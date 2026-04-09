@@ -1,27 +1,4 @@
+# reinstallable
 node_modules/
 .next/
 .next-stale/
-.env
-.env.local
-.env.*
-!.env.example
-*.tsbuildinfo
-
-# IDE / tooling
-.codex/
-.vercel/
-
-# Runtime output
-dev-server.log
-coverage/
-playwright-report/
-test-results/
-*.pem
-*.key
-*.crt
-*.p12
-*.pfx
-docs/backend-cart-failure-report.md
-docs/superpowers/
-.pen
-scripts/auth-probe.mjs

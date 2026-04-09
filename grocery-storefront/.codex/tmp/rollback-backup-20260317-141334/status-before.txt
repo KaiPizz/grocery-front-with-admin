@@ -1,0 +1,12 @@
+## kaipizz-sub...origin/kaipizz-sub
+ M src/app/[locale]/(shop)/account/page.tsx
+ M src/app/[locale]/(shop)/checkout/confirmation/page.tsx
+ M src/app/[locale]/(shop)/checkout/page.tsx
+ M src/lib/graphql/operations/grocery.ts
+ M src/lib/utils.ts
+ M src/types/checkout.ts
+ M src/types/index.ts
+?? docs/
+?? src/components/account/
+?? src/lib/checkout.ts
+

@@ -1,0 +1,685 @@
+{
+  "slug": "chesaigon",
+  "published": {
+    "branding": {
+      "logoUrl": "http://localhost:4100/uploads/1774518246036-chu-cho-mungu.jpg",
+      "faviconUrl": null,
+      "storeName": "alo123",
+      "colors": {
+        "primary": "#16a34a",
+        "primaryHover": "#15803d",
+        "background": "#fafaf9",
+        "foreground": "#1c1917",
+        "accent": "#f0fdf4",
+        "accentForeground": "#14532d",
+        "muted": "#f5f5f4",
+        "mutedForeground": "#78716c",
+        "border": "#e7e5e4",
+        "card": "#ffffff",
+        "cardForeground": "#1c1917",
+        "destructive": "#dc2626",
+        "ring": "#16a34a"
+      }
+    },
+    "homepage": {
+      "hero": {
+        "enabled": false,
+        "headline": "Fresh Groceries, Delivered",
+        "subtitle": "Shop quality produce, pantry staples, and frozen favourites â€” all with full nutritional transparency.",
+        "ctaText": "Shop Products",
+        "ctaLink": "/products",
+        "backgroundImageUrl": null
+      },
+      "promoBanners": [
+        {
+          "id": "banner-1",
+          "headline": "Test",
+          "subtext": "Hand-selected chilled produce updated daily",
+          "ctaText": "Shop Chilled",
+          "ctaLink": "/products?zone=CHILLED",
+          "gradient": "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "banner-2",
+          "headline": "",
+          "subtext": "",
+          "ctaText": "",
+          "ctaLink": "",
+          "gradient": "",
+          "imageUrl": "http://localhost:4100/uploads/1774441144526-test-banner.jpg",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "id": "banner-1774441170945",
+          "headline": "",
+          "subtext": "",
+          "ctaText": "",
+          "ctaLink": "",
+          "gradient": "linear-gradient(135deg, #6366f1, #4f46e5)",
+          "imageUrl": "http://localhost:4100/uploads/1774441178543-images.jfif",
+          "enabled": true,
+          "order": 2
+        }
+      ],
+      "blocks": [
+        {
+          "id": "block-hero-1775036077507",
+          "type": "hero",
+          "enabled": true,
+          "order": 0,
+          "autoPlay": true,
+          "autoPlayInterval": 3000,
+          "slides": [
+            {
+              "id": "slide-1775036077507",
+              "imageUrl": "http://localhost:4100/uploads/1775036247136-hero.png",
+              "mobileImageUrl": null,
+              "title": "",
+              "ctaText": "Shop Now",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "hero-slide-1775036992504",
+              "imageUrl": "http://localhost:4100/uploads/1775037098988-Website-Banner-1920-x-600-Images.png",
+              "mobileImageUrl": null,
+              "title": "",
+              "ctaText": "Test",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "hero-slide-1775037109988",
+              "imageUrl": "http://localhost:4100/uploads/1775037338023-9a0c9fc93d51a9c87d569384.jpg",
+              "mobileImageUrl": null,
+              "title": "",
+              "ctaText": "Check it",
+              "ctaLink": "/http://localhost:3008/en/products/banany-1kg",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "block-horizontal-1775037627960",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 1,
+          "imageUrl": "http://localhost:4100/uploads/1774441144526-test-banner.jpg",
+          "mobileImageUrl": null,
+          "title": "",
+          "ctaText": "",
+          "ctaLink": ""
+        },
+        {
+          "id": "block-horizontal-1775037828876",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 2,
+          "imageUrl": "http://localhost:4100/uploads/1775037973424-stilllifeweb.jpg",
+          "mobileImageUrl": null,
+          "title": "",
+          "ctaText": "",
+          "ctaLink": ""
+        },
+        {
+          "id": "block-horizontal-1775038043035",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 3,
+          "imageUrl": "http://localhost:4100/uploads/1775038065297-Lamplugh_Glacier_1_2011_.jpg",
+          "mobileImageUrl": null,
+          "title": "",
+          "ctaText": "",
+          "ctaLink": ""
+        },
+        {
+          "id": "block-grid-1775056851124",
+          "type": "grid",
+          "enabled": true,
+          "order": 4,
+          "columns": 3,
+          "items": [
+            {
+              "id": "grid-item-1775056853424",
+              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            },
+            {
+              "id": "grid-item-1775056872099",
+              "imageUrl": "http://localhost:4100/uploads/1775056874483-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            },
+            {
+              "id": "grid-item-1775056875937",
+              "imageUrl": "http://localhost:4100/uploads/1775056878568-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "block-round_grid-1775660273825",
+          "type": "round_grid",
+          "enabled": true,
+          "order": 5,
+          "columns": 3,
+          "items": [
+            {
+              "id": "grid-item-1775660277904",
+              "imageUrl": "http://localhost:4100/uploads/1775056874483-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            },
+            {
+              "id": "grid-item-1775660287824",
+              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            },
+            {
+              "id": "grid-item-1775660291682",
+              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            }
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "freshPicks",
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "shopByZone",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "id": "deals",
+          "enabled": true,
+          "order": 2
+        },
+        {
+          "id": "recipes",
+          "enabled": false,
+          "order": 3
+        }
+      ]
+    },
+    "layout": {
+      "header": {
+        "navItems": [
+          {
+            "label": "Home",
+            "href": "/",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "label": "Products",
+            "href": "/products",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "label": "Recipes",
+            "href": "/recipes",
+            "enabled": true,
+            "order": 2
+          }
+        ],
+        "showSearch": true,
+        "showWishlist": true,
+        "showLanguageSwitcher": true,
+        "showThemeToggle": false,
+        "cta": {
+          "text": "yes",
+          "link": "https://chatgpt.com/",
+          "enabled": false
+        }
+      },
+      "footer": {
+        "tagline": "Fresh groceries with full nutritional transparency, delivered to your door.",
+        "columns": [
+          {
+            "title": "Shop",
+            "links": [
+              {
+                "label": "Products",
+                "href": "/products"
+              },
+              {
+                "label": "Recipes",
+                "href": "/recipes"
+              }
+            ]
+          },
+          {
+            "title": "Info",
+            "links": [
+              {
+                "label": "About",
+                "href": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              },
+              {
+                "label": "Contact",
+                "href": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              },
+              {
+                "label": "Delivery",
+                "href": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              }
+            ]
+          },
+          {
+            "title": "Legal",
+            "links": [
+              {
+                "label": "Privacy",
+                "href": "/privacy"
+              },
+              {
+                "label": "Terms",
+                "href": "/terms"
+              }
+            ]
+          }
+        ],
+        "copyrightText": "Â© {year} Grocery Store. Powered by Zira AI."
+      },
+      "pricePosition": "below-image",
+      "bannerPosition": "below-hero"
+    },
+    "tracking": {
+      "facebookPixel": {
+        "enabled": false,
+        "pixelId": ""
+      },
+      "googleAnalytics": {
+        "enabled": false,
+        "measurementId": ""
+      },
+      "googleTagManager": {
+        "enabled": false,
+        "containerId": ""
+      },
+      "hotjar": {
+        "enabled": false,
+        "siteId": ""
+      }
+    },
+    "seo": {
+      "defaultTitle": "Asia Deli",
+      "defaultDescription": "Fresh groceries with full nutritional transparency",
+      "ogImageUrl": "http://localhost:4100/uploads/1774518246036-chu-cho-mungu.jpg",
+      "canonical": ""
+    },
+    "general": {
+      "phone": "",
+      "email": "",
+      "address": "",
+      "socialLinks": [],
+      "policyLinks": {
+        "privacy": "/privacy",
+        "terms": "/terms",
+        "about": "#"
+      }
+    }
+  },
+  "draft": {
+    "branding": {
+      "logoUrl": "http://localhost:4100/uploads/1774518246036-chu-cho-mungu.jpg",
+      "faviconUrl": null,
+      "storeName": "alo123",
+      "colors": {
+        "primary": "#16a34a",
+        "primaryHover": "#15803d",
+        "background": "#fafaf9",
+        "foreground": "#1c1917",
+        "accent": "#f0fdf4",
+        "accentForeground": "#14532d",
+        "muted": "#f5f5f4",
+        "mutedForeground": "#78716c",
+        "border": "#e7e5e4",
+        "card": "#ffffff",
+        "cardForeground": "#1c1917",
+        "destructive": "#dc2626",
+        "ring": "#16a34a"
+      }
+    },
+    "homepage": {
+      "hero": {
+        "enabled": false,
+        "headline": "Fresh Groceries, Delivered",
+        "subtitle": "Shop quality produce, pantry staples, and frozen favourites â€” all with full nutritional transparency.",
+        "ctaText": "Shop Products",
+        "ctaLink": "/products",
+        "backgroundImageUrl": null
+      },
+      "promoBanners": [
+        {
+          "id": "banner-1",
+          "headline": "Test",
+          "subtext": "Hand-selected chilled produce updated daily",
+          "ctaText": "Shop Chilled",
+          "ctaLink": "/products?zone=CHILLED",
+          "gradient": "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "banner-2",
+          "headline": "",
+          "subtext": "",
+          "ctaText": "",
+          "ctaLink": "",
+          "gradient": "",
+          "imageUrl": "http://localhost:4100/uploads/1774441144526-test-banner.jpg",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "id": "banner-1774441170945",
+          "headline": "",
+          "subtext": "",
+          "ctaText": "",
+          "ctaLink": "",
+          "gradient": "linear-gradient(135deg, #6366f1, #4f46e5)",
+          "imageUrl": "http://localhost:4100/uploads/1774441178543-images.jfif",
+          "enabled": true,
+          "order": 2
+        }
+      ],
+      "blocks": [
+        {
+          "id": "block-hero-1775036077507",
+          "type": "hero",
+          "enabled": true,
+          "order": 0,
+          "autoPlay": true,
+          "autoPlayInterval": 3000,
+          "slides": [
+            {
+              "id": "slide-1775036077507",
+              "imageUrl": "http://localhost:4100/uploads/1775036247136-hero.png",
+              "mobileImageUrl": null,
+              "title": "",
+              "ctaText": "Shop Now",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "hero-slide-1775036992504",
+              "imageUrl": "http://localhost:4100/uploads/1775037098988-Website-Banner-1920-x-600-Images.png",
+              "mobileImageUrl": null,
+              "title": "",
+              "ctaText": "Test",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "hero-slide-1775037109988",
+              "imageUrl": "http://localhost:4100/uploads/1775037338023-9a0c9fc93d51a9c87d569384.jpg",
+              "mobileImageUrl": null,
+              "title": "",
+              "ctaText": "Check it",
+              "ctaLink": "/http://localhost:3008/en/products/banany-1kg",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "block-horizontal-1775037627960",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 1,
+          "imageUrl": "http://localhost:4100/uploads/1774441144526-test-banner.jpg",
+          "mobileImageUrl": null,
+          "title": "",
+          "ctaText": "",
+          "ctaLink": ""
+        },
+        {
+          "id": "block-horizontal-1775037828876",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 2,
+          "imageUrl": "http://localhost:4100/uploads/1775037973424-stilllifeweb.jpg",
+          "mobileImageUrl": null,
+          "title": "",
+          "ctaText": "",
+          "ctaLink": ""
+        },
+        {
+          "id": "block-horizontal-1775038043035",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 3,
+          "imageUrl": "http://localhost:4100/uploads/1775038065297-Lamplugh_Glacier_1_2011_.jpg",
+          "mobileImageUrl": null,
+          "title": "",
+          "ctaText": "",
+          "ctaLink": ""
+        },
+        {
+          "id": "block-grid-1775056851124",
+          "type": "grid",
+          "enabled": true,
+          "order": 4,
+          "columns": 3,
+          "items": [
+            {
+              "id": "grid-item-1775056853424",
+              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            },
+            {
+              "id": "grid-item-1775056872099",
+              "imageUrl": "http://localhost:4100/uploads/1775056874483-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            },
+            {
+              "id": "grid-item-1775056875937",
+              "imageUrl": "http://localhost:4100/uploads/1775056878568-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "block-round_grid-1775660273825",
+          "type": "round_grid",
+          "enabled": true,
+          "order": 5,
+          "columns": 3,
+          "items": [
+            {
+              "id": "grid-item-1775660277904",
+              "imageUrl": "http://localhost:4100/uploads/1775056874483-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            },
+            {
+              "id": "grid-item-1775660287824",
+              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            },
+            {
+              "id": "grid-item-1775660291682",
+              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
+              "title": "",
+              "href": "/products",
+              "enabled": true
+            }
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "freshPicks",
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "shopByZone",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "id": "deals",
+          "enabled": true,
+          "order": 2
+        },
+        {
+          "id": "recipes",
+          "enabled": false,
+          "order": 3
+        }
+      ]
+    },
+    "layout": {
+      "header": {
+        "navItems": [
+          {
+            "label": "Home",
+            "href": "/",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "label": "Products",
+            "href": "/products",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "label": "Recipes",
+            "href": "/recipes",
+            "enabled": true,
+            "order": 2
+          }
+        ],
+        "showSearch": true,
+        "showWishlist": true,
+        "showLanguageSwitcher": true,
+        "showThemeToggle": false,
+        "cta": {
+          "text": "yes",
+          "link": "https://chatgpt.com/",
+          "enabled": false
+        }
+      },
+      "footer": {
+        "tagline": "Fresh groceries with full nutritional transparency, delivered to your door.",
+        "columns": [
+          {
+            "title": "Shop",
+            "links": [
+              {
+                "label": "Products",
+                "href": "/products"
+              },
+              {
+                "label": "Recipes",
+                "href": "/recipes"
+              }
+            ]
+          },
+          {
+            "title": "Info",
+            "links": [
+              {
+                "label": "About",
+                "href": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              },
+              {
+                "label": "Contact",
+                "href": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              },
+              {
+                "label": "Delivery",
+                "href": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              }
+            ]
+          },
+          {
+            "title": "Legal",
+            "links": [
+              {
+                "label": "Privacy",
+                "href": "/privacy"
+              },
+              {
+                "label": "Terms",
+                "href": "/terms"
+              }
+            ]
+          }
+        ],
+        "copyrightText": "Â© {year} Grocery Store. Powered by Zira AI."
+      },
+      "pricePosition": "below-image",
+      "bannerPosition": "below-hero"
+    },
+    "tracking": {
+      "facebookPixel": {
+        "enabled": false,
+        "pixelId": ""
+      },
+      "googleAnalytics": {
+        "enabled": false,
+        "measurementId": ""
+      },
+      "googleTagManager": {
+        "enabled": false,
+        "containerId": ""
+      },
+      "hotjar": {
+        "enabled": false,
+        "siteId": ""
+      }
+    },
+    "seo": {
+      "defaultTitle": "Asia Deli",
+      "defaultDescription": "Fresh groceries with full nutritional transparency",
+      "ogImageUrl": "http://localhost:4100/uploads/1774518246036-chu-cho-mungu.jpg",
+      "canonical": ""
+    },
+    "general": {
+      "phone": "",
+      "email": "",
+      "address": "",
+      "socialLinks": [],
+      "policyLinks": {
+        "privacy": "/privacy",
+        "terms": "/terms",
+        "about": "#"
+      }
+    }
+  },
+  "version": 279,
+  "updatedAt": "2026-04-08T14:58:16.084Z"
+}

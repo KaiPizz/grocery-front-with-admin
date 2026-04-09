@@ -1,0 +1,1149 @@
+diff --git a/src/app/[locale]/(shop)/account/page.tsx b/src/app/[locale]/(shop)/account/page.tsx
+index 6b2a331..bdd7ab9 100644
+--- a/src/app/[locale]/(shop)/account/page.tsx
++++ b/src/app/[locale]/(shop)/account/page.tsx
+@@ -1,8 +1,9 @@
+ 'use client';
+ 
+ import { useTranslations } from 'next-intl';
+-import { UserRound, Package, MapPin, Shield, Heart, ShoppingCart, ChevronRight } from 'lucide-react';
++import { UserRound, MapPin, Shield, Heart, ShoppingCart, ChevronRight } from 'lucide-react';
+ import { Link } from '@/i18n/navigation';
++import { OrdersPanel } from '@/components/account/OrdersPanel';
+ import { useAuthStore } from '@/stores/auth-store';
+ 
+ export default function AccountPage() {
+@@ -45,12 +46,6 @@ export default function AccountPage() {
+       description: tAccount('profileDescription'),
+       icon: UserRound,
+     },
+-    {
+-      id: 'orders',
+-      title: tAccount('ordersTitle'),
+-      description: tAccount('ordersDescription'),
+-      icon: Package,
+-    },
+     {
+       id: 'addresses',
+       title: tAccount('addressesTitle'),
+@@ -108,7 +103,7 @@ export default function AccountPage() {
+         </div>
+       </div>
+ 
+-      <div className="grid gap-4 mt-8 md:grid-cols-2">
++      <div className="grid gap-4 mt-8 md:grid-cols-3">
+         {sections.map(({ id, title, description, icon: Icon }) => (
+           <section
+             key={id}
+@@ -144,6 +139,8 @@ export default function AccountPage() {
+         ))}
+       </div>
+ 
++      <OrdersPanel />
++
+       <section
+         className="rounded-2xl border p-5 mt-8"
+         style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+diff --git a/src/app/[locale]/(shop)/checkout/confirmation/page.tsx b/src/app/[locale]/(shop)/checkout/confirmation/page.tsx
+index 88a7d5e..20bbc48 100644
+--- a/src/app/[locale]/(shop)/checkout/confirmation/page.tsx
++++ b/src/app/[locale]/(shop)/checkout/confirmation/page.tsx
+@@ -1,19 +1,98 @@
+ 'use client';
+ 
++import { useEffect, useState } from 'react';
+ import { useSearchParams } from 'next/navigation';
+-import { useLocale, useTranslations } from 'next-intl';
+-import { CheckCircle2 } from 'lucide-react';
+-import { Link, redirect } from '@/i18n/navigation';
++import { useTranslations } from 'next-intl';
++import { CheckCircle2, ExternalLink, Loader2 } from 'lucide-react';
++import { Link } from '@/i18n/navigation';
++import {
++  getPaymentStatusLabel,
++  normalizePaymentPhase,
++  readPendingPaymentContext,
++  type PendingPaymentContext,
++} from '@/lib/checkout';
+ 
+ export default function CheckoutConfirmationPage() {
+   const t = useTranslations('checkout');
+-  const locale = useLocale();
+   const searchParams = useSearchParams();
+-  const orderNumber = searchParams.get('order');
+-  const email = searchParams.get('email');
++  const [storedPaymentContext, setStoredPaymentContext] = useState<PendingPaymentContext | null>(null);
++  const paymentReturnId = searchParams.get('paymentReturnId');
++  const routeOrderNumber = searchParams.get('order');
++  const routeEmail = searchParams.get('email');
++  const routePaymentStatus = searchParams.get('paymentStatus');
++  const routeConfirmationNeeded = searchParams.get('confirmationNeeded') === '1';
++
++  useEffect(() => {
++    if (!paymentReturnId) {
++      setStoredPaymentContext(null);
++      return;
++    }
++
++    setStoredPaymentContext(readPendingPaymentContext(paymentReturnId));
++  }, [paymentReturnId]);
++
++  const orderNumber = routeOrderNumber ?? storedPaymentContext?.orderNumber ?? null;
++  const email = routeEmail ?? storedPaymentContext?.email ?? null;
++  const actionUrl = storedPaymentContext?.actionUrl ?? null;
++  const paymentPhase = normalizePaymentPhase(
++    routePaymentStatus ?? storedPaymentContext?.paymentStatus,
++    actionUrl,
++    routeConfirmationNeeded || storedPaymentContext?.confirmationNeeded || false
++  );
++  const paymentStatusLabel = getPaymentStatusLabel(paymentPhase, storedPaymentContext?.paymentMethodName);
++
++  let headline = t('orderThankYou');
++  let message = email ? t('confirmationSent', { email }) : null;
++
++  if (paymentPhase === 'requires_action') {
++    headline = 'Order created. Payment still needs confirmation.';
++    message = 'Continue to your payment provider to finish the transaction.';
++  } else if (paymentPhase === 'pending') {
++    headline = 'Order received. Payment is still pending.';
++    message = 'We saved the order, but the provider has not confirmed payment yet.';
++  } else if (paymentPhase === 'failed') {
++    headline = 'Order created, but payment failed.';
++    message = 'Retry payment if your provider offers another attempt.';
++  }
++
++  if (!orderNumber && paymentReturnId && !storedPaymentContext) {
++    return (
++      <div className="container-grocery py-16 md:py-24 text-center max-w-lg mx-auto">
++        <Loader2 className="w-8 h-8 mx-auto animate-spin mb-4" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
++        <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
++          Restoring your payment session...
++        </p>
++      </div>
++    );
++  }
+ 
+   if (!orderNumber) {
+-    redirect({ href: '/', locale });
++    return (
++      <div className="container-grocery py-16 md:py-24 text-center max-w-lg mx-auto">
++        <h1 className="heading-display text-2xl md:text-3xl mb-3" style={{ color: 'var(--color-foreground)' }}>
++          We could not restore this order confirmation.
++        </h1>
++        <p className="text-sm mb-8" style={{ color: 'var(--color-muted-foreground)' }}>
++          Return to the storefront and check your account order history.
++        </p>
++        <div className="flex flex-col sm:flex-row gap-3 justify-center">
++          <Link
++            href="/account#orders"
++            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-fast active:scale-95"
++            style={{ backgroundColor: 'var(--color-primary)' }}
++          >
++            View orders
++          </Link>
++          <Link
++            href="/"
++            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold border transition-all duration-fast active:scale-95"
++            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
++          >
++            Back to home
++          </Link>
++        </div>
++      </div>
++    );
+   }
+ 
+   return (
+@@ -29,33 +108,52 @@ export default function CheckoutConfirmationPage() {
+         className="heading-display text-2xl md:text-3xl mb-3"
+         style={{ color: 'var(--color-foreground)' }}
+       >
+-        {t('orderThankYou')}
++        {headline}
+       </h1>
+ 
+       <p className="text-sm mb-1" style={{ color: 'var(--color-muted-foreground)' }}>
+         {t('orderNumber')}: <span className="font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>#{orderNumber}</span>
+       </p>
+ 
+-      {email && (
++      {message && (
+         <p className="text-sm mb-8" style={{ color: 'var(--color-muted-foreground)' }}>
+-          {t('confirmationSent', { email })}
++          {message}
+         </p>
+       )}
+ 
++      <p className="text-xs uppercase tracking-[0.18em] mb-8" style={{ color: 'var(--color-muted-foreground)' }}>
++        {paymentStatusLabel}
++      </p>
++
+       <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
++        {actionUrl && (
++          <button
++            type="button"
++            onClick={() => window.location.assign(actionUrl)}
++            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-fast active:scale-95"
++            style={{ backgroundColor: 'var(--color-primary)' }}
++          >
++            Continue to payment
++            <ExternalLink className="w-4 h-4" aria-hidden="true" />
++          </button>
++        )}
+         <Link
+           href="/products"
+-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-fast active:scale-95"
+-          style={{ backgroundColor: 'var(--color-primary)' }}
++          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-fast active:scale-95"
++          style={{
++            border: actionUrl ? '1px solid var(--color-border)' : 'none',
++            color: actionUrl ? 'var(--color-foreground)' : 'white',
++            backgroundColor: actionUrl ? 'transparent' : 'var(--color-primary)',
++          }}
+         >
+           {t('continueShopping')}
+         </Link>
+         <Link
+-          href="/"
++          href="/account#orders"
+           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold border transition-all duration-fast active:scale-95"
+           style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+         >
+-          {t('backToHome')}
++          View orders
+         </Link>
+       </div>
+     </div>
+diff --git a/src/app/[locale]/(shop)/checkout/page.tsx b/src/app/[locale]/(shop)/checkout/page.tsx
+index 30bd643..093161d 100644
+--- a/src/app/[locale]/(shop)/checkout/page.tsx
++++ b/src/app/[locale]/(shop)/checkout/page.tsx
+@@ -1,20 +1,35 @@
+ 'use client';
+ 
+-import { useState, useCallback } from 'react';
++import { useCallback, useEffect, useState } from 'react';
+ import { useLocale, useTranslations } from 'next-intl';
+ import { useRouter } from 'next/navigation';
+ import Link from 'next/link';
+ import { useForm } from 'react-hook-form';
+ import { zodResolver } from '@hookform/resolvers/zod';
+-import { useMutation } from 'urql';
+-import { ArrowLeft, ShieldCheck, ShoppingCart, Truck, Banknote, CreditCard, Building2, ChevronLeft, ChevronRight, Loader2, Tag, X, RefreshCw } from 'lucide-react';
++import { type CombinedError, useMutation } from 'urql';
++import { ArrowLeft, ShieldCheck, ShoppingCart, Truck, Banknote, CreditCard, Building2, ChevronLeft, ChevronRight, Loader2, Tag, X, RefreshCw, ExternalLink } from 'lucide-react';
+ import { toast } from 'sonner';
++import {
++  buildPendingPaymentContext,
++  createPaymentReturnId,
++  getPaymentStatusLabel,
++  savePendingPaymentContext,
++  normalizePaymentPhase,
++} from '@/lib/checkout';
+ import { useCartStore } from '@/stores/cart-store';
++import { useAuthStore } from '@/stores/auth-store';
+ import { useHydrated } from '@/hooks/use-hydrated';
+-import { useChannel } from '@/hooks/use-channel';
+-import { formatPrice, cn } from '@/lib/utils';
++import { extractMoney, formatPrice } from '@/lib/utils';
+ import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
+-import { checkoutSchema, type CheckoutFormData, type CheckoutStep, type ShippingMethod, type PaymentMethod } from '@/types/checkout';
++import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
++import {
++  checkoutSchema,
++  type CheckoutFormData,
++  type CheckoutStep,
++  type PaymentMethod,
++  type PaymentSession,
++  type ShippingMethod,
++} from '@/types/checkout';
+ import {
+   CHECKOUT_CREATE_MUTATION,
+   CHECKOUT_SHIPPING_ADDRESS_UPDATE,
+@@ -24,6 +39,7 @@ import {
+   CHECKOUT_NOTE_UPDATE,
+   CHECKOUT_PROMO_CODE_ADD,
+   CHECKOUT_PROMO_CODE_REMOVE,
++  AVAILABLE_PAYMENT_METHODS_QUERY,
+ } from '@/lib/graphql/operations/grocery';
+ 
+ const PAYMENT_ICONS: Record<string, typeof CreditCard> = {
+@@ -39,6 +55,79 @@ const PAYMENT_ICONS: Record<string, typeof CreditCard> = {
+ 
+ const INPUT_CLASS = 'w-full px-3 py-2.5 rounded-lg border text-sm bg-transparent transition-colors duration-fast focus:outline-none focus-visible:ring-2';
+ 
++function getCombinedErrorMessage(error: CombinedError | undefined, fallback: string): string | null {
++  if (!error) return null;
++
++  const graphQLError = error.graphQLErrors.find(Boolean);
++  const originalError = (graphQLError?.extensions as { originalError?: { message?: string | string[] } } | undefined)?.originalError;
++  const originalMessage = originalError?.message;
++
++  if (Array.isArray(originalMessage) && originalMessage.length > 0) {
++    return String(originalMessage[0]);
++  }
++
++  if (typeof originalMessage === 'string' && originalMessage.trim()) {
++    return originalMessage;
++  }
++
++  if (graphQLError?.message?.trim()) {
++    return graphQLError.message;
++  }
++
++  if (error.message?.trim()) {
++    return error.message;
++  }
++
++  return fallback;
++}
++
++function getConfirmationPath(locale: string): string {
++  return `${locale === 'pl' ? '' : `/${locale}`}/checkout/confirmation`;
++}
++
++function buildConfirmationUrl(
++  locale: string,
++  params: Record<string, string | null | undefined>
++): string {
++  const searchParams = new URLSearchParams();
++
++  Object.entries(params).forEach(([key, value]) => {
++    if (value) {
++      searchParams.set(key, value);
++    }
++  });
++
++  const path = getConfirmationPath(locale);
++  const query = searchParams.toString();
++  return query ? `${path}?${query}` : path;
++}
++
++interface StorefrontPaymentMethod {
++  id: string;
++  name: string;
++  type?: string | null;
++  currencies?: string[] | null;
++  config?: unknown;
++  // fallback for older API shape
++  code?: string;
++}
++
++interface PaymentMethodsResponse {
++  availablePaymentMethods: StorefrontPaymentMethod[] | null;
++}
++
++function normalizeShippingMethod(method: ShippingMethod): ShippingMethod {
++  const normalizedPrice = extractMoney(method.price) ?? { amount: 0, currency: 'PLN' };
++
++  return {
++    ...method,
++    price: {
++      ...normalizedPrice,
++      gross: method.price.gross,
++    },
++  };
++}
++
+ export default function CheckoutPage() {
+   const locale = useLocale();
+   const t = useTranslations('checkout');
+@@ -46,7 +135,7 @@ export default function CheckoutPage() {
+   const tCommon = useTranslations('common');
+   const isHydrated = useHydrated();
+   const router = useRouter();
+-  const channel = useChannel();
++  const session = useAuthStore((state) => state.session);
+   const { items, getSubtotal, clear } = useCartStore();
+   const displayItems = isHydrated ? items : [];
+   const subtotal = isHydrated ? getSubtotal() : 0;
+@@ -58,6 +147,8 @@ export default function CheckoutPage() {
+   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+   const [selectedShipping, setSelectedShipping] = useState<ShippingMethod | null>(null);
+   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(null);
++  const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null);
++  const [paymentReturnId, setPaymentReturnId] = useState<string | null>(null);
+   const [shippingCost, setShippingCost] = useState(0);
+   const [totalFromServer, setTotalFromServer] = useState<number | null>(null);
+   const [discount, setDiscount] = useState<{ amount: number; currency: string } | null>(null);
+@@ -78,13 +169,11 @@ export default function CheckoutPage() {
+     register,
+     handleSubmit,
+     getValues,
++    setValue,
+     formState: { errors },
+   } = useForm<CheckoutFormData>({
+     resolver: zodResolver(checkoutSchema),
+-    defaultValues: {
+-      shippingMethodId: '',
+-      paymentMethodId: '',
+-    },
++    defaultValues: {},
+   });
+ 
+   // Collect allergens from cart
+@@ -104,6 +193,65 @@ export default function CheckoutPage() {
+     });
+   }, []);
+ 
++  const resetPaymentState = useCallback((options?: { preserveStep?: boolean }) => {
++    setSelectedPayment(null);
++    setPaymentSession(null);
++    setPaymentReturnId(null);
++    setCompletedSteps((previous) => {
++      const next = new Set(previous);
++      next.delete('payment');
++      return next;
++    });
++
++    if (!options?.preserveStep && step === 'review') {
++      setStep('payment');
++    }
++  }, [step]);
++
++  const loadPaymentMethods = useCallback(async (checkoutIdForPayments: string) => {
++    const response = await graphqlRequest<PaymentMethodsResponse>(AVAILABLE_PAYMENT_METHODS_QUERY, {
++      checkoutId: checkoutIdForPayments,
++    });
++
++    const topLevelMessage = getGraphqlErrorMessage(response.errors);
++    if (topLevelMessage) {
++      throw new Error(topLevelMessage);
++    }
++
++    setPaymentMethods(
++      (response.data?.availablePaymentMethods ?? []).map((method) => ({
++        id: method.id ?? method.code,
++        name: method.name,
++        type: method.type ?? method.code,
++      }))
++    );
++  }, []);
++
++  useEffect(() => {
++    if (session.status !== 'authenticated' || !session.user) {
++      return;
++    }
++
++    const fullName = session.user.fullName?.trim() ?? '';
++    const [firstName, ...rest] = fullName.split(/\s+/).filter(Boolean);
++
++    if (!getValues('firstName') && firstName) {
++      setValue('firstName', firstName);
++    }
++
++    if (!getValues('lastName') && rest.length > 0) {
++      setValue('lastName', rest.join(' '));
++    }
++
++    if (!getValues('email') && session.user.email) {
++      setValue('email', session.user.email);
++    }
++
++    if (!getValues('phone') && session.user.phone) {
++      setValue('phone', session.user.phone);
++    }
++  }, [getValues, session.status, session.user, setValue]);
++
+   if (!isHydrated) {
+     return (
+       <div className="container-grocery py-16 text-center">
+@@ -119,11 +267,15 @@ export default function CheckoutPage() {
+     setLoading(true);
+     try {
+       const values = getValues();
++      setCheckoutId(null);
++      setSelectedShipping(null);
++      setShippingCost(0);
++      setTotalFromServer(null);
++      resetPaymentState({ preserveStep: true });
+ 
+       // Create checkout
+       const createResult = await createCheckout({
+         input: {
+-          channel,
+           email: values.email,
+           lines: displayItems.map((item) => ({
+             variantId: item.variantId,
+@@ -132,9 +284,14 @@ export default function CheckoutPage() {
+         },
+       });
+ 
++      const createMessage = getCombinedErrorMessage(createResult.error, t('orderError'));
+       const checkout = createResult.data?.checkoutCreateFull?.checkout;
+       const createErrors = createResult.data?.checkoutCreateFull?.errors;
+ 
++      if (createMessage) {
++        toast.error(createMessage);
++        return;
++      }
+       if (createErrors?.length > 0) {
+         toast.error(createErrors[0].message);
+         return;
+@@ -148,36 +305,32 @@ export default function CheckoutPage() {
+ 
+       // Update shipping address
+       const addrResult = await updateShippingAddress({
+-        input: {
+-          checkoutId: checkout.id,
+-          shippingAddress: {
+-            firstName: values.firstName,
+-            lastName: values.lastName,
+-            streetAddress1: values.streetAddress1,
+-            city: values.city,
+-            postalCode: values.postalCode,
+-            country: 'PL',
+-            phone: values.phone || '',
+-          },
++        checkoutId: checkout.id,
++        address: {
++          street: values.streetAddress1,
++          city: values.city,
++          postalCode: values.postalCode,
++          country: 'PL',
+         },
+       });
+ 
++      const addressMessage = getCombinedErrorMessage(addrResult.error, t('orderError'));
+       const addrCheckout = addrResult.data?.checkoutShippingAddressUpdate?.checkout;
+       const addrErrors = addrResult.data?.checkoutShippingAddressUpdate?.errors;
+ 
++      if (addressMessage) {
++        toast.error(addressMessage);
++        return;
++      }
+       if (addrErrors?.length > 0) {
+         toast.error(addrErrors[0].message);
+         return;
+       }
+ 
+       // Set available shipping methods
+-      const methods = addrCheckout?.availableShippingMethods || checkout.availableShippingMethods || [];
++      const methods = (addrCheckout?.availableShippingMethods || []).map(normalizeShippingMethod);
+       setShippingMethods(methods);
+-      setPaymentMethods(checkout.availablePaymentMethods || []);
+-
+-      if (addrCheckout?.totalPrice?.gross) {
+-        setTotalFromServer(addrCheckout.totalPrice.gross.amount);
+-      }
++      setPaymentMethods([]);
+ 
+       markCompleted('delivery');
+       goToStep('shipping');
+@@ -193,25 +346,35 @@ export default function CheckoutPage() {
+     setLoading(true);
+     try {
+       const result = await updateShippingMethod({
+-        input: { checkoutId, shippingMethodId: method.id },
++        checkoutId,
++        methodId: method.id,
+       });
+ 
++      const shippingMessage = getCombinedErrorMessage(result.error, t('orderError'));
+       const checkout = result.data?.checkoutShippingMethodUpdate?.checkout;
+       const errs = result.data?.checkoutShippingMethodUpdate?.errors;
+ 
++      if (shippingMessage) {
++        toast.error(shippingMessage);
++        return;
++      }
+       if (errs?.length > 0) {
+         toast.error(errs[0].message);
+         return;
+       }
+ 
+       setSelectedShipping(method);
+-      if (checkout?.shippingPrice) {
+-        setShippingCost(checkout.shippingPrice.amount);
++      resetPaymentState({ preserveStep: true });
++      const shippingPrice = extractMoney(checkout?.shippingPrice);
++      if (shippingPrice) {
++        setShippingCost(shippingPrice.amount);
+       }
+       if (checkout?.totalPrice?.gross) {
+         setTotalFromServer(checkout.totalPrice.gross.amount);
+       }
+ 
++      await loadPaymentMethods(checkoutId);
++
+       markCompleted('shipping');
+       goToStep('payment');
+     } catch {
+@@ -225,23 +388,48 @@ export default function CheckoutPage() {
+     if (!checkoutId) return;
+     setLoading(true);
+     try {
++      const nextPaymentReturnId = createPaymentReturnId();
+       const result = await createPayment({
+-        checkoutId,
+         input: {
+-          gateway: method.provider || method.name,
++          checkoutId,
++          gateway: method.type || method.provider || method.name,
++          amount: displayTotal,
+           returnUrl: typeof window !== 'undefined'
+-            ? `${window.location.origin}${locale === 'pl' ? '' : `/${locale}`}/checkout/confirmation`
++            ? `${window.location.origin}${buildConfirmationUrl(locale, { paymentReturnId: nextPaymentReturnId })}`
+             : '',
+         },
+       });
+ 
++      const paymentMessage = getCombinedErrorMessage(result.error, t('orderError'));
++      const payment = result.data?.checkoutPaymentCreate?.payment;
+       const errs = result.data?.checkoutPaymentCreate?.errors;
++
++      if (paymentMessage) {
++        toast.error(paymentMessage);
++        return;
++      }
+       if (errs?.length > 0) {
+         toast.error(errs[0].message);
+         return;
+       }
+ 
++      if (!payment) {
++        toast.error('Payment could not be initialized.');
++        return;
++      }
++
+       setSelectedPayment(method);
++      setPaymentReturnId(nextPaymentReturnId);
++      setPaymentSession({
++        id: payment.id,
++        gateway: payment.gateway,
++        status: null,
++        clientSecret: null,
++        actionUrl: payment.paymentUrl ?? null,
++        amount: payment.total?.amount ?? null,
++        currency: payment.total?.currency ?? null,
++        methodName: method.name,
++      });
+       markCompleted('payment');
+       goToStep('review');
+     } catch {
+@@ -253,32 +441,76 @@ export default function CheckoutPage() {
+ 
+   async function handlePlaceOrder() {
+     if (!checkoutId) return;
++    if (!selectedPayment || !paymentSession) {
++      toast.error('Select and initialize a payment method before placing the order.');
++      goToStep('payment');
++      return;
++    }
+     setLoading(true);
+     try {
+       const values = getValues();
+ 
+       // Update note if provided
+       if (values.note?.trim()) {
+-        await updateNote({ input: { checkoutId, note: values.note.trim() } });
++        await updateNote({ checkoutId, note: values.note.trim() });
+       }
+ 
+       const result = await completeCheckout({
+-        input: { checkoutId },
++        checkoutId,
+       });
+ 
++      const completionMessage = getCombinedErrorMessage(result.error, t('orderError'));
+       const order = result.data?.checkoutComplete?.order;
+       const errs = result.data?.checkoutComplete?.errors;
+ 
++      if (completionMessage) {
++        toast.error(completionMessage);
++        return;
++      }
+       if (errs?.length > 0) {
+         toast.error(errs[0].message);
+         return;
+       }
+ 
+-      if (order) {
+-        clear();
+-        toast.success(t('orderSuccess'));
+-        router.push(`/checkout/confirmation?order=${encodeURIComponent(order.number)}&email=${encodeURIComponent(values.email)}`);
++      if (!order) {
++        toast.error(t('orderError'));
++        return;
++      }
++
++      // Use paymentUrl from order or from the payment session
++      const redirectUrl = order.paymentUrl ?? paymentSession?.actionUrl ?? null;
++      const paymentPhase = normalizePaymentPhase(paymentSession?.status, redirectUrl, false);
++
++      clear();
++      toast.success(t('orderSuccess'));
++
++      if (paymentReturnId) {
++        savePendingPaymentContext(
++          buildPendingPaymentContext(
++            paymentReturnId,
++            {
++              ...paymentSession,
++              actionUrl: redirectUrl,
++            },
++            order.number,
++            values.email,
++            false
++          )
++        );
+       }
++
++      if (redirectUrl && paymentPhase === 'requires_action') {
++        window.location.assign(redirectUrl);
++        return;
++      }
++
++      router.push(
++        buildConfirmationUrl(locale, {
++          order: order.number,
++          email: values.email,
++          paymentReturnId,
++        })
++      );
+     } catch {
+       toast.error(t('orderError') || 'An error occurred');
+     } finally {
+@@ -294,7 +526,12 @@ export default function CheckoutPage() {
+         checkoutId,
+         promoCode: promoCode.trim(),
+       });
++      const promoMessage = getCombinedErrorMessage(result.error, t('orderError'));
+       const errs = result.data?.checkoutPromoCodeAdd?.errors;
++      if (promoMessage) {
++        toast.error(promoMessage);
++        return;
++      }
+       if (errs?.length > 0) {
+         toast.error(errs[0].message);
+         return;
+@@ -307,6 +544,10 @@ export default function CheckoutPage() {
+       if (checkout?.totalPrice?.gross) {
+         setTotalFromServer(checkout.totalPrice.gross.amount);
+       }
++      if (selectedPayment) {
++        resetPaymentState();
++        toast.message('Order total changed. Reconfirm payment before placing the order.');
++      }
+       toast.success(t('promoApplied') || 'Promo code applied');
+     } catch {
+       toast.error(t('orderError') || 'An error occurred');
+@@ -320,13 +561,22 @@ export default function CheckoutPage() {
+     setLoading(true);
+     try {
+       const result = await removePromoCode({ checkoutId });
++      const promoRemoveMessage = getCombinedErrorMessage(result.error, t('orderError'));
+       const checkout = result.data?.checkoutPromoCodeRemove?.checkout;
++      if (promoRemoveMessage) {
++        toast.error(promoRemoveMessage);
++        return;
++      }
+       if (checkout?.totalPrice?.gross) {
+         setTotalFromServer(checkout.totalPrice.gross.amount);
+       }
+       setDiscount(null);
+       setPromoApplied(false);
+       setPromoCode('');
++      if (selectedPayment) {
++        resetPaymentState();
++        toast.message('Order total changed. Reconfirm payment before placing the order.');
++      }
+     } catch {
+       toast.error(t('orderError') || 'An error occurred');
+     } finally {
+@@ -347,6 +597,18 @@ export default function CheckoutPage() {
+   }
+ 
+   const displayTotal = totalFromServer ?? subtotal + shippingCost;
++  const paymentPhase = normalizePaymentPhase(paymentSession?.status, paymentSession?.actionUrl);
++  const paymentStatusLabel = paymentSession
++    ? getPaymentStatusLabel(paymentPhase, paymentSession.methodName)
++    : null;
++  const paymentGuidance = paymentSession?.actionUrl
++    ? 'You will be redirected to your payment provider after the order is created.'
++    : paymentPhase === 'pending'
++      ? 'Payment will remain pending until the provider confirms it.'
++      : null;
++  const placeOrderLabel = paymentSession?.actionUrl
++    ? 'Place order and continue to payment'
++    : t('placeOrder');
+ 
+   return (
+     <div className="container-grocery py-8 md:py-12">
+@@ -560,7 +822,8 @@ export default function CheckoutPage() {
+                 <div className="space-y-3" role="radiogroup" aria-label={t('shippingTitle')}>
+                   {shippingMethods.map((method) => {
+                     const isSelected = selectedShipping?.id === method.id;
+-                    const isFree = method.price.amount === 0;
++                    const methodPrice = extractMoney(method.price);
++                    const isFree = (methodPrice?.amount ?? 0) === 0;
+                     return (
+                       <button
+                         key={method.id}
+@@ -585,7 +848,7 @@ export default function CheckoutPage() {
+                           )}
+                         </div>
+                         <span className="text-sm font-bold tabular-nums" style={{ color: isFree ? 'var(--color-fresh)' : 'var(--color-foreground)' }}>
+-                          {isFree ? t('freeShipping') : formatPrice(method.price.amount, method.price.currency)}
++                          {isFree || !methodPrice ? t('freeShipping') : formatPrice(methodPrice.amount, methodPrice.currency)}
+                         </span>
+                       </button>
+                     );
+@@ -625,7 +888,11 @@ export default function CheckoutPage() {
+                 <div className="space-y-3" role="radiogroup" aria-label={t('paymentTitle')}>
+                   {paymentMethods.map((method) => {
+                     const isSelected = selectedPayment?.id === method.id;
+-                    const Icon = PAYMENT_ICONS[method.methodType?.toLowerCase() ?? ''] || PAYMENT_ICONS[method.provider?.toLowerCase() ?? ''] || CreditCard;
++                    const Icon =
++                      PAYMENT_ICONS[method.type?.toLowerCase() ?? ''] ||
++                      PAYMENT_ICONS[method.methodType?.toLowerCase() ?? ''] ||
++                      PAYMENT_ICONS[method.provider?.toLowerCase() ?? ''] ||
++                      CreditCard;
+                     return (
+                       <button
+                         key={method.id}
+@@ -707,6 +974,11 @@ export default function CheckoutPage() {
+                   <div className="mb-4 pb-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                     <p className="text-xs font-semibold mb-1" style={{ color: 'var(--color-muted-foreground)' }}>{t('paymentTitle')}</p>
+                     <p className="text-sm" style={{ color: 'var(--color-foreground)' }}>{selectedPayment.name}</p>
++                    {paymentStatusLabel && (
++                      <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
++                        {paymentStatusLabel}
++                      </p>
++                    )}
+                   </div>
+                 )}
+ 
+@@ -752,6 +1024,19 @@ export default function CheckoutPage() {
+                     {...register('note')}
+                   />
+                 </div>
++
++                {paymentGuidance && (
++                  <div
++                    className="rounded-lg p-3 mt-4 text-sm flex items-start gap-2"
++                    style={{
++                      backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)',
++                      color: 'var(--color-foreground)',
++                    }}
++                  >
++                    <ExternalLink className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
++                    <span>{paymentGuidance}</span>
++                  </div>
++                )}
+               </div>
+ 
+               <div className="flex justify-between">
+@@ -774,9 +1059,13 @@ export default function CheckoutPage() {
+                   {loading ? (
+                     <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                   ) : (
+-                    <ShieldCheck className="w-5 h-5" aria-hidden="true" />
++                    paymentSession?.actionUrl ? (
++                      <ExternalLink className="w-5 h-5" aria-hidden="true" />
++                    ) : (
++                      <ShieldCheck className="w-5 h-5" aria-hidden="true" />
++                    )
+                   )}
+-                  {loading ? t('processing') : t('placeOrder')}
++                  {loading ? t('processing') : placeOrderLabel}
+                 </button>
+               </div>
+             </section>
+diff --git a/src/lib/graphql/operations/grocery.ts b/src/lib/graphql/operations/grocery.ts
+index 48321f2..3d3fddc 100644
+--- a/src/lib/graphql/operations/grocery.ts
++++ b/src/lib/graphql/operations/grocery.ts
+@@ -335,83 +335,79 @@ export const WISHLIST_PRODUCT_FIELDS = `
+ // --- Checkout mutations ---
+ 
+ export const CHECKOUT_CREATE_MUTATION = `
+-  mutation CheckoutCreateFull($input: CheckoutCreateInput!) {
++  mutation CheckoutCreateFull($input: CheckoutCreateInputExtended!) {
+     checkoutCreateFull(input: $input) {
+       checkout {
+         id
+-        token
+-        email
+-        totalPrice { gross { amount currency } }
+-        availableShippingMethods {
+-          id name
+-          price { amount currency }
+-          minimumDeliveryDays maximumDeliveryDays
+-        }
+-        availablePaymentMethods {
+-          id name description provider methodType iconUrl
+-          fee { amount currency }
+-        }
+       }
+-      errors { field message code }
++      errors { field message }
+     }
+   }
+ `;
+ 
+ export const CHECKOUT_SHIPPING_ADDRESS_UPDATE = `
+-  mutation CheckoutShippingAddressUpdate($input: CheckoutShippingAddressUpdateInput!) {
+-    checkoutShippingAddressUpdate(input: $input) {
++  mutation CheckoutShippingAddressUpdate($checkoutId: ID!, $address: AddressInput!) {
++    checkoutShippingAddressUpdate(checkoutId: $checkoutId, shippingAddress: $address) {
+       checkout {
+         id
+-        shippingPrice { amount currency }
+-        totalPrice { gross { amount currency } }
+         availableShippingMethods {
+-          id name
+-          price { amount currency }
+-          minimumDeliveryDays maximumDeliveryDays
++          id
++          name
++          price { gross { amount currency } }
+         }
+       }
+-      errors { field message code }
++      errors { field message }
+     }
+   }
+ `;
+ 
+ export const CHECKOUT_SHIPPING_METHOD_UPDATE = `
+-  mutation CheckoutShippingMethodUpdate($input: CheckoutShippingMethodUpdateInput!) {
+-    checkoutShippingMethodUpdate(input: $input) {
++  mutation CheckoutShippingMethodUpdate($checkoutId: ID!, $methodId: ID!) {
++    checkoutShippingMethodUpdate(checkoutId: $checkoutId, shippingMethodId: $methodId) {
+       checkout {
+         id
+-        shippingPrice { amount currency }
++        shippingMethod { id name }
++        shippingPrice { gross { amount currency } }
+         totalPrice { gross { amount currency } }
+-        shippingMethod { id name price { amount currency } }
+       }
+-      errors { field message code }
++      errors { field message }
+     }
+   }
+ `;
+ 
+ export const CHECKOUT_PAYMENT_CREATE = `
+-  mutation CheckoutPaymentCreate($checkoutId: ID!, $input: PaymentInput!) {
+-    checkoutPaymentCreate(checkoutId: $checkoutId, input: $input) {
+-      payment { id gateway status clientSecret actionUrl }
++  mutation CheckoutPaymentCreate($input: PaymentInput!) {
++    checkoutPaymentCreate(input: $input) {
++      payment {
++        id
++        gateway
++        paymentUrl
++        total { amount currency }
++      }
+       errors { field message }
+     }
+   }
+ `;
+ 
+ export const CHECKOUT_COMPLETE_MUTATION = `
+-  mutation CheckoutComplete($input: CheckoutCompleteInput!) {
+-    checkoutComplete(input: $input) {
+-      order { id number status total { gross { amount currency } } createdAt }
+-      confirmationNeeded
+-      errors { field message code }
++  mutation CheckoutComplete($checkoutId: ID!) {
++    checkoutComplete(checkoutId: $checkoutId) {
++      order {
++        id
++        number
++        status
++        totalPrice { gross { amount currency } }
++        paymentUrl
++      }
++      errors { field message }
+     }
+   }
+ `;
+ 
+ export const CHECKOUT_NOTE_UPDATE = `
+-  mutation CheckoutNoteUpdate($input: CheckoutNoteUpdateInput!) {
+-    checkoutNoteUpdate(input: $input) {
+-      checkout { id }
++  mutation CheckoutNoteUpdate($checkoutId: ID!, $note: String!) {
++    checkoutNoteUpdate(checkoutId: $checkoutId, note: $note) {
++      checkout { id note }
+       errors { field message }
+     }
+   }
+@@ -425,7 +421,7 @@ export const CHECKOUT_PROMO_CODE_ADD = `
+         discount { amount currency }
+         totalPrice { gross { amount currency } }
+       }
+-      errors { field message code }
++      errors { field message }
+     }
+   }
+ `;
+@@ -453,10 +449,39 @@ export const AVAILABLE_SHIPPING_METHODS_QUERY = `
+ `;
+ 
+ export const AVAILABLE_PAYMENT_METHODS_QUERY = `
+-  query AvailablePaymentMethods($channel: String!) {
+-    availablePaymentMethods(channel: $channel) {
+-      id name description provider methodType iconUrl
+-      fee { amount currency }
++  query AvailablePaymentMethods($checkoutId: ID!) {
++    availablePaymentMethods(checkoutId: $checkoutId) {
++      id
++      name
++      type
++      currencies
++      config
++    }
++  }
++`;
++
++export const CUSTOMER_ORDERS_QUERY = `
++  query CustomerOrders($first: Int!, $after: String) {
++    orders(first: $first, after: $after) {
++      totalCount
++      pageInfo { hasNextPage endCursor }
++      edges {
++        node {
++          id
++          number
++          status
++          created
++          total {
++            gross { amount currency }
++          }
++          lines {
++            quantity
++            productName
++            totalPrice { gross { amount currency } }
++            thumbnail { url }
++          }
++        }
++      }
+     }
+   }
+ `;
+diff --git a/src/lib/utils.ts b/src/lib/utils.ts
+index ca88b5a..ea70e3d 100644
+--- a/src/lib/utils.ts
++++ b/src/lib/utils.ts
+@@ -18,6 +18,25 @@ export function formatWeight(grams: number): string {
+   return `${grams} g`;
+ }
+ 
++export function extractMoney(
++  value?:
++    | { amount: number; currency: string }
++    | { gross?: { amount: number; currency: string } | null }
++    | null
++): { amount: number; currency: string } | null {
++  if (!value) return null;
++
++  if ('amount' in value && typeof value.amount === 'number') {
++    return { amount: value.amount, currency: value.currency };
++  }
++
++  if ('gross' in value && value.gross) {
++    return extractMoney(value.gross);
++  }
++
++  return null;
++}
++
+ export function normalizeImageUrl(url?: string | null): string | null {
+   if (!url) return null;
+ 
+diff --git a/src/types/checkout.ts b/src/types/checkout.ts
+index 29d998e..444242c 100644
+--- a/src/types/checkout.ts
++++ b/src/types/checkout.ts
+@@ -8,8 +8,6 @@ export const checkoutSchema = z.object({
+   streetAddress1: z.string().min(1, 'required'),
+   city: z.string().min(1, 'required'),
+   postalCode: z.string().min(1, 'required'),
+-  shippingMethodId: z.string().min(1, 'required'),
+-  paymentMethodId: z.string().min(1, 'required'),
+   note: z.string().optional(),
+ });
+ 
+@@ -20,7 +18,14 @@ export type CheckoutStep = 'delivery' | 'shipping' | 'payment' | 'review';
+ export interface ShippingMethod {
+   id: string;
+   name: string;
+-  price: { amount: number; currency: string };
++  price: {
++    amount: number;
++    currency: string;
++    gross?: {
++      amount: number;
++      currency: string;
++    };
++  };
+   minimumDeliveryDays?: number;
+   maximumDeliveryDays?: number;
+ }
+@@ -28,9 +33,23 @@ export interface ShippingMethod {
+ export interface PaymentMethod {
+   id: string;
+   name: string;
++  type?: string;
++  currencies?: string[];
++  config?: unknown;
+   description?: string;
+   provider?: string;
+   methodType?: string;
+   iconUrl?: string;
+   fee?: { amount: number; currency: string };
+ }
++
++export interface PaymentSession {
++  id: string;
++  gateway?: string | null;
++  status?: string | null;
++  clientSecret?: string | null;
++  actionUrl?: string | null;
++  amount?: number | null;
++  currency?: string | null;
++  methodName?: string;
++}
+diff --git a/src/types/index.ts b/src/types/index.ts
+index 28e4421..0b8d5dc 100644
+--- a/src/types/index.ts
++++ b/src/types/index.ts
+@@ -168,6 +168,34 @@ export interface AuthSession {
+   status: AuthStatus;
+ }
+ 
++export interface CustomerOrderLine {
++  quantity: number;
++  productName?: string | null;
++  totalPrice?: {
++    gross: {
++      amount: number;
++      currency: string;
++    };
++  };
++  thumbnail?: {
++    url?: string | null;
++  } | null;
++}
++
++export interface CustomerOrder {
++  id: string;
++  number: string;
++  status: string;
++  created: string;
++  total: {
++    gross: {
++      amount: number;
++      currency: string;
++    };
++  };
++  lines: CustomerOrderLine[];
++}
++
+ export interface WishlistServerItem {
+   productId: string;
+   variantId: string;

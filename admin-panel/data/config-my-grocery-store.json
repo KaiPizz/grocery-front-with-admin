@@ -1,0 +1,411 @@
+{
+  "slug": "my-grocery-store",
+  "published": {
+    "branding": {
+      "logoUrl": "/uploads/1774437677529-kenmito.jpg",
+      "faviconUrl": "/uploads/1774439011879-kenmito.jpg",
+      "storeName": "Kemito",
+      "colors": {
+        "primary": "#16a34a",
+        "primaryHover": "#15803d",
+        "background": "#fafaf9",
+        "foreground": "#1c1917",
+        "accent": "#f0fdf4",
+        "accentForeground": "#14532d",
+        "muted": "#f5f5f4",
+        "mutedForeground": "#78716c",
+        "border": "#e7e5e4",
+        "card": "#ffffff",
+        "cardForeground": "#1c1917",
+        "destructive": "#dc2626",
+        "ring": "#16a34a"
+      }
+    },
+    "homepage": {
+      "hero": {
+        "enabled": false,
+        "headline": "Fresh Groceries, Delivered",
+        "subtitle": "Shop quality produce, pantry staples, and frozen favourites — all with full nutritional transparency.",
+        "ctaText": "Shop Products",
+        "ctaLink": "/products",
+        "backgroundImageUrl": null
+      },
+      "promoBanners": [
+        {
+          "id": "banner-1",
+          "headline": "Test",
+          "subtext": "Hand-selected chilled produce updated daily",
+          "ctaText": "Shop Chilled",
+          "ctaLink": "/products?zone=CHILLED",
+          "gradient": "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "banner-2",
+          "headline": "Weekly Deals",
+          "subtext": "Save big on your favourite everyday essentials",
+          "ctaText": "See Deals",
+          "ctaLink": "/products?sort=price_asc",
+          "gradient": "linear-gradient(135deg, var(--color-frozen), color-mix(in srgb, var(--color-frozen) 70%, #000))",
+          "imageUrl": null,
+          "enabled": false,
+          "order": 1
+        },
+        {
+          "id": "banner-3",
+          "headline": "Stock Your Freezer",
+          "subtext": "Premium frozen meals and ingredients at great prices",
+          "ctaText": "Shop Frozen",
+          "ctaLink": "/products?zone=FROZEN",
+          "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 2
+        }
+      ],
+      "sections": [
+        {
+          "id": "shopByZone",
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "deals",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "id": "freshPicks",
+          "enabled": true,
+          "order": 2
+        },
+        {
+          "id": "recipes",
+          "enabled": true,
+          "order": 3
+        }
+      ]
+    },
+    "layout": {
+      "header": {
+        "navItems": [
+          {
+            "label": "Home",
+            "href": "/",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "label": "Products",
+            "href": "/products",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "label": "Recipes",
+            "href": "/recipes",
+            "enabled": true,
+            "order": 2
+          }
+        ],
+        "showSearch": true,
+        "showWishlist": true,
+        "showLanguageSwitcher": true,
+        "showThemeToggle": true
+      },
+      "footer": {
+        "tagline": "Fresh groceries with full nutritional transparency, delivered to your door.",
+        "columns": [
+          {
+            "title": "Shop",
+            "links": [
+              {
+                "label": "Products",
+                "href": "/products"
+              },
+              {
+                "label": "Recipes",
+                "href": "/recipes"
+              }
+            ]
+          },
+          {
+            "title": "Info",
+            "links": [
+              {
+                "label": "About",
+                "href": "#"
+              },
+              {
+                "label": "Contact",
+                "href": "#"
+              },
+              {
+                "label": "Delivery",
+                "href": "#"
+              }
+            ]
+          },
+          {
+            "title": "Legal",
+            "links": [
+              {
+                "label": "Privacy",
+                "href": "/privacy"
+              },
+              {
+                "label": "Terms",
+                "href": "/terms"
+              }
+            ]
+          }
+        ],
+        "copyrightText": "© {year} Grocery Store. Powered by Zira AI."
+      },
+      "pricePosition": "below-image",
+      "bannerPosition": "below-hero"
+    },
+    "tracking": {
+      "facebookPixel": {
+        "enabled": false,
+        "pixelId": ""
+      },
+      "googleAnalytics": {
+        "enabled": false,
+        "measurementId": ""
+      },
+      "googleTagManager": {
+        "enabled": false,
+        "containerId": ""
+      },
+      "hotjar": {
+        "enabled": false,
+        "siteId": ""
+      }
+    },
+    "seo": {
+      "defaultTitle": "Grocery Store",
+      "defaultDescription": "Fresh groceries with full nutritional transparency",
+      "ogImageUrl": null,
+      "canonical": ""
+    },
+    "general": {
+      "phone": "",
+      "email": "",
+      "address": "",
+      "socialLinks": [],
+      "policyLinks": {
+        "privacy": "/privacy",
+        "terms": "/terms",
+        "about": "#"
+      }
+    }
+  },
+  "draft": {
+    "branding": {
+      "logoUrl": "/uploads/1774437677529-kenmito.jpg",
+      "faviconUrl": "/uploads/1774439011879-kenmito.jpg",
+      "storeName": "Kenmito",
+      "colors": {
+        "primary": "#16a34a",
+        "primaryHover": "#15803d",
+        "background": "#fafaf9",
+        "foreground": "#1c1917",
+        "accent": "#f0fdf4",
+        "accentForeground": "#14532d",
+        "muted": "#f5f5f4",
+        "mutedForeground": "#78716c",
+        "border": "#e7e5e4",
+        "card": "#ffffff",
+        "cardForeground": "#1c1917",
+        "destructive": "#dc2626",
+        "ring": "#16a34a"
+      }
+    },
+    "homepage": {
+      "hero": {
+        "enabled": false,
+        "headline": "Fresh Groceries, Delivered",
+        "subtitle": "Shop quality produce, pantry staples, and frozen favourites — all with full nutritional transparency.",
+        "ctaText": "Shop Products",
+        "ctaLink": "/products",
+        "backgroundImageUrl": null
+      },
+      "promoBanners": [
+        {
+          "id": "banner-1",
+          "headline": "Test",
+          "subtext": "Hand-selected chilled produce updated daily",
+          "ctaText": "Shop Chilled",
+          "ctaLink": "/products?zone=CHILLED",
+          "gradient": "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "banner-2",
+          "headline": "Weekly Deals",
+          "subtext": "Save big on your favourite everyday essentials",
+          "ctaText": "See Deals",
+          "ctaLink": "/products?sort=price_asc",
+          "gradient": "linear-gradient(135deg, var(--color-frozen), color-mix(in srgb, var(--color-frozen) 70%, #000))",
+          "imageUrl": null,
+          "enabled": false,
+          "order": 1
+        },
+        {
+          "id": "banner-3",
+          "headline": "Stock Your Freezer",
+          "subtext": "Premium frozen meals and ingredients at great prices",
+          "ctaText": "Shop Frozen",
+          "ctaLink": "/products?zone=FROZEN",
+          "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 2
+        }
+      ],
+      "sections": [
+        {
+          "id": "shopByZone",
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "deals",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "id": "freshPicks",
+          "enabled": true,
+          "order": 2
+        },
+        {
+          "id": "recipes",
+          "enabled": true,
+          "order": 3
+        }
+      ]
+    },
+    "layout": {
+      "header": {
+        "navItems": [
+          {
+            "label": "Home",
+            "href": "/",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "label": "Products",
+            "href": "/products",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "label": "Recipes",
+            "href": "/recipes",
+            "enabled": true,
+            "order": 2
+          }
+        ],
+        "showSearch": true,
+        "showWishlist": true,
+        "showLanguageSwitcher": true,
+        "showThemeToggle": true
+      },
+      "footer": {
+        "tagline": "Fresh groceries with full nutritional transparency, delivered to your door.",
+        "columns": [
+          {
+            "title": "Shop",
+            "links": [
+              {
+                "label": "Products",
+                "href": "/products"
+              },
+              {
+                "label": "Recipes",
+                "href": "/recipes"
+              }
+            ]
+          },
+          {
+            "title": "Info",
+            "links": [
+              {
+                "label": "About",
+                "href": "#"
+              },
+              {
+                "label": "Contact",
+                "href": "#"
+              },
+              {
+                "label": "Delivery",
+                "href": "#"
+              }
+            ]
+          },
+          {
+            "title": "Legal",
+            "links": [
+              {
+                "label": "Privacy",
+                "href": "/privacy"
+              },
+              {
+                "label": "Terms",
+                "href": "/terms"
+              }
+            ]
+          }
+        ],
+        "copyrightText": "© {year} Grocery Store. Powered by Zira AI."
+      },
+      "pricePosition": "below-image",
+      "bannerPosition": "below-hero"
+    },
+    "tracking": {
+      "facebookPixel": {
+        "enabled": false,
+        "pixelId": ""
+      },
+      "googleAnalytics": {
+        "enabled": false,
+        "measurementId": ""
+      },
+      "googleTagManager": {
+        "enabled": false,
+        "containerId": ""
+      },
+      "hotjar": {
+        "enabled": false,
+        "siteId": ""
+      }
+    },
+    "seo": {
+      "defaultTitle": "Grocery Store",
+      "defaultDescription": "Fresh groceries with full nutritional transparency",
+      "ogImageUrl": null,
+      "canonical": ""
+    },
+    "general": {
+      "phone": "",
+      "email": "",
+      "address": "",
+      "socialLinks": [],
+      "policyLinks": {
+        "privacy": "/privacy",
+        "terms": "/terms",
+        "about": "#"
+      }
+    }
+  },
+  "version": 45,
+  "updatedAt": "2026-03-25T11:44:19.831Z"
+}
