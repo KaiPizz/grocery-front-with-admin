@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  admin-panel:
+    build: .
+    ports:
+      - '4100:4100'
+    environment:
+      - ADMIN_API_KEY=${ADMIN_API_KEY:-change-me}
+      - NEXT_PUBLIC_ADMIN_API_KEY=${NEXT_PUBLIC_ADMIN_API_KEY:-change-me}
+      - NEXT_PUBLIC_SALON_SLUG=${NEXT_PUBLIC_SALON_SLUG:-my-grocery-store}
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+    volumes:
+      - admin-data:/app/data
+      - admin-uploads:/app/public/uploads
+
+volumes:
+  admin-data:
+  admin-uploads:

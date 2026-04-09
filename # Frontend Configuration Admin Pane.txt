@@ -1,0 +1,430 @@
+# Frontend Configuration Admin Panel – Project Scope
+
+## 1. Project Overview
+
+Build a **standalone admin panel** to manage **frontend configuration and layout settings** for the web application.
+
+The system must be **independent from Zyra**.
+Zyra will only be used as a **backend API provider** for business data.
+
+The purpose of this project is to:
+
+* Reduce hard-coded frontend values
+* Allow non-developers to update UI content
+* Speed up iteration on marketing and layout changes
+* Manage analytics / tracking integrations
+* Avoid increasing complexity inside Zyra
+
+The admin panel will act as a **configuration CMS for the frontend**.
+
+---
+
+# 2. Architecture
+
+### 2.1 System Components
+
+**1. Frontend Website**
+
+* Public website
+* Reads configuration from the frontend config API
+
+**2. Frontend Admin Panel**
+
+* Internal admin interface
+* Used to manage configuration
+
+**3. Config API / Service**
+
+* Stores configuration
+* Serves data to frontend
+
+**4. Zyra**
+
+* Used only for product / business APIs
+
+---
+
+### 2.2 High Level Data Flow
+
+```
+Admin Panel
+    ↓
+Config API / Database
+    ↓
+Frontend Website
+    ↓
+Zyra API (products, etc.)
+```
+
+The **frontend should load UI configuration dynamically** from the Config API.
+
+---
+
+# 3. Core Admin Panel Modules
+
+## 3.1 Authentication & Access
+
+Admin authentication system.
+
+Features:
+
+* Admin login
+* Role-based access (optional for MVP)
+* Session/token authentication
+* Basic security
+
+Possible roles:
+
+* Admin
+* Editor (optional)
+
+---
+
+# 3.2 Site Settings / Branding
+
+Global frontend branding configuration.
+
+Fields:
+
+* Site name
+* Logo upload
+* Favicon upload
+* Brand colors
+* Default font (optional)
+
+Example output:
+
+```
+{
+  logo_url: "",
+  favicon_url: "",
+  primary_color: "",
+  site_name: ""
+}
+```
+
+---
+
+# 3.3 Homepage / Landing Page Configuration
+
+Ability to control homepage sections without code changes.
+
+Each section should support:
+
+* enable / disable
+* ordering
+* content fields
+
+Example sections:
+
+### Hero Section
+
+Fields:
+
+* title
+* subtitle
+* background image
+* CTA button
+* CTA link
+
+### Banner Section
+
+Fields:
+
+* banner image
+* banner link
+* banner text
+
+### Promo Blocks
+
+Fields:
+
+* image
+* title
+* description
+* link
+
+---
+
+# 3.4 Banner Management
+
+Marketing banners configurable through admin.
+
+Fields:
+
+* banner name
+* image
+* target URL
+* position
+* active / inactive
+* start date
+* end date
+
+Positions examples:
+
+* homepage hero
+* homepage middle
+* product page
+* global top banner
+
+---
+
+# 3.5 Price Display Configuration
+
+Control how prices appear on the frontend.
+
+Fields:
+
+* price position (e.g., top / bottom / overlay)
+* show discount badge
+* show original price
+* price label text
+
+Example:
+
+```
+{
+  price_position: "top",
+  show_discount: true,
+  show_original_price: true
+}
+```
+
+Purpose: avoid hardcoding price layout logic.
+
+---
+
+# 3.6 Layout Configuration
+
+Control visibility and order of UI blocks.
+
+Features:
+
+* enable / disable sections
+* reorder sections
+* configure layout variations
+
+Example:
+
+```
+homepage_layout = [
+  hero,
+  banner_1,
+  product_list,
+  promo_block,
+  newsletter
+]
+```
+
+---
+
+# 3.7 Tracking & Analytics Integrations
+
+Admin interface to manage tracking tools.
+
+Supported integrations:
+
+* Facebook Pixel
+* Google Analytics / GA4
+* Google Tag Manager (optional)
+* Hotjar
+
+Fields:
+
+```
+facebook_pixel_id
+google_analytics_id
+gtm_id
+hotjar_id
+```
+
+Ability to:
+
+* enable / disable each service
+* inject script automatically into frontend
+
+This avoids modifying frontend code when marketing tools change.
+
+---
+
+# 3.8 SEO Configuration
+
+Basic SEO controls.
+
+Fields:
+
+* default meta title
+* default meta description
+* OpenGraph image
+* canonical URL (optional)
+
+Optional (future):
+
+* per-page SEO
+
+---
+
+# 3.9 Header / Footer Configuration
+
+Editable UI content.
+
+Header:
+
+* navigation items
+* CTA button
+* logo
+
+Footer:
+
+* company info
+* social links
+* policy links
+* contact info
+
+---
+
+# 4. Media Management
+
+Basic media library.
+
+Features:
+
+* image upload
+* image preview
+* image selection for banners / sections
+
+Supported formats:
+
+* PNG
+* JPG
+* SVG
+* WebP
+
+---
+
+# 5. Configuration API
+
+API used by frontend to retrieve configuration.
+
+Example endpoints:
+
+```
+GET /config/site
+GET /config/homepage
+GET /config/layout
+GET /config/tracking
+GET /config/seo
+```
+
+Frontend should load configuration during page load.
+
+---
+
+# 6. Admin Dashboard
+
+Simple overview page.
+
+Display:
+
+* site status
+* active banners
+* tracking status
+* last configuration changes
+
+Purpose: quick overview for administrators.
+
+---
+
+# 7. Technical Requirements
+
+### Admin Panel
+
+Recommended stack:
+
+* React / Next.js
+* Vue / Nuxt
+* Any modern admin framework
+
+### Backend
+
+Options:
+
+* Node.js
+* NestJS
+* Laravel
+* Django
+
+Database:
+
+* PostgreSQL
+* MySQL
+
+---
+
+# 8. Non Functional Requirements
+
+### Performance
+
+* Config endpoints must be cached
+* Frontend should load config within 100–200 ms
+
+### Security
+
+* Admin routes protected
+* Authentication required
+
+### Maintainability
+
+* Modular configuration structure
+* Avoid hard-coded UI values
+
+---
+
+# 9. MVP Scope (Phase 1)
+
+Must include:
+
+* Admin authentication
+* Branding settings
+* Homepage sections
+* Banner management
+* Price display configuration
+* Tracking integrations
+* Header / footer editor
+* Config API
+* Media upload
+
+---
+
+# 10. Phase 2 (Optional)
+
+Future improvements:
+
+* A/B testing
+* Page builder
+* Drag-and-drop layout editor
+* Multi-language support
+* Version history
+* Feature flags
+
+---
+
+# The Brutal Reality (Mentor Note)
+
+Your idea is **directionally correct**, but there is a hidden risk.
+
+What you are building is **basically a mini CMS**.
+
+And teams often screw this up by:
+
+1. Making **too many configurable things**
+2. Creating **an overly complex schema**
+3. Turning the admin panel into a **Frankenstein marketing tool**
+
+If you let marketing configure **everything**, the frontend becomes unstable.
+
+The correct strategy is:
+
+**Only make configurable what will change often.**
+
+Everything else stays in code.
