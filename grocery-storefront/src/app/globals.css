@@ -108,14 +108,26 @@ body {
   font-family: var(--font-body);
   min-height: 100vh;
   background-color: var(--color-background);
-  background-image: var(--page-background);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
   color: var(--color-foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  position: relative;
+}
+
+/* GPU-composited fixed gradient — avoids the repaint-on-scroll caused by
+   background-attachment: fixed. The pseudo-element sits on its own
+   compositing layer, so scrolling the page never triggers a repaint. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--page-background);
+  background-repeat: no-repeat;
+  background-size: cover;
+  will-change: transform;          /* promote to own GPU layer */
+  pointer-events: none;
 }
 
 /* === Focus ring — WCAG 2.1 AA compliant === */

@@ -2,3 +2,12 @@
 node_modules/
 .next/
 .next-stale/
+
+# build info
+tsconfig.tsbuildinfo
+
+# dev logs
+dev-server.log
+
+# codex rollback backups
+.codex/tmp/

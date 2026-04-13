@@ -7,13 +7,22 @@ export function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let rafId = 0;
+
     function handleScroll() {
-      setIsVisible(window.scrollY > 360);
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        setIsVisible(window.scrollY > 360);
+      });
     }
 
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   function scrollToTop() {

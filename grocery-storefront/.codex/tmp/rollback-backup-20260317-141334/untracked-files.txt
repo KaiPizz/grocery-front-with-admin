@@ -1,5 +1,0 @@
-docs/frontend-configuration-system-spike.md
-docs/oms-phase-1-contract-review.md
-src/components/account/OrdersPanel.tsx
-src/lib/checkout.ts
-

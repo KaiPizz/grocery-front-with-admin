@@ -1,8 +1,0 @@
-src/app/[locale]/(shop)/account/page.tsx
-src/app/[locale]/(shop)/checkout/confirmation/page.tsx
-src/app/[locale]/(shop)/checkout/page.tsx
-src/lib/graphql/operations/grocery.ts
-src/lib/utils.ts
-src/types/checkout.ts
-src/types/index.ts
-

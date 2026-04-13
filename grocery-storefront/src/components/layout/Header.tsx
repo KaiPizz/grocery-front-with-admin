@@ -76,6 +76,8 @@ export function Header() {
   useEffect(() => {
     if (!isMounted) return;
 
+    let rafId = 0;
+
     const resetIdleCycle = () => {
       setMobileHeaderVisible(true);
 
@@ -95,34 +97,41 @@ export function Header() {
     };
 
     const handleWindowScroll = () => {
-      if (window.innerWidth >= 768) return;
+      if (rafId) return;                       // throttle: one update per frame
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
 
-      const currentScrollY = window.scrollY;
-      const previousScrollY = lastScrollYRef.current;
-      const delta = currentScrollY - previousScrollY;
+        if (window.innerWidth >= 768) return;
 
-      lastScrollYRef.current = currentScrollY;
-      resetIdleCycle();
+        const currentScrollY = window.scrollY;
+        const previousScrollY = lastScrollYRef.current;
+        const delta = currentScrollY - previousScrollY;
 
-      if (menuOpen || searchOpen) {
-        setMobileHeaderVisible(true);
-        return;
-      }
+        lastScrollYRef.current = currentScrollY;
 
-      if (currentScrollY <= 24) {
-        setMobileHeaderVisible(true);
-        return;
-      }
+        if (menuOpen || searchOpen) {
+          setMobileHeaderVisible(true);
+          return;
+        }
 
-      if (Math.abs(delta) < 6) {
-        return;
-      }
+        if (currentScrollY <= 24) {
+          setMobileHeaderVisible(true);
+          resetIdleCycle();
+          return;
+        }
 
-      if (delta > 0) {
-        setMobileHeaderVisible(false);
-      } else {
-        setMobileHeaderVisible(true);
-      }
+        if (Math.abs(delta) < 6) {
+          return;                               // skip tiny scrolls entirely
+        }
+
+        resetIdleCycle();                       // only reset when meaningful scroll
+
+        if (delta > 0) {
+          setMobileHeaderVisible(false);
+        } else {
+          setMobileHeaderVisible(true);
+        }
+      });
     };
 
     const handleInteraction = () => {
@@ -138,6 +147,7 @@ export function Header() {
     window.addEventListener('keydown', handleInteraction);
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleWindowScroll);
       window.removeEventListener('pointerdown', handleInteraction);
       window.removeEventListener('keydown', handleInteraction);
