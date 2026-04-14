@@ -13,28 +13,44 @@ import {
   AlertCircle,
   Check,
 } from 'lucide-react';
-import {
-  CUSTOMER_ADDRESSES_QUERY,
-  CUSTOMER_ADDRESS_CREATE_MUTATION,
-  CUSTOMER_ADDRESS_UPDATE_MUTATION,
-  CUSTOMER_ADDRESS_DELETE_MUTATION,
-  CUSTOMER_ADDRESS_SET_DEFAULT_MUTATION,
-} from '@/lib/graphql/operations/grocery';
-import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
+import { getAuthToken } from '@/lib/auth';
 import type { CustomerAddress, CustomerAddressInput } from '@/types';
 
-/* ---------- response types ---------- */
+/* ---------- local address API helper ---------- */
 
-interface AddressesResponse {
-  customerAddresses: CustomerAddress[] | null;
+/**
+ * Calls the local /api/addresses endpoint.
+ * This works around a backend bug where the GraphQL mutations
+ * (customerAddressCreate / customerAddressUpdate) reject all input fields.
+ */
+async function addressApi<T = unknown>(
+  method: 'GET' | 'POST',
+  body?: Record<string, unknown>,
+): Promise<T> {
+  const token = getAuthToken();
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const res = await fetch('/api/addresses', {
+    method,
+    headers,
+    cache: 'no-store',
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+
+  return res.json();
+}
+
+interface AddressListResponse {
+  addresses: CustomerAddress[];
+  error?: string;
 }
 
 interface AddressMutationResponse {
-  [key: string]: {
-    success: boolean;
-    address?: CustomerAddress | null;
-    errors?: string[] | null;
-  } | null;
+  success: boolean;
+  address?: CustomerAddress | null;
+  errors?: string[] | null;
+  error?: string;
 }
 
 /* ---------- empty form state ---------- */
@@ -79,13 +95,12 @@ export function AddressesPanel() {
     setLoading(true);
     setError(null);
     try {
-      const res = await graphqlRequest<AddressesResponse>(CUSTOMER_ADDRESSES_QUERY);
-      const msg = getGraphqlErrorMessage(res.errors);
-      if (msg) {
-        setError(msg);
+      const res = await addressApi<AddressListResponse>('GET');
+      if (res.error) {
+        setError(res.error);
         return;
       }
-      setAddresses(res.data?.customerAddresses ?? []);
+      setAddresses(res.addresses ?? []);
     } catch {
       setError('Failed to load addresses.');
     } finally {
@@ -144,22 +159,14 @@ export function AddressesPanel() {
 
     try {
       const isEdit = Boolean(editingId);
-      const mutation = isEdit ? CUSTOMER_ADDRESS_UPDATE_MUTATION : CUSTOMER_ADDRESS_CREATE_MUTATION;
-      const variables = isEdit ? { id: editingId, input } : { input };
+      const res = await addressApi<AddressMutationResponse>('POST', isEdit
+        ? { action: 'update', id: editingId, input }
+        : { action: 'create', input },
+      );
 
-      const res = await graphqlRequest<AddressMutationResponse>(mutation, variables);
-      const topError = getGraphqlErrorMessage(res.errors);
-      if (topError) {
-        setFormError(topError);
-        return;
-      }
-
-      const payloadKey = isEdit ? 'customerAddressUpdate' : 'customerAddressCreate';
-      const payload = res.data?.[payloadKey];
-
-      if (!payload?.success) {
-        const errArr = payload?.errors;
-        setFormError(Array.isArray(errArr) && errArr.length > 0 ? errArr[0] : tAccount('addressSaveFailed'));
+      if (res.error || !res.success) {
+        const errArr = res.errors;
+        setFormError(res.error ?? (Array.isArray(errArr) && errArr.length > 0 ? errArr[0] : tAccount('addressSaveFailed')));
         return;
       }
 
@@ -177,12 +184,10 @@ export function AddressesPanel() {
   async function handleDelete(id: string) {
     setActionLoading(id);
     try {
-      const res = await graphqlRequest<AddressMutationResponse>(CUSTOMER_ADDRESS_DELETE_MUTATION, { id });
-      const topError = getGraphqlErrorMessage(res.errors);
-      const payload = res.data?.customerAddressDelete;
+      const res = await addressApi<AddressMutationResponse>('POST', { action: 'delete', id });
 
-      if (topError || !payload?.success) {
-        setToast({ type: 'error', message: topError ?? tAccount('addressDeleteFailed') });
+      if (!res.success) {
+        setToast({ type: 'error', message: res.errors?.[0] ?? tAccount('addressDeleteFailed') });
         return;
       }
 
@@ -199,12 +204,10 @@ export function AddressesPanel() {
   async function handleSetDefault(id: string) {
     setActionLoading(id);
     try {
-      const res = await graphqlRequest<AddressMutationResponse>(CUSTOMER_ADDRESS_SET_DEFAULT_MUTATION, { id });
-      const topError = getGraphqlErrorMessage(res.errors);
-      const payload = res.data?.customerAddressSetDefault;
+      const res = await addressApi<AddressMutationResponse>('POST', { action: 'setDefault', id });
 
-      if (topError || !payload?.success) {
-        setToast({ type: 'error', message: topError ?? tAccount('addressDefaultFailed') });
+      if (!res.success) {
+        setToast({ type: 'error', message: res.errors?.[0] ?? tAccount('addressDefaultFailed') });
         return;
       }
 

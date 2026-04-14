@@ -10,6 +10,7 @@ import {
   ChevronRight,
   CreditCard,
   Loader2,
+  MapPin,
   RefreshCw,
   ShieldCheck,
   ShoppingCart,
@@ -29,12 +30,14 @@ import {
   CHECKOUT_SHIPPING_ADDRESS_UPDATE,
   CHECKOUT_SHIPPING_METHOD_UPDATE,
 } from '@/lib/graphql/operations/grocery';
+import { getAuthToken } from '@/lib/auth';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
 import { formatPrice } from '@/lib/utils';
 import { useChannel } from '@/hooks/use-channel';
 import { useHydrated } from '@/hooks/use-hydrated';
 import { useCartStore } from '@/stores/cart-store';
-import type { CartDeliveryOption } from '@/types';
+import { useAuthStore } from '@/stores/auth-store';
+import type { CartDeliveryOption, CustomerAddress } from '@/types';
 import type { CheckoutStep, PaymentMethod } from '@/types/checkout';
 
 interface CheckoutMutationError {
@@ -292,6 +295,10 @@ export default function CheckoutPage() {
   const [busy, setBusy] = useState(false);
   const [errorBanner, setErrorBanner] = useState<string | null>(null);
   const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
+  const authSession = useAuthStore((s) => s.session);
+  const isAuthenticated = authSession.status === 'authenticated';
+  const authEmail = authSession.user?.email ?? '';
   const uiText = useMemo(
     () => ({
       paymentReturned:
@@ -347,15 +354,35 @@ export default function CheckoutPage() {
     return true;
   }, [channel, form.country]);
 
+  /* ── Fetch saved addresses for authenticated users ── */
+  useEffect(() => {
+    if (!isHydrated || !isAuthenticated) return;
+
+    const token = getAuthToken();
+    if (!token) return;
+
+    fetch('/api/addresses', {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    })
+      .then((res) => res.json())
+      .then((data: { addresses?: CustomerAddress[] }) => {
+        if (data.addresses && data.addresses.length > 0) {
+          setSavedAddresses(data.addresses);
+        }
+      })
+      .catch(() => { /* ignore – not critical */ });
+  }, [isHydrated, isAuthenticated]);
+
   useEffect(() => {
     setForm((current) => ({
       ...current,
-      email: current.email || sessionEmail,
+      email: current.email || (isAuthenticated ? authEmail : '') || sessionEmail,
       phone: current.phone || buyerIdentity?.phone || '',
       country: current.country || buyerIdentity?.countryCode || 'PL',
       note: current.note || note || '',
     }));
-  }, [buyerIdentity?.countryCode, buyerIdentity?.phone, note, sessionEmail]);
+  }, [buyerIdentity?.countryCode, buyerIdentity?.phone, note, sessionEmail, isAuthenticated, authEmail]);
 
   useEffect(() => {
     if (!selectedDeliveryOption) {
@@ -562,38 +589,46 @@ export default function CheckoutPage() {
     });
   }
 
-  function validateDeliveryStep() {
+  function validateDeliveryStep(formOverride?: DeliveryFormState) {
+    const f = formOverride ?? form;
     const errors: FieldErrors = {};
 
-    if (!form.firstName.trim()) errors.firstName = t('required');
-    if (!form.lastName.trim()) errors.lastName = t('required');
-    if (!form.email.trim()) {
+    if (!f.firstName.trim()) errors.firstName = t('required');
+    if (!f.lastName.trim()) errors.lastName = t('required');
+
+    /* Authenticated users don't need to type their email — we already have it */
+    const effectiveEmail = isAuthenticated ? authEmail : f.email.trim();
+    if (!effectiveEmail) {
       errors.email = t('required');
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail)) {
       errors.email = t('invalidEmail');
     }
-    if (!form.streetAddress1.trim()) errors.streetAddress1 = t('required');
-    if (!form.city.trim()) errors.city = t('required');
-    if (!form.postalCode.trim()) errors.postalCode = t('required');
-    if (!form.country.trim()) errors.country = t('required');
+
+    if (!f.streetAddress1.trim()) errors.streetAddress1 = t('required');
+    if (!f.city.trim()) errors.city = t('required');
+    if (!f.postalCode.trim()) errors.postalCode = t('required');
+    if (!f.country.trim()) errors.country = t('required');
 
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   }
 
-  async function handleDeliveryContinue() {
-    if (!validateDeliveryStep()) {
+  async function handleDeliveryContinue(formOverride?: DeliveryFormState) {
+    if (!validateDeliveryStep(formOverride)) {
       return;
     }
+
+    const f = formOverride ?? form;
+    const effectiveEmail = isAuthenticated ? authEmail : f.email.trim();
 
     setBusy(true);
     setErrorBanner(null);
 
     try {
       const buyerUpdated = await updateBuyerIdentity({
-        email: form.email.trim(),
-        phone: form.phone.trim() || null,
-        countryCode: normalizeCountryCode(form.country),
+        email: effectiveEmail,
+        phone: f.phone.trim() || null,
+        countryCode: normalizeCountryCode(f.country),
       });
 
       if (!buyerUpdated) {
@@ -603,8 +638,8 @@ export default function CheckoutPage() {
         return;
       }
 
-      if (form.note !== note) {
-        await updateNote(form.note);
+      if (f.note !== note) {
+        await updateNote(f.note);
       }
 
       const options = await fetchDeliveryOptions();
@@ -621,6 +656,31 @@ export default function CheckoutPage() {
     } finally {
       setBusy(false);
     }
+  }
+
+  /** Fill the form from a saved address and immediately advance to shipping */
+  function handleSavedAddressSelect(addr: CustomerAddress) {
+    const parts = (addr.fullName ?? '').trim().split(/\s+/);
+    const lastName = parts.length > 1 ? parts[parts.length - 1] : '';
+    const firstName = parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0] ?? '';
+
+    const nextForm: DeliveryFormState = {
+      ...form,
+      firstName,
+      lastName,
+      email: isAuthenticated ? authEmail : form.email,
+      phone: addr.phone ?? form.phone,
+      streetAddress1: addr.street,
+      city: addr.city,
+      postalCode: addr.postalCode,
+      country: addr.country,
+    };
+
+    setForm(nextForm);
+    setFieldErrors({});
+
+    /* Pass the form snapshot directly so we don't depend on React state */
+    void handleDeliveryContinue(nextForm);
   }
 
   async function handleDeliverySelection(option: CartDeliveryOption) {
@@ -1004,11 +1064,84 @@ export default function CheckoutPage() {
                 : undefined
             }
           >
+              {/* ── Saved address selector ── */}
+              {savedAddresses.length > 0 && (
+                <div className="mb-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] mb-2.5" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {locale === 'pl' ? 'Użyj zapisanego adresu' : 'Use a saved address'}
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {[...savedAddresses]
+                      .sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0))
+                      .map((addr) => {
+                      const isDefault = addr.isDefault;
+                      return (
+                        <button
+                          key={addr.id}
+                          type="button"
+                          disabled={busy}
+                          onClick={() => handleSavedAddressSelect(addr)}
+                          className="w-full rounded-xl border-2 p-3.5 text-left transition-all duration-fast disabled:opacity-60"
+                          style={{
+                            borderColor: isDefault ? 'var(--color-primary)' : 'var(--color-border)',
+                            backgroundColor: isDefault
+                              ? 'color-mix(in srgb, var(--color-primary) 6%, transparent)'
+                              : 'transparent',
+                          }}
+                        >
+                          <span className="flex items-center gap-2 mb-1">
+                            <MapPin
+                              className="w-3.5 h-3.5 shrink-0"
+                              style={{ color: isDefault ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }}
+                              aria-hidden="true"
+                            />
+                            {addr.label && (
+                              <span
+                                className="text-[10px] font-bold uppercase tracking-wider"
+                                style={{ color: isDefault ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }}
+                              >
+                                {addr.label}
+                              </span>
+                            )}
+                            {isDefault && (
+                              <span
+                                className="ml-auto text-[9px] font-bold uppercase tracking-widest rounded-full px-2 py-0.5"
+                                style={{
+                                  backgroundColor: 'var(--color-primary)',
+                                  color: 'white',
+                                }}
+                              >
+                                {locale === 'pl' ? 'Domyślny' : 'Default'}
+                              </span>
+                            )}
+                          </span>
+                          <span className="block text-xs font-semibold truncate mt-0.5" style={{ color: 'var(--color-foreground)' }}>
+                            {addr.fullName}
+                          </span>
+                          <span className="block text-xs truncate mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>
+                            {addr.street}, {addr.postalCode} {addr.city}
+                          </span>
+                          {addr.phone && (
+                            <span className="block text-[11px] mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>
+                              {addr.phone}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="border-b mt-4 mb-1" style={{ borderColor: 'var(--color-border)' }} />
+                  <p className="text-[11px] mt-2 mb-1" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {locale === 'pl' ? 'Lub wypełnij ręcznie poniżej:' : 'Or fill in manually below:'}
+                  </p>
+                </div>
+              )}
+
               <div className="grid gap-4 sm:grid-cols-2">
                 {([
                   { key: 'firstName',      label: t('firstName'),   autoComplete: 'given-name',            type: 'text',  inputMode: 'text'    as const },
                   { key: 'lastName',       label: t('lastName'),    autoComplete: 'family-name',           type: 'text',  inputMode: 'text'    as const },
-                  { key: 'email',          label: t('email'),       autoComplete: 'email',                 type: 'email', inputMode: 'email'   as const },
+                  ...(!isAuthenticated ? [{ key: 'email' as const, label: t('email'), autoComplete: 'email', type: 'email', inputMode: 'email' as const }] : []),
                   { key: 'phone',          label: t('phone'),       autoComplete: 'tel',                   type: 'tel',   inputMode: 'tel'     as const },
                   { key: 'streetAddress1', label: t('address'),     autoComplete: 'street-address',        type: 'text',  inputMode: 'text'    as const },
                   { key: 'city',           label: t('city'),        autoComplete: 'address-level2',        type: 'text',  inputMode: 'text'    as const },

@@ -11,3 +11,6 @@ dev-server.log
 
 # codex rollback backups
 .codex/tmp/
+
+# local address storage (workaround for backend bug)
+data/addresses.json
