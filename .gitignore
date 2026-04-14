@@ -12,8 +12,3 @@ Thumbs.db
 # Google Drive sync artifacts
 .tmp.driveupload/
 .vscode/
-
-# Claude Code local configuration (skills, agents, rules, commands, frameworks)
-# These are machine-local and should not be committed
-.claude/
-CLAUDE.md
