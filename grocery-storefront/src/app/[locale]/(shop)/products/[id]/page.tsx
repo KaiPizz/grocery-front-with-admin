@@ -296,7 +296,7 @@ export default function ProductDetailPage() {
             <button
               type="button"
               onClick={handleWishlistToggle}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-all duration-fast hover:scale-[1.02] active:scale-[0.98] sm:h-10 sm:w-10"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-all duration-fast hover:scale-[1.02] active:scale-[0.98] sm:h-10 sm:w-10"
               style={{
                 borderColor: isWishlisted ? 'var(--color-primary)' : 'var(--color-border)',
                 backgroundColor: 'var(--color-card)',
@@ -311,7 +311,7 @@ export default function ProductDetailPage() {
               type="button"
               onClick={handleAddToCart}
               disabled={!inStock}
-              className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-white transition-all duration-fast disabled:opacity-50 active:scale-[0.98] hover:brightness-90 hover:shadow-md sm:h-10 sm:gap-2 sm:px-4 sm:text-base"
+              className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-white transition-all duration-fast disabled:opacity-50 active:scale-[0.98] hover:brightness-90 hover:shadow-md sm:h-10 sm:gap-2 sm:px-4 sm:text-base"
               style={{
                 backgroundColor: justAdded ? 'var(--color-fresh)' : 'var(--color-primary)',
               }}

@@ -148,7 +148,7 @@ export function MobileProductCard({ product, imagePriority = false, testId }: Mo
               type="button"
               onClick={handleAddToCart}
               disabled={!inStock}
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-fast disabled:opacity-40 active:scale-[0.98]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast disabled:opacity-40 active:scale-[0.98]"
               style={{
                 backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-muted)',
                 borderColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-border)',
@@ -169,7 +169,7 @@ export function MobileProductCard({ product, imagePriority = false, testId }: Mo
             <button
               type="button"
               onClick={handleWishlistToggle}
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98]"
               style={{
                 backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, transparent)',
                 borderColor: isWishlisted ? 'var(--color-primary)' : 'var(--color-border)',
