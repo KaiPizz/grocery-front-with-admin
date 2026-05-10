@@ -1035,7 +1035,16 @@ export default function CheckoutPage() {
         {t('title')}
       </h1>
 
-      <CheckoutProgressBar currentStep={step} completedSteps={completedSteps} />
+      <div
+        className="sticky z-30 -mx-4 px-4 py-2 backdrop-blur md:static md:mx-0 md:px-0 md:py-0 md:backdrop-blur-none"
+        style={{
+          top: 'var(--header-height)',
+          backgroundColor: 'color-mix(in srgb, var(--color-background) 92%, transparent)',
+        }}
+        data-testid="checkout-sticky-progress"
+      >
+        <CheckoutProgressBar currentStep={step} completedSteps={completedSteps} />
+      </div>
 
       {(errorBanner || cartError) && (
         <div
