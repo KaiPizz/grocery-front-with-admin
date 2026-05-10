@@ -9,6 +9,7 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import { useMobileChromeStore } from '@/stores/mobile-chrome-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
 import { MiniCart } from './MiniCart';
@@ -26,7 +27,8 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const [mobileHeaderVisible, setMobileHeaderVisible] = useState(true);
+  const mobileHeaderVisible = useMobileChromeStore((s) => s.mobileHeaderVisible);
+  const setMobileHeaderVisible = useMobileChromeStore((s) => s.setMobileHeaderVisible);
   const itemCount = useCartStore((s) => s.getItemCount());
   const cartInitialized = useCartStore((s) => s.initialized);
   const wishlistCount = useWishlistStore((s) => s.items.length);
