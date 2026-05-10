@@ -123,6 +123,10 @@
     "addToCartSuccess": "Added to cart",
     "outOfStock": "Out of stock",
     "deliveryEstimate": "Delivery in 1-2 days",
+    "inStock": "In stock",
+    "lowStockCount": "Only {count} left",
+    "shipsToday": "ships today",
+    "shipsTomorrow": "ships tomorrow",
     "freshness": {
       "fresh": "Fresh",
       "expiringSoon": "Expiring soon",

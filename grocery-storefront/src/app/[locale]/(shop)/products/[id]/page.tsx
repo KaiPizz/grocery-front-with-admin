@@ -47,8 +47,16 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
   const [showStickyAdd, setShowStickyAdd] = useState(false);
+  const [shipPromise, setShipPromise] = useState<'today' | 'tomorrow'>('tomorrow');
   const inlineActionsRef = useRef<HTMLDivElement>(null);
   const channel = useChannel();
+
+  // Resolve same-day-shipping cutoff on client only to avoid SSR/CSR
+  // hydration mismatch on Date(). Cutoff hour hardcoded to 12 for now;
+  // backlog item B21 lifts this into StorefrontConfig.general.
+  useEffect(() => {
+    setShipPromise(new Date().getHours() < 12 ? 'today' : 'tomorrow');
+  }, []);
 
   // Show the mobile sticky add-to-cart bar exactly when the inline CTA row
   // has scrolled out of view. rootMargin compensates for the sticky header.
@@ -209,7 +217,7 @@ export default function ProductDetailPage() {
           </h1>
 
           {/* Price */}
-          <div className="mb-6">
+          <div className="mb-4">
             <span className="text-3xl font-bold tabular-nums tracking-tight" style={{ color: 'var(--color-foreground)' }}>
               {formatPrice(price, currency)}
             </span>
@@ -220,6 +228,26 @@ export default function ProductDetailPage() {
               className="block text-sm mt-1"
             />
           </div>
+
+          {/* Stock + delivery promise */}
+          {inStock && variant && (
+            <div className="mb-5 flex items-center gap-2 text-sm" data-testid="pd-stock-promise">
+              <Truck className="h-4 w-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+              <span style={{ color: 'var(--color-foreground)' }}>
+                {(() => {
+                  const qty = variant.quantityAvailable ?? 0;
+                  const lowStock = qty <= 10;
+                  const stockText = lowStock
+                    ? (t('product.lowStockCount', { count: qty }) || `Only ${qty} left`)
+                    : (t('product.inStock') || 'In stock');
+                  const shipText = shipPromise === 'today'
+                    ? (t('product.shipsToday') || 'ships today')
+                    : (t('product.shipsTomorrow') || 'ships tomorrow');
+                  return `${stockText} — ${shipText}`;
+                })()}
+              </span>
+            </div>
+          )}
 
           {/* Allergen chips */}
           {product.allergens?.length > 0 && (
@@ -327,14 +355,6 @@ export default function ProductDetailPage() {
               )}
               {inStock ? t('common.addToCart') : t('product.outOfStock')}
             </button>
-          </div>
-
-          {/* Delivery estimate */}
-          <div className="flex items-center gap-2 mt-4">
-            <Truck className="w-4 h-4" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
-            <span className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-              {t('product.deliveryEstimate') || 'Delivery in 1-2 days'}
-            </span>
           </div>
 
           {/* Description */}

@@ -123,6 +123,10 @@
     "addToCartSuccess": "Dodano do koszyka",
     "outOfStock": "Brak w magazynie",
     "deliveryEstimate": "Dostawa w 1-2 dni",
+    "inStock": "W magazynie",
+    "lowStockCount": "Zostało tylko {count}",
+    "shipsToday": "wysyłka dziś",
+    "shipsTomorrow": "wysyłka jutro",
     "freshness": {
       "fresh": "Świeży",
       "expiringSoon": "Termin mija",
