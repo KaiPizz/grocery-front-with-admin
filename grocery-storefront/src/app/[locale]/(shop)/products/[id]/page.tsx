@@ -13,6 +13,7 @@ import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
 import { NutritionModal } from '@/components/grocery/NutritionModal';
 import { RecipeCard } from '@/components/grocery/RecipeCard';
 import { Breadcrumb } from '@/components/grocery/Breadcrumb';
+import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
@@ -212,11 +213,12 @@ export default function ProductDetailPage() {
             <span className="text-3xl font-bold tabular-nums tracking-tight" style={{ color: 'var(--color-foreground)' }}>
               {formatPrice(price, currency)}
             </span>
-            {product.sellByWeight && product.pricePerUnit && product.unitOfMeasure && (
-              <span className="block text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-                {formatPrice(product.pricePerUnit, currency)} / {product.unitOfMeasure}
-              </span>
-            )}
+            <UnitPrice
+              pricePerUnit={product.pricePerUnit}
+              unitOfMeasure={product.unitOfMeasure}
+              currency={currency}
+              className="block text-sm mt-1"
+            />
           </div>
 
           {/* Allergen chips */}
@@ -403,11 +405,12 @@ export default function ProductDetailPage() {
               <p className="truncate text-base font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
                 {formatPrice(price * quantity, currency)}
               </p>
-              {product.sellByWeight && product.pricePerUnit && product.unitOfMeasure && (
-                <p className="truncate text-[10px] tabular-nums" style={{ color: 'var(--color-muted-foreground)' }}>
-                  {formatPrice(product.pricePerUnit, currency)} / {product.unitOfMeasure}
-                </p>
-              )}
+              <UnitPrice
+                pricePerUnit={product.pricePerUnit}
+                unitOfMeasure={product.unitOfMeasure}
+                currency={currency}
+                className="block truncate text-[10px] tabular-nums"
+              />
             </div>
 
             <div className="flex items-center rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>

@@ -7,6 +7,7 @@ import { ShoppingCart, Info, Package, Check, Minus, Plus, Heart } from 'lucide-r
 import { toast } from 'sonner';
 import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
 import { NutritionModal } from '@/components/grocery/NutritionModal';
+import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { Link } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
@@ -313,11 +314,12 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
               <span className="text-base font-bold tabular-nums tracking-tight" style={{ color: 'var(--color-foreground)' }}>
                 {formatPrice(price, currency)}
               </span>
-              {product.sellByWeight && product.pricePerUnit && product.unitOfMeasure && (
-                <span className="block text-[10px] mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>
-                  {formatPrice(product.pricePerUnit, currency)}/{product.unitOfMeasure}
-                </span>
-              )}
+              <UnitPrice
+                pricePerUnit={product.pricePerUnit}
+                unitOfMeasure={product.unitOfMeasure}
+                currency={currency}
+                className="block text-[10px] mt-0.5"
+              />
               {product.compareAtPrice && product.compareAtPrice > price && (
                 <span className="text-xs line-through ml-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
                   {formatPrice(product.compareAtPrice, currency)}

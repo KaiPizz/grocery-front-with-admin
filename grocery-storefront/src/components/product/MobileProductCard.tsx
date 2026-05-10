@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Check, Heart, Minus, Package, Plus, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from '@/i18n/navigation';
+import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
@@ -207,10 +208,16 @@ export function MobileProductCard({ product, imagePriority = false, testId }: Mo
           {product.name}
         </h2>
 
-        <div className="mt-2 flex items-end gap-2">
+        <div className="mt-2">
           <span className="text-[0.98rem] font-bold tabular-nums tracking-tight" style={{ color: 'var(--color-foreground)' }}>
             {formatPrice(price, currency)}
           </span>
+          <UnitPrice
+            pricePerUnit={(product as any).pricePerUnit}
+            unitOfMeasure={(product as any).unitOfMeasure}
+            currency={currency}
+            className="block text-[10px] mt-0.5"
+          />
         </div>
 
         <div
