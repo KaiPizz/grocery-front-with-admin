@@ -19,7 +19,11 @@ export default function CartPage() {
   const isHydrated = useHydrated();
   const initialized = useCartStore((state) => state.initialized);
   const itemCount = useCartStore((state) => state.getItemCount());
-  const { items, removeItem, updateQuantity, getSubtotal, getItemsByZone } = useCartStore();
+  const items = useCartStore((state) => state.items);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const getItemsByZone = useCartStore((state) => state.getItemsByZone);
   const addWishlistItem = useWishlistStore((state) => state.addItem);
 
   const displayItems = isHydrated && initialized ? items : [];
