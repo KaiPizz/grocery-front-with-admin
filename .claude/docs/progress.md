@@ -14,10 +14,10 @@
 |---------|--------|-------|
 | Homepage (`/`) | ✅ | Mobile + desktop layouts, hero section, Shop by Zone, Deals, Fresh Picks, Recipes. Config-driven section ordering and banner blocks. Skeleton loading states. |
 | Products listing (`/products`) | ✅ | 39KB page. Category filtering, search, sort, zone filtering, pagination. Responsive grid. |
-| Product detail (`/products/[id]`) | ✅ | 15KB page. Image gallery, variants, nutrition info, allergens, add to cart, freshness badges. |
+| Product detail (`/products/[id]`) | ✅ | 15KB page. Image gallery, variants, nutrition info, allergens, add to cart, freshness badges. 2026-05-10 added mobile sticky add-to-cart bar (IntersectionObserver-driven) and bumped tap targets to 44px. |
 | Recipes listing (`/recipes`) | ✅ | Recipe grid with cards. |
 | Recipe detail (`/recipes/[slug]`) | ✅ | 11KB page. Steps, ingredients with product links, cook time, difficulty. |
-| Cart (`/cart`) | ✅ | Storage zone grouping, quantity controls, save-for-later (→ wishlist), free shipping progress bar, mobile sticky summary bar. |
+| Cart (`/cart`) | ✅ | Storage zone grouping, quantity controls, save-for-later (→ wishlist), free shipping progress bar (desktop sidebar + 2026-05-10 mobile sticky bar), mobile sticky summary bar. |
 | Checkout (`/checkout`) | ✅ | 1492-line multi-step flow: delivery → shipping → payment → review. Saved address selection (auto-advance), promo codes, legacy Zyra checkout handoff, session draft persistence. |
 | Wishlist (`/wishlist`) | ✅ | Grid cards with images. Move-to-cart action. Remove action. |
 | Account (`/account`) | ✅ | Tab-based: Profile, Orders, Addresses. |
@@ -44,6 +44,7 @@
 | ScrollToTopButton | ✅ | Appears after scroll. |
 | CheckoutProgress | ✅ | Step indicator bar for checkout flow. |
 | ConfigProvider | ✅ | Runtime config injection via context + CSS variables. |
+| MobileFloatingCart | ✅ | 2026-05-10. Floating cart pill (top-right, mobile-only) that fades in when sticky header hides on scroll. Restores cart visibility mid-browse. State lifted into `mobile-chrome-store`. |
 | BlockRenderer | ✅ | Dispatches to block components. |
 | HeroBanner | ✅ | Hero slider with slides. |
 | GridBanner | ✅ | Multi-column promo grid. |
@@ -157,7 +158,7 @@
 | Type sync (`StorefrontConfig`) | ✅ | Defined in both apps — must be kept in sync manually. |
 | E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. |
 | Error handling | ✅ | Consistent toast + banner pattern across checkout and forms. |
-| Accessibility | 🔧 | ARIA labels on interactive elements, focus-visible ring, sr-only utility, landmark roles. Audit not done. |
+| Accessibility | 🔧 | ARIA labels on interactive elements, focus-visible ring, sr-only utility, landmark roles. 2026-05-10 mobile tap targets bumped to 44x44 (WCAG 2.5.5 AAA) on `MobileProductCard` + PD wishlist/add buttons. Full audit still pending. |
 | SEO meta tags | 🔧 | Admin SEO config page exists. Actual meta tag injection on storefront pages not verified. |
 | Tracking scripts | 🔧 | Admin tracking config exists. `TrackingScripts.tsx` component exists (3KB). Integration not verified. |
 
@@ -169,7 +170,7 @@
 |-------|----------|-------|
 | 5 admin block editors are stubs | Low | `CircularGridEditor`, `GradientPicker`, `ImageSizeHint`, `LongBannerEditor`, `SliderBlockEditor` — all 45-byte placeholder files. |
 | Checkout page is 1492 lines | Low | Functional but large. Could be split if more features are added. |
-| Cart page destructures store | Low | `const { items, removeItem, ... } = useCartStore()` instead of individual selectors. Inconsistent with pattern in other pages. |
+| Free-shipping threshold hardcoded | Low | `threshold = 150` hardcoded in `cart/page.tsx`. Should lift into `StorefrontConfig.general` (touches both apps + the type-sync watch-out) so admin can edit per-store. Phase 2 follow-up. |
 
 ---
 
