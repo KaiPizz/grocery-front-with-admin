@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
@@ -45,7 +45,24 @@ export default function ProductDetailPage() {
   const [nutritionOpen, setNutritionOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
+  const [showStickyAdd, setShowStickyAdd] = useState(false);
+  const inlineActionsRef = useRef<HTMLDivElement>(null);
   const channel = useChannel();
+
+  // Show the mobile sticky add-to-cart bar exactly when the inline CTA row
+  // has scrolled out of view. rootMargin compensates for the sticky header.
+  // Re-observe on slug change (route param, hoisted; product object is not
+  // yet declared at this point, hence we key on slug instead).
+  useEffect(() => {
+    const node = inlineActionsRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowStickyAdd(!entry.isIntersecting),
+      { rootMargin: '-80px 0px 0px 0px' },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [slug]);
 
   const [productResult] = useQuery({
     query: PRODUCT_BY_SLUG_QUERY,
@@ -147,7 +164,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="container-grocery py-8 md:py-12">
+    <div className="container-grocery py-8 pb-28 md:py-12">
       {/* Breadcrumb */}
       <Breadcrumb items={[
         { label: t('nav.home'), href: '/' },
@@ -252,7 +269,7 @@ export default function ProductDetailPage() {
           )}
 
           {/* Add to cart */}
-          <div className="flex items-center gap-2 sm:gap-3" data-testid="product-detail-actions">
+          <div ref={inlineActionsRef} className="flex items-center gap-2 sm:gap-3" data-testid="product-detail-actions">
             <div className="flex items-center border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
               <button
                 type="button"
@@ -365,6 +382,80 @@ export default function ProductDetailPage() {
             ))}
           </div>
         </section>
+      )}
+
+      {/* Mobile sticky add-to-cart bar — appears when inline CTA scrolls out of view */}
+      {inStock && (
+        <div
+          className={`fixed inset-x-0 bottom-0 z-40 border-t backdrop-blur transition-all duration-normal ease-out md:hidden ${
+            showStickyAdd ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0'
+          }`}
+          style={{
+            borderColor: 'var(--color-border)',
+            backgroundColor: 'color-mix(in srgb, var(--color-card) 96%, transparent)',
+            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)',
+          }}
+          aria-hidden={!showStickyAdd}
+          data-testid="mobile-pd-sticky-bar"
+        >
+          <div className="container-grocery flex items-center gap-2 py-3">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-base font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
+                {formatPrice(price * quantity, currency)}
+              </p>
+              {product.sellByWeight && product.pricePerUnit && product.unitOfMeasure && (
+                <p className="truncate text-[10px] tabular-nums" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {formatPrice(product.pricePerUnit, currency)} / {product.unitOfMeasure}
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
+              <button
+                type="button"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="flex h-11 w-11 items-center justify-center transition-colors duration-fast hover-surface"
+                style={{ color: 'var(--color-foreground)' }}
+                aria-label="Decrease quantity"
+                tabIndex={showStickyAdd ? 0 : -1}
+              >
+                <Minus className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <span
+                className="min-w-[24px] px-1 text-center text-sm font-medium tabular-nums"
+                style={{ color: 'var(--color-foreground)' }}
+              >
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={() => setQuantity(quantity + 1)}
+                className="flex h-11 w-11 items-center justify-center transition-colors duration-fast hover-surface"
+                style={{ color: 'var(--color-foreground)' }}
+                aria-label="Increase quantity"
+                tabIndex={showStickyAdd ? 0 : -1}
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={!inStock}
+              className="checkout-btn inline-flex h-11 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-white transition-all duration-fast active:scale-[0.98] disabled:opacity-50"
+              style={{
+                backgroundColor: justAdded ? 'var(--color-fresh)' : 'var(--color-primary)',
+              }}
+              aria-label={t('common.addToCart')}
+              tabIndex={showStickyAdd ? 0 : -1}
+              data-testid="mobile-pd-sticky-add"
+            >
+              {justAdded ? <Check className="h-4 w-4" aria-hidden="true" /> : <ShoppingCart className="h-4 w-4" aria-hidden="true" />}
+              <span>{t('common.addToCart')}</span>
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Nutrition modal */}
