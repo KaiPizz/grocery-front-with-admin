@@ -259,24 +259,60 @@ export default function CartPage() {
         }}
         data-testid="mobile-cart-summary-bar"
       >
-        <div className="container-grocery flex items-center justify-between gap-3 py-3">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-              {t('total')}
-            </p>
-            <p className="text-lg font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
-              {formatPrice(subtotal, currency)}
-            </p>
-          </div>
+        <div className="container-grocery py-3">
+          {(() => {
+            const threshold = 150;
+            const progress = Math.min(subtotal / threshold, 1);
+            const remaining = Math.max(threshold - subtotal, 0);
+            return (
+              <div className="mb-2.5" data-testid="mobile-cart-free-shipping">
+                <div
+                  className="h-1.5 overflow-hidden rounded-full"
+                  style={{ backgroundColor: 'var(--color-muted)' }}
+                  aria-hidden="true"
+                >
+                  <div
+                    className="h-full rounded-full transition-all duration-normal"
+                    style={{
+                      width: `${progress * 100}%`,
+                      backgroundColor: progress >= 1 ? 'var(--color-fresh)' : 'var(--color-primary)',
+                    }}
+                  />
+                </div>
+                <p
+                  className="mt-1 flex items-center gap-1 text-[11px]"
+                  style={{ color: progress >= 1 ? 'var(--color-fresh)' : 'var(--color-muted-foreground)' }}
+                >
+                  <Truck className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  <span className="truncate">
+                    {progress >= 1
+                      ? (t('freeShippingReached') || 'You qualify for free shipping!')
+                      : (t('freeShippingRemaining', { amount: formatPrice(remaining, currency) }) || `Add ${formatPrice(remaining, currency)} more for free shipping`)}
+                  </span>
+                </p>
+              </div>
+            );
+          })()}
 
-          <Link
-            href="/checkout"
-            className="checkout-btn inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white transition-all duration-fast active:scale-[0.98]"
-            style={{ backgroundColor: 'var(--color-primary)' }}
-          >
-            {t('checkout')}
-            <ArrowRight className="w-4 h-4" aria-hidden="true" />
-          </Link>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
+                {t('total')}
+              </p>
+              <p className="text-lg font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
+                {formatPrice(subtotal, currency)}
+              </p>
+            </div>
+
+            <Link
+              href="/checkout"
+              className="checkout-btn inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white transition-all duration-fast active:scale-[0.98]"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+            >
+              {t('checkout')}
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>
