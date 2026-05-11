@@ -1,6 +1,6 @@
 # Feature Progress
 
-> **Last updated:** 2026-04-14
+> **Last updated:** 2026-05-11
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
@@ -14,7 +14,7 @@
 |---------|--------|-------|
 | Homepage (`/`) | ✅ | Mobile + desktop layouts, hero section, Shop by Zone, Deals, Fresh Picks, Recipes. Config-driven section ordering and banner blocks. Skeleton loading states. |
 | Products listing (`/products`) | ✅ | 39KB page. Category filtering, search, sort, zone filtering, pagination. Responsive grid. |
-| Product detail (`/products/[id]`) | ✅ | 15KB page. Image gallery, variants, nutrition info, allergens, add to cart, freshness badges. 2026-05-10: added mobile sticky add-to-cart bar (IntersectionObserver-driven), bumped tap targets to 44px, added in-stock + dynamic ship-promise strip ("In stock — ships today/tomorrow", low-stock variant for qty <= 10), per-unit price now drops the sellByWeight gate (EU compliance for prepackaged grocery). |
+| Product detail (`/products/[id]`) | ✅ | 15KB page. Image gallery, variants, nutrition info, allergens, add to cart, freshness badges. 2026-05-10: added mobile sticky add-to-cart bar (IntersectionObserver-driven), bumped tap targets to 44px, added in-stock + dynamic ship-promise strip ("In stock — ships today/tomorrow", low-stock variant for qty <= 10), per-unit price now drops the sellByWeight gate (EU compliance for prepackaged grocery). 2026-05-11: sticky bar shifted from bottom-0 to calc(3.5rem + safe-area) so it stacks above MobileBottomNav. |
 | Recipes listing (`/recipes`) | ✅ | Recipe grid with cards. |
 | Recipe detail (`/recipes/[slug]`) | ✅ | 11KB page. Steps, ingredients with product links, cook time, difficulty. |
 | Cart (`/cart`) | ✅ | Storage zone grouping, quantity controls, save-for-later (→ wishlist), free shipping progress bar (desktop sidebar + 2026-05-10 mobile sticky bar), mobile sticky summary bar. |
@@ -44,7 +44,7 @@
 | ScrollToTopButton | ✅ | Appears after scroll. |
 | CheckoutProgress | ✅ | Step indicator bar for checkout flow. |
 | ConfigProvider | ✅ | Runtime config injection via context + CSS variables. |
-| MobileFloatingCart | ✅ | 2026-05-10. Floating cart pill (top-right, mobile-only) that fades in when sticky header hides on scroll. Restores cart visibility mid-browse. State lifted into `mobile-chrome-store`. |
+| MobileBottomNav | ✅ | 2026-05-11. Fixed bottom nav (mobile-only) with 3 icons: home / wishlist / cart. Active route highlight, hydration-gated count badges, safe-area-inset-bottom for hardware insets. Hidden on `/cart` + `/checkout/*` (own bottom CTAs). PD sticky add-to-cart stacks above. Supersedes the 2026-05-10 MobileFloatingCart pill — bottom nav covers cart visibility at all scroll positions. Categories tab deferred until B1/B2 ship (3-icon stopgap per backlog plan). |
 | UnitPrice (grocery/) | ✅ | 2026-05-10. Tiny shared component for EU-mandated per-unit price line ("X zł / kg", "X zł / l"). Used on MobileProductCard, ProductCard, and PD page (price block + mobile sticky bar). Drops the prior `sellByWeight &&` gate so prepackaged items render too. Includes UNIT_LABELS mapping (KG → kg, LITER → l, etc.). |
 | BlockRenderer | ✅ | Dispatches to block components. |
 | HeroBanner | ✅ | Hero slider with slides. |
