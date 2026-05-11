@@ -666,9 +666,13 @@ export async function mockMobileStorefront(
     }
 
     if (operationName === 'GroceryProduct' || query.includes('query GroceryProduct')) {
+      const requestedSlug = body.variables?.slug;
+      const matchedProduct = typeof requestedSlug === 'string'
+        ? products.find((p) => p.slug === requestedSlug) ?? featuredProduct
+        : featuredProduct;
       await fulfill(route, {
         product: {
-          ...featuredProduct,
+          ...matchedProduct,
           media: [],
         },
       });
