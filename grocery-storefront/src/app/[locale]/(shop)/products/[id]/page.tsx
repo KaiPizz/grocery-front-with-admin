@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
   const [justAdded, setJustAdded] = useState(false);
   const [showStickyAdd, setShowStickyAdd] = useState(false);
   const [shipPromise, setShipPromise] = useState<'today' | 'tomorrow'>('tomorrow');
-  const inlineActionsRef = useRef<HTMLDivElement>(null);
+  const [inlineActionsNode, setInlineActionsNode] = useState<HTMLDivElement | null>(null);
   const channel = useChannel();
 
   // Resolve same-day-shipping cutoff on client only to avoid SSR/CSR
@@ -60,18 +60,18 @@ export default function ProductDetailPage() {
 
   // Show the mobile sticky add-to-cart bar exactly when the inline CTA row
   // has scrolled out of view. rootMargin compensates for the sticky header.
-  // Re-observe on slug change (route param, hoisted; product object is not
-  // yet declared at this point, hence we key on slug instead).
+  // Using a state-backed ref ensures the observer re-attaches when the inline
+  // actions div mounts — guarding against the DetailSkeleton → full-UI swap
+  // not triggering a useEffect keyed on a stable param like `slug`.
   useEffect(() => {
-    const node = inlineActionsRef.current;
-    if (!node) return;
+    if (!inlineActionsNode) return;
     const observer = new IntersectionObserver(
       ([entry]) => setShowStickyAdd(!entry.isIntersecting),
       { rootMargin: '-80px 0px 0px 0px' },
     );
-    observer.observe(node);
+    observer.observe(inlineActionsNode);
     return () => observer.disconnect();
-  }, [slug]);
+  }, [inlineActionsNode]);
 
   const [productResult] = useQuery({
     query: PRODUCT_BY_SLUG_QUERY,
@@ -299,7 +299,7 @@ export default function ProductDetailPage() {
           )}
 
           {/* Add to cart */}
-          <div ref={inlineActionsRef} className="flex items-center gap-2 sm:gap-3" data-testid="product-detail-actions">
+          <div ref={setInlineActionsNode} className="flex items-center gap-2 sm:gap-3" data-testid="product-detail-actions">
             <div className="flex items-center border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
               <button
                 type="button"
