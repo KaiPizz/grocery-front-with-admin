@@ -8,13 +8,11 @@ interface MobileChromeState {
 }
 
 /**
- * Tiny UI store for mobile chrome state shared across Header + floating chrome
- * components (e.g. MobileFloatingCart). Kept separate from cart/auth/wishlist
- * so its frequent updates (scroll-driven) don't widen subscriptions on the
- * larger stores.
- *
- * Setter mirrors React's useState signature so it's a drop-in replacement for
- * the previous local state in Header.tsx.
+ * Tiny UI store for mobile chrome state. Currently drives the Header's
+ * hide-on-scroll + idle-cycle visibility on mobile. Kept separate from
+ * cart/auth/wishlist so its frequent scroll-driven updates don't widen
+ * subscriptions on the larger stores. Setter mirrors React's useState
+ * signature so it stays a drop-in replacement for the previous local state.
  */
 export const useMobileChromeStore = create<MobileChromeState>((set) => ({
   mobileHeaderVisible: true,
