@@ -157,7 +157,7 @@
 |---------|--------|-------|
 | Config sync (admin → storefront) | ✅ | Draft/publish flow, 5-min cache TTL on storefront side. |
 | Type sync (`StorefrontConfig`) | ✅ | Defined in both apps — must be kept in sync manually. |
-| E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. |
+| E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. 2026-05-11: added spec-first testing rule after finding implementation-shaped assertions in mobile product layout tests. |
 | Error handling | ✅ | Consistent toast + banner pattern across checkout and forms. |
 | Accessibility | 🔧 | ARIA labels on interactive elements, focus-visible ring, sr-only utility, landmark roles. 2026-05-10 mobile tap targets bumped to 44x44 (WCAG 2.5.5 AAA) on `MobileProductCard` + PD wishlist/add buttons. Full audit still pending. |
 | SEO meta tags | 🔧 | Admin SEO config page exists. Actual meta tag injection on storefront pages not verified. |
@@ -174,6 +174,7 @@
 | Free-shipping threshold hardcoded | Low | `threshold = 150` hardcoded in `cart/page.tsx`. Should lift into `StorefrontConfig.general` (touches both apps + the type-sync watch-out) so admin can edit per-store. Phase 2 follow-up. |
 | Same-day-shipping cutoff hardcoded | Low | `cutoff = 12` (noon) hardcoded in `products/[id]/page.tsx` for the in-stock ship promise. Same fix as the free-shipping threshold — lift into `StorefrontConfig.general` (e.g. `shippingCutoff: "12:00"`). |
 | Low-stock threshold hardcoded | Low | `qty <= 10` triggers "Only X left" microcopy on PD. Could be lifted to config or made per-product, but cosmetic — defer until merchandising asks. |
+| Some E2E tests are implementation-shaped | Medium | Several mobile tests assert exact DOM/CSS geometry (`getComputedStyle`, `boundingBox`, pixel thresholds) without an explicit PRD/spec anchor. Audit and rewrite high-value tests so they protect user workflows, accessibility, and PRD requirements rather than freezing current UI mechanics. |
 
 ---
 

@@ -9,7 +9,8 @@ test.describe('mobile storefront smoke', () => {
     for (const width of widths) {
       await page.setViewportSize({ width, height: width >= 768 ? 900 : 780 });
       await page.goto('/en/products?search=apples');
-      await expect(page.getByTestId('product-card').first()).toBeVisible();
+      const productCardTestId = width < 768 ? 'mobile-product-card' : 'product-card';
+      await expect(page.getByTestId(productCardTestId).first()).toBeVisible();
       await expect(page.locator('#product-search')).toHaveCount(0);
       await expect(page.getByTestId('products-page-search')).toHaveCount(0);
 
@@ -56,9 +57,10 @@ test.describe('mobile storefront smoke', () => {
     await mockMobileStorefront(page);
     await page.goto('/en/products');
 
+    const mobileHeader = page.getByTestId('mobile-sticky-header');
     await expect(page.getByRole('button', { name: /open search/i })).toBeVisible();
     await expect(page.getByTestId('mobile-header-wishlist')).toBeVisible();
-    await expect(page.getByRole('link', { name: /^cart/i })).toBeVisible();
+    await expect(mobileHeader.getByRole('link', { name: /^cart/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /open menu/i })).toBeVisible();
     await expect(page.getByTestId('mobile-header-theme')).toBeHidden();
     await expect(page.getByTestId('mobile-header-language')).toBeHidden();
@@ -129,7 +131,7 @@ test.describe('mobile storefront smoke', () => {
     await expect(page.getByTestId('mobile-cart-count')).toHaveText('1');
   });
 
-  test('keeps product detail actions compact with wishlist left of add to cart', async ({ page }) => {
+  test('keeps product detail actions accessible and compact with wishlist left of add to cart', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');
     await expect(page.getByRole('heading', { name: /organic gala apples family value pack/i })).toBeVisible();
@@ -145,9 +147,12 @@ test.describe('mobile storefront smoke', () => {
     expect(wishlistBox).not.toBeNull();
     expect(addButtonBox).not.toBeNull();
     expect(wishlistBox!.x).toBeLessThan(addButtonBox!.x);
-    expect(Math.round(wishlistBox!.width)).toBe(36);
-    expect(Math.round(wishlistBox!.height)).toBe(36);
-    expect(Math.round(addButtonBox!.height)).toBe(36);
+    expect(Math.round(wishlistBox!.width)).toBeGreaterThanOrEqual(44);
+    expect(Math.round(wishlistBox!.height)).toBeGreaterThanOrEqual(44);
+    expect(Math.round(addButtonBox!.height)).toBeGreaterThanOrEqual(44);
+    expect(Math.round(wishlistBox!.width)).toBeLessThanOrEqual(48);
+    expect(Math.round(wishlistBox!.height)).toBeLessThanOrEqual(48);
+    expect(Math.round(addButtonBox!.height)).toBeLessThanOrEqual(48);
   });
 
   test('keeps signed-in wishlist removals after stale sync responses', async ({ page }) => {
@@ -212,7 +217,9 @@ test.describe('mobile storefront smoke', () => {
     await mockMobileStorefront(page, { cart: 'single-item' });
     await page.goto('/en/checkout');
 
-    await expect(page.getByTestId('mobile-checkout-progress')).toBeVisible();
+    const progress = page.getByTestId('checkout-sticky-progress');
+    await expect(progress).toBeVisible();
+    await expect(progress).toContainText(/step 1 of 4/i);
     await expect(page.getByTestId('mobile-checkout-summary-bar')).toBeVisible();
 
     await page.getByLabel(/first name/i).fill('Marta');
@@ -227,7 +234,7 @@ test.describe('mobile storefront smoke', () => {
     await page.getByRole('button', { name: /standard courier/i }).click();
     await page.getByRole('button', { name: /credit\/debit card/i }).click();
 
-    await expect(page.getByTestId('mobile-checkout-progress-current')).toContainText(/review/i);
+    await expect(progress).toContainText(/step 4 of 4/i);
     await expect(page.getByTestId('mobile-checkout-summary-panel')).toContainText(/organic gala apples/i);
   });
 });

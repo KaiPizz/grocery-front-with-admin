@@ -104,10 +104,14 @@ test.describe('mobile products page', () => {
     expect(mediaBox!.x - cardBox!.x).toBeLessThanOrEqual(2);
     expect(mediaBox!.y - cardBox!.y).toBeLessThanOrEqual(2);
     expect(cardBox!.x + cardBox!.width - (mediaBox!.x + mediaBox!.width)).toBeLessThanOrEqual(2);
-    expect(addButtonBox!.width).toBeLessThanOrEqual(36);
-    expect(addButtonBox!.height).toBeLessThanOrEqual(36);
-    expect(wishlistButtonBox!.width).toBeLessThanOrEqual(36);
-    expect(wishlistButtonBox!.height).toBeLessThanOrEqual(36);
+    expect(addButtonBox!.width).toBeGreaterThanOrEqual(44);
+    expect(addButtonBox!.height).toBeGreaterThanOrEqual(44);
+    expect(wishlistButtonBox!.width).toBeGreaterThanOrEqual(44);
+    expect(wishlistButtonBox!.height).toBeGreaterThanOrEqual(44);
+    expect(addButtonBox!.width).toBeLessThanOrEqual(48);
+    expect(addButtonBox!.height).toBeLessThanOrEqual(48);
+    expect(wishlistButtonBox!.width).toBeLessThanOrEqual(48);
+    expect(wishlistButtonBox!.height).toBeLessThanOrEqual(48);
 
     const [addIconBox, wishlistIconBox] = await Promise.all([
       addIcon.boundingBox(),

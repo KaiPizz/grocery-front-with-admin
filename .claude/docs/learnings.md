@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-04-14
+> **Last updated:** 2026-05-11
 
 ---
 
@@ -109,3 +109,13 @@
 - **Cause:** Cloud sync tools (Google Drive, OneDrive) create temp files in the working directory.
 - **Fix:** Added patterns to `.gitignore`. Ran a cleanup pass to remove existing ones.
 - **Rule:** Check for and remove temp files before committing. Keep `.gitignore` patterns up to date.
+
+---
+
+## Testing Errors
+
+### Wrote implementation-shaped tests instead of spec-shaped tests
+- **Error:** A mobile products E2E test asserted overlay action buttons were `<=36px` because that matched an earlier UI implementation. After the app intentionally moved to 44px tap targets for accessibility, the test failed even though the product requirement was better satisfied.
+- **Cause:** The assertion was derived from the existing UI shape, not from the PRD/user need. It optimized for "what was built" instead of "what the shopper/admin workflow requires."
+- **Fix:** Updated the testing rule to require reading the PRD/progress/task plan before writing tests and deriving assertions from product requirements. The stale assertion was changed to protect the actual accessibility contract: tap targets must be at least 44px while staying compact.
+- **Rule:** Tests must be spec-first. Start from PRD goals, user stories, workflow requirements, accessibility/compliance constraints, and documented backend contracts. Only assert implementation details when the spec explicitly makes them part of the contract.
