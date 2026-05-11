@@ -406,16 +406,17 @@ export default function ProductDetailPage() {
         </section>
       )}
 
-      {/* Mobile sticky add-to-cart bar — appears when inline CTA scrolls out of view */}
+      {/* Mobile sticky add-to-cart bar — appears when inline CTA scrolls out of view.
+          Sits above the MobileBottomNav (3.5rem + safe-area). */}
       {inStock && (
         <div
-          className={`fixed inset-x-0 bottom-0 z-40 border-t backdrop-blur transition-all duration-normal ease-out md:hidden ${
+          className={`fixed inset-x-0 z-40 border-t backdrop-blur transition-all duration-normal ease-out md:hidden ${
             showStickyAdd ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0'
           }`}
           style={{
+            bottom: 'calc(3.5rem + env(safe-area-inset-bottom, 0px))',
             borderColor: 'var(--color-border)',
             backgroundColor: 'color-mix(in srgb, var(--color-card) 96%, transparent)',
-            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)',
           }}
           aria-hidden={!showStickyAdd}
           data-testid="mobile-pd-sticky-bar"
