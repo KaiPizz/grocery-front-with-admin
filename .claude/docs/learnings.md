@@ -72,6 +72,12 @@
 
 ## CSS & Theming Errors
 
+### Assumed the icon library covered every social platform
+- **Error:** Treating "use lucide-react for social icons" as if the installed icon set covered every admin platform would have left TikTok, LINE, WhatsApp, Telegram, and Pinterest without reliable icons or pushed the project toward an unnecessary dependency.
+- **Cause:** `lucide-react` ships some brand icons (Facebook, Instagram, Twitter, YouTube, LinkedIn) but not the full admin `PLATFORM_OPTIONS` list.
+- **Fix:** Verified the local `lucide-react` exports before implementation, used lucide where available, and colocated tiny inline SVG fallbacks in `SocialBar.tsx` for the missing platforms.
+- **Rule:** Before mapping admin-controlled platform names to icons, inspect the installed icon package and add small colocated SVG fallbacks for gaps; do not add a dependency for a handful of static icons.
+
 ### Used Tailwind color class instead of CSS variable — broke admin theming
 - **Error:** A component used `text-green-600` for the primary color. When the admin changed the store's primary color, this component didn't update.
 - **Cause:** Tailwind color classes are compile-time. CSS variables (`var(--color-primary)`) are runtime and get updated by `ConfigProvider`.

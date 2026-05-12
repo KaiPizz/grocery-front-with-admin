@@ -33,7 +33,7 @@
 | Component | Status | Notes |
 |-----------|--------|-------|
 | Header | ✅ | Sticky, responsive, hide-on-scroll (mobile), search, account dropdown, nav from config. |
-| Footer | ✅ | Links, legal pages, branding. |
+| Footer | ✅ | Links, legal pages, branding. 2026-05-12: added B19 SocialBar consuming admin-configured `general.socialLinks` with accessible external icon links, unknown-platform fallback, duplicate/order preservation, and 44×44 mobile tap targets. |
 | MiniCart | ✅ | Desktop hover cart preview with scrollable item list. |
 | SearchAutocomplete | ✅ | 13KB component. Auto-suggest with keyboard nav. |
 | ProductCard | ✅ | 18KB. Desktop card with add-to-cart, wishlist toggle, sale badges, freshness. |
@@ -157,7 +157,7 @@
 |---------|--------|-------|
 | Config sync (admin → storefront) | ✅ | Draft/publish flow, 5-min cache TTL on storefront side. |
 | Type sync (`StorefrontConfig`) | ✅ | Defined in both apps — must be kept in sync manually. |
-| E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. 2026-05-11: added spec-first testing rule after finding implementation-shaped assertions in mobile product layout tests. |
+| E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. 2026-05-11: added spec-first testing rule after finding implementation-shaped assertions in mobile product layout tests. 2026-05-12: added true RED→GREEN spec-first B19 SocialBar coverage (12 runs green; full suite 112/114 with only documented homepage stale-testid failures). |
 | Error handling | ✅ | Consistent toast + banner pattern across checkout and forms. |
 | Accessibility | 🔧 | ARIA labels on interactive elements, focus-visible ring, sr-only utility, landmark roles. 2026-05-10 mobile tap targets bumped to 44x44 (WCAG 2.5.5 AAA) on `MobileProductCard` + PD wishlist/add buttons. Full audit still pending. |
 | SEO meta tags | 🔧 | Admin SEO config page exists. Actual meta tag injection on storefront pages not verified. |
