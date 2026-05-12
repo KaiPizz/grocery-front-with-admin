@@ -158,11 +158,11 @@
 |---------|--------|-------|
 | Config sync (admin → storefront) | ✅ | Draft/publish flow, 5-min cache TTL on storefront side. |
 | Type sync (`StorefrontConfig`) | ✅ | Defined in both apps — must be kept in sync manually. |
-| E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. 2026-05-11: added spec-first testing rule after finding implementation-shaped assertions in mobile product layout tests. 2026-05-12: added true RED→GREEN spec-first B19 SocialBar coverage (12 runs green). 2026-05-12: added true RED→GREEN B8 shipping countdown coverage (16 runs green). 2026-05-12: repaired stale mobile homepage spec by replacing the blocked quick-categories assertion with shipped Shop-by-Zone behavior and deterministic config mocking; full suite now 130/130 green. |
+| E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. 2026-05-11: added spec-first testing rule after finding implementation-shaped assertions in mobile product layout tests. 2026-05-12: added true RED→GREEN spec-first B19 SocialBar coverage (12 runs green). 2026-05-12: added true RED→GREEN B8 shipping countdown coverage (16 runs green). 2026-05-12: repaired stale mobile homepage spec by replacing the blocked quick-categories assertion with shipped Shop-by-Zone behavior and deterministic config mocking. 2026-05-12: added deterministic SSR config mock server for Playwright, RED→GREEN SEO/tracking coverage, and repaired PD sticky tests that assumed every mobile viewport could force the sticky state; full suite now 134/134 green. |
 | Error handling | ✅ | Consistent toast + banner pattern across checkout and forms. |
 | Accessibility | 🔧 | ARIA labels on interactive elements, focus-visible ring, sr-only utility, landmark roles. 2026-05-10 mobile tap targets bumped to 44x44 (WCAG 2.5.5 AAA) on `MobileProductCard` + PD wishlist/add buttons. Full audit still pending. |
-| SEO meta tags | 🔧 | Admin SEO config page exists. Actual meta tag injection on storefront pages not verified. |
-| Tracking scripts | 🔧 | Admin tracking config exists. `TrackingScripts.tsx` component exists (3KB). Integration not verified. |
+| SEO meta tags | ✅ | Admin SEO config page exists. 2026-05-12: storefront `generateMetadata()` now reads published config for title, description, canonical, OG image, and favicon; covered by Playwright RED→GREEN spec. |
+| Tracking scripts | ✅ | Admin tracking config exists. `TrackingScripts.tsx` component exists (3KB). 2026-05-12: Playwright verifies enabled Facebook Pixel, GA4, and GTM scripts inject after config refresh while disabled Hotjar stays absent. |
 
 ---
 
@@ -172,7 +172,7 @@
 |-------|----------|-------|
 | 5 admin block editors are stubs | Low | `CircularGridEditor`, `GradientPicker`, `ImageSizeHint`, `LongBannerEditor`, `SliderBlockEditor` — all 45-byte placeholder files. |
 | Checkout page is 1492 lines | Low | Functional but large. Could be split if more features are added. |
-| Some E2E tests are implementation-shaped | Medium | Several mobile tests assert exact DOM/CSS geometry (`getComputedStyle`, `boundingBox`, pixel thresholds) without an explicit PRD/spec anchor. Audit and rewrite high-value tests so they protect user workflows, accessibility, and PRD requirements rather than freezing current UI mechanics. |
+| Some E2E tests are implementation-shaped | Medium | Several mobile tests still assert exact DOM/CSS geometry (`getComputedStyle`, `boundingBox`, pixel thresholds) without an explicit PRD/spec anchor. 2026-05-12: repaired PD sticky tests to use the accessibility contract (`aria-hidden`) and an explicit short viewport for the out-of-view scenario, but broader audit remains. |
 
 ---
 

@@ -1,5 +1,26 @@
+import type { Locator, Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import { mockMobileStorefront } from './mobile-fixtures';
+
+async function scrollInlineAddIntoView(inlineAdd: Locator) {
+  await inlineAdd.evaluate((element) => {
+    element.scrollIntoView({ block: 'center', inline: 'nearest' });
+  });
+}
+
+async function scrollInlineAddOutOfView(page: Page) {
+  await page.evaluate(() => {
+    window.scrollTo(0, document.documentElement.scrollHeight);
+  });
+}
+
+async function useShortMobileViewport(page: Page) {
+  const viewport = page.viewportSize();
+  await page.setViewportSize({
+    width: viewport?.width ?? 390,
+    height: 640,
+  });
+}
 
 test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-stock badge', () => {
   test('PD sticky add-to-cart is hidden while the inline CTA is in view', async ({ page }) => {
@@ -8,69 +29,58 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     const inlineAdd = page.getByTestId('product-detail-add');
     await expect(inlineAdd).toBeVisible();
 
-    // The inline CTA is below the fold on smaller mobile viewports — scroll it
-    // into view explicitly so the IntersectionObserver reports it as visible.
-    await inlineAdd.scrollIntoViewIfNeeded();
+    // Protects the shopper contract: when the main CTA is reachable, the
+    // sticky duplicate should be removed from assistive-tech navigation.
+    await scrollInlineAddIntoView(inlineAdd);
 
     const sticky = page.getByTestId('mobile-pd-sticky-bar');
-    await expect
-      .poll(async () => Number(await sticky.evaluate((el) => getComputedStyle(el).opacity)), { timeout: 5000 })
-      .toBeLessThanOrEqual(0.05);
+    await expect(sticky).toHaveAttribute('aria-hidden', 'true');
   });
 
   test('PD sticky add-to-cart appears once the inline CTA scrolls out of view', async ({ page }) => {
+    await useShortMobileViewport(page);
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');
     const inlineAdd = page.getByTestId('product-detail-add');
     await expect(inlineAdd).toBeVisible();
 
-    // Scroll the inline CTA out of the viewport. Use scrollIntoViewIfNeeded(false) target by anchoring
-    // to a later DOM element, plus scrollBy to push it further off-screen. IntersectionObserver fires
-    // after the next composited frame; poll the computed opacity rather than asserting immediately.
-    await inlineAdd.scrollIntoViewIfNeeded();
-    await page.evaluate(() => window.scrollBy({ top: 800, behavior: 'instant' }));
+    // Protects the shopper contract: the sticky CTA appears when the main CTA
+    // is no longer reachable in the viewport, independent of device height.
+    await scrollInlineAddIntoView(inlineAdd);
+    await scrollInlineAddOutOfView(page);
 
     const sticky = page.getByTestId('mobile-pd-sticky-bar');
-    await expect
-      .poll(async () => Number(await sticky.evaluate((el) => getComputedStyle(el).opacity)), { timeout: 5000 })
-      .toBeGreaterThan(0.9);
+    await expect(sticky).toHaveAttribute('aria-hidden', 'false');
     await expect(sticky.getByTestId('mobile-pd-sticky-add')).toBeVisible();
   });
 
   test('PD sticky add-to-cart re-hides when the inline CTA returns into view', async ({ page }) => {
+    await useShortMobileViewport(page);
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');
     const inlineAdd = page.getByTestId('product-detail-add');
     await expect(inlineAdd).toBeVisible();
 
-    await inlineAdd.scrollIntoViewIfNeeded();
-    await page.evaluate(() => window.scrollBy({ top: 800, behavior: 'instant' }));
+    await scrollInlineAddIntoView(inlineAdd);
+    await scrollInlineAddOutOfView(page);
     const sticky = page.getByTestId('mobile-pd-sticky-bar');
-    await expect
-      .poll(async () => Number(await sticky.evaluate((el) => getComputedStyle(el).opacity)), { timeout: 5000 })
-      .toBeGreaterThan(0.9);
+    await expect(sticky).toHaveAttribute('aria-hidden', 'false');
 
-    // Scroll the inline CTA back into view so the IntersectionObserver reports
-    // intersecting again. scrollIntoViewIfNeeded is more robust than scrollTo(0,0)
-    // because the CTA can sit below the fold on short mobile viewports.
-    await inlineAdd.scrollIntoViewIfNeeded();
-    await expect
-      .poll(async () => Number(await sticky.evaluate((el) => getComputedStyle(el).opacity)), { timeout: 5000 })
-      .toBeLessThanOrEqual(0.05);
+    await scrollInlineAddIntoView(inlineAdd);
+    await expect(sticky).toHaveAttribute('aria-hidden', 'true');
   });
 
   test('PD sticky add-to-cart buttons meet 44×44 tap-target floor (Tier 1)', async ({ page }) => {
+    await useShortMobileViewport(page);
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');
     const inlineAdd = page.getByTestId('product-detail-add');
     await expect(inlineAdd).toBeVisible();
-    await inlineAdd.scrollIntoViewIfNeeded();
-    await page.evaluate(() => window.scrollBy({ top: 800, behavior: 'instant' }));
+    await scrollInlineAddIntoView(inlineAdd);
+    await scrollInlineAddOutOfView(page);
 
     const sticky = page.getByTestId('mobile-pd-sticky-bar');
-    await expect
-      .poll(async () => Number(await sticky.evaluate((el) => getComputedStyle(el).opacity)), { timeout: 5000 })
-      .toBeGreaterThan(0.9);
+    await expect(sticky).toHaveAttribute('aria-hidden', 'false');
 
     const addBox = await sticky.getByTestId('mobile-pd-sticky-add').boundingBox();
     const decBox = await sticky.getByRole('button', { name: /decrease quantity/i }).boundingBox();

@@ -120,11 +120,29 @@
 
 ## Testing Errors
 
+### Tested server-rendered config with browser-only route mocks
+- **Error:** A SEO metadata test would have been unable to prove admin-configured metadata if it only used `page.route('**/api/config/**')`, because that intercepts browser requests but not the Next.js server render.
+- **Cause:** `generateMetadata()` and root layout config fetches run in the Next dev server process. Browser route mocks only affect client-side refreshes after hydration.
+- **Fix:** Added a tiny Playwright config API mock server and pointed the test Next server at it via `NEXT_PUBLIC_CONFIG_API_URL`, while keeping `page.route()` for client-refresh scenarios like tracking script injection.
+- **Rule:** For SSR behavior, provide a real mock HTTP service through the app environment. Use `page.route()` only for browser-side fetches.
+
+### Left admin SEO config out of Next metadata generation
+- **Error:** Publishing SEO defaults in admin did not change the storefront document title, description, canonical link, or Open Graph tags; the root layout always used static env fallback metadata.
+- **Cause:** `src/app/layout.tsx` exported a static `metadata` object and never consulted `StorefrontConfig.seo` during server metadata generation.
+- **Fix:** Replaced static metadata with `generateMetadata()` that fetches published storefront config and falls back to env/default values when config fields are blank or unavailable.
+- **Rule:** Any admin-configured SEO field must be wired through Next.js server metadata, not only through client context.
+
 ### Wrote implementation-shaped tests instead of spec-shaped tests
 - **Error:** A mobile products E2E test asserted overlay action buttons were `<=36px` because that matched an earlier UI implementation. After the app intentionally moved to 44px tap targets for accessibility, the test failed even though the product requirement was better satisfied.
 - **Cause:** The assertion was derived from the existing UI shape, not from the PRD/user need. It optimized for "what was built" instead of "what the shopper/admin workflow requires."
 - **Fix:** Updated the testing rule to require reading the PRD/progress/task plan before writing tests and deriving assertions from product requirements. The stale assertion was changed to protect the actual accessibility contract: tap targets must be at least 44px while staying compact.
 - **Rule:** Tests must be spec-first. Start from PRD goals, user stories, workflow requirements, accessibility/compliance constraints, and documented backend contracts. Only assert implementation details when the spec explicitly makes them part of the contract.
+
+### Assumed a fixed scroll distance forces mobile sticky CTA state
+- **Error:** `mobile-pd-extras.spec.ts` used `scrollBy(800)` and opacity polling to assert the product-detail sticky add-to-cart state. On taller mobile viewports, the inline CTA remained visible even at the page bottom, so the sticky CTA correctly stayed hidden and the test failed.
+- **Cause:** The test encoded one viewport's mechanics instead of the user contract. It did not create the precondition it claimed to test: the inline CTA being out of view.
+- **Fix:** Rewrote the sticky tests to use a short mobile viewport for out-of-view scenarios, scroll the inline CTA explicitly in/out of view, and assert the accessibility contract via `aria-hidden`.
+- **Rule:** When testing viewport-dependent UI, first make the viewport satisfy the scenario precondition, then assert user-visible or accessibility state. Do not rely on magic scroll distances or raw opacity thresholds.
 
 ### Wrote implementation-shaped tests instead of spec-shaped tests (second occurrence)
 - **Error:** Shipped `mobile-config-thresholds.spec.ts` for B21+B22+B23 with tests written AFTER the implementation. Tests verified the code did what was just written, not what the spec demanded. Missed: B21 threshold=0 (always-free), B22 minute-precision contract (an hour-only regression would have passed), B23 boundary qty=threshold (off-by-one would have passed), B23 threshold=0 (never-show).

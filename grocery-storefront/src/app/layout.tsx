@@ -11,13 +11,8 @@ import { TrackingScripts } from '@/components/TrackingScripts';
 import type { StorefrontConfig } from '@/types/storefront-config';
 import './globals.css';
 
-export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_STORE_NAME || 'Grocery Store',
-  description: process.env.NEXT_PUBLIC_STORE_DESCRIPTION || 'Fresh groceries with full nutritional transparency',
-  icons: {
-    icon: '/favicon.ico',
-  },
-};
+const FALLBACK_TITLE = process.env.NEXT_PUBLIC_STORE_NAME || 'Grocery Store';
+const FALLBACK_DESCRIPTION = process.env.NEXT_PUBLIC_STORE_DESCRIPTION || 'Fresh groceries with full nutritional transparency';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -38,6 +33,38 @@ async function fetchServerConfig(): Promise<StorefrontConfig | null> {
   } catch {
     return null;
   }
+}
+
+function getConfigString(value: string | null | undefined): string | undefined {
+  const nextValue = value?.trim();
+  return nextValue ? nextValue : undefined;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const siteConfig = await fetchServerConfig();
+  const title = getConfigString(siteConfig?.seo?.defaultTitle) ?? FALLBACK_TITLE;
+  const description = getConfigString(siteConfig?.seo?.defaultDescription) ?? FALLBACK_DESCRIPTION;
+  const faviconUrl = getConfigString(siteConfig?.branding?.faviconUrl);
+  const ogImageUrl = getConfigString(siteConfig?.seo?.ogImageUrl);
+  const canonical = getConfigString(siteConfig?.seo?.canonical);
+
+  return {
+    title,
+    description,
+    icons: {
+      icon: faviconUrl ?? '/favicon.ico',
+    },
+    openGraph: {
+      title,
+      description,
+      images: ogImageUrl ? [ogImageUrl] : undefined,
+    },
+    alternates: canonical
+      ? {
+        canonical,
+      }
+      : undefined,
+  };
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

@@ -14,12 +14,24 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:3018',
     trace: 'retain-on-failure',
   },
-  webServer: {
-    command: 'npx next dev -p 3018',
-    url: 'http://127.0.0.1:3018',
-    reuseExistingServer: false,
-    timeout: 120000,
-  },
+  webServer: [
+    {
+      command: 'node tests/config-server.mjs',
+      url: 'http://127.0.0.1:4199',
+      reuseExistingServer: false,
+      timeout: 120000,
+    },
+    {
+      command: 'npx next dev -p 3018',
+      url: 'http://127.0.0.1:3018',
+      reuseExistingServer: false,
+      timeout: 120000,
+      env: {
+        NEXT_PUBLIC_CONFIG_API_URL: 'http://127.0.0.1:4199',
+        NEXT_PUBLIC_SALON_SLUG: 'test',
+      },
+    },
+  ],
   projects: [
     {
       name: 'iphone-12',
