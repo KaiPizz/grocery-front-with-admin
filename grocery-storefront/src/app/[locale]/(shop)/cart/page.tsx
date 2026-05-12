@@ -6,6 +6,7 @@ import { ShoppingCart, Trash2, Minus, Plus, Package, ArrowRight, Truck, Heart } 
 import { toast } from 'sonner';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { StorageZoneGroup } from '@/components/grocery/StorageZoneGroup';
 import { Link } from '@/i18n/navigation';
 import { useHydrated } from '@/hooks/use-hydrated';
@@ -25,6 +26,9 @@ export default function CartPage() {
   const getSubtotal = useCartStore((state) => state.getSubtotal);
   const getItemsByZone = useCartStore((state) => state.getItemsByZone);
   const addWishlistItem = useWishlistStore((state) => state.addItem);
+
+  const siteConfig = useStorefrontConfig();
+  const freeShippingThreshold = siteConfig?.general?.freeShippingThreshold ?? 150;
 
   const displayItems = isHydrated && initialized ? items : [];
   const subtotal = isHydrated && initialized ? getSubtotal() : 0;
@@ -218,9 +222,8 @@ export default function CartPage() {
             </div>
 
             {(() => {
-              const threshold = 150;
-              const progress = Math.min(subtotal / threshold, 1);
-              const remaining = Math.max(threshold - subtotal, 0);
+              const progress = freeShippingThreshold > 0 ? Math.min(subtotal / freeShippingThreshold, 1) : 1;
+              const remaining = Math.max(freeShippingThreshold - subtotal, 0);
               return (
                 <div className="mb-5">
                   <div className="h-2 overflow-hidden rounded-full" style={{ backgroundColor: 'var(--color-muted)' }}>
@@ -265,9 +268,8 @@ export default function CartPage() {
       >
         <div className="container-grocery py-3">
           {(() => {
-            const threshold = 150;
-            const progress = Math.min(subtotal / threshold, 1);
-            const remaining = Math.max(threshold - subtotal, 0);
+            const progress = freeShippingThreshold > 0 ? Math.min(subtotal / freeShippingThreshold, 1) : 1;
+            const remaining = Math.max(freeShippingThreshold - subtotal, 0);
             return (
               <div className="mb-2.5" data-testid="mobile-cart-free-shipping">
                 <div
