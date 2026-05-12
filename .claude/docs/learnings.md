@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-11
+> **Last updated:** 2026-05-12
 
 ---
 
@@ -119,3 +119,9 @@
 - **Cause:** The assertion was derived from the existing UI shape, not from the PRD/user need. It optimized for "what was built" instead of "what the shopper/admin workflow requires."
 - **Fix:** Updated the testing rule to require reading the PRD/progress/task plan before writing tests and deriving assertions from product requirements. The stale assertion was changed to protect the actual accessibility contract: tap targets must be at least 44px while staying compact.
 - **Rule:** Tests must be spec-first. Start from PRD goals, user stories, workflow requirements, accessibility/compliance constraints, and documented backend contracts. Only assert implementation details when the spec explicitly makes them part of the contract.
+
+### Playwright config mocks fire on client refresh, not on SSR
+- **Error:** New spec-first tests for admin-configurable thresholds asserted UI text directly and intermittently failed because the page rendered the SSR config first and only flipped to the mocked value after the client-side refresh fired.
+- **Cause:** `page.route()` intercepts browser network calls. The storefront fetches `StorefrontConfig` twice — server-side in `app/layout.tsx`'s `fetchServerConfig` (not interceptable) and again client-side in `ConfigProvider.refreshConfig` on mount (interceptable). The first paint uses whatever the SSR call returned (admin's real values or `null` → fallback); the mock only lands after the post-mount refresh updates the React context.
+- **Fix:** Wrap config-dependent assertions in `expect.poll(...)` so they wait for the eventual state. Treat the initial paint as throwaway in these tests.
+- **Rule:** When a Playwright test depends on admin-configured behavior, always poll the assertion. Configure the route handler before `page.goto`, then poll the rendered text/state until it reflects the mocked config.

@@ -1,6 +1,6 @@
 # Feature Progress
 
-> **Last updated:** 2026-05-11
+> **Last updated:** 2026-05-12
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
@@ -14,10 +14,10 @@
 |---------|--------|-------|
 | Homepage (`/`) | ✅ | Mobile + desktop layouts, hero section, Shop by Zone, Deals, Fresh Picks, Recipes. Config-driven section ordering and banner blocks. Skeleton loading states. |
 | Products listing (`/products`) | ✅ | 39KB page. Category filtering, search, sort, zone filtering, pagination. Responsive grid. |
-| Product detail (`/products/[id]`) | ✅ | 15KB page. Image gallery, variants, nutrition info, allergens, add to cart, freshness badges. 2026-05-10: added mobile sticky add-to-cart bar (IntersectionObserver-driven), bumped tap targets to 44px, added in-stock + dynamic ship-promise strip ("In stock — ships today/tomorrow", low-stock variant for qty <= 10), per-unit price now drops the sellByWeight gate (EU compliance for prepackaged grocery). 2026-05-11: sticky bar shifted from bottom-0 to calc(3.5rem + safe-area) so it stacks above MobileBottomNav. |
+| Product detail (`/products/[id]`) | ✅ | 15KB page. Image gallery, variants, nutrition info, allergens, add to cart, freshness badges. 2026-05-10: added mobile sticky add-to-cart bar (IntersectionObserver-driven), bumped tap targets to 44px, added in-stock + dynamic ship-promise strip ("In stock — ships today/tomorrow"), per-unit price now drops the sellByWeight gate (EU compliance for prepackaged grocery). 2026-05-11: sticky bar shifted from bottom-0 to calc(3.5rem + safe-area) so it stacks above MobileBottomNav. 2026-05-12: same-day-ship cutoff (HH:MM) and low-stock display threshold now read from `StorefrontConfig.general` (B22 + B23). |
 | Recipes listing (`/recipes`) | ✅ | Recipe grid with cards. |
 | Recipe detail (`/recipes/[slug]`) | ✅ | 11KB page. Steps, ingredients with product links, cook time, difficulty. |
-| Cart (`/cart`) | ✅ | Storage zone grouping, quantity controls, save-for-later (→ wishlist), free shipping progress bar (desktop sidebar + 2026-05-10 mobile sticky bar), mobile sticky summary bar. |
+| Cart (`/cart`) | ✅ | Storage zone grouping, quantity controls, save-for-later (→ wishlist), free shipping progress bar (desktop sidebar + 2026-05-10 mobile sticky bar), mobile sticky summary bar. 2026-05-12: free-shipping threshold now reads from `StorefrontConfig.general` (B21). |
 | Checkout (`/checkout`) | ✅ | 1492-line multi-step flow: delivery → shipping → payment → review. Saved address selection (auto-advance), promo codes, legacy Zyra checkout handoff, session draft persistence. 2026-05-10: progress bar now sticky-on-mobile (top: var(--header-height), z-30, backdrop-blur), static on desktop. |
 | Wishlist (`/wishlist`) | ✅ | Grid cards with images. Move-to-cart action. Remove action. |
 | Account (`/account`) | ✅ | Tab-based: Profile, Orders, Addresses. |
@@ -171,9 +171,7 @@
 |-------|----------|-------|
 | 5 admin block editors are stubs | Low | `CircularGridEditor`, `GradientPicker`, `ImageSizeHint`, `LongBannerEditor`, `SliderBlockEditor` — all 45-byte placeholder files. |
 | Checkout page is 1492 lines | Low | Functional but large. Could be split if more features are added. |
-| Free-shipping threshold hardcoded | Low | `threshold = 150` hardcoded in `cart/page.tsx`. Should lift into `StorefrontConfig.general` (touches both apps + the type-sync watch-out) so admin can edit per-store. Phase 2 follow-up. |
-| Same-day-shipping cutoff hardcoded | Low | `cutoff = 12` (noon) hardcoded in `products/[id]/page.tsx` for the in-stock ship promise. Same fix as the free-shipping threshold — lift into `StorefrontConfig.general` (e.g. `shippingCutoff: "12:00"`). |
-| Low-stock threshold hardcoded | Low | `qty <= 10` triggers "Only X left" microcopy on PD. Could be lifted to config or made per-product, but cosmetic — defer until merchandising asks. |
+| Mobile homepage spec asserts non-existent testid | Low | `mobile-homepage.spec.ts` line 11 asserts `getByTestId('mobile-home-quick-categories')` which has no source counterpart. Predates the spec-first rule; the failing test was not flagged at the time. Audit when working on homepage layout. |
 | Some E2E tests are implementation-shaped | Medium | Several mobile tests assert exact DOM/CSS geometry (`getComputedStyle`, `boundingBox`, pixel thresholds) without an explicit PRD/spec anchor. Audit and rewrite high-value tests so they protect user workflows, accessibility, and PRD requirements rather than freezing current UI mechanics. |
 
 ---
