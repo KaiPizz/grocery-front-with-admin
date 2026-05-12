@@ -163,13 +163,13 @@ export function Header() {
         clearInterval(idleCycleIntervalRef.current);
       }
     };
-  }, [isMounted, menuOpen, searchOpen]);
+  }, [isMounted, menuOpen, searchOpen, setMobileHeaderVisible]);
 
   useEffect(() => {
     if (menuOpen || searchOpen) {
       setMobileHeaderVisible(true);
     }
-  }, [menuOpen, searchOpen]);
+  }, [menuOpen, searchOpen, setMobileHeaderVisible]);
 
   function handleSearch(query: string) {
     const q = query.trim();

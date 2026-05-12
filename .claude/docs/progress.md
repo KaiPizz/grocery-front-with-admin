@@ -173,6 +173,7 @@
 | 5 admin block editors are stubs | Low | `CircularGridEditor`, `GradientPicker`, `ImageSizeHint`, `LongBannerEditor`, `SliderBlockEditor` — all 45-byte placeholder files. |
 | Checkout page is 1492 lines | Low | Functional but large. Could be split if more features are added. |
 | Some E2E tests are implementation-shaped | Medium | Several mobile tests still assert exact DOM/CSS geometry (`getComputedStyle`, `boundingBox`, pixel thresholds) without an explicit PRD/spec anchor. 2026-05-12: repaired PD sticky tests to use the accessibility contract (`aria-hidden`) and an explicit short viewport for the out-of-view scenario, but broader audit remains. |
+| Runtime-configured images still use raw `<img>` | Medium | 2026-05-12: lint now only warns on admin/runtime image surfaces (logo, banner blocks, PromoBanner). Do not blindly convert to `next/image` until production admin/CDN image domains or a safe unoptimized loader policy are decided. |
 
 ---
 

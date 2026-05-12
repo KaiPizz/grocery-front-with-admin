@@ -96,6 +96,12 @@
 - **Fix:** Used `.heading-display` or `.heading-section` CSS classes instead, or inline `style={{ fontFamily: 'var(--font-display)' }}`.
 - **Rule:** Use `.heading-display`/`.heading-section` for headings. Don't use Tailwind's `font-serif` or `font-sans`.
 
+### Treating admin-controlled images like static Next images
+- **Error:** The lint output tempts a blanket replacement of storefront `<img>` tags with `next/image`, but those warnings are on admin/runtime-configured logo and banner media.
+- **Cause:** `next/image` optimization needs a known remote domain policy or an intentional unoptimized/custom-loader path. The production admin/CDN image domain is still undecided, and MVP uploads currently come from the admin panel.
+- **Fix:** Fixed unrelated hook dependency warnings immediately, but left the runtime image warnings documented as production debt until deployment image storage/domain policy is chosen.
+- **Rule:** Do not convert admin-configured image URLs to optimized `next/image` without first defining production media hosting and remote-pattern/loader behavior.
+
 ---
 
 ## Checkout Errors
