@@ -137,3 +137,9 @@
 - **Cause:** `page.route()` intercepts browser network calls. The storefront fetches `StorefrontConfig` twice — server-side in `app/layout.tsx`'s `fetchServerConfig` (not interceptable) and again client-side in `ConfigProvider.refreshConfig` on mount (interceptable). The first paint uses whatever the SSR call returned (admin's real values or `null` → fallback); the mock only lands after the post-mount refresh updates the React context.
 - **Fix:** Wrap config-dependent assertions in `expect.poll(...)` so they wait for the eventual state. Treat the initial paint as throwaway in these tests.
 - **Rule:** When a Playwright test depends on admin-configured behavior, always poll the assertion. Configure the route handler before `page.goto`, then poll the rendered text/state until it reflects the mocked config.
+
+### Playwright clock install does not freeze wall time during navigation
+- **Error:** B8 countdown tests initially expected exactly `03:30:00` after `page.clock.install({ time })`, but the app rendered `03:29:5x` because mocked wall time still advanced while Next loaded and hydrated.
+- **Cause:** `clock.install({ time })` starts fake time at the requested instant but lets it progress. Navigation/hydration time consumes seconds before the assertion runs.
+- **Fix:** Install the clock one minute before the target wall time, let the page load, then call `page.clock.pauseAt(targetTime)` before asserting exact countdown text. Use `page.clock.runFor(1000)` to prove one-second ticks.
+- **Rule:** For exact countdown tests, do not rely on `clock.install({ time })` alone. Install early, navigate, `pauseAt()` the target time, then advance with `runFor()` for deterministic ticks.
