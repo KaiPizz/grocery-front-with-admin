@@ -179,3 +179,9 @@
 - **Cause:** WebKit/Safari-style tab traversal can skip anchor links unless full keyboard navigation is enabled, so an anchor-only fragment link did not reliably become the first keyboard focus target in this Playwright matrix.
 - **Fix:** Implemented the storefront skip control as the first DOM button with `aria-controls="main-content"` and programmatic focus on `main#main-content`; kept the test on a narrow viewport with touch-only emulation disabled for keyboard traversal.
 - **Rule:** For this storefront's skip-to-content affordance, prefer a focusable button that moves focus to the main landmark over an anchor-only fragment link.
+
+### Chased a hydration warning caused by browser-injected attributes
+- **Error:** Console warning pointed at `ShippingCountdown` with `Extra attributes from the server: bis_skin_checked`, which can look like a React hydration bug in the component.
+- **Cause:** `bis_skin_checked` is not emitted anywhere in the repo; it is an attribute injected into DOM nodes by browser security/extension tooling before React hydrates. The component stack only shows where React noticed the mutated DOM.
+- **Fix:** Verified the string is absent from source/tests before touching code. Do not add `suppressHydrationWarning` to storefront components for this attribute; use a clean browser profile or disable the injecting extension when validating hydration.
+- **Rule:** For hydration warnings naming unknown attributes, search the repo/build output first. If the attribute is external, fix the browser environment instead of masking real React mismatches in code.

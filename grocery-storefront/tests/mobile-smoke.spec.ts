@@ -59,9 +59,12 @@ test.describe('mobile storefront smoke', () => {
 
     const mobileHeader = page.getByTestId('mobile-sticky-header');
     await expect(page.getByRole('button', { name: /open search/i })).toBeVisible();
-    await expect(page.getByTestId('mobile-header-wishlist')).toBeVisible();
-    await expect(mobileHeader.getByRole('link', { name: /^cart/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /open menu/i })).toBeVisible();
+    await expect(page.getByTestId('mobile-header-wishlist')).toHaveCount(0);
+    await expect(mobileHeader.getByRole('link', { name: /^cart/i })).toHaveCount(0);
+    await expect(page.getByTestId('mobile-bottom-nav-home')).toBeVisible();
+    await expect(page.getByTestId('mobile-bottom-nav-wishlist')).toBeVisible();
+    await expect(page.getByTestId('mobile-bottom-nav-cart')).toBeVisible();
     await expect(page.getByTestId('mobile-header-theme')).toBeHidden();
     await expect(page.getByTestId('mobile-header-language')).toBeHidden();
 
@@ -128,7 +131,7 @@ test.describe('mobile storefront smoke', () => {
     expect(titleStyles.whiteSpace).toBe('nowrap');
 
     await addButton.click();
-    await expect(page.getByTestId('mobile-cart-count')).toHaveText('1');
+    await expect(page.getByTestId('mobile-bottom-nav-cart-badge')).toHaveText('1');
   });
 
   test('keeps product detail actions accessible and compact with wishlist left of add to cart', async ({ page }) => {

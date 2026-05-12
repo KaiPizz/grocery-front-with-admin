@@ -380,41 +380,6 @@ export function Header() {
             </Link>
           )}
 
-          <Link
-            href="/wishlist"
-            className="relative p-2.5 rounded-xl hover-surface md:hidden"
-            aria-label={`${t('wishlist')}${isMounted && wishlistCount > 0 ? `, ${tCommon('itemCount', { count: wishlistCount })}` : ''}`}
-            data-testid="mobile-header-wishlist"
-          >
-            <Heart className="w-5 h-5" style={{ color: 'var(--color-foreground)' }} />
-            {isMounted && wishlistCount > 0 && (
-              <span
-                className="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-                aria-hidden="true"
-              >
-                {wishlistCount > 99 ? '99+' : wishlistCount}
-              </span>
-            )}
-          </Link>
-
-          <Link
-            href="/cart"
-            className="relative p-2.5 rounded-xl hover-surface md:hidden"
-            aria-label={`${t('cart')}${isMounted && cartInitialized && itemCount > 0 ? `, ${tCommon('itemCount', { count: itemCount })}` : ''}`}
-          >
-            <ShoppingCart className="w-5 h-5" style={{ color: 'var(--color-foreground)' }} />
-            {isMounted && cartInitialized && itemCount > 0 && (
-              <span
-                className="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-                data-testid="mobile-cart-count"
-              >
-                {itemCount > 99 ? '99+' : itemCount}
-              </span>
-            )}
-          </Link>
-
           <button
             type="button"
             className="md:hidden p-2.5 rounded-xl hover-surface"

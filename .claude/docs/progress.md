@@ -32,7 +32,7 @@
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| Header | ✅ | Sticky, responsive, hide-on-scroll (mobile), search, account dropdown, nav from config. 2026-05-12: added B8 shipping cutoff utility strip above the main nav row so same-day shipping promise is visible without cramping header controls. |
+| Header | ✅ | Sticky, responsive, hide-on-scroll (mobile), search, account dropdown, nav from config. 2026-05-12: added B8 shipping cutoff utility strip above the main nav row so same-day shipping promise is visible without cramping header controls. 2026-05-12: removed mobile-only wishlist/cart shortcuts so the mobile header stays to logo/search/menu while BottomNav owns Home/Wishlist/Cart. |
 | ShippingCountdown | ✅ | 2026-05-12. Header utility-bar widget for B8. Reads `StorefrontConfig.general.sameDayShippingCutoff`, falls back to `12:00`, server-renders static no-JS copy, hydrates into a 1-second HH:MM:SS countdown before cutoff, and switches to "ships tomorrow at HH:MM" at/after cutoff. |
 | Footer | ✅ | Links, legal pages, branding. 2026-05-12: added B19 SocialBar consuming admin-configured `general.socialLinks` with accessible external icon links, unknown-platform fallback, duplicate/order preservation, and 44×44 mobile tap targets. |
 | MiniCart | ✅ | Desktop hover cart preview with scrollable item list. |
@@ -45,7 +45,7 @@
 | ScrollToTopButton | ✅ | Appears after scroll. |
 | CheckoutProgress | ✅ | Step indicator bar for checkout flow. |
 | ConfigProvider | ✅ | Runtime config injection via context + CSS variables. |
-| MobileBottomNav | ✅ | 2026-05-11. Fixed bottom nav (mobile-only) with 3 icons: home / wishlist / cart. Active route highlight, hydration-gated count badges, safe-area-inset-bottom for hardware insets. Hidden on `/cart` + `/checkout/*` (own bottom CTAs). PD sticky add-to-cart stacks above. Supersedes the 2026-05-10 MobileFloatingCart pill — bottom nav covers cart visibility at all scroll positions. Categories tab deferred until B1/B2 ship (3-icon stopgap per backlog plan). |
+| MobileBottomNav | ✅ | 2026-05-11. Fixed bottom nav (mobile-only) with 3 icons: home / wishlist / cart. Active route highlight, hydration-gated count badges, safe-area-inset-bottom for hardware insets. Hidden on `/cart` + `/checkout/*` (own bottom CTAs). PD sticky add-to-cart stacks above. Supersedes the 2026-05-10 MobileFloatingCart pill — bottom nav covers cart visibility at all scroll positions. 2026-05-12: confirmed as the mobile owner for Home/Wishlist/Cart to avoid duplicate header shortcuts. Categories tab deferred until B1/B2 ship (3-icon stopgap per backlog plan). |
 | UnitPrice (grocery/) | ✅ | 2026-05-10. Tiny shared component for EU-mandated per-unit price line ("X zł / kg", "X zł / l"). Used on MobileProductCard, ProductCard, and PD page (price block + mobile sticky bar). Drops the prior `sellByWeight &&` gate so prepackaged items render too. Includes UNIT_LABELS mapping (KG → kg, LITER → l, etc.). |
 | BlockRenderer | ✅ | Dispatches to block components. |
 | HeroBanner | ✅ | Hero slider with slides. |
