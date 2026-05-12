@@ -315,9 +315,33 @@ function normalizeCost(cost?: CartCost | null): CartCost {
   };
 }
 
+function hasPositiveAmount(amount: number | null | undefined): amount is number {
+  return typeof amount === 'number' && amount > 0;
+}
+
+function resolveAmount(serverAmount: number | null | undefined, fallbackAmount: number | null | undefined): number {
+  if (hasPositiveAmount(serverAmount) || !hasPositiveAmount(fallbackAmount)) {
+    return serverAmount ?? fallbackAmount ?? 0;
+  }
+
+  return fallbackAmount;
+}
+
+function calculateItemsSubtotal(items: CartItem[]): number {
+  return items.reduce((sum, item) => sum + (item.totalPrice ?? item.price * item.quantity), 0);
+}
+
 function mapLineToItem(line: CartGraphqlLine, metadata?: CartLineMetadata): CartItem {
-  const unitPrice = line.cost?.amountPerQuantity?.amount ?? metadata?.price ?? 0;
-  const currency = line.cost?.amountPerQuantity?.currency ?? metadata?.currency ?? getFallbackCurrency();
+  const serverUnitAmount = line.cost?.amountPerQuantity?.amount;
+  const metadataUnitAmount = metadata?.price;
+  const useMetadataUnitPrice = hasPositiveAmount(metadataUnitAmount) && !hasPositiveAmount(serverUnitAmount);
+  const unitPrice = resolveAmount(serverUnitAmount, metadataUnitAmount);
+  const totalPrice = useMetadataUnitPrice
+    ? resolveAmount(line.cost?.totalAmount?.amount, unitPrice * line.quantity)
+    : line.cost?.totalAmount?.amount ?? unitPrice * line.quantity;
+  const currency = useMetadataUnitPrice
+    ? metadata?.currency ?? getFallbackCurrency()
+    : line.cost?.amountPerQuantity?.currency ?? metadata?.currency ?? getFallbackCurrency();
 
   return {
     id: line.id,
@@ -330,7 +354,7 @@ function mapLineToItem(line: CartGraphqlLine, metadata?: CartLineMetadata): Cart
     price: unitPrice,
     currency,
     quantity: line.quantity,
-    totalPrice: line.cost?.totalAmount?.amount ?? unitPrice * line.quantity,
+    totalPrice,
     storageZone: metadata?.storageZone,
     allergens: metadata?.allergens,
   };
@@ -965,12 +989,9 @@ export const useCartStore = create<CartState>()(
         },
 
         getSubtotal: () => {
+          const itemSubtotal = calculateItemsSubtotal(get().items);
           const subtotal = get().cost.subtotalAmount?.amount;
-          if (typeof subtotal === 'number') {
-            return subtotal;
-          }
-
-          return get().items.reduce((sum, item) => sum + (item.totalPrice ?? item.price * item.quantity), 0);
+          return resolveAmount(subtotal, itemSubtotal);
         },
 
         getItemCount: () => {

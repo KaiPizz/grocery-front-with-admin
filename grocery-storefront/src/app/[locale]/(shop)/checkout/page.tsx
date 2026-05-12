@@ -481,13 +481,16 @@ export default function CheckoutPage() {
     }
   }, [step]);
 
-  const displaySubtotal = cost.subtotalAmount?.amount ?? getSubtotal();
+  const displaySubtotal = getSubtotal();
   const displayCurrency =
     cost.totalAmount?.currency
     || cost.subtotalAmount?.currency
     || items[0]?.currency
     || 'PLN';
-  const discountedTotal = cost.totalAmount?.amount ?? displaySubtotal;
+  const cartTotalAmount = cost.totalAmount?.amount;
+  const discountedTotal = typeof cartTotalAmount === 'number' && (cartTotalAmount > 0 || displaySubtotal <= 0)
+    ? cartTotalAmount
+    : displaySubtotal;
   const displayTotal = serverTotal ?? discountedTotal + shippingCost;
   const appliedDiscount = useMemo(
     () => discountCodes.find((entry) => entry.applicable),

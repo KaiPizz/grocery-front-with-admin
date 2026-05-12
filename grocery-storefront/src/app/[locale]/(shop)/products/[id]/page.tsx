@@ -109,8 +109,10 @@ export default function ProductDetailPage() {
   }
 
   const variant = product.variants?.[0];
-  const price = variant?.pricing?.price?.gross?.amount ?? 0;
-  const currency = variant?.pricing?.price?.gross?.currency ?? 'PLN';
+  const variantPrice = variant?.pricing?.price?.gross;
+  const productPrice = product.pricing?.priceRange?.start?.gross;
+  const price = variantPrice?.amount ?? productPrice?.amount ?? 0;
+  const currency = variantPrice?.currency ?? productPrice?.currency ?? 'PLN';
   const inStock = (variant?.quantityAvailable ?? 0) > 0;
   const imageUrl = getImageSrc(product?.thumbnail?.url);
   const isWishlisted = wishlistItems.some((item) => item.productId === product.id);

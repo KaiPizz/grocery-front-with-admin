@@ -433,14 +433,16 @@ function buildCart(lines: CartLineState[]): CartState {
   };
 }
 
-function buildCartLine(quantity = 1): CartLineState {
+function buildCartLine(quantity = 1, cartCosts: 'priced' | 'zero' = 'priced'): CartLineState {
+  const unitAmount = cartCosts === 'zero' ? 0 : 12.99;
+
   return {
     id: 'line-1',
     merchandiseId: 'variant-apples',
     quantity,
     cost: {
-      amountPerQuantity: { amount: 12.99, currency: 'PLN' },
-      totalAmount: { amount: 12.99 * quantity, currency: 'PLN' },
+      amountPerQuantity: { amount: unitAmount, currency: 'PLN' },
+      totalAmount: { amount: unitAmount * quantity, currency: 'PLN' },
     },
   };
 }
@@ -514,6 +516,7 @@ export async function seedAuthSession(page: Page) {
 
 interface MockMobileStorefrontOptions {
   cart?: 'empty' | 'single-item';
+  cartCosts?: 'priced' | 'zero';
   products?: 'ok' | 'error';
   facets?: 'populated' | 'empty';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
@@ -529,7 +532,8 @@ export async function mockMobileStorefront(
   const products = options.facets === 'empty' ? PRODUCTS_WITH_EMPTY_FACETS : PRODUCTS;
   const productsById = new Map(products.map((product) => [product.id, product]));
   const featuredProduct = products[0] ?? PRIMARY_PRODUCT;
-  let cart = buildCart(options.cart === 'single-item' ? [buildCartLine()] : []);
+  const cartCostMode = options.cartCosts ?? 'priced';
+  let cart = buildCart(options.cart === 'single-item' ? [buildCartLine(1, cartCostMode)] : []);
   let checkout = buildCheckoutState();
   let wishlistItems = (() => {
     if (options.wishlist === 'single-item' || options.wishlist === 'stale-remove') {
@@ -738,7 +742,7 @@ export async function mockMobileStorefront(
 
     if (operationName === 'CartCreate' || query.includes('mutation CartCreate')) {
       const quantity = body.variables?.input?.lines?.[0]?.quantity ?? 1;
-      cart = buildCart([buildCartLine(quantity)]);
+      cart = buildCart([buildCartLine(quantity, cartCostMode)]);
       await fulfill(route, {
         cartCreate: {
           cart,
@@ -751,7 +755,7 @@ export async function mockMobileStorefront(
     if (operationName === 'CartLinesAdd' || query.includes('mutation CartLinesAdd')) {
       const currentQuantity = cart.lines[0]?.quantity ?? 0;
       const addedQuantity = body.variables?.lines?.[0]?.quantity ?? 1;
-      cart = buildCart([buildCartLine(currentQuantity + addedQuantity)]);
+      cart = buildCart([buildCartLine(currentQuantity + addedQuantity, cartCostMode)]);
       await fulfill(route, {
         cartLinesAdd: {
           cart,
@@ -763,7 +767,7 @@ export async function mockMobileStorefront(
 
     if (operationName === 'CartLinesUpdate' || query.includes('mutation CartLinesUpdate')) {
       const quantity = body.variables?.lines?.[0]?.quantity ?? 1;
-      cart = buildCart(quantity > 0 ? [buildCartLine(quantity)] : []);
+      cart = buildCart(quantity > 0 ? [buildCartLine(quantity, cartCostMode)] : []);
       await fulfill(route, {
         cartLinesUpdate: {
           cart,

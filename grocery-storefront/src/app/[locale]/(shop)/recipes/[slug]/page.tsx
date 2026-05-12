@@ -84,14 +84,16 @@ export default function RecipeDetailPage() {
       let successCount = 0;
 
       for (const ingredient of availableIngredients) {
+        const variantPrice = ingredient.variant.pricing?.price?.gross;
+
         const success = await addItem({
           productId: ingredient.product?.id || ingredient.variant.id,
           variantId: ingredient.variant.id,
           slug: ingredient.product?.slug,
           name: ingredient.variant.name || ingredient.displayName,
           thumbnail: getImageSrc(ingredient.product?.thumbnail?.url) || undefined,
-          price: ingredient.variant.pricing?.price?.gross?.amount ?? 0,
-          currency: ingredient.variant.pricing?.price?.gross?.currency ?? 'PLN',
+          price: variantPrice?.amount ?? ingredient.variant.price ?? 0,
+          currency: variantPrice?.currency ?? ingredient.variant.currency ?? 'PLN',
           quantity: Math.ceil(ingredient.quantity),
         });
 

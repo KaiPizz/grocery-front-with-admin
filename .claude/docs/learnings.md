@@ -197,3 +197,9 @@
 - **Cause:** Checkout sections were visually collapsed with `max-height`, `opacity`, and `overflow`, but the subtree was still accessible. Delivery validation set `aria-invalid` only, with no `aria-describedby` or first-error focus handoff.
 - **Fix:** Inactive checkout panels now use `aria-hidden` plus `inert`; delivery validation focuses the first invalid field and links each field to its error text. Shipping and payment choice buttons also expose selected state through `aria-pressed`.
 - **Rule:** Do not rely on CSS-only collapsed panels for accessibility. Hide inactive interactive subtrees from assistive tech and make validation errors both focusable and programmatically associated with their fields.
+
+### OMS cart cost can be zero while product metadata has the real price
+- **Error:** Header cart, mini cart, cart page, and checkout summary showed `0,00 zł` after adding a product whose card displayed a positive price.
+- **Cause:** The OMS cart payload can return `0` for `line.cost.amountPerQuantity`, `line.cost.totalAmount`, and `cart.cost.subtotalAmount` immediately after add-to-cart. The cart store trusted those zero server amounts over the positive price captured from product metadata, and checkout read `cost.subtotalAmount` directly.
+- **Fix:** Cart line mapping and subtotal calculation now fall back to positive product metadata when the matching server amount is zero. Checkout uses the corrected cart subtotal, and product-detail/recipe add-to-cart paths have price fallbacks for missing nested variant pricing.
+- **Rule:** Treat external cart cost `0` as suspect when the same line has positive local product metadata. Centralize the fallback in cart state and cover it with a regression test before touching UI surfaces.
