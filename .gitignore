@@ -12,3 +12,7 @@ Thumbs.db
 # Google Drive sync artifacts
 .tmp.driveupload/
 .vscode/
+
+# Codex CLI local tooling (per-machine; not project artifacts)
+.agents/
+AGENTS.md
