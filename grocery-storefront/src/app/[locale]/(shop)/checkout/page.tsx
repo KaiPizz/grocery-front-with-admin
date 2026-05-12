@@ -188,6 +188,16 @@ const PAYMENT_ICONS: Record<string, typeof CreditCard> = {
 const INPUT_CLASS =
   'w-full rounded-lg border bg-transparent px-3 py-2.5 text-sm transition-colors duration-fast focus:outline-none focus-visible:ring-2';
 const CHECKOUT_DRAFT_KEY = 'oms-checkout-draft-v1';
+const DELIVERY_FIELD_ORDER: Array<keyof DeliveryFormState> = [
+  'firstName',
+  'lastName',
+  'email',
+  'phone',
+  'streetAddress1',
+  'city',
+  'postalCode',
+  'country',
+];
 
 function getPayloadMessage(errors?: CheckoutMutationError[] | null): string | null {
   return errors?.find((error) => error.message?.trim())?.message ?? null;
@@ -250,6 +260,14 @@ function translatePaymentMethodName(locale: string, method: PaymentMethod): stri
   if (code === 'p24') return 'Przelewy24';
 
   return method.name;
+}
+
+function focusDeliveryField(field: keyof DeliveryFormState) {
+  if (typeof window === 'undefined') return;
+
+  window.requestAnimationFrame(() => {
+    document.getElementById(`checkout-${field}`)?.focus();
+  });
 }
 
 export default function CheckoutPage() {
@@ -609,8 +627,14 @@ export default function CheckoutPage() {
     if (!f.postalCode.trim()) errors.postalCode = t('required');
     if (!f.country.trim()) errors.country = t('required');
 
+    const firstErrorField = DELIVERY_FIELD_ORDER.find((field) => Boolean(errors[field]));
+
     setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
+    if (firstErrorField) {
+      focusDeliveryField(firstErrorField);
+    }
+
+    return !firstErrorField;
   }
 
   async function handleDeliveryContinue(formOverride?: DeliveryFormState) {
@@ -1173,6 +1197,7 @@ export default function CheckoutPage() {
                         value={form[field]}
                         onChange={(event) => setFieldValue(field, event.target.value)}
                         aria-invalid={Boolean(fieldErrors[field])}
+                        aria-describedby={fieldErrors[field] ? `checkout-${field}-error` : undefined}
                         className={INPUT_CLASS}
                         style={{
                           borderColor: fieldErrors[field] ? 'var(--color-destructive)' : 'var(--color-border)',
@@ -1180,7 +1205,7 @@ export default function CheckoutPage() {
                         }}
                       />
                       {fieldErrors[field] && (
-                        <p className="text-xs mt-1" style={{ color: 'var(--color-destructive)' }} role="alert">
+                        <p id={`checkout-${field}-error`} className="text-xs mt-1" style={{ color: 'var(--color-destructive)' }} role="alert">
                           {fieldErrors[field]}
                         </p>
                       )}
@@ -1248,6 +1273,7 @@ export default function CheckoutPage() {
                       type="button"
                       onClick={() => void handleDeliverySelection(option)}
                       disabled={busy}
+                      aria-pressed={selected}
                       className="w-full rounded-2xl border p-4 text-left transition-colors duration-fast disabled:opacity-60"
                       style={{
                         borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
@@ -1315,6 +1341,7 @@ export default function CheckoutPage() {
                         type="button"
                         onClick={() => void handlePaymentSelection(method)}
                         disabled={busy}
+                        aria-pressed={selected}
                         className="w-full rounded-2xl border p-4 text-left transition-colors duration-fast disabled:opacity-60"
                         style={{
                           borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
@@ -1439,6 +1466,7 @@ export default function CheckoutPage() {
         {mobileSummaryOpen && (
           <div className="container-grocery mb-3">
             <div
+              id="mobile-checkout-summary-panel"
               className="rounded-2xl border p-4 shadow-2xl"
               style={{
                 borderColor: 'var(--color-border)',
@@ -1489,6 +1517,7 @@ export default function CheckoutPage() {
               className="inline-flex items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold hover-surface"
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               aria-expanded={mobileSummaryOpen}
+              aria-controls="mobile-checkout-summary-panel"
             >
               {mobileSummaryOpen ? tCommon('close') : t('summary')}
             </button>

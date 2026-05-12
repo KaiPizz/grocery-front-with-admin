@@ -191,3 +191,9 @@
 - **Cause:** The button reused the visible wishlist copy and missed the product-specific accessible naming pattern already used by remove and quantity controls.
 - **Fix:** Added a cart-scoped `saveForLaterItem` i18n label, applied it as `aria-label`, and covered the cart page with a RED→GREEN Playwright accessibility spec.
 - **Rule:** Any repeated per-product action in cart, wishlist, or product grids must include the product name in its accessible name, even when the visible label stays short.
+
+### Left collapsed checkout panels in the accessibility tree
+- **Error:** Payment choices stayed discoverable by `getByRole()` while the payment accordion panel was collapsed, and invalid delivery fields showed errors without moving focus or associating the error text with the input.
+- **Cause:** Checkout sections were visually collapsed with `max-height`, `opacity`, and `overflow`, but the subtree was still accessible. Delivery validation set `aria-invalid` only, with no `aria-describedby` or first-error focus handoff.
+- **Fix:** Inactive checkout panels now use `aria-hidden` plus `inert`; delivery validation focuses the first invalid field and links each field to its error text. Shipping and payment choice buttons also expose selected state through `aria-pressed`.
+- **Rule:** Do not rely on CSS-only collapsed panels for accessibility. Hide inactive interactive subtrees from assistive tech and make validation errors both focusable and programmatically associated with their fields.

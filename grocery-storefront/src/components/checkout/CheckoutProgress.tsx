@@ -135,6 +135,8 @@ export function CheckoutSection({
       <div
         id={`checkout-panel-${step}`}
         className="transition-all duration-300 ease-in-out"
+        aria-hidden={!isActive}
+        inert={!isActive ? true : undefined}
         style={{
           maxHeight: isActive ? '2000px' : '0px',
           opacity: isActive ? 1 : 0,
@@ -193,4 +195,3 @@ export function CheckoutProgressBar({ currentStep, completedSteps }: CheckoutPro
     </div>
   );
 }
-
