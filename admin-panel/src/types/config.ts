@@ -260,6 +260,9 @@ export interface GeneralConfig {
     terms: string;
     about: string;
   };
+  freeShippingThreshold: number;
+  sameDayShippingCutoff: string;
+  lowStockThreshold: number;
 }
 
 // --- Top-level config ---

@@ -200,7 +200,10 @@
         "privacy": "/privacy",
         "terms": "/terms",
         "about": "#"
-      }
+      },
+      "freeShippingThreshold": 150,
+      "sameDayShippingCutoff": "12:00",
+      "lowStockThreshold": 10
     }
   },
   "draft": {
@@ -403,7 +406,10 @@
         "privacy": "/privacy",
         "terms": "/terms",
         "about": "#"
-      }
+      },
+      "freeShippingThreshold": 150,
+      "sameDayShippingCutoff": "12:00",
+      "lowStockThreshold": 10
     }
   },
   "version": 45,

@@ -175,5 +175,8 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
       terms: '/terms',
       about: '#',
     },
+    freeShippingThreshold: 150,
+    sameDayShippingCutoff: '12:00',
+    lowStockThreshold: 10,
   },
 };

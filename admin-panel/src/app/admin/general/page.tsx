@@ -84,6 +84,45 @@ export default function GeneralPage() {
           </FieldLabel>
         </FormCard>
 
+        <FormCard
+          title={t('general.shippingAndInventory')}
+          description={t('general.shippingAndInventoryDescription')}
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <FieldLabel label={t('general.freeShippingThreshold')}>
+              <input
+                type="number"
+                min={0}
+                step={10}
+                value={general.freeShippingThreshold}
+                onChange={(e) => updateGeneral({ freeShippingThreshold: Number(e.target.value) })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
+              />
+              <p className="mt-1 text-xs text-gray-500">{t('general.freeShippingThresholdHint')}</p>
+            </FieldLabel>
+            <FieldLabel label={t('general.sameDayShippingCutoff')}>
+              <input
+                type="time"
+                value={general.sameDayShippingCutoff}
+                onChange={(e) => updateGeneral({ sameDayShippingCutoff: e.target.value })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
+              />
+              <p className="mt-1 text-xs text-gray-500">{t('general.sameDayShippingCutoffHint')}</p>
+            </FieldLabel>
+            <FieldLabel label={t('general.lowStockThreshold')}>
+              <input
+                type="number"
+                min={0}
+                step={1}
+                value={general.lowStockThreshold}
+                onChange={(e) => updateGeneral({ lowStockThreshold: Number(e.target.value) })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
+              />
+              <p className="mt-1 text-xs text-gray-500">{t('general.lowStockThresholdHint')}</p>
+            </FieldLabel>
+          </div>
+        </FormCard>
+
         <FormCard title={t('general.socialLinks')}>
           <div className="space-y-2">
             {general.socialLinks.map((link, index) => (

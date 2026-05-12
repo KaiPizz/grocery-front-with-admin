@@ -284,6 +284,9 @@ const generalSchema = z.object({
     terms: z.string().max(500),
     about: z.string().max(500),
   }),
+  freeShippingThreshold: z.number().min(0).max(100000),
+  sameDayShippingCutoff: z.string().regex(/^([01]?\d|2[0-3]):[0-5]\d$/, 'Must be HH:MM'),
+  lowStockThreshold: z.number().int().min(0).max(10000),
 });
 
 // --- Top-level ---
