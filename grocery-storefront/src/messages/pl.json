@@ -156,7 +156,8 @@
     "removeSuccess": "Usunięto z ulubionych",
     "saveForLater": "Zapisz na później",
     "savedForLater": "Produkt zapisany na później",
-    "movedToCart": "Produkt dodany do koszyka"
+    "movedToCart": "Produkt dodany do koszyka",
+    "addToCartItem": "Dodaj {name} do koszyka"
   },
   "recipes": {
     "title": "Przepisy",

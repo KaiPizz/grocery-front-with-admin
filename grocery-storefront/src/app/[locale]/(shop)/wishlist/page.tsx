@@ -104,7 +104,7 @@ export default function WishlistPage() {
               style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
             >
               {item.slug ? (
-                <Link href={`/products/${item.slug}`} className="block">
+                <Link href={`/products/${item.slug}`} className="block" aria-hidden="true" tabIndex={-1}>
                   <div className="relative aspect-[4/3]" style={{ backgroundColor: 'var(--color-muted)' }}>
                     {imageUrl ? (
                       <Image
@@ -172,6 +172,7 @@ export default function WishlistPage() {
                     onClick={() => handleAddToCart(item.productId)}
                     className="h-11 rounded-xl px-4 flex items-center justify-center gap-2 font-semibold transition-all duration-fast active:scale-[0.98] checkout-btn"
                     style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}
+                    aria-label={t('addToCartItem', { name: item.name })}
                   >
                     <ShoppingCart className="w-4 h-4" aria-hidden="true" />
                     <span>{tCommon('addToCart')}</span>

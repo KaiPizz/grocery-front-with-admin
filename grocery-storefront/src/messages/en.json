@@ -156,7 +156,8 @@
     "removeSuccess": "Removed from wishlist",
     "saveForLater": "Save for later",
     "savedForLater": "Saved for later",
-    "movedToCart": "Added to cart"
+    "movedToCart": "Added to cart",
+    "addToCartItem": "Add {name} to cart"
   },
   "recipes": {
     "title": "Recipes",
