@@ -173,3 +173,9 @@
 - **Cause:** The spec mixed a future category-browse placeholder with shipped homepage behavior. Real multi-level categories and `/categories` are B1/B2 and remain backend-blocked. The test also depended on whatever the real admin config returned for hero/section visibility instead of setting the homepage contract explicitly.
 - **Fix:** Added a deterministic homepage config route mock and changed the mobile browse assertion to the shipped Shop-by-Zone links documented in `progress.md`. Removed the blocked quick-categories/scroll-track assertions.
 - **Rule:** Homepage tests must mock `StorefrontConfig` before `page.goto()` and assert shipped PRD/progress behavior. Do not assert deferred backlog features as if they already exist.
+
+### Tested skip navigation as an anchor under WebKit mobile emulation
+- **Error:** The homepage skip navigation test passed on the Pixel project but failed on the iPhone project after adding a standard anchor skip link.
+- **Cause:** WebKit/Safari-style tab traversal can skip anchor links unless full keyboard navigation is enabled, so an anchor-only fragment link did not reliably become the first keyboard focus target in this Playwright matrix.
+- **Fix:** Implemented the storefront skip control as the first DOM button with `aria-controls="main-content"` and programmatic focus on `main#main-content`; kept the test on a narrow viewport with touch-only emulation disabled for keyboard traversal.
+- **Rule:** For this storefront's skip-to-content affordance, prefer a focusable button that moves focus to the main landmark over an anchor-only fragment link.

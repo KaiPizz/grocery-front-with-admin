@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollToTopButton } from '@/components/layout/ScrollToTopButton';
@@ -9,10 +11,16 @@ import { usePathname } from '@/i18n/navigation';
 const NAV_HIDDEN_PREFIXES = ['/cart', '/checkout'] as const;
 
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
+  const tCommon = useTranslations('common');
   const pathname = usePathname();
   const navHidden = NAV_HIDDEN_PREFIXES.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
   );
+
+  function handleSkipToContent() {
+    const mainContent = document.getElementById('main-content');
+    mainContent?.focus();
+  }
 
   return (
     <div
@@ -23,8 +31,16 @@ export default function ShopLayout({ children }: { children: React.ReactNode }) 
           : 'calc(3.5rem + env(safe-area-inset-bottom, 0px))',
       }}
     >
+      <button
+        type="button"
+        className="skip-link"
+        aria-controls="main-content"
+        onClick={handleSkipToContent}
+      >
+        {tCommon('skipToContent')}
+      </button>
       <Header />
-      <main id="main-content" className="flex-1">{children}</main>
+      <main id="main-content" tabIndex={-1} className="flex-1">{children}</main>
       <ScrollToTopButton />
       <MobileBottomNav />
       <Footer />

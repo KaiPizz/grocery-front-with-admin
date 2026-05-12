@@ -20,7 +20,8 @@
     "closeMenu": "Zamknij menu",
     "itemCount": "{count, plural, one {# pozycja} few {# pozycje} many {# pozycji} other {# pozycji}}",
     "viewAllProducts": "Zobacz wszystkie produkty",
-    "viewAllRecipes": "Zobacz wszystkie przepisy"
+    "viewAllRecipes": "Zobacz wszystkie przepisy",
+    "skipToContent": "Przejdź do treści"
   },
   "nav": {
     "home": "Strona główna",

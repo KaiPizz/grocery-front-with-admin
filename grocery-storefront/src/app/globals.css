@@ -378,6 +378,40 @@ input[type='search']::-ms-reveal {
   border-width: 0;
 }
 
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  appearance: none;
+  background: var(--color-card);
+  box-shadow: 0 18px 35px -20px color-mix(in srgb, var(--color-foreground) 45%, transparent);
+  color: var(--color-foreground);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.65rem 1rem;
+  opacity: 0;
+  transform: translateY(calc(-100% - 1rem));
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* === Skeleton loading (GPU-accelerated with transform) === */
 .skeleton {
   @apply rounded;

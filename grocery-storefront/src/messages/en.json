@@ -20,7 +20,8 @@
     "closeMenu": "Close menu",
     "itemCount": "{count, plural, one {# item} other {# items}}",
     "viewAllProducts": "View all products",
-    "viewAllRecipes": "View all recipes"
+    "viewAllRecipes": "View all recipes",
+    "skipToContent": "Skip to content"
   },
   "nav": {
     "home": "Home",
