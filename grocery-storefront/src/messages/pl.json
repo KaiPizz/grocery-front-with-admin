@@ -187,6 +187,7 @@
     "total": "Razem",
     "checkout": "Przejdź do kasy",
     "remove": "Usuń",
+    "saveForLaterItem": "Zapisz {name} na później",
     "freeShippingReached": "Kwalifikujesz się do darmowej dostawy!",
     "freeShippingRemaining": "Dodaj jeszcze {amount}, aby uzyskać darmową dostawę",
     "zoneGroup": {

@@ -187,6 +187,7 @@
     "total": "Total",
     "checkout": "Proceed to checkout",
     "remove": "Remove",
+    "saveForLaterItem": "Save {name} for later",
     "freeShippingReached": "You qualify for free shipping!",
     "freeShippingRemaining": "Add {amount} more for free shipping",
     "zoneGroup": {

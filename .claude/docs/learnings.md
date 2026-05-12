@@ -185,3 +185,9 @@
 - **Cause:** Neither `bis_skin_checked` nor Summarizer API usage is emitted anywhere in source, tests, or `.next`; a clean Playwright Chromium run on `/en` captured no matching console messages and no `[bis_skin_checked]` DOM attributes. These warnings come from browser/extension tooling mutating or calling APIs in the page context.
 - **Fix:** Verified the strings are absent from source/build output and reproduced the page in a clean browser before touching code. Do not add `suppressHydrationWarning` or Summarizer shims to storefront components for these warnings; use a clean browser profile or disable the injecting extension/tool when validating hydration.
 - **Rule:** For console warnings naming unknown attributes or browser APIs, search source and built output, then reproduce in a clean browser. If the warning disappears, fix the browser environment instead of masking real app mismatches in code.
+
+### Reused generic labels on repeated cart item actions
+- **Error:** Each cart line exposed the same `Save for later` button name to assistive tech, so a keyboard or screen-reader shopper could not tell which product would be saved when multiple cart items exist.
+- **Cause:** The button reused the visible wishlist copy and missed the product-specific accessible naming pattern already used by remove and quantity controls.
+- **Fix:** Added a cart-scoped `saveForLaterItem` i18n label, applied it as `aria-label`, and covered the cart page with a RED→GREEN Playwright accessibility spec.
+- **Rule:** Any repeated per-product action in cart, wishlist, or product grids must include the product name in its accessible name, even when the visible label stays short.

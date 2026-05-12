@@ -93,6 +93,7 @@ export default function CartPage() {
               onClick={() => void handleSaveForLater(item)}
               className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-medium transition-opacity duration-fast hover:opacity-80"
               style={{ color: 'var(--color-primary)' }}
+              aria-label={t('saveForLaterItem', { name: item.name })}
             >
               <Heart className="w-3.5 h-3.5" aria-hidden="true" />
               {tWishlist('saveForLater')}

@@ -205,7 +205,7 @@ test.describe('mobile storefront smoke', () => {
     await expect(cartItem).toBeVisible();
     await expect(mobileSummaryBar).toBeVisible();
     await expect(mobileSummaryBar.getByRole('link', { name: /proceed to checkout/i })).toBeVisible();
-    const saveForLater = page.getByRole('button', { name: /save for later/i }).first();
+    const saveForLater = page.getByRole('button', { name: /save organic gala apples family value pack for later/i }).first();
     const decreaseQuantity = page.getByRole('button', { name: /decrease organic gala apples family value pack quantity/i }).first();
     await expect(saveForLater).toBeVisible();
     await expect(decreaseQuantity).toBeVisible();
