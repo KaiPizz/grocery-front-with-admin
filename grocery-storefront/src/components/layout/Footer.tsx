@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Leaf } from 'lucide-react';
+import { SocialBar } from '@/components/layout/SocialBar';
 import { Link } from '@/i18n/navigation';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 
@@ -14,6 +15,7 @@ export function Footer() {
   const logoUrl = siteConfig?.branding?.logoUrl;
   const footerCfg = siteConfig?.layout?.footer;
   const tagline = footerCfg?.tagline || t('tagline');
+  const socialLinks = siteConfig?.general?.socialLinks ?? [];
   const copyrightText = (footerCfg?.copyrightText || `\u00A9 {year} ${storeName}. Powered by Zira AI.`).replace('{year}', String(new Date().getFullYear()));
 
   // Map known footer labels to i18n translations so config doesn't force English
@@ -58,6 +60,7 @@ export function Footer() {
             <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-muted-foreground)' }}>
               {tagline}
             </p>
+            <SocialBar links={socialLinks} />
           </div>
 
           {columns ? (
