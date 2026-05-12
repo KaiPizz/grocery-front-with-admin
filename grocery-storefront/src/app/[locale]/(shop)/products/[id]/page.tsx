@@ -16,6 +16,7 @@ import { Breadcrumb } from '@/components/grocery/Breadcrumb';
 import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import { useChannel } from '@/hooks/use-channel';
 
@@ -50,13 +51,18 @@ export default function ProductDetailPage() {
   const [shipPromise, setShipPromise] = useState<'today' | 'tomorrow'>('tomorrow');
   const [inlineActionsNode, setInlineActionsNode] = useState<HTMLDivElement | null>(null);
   const channel = useChannel();
+  const siteConfig = useStorefrontConfig();
+  const cutoffStr = siteConfig?.general?.sameDayShippingCutoff ?? '12:00';
+  const lowStockThreshold = siteConfig?.general?.lowStockThreshold ?? 10;
 
   // Resolve same-day-shipping cutoff on client only to avoid SSR/CSR
-  // hydration mismatch on Date(). Cutoff hour hardcoded to 12 for now;
-  // backlog item B21 lifts this into StorefrontConfig.general.
+  // hydration mismatch on Date(). Cutoff comes from admin config (HH:MM).
   useEffect(() => {
-    setShipPromise(new Date().getHours() < 12 ? 'today' : 'tomorrow');
-  }, []);
+    const [h, m] = cutoffStr.split(':').map(Number);
+    const now = new Date();
+    const beforeCutoff = now.getHours() < h || (now.getHours() === h && now.getMinutes() < m);
+    setShipPromise(beforeCutoff ? 'today' : 'tomorrow');
+  }, [cutoffStr]);
 
   // Show the mobile sticky add-to-cart bar exactly when the inline CTA row
   // has scrolled out of view. rootMargin compensates for the sticky header.
@@ -236,7 +242,7 @@ export default function ProductDetailPage() {
               <span style={{ color: 'var(--color-foreground)' }}>
                 {(() => {
                   const qty = variant.quantityAvailable ?? 0;
-                  const lowStock = qty <= 10;
+                  const lowStock = qty <= lowStockThreshold;
                   const stockText = lowStock
                     ? (t('product.lowStockCount', { count: qty }) || `Only ${qty} left`)
                     : (t('product.inStock') || 'In stock');
