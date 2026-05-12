@@ -15,6 +15,7 @@ import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
 import { MiniCart } from './MiniCart';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeToggle } from './ThemeToggle';
+import { ShippingCountdown } from './ShippingCountdown';
 
 export function Header() {
   const t = useTranslations('nav');
@@ -219,7 +220,12 @@ export function Header() {
       role="banner"
       data-testid="mobile-sticky-header"
     >
-      <div className="container-grocery h-full flex items-center justify-between gap-4">
+      <ShippingCountdown cutoff={siteConfig?.general?.sameDayShippingCutoff} />
+
+      <div
+        className="container-grocery flex items-center justify-between gap-4"
+        style={{ height: 'var(--header-main-height)' }}
+      >
         <Link href="/" className="flex items-center gap-2.5 shrink-0 group" aria-label={`${storeName} Home`}>
           {logoUrl ? (
             <img src={logoUrl} alt={storeName} className="h-9 w-auto rounded-xl transition-transform duration-fast group-hover:scale-105" />

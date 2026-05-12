@@ -34,6 +34,11 @@
     "register": "Register",
     "logout": "Logout"
   },
+  "shippingCountdown": {
+    "static": "Order before {time} for same-day shipping",
+    "countdown": "Order in {time} for same-day shipping",
+    "tomorrow": "Ships tomorrow at {time}"
+  },
   "search": {
     "recentSearches": "Recent searches",
     "suggestions": "Suggestions",

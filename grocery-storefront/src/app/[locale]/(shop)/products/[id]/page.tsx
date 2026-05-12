@@ -18,6 +18,7 @@ import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
+import { DEFAULT_SAME_DAY_SHIPPING_CUTOFF, isBeforeShippingCutoff } from '@/lib/shipping-cutoff';
 import { useChannel } from '@/hooks/use-channel';
 
 function DetailSkeleton() {
@@ -52,16 +53,13 @@ export default function ProductDetailPage() {
   const [inlineActionsNode, setInlineActionsNode] = useState<HTMLDivElement | null>(null);
   const channel = useChannel();
   const siteConfig = useStorefrontConfig();
-  const cutoffStr = siteConfig?.general?.sameDayShippingCutoff ?? '12:00';
+  const cutoffStr = siteConfig?.general?.sameDayShippingCutoff ?? DEFAULT_SAME_DAY_SHIPPING_CUTOFF;
   const lowStockThreshold = siteConfig?.general?.lowStockThreshold ?? 10;
 
   // Resolve same-day-shipping cutoff on client only to avoid SSR/CSR
   // hydration mismatch on Date(). Cutoff comes from admin config (HH:MM).
   useEffect(() => {
-    const [h, m] = cutoffStr.split(':').map(Number);
-    const now = new Date();
-    const beforeCutoff = now.getHours() < h || (now.getHours() === h && now.getMinutes() < m);
-    setShipPromise(beforeCutoff ? 'today' : 'tomorrow');
+    setShipPromise(isBeforeShippingCutoff(new Date(), cutoffStr) ? 'today' : 'tomorrow');
   }, [cutoffStr]);
 
   // Show the mobile sticky add-to-cart bar exactly when the inline CTA row

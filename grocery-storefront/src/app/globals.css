@@ -51,7 +51,9 @@
   --color-allergen-bg: #fef2f2;
 
   /* Layout */
-  --header-height: 64px;
+  --header-main-height: 64px;
+  --shipping-countdown-height: 32px;
+  --header-height: calc(var(--header-main-height) + var(--shipping-countdown-height));
   --radius: 0.75rem;
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);

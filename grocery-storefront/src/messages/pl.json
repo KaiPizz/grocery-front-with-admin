@@ -34,6 +34,11 @@
     "register": "Zarejestruj się",
     "logout": "Wyloguj"
   },
+  "shippingCountdown": {
+    "static": "Zamów przed {time}, a wyślemy dziś",
+    "countdown": "Zamów w ciągu {time}, a wyślemy dziś",
+    "tomorrow": "Wysyłka jutro o {time}"
+  },
   "search": {
     "recentSearches": "Ostatnie wyszukiwania",
     "suggestions": "Sugestie",
