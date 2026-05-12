@@ -143,3 +143,9 @@
 - **Cause:** `clock.install({ time })` starts fake time at the requested instant but lets it progress. Navigation/hydration time consumes seconds before the assertion runs.
 - **Fix:** Install the clock one minute before the target wall time, let the page load, then call `page.clock.pauseAt(targetTime)` before asserting exact countdown text. Use `page.clock.runFor(1000)` to prove one-second ticks.
 - **Rule:** For exact countdown tests, do not rely on `clock.install({ time })` alone. Install early, navigate, `pauseAt()` the target time, then advance with `runFor()` for deterministic ticks.
+
+### Homepage specs inherited real admin config and asserted deferred category UI
+- **Error:** `mobile-homepage.spec.ts` failed on `mobile-home-quick-categories`, and targeted runs could also fail on missing hero/desktop hero because the test did not mock storefront config.
+- **Cause:** The spec mixed a future category-browse placeholder with shipped homepage behavior. Real multi-level categories and `/categories` are B1/B2 and remain backend-blocked. The test also depended on whatever the real admin config returned for hero/section visibility instead of setting the homepage contract explicitly.
+- **Fix:** Added a deterministic homepage config route mock and changed the mobile browse assertion to the shipped Shop-by-Zone links documented in `progress.md`. Removed the blocked quick-categories/scroll-track assertions.
+- **Rule:** Homepage tests must mock `StorefrontConfig` before `page.goto()` and assert shipped PRD/progress behavior. Do not assert deferred backlog features as if they already exist.

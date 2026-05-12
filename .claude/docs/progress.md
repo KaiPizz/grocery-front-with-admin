@@ -158,7 +158,7 @@
 |---------|--------|-------|
 | Config sync (admin → storefront) | ✅ | Draft/publish flow, 5-min cache TTL on storefront side. |
 | Type sync (`StorefrontConfig`) | ✅ | Defined in both apps — must be kept in sync manually. |
-| E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. 2026-05-11: added spec-first testing rule after finding implementation-shaped assertions in mobile product layout tests. 2026-05-12: added true RED→GREEN spec-first B19 SocialBar coverage (12 runs green; full suite 112/114 with only documented homepage stale-testid failures). 2026-05-12: added true RED→GREEN B8 shipping countdown coverage (16 runs green; full suite 128/130 with only documented homepage stale-testid failures). |
+| E2E tests (Playwright) | 🔧 | Test infrastructure set up, mock-route pattern established. Coverage unknown — need audit. 2026-05-11: added spec-first testing rule after finding implementation-shaped assertions in mobile product layout tests. 2026-05-12: added true RED→GREEN spec-first B19 SocialBar coverage (12 runs green). 2026-05-12: added true RED→GREEN B8 shipping countdown coverage (16 runs green). 2026-05-12: repaired stale mobile homepage spec by replacing the blocked quick-categories assertion with shipped Shop-by-Zone behavior and deterministic config mocking; full suite now 130/130 green. |
 | Error handling | ✅ | Consistent toast + banner pattern across checkout and forms. |
 | Accessibility | 🔧 | ARIA labels on interactive elements, focus-visible ring, sr-only utility, landmark roles. 2026-05-10 mobile tap targets bumped to 44x44 (WCAG 2.5.5 AAA) on `MobileProductCard` + PD wishlist/add buttons. Full audit still pending. |
 | SEO meta tags | 🔧 | Admin SEO config page exists. Actual meta tag injection on storefront pages not verified. |
@@ -172,7 +172,6 @@
 |-------|----------|-------|
 | 5 admin block editors are stubs | Low | `CircularGridEditor`, `GradientPicker`, `ImageSizeHint`, `LongBannerEditor`, `SliderBlockEditor` — all 45-byte placeholder files. |
 | Checkout page is 1492 lines | Low | Functional but large. Could be split if more features are added. |
-| Mobile homepage spec asserts non-existent testid | Low | `mobile-homepage.spec.ts` line 11 asserts `getByTestId('mobile-home-quick-categories')` which has no source counterpart. Predates the spec-first rule; the failing test was not flagged at the time. Audit when working on homepage layout. |
 | Some E2E tests are implementation-shaped | Medium | Several mobile tests assert exact DOM/CSS geometry (`getComputedStyle`, `boundingBox`, pixel thresholds) without an explicit PRD/spec anchor. Audit and rewrite high-value tests so they protect user workflows, accessibility, and PRD requirements rather than freezing current UI mechanics. |
 
 ---
