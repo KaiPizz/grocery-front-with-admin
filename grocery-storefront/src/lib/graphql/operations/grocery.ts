@@ -585,10 +585,32 @@ export const CHECKOUT_NOTE_UPDATE = `
 `;
 
 export const AVAILABLE_PAYMENT_METHODS_QUERY = `
-  query AvailablePaymentMethods($channel: String!, $countryCode: String!) {
-    availablePaymentMethods(channel: $channel, countryCode: $countryCode) {
-      code
+  query AvailablePaymentMethods($channel: String!) {
+    availablePaymentMethods(channel: $channel) {
+      id
       name
+      description
+      provider
+      isActive
+      fee { amount currency }
+    }
+  }
+`;
+
+export const CHECKOUT_PROMO_CODE_ADD = `
+  mutation CheckoutPromoCodeAdd($checkoutId: ID!, $promoCode: String!) {
+    checkoutPromoCodeAdd(input: { checkoutId: $checkoutId, promoCode: $promoCode }) {
+      checkout { id }
+      errors { field message code }
+    }
+  }
+`;
+
+export const CHECKOUT_PROMO_CODE_REMOVE = `
+  mutation CheckoutPromoCodeRemove($checkoutId: ID!) {
+    checkoutPromoCodeRemove(checkoutId: $checkoutId) {
+      checkout { id }
+      errors { field message code }
     }
   }
 `;

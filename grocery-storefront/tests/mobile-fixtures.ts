@@ -339,12 +339,20 @@ const DELIVERY_OPTIONS = [
 
 const PAYMENT_METHODS = [
   {
-    code: 'card',
+    id: 'card',
     name: 'Card',
+    description: 'Pay by card',
+    provider: 'stripe',
+    isActive: true,
+    fee: { amount: 0, currency: 'PLN' },
   },
   {
-    code: 'blik',
+    id: 'blik',
     name: 'BLIK',
+    description: 'Pay with BLIK',
+    provider: 'blik',
+    isActive: true,
+    fee: { amount: 0, currency: 'PLN' },
   },
 ];
 
@@ -916,12 +924,32 @@ export async function mockMobileStorefront(
         checkoutPaymentCreate: {
           payment: {
             id: 'payment-1',
-            gateway: 'card',
+            gateway: body.variables?.input?.gateway ?? 'card',
             status: 'AUTHORIZED',
             clientSecret: null,
             actionUrl: null,
             total: checkout.totalPrice.gross,
           },
+          errors: [],
+        },
+      });
+      return;
+    }
+
+    if (operationName === 'CheckoutPromoCodeAdd' || query.includes('mutation CheckoutPromoCodeAdd')) {
+      await fulfill(route, {
+        checkoutPromoCodeAdd: {
+          checkout: { id: checkout.id },
+          errors: [],
+        },
+      });
+      return;
+    }
+
+    if (operationName === 'CheckoutPromoCodeRemove' || query.includes('mutation CheckoutPromoCodeRemove')) {
+      await fulfill(route, {
+        checkoutPromoCodeRemove: {
+          checkout: { id: checkout.id },
           errors: [],
         },
       });

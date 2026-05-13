@@ -8,6 +8,7 @@
     "start": "next start -p 3008",
     "lint": "next lint",
     "test:e2e": "playwright test",
+    "test:checkout-contract": "node --test tests/checkout-backend-contract.test.mjs",
     "test:cart-probe": "node --test tests/cart-endpoints-probe.test.mjs",
     "probe:cart": "node scripts/cart-endpoints-probe.mjs",
     "probe:cart:report": "node scripts/cart-endpoints-probe.mjs --output=docs/backend-cart-failure-report.md"

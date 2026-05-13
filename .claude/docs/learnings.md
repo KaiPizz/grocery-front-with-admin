@@ -40,6 +40,12 @@
 
 ## Zyra API Errors
 
+### Got local dev IP banned by fail2ban from GraphQL 400 bursts
+- **Error:** Storefront dev could load Next pages but `/api/graphql` hung with `UND_ERR_CONNECT_TIMEOUT`, and `Test-NetConnection zira-ai.com -Port 443` failed even though DNS and ping worked.
+- **Cause:** Zyra production `fail2ban` jail `nginx-bad-request` banned the current NAT IP after repeated `POST /graphql/storefront` requests returned HTTP 400 during schema/probe iteration. After ban, traffic was dropped at the iptables `f2b-nginx-bad-request` chain before nginx, so there were no nginx access logs.
+- **Fix:** Backend unbanned the current public IP (`46.134.113.125`). Verified `https://zira-ai.com/api/v1/health` and a valid `/api/graphql` category query through the local Next proxy returned 200.
+- **Rule:** Do not run bursty malformed GraphQL probes against production. In PowerShell, avoid hand-quoted curl JSON with `$variables`; use Node `JSON.stringify`, a saved JSON file, or a GraphQL client. If dev probing is needed, whitelist the current dev IP in fail2ban or use a local backend.
+
 ### Assumed GraphQL response fields were non-null
 - **Error:** Code like `product.pricing.priceRange.start.gross.amount` crashed with "Cannot read property of null" because intermediate fields were null.
 - **Cause:** Zyra returns nullable fields at every nesting level. A variant can have `pricing: null` even though the product has a price elsewhere.
@@ -131,6 +137,12 @@
 ---
 
 ## Testing Errors
+
+### Ran `next build` while Playwright was running `next dev`
+- **Error:** `npm run build` failed during page data collection with `PageNotFoundError: Cannot find module for page: /_document`.
+- **Cause:** The build was started in parallel with Playwright, whose web server was running `npx next dev` in the same app directory. Both processes touched `.next` at the same time.
+- **Fix:** Waited for Playwright to finish, then reran `npm run build` sequentially; the build passed.
+- **Rule:** Do not run `next build` concurrently with Playwright or any active `next dev` process for the same workspace. Run Next build and Playwright sequentially.
 
 ### Tested server-rendered config with browser-only route mocks
 - **Error:** A SEO metadata test would have been unable to prove admin-configured metadata if it only used `page.route('**/api/config/**')`, because that intercepts browser requests but not the Next.js server render.

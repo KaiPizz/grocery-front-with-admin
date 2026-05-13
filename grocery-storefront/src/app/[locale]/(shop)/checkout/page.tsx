@@ -27,6 +27,8 @@ import {
   CHECKOUT_CREATE_MUTATION,
   CHECKOUT_NOTE_UPDATE,
   CHECKOUT_PAYMENT_CREATE,
+  CHECKOUT_PROMO_CODE_ADD,
+  CHECKOUT_PROMO_CODE_REMOVE,
   CHECKOUT_SHIPPING_ADDRESS_UPDATE,
   CHECKOUT_SHIPPING_METHOD_UPDATE,
 } from '@/lib/graphql/operations/grocery';
@@ -94,8 +96,15 @@ interface CheckoutShippingMethodResponse {
 
 interface PaymentMethodsResponse {
   availablePaymentMethods: Array<{
-    code?: string | null;
+    id: string;
     name: string;
+    description: string | null;
+    provider: string | null;
+    isActive: boolean | null;
+    fee: {
+      amount: number;
+      currency: string;
+    } | null;
   }> | null;
 }
 
@@ -124,6 +133,21 @@ interface CheckoutNoteUpdateResponse {
     } | null;
     errors: CheckoutMutationError[] | null;
   } | null;
+}
+
+interface CheckoutPromoCodeResponse {
+  checkout: {
+    id: string;
+  } | null;
+  errors: CheckoutMutationError[] | null;
+}
+
+interface CheckoutPromoCodeAddResponse {
+  checkoutPromoCodeAdd: CheckoutPromoCodeResponse | null;
+}
+
+interface CheckoutPromoCodeRemoveResponse {
+  checkoutPromoCodeRemove: CheckoutPromoCodeResponse | null;
 }
 
 interface CheckoutCompleteResponse {
@@ -173,6 +197,7 @@ interface CheckoutDraftState {
   form: DeliveryFormState;
   checkoutId: string | null;
   promoCode: string;
+  appliedPromoCode: string | null;
 }
 
 const PAYMENT_ICONS: Record<string, typeof CreditCard> = {
@@ -208,12 +233,16 @@ function getRequestMessage(
   payloadErrors?: CheckoutMutationError[] | null,
   fallback = 'Request failed.'
 ) {
-  return getPayloadMessage(payloadErrors) ?? getGraphqlErrorMessage(topLevelErrors) ?? fallback;
+  return getGraphqlErrorMessage(topLevelErrors) ?? getPayloadMessage(payloadErrors) ?? fallback;
 }
 
 function getPaymentIcon(method: PaymentMethod) {
-  const code = method.code?.toLowerCase() ?? method.id.toLowerCase();
-  return PAYMENT_ICONS[code] ?? CreditCard;
+  const source = `${method.id} ${method.provider ?? ''} ${method.name}`.toLowerCase();
+
+  if (source.includes('cash') || source.includes('cod')) return Banknote;
+  if (source.includes('bank') || source.includes('p24') || source.includes('tpay')) return Building2;
+
+  return PAYMENT_ICONS[method.id.toLowerCase()] ?? CreditCard;
 }
 
 function createInitialFormState(email?: string | null): DeliveryFormState {
@@ -251,13 +280,13 @@ function translateDeliveryOptionName(locale: string, option: CartDeliveryOption)
 }
 
 function translatePaymentMethodName(locale: string, method: PaymentMethod): string {
-  const code = (method.code ?? method.id).toLowerCase();
+  const code = `${method.id} ${method.provider ?? ''} ${method.name}`.toLowerCase();
 
-  if (code === 'card') return locale === 'pl' ? 'Karta płatnicza' : 'Credit/Debit Card';
-  if (code === 'bank_transfer') return locale === 'pl' ? 'Przelew bankowy' : 'Bank Transfer';
-  if (code === 'cod') return locale === 'pl' ? 'Płatność przy odbiorze' : 'Cash on Delivery';
-  if (code === 'blik') return 'BLIK';
-  if (code === 'p24') return 'Przelewy24';
+  if (code.includes('blik')) return 'BLIK';
+  if (code.includes('p24') || code.includes('przelewy24')) return 'Przelewy24';
+  if (code.includes('bank_transfer') || code.includes('bank transfer')) return locale === 'pl' ? 'Przelew bankowy' : 'Bank Transfer';
+  if (code.includes('cod') || code.includes('cash')) return locale === 'pl' ? 'Płatność przy odbiorze' : 'Cash on Delivery';
+  if (code.includes('card') || code.includes('stripe')) return locale === 'pl' ? 'Karta płatnicza' : 'Credit/Debit Card';
 
   return method.name;
 }
@@ -284,7 +313,6 @@ export default function CheckoutPage() {
   const cost = useCartStore((state) => state.cost);
   const buyerIdentity = useCartStore((state) => state.buyerIdentity);
   const note = useCartStore((state) => state.note);
-  const discountCodes = useCartStore((state) => state.discountCodes);
   const deliveryOptions = useCartStore((state) => state.deliveryOptions);
   const selectedDeliveryOption = useCartStore((state) => state.selectedDeliveryOption);
   const initialized = useCartStore((state) => state.initialized);
@@ -292,7 +320,6 @@ export default function CheckoutPage() {
   const cartError = useCartStore((state) => state.error);
   const getSubtotal = useCartStore((state) => state.getSubtotal);
   const updateBuyerIdentity = useCartStore((state) => state.updateBuyerIdentity);
-  const updateDiscountCodes = useCartStore((state) => state.updateDiscountCodes);
   const updateNote = useCartStore((state) => state.updateNote);
   const fetchDeliveryOptions = useCartStore((state) => state.fetchDeliveryOptions);
   const selectDeliveryOption = useCartStore((state) => state.selectDeliveryOption);
@@ -304,6 +331,7 @@ export default function CheckoutPage() {
   const [form, setForm] = useState<DeliveryFormState>(() => createInitialFormState(sessionEmail));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [promoCode, setPromoCode] = useState('');
+  const [appliedPromoCode, setAppliedPromoCode] = useState<string | null>(null);
   const [checkoutId, setCheckoutId] = useState<string | null>(searchParams.get('checkoutId'));
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
@@ -349,10 +377,9 @@ export default function CheckoutPage() {
     [locale]
   );
 
-  const loadPaymentMethods = useCallback(async (countryCodeOverride?: string) => {
+  const loadPaymentMethods = useCallback(async () => {
     const response = await graphqlRequest<PaymentMethodsResponse>(AVAILABLE_PAYMENT_METHODS_QUERY, {
       channel,
-      countryCode: countryCodeOverride ?? normalizeCountryCode(form.country),
     });
     const paymentMethodsMessage = getGraphqlErrorMessage(response.errors);
 
@@ -362,15 +389,20 @@ export default function CheckoutPage() {
       return false;
     }
 
-    const mappedMethods: PaymentMethod[] = (response.data?.availablePaymentMethods ?? []).map((method) => ({
-      id: method.code ?? method.name,
-      code: method.code ?? undefined,
-      name: method.name,
-    }));
+    const mappedMethods: PaymentMethod[] = (response.data?.availablePaymentMethods ?? [])
+      .filter((method) => method.isActive !== false)
+      .map((method) => ({
+        id: method.id,
+        name: method.name,
+        description: method.description,
+        provider: method.provider,
+        isActive: method.isActive,
+        fee: method.fee,
+      }));
 
     setPaymentMethods(mappedMethods);
     return true;
-  }, [channel, form.country]);
+  }, [channel]);
 
   /* ── Fetch saved addresses for authenticated users ── */
   useEffect(() => {
@@ -416,8 +448,8 @@ export default function CheckoutPage() {
       return;
     }
 
-    void loadPaymentMethods(normalizeCountryCode(form.country));
-  }, [form.country, isHydrated, loadPaymentMethods, paymentMethods.length, selectedDeliveryOption, step]);
+    void loadPaymentMethods();
+  }, [isHydrated, loadPaymentMethods, paymentMethods.length, selectedDeliveryOption, step]);
 
   useEffect(() => {
     const returnedCheckoutId = searchParams.get('checkoutId');
@@ -454,6 +486,7 @@ export default function CheckoutPage() {
       setStep(draft.step);
       setCheckoutId((current) => current ?? draft.checkoutId);
       setPromoCode(draft.promoCode);
+      setAppliedPromoCode(draft.appliedPromoCode ?? null);
     } catch {
       window.sessionStorage.removeItem(CHECKOUT_DRAFT_KEY);
     }
@@ -470,10 +503,11 @@ export default function CheckoutPage() {
       form,
       checkoutId,
       promoCode,
+      appliedPromoCode,
     };
 
     window.sessionStorage.setItem(CHECKOUT_DRAFT_KEY, JSON.stringify(draft));
-  }, [checkoutId, completedSteps, form, isHydrated, promoCode, step]);
+  }, [appliedPromoCode, checkoutId, completedSteps, form, isHydrated, promoCode, step]);
 
   useEffect(() => {
     if (step === 'review') {
@@ -492,10 +526,6 @@ export default function CheckoutPage() {
     ? cartTotalAmount
     : displaySubtotal;
   const displayTotal = serverTotal ?? discountedTotal + shippingCost;
-  const appliedDiscount = useMemo(
-    () => discountCodes.find((entry) => entry.applicable),
-    [discountCodes]
-  );
   const summaryContent = (
     <>
       <ul className="space-y-3 mb-5" role="list">
@@ -530,8 +560,8 @@ export default function CheckoutPage() {
         </div>
         <div className="flex justify-between text-sm">
           <span style={{ color: 'var(--color-muted-foreground)' }}>{uiText.discountLabel}</span>
-          <span className="font-medium" style={{ color: appliedDiscount ? 'var(--color-fresh)' : 'var(--color-muted-foreground)' }}>
-            {appliedDiscount ? appliedDiscount.code : uiText.noneLabel}
+          <span className="font-medium" style={{ color: appliedPromoCode ? 'var(--color-fresh)' : 'var(--color-muted-foreground)' }}>
+            {appliedPromoCode ?? uiText.noneLabel}
           </span>
         </div>
         <div className="flex justify-between pt-2 font-bold">
@@ -543,11 +573,11 @@ export default function CheckoutPage() {
       </div>
 
       <div className="mt-5">
-        {discountCodes.length > 0 ? (
+        {appliedPromoCode ? (
           <div className="flex items-center gap-2 rounded-xl border px-3 py-3 text-sm" style={{ borderColor: 'var(--color-border)' }}>
             <Tag className="h-4 w-4 shrink-0" style={{ color: 'var(--color-fresh)' }} aria-hidden="true" />
             <span className="flex-1 font-medium" style={{ color: 'var(--color-foreground)' }}>
-              {discountCodes.map((entry) => entry.code).join(', ')}
+              {appliedPromoCode}
             </span>
             <button
               type="button"
@@ -608,6 +638,18 @@ export default function CheckoutPage() {
       next.add(nextStep);
       return next;
     });
+  }
+
+  function resetPaymentSelectionForCheckoutChange() {
+    setSelectedPaymentMethod(null);
+    setPaymentSession(null);
+    setCompletedSteps((current) => {
+      const next = new Set(Array.from(current));
+      next.delete('payment');
+      next.delete('review');
+      return next;
+    });
+    setStep((current) => current === 'review' ? 'payment' : current);
   }
 
   function validateDeliveryStep(formOverride?: DeliveryFormState) {
@@ -724,7 +766,7 @@ export default function CheckoutPage() {
         return;
       }
 
-      await loadPaymentMethods(normalizeCountryCode(form.country));
+      await loadPaymentMethods();
 
       markCompleted('shipping');
       setStep('payment');
@@ -736,6 +778,15 @@ export default function CheckoutPage() {
   async function initializeCheckoutHandoff() {
     if (checkoutId) {
       return checkoutId;
+    }
+
+    const legacyShippingMethodId = selectedDeliveryOption?.id;
+
+    if (!legacyShippingMethodId) {
+      const message = uiText.selectDeliveryFirst;
+      setErrorBanner(message);
+      toast.error(message);
+      return null;
     }
 
     setBusy(true);
@@ -798,15 +849,6 @@ export default function CheckoutPage() {
         return null;
       }
 
-      const legacyShippingMethodId = selectedDeliveryOption?.id;
-
-      if (!legacyShippingMethodId) {
-        const message = uiText.selectDeliveryFirst;
-        setErrorBanner(message);
-        toast.error(message);
-        return null;
-      }
-
       const shippingMethodResponse = await graphqlRequest<CheckoutShippingMethodResponse>(
         CHECKOUT_SHIPPING_METHOD_UPDATE,
         {
@@ -849,7 +891,7 @@ export default function CheckoutPage() {
         }
       }
 
-      await loadPaymentMethods(normalizeCountryCode(form.country));
+      await loadPaymentMethods();
       return nextCheckoutId;
     } finally {
       setBusy(false);
@@ -874,7 +916,7 @@ export default function CheckoutPage() {
       const response = await graphqlRequest<PaymentCreateResponse>(CHECKOUT_PAYMENT_CREATE, {
         checkoutId: legacyCheckoutId,
         input: {
-          gateway: method.code ?? method.id,
+          gateway: method.id,
           returnUrl,
         },
       });
@@ -919,19 +961,33 @@ export default function CheckoutPage() {
       return;
     }
 
+    const legacyCheckoutId = await initializeCheckoutHandoff();
+
+    if (!legacyCheckoutId) {
+      return;
+    }
+
+    const nextPromoCode = promoCode.trim();
+
     setBusy(true);
     setErrorBanner(null);
 
     try {
-      const success = await updateDiscountCodes([promoCode.trim()]);
+      const response = await graphqlRequest<CheckoutPromoCodeAddResponse>(CHECKOUT_PROMO_CODE_ADD, {
+        checkoutId: legacyCheckoutId,
+        promoCode: nextPromoCode,
+      });
+      const payload = response.data?.checkoutPromoCodeAdd;
+      const message = getRequestMessage(response.errors, payload?.errors, 'Failed to apply promo code.');
 
-      if (!success) {
-        const message = useCartStore.getState().error ?? 'Failed to apply promo code.';
+      if (getGraphqlErrorMessage(response.errors) || getPayloadMessage(payload?.errors) || !payload?.checkout) {
         setErrorBanner(message);
         toast.error(message);
         return;
       }
 
+      setAppliedPromoCode(nextPromoCode);
+      resetPaymentSelectionForCheckoutChange();
       toast.success(t('promoApplied'));
     } finally {
       setBusy(false);
@@ -939,19 +995,31 @@ export default function CheckoutPage() {
   }
 
   async function handlePromoRemove() {
+    if (!checkoutId) {
+      const message = 'Checkout is not ready yet.';
+      setErrorBanner(message);
+      toast.error(message);
+      return;
+    }
+
     setBusy(true);
     setErrorBanner(null);
 
     try {
-      const success = await updateDiscountCodes([]);
+      const response = await graphqlRequest<CheckoutPromoCodeRemoveResponse>(CHECKOUT_PROMO_CODE_REMOVE, {
+        checkoutId,
+      });
+      const payload = response.data?.checkoutPromoCodeRemove;
+      const message = getRequestMessage(response.errors, payload?.errors, 'Failed to remove promo code.');
 
-      if (!success) {
-        const message = useCartStore.getState().error ?? 'Failed to remove promo code.';
+      if (getGraphqlErrorMessage(response.errors) || getPayloadMessage(payload?.errors) || !payload?.checkout) {
         setErrorBanner(message);
         toast.error(message);
         return;
       }
 
+      setAppliedPromoCode(null);
+      resetPaymentSelectionForCheckoutChange();
       setPromoCode('');
     } finally {
       setBusy(false);
@@ -1337,6 +1405,7 @@ export default function CheckoutPage() {
                   {paymentMethods.map((method) => {
                     const selected = selectedPaymentMethod?.id === method.id;
                     const Icon = getPaymentIcon(method);
+                    const paymentDetail = method.description?.trim() || method.provider?.trim() || null;
 
                     return (
                       <button
@@ -1357,9 +1426,9 @@ export default function CheckoutPage() {
                             <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
                               {translatePaymentMethodName(locale, method)}
                             </p>
-                            {method.code && (
-                              <p className="text-xs mt-1 uppercase tracking-[0.16em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                                {method.code}
+                            {paymentDetail && (
+                              <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
+                                {paymentDetail}
                               </p>
                             )}
                           </div>
