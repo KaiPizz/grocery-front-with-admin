@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-12
+> **Last updated:** 2026-05-13
 
 ---
 
@@ -45,6 +45,12 @@
 - **Cause:** Zyra returns nullable fields at every nesting level. A variant can have `pricing: null` even though the product has a price elsewhere.
 - **Fix:** Chain every access with `?.` and provide fallbacks: `product?.pricing?.priceRange?.start?.gross?.amount ?? 0`.
 - **Rule:** Never assume a nested field from Zyra exists. Always use optional chaining with defaults.
+
+### Reused stale Zyra checkout/category assumptions after backend contract changed
+- **Error:** Frontend planning still treated category slugs as unsafe, payment methods as `{ code, name }` with `countryCode`, and promo codes as cart-level discounts even after backend confirmed the live contract.
+- **Cause:** Important backend-bot findings were living in chat/downloaded notes instead of durable docs. The live backend schema has `Category.slug: String!` fixed by production commit `f0c0133a`, `availablePaymentMethods(channel)` with `PaymentMethod.id`, and legacy checkout promo mutations that run after `checkoutCreateFull`.
+- **Fix:** Recorded the contract in the wiki vault at `D:\kaipizz-second-brain\store-front-brain\wiki\decisions\enail-storefront-zyra-storefront-contract.md`. Frontend work should use category slug routes, query `availablePaymentMethods(channel) { id name description provider isActive fee { amount currency } }`, pass `id` as `CheckoutPaymentInput.gateway`, and apply promo codes with `checkoutPromoCodeAdd(input: { checkoutId, promoCode })` after checkout creation.
+- **Rule:** Before changing Zyra GraphQL operations, read the vault contract page first. Do not resurrect old probes or stale schema guesses unless live verification disproves the documented contract.
 
 ### Wishlist sync returned success but empty items
 - **Error:** After syncing wishlist to server, querying the wishlist returned zero items even though sync said `success: true`. The UI cleared the wishlist.
