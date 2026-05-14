@@ -356,6 +356,54 @@ const PAYMENT_METHODS = [
   },
 ];
 
+function buildCategoryFixtures(products: Array<(typeof PRODUCTS)[number]>) {
+  const categories = new Map<string, (typeof PRODUCTS)[number]['category']>();
+
+  for (const product of products) {
+    categories.set(product.category.id, product.category);
+  }
+
+  categories.set('cat-household', {
+    id: 'cat-household',
+    name: 'Household',
+    slug: 'household',
+  });
+
+  return Array.from(categories.values());
+}
+
+function getProductsForCategory(products: Array<(typeof PRODUCTS)[number]>, categoryId: string) {
+  return products.filter((product) => product.category.id === categoryId);
+}
+
+function buildCategoryNode(
+  category: (typeof PRODUCTS)[number]['category'],
+  products: Array<(typeof PRODUCTS)[number]>
+) {
+  return {
+    ...category,
+    level: 0,
+    description: null,
+    backgroundImage: null,
+    parent: null,
+    children: { edges: [] },
+    products: {
+      totalCount: getProductsForCategory(products, category.id).length,
+    },
+  };
+}
+
+function buildCategoryEdge(
+  category: (typeof PRODUCTS)[number]['category'],
+  products: Array<(typeof PRODUCTS)[number]>,
+  index: number
+) {
+  return {
+    cursor: `category-${index + 1}`,
+    node: buildCategoryNode(category, products),
+  };
+}
+
 function buildProductEdge(product: (typeof PRODUCTS)[number], index: number) {
   return {
     cursor: `cursor-${index + 1}`,
@@ -371,6 +419,14 @@ function getProductPrice(product: (typeof PRODUCTS)[number]) {
 function matchesProductsFilter(product: (typeof PRODUCTS)[number], filter: Record<string, any> | undefined) {
   if (!filter) {
     return true;
+  }
+
+  if (Array.isArray(filter.categories) && filter.categories.length > 0) {
+    const categoryKeys = filter.categories.map((value: unknown) => String(value));
+
+    if (!categoryKeys.includes(product.category.id) && !categoryKeys.includes(product.category.slug)) {
+      return false;
+    }
   }
 
   if (Array.isArray(filter.excludeAllergens) && filter.excludeAllergens.length > 0) {
@@ -539,6 +595,7 @@ export async function mockMobileStorefront(
 ) {
   const products = options.facets === 'empty' ? PRODUCTS_WITH_EMPTY_FACETS : PRODUCTS;
   const productsById = new Map(products.map((product) => [product.id, product]));
+  const categoryFixtures = buildCategoryFixtures(products);
   const featuredProduct = products[0] ?? PRIMARY_PRODUCT;
   const cartCostMode = options.cartCosts ?? 'priced';
   let cart = buildCart(options.cart === 'single-item' ? [buildCartLine(1, cartCostMode)] : []);
@@ -618,6 +675,39 @@ export async function mockMobileStorefront(
             },
           })),
         },
+      });
+      return;
+    }
+
+    if (operationName === 'Categories' || query.includes('query Categories')) {
+      await fulfill(route, {
+        categories: {
+          edges: categoryFixtures.map((category, index) => buildCategoryEdge(category, products, index)),
+          pageInfo: { hasNextPage: false, endCursor: null },
+          totalCount: categoryFixtures.length,
+        },
+      });
+      return;
+    }
+
+    if (operationName === 'CategoryBySlug' || query.includes('query CategoryBySlug')) {
+      const requestedSlug = body.variables?.slug;
+      const matchedCategory = typeof requestedSlug === 'string'
+        ? categoryFixtures.find((category) => category.slug === requestedSlug) ?? null
+        : null;
+      const categoryProducts = matchedCategory ? getProductsForCategory(products, matchedCategory.id) : [];
+
+      await fulfill(route, {
+        category: matchedCategory
+          ? {
+            ...buildCategoryNode(matchedCategory, products),
+            products: {
+              edges: categoryProducts.map(buildProductEdge),
+              pageInfo: { hasNextPage: false, endCursor: null },
+              totalCount: categoryProducts.length,
+            },
+          }
+          : null,
       });
       return;
     }

@@ -1,0 +1,193 @@
+import { getLocale, getTranslations } from 'next-intl/server';
+import { ArrowLeft, RefreshCw } from 'lucide-react';
+
+import { Link } from '@/i18n/navigation';
+import { CATEGORY_BY_SLUG_QUERY } from '@/lib/graphql/operations/grocery';
+import { serverGraphqlRequest } from '@/lib/graphql/server-request';
+import { resolveChannel } from '@/lib/channel';
+import { CategoryProductGrid } from './CategoryProductGrid';
+import type { GroceryProduct } from '@/types';
+
+const PAGE_SIZE = 24;
+
+interface CategoryChildNode {
+  id: string;
+  slug: string;
+  name: string;
+  level: number | null;
+}
+
+interface CategoryProductConnection {
+  edges: Array<{
+    node: GroceryProduct;
+    cursor: string;
+  }>;
+  pageInfo: {
+    hasNextPage: boolean;
+    endCursor: string | null;
+  };
+  totalCount: number;
+}
+
+interface CategoryNode {
+  id: string;
+  slug: string;
+  name: string;
+  level: number | null;
+  description: string | null;
+  backgroundImage: {
+    url: string;
+    alt: string | null;
+  } | null;
+  parent: {
+    id: string;
+    slug: string;
+    name: string;
+  } | null;
+  children: {
+    edges: Array<{ node: CategoryChildNode }>;
+  } | null;
+  products: CategoryProductConnection;
+}
+
+interface CategoryBySlugResponse {
+  category: CategoryNode | null;
+}
+
+interface CategoryPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+function formatProductCount(locale: string, count: number) {
+  if (locale === 'pl') {
+    if (count === 1) return '1 produkt';
+    if (count > 1 && count < 5) return `${count} produkty`;
+    return `${count} produktów`;
+  }
+
+  return count === 1 ? '1 product' : `${count} products`;
+}
+
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const [locale, t, tCommon] = await Promise.all([
+    getLocale(),
+    getTranslations('categories'),
+    getTranslations('common'),
+  ]);
+  const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
+  const result = await serverGraphqlRequest<CategoryBySlugResponse>(CATEGORY_BY_SLUG_QUERY, {
+    channel,
+    slug: params.slug,
+    first: PAGE_SIZE,
+  });
+  const category = result.data?.category ?? null;
+  const totalCount = category?.products.totalCount ?? 0;
+  const childCategories = category?.children?.edges.map((edge) => edge.node) ?? [];
+  const products = category?.products.edges.map((edge) => edge.node) ?? [];
+  const pageInfo = category?.products.pageInfo ?? { hasNextPage: false, endCursor: null };
+
+  return (
+    <div className="container-grocery py-8 md:py-12">
+      <Link
+        href="/categories"
+        className="mb-6 inline-flex items-center gap-2 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
+        style={{ color: 'var(--color-muted-foreground)' }}
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        {t('allCategories')}
+      </Link>
+
+      {result.errorMessage && !category && (
+        <div className="rounded-lg border px-5 py-8 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+            {tCommon('error')}
+          </p>
+          <p className="mt-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+            {result.errorMessage}
+          </p>
+          <Link
+            href={`/categories/${params.slug}`}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
+            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+          >
+            <RefreshCw className="h-4 w-4" aria-hidden="true" />
+            {tCommon('retry')}
+          </Link>
+        </div>
+      )}
+
+      {!result.errorMessage && !category && (
+        <div className="rounded-lg border px-5 py-8 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+            {t('notFound')}
+          </p>
+          <Link
+            href="/categories"
+            className="mt-4 inline-flex rounded-lg border px-4 py-2.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
+            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+          >
+            {t('browseAll')}
+          </Link>
+        </div>
+      )}
+
+      {category && (
+        <>
+          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
+                {t('eyebrow')}
+              </p>
+              <h1 className="heading-display text-2xl md:text-3xl" style={{ color: 'var(--color-foreground)' }}>
+                {category.name}
+              </h1>
+              {category.description && (
+                <p className="mt-3 max-w-2xl text-sm md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {category.description}
+                </p>
+              )}
+            </div>
+            <div
+              className="inline-flex w-fit rounded-full px-3 py-1 text-sm font-semibold"
+              style={{
+                backgroundColor: totalCount > 0
+                  ? 'color-mix(in srgb, var(--color-primary) 12%, transparent)'
+                  : 'color-mix(in srgb, var(--color-foreground) 7%, transparent)',
+                color: totalCount > 0 ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+              }}
+            >
+              {totalCount > 0 ? formatProductCount(locale, totalCount) : t('comingSoon')}
+            </div>
+          </div>
+
+          {childCategories.length > 0 && (
+            <div className="mb-8 flex flex-wrap gap-2">
+              {childCategories.map((child) => (
+                <Link
+                  key={child.id}
+                  href={`/categories/${child.slug}`}
+                  className="rounded-full border px-3 py-1.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                >
+                  {child.name}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <CategoryProductGrid
+            channel={channel}
+            slug={params.slug}
+            initialProducts={products}
+            initialEndCursor={pageInfo.endCursor}
+            initialHasMore={pageInfo.hasNextPage}
+            totalCount={totalCount}
+            pageSize={PAGE_SIZE}
+          />
+        </>
+      )}
+    </div>
+  );
+}

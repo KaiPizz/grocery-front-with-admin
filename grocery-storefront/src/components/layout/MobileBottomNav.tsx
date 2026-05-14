@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Heart, ShoppingCart } from 'lucide-react';
+import { Grid2X2, Home, Heart, ShoppingCart } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
@@ -9,8 +9,7 @@ import { useWishlistStore } from '@/stores/wishlist-store';
 import { useHydrated } from '@/hooks/use-hydrated';
 
 /**
- * Mobile bottom navigation — 3-icon stopgap (home / wishlist / cart).
- * Categories tab deferred until backlog B1/B2 (multi-level categories) ships.
+ * Mobile bottom navigation for high-frequency storefront routes.
  *
  * Hidden on routes that own their own bottom CTA real estate (`/cart`,
  * `/checkout`). On product detail, the PD sticky add-to-cart bar is shifted
@@ -19,14 +18,18 @@ import { useHydrated } from '@/hooks/use-hydrated';
 
 const HIDE_PREFIXES = ['/cart', '/checkout'] as const;
 
-type NavItem = {
+interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
   badge: number;
   showBadge: boolean;
   testId: string;
-};
+}
+
+function isActivePath(pathname: string, href: string) {
+  return pathname === href || (href !== '/' && pathname.startsWith(`${href}/`));
+}
 
 export function MobileBottomNav() {
   const t = useTranslations('nav');
@@ -50,6 +53,14 @@ export function MobileBottomNav() {
       badge: 0,
       showBadge: false,
       testId: 'mobile-bottom-nav-home',
+    },
+    {
+      href: '/categories',
+      label: t('categories'),
+      icon: Grid2X2,
+      badge: 0,
+      showBadge: false,
+      testId: 'mobile-bottom-nav-categories',
     },
     {
       href: '/wishlist',
@@ -80,9 +91,9 @@ export function MobileBottomNav() {
       aria-label="Primary mobile navigation"
       data-testid="mobile-bottom-nav"
     >
-      <ul className="grid grid-cols-3">
+      <ul className="grid grid-cols-4">
         {items.map(({ href, label, icon: Icon, badge, showBadge, testId }) => {
-          const isActive = pathname === href;
+          const isActive = isActivePath(pathname, href);
           return (
             <li key={href} className="flex">
               <Link

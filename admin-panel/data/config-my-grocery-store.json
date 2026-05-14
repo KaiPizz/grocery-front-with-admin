@@ -98,16 +98,22 @@
             "order": 0
           },
           {
+            "label": "Categories",
+            "href": "/categories",
+            "enabled": true,
+            "order": 1
+          },
+          {
             "label": "Products",
             "href": "/products",
             "enabled": true,
-            "order": 1
+            "order": 2
           },
           {
             "label": "Recipes",
             "href": "/recipes",
             "enabled": true,
-            "order": 2
+            "order": 3
           }
         ],
         "showSearch": true,
@@ -121,6 +127,10 @@
           {
             "title": "Shop",
             "links": [
+              {
+                "label": "Categories",
+                "href": "/categories"
+              },
               {
                 "label": "Products",
                 "href": "/products"
@@ -304,16 +314,22 @@
             "order": 0
           },
           {
+            "label": "Categories",
+            "href": "/categories",
+            "enabled": true,
+            "order": 1
+          },
+          {
             "label": "Products",
             "href": "/products",
             "enabled": true,
-            "order": 1
+            "order": 2
           },
           {
             "label": "Recipes",
             "href": "/recipes",
             "enabled": true,
-            "order": 2
+            "order": 3
           }
         ],
         "showSearch": true,
@@ -327,6 +343,10 @@
           {
             "title": "Shop",
             "links": [
+              {
+                "label": "Categories",
+                "href": "/categories"
+              },
               {
                 "label": "Products",
                 "href": "/products"

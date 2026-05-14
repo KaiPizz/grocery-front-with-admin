@@ -221,3 +221,9 @@
 - **Cause:** The OMS cart payload can return `0` for `line.cost.amountPerQuantity`, `line.cost.totalAmount`, and `cart.cost.subtotalAmount` immediately after add-to-cart. The cart store trusted those zero server amounts over the positive price captured from product metadata, and checkout read `cost.subtotalAmount` directly.
 - **Fix:** Cart line mapping and subtotal calculation now fall back to positive product metadata when the matching server amount is zero. Checkout uses the corrected cart subtotal, and product-detail/recipe add-to-cart paths have price fallbacks for missing nested variant pricing.
 - **Rule:** Treat external cart cost `0` as suspect when the same line has positive local product metadata. Centralize the fallback in cart state and cover it with a regression test before touching UI surfaces.
+
+### Playwright can report all tests ok but hang during teardown on Windows
+- **Error:** The B1 category browsing and BottomNav targeted Pixel run printed 15/15 `ok`, but the `playwright.cmd` process never returned and the shell killed it on timeout.
+- **Cause:** The app routes and test assertions completed; no `:3018` or `:4199` listener remained afterward. The failure is consistent with Playwright webServer/process teardown hanging on Windows, not with a storefront behavior failure. Replacing `npx next dev` with a direct Next CLI command did not fix the hang.
+- **Fix:** Treat the per-test `ok` output as useful signal, but not a clean command pass. Verify the app with `next build`, inspect artifacts/ports when needed, and track the teardown issue as test harness debt before relying on this command as a hard CI gate.
+- **Rule:** When Playwright output shows all target tests passed but the process times out after test completion, do not churn product code. Separate product failures from harness teardown failures and document the residual risk.

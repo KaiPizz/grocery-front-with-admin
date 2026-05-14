@@ -106,8 +106,9 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
     header: {
       navItems: [
         { label: 'Home', href: '/', enabled: true, order: 0 },
-        { label: 'Products', href: '/products', enabled: true, order: 1 },
-        { label: 'Recipes', href: '/recipes', enabled: true, order: 2 },
+        { label: 'Categories', href: '/categories', enabled: true, order: 1 },
+        { label: 'Products', href: '/products', enabled: true, order: 2 },
+        { label: 'Recipes', href: '/recipes', enabled: true, order: 3 },
       ],
       showSearch: true,
       showWishlist: true,
@@ -121,6 +122,7 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
         {
           title: 'Shop',
           links: [
+            { label: 'Categories', href: '/categories' },
             { label: 'Products', href: '/products' },
             { label: 'Recipes', href: '/recipes' },
           ],

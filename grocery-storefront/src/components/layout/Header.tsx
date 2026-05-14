@@ -49,6 +49,7 @@ export function Header() {
 
   const hrefToI18n: Record<string, string> = {
     '/': t('home'),
+    '/categories': t('categories'),
     '/products': t('products'),
     '/recipes': t('recipes'),
   };
@@ -60,8 +61,9 @@ export function Header() {
         .map(n => ({ ...n, label: hrefToI18n[n.href] || n.label }))
     : [
         { label: t('home'), href: '/', enabled: true, order: 0 },
-        { label: t('products'), href: '/products', enabled: true, order: 1 },
-        { label: t('recipes'), href: '/recipes', enabled: true, order: 2 },
+        { label: t('categories'), href: '/categories', enabled: true, order: 1 },
+        { label: t('products'), href: '/products', enabled: true, order: 2 },
+        { label: t('recipes'), href: '/recipes', enabled: true, order: 3 },
       ];
   const showSearch = headerCfg?.showSearch ?? true;
   const showWishlist = headerCfg?.showWishlist ?? true;

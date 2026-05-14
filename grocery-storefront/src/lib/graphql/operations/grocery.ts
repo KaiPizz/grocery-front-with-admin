@@ -112,6 +112,59 @@ export const PRODUCT_BY_SLUG_QUERY = `
   }
 `;
 
+export const CATEGORIES_QUERY = `
+  query Categories($channel: String!) {
+    categories(channel: $channel, first: 50) {
+      edges {
+        node {
+          id
+          slug
+          name
+          level
+          description
+          backgroundImage { url alt }
+          children(first: 10) {
+            edges {
+              node { id slug name level }
+            }
+          }
+          products(channel: $channel, first: 0) { totalCount }
+        }
+      }
+      pageInfo { hasNextPage endCursor }
+      totalCount
+    }
+  }
+`;
+
+export const CATEGORY_BY_SLUG_QUERY = `
+  ${GROCERY_PRODUCT_FIELDS}
+  query CategoryBySlug($channel: String!, $slug: String!, $first: Int!, $after: String) {
+    category(channel: $channel, slug: $slug) {
+      id
+      slug
+      name
+      level
+      description
+      backgroundImage { url alt }
+      parent { id slug name }
+      children(first: 10) {
+        edges {
+          node { id slug name level }
+        }
+      }
+      products(channel: $channel, first: $first, after: $after) {
+        edges {
+          node { ...GroceryProductFields }
+          cursor
+        }
+        pageInfo { hasNextPage endCursor }
+        totalCount
+      }
+    }
+  }
+`;
+
 const RECIPE_FIELDS = `
   fragment RecipeFields on Recipe {
     id

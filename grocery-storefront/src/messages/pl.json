@@ -25,6 +25,7 @@
   },
   "nav": {
     "home": "Strona główna",
+    "categories": "Kategorie",
     "products": "Produkty",
     "recipes": "Przepisy",
     "wishlist": "Ulubione",
@@ -107,6 +108,19 @@
     "loadMore": "Załaduj więcej",
     "showing": "Wyświetlono {count} z {total}"
   },
+  "categories": {
+    "eyebrow": "Przeglądaj",
+    "title": "Kategorie",
+    "empty": "Brak dostępnych kategorii.",
+    "comingSoon": "Wkrótce",
+    "browse": "Przeglądaj",
+    "browseAll": "Przeglądaj wszystkie kategorie",
+    "allCategories": "Kategorie",
+    "notFound": "Nie znaleziono kategorii.",
+    "emptyCategory": "Produkty z tej kategorii pojawią się tutaj, gdy będą dostępne.",
+    "loadMore": "Załaduj więcej",
+    "subcategories": "{count, plural, one {# podkategoria} few {# podkategorie} many {# podkategorii} other {# podkategorii}}"
+  },
   "product": {
     "nutrition": "Wartości odżywcze",
     "nutritionPer100": "Na 100g / 100ml",
@@ -122,6 +136,7 @@
     "ingredients": "Skład",
     "allergens": "Alergeny",
     "dietary": "Informacje dietetyczne",
+    "certifications": "Certyfikaty",
     "origin": "Kraj pochodzenia",
     "storage": "Przechowywanie",
     "bestBefore": "Najlepiej spożyć przed",

@@ -2,13 +2,14 @@ import { expect, test } from '@playwright/test';
 import { mockMobileStorefront, seedAuthSession, seedCartStorage } from './mobile-fixtures';
 
 test.describe('MobileBottomNav (Tier 3)', () => {
-  test('renders 3 icons (home / wishlist / cart) on mobile home', async ({ page }) => {
+  test('renders primary mobile destinations on mobile home', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.goto('/en');
 
     const nav = page.getByTestId('mobile-bottom-nav');
     await expect(nav).toBeVisible();
     await expect(page.getByTestId('mobile-bottom-nav-home')).toBeVisible();
+    await expect(page.getByTestId('mobile-bottom-nav-categories')).toBeVisible();
     await expect(page.getByTestId('mobile-bottom-nav-wishlist')).toBeVisible();
     await expect(page.getByTestId('mobile-bottom-nav-cart')).toBeVisible();
   });
@@ -47,8 +48,17 @@ test.describe('MobileBottomNav (Tier 3)', () => {
     await page.goto('/en');
 
     await expect(page.getByTestId('mobile-bottom-nav-home')).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByTestId('mobile-bottom-nav-categories')).not.toHaveAttribute('aria-current', 'page');
     await expect(page.getByTestId('mobile-bottom-nav-cart')).not.toHaveAttribute('aria-current', 'page');
     await expect(page.getByTestId('mobile-bottom-nav-wishlist')).not.toHaveAttribute('aria-current', 'page');
+  });
+
+  test('marks the categories item aria-current="page" on category routes', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.goto('/en/categories/fruit');
+
+    await expect(page.getByTestId('mobile-bottom-nav-categories')).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByTestId('mobile-bottom-nav-home')).not.toHaveAttribute('aria-current', 'page');
   });
 
   test('marks the wishlist item aria-current="page" on /wishlist', async ({ page }) => {
