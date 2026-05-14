@@ -40,6 +40,7 @@ export function Header() {
   const [isMounted, setIsMounted] = useState(false);
   const idleCycleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleCycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const categoryMenuCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastScrollYRef = useRef(0);
   const siteConfig = useStorefrontConfig();
   const isProductsRoute = pathname === '/products';
@@ -177,6 +178,55 @@ export function Header() {
     }
   }, [menuOpen, searchOpen, setMobileHeaderVisible]);
 
+  useEffect(() => {
+    return () => {
+      if (categoryMenuCloseTimeoutRef.current) {
+        clearTimeout(categoryMenuCloseTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!categoryMenuOpen || !isMounted) return;
+    if (typeof window === 'undefined' || window.innerWidth < 768) return;
+
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    document.body.style.overflow = 'hidden';
+
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, [categoryMenuOpen, isMounted]);
+
+  useEffect(() => {
+    if (!categoryMenuOpen) return;
+
+    function handleDocumentKeyDown(event: globalThis.KeyboardEvent) {
+      if (event.key === 'Escape') {
+        if (categoryMenuCloseTimeoutRef.current) {
+          clearTimeout(categoryMenuCloseTimeoutRef.current);
+          categoryMenuCloseTimeoutRef.current = null;
+        }
+
+        setCategoryMenuOpen(false);
+      }
+    }
+
+    document.addEventListener('keydown', handleDocumentKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleDocumentKeyDown);
+    };
+  }, [categoryMenuOpen]);
+
   function handleSearch(query: string) {
     const q = query.trim();
     if (!q) return;
@@ -196,18 +246,47 @@ export function Header() {
     setSearchOpen((current) => !current);
   }
 
+  function handleCategoryMenuOpen() {
+    if (categoryMenuCloseTimeoutRef.current) {
+      clearTimeout(categoryMenuCloseTimeoutRef.current);
+      categoryMenuCloseTimeoutRef.current = null;
+    }
+
+    setCategoryMenuOpen(true);
+  }
+
+  function handleCategoryMenuClose() {
+    if (categoryMenuCloseTimeoutRef.current) {
+      clearTimeout(categoryMenuCloseTimeoutRef.current);
+    }
+
+    categoryMenuCloseTimeoutRef.current = setTimeout(() => {
+      setCategoryMenuOpen(false);
+      categoryMenuCloseTimeoutRef.current = null;
+    }, 160);
+  }
+
+  function closeCategoryMenuImmediately() {
+    if (categoryMenuCloseTimeoutRef.current) {
+      clearTimeout(categoryMenuCloseTimeoutRef.current);
+      categoryMenuCloseTimeoutRef.current = null;
+    }
+
+    setCategoryMenuOpen(false);
+  }
+
   function handleCategoryNavBlur(event: FocusEvent<HTMLDivElement>) {
     const nextTarget = event.relatedTarget;
 
     if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) {
-      setCategoryMenuOpen(false);
+      closeCategoryMenuImmediately();
     }
   }
 
   function handleCategoryNavKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Escape') {
       event.preventDefault();
-      setCategoryMenuOpen(false);
+      closeCategoryMenuImmediately();
     }
   }
 
@@ -270,9 +349,9 @@ export function Header() {
                 <div
                   key={href}
                   className="relative"
-                  onMouseEnter={() => setCategoryMenuOpen(true)}
-                  onMouseLeave={() => setCategoryMenuOpen(false)}
-                  onFocus={() => setCategoryMenuOpen(true)}
+                  onMouseEnter={handleCategoryMenuOpen}
+                  onMouseLeave={handleCategoryMenuClose}
+                  onFocus={handleCategoryMenuOpen}
                   onBlur={handleCategoryNavBlur}
                   onKeyDown={handleCategoryNavKeyDown}
                 >
@@ -282,11 +361,16 @@ export function Header() {
                     style={{ color: 'var(--color-foreground)' }}
                     aria-haspopup="true"
                     aria-expanded={categoryMenuOpen}
-                    onClick={() => setCategoryMenuOpen(false)}
+                    onClick={closeCategoryMenuImmediately}
                   >
                     {label}
                   </Link>
-                  <CategoryMegaMenu open={categoryMenuOpen} onNavigate={() => setCategoryMenuOpen(false)} />
+                  <CategoryMegaMenu
+                    open={categoryMenuOpen}
+                    onMouseEnter={handleCategoryMenuOpen}
+                    onMouseLeave={handleCategoryMenuClose}
+                    onNavigate={closeCategoryMenuImmediately}
+                  />
                 </div>
               );
             }

@@ -46,6 +46,8 @@ interface CategoriesResponse {
 
 interface CategoryMegaMenuProps {
   open: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
   onNavigate: () => void;
 }
 
@@ -72,7 +74,7 @@ function splitIntoColumns(categories: CategoryNode[]) {
   }).filter((column) => column.length > 0);
 }
 
-export function CategoryMegaMenu({ open, onNavigate }: CategoryMegaMenuProps) {
+export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate }: CategoryMegaMenuProps) {
   const t = useTranslations('categories');
   const locale = useLocale();
   const channel = useChannel();
@@ -110,8 +112,10 @@ export function CategoryMegaMenu({ open, onNavigate }: CategoryMegaMenuProps) {
     <nav
       aria-label={t('megaMenuLabel')}
       data-testid="category-mega-menu"
-      className="fixed left-1/2 z-[60] hidden w-[min(76rem,calc(100vw-2rem))] -translate-x-1/2 pt-3 md:block"
-      style={{ top: 'var(--header-height)' }}
+      className="fixed left-1/2 z-[60] hidden w-[min(76rem,calc(100vw-2rem))] -translate-x-1/2 md:block"
+      style={{ top: 'calc(var(--header-height) - 1px)' }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <div
         className="max-h-[calc(100vh-var(--header-height)-1rem)] overflow-y-auto rounded-lg border p-5 shadow-2xl"

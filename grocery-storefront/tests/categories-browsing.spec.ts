@@ -117,4 +117,58 @@ test.describe('desktop category navigation', () => {
     await expect(megaMenu).toBeHidden();
     await expect(categoriesLink).toHaveAttribute('aria-expanded', 'false');
   });
+
+  test('keeps the category panel visually attached to the header', async ({ page }) => {
+    await mockMobileStorefront(page);
+
+    await page.goto('/en');
+
+    const header = page.getByRole('banner');
+    const mainNavigation = page.getByRole('navigation', { name: 'Main navigation' });
+    const categoriesLink = mainNavigation.getByRole('link', { name: /^categories$/i });
+
+    await categoriesLink.hover();
+
+    const megaMenu = page.getByRole('navigation', { name: /category mega menu/i });
+    await expect(megaMenu).toBeVisible();
+
+    const headerBox = await header.boundingBox();
+    const panelBox = await megaMenu.locator(':scope > div').boundingBox();
+
+    expect(headerBox).not.toBeNull();
+    expect(panelBox).not.toBeNull();
+    expect(panelBox!.y).toBeLessThanOrEqual(headerBox!.y + headerBox!.height + 1);
+  });
+
+  test('locks the page scroll while the category mega menu is open', async ({ page }) => {
+    await mockMobileStorefront(page);
+
+    await page.goto('/en');
+    await page.evaluate(() => {
+      const spacer = document.createElement('div');
+      spacer.setAttribute('data-testid', 'category-scroll-lock-spacer');
+      spacer.style.height = '2400px';
+      document.body.appendChild(spacer);
+      window.scrollTo(0, 0);
+    });
+
+    const mainNavigation = page.getByRole('navigation', { name: 'Main navigation' });
+    const categoriesLink = mainNavigation.getByRole('link', { name: /^categories$/i });
+
+    await categoriesLink.hover();
+
+    const megaMenu = page.getByRole('navigation', { name: /category mega menu/i });
+    await expect(megaMenu).toBeVisible();
+    await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
+
+    await page.mouse.wheel(0, 900);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+
+    await page.keyboard.press('Escape');
+    await expect(megaMenu).toBeHidden();
+    await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
+
+    await page.mouse.wheel(0, 900);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  });
 });

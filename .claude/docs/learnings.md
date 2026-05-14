@@ -118,6 +118,12 @@
 
 ## Config & Navigation Errors
 
+### Left a transparent hover gap between the header and category mega menu
+- **Error:** Moving from the Categories nav item into the desktop mega menu was brittle, and the page could still scroll behind the open category overlay.
+- **Cause:** The fixed menu wrapper used top padding below the header, so the pointer crossed a dead zone that triggered immediate `onMouseLeave`. The menu also had no body scroll lock and Escape handling was scoped too narrowly to focused header elements.
+- **Fix:** Removed the physical gap, shared pointer ownership between the trigger and panel, added a short close delay, locked `document.body` scroll on desktop while open, and added document-level Escape close. Added Playwright regressions for attached geometry and background scroll lock.
+- **Rule:** Hover overlays must be physically contiguous with their trigger or have an intentional hover bridge plus close delay; modal-like navigation overlays should lock background scroll and close from global Escape.
+
 ### Treated an empty configured nav list as an intentional empty desktop nav
 - **Error:** Header rendered no desktop nav links when `layout.header.navItems` existed but was an empty array in the mock/admin config. This hid the Categories link before the new mega-menu behavior could even be reached.
 - **Cause:** The code checked `headerCfg?.navItems` for truthiness. Empty arrays are truthy, so the fallback nav was skipped even though there were no enabled configured items.
