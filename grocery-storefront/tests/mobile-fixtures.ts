@@ -376,6 +376,17 @@ function getProductsForCategory(products: Array<(typeof PRODUCTS)[number]>, cate
   return products.filter((product) => product.category.id === categoryId);
 }
 
+function getCategoryBackgroundImage(category: (typeof PRODUCTS)[number]['category']) {
+  if (category.id !== 'cat-fruit') {
+    return null;
+  }
+
+  return {
+    url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
+    alt: 'Fruit category',
+  };
+}
+
 function buildCategoryNode(
   category: (typeof PRODUCTS)[number]['category'],
   products: Array<(typeof PRODUCTS)[number]>
@@ -384,7 +395,7 @@ function buildCategoryNode(
     ...category,
     level: 0,
     description: null,
-    backgroundImage: null,
+    backgroundImage: getCategoryBackgroundImage(category),
     parent: null,
     children: { edges: [] },
     products: {

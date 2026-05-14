@@ -1,0 +1,255 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import { useLocale, useTranslations } from 'next-intl';
+import { ArrowRight, Layers3 } from 'lucide-react';
+import { useQuery } from 'urql';
+
+import { Link } from '@/i18n/navigation';
+import { useChannel } from '@/hooks/use-channel';
+import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
+
+const COLUMN_COUNT = 4;
+
+interface CategoryChildNode {
+  id: string;
+  slug: string;
+  name: string;
+  level: number | null;
+}
+
+interface CategoryNode {
+  id: string;
+  slug: string;
+  name: string;
+  level: number | null;
+  description: string | null;
+  backgroundImage: {
+    url: string;
+    alt: string | null;
+  } | null;
+  children: {
+    edges: Array<{ node: CategoryChildNode }>;
+  } | null;
+  products: {
+    totalCount: number;
+  } | null;
+}
+
+interface CategoriesResponse {
+  categories: {
+    edges: Array<{ node: CategoryNode }>;
+    totalCount: number;
+  } | null;
+}
+
+interface CategoryMegaMenuProps {
+  open: boolean;
+  onNavigate: () => void;
+}
+
+function formatProductCount(locale: string, count: number) {
+  if (locale === 'pl') {
+    if (count === 1) return '1 produkt';
+    if (count > 1 && count < 5) return `${count} produkty`;
+    return `${count} produktów`;
+  }
+
+  return count === 1 ? '1 product' : `${count} products`;
+}
+
+function getProductCount(category: CategoryNode) {
+  return category.products?.totalCount ?? 0;
+}
+
+function splitIntoColumns(categories: CategoryNode[]) {
+  const columnSize = Math.ceil(categories.length / COLUMN_COUNT);
+
+  return Array.from({ length: COLUMN_COUNT }, (_, index) => {
+    const start = index * columnSize;
+    return categories.slice(start, start + columnSize);
+  }).filter((column) => column.length > 0);
+}
+
+export function CategoryMegaMenu({ open, onNavigate }: CategoryMegaMenuProps) {
+  const t = useTranslations('categories');
+  const locale = useLocale();
+  const channel = useChannel();
+  const [requested, setRequested] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setRequested(true);
+    }
+  }, [open]);
+
+  const [result] = useQuery<CategoriesResponse>({
+    query: CATEGORIES_QUERY,
+    variables: { channel },
+    pause: !requested,
+  });
+
+  const categories = useMemo(() => {
+    return result.data?.categories?.edges
+      .map((edge) => edge.node)
+      .filter((category) => category.slug && category.name) ?? [];
+  }, [result.data]);
+
+  const columns = useMemo(() => splitIntoColumns(categories), [categories]);
+  const featuredCategory = categories.find((category) => category.backgroundImage?.url)
+    ?? categories.find((category) => getProductCount(category) > 0)
+    ?? categories[0]
+    ?? null;
+
+  if (!open) {
+    return null;
+  }
+
+  return (
+    <nav
+      aria-label={t('megaMenuLabel')}
+      data-testid="category-mega-menu"
+      className="fixed left-1/2 z-[60] hidden w-[min(76rem,calc(100vw-2rem))] -translate-x-1/2 pt-3 md:block"
+      style={{ top: 'var(--header-height)' }}
+    >
+      <div
+        className="max-h-[calc(100vh-var(--header-height)-1rem)] overflow-y-auto rounded-lg border p-5 shadow-2xl"
+        style={{
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'color-mix(in srgb, var(--color-card) 98%, white)',
+        }}
+      >
+        <div className="mb-4 flex items-center justify-between gap-4 border-b pb-4" style={{ borderColor: 'var(--color-border)' }}>
+          <div className="flex items-center gap-2">
+            <Layers3 className="h-4 w-4" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+            <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
+              {t('allCategories')}
+            </p>
+          </div>
+          <Link
+            href="/categories"
+            className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-opacity duration-fast hover:opacity-80"
+            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+            onClick={onNavigate}
+          >
+            {t('browseAll')}
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        </div>
+
+        {result.fetching && categories.length === 0 && (
+          <p className="py-8 text-center text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+            {t('loading')}
+          </p>
+        )}
+
+        {!result.fetching && categories.length === 0 && (
+          <p className="py-8 text-center text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+            {t('empty')}
+          </p>
+        )}
+
+        {categories.length > 0 && (
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
+            <div className="grid gap-5 md:grid-cols-4">
+              {columns.map((column, columnIndex) => (
+                <div key={`category-column-${columnIndex}`} className="space-y-4">
+                  {column.map((category) => {
+                    const count = getProductCount(category);
+                    const countLabel = count > 0 ? formatProductCount(locale, count) : t('comingSoon');
+                    const childCategories = category.children?.edges.map((edge) => edge.node) ?? [];
+
+                    return (
+                      <div key={category.id} className="min-w-0">
+                        <Link
+                          href={`/categories/${category.slug}`}
+                          aria-label={`${category.name}, ${countLabel}`}
+                          className="group block rounded-lg px-2.5 py-2 transition-colors duration-fast hover-surface"
+                          style={{ color: 'var(--color-foreground)' }}
+                          onClick={onNavigate}
+                        >
+                          <span className="flex items-start justify-between gap-2">
+                            <span className="min-w-0 text-sm font-semibold leading-snug">
+                              {category.name}
+                            </span>
+                            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-0 transition-opacity duration-fast group-hover:opacity-100" aria-hidden="true" />
+                          </span>
+                          <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                            {countLabel}
+                          </span>
+                        </Link>
+
+                        {childCategories.length > 0 && (
+                          <div className="mt-1 space-y-1 pl-3">
+                            {childCategories.slice(0, 4).map((child) => (
+                              <Link
+                                key={child.id}
+                                href={`/categories/${child.slug}`}
+                                className="block rounded-md px-2 py-1 text-xs transition-colors duration-fast hover-surface"
+                                style={{ color: 'var(--color-muted-foreground)' }}
+                                onClick={onNavigate}
+                              >
+                                {child.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+
+            {featuredCategory && (
+              <Link
+                href={`/categories/${featuredCategory.slug}`}
+                data-testid="category-mega-menu-promo"
+                aria-label={`${t('featured')}: ${featuredCategory.name}`}
+                className="group flex min-h-64 flex-col overflow-hidden rounded-lg border transition-transform duration-fast hover:-translate-y-0.5"
+                style={{
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'color-mix(in srgb, var(--color-primary) 8%, var(--color-card))',
+                }}
+                onClick={onNavigate}
+              >
+                {featuredCategory.backgroundImage?.url && (
+                  <span className="relative block h-36 w-full overflow-hidden">
+                    <Image
+                      src={featuredCategory.backgroundImage.url}
+                      alt={featuredCategory.backgroundImage.alt ?? `${featuredCategory.name} category`}
+                      fill
+                      sizes="18rem"
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </span>
+                )}
+                <span className="flex flex-1 flex-col justify-between p-4">
+                  <span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
+                      {t('featured')}
+                    </span>
+                    <span className="mt-2 block text-xl font-semibold leading-tight" style={{ color: 'var(--color-foreground)' }}>
+                      {featuredCategory.name}
+                    </span>
+                    {featuredCategory.description && (
+                      <span className="mt-2 line-clamp-2 block text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                        {featuredCategory.description}
+                      </span>
+                    )}
+                  </span>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
+                    {t('shopCategory')}
+                    <ArrowRight className="h-4 w-4 transition-transform duration-fast group-hover:translate-x-0.5" aria-hidden="true" />
+                  </span>
+                </span>
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}

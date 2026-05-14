@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-13
+> **Last updated:** 2026-05-14
 
 ---
 
@@ -116,6 +116,16 @@
 
 ---
 
+## Config & Navigation Errors
+
+### Treated an empty configured nav list as an intentional empty desktop nav
+- **Error:** Header rendered no desktop nav links when `layout.header.navItems` existed but was an empty array in the mock/admin config. This hid the Categories link before the new mega-menu behavior could even be reached.
+- **Cause:** The code checked `headerCfg?.navItems` for truthiness. Empty arrays are truthy, so the fallback nav was skipped even though there were no enabled configured items.
+- **Fix:** Build the enabled configured nav list first and only use it when `length > 0`; otherwise fall back to Home/Categories/Products/Recipes. Added RED→GREEN Playwright coverage through the desktop category mega-menu test.
+- **Rule:** For admin-configured arrays where an empty list means "unset", check the filtered list length before replacing defaults.
+
+---
+
 ## Checkout Errors
 
 ### Didn't split `fullName` into first/last for Zyra checkout
@@ -143,6 +153,12 @@
 - **Cause:** The build was started in parallel with Playwright, whose web server was running `npx next dev` in the same app directory. Both processes touched `.next` at the same time.
 - **Fix:** Waited for Playwright to finish, then reran `npm run build` sequentially; the build passed.
 - **Rule:** Do not run `next build` concurrently with Playwright or any active `next dev` process for the same workspace. Run Next build and Playwright sequentially.
+
+### `npm run dev` failed because port 3008 was already held by stale Next dev
+- **Error:** Storefront `npm run dev` failed with `listen EADDRINUSE: address already in use :::3008`.
+- **Cause:** A prior `node ...next/dist/server/lib/start-server.js` process for `grocery-storefront` was still listening on port 3008.
+- **Fix:** Identified the listener with `Get-NetTCPConnection -LocalPort 3008` and `Get-CimInstance Win32_Process`, then stopped only that owning process. Confirmed `NO_LISTENER_3008` afterward.
+- **Rule:** Before starting storefront dev or build work, check for stale `:3008` listeners and stop the old Next process if it belongs to this workspace.
 
 ### Tested server-rendered config with browser-only route mocks
 - **Error:** A SEO metadata test would have been unable to prove admin-configured metadata if it only used `page.route('**/api/config/**')`, because that intercepts browser requests but not the Next.js server render.

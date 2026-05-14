@@ -68,3 +68,53 @@ test.describe('B1 category browsing', () => {
     await expect(page.getByRole('link', { name: /browse all categories/i })).toBeVisible();
   });
 });
+
+test.describe('desktop category navigation', () => {
+  test.use({
+    viewport: { width: 1280, height: 900 },
+    isMobile: false,
+    hasTouch: false,
+  });
+
+  test('opens a Kimchi-style category mega menu with taxonomy columns and a visual feature tile', async ({ page }) => {
+    await mockMobileStorefront(page);
+
+    await page.goto('/en');
+
+    const mainNavigation = page.getByRole('navigation', { name: 'Main navigation' });
+    const categoriesLink = mainNavigation.getByRole('link', { name: /^categories$/i });
+
+    // wiki/concepts/kimchi-category-model.md: desktop category discovery should happen in the header,
+    // not only after navigating to a flat `/categories` page.
+    await categoriesLink.hover();
+
+    const megaMenu = page.getByRole('navigation', { name: /category mega menu/i });
+    await expect(megaMenu).toBeVisible();
+    await expect(megaMenu.getByRole('link', { name: /browse all categories/i })).toBeVisible();
+    await expect(megaMenu.getByRole('link', { name: /fruit.*2 products/i })).toBeVisible();
+    await expect(megaMenu.getByRole('link', { name: /household.*coming soon/i })).toBeVisible();
+    await expect(megaMenu.getByRole('img', { name: /fruit category/i })).toBeVisible();
+
+    await megaMenu.getByRole('link', { name: /fruit.*2 products/i }).click();
+    await expect(page).toHaveURL(/\/en\/categories\/fruit$/);
+  });
+
+  test('keeps the category mega menu reachable from keyboard focus', async ({ page }) => {
+    await mockMobileStorefront(page);
+
+    await page.goto('/en');
+
+    const mainNavigation = page.getByRole('navigation', { name: 'Main navigation' });
+    const categoriesLink = mainNavigation.getByRole('link', { name: /^categories$/i });
+
+    await categoriesLink.focus();
+
+    const megaMenu = page.getByRole('navigation', { name: /category mega menu/i });
+    await expect(megaMenu).toBeVisible();
+    await expect(categoriesLink).toHaveAttribute('aria-expanded', 'true');
+
+    await page.keyboard.press('Escape');
+    await expect(megaMenu).toBeHidden();
+    await expect(categoriesLink).toHaveAttribute('aria-expanded', 'false');
+  });
+});

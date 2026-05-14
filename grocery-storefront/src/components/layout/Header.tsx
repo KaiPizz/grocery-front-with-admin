@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ShoppingCart, Search, Menu, X, Leaf, Heart, LogIn, LogOut, UserRound, ChevronDown, Package, MapPin, Shield } from 'lucide-react';
@@ -16,6 +16,7 @@ import { MiniCart } from './MiniCart';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeToggle } from './ThemeToggle';
 import { ShippingCountdown } from './ShippingCountdown';
+import { CategoryMegaMenu } from './CategoryMegaMenu';
 
 export function Header() {
   const t = useTranslations('nav');
@@ -27,6 +28,7 @@ export function Header() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const mobileHeaderVisible = useMobileChromeStore((s) => s.mobileHeaderVisible);
   const setMobileHeaderVisible = useMobileChromeStore((s) => s.setMobileHeaderVisible);
@@ -54,17 +56,19 @@ export function Header() {
     '/recipes': t('recipes'),
   };
 
-  const navItems = headerCfg?.navItems
-    ? headerCfg.navItems
-        .filter(n => n.enabled)
-        .sort((a, b) => a.order - b.order)
-        .map(n => ({ ...n, label: hrefToI18n[n.href] || n.label }))
-    : [
-        { label: t('home'), href: '/', enabled: true, order: 0 },
-        { label: t('categories'), href: '/categories', enabled: true, order: 1 },
-        { label: t('products'), href: '/products', enabled: true, order: 2 },
-        { label: t('recipes'), href: '/recipes', enabled: true, order: 3 },
-      ];
+  const fallbackNavItems = [
+    { label: t('home'), href: '/', enabled: true, order: 0 },
+    { label: t('categories'), href: '/categories', enabled: true, order: 1 },
+    { label: t('products'), href: '/products', enabled: true, order: 2 },
+    { label: t('recipes'), href: '/recipes', enabled: true, order: 3 },
+  ];
+  const configuredNavItems = headerCfg?.navItems
+    ?.filter(n => n.enabled)
+    .sort((a, b) => a.order - b.order)
+    .map(n => ({ ...n, label: hrefToI18n[n.href] || n.label }));
+  const navItems = configuredNavItems && configuredNavItems.length > 0
+    ? configuredNavItems
+    : fallbackNavItems;
   const showSearch = headerCfg?.showSearch ?? true;
   const showWishlist = headerCfg?.showWishlist ?? true;
   const showLanguageSwitcher = headerCfg?.showLanguageSwitcher ?? true;
@@ -192,6 +196,21 @@ export function Header() {
     setSearchOpen((current) => !current);
   }
 
+  function handleCategoryNavBlur(event: FocusEvent<HTMLDivElement>) {
+    const nextTarget = event.relatedTarget;
+
+    if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) {
+      setCategoryMenuOpen(false);
+    }
+  }
+
+  function handleCategoryNavKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setCategoryMenuOpen(false);
+    }
+  }
+
   const isAuthenticated = isMounted && session.status === 'authenticated';
   const accountName = session.user?.fullName?.split(' ')[0] || t('account');
   const accountMenuItems = [
@@ -245,16 +264,44 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
-          {navItems.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="px-3 py-2 text-sm font-medium rounded-lg hover-surface"
-              style={{ color: 'var(--color-foreground)' }}
-            >
-              {label}
-            </Link>
-          ))}
+          {navItems.map(({ href, label }) => {
+            if (href === '/categories') {
+              return (
+                <div
+                  key={href}
+                  className="relative"
+                  onMouseEnter={() => setCategoryMenuOpen(true)}
+                  onMouseLeave={() => setCategoryMenuOpen(false)}
+                  onFocus={() => setCategoryMenuOpen(true)}
+                  onBlur={handleCategoryNavBlur}
+                  onKeyDown={handleCategoryNavKeyDown}
+                >
+                  <Link
+                    href={href}
+                    className="px-3 py-2 text-sm font-medium rounded-lg hover-surface"
+                    style={{ color: 'var(--color-foreground)' }}
+                    aria-haspopup="true"
+                    aria-expanded={categoryMenuOpen}
+                    onClick={() => setCategoryMenuOpen(false)}
+                  >
+                    {label}
+                  </Link>
+                  <CategoryMegaMenu open={categoryMenuOpen} onNavigate={() => setCategoryMenuOpen(false)} />
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="px-3 py-2 text-sm font-medium rounded-lg hover-surface"
+                style={{ color: 'var(--color-foreground)' }}
+              >
+                {label}
+              </Link>
+            );
+          })}
         </nav>
 
         {showSearch && <div className="hidden md:flex flex-1 max-w-md">
