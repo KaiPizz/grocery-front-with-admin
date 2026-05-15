@@ -166,6 +166,12 @@
 
 ## Testing Errors
 
+### Imported Lucide `Image` directly on an admin page and triggered a false accessibility warning
+- **Error:** `next lint` reported `jsx-a11y/alt-text` on the admin dashboard even though the node was a Lucide icon component, not an HTML `<img>`.
+- **Cause:** Naming the imported icon `Image` makes the JSX lint rule treat `<Image />` like an image element that requires `alt`.
+- **Fix:** Aliased the icon import to `ImageIcon` before using it in the dashboard.
+- **Rule:** In React admin pages, alias Lucide's `Image` export to `ImageIcon` (or similar) so lint can distinguish it from real image elements.
+
 ### Ran `next build` while Playwright was running `next dev`
 - **Error:** `npm run build` failed during page data collection with `PageNotFoundError: Cannot find module for page: /_document`.
 - **Cause:** The build was started in parallel with Playwright, whose web server was running `npx next dev` in the same app directory. Both processes touched `.next` at the same time.

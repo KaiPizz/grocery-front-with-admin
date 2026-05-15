@@ -54,6 +54,48 @@ export const en = {
   dashboard: {
     title: 'Dashboard',
     description: 'Manage your storefront configuration',
+    setupTitle: 'First publish setup',
+    blockedTitle: 'Required setup is still incomplete',
+    blockedDescription: 'Fix the remaining required items before publishing your storefront.',
+    readyTitle: 'Ready to publish',
+    readyDescription: 'All required setup is complete.',
+    readyWithRecommendationsTitle: 'Ready to publish, with recommended improvements remaining',
+    readyWithRecommendationsDescription: 'You can publish now and improve the remaining items later.',
+    continueSetup: 'Continue setup',
+    publishStorefront: 'Publish storefront',
+    checklist: 'Setup checklist',
+    state: {
+      required: 'Required',
+      recommended: 'Recommended',
+      optional: 'Optional',
+      complete: 'Complete',
+    },
+    setupSections: {
+      branding: {
+        complete: 'Store identity is ready.',
+        recommended: 'Add a real store name and logo before launch.',
+      },
+      homepage: {
+        complete: 'Homepage blocks have the assets they need.',
+        blocking: 'Upload the required images for enabled homepage blocks.',
+      },
+      layout: {
+        complete: 'Header and footer structure are available.',
+      },
+      general: {
+        complete: 'Customer-facing contact details are set.',
+        recommended: 'Add phone, email, and address details.',
+      },
+      seo: {
+        complete: 'SEO defaults are customized.',
+        recommended: 'Customize title, description, and canonical URL.',
+      },
+      tracking: {
+        complete: 'Enabled trackers are configured.',
+        optional: 'Analytics is optional for the first publish.',
+        blocking: 'Finish the IDs for enabled tracking tools.',
+      },
+    },
     banners: 'Banners',
     sections: 'Sections',
     tracking: 'Tracking',

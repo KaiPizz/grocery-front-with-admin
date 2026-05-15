@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import type { StorefrontConfig } from '@/types/config';
 import { fetchDraftConfig, saveDraft, publishConfig as publishConfigApi } from '@/lib/api-client';
 import { DEFAULT_CONFIG } from '@/lib/defaults';
+import { getAdminReadiness, getPublishBlockerMessage } from '@/lib/admin-readiness';
 
 const SLUG = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
 const HISTORY_LIMIT = 50;
@@ -156,6 +157,14 @@ export function useConfig(): UseConfigReturn {
   }, [config]);
 
   const publish = useCallback(async () => {
+    const readiness = getAdminReadiness(config);
+    if (!readiness.canPublish) {
+      const msg = getPublishBlockerMessage(readiness.blockingIssues[0]);
+      setError(msg);
+      toast.error('Failed to publish', { description: msg });
+      throw new Error(msg);
+    }
+
     try {
       setPublishing(true);
       setError(null);

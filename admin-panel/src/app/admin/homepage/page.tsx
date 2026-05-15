@@ -94,17 +94,6 @@ export default function HomepagePage() {
     await save();
   }
 
-  async function handlePublish() {
-    const errors = getBlockImageErrors(homepage.blocks ?? []);
-    if (errors.length > 0) {
-      toast.error('Cannot publish — missing images', {
-        description: errors[0] + (errors.length > 1 ? ` (+${errors.length - 1} more)` : ''),
-      });
-      return;
-    }
-    await publish();
-  }
-
   function updateSection(index: number, partial: Partial<HomepageSectionItem>) {
     const sections = [...homepage.sections];
     sections[index] = { ...sections[index], ...partial };
@@ -248,7 +237,7 @@ export default function HomepagePage() {
         lastSaved={lastSaved}
         error={error}
         onSave={handleSave}
-        onPublish={handlePublish}
+        onPublish={publish}
       />
     </div>
   );

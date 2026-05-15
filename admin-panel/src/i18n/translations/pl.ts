@@ -56,6 +56,48 @@ export const pl: Translations = {
   dashboard: {
     title: 'Panel główny',
     description: 'Zarządzaj konfiguracją sklepu',
+    setupTitle: 'Konfiguracja pierwszej publikacji',
+    blockedTitle: 'Wymagana konfiguracja nie jest jeszcze kompletna',
+    blockedDescription: 'Uzupełnij pozostałe wymagane elementy przed publikacją sklepu.',
+    readyTitle: 'Gotowe do publikacji',
+    readyDescription: 'Cała wymagana konfiguracja jest kompletna.',
+    readyWithRecommendationsTitle: 'Gotowe do publikacji, pozostały zalecane ulepszenia',
+    readyWithRecommendationsDescription: 'Możesz opublikować teraz i dopracować pozostałe elementy później.',
+    continueSetup: 'Kontynuuj konfigurację',
+    publishStorefront: 'Opublikuj sklep',
+    checklist: 'Lista konfiguracji',
+    state: {
+      required: 'Wymagane',
+      recommended: 'Zalecane',
+      optional: 'Opcjonalne',
+      complete: 'Gotowe',
+    },
+    setupSections: {
+      branding: {
+        complete: 'Tożsamość sklepu jest gotowa.',
+        recommended: 'Dodaj właściwą nazwę sklepu i logo przed startem.',
+      },
+      homepage: {
+        complete: 'Bloki strony głównej mają potrzebne zasoby.',
+        blocking: 'Prześlij wymagane obrazy dla włączonych bloków strony głównej.',
+      },
+      layout: {
+        complete: 'Struktura nagłówka i stopki jest dostępna.',
+      },
+      general: {
+        complete: 'Dane kontaktowe widoczne dla klientów są ustawione.',
+        recommended: 'Dodaj telefon, e-mail i adres.',
+      },
+      seo: {
+        complete: 'Domyślne ustawienia SEO są dostosowane.',
+        recommended: 'Dostosuj tytuł, opis i adres canonical.',
+      },
+      tracking: {
+        complete: 'Włączone trackery są skonfigurowane.',
+        optional: 'Analityka jest opcjonalna przy pierwszej publikacji.',
+        blocking: 'Uzupełnij identyfikatory dla włączonych narzędzi śledzenia.',
+      },
+    },
     banners: 'Banery',
     sections: 'Sekcje',
     tracking: 'Śledzenie',

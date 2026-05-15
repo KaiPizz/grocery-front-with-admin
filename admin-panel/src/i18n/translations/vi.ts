@@ -56,6 +56,48 @@ export const vi: Translations = {
   dashboard: {
     title: 'Bảng điều khiển',
     description: 'Quản lý cấu hình giao diện cửa hàng',
+    setupTitle: 'Thiết lập lần xuất bản đầu',
+    blockedTitle: 'Thiết lập bắt buộc vẫn chưa hoàn tất',
+    blockedDescription: 'Hoàn thành các mục bắt buộc còn lại trước khi xuất bản cửa hàng.',
+    readyTitle: 'Sẵn sàng xuất bản',
+    readyDescription: 'Mọi thiết lập bắt buộc đã hoàn tất.',
+    readyWithRecommendationsTitle: 'Đã có thể xuất bản, vẫn còn vài mục nên cải thiện',
+    readyWithRecommendationsDescription: 'Bạn có thể xuất bản ngay và hoàn thiện các mục còn lại sau.',
+    continueSetup: 'Tiếp tục thiết lập',
+    publishStorefront: 'Xuất bản cửa hàng',
+    checklist: 'Danh sách thiết lập',
+    state: {
+      required: 'Bắt buộc',
+      recommended: 'Nên làm',
+      optional: 'Tùy chọn',
+      complete: 'Hoàn tất',
+    },
+    setupSections: {
+      branding: {
+        complete: 'Nhận diện cửa hàng đã sẵn sàng.',
+        recommended: 'Thêm tên cửa hàng thật và logo trước khi ra mắt.',
+      },
+      homepage: {
+        complete: 'Các khối trang chủ đã có đủ tài nguyên cần thiết.',
+        blocking: 'Tải lên ảnh bắt buộc cho các khối trang chủ đang bật.',
+      },
+      layout: {
+        complete: 'Cấu trúc header và footer đã sẵn sàng.',
+      },
+      general: {
+        complete: 'Thông tin liên hệ hiển thị cho khách đã sẵn sàng.',
+        recommended: 'Thêm số điện thoại, email và địa chỉ.',
+      },
+      seo: {
+        complete: 'Thiết lập SEO mặc định đã được tùy chỉnh.',
+        recommended: 'Tùy chỉnh tiêu đề, mô tả và URL canonical.',
+      },
+      tracking: {
+        complete: 'Các công cụ theo dõi đang bật đã được cấu hình.',
+        optional: 'Phân tích là tùy chọn cho lần xuất bản đầu.',
+        blocking: 'Hoàn thiện ID cho các công cụ theo dõi đang bật.',
+      },
+    },
     banners: 'Banner',
     sections: 'Mục',
     tracking: 'Theo dõi',

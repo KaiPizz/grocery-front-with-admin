@@ -104,7 +104,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Dashboard (`/admin`) | ✅ | Overview page (7KB). |
+| Dashboard (`/admin`) | ✅ | 2026-05-15: upgraded from a generic overview into a first-publish hub with readiness summary, ordered setup checklist, and next-step CTA backed by centralized publish blockers. Existing summary cards/config links remain below the guidance layer. |
 | Branding (`/admin/branding`) | ✅ | Store name, logo, 15 color tokens with color pickers. |
 | Homepage (`/admin/homepage`) | ✅ | Hero toggle, section ordering, banner block builder. |
 | General (`/admin/general`) | ✅ | General store settings. |
@@ -179,6 +179,7 @@
 | Some E2E tests are implementation-shaped | Medium | Several mobile tests still assert exact DOM/CSS geometry (`getComputedStyle`, `boundingBox`, pixel thresholds) without an explicit PRD/spec anchor. 2026-05-12: repaired PD sticky tests to use the accessibility contract (`aria-hidden`) and an explicit short viewport for the out-of-view scenario, but broader audit remains. |
 | Runtime-configured images still use raw `<img>` | Medium | 2026-05-12: lint now only warns on admin/runtime image surfaces (logo, banner blocks, PromoBanner). Do not blindly convert to `next/image` until production admin/CDN image domains or a safe unoptimized loader policy are decided. |
 | Playwright command hangs after successful targeted runs on Windows | Medium | 2026-05-13: targeted category/BottomNav run printed 15/15 `ok`, but `playwright.cmd` did not return before the shell timeout. No `:3018` or `:4199` listener remained afterward. Treat as harness teardown debt; do not use the timeout alone as product failure without checking per-test output/artifacts. |
+| Admin panel lacks dedicated browser-level test coverage | Medium | 2026-05-15: first admin UX slice added focused unit coverage for publish-readiness logic, but admin pages still do not have their own Playwright/component test harness. Manual browser verification remains required for UI regressions until that layer exists. |
 | Standalone `/products` has no category selector | Medium | 2026-05-15: category slug pages now pass category context into shared listing controls, but the uncategorized `/products` page still does not expose a category picker/filter of its own. Keep this separate from category-page listing UX. |
 | Live `chesaigon` catalog regressed to 1 visible product | High | 2026-05-15: fresh GraphQL probe returned `totalCount: 1` for `products(channel:"chesaigon")`, contradicting the 2026-05-13 snapshot of 121 storefront-visible products. Product-data-dependent UI validation is unreliable until backend restores representative channel data or confirms a replacement source. |
 
