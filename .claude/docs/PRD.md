@@ -110,7 +110,7 @@ Any grocery store can launch a beautiful, branded online store in minutes — wi
 | Feature | Description | Priority |
 |---------|-------------|----------|
 | **Mobile optimization** | Rebuild storefront experience for mobile-first (80% traffic) | Must-have |
-| **Product categories** | Category browsing and filtering (requires Zyra support) | Must-have |
+| **Product categories** | Category browsing, filtering, and category-linked navigation | Must-have |
 | **Performance polish** | Faster loads, smoother animations, optimized images on mobile | Must-have |
 | **Admin UX improvements** | Simplify admin panel workflows, better feedback and guidance | Should-have |
 | **Storefront polish** | Visual refinements, micro-interactions, consistency pass | Should-have |
@@ -119,7 +119,7 @@ Any grocery store can launch a beautiful, branded online store in minutes — wi
 
 | Feature | Description | Priority |
 |---------|-------------|----------|
-| Product category pages | Dedicated category landing pages with filters | High |
+| Commercial category landings | Curated / merchandised browse pages beyond the standard category listing flow | High |
 | Page builder | Drag-and-drop layout editor beyond block system | Medium |
 | A/B testing | Config variants with traffic splitting | Medium |
 | Config version history | Rollback and diff viewing for published configs | Medium |
@@ -243,17 +243,17 @@ Any grocery store can launch a beautiful, branded online store in minutes — wi
 - [x] Banner block builder (6 types)
 - [x] Tracking integrations
 
-### Phase 2 — Mobile & Categories (Next 1-2 months)
+### Phase 2 — Mobile & Categories (Active)
 **Goal:** Production-ready mobile experience, product categorization
 - [ ] Mobile-first storefront redesign / optimization
-- [ ] Product category browsing (when Zyra adds category support)
+- [x] Product category browsing and filtering
 - [ ] Performance optimization (images, loading, animations)
 - [ ] Admin panel UX improvements
 - [ ] Visual polish and consistency pass
 
 ### Phase 3 — Growth & Platform
 **Goal:** Scale to multiple stores, add power features
-- [ ] Category landing pages with filters
+- [ ] Commercial category landings and curated collection pages
 - [ ] Config version history and rollback
 - [ ] Drag-and-drop page builder
 - [ ] A/B testing for config variants
@@ -278,7 +278,7 @@ Any grocery store can launch a beautiful, branded online store in minutes — wi
 
 ## 10. Open Questions
 
-- When will Zyra add product category support? (Blocks Phase 2 category browsing)
+- Should standalone `/products` also expose a category picker now that `/categories/[slug]` owns category-scoped browsing?
 - Should the storefront support PWA / app-like experience for mobile?
 - Is the current 4-step checkout too many steps for mobile shoppers?
 - Should admin panel support mobile/tablet layout for on-the-go store owners?

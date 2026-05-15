@@ -1,11 +1,11 @@
 import { getLocale, getTranslations } from 'next-intl/server';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft, PackageOpen, RefreshCw } from 'lucide-react';
 
+import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { Link } from '@/i18n/navigation';
 import { CATEGORY_BY_SLUG_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
-import { CategoryProductGrid } from './CategoryProductGrid';
 import type { GroceryProduct } from '@/types';
 
 const PAGE_SIZE = 24;
@@ -177,15 +177,39 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             </div>
           )}
 
-          <CategoryProductGrid
-            channel={channel}
-            slug={params.slug}
-            initialProducts={products}
-            initialEndCursor={pageInfo.endCursor}
-            initialHasMore={pageInfo.hasNextPage}
-            totalCount={totalCount}
-            pageSize={PAGE_SIZE}
-          />
+          {products.length > 0 ? (
+            <ProductListingClient
+              channel={channel}
+              basePath={`/categories/${params.slug}`}
+              title={category.name}
+              categoryId={category.id}
+              initialProducts={products}
+              initialEndCursor={pageInfo.endCursor}
+              initialHasMore={pageInfo.hasNextPage}
+              initialTotalCount={totalCount}
+              pageSize={PAGE_SIZE}
+              layoutMode="responsive"
+              showTitle={false}
+              withContainer={false}
+            />
+          ) : (
+            <div className="rounded-lg border px-5 py-10 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
+              <PackageOpen className="mx-auto h-10 w-10" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
+              <p className="mt-4 text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                {t('comingSoon')}
+              </p>
+              <p className="mt-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                {t('emptyCategory')}
+              </p>
+              <Link
+                href="/categories"
+                className="mt-5 inline-flex rounded-lg border px-4 py-2.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
+                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+              >
+                {t('browseAll')}
+              </Link>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -67,6 +67,79 @@ test.describe('B1 category browsing', () => {
     await expect(page.getByText(/coming soon/i).first()).toBeVisible();
     await expect(page.getByRole('link', { name: /browse all categories/i })).toBeVisible();
   });
+
+  test('applies desktop listing filters through a category-scoped products query', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/categories/fruit');
+
+    await expect(page.getByRole('heading', { name: /^fruit$/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /organic gala apples/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /blueberries snack box/i })).toBeVisible();
+
+    await expect.poll(() => productQueries.some((variables) => {
+      const filter = variables.filter as Record<string, any> | undefined;
+      return Array.isArray(filter?.categories) && filter.categories.includes('cat-fruit');
+    })).toBe(true);
+
+    await page.getByRole('button', { name: /filters/i }).click();
+    const filterPanel = page.locator('#filter-panel');
+    await expect(filterPanel).toBeVisible();
+    await filterPanel.getByLabel(/minimum price/i).fill('10');
+
+    await expect.poll(() => productQueries.some((variables) => {
+      const filter = variables.filter as Record<string, any> | undefined;
+      return Array.isArray(filter?.categories)
+        && filter.categories.includes('cat-fruit')
+        && filter.price?.gte === 10;
+    })).toBe(true);
+    await expect(page.getByRole('heading', { name: /organic gala apples/i })).toBeVisible();
+    await expect(page.getByText(/blueberries snack box/i)).toHaveCount(0);
+  });
+
+  test('applies mobile category filters only after tapping apply', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/categories/fruit');
+
+    const cards = page.getByTestId('mobile-product-card');
+    await expect(cards).toHaveCount(2);
+
+    await page.getByRole('button', { name: /filters/i }).click();
+    const filterSheet = page.getByTestId('mobile-filter-sheet');
+    await expect(filterSheet).toBeVisible();
+    await filterSheet.getByLabel(/minimum price/i).fill('10');
+
+    expect(productQueries.some((variables) => {
+      const filter = variables.filter as Record<string, any> | undefined;
+      return Array.isArray(filter?.categories)
+        && filter.categories.includes('cat-fruit')
+        && filter.price?.gte === 10;
+    })).toBe(false);
+    await expect(cards).toHaveCount(2);
+
+    await filterSheet.getByRole('button', { name: /apply filters/i }).click();
+
+    await expect(cards).toHaveCount(1);
+    await expect.poll(() => productQueries.some((variables) => {
+      const filter = variables.filter as Record<string, any> | undefined;
+      return Array.isArray(filter?.categories)
+        && filter.categories.includes('cat-fruit')
+        && filter.price?.gte === 10;
+    })).toBe(true);
+  });
 });
 
 test.describe('desktop category navigation', () => {

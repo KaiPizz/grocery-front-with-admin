@@ -108,6 +108,14 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     await expect(unitPrice).toContainText(/kg/i);
   });
 
+  test('links the product detail breadcrumb back to the primary category page', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.goto('/en/products/organic-gala-apples');
+
+    const breadcrumb = page.getByRole('navigation', { name: /breadcrumb/i });
+    await expect(breadcrumb.getByRole('link', { name: /^fruit$/i })).toHaveAttribute('href', '/en/categories/fruit');
+  });
+
   test('in-stock badge shows the high-stock variant for qty > 10', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');

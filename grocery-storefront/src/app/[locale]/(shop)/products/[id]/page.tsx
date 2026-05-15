@@ -184,7 +184,7 @@ export default function ProductDetailPage() {
       <Breadcrumb items={[
         { label: t('nav.home'), href: '/' },
         { label: t('nav.products'), href: '/products' },
-        ...(product.category ? [{ label: product.category.name, href: `/products?zone=` }] : []),
+        ...(product.category ? [{ label: product.category.name, href: `/categories/${product.category.slug}` }] : []),
         { label: product.name },
       ]} />
 

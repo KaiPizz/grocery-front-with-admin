@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-14
+> **Last updated:** 2026-05-15
 
 ---
 
@@ -40,6 +40,12 @@
 
 ## Zyra API Errors
 
+### Reused UI `GroceryProduct` type for raw GraphQL variant pricing
+- **Error:** After extracting shared listing helpers, `npx tsc --noEmit` failed because `ProductVariant` in `src/types/index.ts` does not expose nested `variant.pricing`, even though live GraphQL product fragments do.
+- **Cause:** `GroceryProduct` is an older UI-facing shape, while raw Zyra GraphQL products still carry Saleor-style nested pricing objects in several listing paths.
+- **Fix:** Kept the global type unchanged and narrowed only the local price-reader helper before reading `variant.pricing`.
+- **Rule:** Do not casually expand shared UI product types to match one raw GraphQL operation. Use an operation-specific interface or a tight local narrowing at the boundary that reads raw GraphQL fields.
+
 ### Got local dev IP banned by fail2ban from GraphQL 400 bursts
 - **Error:** Storefront dev could load Next pages but `/api/graphql` hung with `UND_ERR_CONNECT_TIMEOUT`, and `Test-NetConnection zira-ai.com -Port 443` failed even though DNS and ping worked.
 - **Cause:** Zyra production `fail2ban` jail `nginx-bad-request` banned the current NAT IP after repeated `POST /graphql/storefront` requests returned HTTP 400 during schema/probe iteration. After ban, traffic was dropped at the iptables `f2b-nginx-bad-request` chain before nginx, so there were no nginx access logs.
@@ -57,6 +63,12 @@
 - **Cause:** Important backend-bot findings were living in chat/downloaded notes instead of durable docs. The live backend schema has `Category.slug: String!` fixed by production commit `f0c0133a`, `availablePaymentMethods(channel)` with `PaymentMethod.id`, and legacy checkout promo mutations that run after `checkoutCreateFull`.
 - **Fix:** Recorded the contract in the wiki vault at `D:\kaipizz-second-brain\store-front-brain\wiki\decisions\enail-storefront-zyra-storefront-contract.md`. Frontend work should use category slug routes, query `availablePaymentMethods(channel) { id name description provider isActive fee { amount currency } }`, pass `id` as `CheckoutPaymentInput.gateway`, and apply promo codes with `checkoutPromoCodeAdd(input: { checkoutId, promoCode })` after checkout creation.
 - **Rule:** Before changing Zyra GraphQL operations, read the vault contract page first. Do not resurrect old probes or stale schema guesses unless live verification disproves the documented contract.
+
+### Trusted a recent live product-count snapshot as if it were durable
+- **Error:** Treated the 2026-05-13 `chesaigon` snapshot of 121 storefront-visible products as still true while planning the next slice on 2026-05-15.
+- **Cause:** Backend catalog data is mutable, and a wiki note that was accurate two days ago is not an invariant.
+- **Fix:** Re-ran a fresh live GraphQL probe on 2026-05-15, found `products(channel:"chesaigon")` had regressed to `totalCount: 1`, and updated the wiki/SCR to make the data drift explicit.
+- **Rule:** Recheck live channel counts and representative sample values before any product-data-dependent work; treat old snapshots as history, not current truth.
 
 ### Wishlist sync returned success but empty items
 - **Error:** After syncing wishlist to server, querying the wishlist returned zero items even though sync said `success: true`. The UI cleared the wishlist.
