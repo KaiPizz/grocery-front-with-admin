@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-15
+> **Last updated:** 2026-05-22
 
 ---
 
@@ -129,6 +129,18 @@
 ---
 
 ## Config & Navigation Errors
+
+### Removed config env but code still had localhost fallback
+- **Error:** Treating "drop `NEXT_PUBLIC_CONFIG_API_URL`" as an env-only change would still make the storefront call `http://localhost:4100/api/config/{slug}`.
+- **Cause:** Both server metadata/layout config fetch and client `ConfigProvider` used `process.env.NEXT_PUBLIC_CONFIG_API_URL || 'http://localhost:4100'`.
+- **Fix:** Made config API opt-in: missing or blank `NEXT_PUBLIC_CONFIG_API_URL` returns `null` on the server and skips client refresh.
+- **Rule:** When disabling an optional integration, remove the fallback call path; deleting the env var is not enough if code supplies a default URL.
+
+### Confused admin UI URL with config API integration
+- **Error:** Adding `NEXT_PUBLIC_ADMIN_URL=http://localhost:4100/admin` did not make storefront use admin config, and admin stayed on `chesaigon` while storefront used `kamito`.
+- **Cause:** Admin UI URL is only an operator link; storefront config reads from `NEXT_PUBLIC_CONFIG_API_URL` and `NEXT_PUBLIC_SALON_SLUG`. The homepage also rendered the hardcoded legacy hero before admin banner blocks.
+- **Fix:** Re-enabled `NEXT_PUBLIC_CONFIG_API_URL`, aligned admin/storefront slug to `kamito`, published `config-kamito.json`, and promoted admin hero blocks into the first homepage hero slot with a regression test.
+- **Rule:** For admin integration, verify all three layers: admin slug, config API URL, and storefront render surface. A URL bookmark is not a data integration.
 
 ### Left a transparent hover gap between the header and category mega menu
 - **Error:** Moving from the Categories nav item into the desktop mega menu was brittle, and the page could still scroll behind the open category overlay.

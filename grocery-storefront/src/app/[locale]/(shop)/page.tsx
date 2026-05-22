@@ -104,6 +104,19 @@ export default function HomePage() {
   const channel = useChannel();
   const siteConfig = useStorefrontConfig();
 
+  const homepageHero = siteConfig?.homepage?.hero;
+  const homepageBlocks = siteConfig?.homepage?.blocks ?? [];
+  const enabledBlocks = homepageBlocks.filter((block) => block.enabled).sort((a, b) => a.order - b.order);
+  const heroBlock = enabledBlocks.find((block) => block.type === 'hero');
+  const secondaryBlocks = heroBlock
+    ? enabledBlocks.filter((block) => block.id !== heroBlock.id)
+    : enabledBlocks;
+  const showLegacyHero = !heroBlock && homepageHero?.enabled !== false;
+  const heroHeadline = homepageHero?.headline?.trim() || t('hero');
+  const heroSubtitle = homepageHero?.subtitle?.trim() || t('heroSub');
+  const heroCtaText = homepageHero?.ctaText?.trim() || tNav('products');
+  const heroCtaLink = homepageHero?.ctaLink?.trim() || '/products';
+
   const configSections = siteConfig?.homepage?.sections;
   const orderedSections: HomepageSectionId[] = configSections
     ? configSections
@@ -146,7 +159,13 @@ export default function HomePage() {
   return (
     <div className="pb-12">
       <div className="md:hidden">
-        {siteConfig?.homepage?.hero?.enabled !== false && (
+        {heroBlock ? (
+          <section className="container-grocery pb-4 pt-6 sm:pt-8" data-testid="mobile-home-hero">
+            <BlockRenderer block={heroBlock} />
+          </section>
+        ) : null}
+
+        {showLegacyHero && (
         <section className="container-grocery pb-4 pt-6 sm:pt-8">
           <div
             className="relative overflow-hidden rounded-[34px] border px-5 py-6 shadow-[0_35px_90px_-50px_rgba(22,163,74,0.35)] sm:px-8 sm:py-7"
@@ -184,19 +203,19 @@ export default function HomePage() {
                 className="mt-4 text-[1.85rem] font-semibold leading-[0.98] tracking-[-0.05em] sm:text-[2.75rem]"
                 style={{ color: 'var(--color-foreground)', fontFamily: 'var(--font-display)' }}
               >
-                {t('hero')}
+                {heroHeadline}
               </h1>
               <p className="mx-auto mt-3 max-w-[24rem] text-sm leading-[1.45] sm:text-[15px]" style={{ color: 'var(--color-muted-foreground)' }}>
-                {t('heroSub')}
+                {heroSubtitle}
               </p>
 
               <div className="mt-5 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
                 <Link
-                  href="/products"
+                  href={heroCtaLink}
                   className="inline-flex h-11 min-w-[168px] items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold text-white shadow-[0_18px_32px_-18px_rgba(22,163,74,0.75)] transition-all duration-fast active:scale-[0.98]"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                 >
-                  {tNav('products')}
+                  {heroCtaText}
                   <ChevronRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <a
@@ -233,12 +252,10 @@ export default function HomePage() {
         )}
 
         {(() => {
-          const blocks = siteConfig?.homepage?.blocks ?? [];
-          const enabledBlocks = blocks.filter((b) => b.enabled).sort((a, b) => a.order - b.order);
-          if (enabledBlocks.length > 0) {
+          if (secondaryBlocks.length > 0) {
             return (
               <div className="container-grocery space-y-4 py-4">
-                {enabledBlocks.map((block) => (
+                {secondaryBlocks.map((block) => (
                   <BlockRenderer key={block.id} block={block} />
                 ))}
               </div>
@@ -404,7 +421,13 @@ export default function HomePage() {
       </div>
 
       <div className="hidden md:block">
-        {siteConfig?.homepage?.hero?.enabled !== false && (
+        {heroBlock ? (
+          <section className="container-grocery py-8 md:py-12" data-testid="desktop-home-hero">
+            <BlockRenderer block={heroBlock} />
+          </section>
+        ) : null}
+
+        {showLegacyHero && (
         <section className="py-20 md:py-32" style={{ backgroundColor: 'var(--color-accent)' }} data-testid="desktop-home-hero">
           <div className="container-grocery text-center">
             <div className="mb-6 flex items-center justify-center gap-2">
@@ -419,20 +442,20 @@ export default function HomePage() {
               className="heading-display mb-5 text-4xl md:text-5xl lg:text-6xl"
               style={{ color: 'var(--color-foreground)' }}
             >
-              {t('hero')}
+              {heroHeadline}
             </h1>
             <p
               className="mx-auto mb-10 max-w-xl text-lg leading-relaxed md:text-xl"
               style={{ color: 'var(--color-muted-foreground)' }}
             >
-              {t('heroSub')}
+              {heroSubtitle}
             </p>
             <Link
-              href="/products"
+              href={heroCtaLink}
               className="inline-flex items-center gap-2 rounded-xl px-8 py-3.5 font-semibold text-white transition-all duration-fast active:scale-95 hover:opacity-90"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              {tNav('products')}
+              {heroCtaText}
               <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
@@ -440,12 +463,10 @@ export default function HomePage() {
         )}
 
         {(() => {
-          const blocks = siteConfig?.homepage?.blocks ?? [];
-          const enabledBlocks = blocks.filter((b) => b.enabled).sort((a, b) => a.order - b.order);
-          if (enabledBlocks.length > 0) {
+          if (secondaryBlocks.length > 0) {
             return (
               <div className="container-grocery space-y-8 py-8 md:py-12">
-                {enabledBlocks.map((block) => (
+                {secondaryBlocks.map((block) => (
                   <BlockRenderer key={block.id} block={block} />
                 ))}
               </div>

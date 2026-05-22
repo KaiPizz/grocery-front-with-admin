@@ -103,7 +103,42 @@ async function mockHomepageConfig(page: Page) {
   });
 }
 
+async function mockHomepageHeroConfig(page: Page) {
+  const envelope = configEnvelope();
+  envelope.config.homepage.hero = {
+    enabled: true,
+    headline: 'Kamito market essentials',
+    subtitle: 'Korean, Japanese, and Asian pantry picks ready for local delivery.',
+    ctaText: 'Shop Kamito',
+    ctaLink: '/categories',
+    backgroundImageUrl: null,
+  };
+
+  await page.route('**/api/config/**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(envelope),
+    });
+  });
+}
+
 test.describe('mobile homepage', () => {
+  test('renders admin-configured homepage hero copy and CTA', async ({ page }) => {
+    // Protects the admin homepage contract: published hero copy should affect
+    // the first storefront viewport, not only lower banner blocks or metadata.
+    await mockHomepageHeroConfig(page);
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en');
+
+    const hero = page.getByTestId('desktop-home-hero');
+
+    await expect(hero.getByRole('heading', { name: 'Kamito market essentials' })).toBeVisible();
+    await expect(hero.getByText('Korean, Japanese, and Asian pantry picks ready for local delivery.')).toBeVisible();
+    await expect(hero.getByRole('link', { name: 'Shop Kamito' })).toBeVisible();
+  });
+
   test('uses a compact Stitch-inspired landing page layout for fast shopping', async ({ page }) => {
     // Protects: PRD sections 3.2 / 5.1 / 5.3 plus the shipped homepage
     // progress row. Shop by Zone is the current fast-browse affordance;

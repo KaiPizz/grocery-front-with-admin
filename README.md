@@ -63,7 +63,7 @@ npm run dev
 
 Mở trình duyệt:
 - Storefront: http://localhost:3008
-- Admin Panel: http://localhost:4100
+- Admin Panel: http://localhost:4100/admin
 
 ---
 

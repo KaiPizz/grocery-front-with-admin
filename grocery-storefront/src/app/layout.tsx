@@ -21,7 +21,9 @@ export const viewport: Viewport = {
 };
 
 async function fetchServerConfig(): Promise<StorefrontConfig | null> {
-  const apiUrl = process.env.NEXT_PUBLIC_CONFIG_API_URL || 'http://localhost:4100';
+  const apiUrl = process.env.NEXT_PUBLIC_CONFIG_API_URL?.trim();
+  if (!apiUrl) return null;
+
   const slug = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
   try {
     const res = await fetch(`${apiUrl}/api/config/${slug}`, {

@@ -13,6 +13,9 @@ Thumbs.db
 .tmp.driveupload/
 .vscode/
 
+# Local dev server logs
+dev-server.log
+
 # Codex CLI local tooling (per-machine; not project artifacts)
 .agents/
 AGENTS.md

@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { StorefrontConfig } from '@/types/storefront-config';
 
-const CONFIG_API_URL = process.env.NEXT_PUBLIC_CONFIG_API_URL || 'http://localhost:4100';
+const CONFIG_API_URL = process.env.NEXT_PUBLIC_CONFIG_API_URL?.trim() || null;
 const SALON_SLUG = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
 
 const ConfigContext = createContext<StorefrontConfig | null>(null);
@@ -35,6 +35,8 @@ export function ConfigProvider({ initialConfig, children }: ConfigProviderProps)
   const [config, setConfig] = useState<StorefrontConfig | null>(initialConfig);
 
   const refreshConfig = useCallback(async () => {
+    if (!CONFIG_API_URL) return;
+
     try {
       const res = await fetch(`${CONFIG_API_URL}/api/config/${SALON_SLUG}`, {
         cache: 'no-store',
