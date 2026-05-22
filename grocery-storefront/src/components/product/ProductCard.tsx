@@ -21,20 +21,32 @@ interface ProductCardProps {
 
 export function ProductCard({ product, imagePriority = false }: ProductCardProps) {
   const t = useTranslations();
+  const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
+  const cartItem = useCartStore((s) => {
+    const variantId = variant?.id;
+    if (!variantId) return null;
+
+    return s.items.find((item) => item.variantId === variantId || item.merchandiseId === variantId) ?? null;
+  });
+  const updateCartQuantity = useCartStore((s) => s.updateQuantity);
+  const removeCartItem = useCartStore((s) => s.removeItem);
   const addWishlistItem = useWishlistStore((s) => s.addItem);
   const removeWishlistItem = useWishlistStore((s) => s.removeItem);
   const isWishlisted = useWishlistStore((s) => s.items.some((item) => item.productId === product.id));
   const [nutritionOpen, setNutritionOpen] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [busy, setBusy] = useState(false);
 
-  const variant = product.variants?.[0] as any;
   const inStock = (variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 0) > 0;
   const price = variant?.pricing?.price?.gross?.amount ?? (product as any).pricing?.priceRange?.start?.gross?.amount ?? 0;
   const currency = variant?.pricing?.price?.gross?.currency ?? (product as any).pricing?.priceRange?.start?.gross?.currency ?? 'PLN';
   const imageUrl = getImageSrc(product.thumbnail?.url);
   const maxQuantity = Math.max(1, variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 99);
+  const cartQuantity = cartItem?.quantity ?? 0;
+  const isInCart = cartQuantity > 0;
+  const displayedQuantity = isInCart ? cartQuantity : quantity;
   const quantityUnitLabel = t('product.quantityUnitShort');
   const addToCartLabel = t('common.addToCart');
   const storageZoneSymbol = product.storageZone
@@ -48,37 +60,70 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
   function updateQuantity(e: React.MouseEvent, delta: number) {
     e.preventDefault();
     e.stopPropagation();
-    if (!inStock) return;
+    if (!inStock || busy) return;
+
+    if (isInCart) {
+      void handleCartQuantityChange(cartQuantity + delta);
+      return;
+    }
 
     setQuantity((current) => Math.max(1, Math.min(maxQuantity, current + delta)));
+  }
+
+  async function handleCartQuantityChange(nextQuantity: number) {
+    if (!variant || busy) return;
+
+    setBusy(true);
+    try {
+      const success = nextQuantity <= 0
+        ? await removeCartItem(variant.id)
+        : await updateCartQuantity(variant.id, Math.min(maxQuantity, nextQuantity));
+
+      if (!success) {
+        toast.error(t('common.error'));
+      }
+    } finally {
+      setBusy(false);
+    }
   }
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (!variant || !inStock) return;
-    void (async () => {
-      const success = await addItem({
-        productId: product.id,
-        variantId: variant.id,
-        slug: product.slug,
-        name: product.name,
-        thumbnail: imageUrl || undefined,
-        price,
-        currency,
-        quantity,
-        storageZone: product.storageZone,
-        allergens: product.allergens,
-      });
+    if (!variant || !inStock || busy) return;
 
-      if (!success) {
-        toast.error(t('common.error'));
+    void (async () => {
+      if (isInCart) {
+        await handleCartQuantityChange(cartQuantity + 1);
         return;
       }
 
-      setJustAdded(true);
-      setTimeout(() => setJustAdded(false), 1200);
-      toast.success(t('product.addToCartSuccess'));
+      setBusy(true);
+      try {
+        const success = await addItem({
+          productId: product.id,
+          variantId: variant.id,
+          slug: product.slug,
+          name: product.name,
+          thumbnail: imageUrl || undefined,
+          price,
+          currency,
+          quantity,
+          storageZone: product.storageZone,
+          allergens: product.allergens,
+        });
+
+        if (!success) {
+          toast.error(t('common.error'));
+          return;
+        }
+
+        setJustAdded(true);
+        setTimeout(() => setJustAdded(false), 1200);
+        toast.success(t('product.addToCartSuccess'));
+      } finally {
+        setBusy(false);
+      }
     })();
   }
 
@@ -161,14 +206,14 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={!inStock}
+              disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
               className="flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-fast disabled:opacity-40 active:scale-[0.98]"
               style={{
                 backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'color-mix(in srgb, var(--color-primary) 92%, transparent)' : 'var(--color-muted)',
                 borderColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-border)',
                 color: inStock ? 'white' : 'var(--color-muted-foreground)',
               }}
-              aria-label={inStock ? t('product.addToCartWithQuantity', { quantity }) : t('product.outOfStock')}
+              aria-label={inStock ? t('product.addToCartWithQuantity', { quantity: displayedQuantity }) : t('product.outOfStock')}
               data-testid="product-card-add"
             >
               {justAdded ? (
@@ -328,15 +373,18 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
             </div>
 
             <div className="mt-3 sm:grid sm:grid-cols-[92px,minmax(0,1fr)] sm:items-start sm:gap-2">
-              <div className="group/quantity" data-testid="product-card-quantity">
+              <div className="group/quantity" data-testid="product-card-quantity" data-in-cart={isInCart ? 'true' : 'false'}>
                 <div
                   className="grid grid-cols-3 h-11 rounded-xl border overflow-hidden"
-                  style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+                  style={{
+                    borderColor: isInCart ? 'var(--color-primary)' : 'var(--color-border)',
+                    backgroundColor: isInCart ? 'var(--color-accent)' : 'var(--color-card)',
+                  }}
                 >
                   <button
                     type="button"
                     onClick={(e) => updateQuantity(e, -1)}
-                    disabled={!inStock || quantity <= 1}
+                    disabled={!inStock || busy || (!isInCart && quantity <= 1)}
                     className="flex items-center justify-center transition-all duration-fast hover-surface disabled:opacity-40"
                     aria-label={t('product.decreaseQuantity', { name: product.name })}
                   >
@@ -346,13 +394,14 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
                     className="flex items-center justify-center text-sm font-semibold tabular-nums"
                     style={{ color: 'var(--color-foreground)' }}
                     aria-live="polite"
+                    data-testid="product-card-quantity-value"
                   >
-                    {quantity}
+                    {displayedQuantity}
                   </span>
                   <button
                     type="button"
                     onClick={(e) => updateQuantity(e, 1)}
-                    disabled={!inStock || quantity >= maxQuantity}
+                    disabled={!inStock || busy || displayedQuantity >= maxQuantity}
                     className="flex items-center justify-center transition-all duration-fast hover-surface disabled:opacity-40"
                     aria-label={t('product.increaseQuantity', { name: product.name })}
                   >
@@ -370,13 +419,13 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={!inStock}
+                disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
                 className="hidden h-11 w-full items-center justify-center gap-2 rounded-xl px-3 font-semibold transition-all duration-fast disabled:opacity-40 active:scale-[0.98] sm:flex checkout-btn"
                 style={{
                   backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-muted)',
                   color: inStock ? 'white' : 'var(--color-muted-foreground)',
                 }}
-                aria-label={inStock ? t('product.addToCartWithQuantity', { quantity }) : t('product.outOfStock')}
+                aria-label={inStock ? t('product.addToCartWithQuantity', { quantity: displayedQuantity }) : t('product.outOfStock')}
               >
                 {justAdded ? (
                   <Check className="w-4 h-4" aria-hidden="true" />

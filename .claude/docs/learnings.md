@@ -279,3 +279,9 @@
 - **Cause:** The app routes and test assertions completed; no `:3018` or `:4199` listener remained afterward. The failure is consistent with Playwright webServer/process teardown hanging on Windows, not with a storefront behavior failure. Replacing `npx next dev` with a direct Next CLI command did not fix the hang.
 - **Fix:** Treat the per-test `ok` output as useful signal, but not a clean command pass. Verify the app with `next build`, inspect artifacts/ports when needed, and track the teardown issue as test harness debt before relying on this command as a hard CI gate.
 - **Rule:** When Playwright output shows all target tests passed but the process times out after test completion, do not churn product code. Separate product failures from harness teardown failures and document the residual risk.
+
+### Used hover to open desktop UI inside a touch-emulated Playwright project
+- **Error:** `cart-price-integrity.spec.ts` tried to open the desktop mini cart with `cartLink.hover()` while running under the `pixel-7` project. The test forced a 1280px viewport, but the browser context still had touch/mobile emulation, so the hover path did not reliably open the dialog.
+- **Cause:** The test mixed desktop layout assertions with a mobile-emulated project and depended on pointer hover instead of the component's keyboard/focus accessibility path.
+- **Fix:** Open the mini cart with `cartLink.focus()` for the price-integrity assertion, which exercises the same dialog without relying on hover availability.
+- **Rule:** In mobile-emulated Playwright projects, avoid hover as the only way to reveal UI. Prefer focus/click paths for behavior tests unless hover itself is the contract under test.

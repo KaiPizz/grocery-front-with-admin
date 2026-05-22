@@ -20,7 +20,7 @@ test.describe('cart price integrity', () => {
     await expect(cartLink).toContainText(PRODUCT_PRICE_PATTERN);
     await expect(cartLink).not.toContainText(ZERO_PRICE_PATTERN);
 
-    await cartLink.hover();
+    await cartLink.focus();
     const miniCart = page.getByRole('dialog', { name: /your cart/i });
     await expect(miniCart).toBeVisible();
     await expect(miniCart).toContainText(PRODUCT_PRICE_PATTERN);

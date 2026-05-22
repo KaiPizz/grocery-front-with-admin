@@ -20,55 +20,99 @@ interface MobileProductCardProps {
 
 export function MobileProductCard({ product, imagePriority = false, testId }: MobileProductCardProps) {
   const t = useTranslations();
+  const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
+  const cartItem = useCartStore((s) => {
+    const variantId = variant?.id;
+    if (!variantId) return null;
+
+    return s.items.find((item) => item.variantId === variantId || item.merchandiseId === variantId) ?? null;
+  });
+  const updateCartQuantity = useCartStore((s) => s.updateQuantity);
+  const removeCartItem = useCartStore((s) => s.removeItem);
   const addWishlistItem = useWishlistStore((s) => s.addItem);
   const removeWishlistItem = useWishlistStore((s) => s.removeItem);
   const isWishlisted = useWishlistStore((s) => s.items.some((item) => item.productId === product.id));
   const [justAdded, setJustAdded] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [busy, setBusy] = useState(false);
 
-  const variant = product.variants?.[0] as any;
   const inStock = (variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 0) > 0;
   const price = variant?.pricing?.price?.gross?.amount ?? (product as any).pricing?.priceRange?.start?.gross?.amount ?? 0;
   const currency = variant?.pricing?.price?.gross?.currency ?? (product as any).pricing?.priceRange?.start?.gross?.currency ?? 'PLN';
   const imageUrl = getImageSrc(product.thumbnail?.url);
   const maxQuantity = Math.max(1, variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 99);
+  const cartQuantity = cartItem?.quantity ?? 0;
+  const isInCart = cartQuantity > 0;
+  const displayedQuantity = isInCart ? cartQuantity : quantity;
 
   function updateQuantity(e: React.MouseEvent, delta: number) {
     e.preventDefault();
     e.stopPropagation();
-    if (!inStock) return;
+    if (!inStock || busy) return;
+
+    if (isInCart) {
+      void handleCartQuantityChange(cartQuantity + delta);
+      return;
+    }
 
     setQuantity((current) => Math.max(1, Math.min(maxQuantity, current + delta)));
+  }
+
+  async function handleCartQuantityChange(nextQuantity: number) {
+    if (!variant || busy) return;
+
+    setBusy(true);
+    try {
+      const success = nextQuantity <= 0
+        ? await removeCartItem(variant.id)
+        : await updateCartQuantity(variant.id, Math.min(maxQuantity, nextQuantity));
+
+      if (!success) {
+        toast.error(t('common.error'));
+      }
+    } finally {
+      setBusy(false);
+    }
   }
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (!variant || !inStock) return;
+    if (!variant || !inStock || busy) return;
 
     void (async () => {
-      const success = await addItem({
-        productId: product.id,
-        variantId: variant.id,
-        slug: product.slug,
-        name: product.name,
-        thumbnail: imageUrl || undefined,
-        price,
-        currency,
-        quantity,
-        storageZone: product.storageZone,
-        allergens: product.allergens,
-      });
-
-      if (!success) {
-        toast.error(t('common.error'));
+      if (isInCart) {
+        await handleCartQuantityChange(cartQuantity + 1);
         return;
       }
 
-      setJustAdded(true);
-      setTimeout(() => setJustAdded(false), 1200);
-      toast.success(t('product.addToCartSuccess'));
+      setBusy(true);
+      try {
+        const success = await addItem({
+          productId: product.id,
+          variantId: variant.id,
+          slug: product.slug,
+          name: product.name,
+          thumbnail: imageUrl || undefined,
+          price,
+          currency,
+          quantity,
+          storageZone: product.storageZone,
+          allergens: product.allergens,
+        });
+
+        if (!success) {
+          toast.error(t('common.error'));
+          return;
+        }
+
+        setJustAdded(true);
+        setTimeout(() => setJustAdded(false), 1200);
+        toast.success(t('product.addToCartSuccess'));
+      } finally {
+        setBusy(false);
+      }
     })();
   }
 
@@ -148,14 +192,14 @@ export function MobileProductCard({ product, imagePriority = false, testId }: Mo
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={!inStock}
+              disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
               className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast disabled:opacity-40 active:scale-[0.98]"
               style={{
                 backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-muted)',
                 borderColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-border)',
                 color: inStock ? 'white' : 'var(--color-muted-foreground)',
               }}
-              aria-label={inStock ? t('product.addToCartWithQuantity', { quantity }) : t('product.outOfStock')}
+              aria-label={inStock ? t('product.addToCartWithQuantity', { quantity: displayedQuantity }) : t('product.outOfStock')}
               data-testid="mobile-product-card-add"
             >
               {justAdded ? (
@@ -221,14 +265,18 @@ export function MobileProductCard({ product, imagePriority = false, testId }: Mo
         </div>
 
         <div
-          className="mt-3 grid h-11 grid-cols-3 overflow-hidden rounded-full border bg-[var(--color-card)]"
-          style={{ borderColor: 'var(--color-border)' }}
+          className="mt-3 grid h-11 grid-cols-3 overflow-hidden rounded-full border"
+          style={{
+            borderColor: isInCart ? 'var(--color-primary)' : 'var(--color-border)',
+            backgroundColor: isInCart ? 'var(--color-accent)' : 'var(--color-card)',
+          }}
           data-testid="mobile-product-card-stepper"
+          data-in-cart={isInCart ? 'true' : 'false'}
         >
           <button
             type="button"
             onClick={(e) => updateQuantity(e, -1)}
-            disabled={!inStock || quantity <= 1}
+            disabled={!inStock || busy || (!isInCart && quantity <= 1)}
             className="flex items-center justify-center transition-colors duration-fast disabled:opacity-40"
             aria-label={t('product.decreaseQuantity', { name: product.name })}
           >
@@ -238,13 +286,14 @@ export function MobileProductCard({ product, imagePriority = false, testId }: Mo
             className="flex items-center justify-center text-base font-semibold tabular-nums"
             style={{ color: 'var(--color-foreground)' }}
             aria-live="polite"
+            data-testid="mobile-product-card-quantity-value"
           >
-            {quantity}
+            {displayedQuantity}
           </span>
           <button
             type="button"
             onClick={(e) => updateQuantity(e, 1)}
-            disabled={!inStock || quantity >= maxQuantity}
+            disabled={!inStock || busy || displayedQuantity >= maxQuantity}
             className="flex items-center justify-center transition-colors duration-fast disabled:opacity-40"
             aria-label={t('product.increaseQuantity', { name: product.name })}
           >
