@@ -98,7 +98,7 @@ Any grocery store can launch a beautiful, branded online store in minutes — wi
 | **Checkout flow** | 4-step: Delivery, Shipping, Payment, Review | Done |
 | **Customer accounts** | Login, register, profile, order history, saved addresses | Done |
 | **Wishlist** | Save items, move to cart, local-first with server sync | Done |
-| **Dark mode** | Full dark theme toggle | Done |
+| **Light-only theme** | Dark/light switching removed by product decision; storefront stays on the configured light theme | Done |
 | **i18n** | English + Polish | Done |
 | **Draft/Publish workflow** | Save draft, preview, publish with versioning | Done |
 | **Tracking integrations** | Facebook Pixel, GA4, GTM, Hotjar (configurable) | Done |

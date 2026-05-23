@@ -4,6 +4,10 @@ import { z } from 'zod';
 
 const hexColor = z.string().regex(/^#[0-9a-fA-F]{6,8}$/, 'Must be a valid hex color');
 const optionalUrl = z.string().max(2000).nullable();
+const linkHref = z.string().min(1).max(500).refine(
+  (href) => href.startsWith('/') || /^https?:\/\//i.test(href),
+  'Must be an internal path or http(s) URL'
+);
 
 // --- Branding ---
 
@@ -205,7 +209,6 @@ const headerSchema = z.object({
   showSearch: z.boolean(),
   showWishlist: z.boolean(),
   showLanguageSwitcher: z.boolean(),
-  showThemeToggle: z.boolean(),
   cta: headerCtaSchema.optional(),
 });
 
@@ -289,6 +292,90 @@ const generalSchema = z.object({
   lowStockThreshold: z.number().int().min(0).max(10000),
 });
 
+// --- Commercial ---
+
+const commercialSurfaceKindSchema = z.enum(['category', 'collection', 'outlet', 'external']);
+const collectionSlugSchema = z.string().regex(
+  /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+  'Must use lowercase letters, numbers, and hyphens'
+);
+
+const commercialQuickLinkSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1).max(100),
+  href: linkHref,
+  kind: commercialSurfaceKindSchema,
+  description: z.string().max(300).nullable(),
+  imageUrl: optionalUrl,
+  enabled: z.boolean(),
+  order: z.number().int().min(0),
+});
+
+const commercialCollectionTileSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1).max(120),
+  href: linkHref,
+  description: z.string().max(300).nullable(),
+  imageUrl: optionalUrl,
+  enabled: z.boolean(),
+  order: z.number().int().min(0),
+});
+
+const commercialCollectionSchema = z.object({
+  slug: collectionSlugSchema,
+  title: z.string().min(1).max(160),
+  subtitle: z.string().max(500).nullable(),
+  heroImageUrl: optionalUrl,
+  enabled: z.boolean(),
+  order: z.number().int().min(0),
+  tiles: z.array(commercialCollectionTileSchema),
+});
+
+const commercialOutletSchema = z.object({
+  enabled: z.boolean(),
+  label: z.string().min(1).max(100),
+  collectionSlug: collectionSlugSchema.nullable(),
+});
+
+const commercialSchema = z.object({
+  enabled: z.boolean(),
+  quickLinks: z.array(commercialQuickLinkSchema),
+  collections: z.array(commercialCollectionSchema),
+  outlet: commercialOutletSchema,
+}).superRefine((commercial, ctx) => {
+  if (!commercial.outlet.enabled) return;
+
+  if (!commercial.outlet.collectionSlug) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['outlet', 'collectionSlug'],
+      message: 'Enabled outlet requires a collection slug',
+    });
+    return;
+  }
+
+  const collectionExists = commercial.collections.some(
+    (collection) => collection.slug === commercial.outlet.collectionSlug
+  );
+
+  if (!collectionExists) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['outlet', 'collectionSlug'],
+      message: 'Outlet collection slug must match a configured collection',
+    });
+  }
+}).default({
+  enabled: false,
+  quickLinks: [],
+  collections: [],
+  outlet: {
+    enabled: false,
+    label: 'Outlet',
+    collectionSlug: null,
+  },
+});
+
 // --- Top-level ---
 
 export const storefrontConfigSchema = z.object({
@@ -298,6 +385,7 @@ export const storefrontConfigSchema = z.object({
   tracking: trackingSchema,
   seo: seoSchema,
   general: generalSchema,
+  commercial: commercialSchema,
 });
 
 export const partialStorefrontConfigSchema = storefrontConfigSchema.deepPartial();

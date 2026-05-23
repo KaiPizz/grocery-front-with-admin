@@ -251,7 +251,6 @@
         "showSearch": true,
         "showWishlist": true,
         "showLanguageSwitcher": true,
-        "showThemeToggle": false,
         "cta": {
           "text": "yes",
           "link": "https://chatgpt.com/",
@@ -604,7 +603,6 @@
         "showSearch": true,
         "showWishlist": true,
         "showLanguageSwitcher": true,
-        "showThemeToggle": false,
         "cta": {
           "text": "yes",
           "link": "https://chatgpt.com/",

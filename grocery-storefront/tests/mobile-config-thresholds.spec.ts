@@ -90,7 +90,6 @@ function configEnvelope(overrides: ConfigOverrides = {}) {
           showSearch: true,
           showWishlist: true,
           showLanguageSwitcher: true,
-          showThemeToggle: true,
         },
         footer: { tagline: '', columns: [], copyrightText: '' },
         bannerPosition: 'below-hero',

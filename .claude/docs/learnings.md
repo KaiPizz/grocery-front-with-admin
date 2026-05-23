@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-22
+> **Last updated:** 2026-05-23
 
 ---
 
@@ -285,3 +285,15 @@
 - **Cause:** The test mixed desktop layout assertions with a mobile-emulated project and depended on pointer hover instead of the component's keyboard/focus accessibility path.
 - **Fix:** Open the mini cart with `cartLink.focus()` for the price-integrity assertion, which exercises the same dialog without relying on hover availability.
 - **Rule:** In mobile-emulated Playwright projects, avoid hover as the only way to reveal UI. Prefer focus/click paths for behavior tests unless hover itself is the contract under test.
+
+### Trusted a URL assertion after desktop navigation in a mobile-emulated project
+- **Error:** The first commercial-navigation RED/GREEN spec asserted `toHaveURL()` after clicking a desktop quick link while running in the `pixel-7` project with a forced desktop viewport. The assertion reported the old `/en` URL even though the failure snapshot showed the collection page content and the link had the correct `/en/collections/korean-pantry` href.
+- **Cause:** The test mixed desktop layout with a mobile-emulated browser context, and the URL assertion became stale while the app-rendered route content had already changed.
+- **Fix:** Assert the quick link's `href`, assert the collection page content after click, and keep direct route tests for `/collections/[slug]` and `/outlet`.
+- **Rule:** When a Playwright project uses mobile emulation but a test forces desktop layout, do not rely on URL alone for SPA navigation. Verify the link target plus rendered route content, and keep direct route/status tests for bookmarkable URLs.
+
+### Validated unrelated schema blockers in a narrow config test
+- **Error:** A RED test for removing `showThemeToggle` from the admin config schema failed first on `homepage.blocks[0].slides[0].imageUrl` being null, not on the legacy theme flag.
+- **Cause:** `DEFAULT_CONFIG` is useful as an app fallback but is not directly schema-valid for publishable banner blocks because enabled hero slides require images.
+- **Fix:** The test fixture now sets a valid hero image before checking that validation strips the legacy theme flag.
+- **Rule:** When testing one config field through the full storefront schema, first make unrelated required config branches valid so the failure proves the target behavior.

@@ -118,8 +118,7 @@
         ],
         "showSearch": true,
         "showWishlist": true,
-        "showLanguageSwitcher": true,
-        "showThemeToggle": true
+        "showLanguageSwitcher": true
       },
       "footer": {
         "tagline": "Fresh groceries with full nutritional transparency, delivered to your door.",
@@ -334,8 +333,7 @@
         ],
         "showSearch": true,
         "showWishlist": true,
-        "showLanguageSwitcher": true,
-        "showThemeToggle": true
+        "showLanguageSwitcher": true
       },
       "footer": {
         "tagline": "Fresh groceries with full nutritional transparency, delivered to your door.",

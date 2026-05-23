@@ -5,8 +5,9 @@ import { PageHeader } from '@/components/PageHeader';
 import { FormCard } from '@/components/FormCard';
 import { FieldLabel } from '@/components/FieldLabel';
 import { SaveBar } from '@/components/SaveBar';
+import { CommercialConfigEditor } from '@/components/CommercialConfigEditor';
 import { Loader2, Plus, Trash2, ChevronUp, ChevronDown, GripVertical } from 'lucide-react';
-import type { LayoutConfig, NavItem, FooterColumn } from '@/types/config';
+import type { CommercialConfig, LayoutConfig, NavItem, FooterColumn } from '@/types/config';
 import { useLanguage } from '@/i18n';
 
 export default function LayoutConfigPage() {
@@ -25,6 +26,10 @@ export default function LayoutConfigPage() {
 
   function updateLayout(partial: Partial<LayoutConfig>) {
     updateConfig(prev => ({ ...prev, layout: { ...prev.layout, ...partial } }));
+  }
+
+  function updateCommercial(commercial: CommercialConfig) {
+    updateConfig(prev => ({ ...prev, commercial }));
   }
 
   // --- Header Nav ---
@@ -116,7 +121,6 @@ export default function LayoutConfigPage() {
               ['showSearch', t('layout.header.showSearch')],
               ['showWishlist', t('layout.header.showWishlist')],
               ['showLanguageSwitcher', t('layout.header.showLanguage')],
-              ['showThemeToggle', t('layout.header.showTheme')],
             ] as const).map(([key, label]) => (
               <label key={key} className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -169,6 +173,8 @@ export default function LayoutConfigPage() {
             <Plus className="w-4 h-4" /> {t('layout.header.addNavItem')}
           </button>
         </FormCard>
+
+        <CommercialConfigEditor commercial={config.commercial} onChange={updateCommercial} />
 
         {/* Header CTA Button */}
         <FormCard title={t('layout.header.ctaTitle')} description={t('layout.header.ctaDescription')}>

@@ -415,11 +415,6 @@
     "addressDeleteFailed": "Failed to delete address.",
     "addressDefaultSet": "Default address updated.",
     "addressDefaultFailed": "Failed to set default address."
-  },
-  "theme": {
-    "light": "Light",
-    "dark": "Dark",
-    "switchTo": "Switch to {theme} theme"
   }
 }
 

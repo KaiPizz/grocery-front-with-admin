@@ -113,7 +113,6 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
       showSearch: true,
       showWishlist: true,
       showLanguageSwitcher: true,
-      showThemeToggle: true,
       cta: { text: '', link: '', enabled: false },
     },
     footer: {
@@ -180,5 +179,16 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
     freeShippingThreshold: 150,
     sameDayShippingCutoff: '12:00',
     lowStockThreshold: 10,
+  },
+
+  commercial: {
+    enabled: false,
+    quickLinks: [],
+    collections: [],
+    outlet: {
+      enabled: false,
+      label: 'Outlet',
+      collectionSlug: null,
+    },
   },
 };

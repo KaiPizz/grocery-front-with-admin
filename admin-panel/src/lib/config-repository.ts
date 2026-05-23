@@ -18,6 +18,13 @@ async function ensureDataDir(): Promise<void> {
   }
 }
 
+function withConfigDefaults(config: StorefrontConfig): StorefrontConfig {
+  return {
+    ...config,
+    commercial: config.commercial ?? DEFAULT_CONFIG.commercial,
+  };
+}
+
 export interface StoredConfig {
   slug: string;
   published: StorefrontConfig;
@@ -57,7 +64,7 @@ export async function getPublishedConfig(slug: string): Promise<ConfigEnvelope> 
 
   return {
     slug: stored.slug,
-    config: stored.published,
+    config: withConfigDefaults(stored.published),
     version: stored.version,
     updatedAt: stored.updatedAt,
   };
@@ -81,7 +88,7 @@ export async function getDraftConfig(slug: string): Promise<ConfigEnvelope> {
 
   return {
     slug: stored.slug,
-    config: stored.draft,
+    config: withConfigDefaults(stored.draft),
     version: stored.version,
     updatedAt: stored.updatedAt,
   };
@@ -99,7 +106,7 @@ export async function saveDraftConfig(slug: string, config: StorefrontConfig): P
 
   const stored: StoredConfig = {
     slug,
-    published: existing?.published ?? DEFAULT_CONFIG,
+    published: existing?.published ? withConfigDefaults(existing.published) : DEFAULT_CONFIG,
     draft: config,
     version: (existing?.version ?? 0) + 1,
     updatedAt: now,
@@ -121,7 +128,7 @@ export async function patchDraftConfig(
   partial: Partial<StorefrontConfig>
 ): Promise<StoredConfig> {
   const existing = await readStoredConfig(slug);
-  const currentDraft = existing?.draft ?? DEFAULT_CONFIG;
+  const currentDraft = existing?.draft ? withConfigDefaults(existing.draft) : DEFAULT_CONFIG;
 
   const merged: StorefrontConfig = {
     branding: partial.branding ? { ...currentDraft.branding, ...partial.branding, colors: { ...currentDraft.branding.colors, ...(partial.branding?.colors ?? {}) } } : currentDraft.branding,
@@ -146,6 +153,11 @@ export async function patchDraftConfig(
       ...partial.general,
       policyLinks: partial.general?.policyLinks ? { ...currentDraft.general.policyLinks, ...partial.general.policyLinks } : currentDraft.general.policyLinks,
     } : currentDraft.general,
+    commercial: partial.commercial ? {
+      ...currentDraft.commercial,
+      ...partial.commercial,
+      outlet: partial.commercial?.outlet ? { ...currentDraft.commercial.outlet, ...partial.commercial.outlet } : currentDraft.commercial.outlet,
+    } : currentDraft.commercial,
   };
 
   return saveDraftConfig(slug, merged);
@@ -178,7 +190,7 @@ export async function publishConfig(slug: string): Promise<StoredConfig> {
 
   const stored: StoredConfig = {
     ...existing,
-    published: existing.draft,
+    published: withConfigDefaults(existing.draft),
     version: existing.version + 1,
     updatedAt: new Date().toISOString(),
   };

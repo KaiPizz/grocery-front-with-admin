@@ -80,7 +80,6 @@ function configEnvelope(socialLinks: SocialLink[]) {
           showSearch: true,
           showWishlist: true,
           showLanguageSwitcher: true,
-          showThemeToggle: true,
         },
         footer: {
           tagline: 'Fresh groceries configured for this store.',
