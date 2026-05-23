@@ -1,0 +1,565 @@
+{
+  "slug": "kamito",
+  "published": {
+    "branding": {
+      "logoUrl": null,
+      "faviconUrl": null,
+      "storeName": "Kamito",
+      "colors": {
+        "primary": "#16a34a",
+        "primaryHover": "#15803d",
+        "checkoutBtnColor": "#16a34a",
+        "checkoutBtnHoverColor": "#75c547",
+        "background": "#fafaf9",
+        "foreground": "#1c1917",
+        "accent": "#f0fdf4",
+        "accentForeground": "#14532d",
+        "muted": "#f5f5f4",
+        "mutedForeground": "#78716c",
+        "border": "#e7e5e4",
+        "card": "#ffffff",
+        "cardForeground": "#1c1917",
+        "destructive": "#dc2626",
+        "ring": "#16a34a"
+      }
+    },
+    "homepage": {
+      "hero": {
+        "enabled": true,
+        "headline": "Azjatyckie produkty spozywcze",
+        "subtitle": "Kimchi, sosy, makarony, ryz i codzienne skladniki do kuchni azjatyckiej.",
+        "ctaText": "Zobacz produkty",
+        "ctaLink": "/products",
+        "backgroundImageUrl": null
+      },
+      "promoBanners": [
+        {
+          "id": "banner-outlet",
+          "headline": "Outlet",
+          "subtext": "Krotkie daty, promocje i okazje w jednym miejscu.",
+          "ctaText": "Zobacz outlet",
+          "ctaLink": "/outlet",
+          "gradient": "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "banner-korean-pantry",
+          "headline": "Korean pantry",
+          "subtext": "Ryz, sosy, makarony i podstawy kuchni koreanskiej.",
+          "ctaText": "Otworz kolekcje",
+          "ctaLink": "/collections/korean-pantry",
+          "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 1
+        }
+      ],
+      "blocks": [],
+      "sections": [
+        {
+          "id": "shopByZone",
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "deals",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "id": "freshPicks",
+          "enabled": true,
+          "order": 2
+        },
+        {
+          "id": "recipes",
+          "enabled": false,
+          "order": 3
+        }
+      ]
+    },
+    "layout": {
+      "header": {
+        "navItems": [
+          {
+            "label": "Home",
+            "href": "/",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "label": "Kategorie",
+            "href": "/categories",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "label": "Produkty",
+            "href": "/products",
+            "enabled": true,
+            "order": 2
+          }
+        ],
+        "showSearch": true,
+        "showWishlist": true,
+        "showLanguageSwitcher": true,
+        "showThemeToggle": false,
+        "cta": {
+          "text": "",
+          "link": "",
+          "enabled": false
+        }
+      },
+      "footer": {
+        "tagline": "Azjatyckie produkty spozywcze do codziennego gotowania.",
+        "columns": [
+          {
+            "title": "Sklep",
+            "links": [
+              {
+                "label": "Kategorie",
+                "href": "/categories"
+              },
+              {
+                "label": "Produkty",
+                "href": "/products"
+              },
+              {
+                "label": "Outlet",
+                "href": "/outlet"
+              },
+              {
+                "label": "Korean pantry",
+                "href": "/collections/korean-pantry"
+              }
+            ]
+          },
+          {
+            "title": "Informacje",
+            "links": [
+              {
+                "label": "Kontakt",
+                "href": "/privacy"
+              },
+              {
+                "label": "Dostawa",
+                "href": "/terms"
+              }
+            ]
+          },
+          {
+            "title": "Legal",
+            "links": [
+              {
+                "label": "Privacy",
+                "href": "/privacy"
+              },
+              {
+                "label": "Terms",
+                "href": "/terms"
+              }
+            ]
+          }
+        ],
+        "copyrightText": "\u00a9 {year} Kamito."
+      },
+      "priceDisplay": {
+        "position": "below-image",
+        "showDiscountBadge": true,
+        "showOriginalPrice": true
+      },
+      "bannerPosition": "below-hero"
+    },
+    "tracking": {
+      "facebookPixel": {
+        "enabled": false,
+        "pixelId": ""
+      },
+      "googleAnalytics": {
+        "enabled": false,
+        "measurementId": ""
+      },
+      "googleTagManager": {
+        "enabled": false,
+        "containerId": ""
+      },
+      "hotjar": {
+        "enabled": false,
+        "siteId": ""
+      }
+    },
+    "seo": {
+      "defaultTitle": "Kamito - azjatyckie produkty spozywcze",
+      "defaultDescription": "Kimchi, sosy, makarony, ryz i produkty kuchni azjatyckiej.",
+      "ogImageUrl": null,
+      "canonical": ""
+    },
+    "general": {
+      "phone": "",
+      "email": "",
+      "address": "",
+      "socialLinks": [],
+      "policyLinks": {
+        "privacy": "/privacy",
+        "terms": "/terms",
+        "about": "/privacy"
+      },
+      "freeShippingThreshold": 150,
+      "sameDayShippingCutoff": "12:00",
+      "lowStockThreshold": 10
+    },
+    "commercial": {
+      "enabled": true,
+      "quickLinks": [
+        {
+          "id": "quick-outlet",
+          "label": "Outlet",
+          "href": "/outlet",
+          "kind": "outlet",
+          "description": "Promocje i krotkie daty",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "quick-korean-pantry",
+          "label": "Korean pantry",
+          "href": "/collections/korean-pantry",
+          "kind": "collection",
+          "description": "Podstawy kuchni koreanskiej",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 1
+        }
+      ],
+      "collections": [
+        {
+          "slug": "korean-pantry",
+          "title": "Korean pantry",
+          "subtitle": "Ryz, sosy, makarony i podstawowe skladniki do kuchni koreanskiej.",
+          "heroImageUrl": null,
+          "enabled": true,
+          "order": 0,
+          "tiles": [
+            {
+              "id": "tile-kimchi",
+              "title": "Kimchi",
+              "href": "/categories/kimchi",
+              "description": "Fermentowane dodatki, pasty i chlodzone produkty.",
+              "imageUrl": null,
+              "enabled": true,
+              "order": 0
+            },
+            {
+              "id": "tile-sauces",
+              "title": "Sosy i pasty",
+              "href": "/products?search=sos",
+              "description": "Gochujang, sojowe, sezamowe i ostre bazy smaku.",
+              "imageUrl": null,
+              "enabled": true,
+              "order": 1
+            },
+            {
+              "id": "tile-noodles",
+              "title": "Makarony i ryz",
+              "href": "/products?search=makaron",
+              "description": "Codzienne podstawy do szybkich dan.",
+              "imageUrl": null,
+              "enabled": true,
+              "order": 2
+            }
+          ]
+        }
+      ],
+      "outlet": {
+        "enabled": true,
+        "label": "Outlet",
+        "collectionSlug": "korean-pantry"
+      }
+    }
+  },
+  "draft": {
+    "branding": {
+      "logoUrl": null,
+      "faviconUrl": null,
+      "storeName": "Kamito",
+      "colors": {
+        "primary": "#16a34a",
+        "primaryHover": "#15803d",
+        "checkoutBtnColor": "#16a34a",
+        "checkoutBtnHoverColor": "#75c547",
+        "background": "#fafaf9",
+        "foreground": "#1c1917",
+        "accent": "#f0fdf4",
+        "accentForeground": "#14532d",
+        "muted": "#f5f5f4",
+        "mutedForeground": "#78716c",
+        "border": "#e7e5e4",
+        "card": "#ffffff",
+        "cardForeground": "#1c1917",
+        "destructive": "#dc2626",
+        "ring": "#16a34a"
+      }
+    },
+    "homepage": {
+      "hero": {
+        "enabled": true,
+        "headline": "Azjatyckie produkty spozywcze",
+        "subtitle": "Kimchi, sosy, makarony, ryz i codzienne skladniki do kuchni azjatyckiej.",
+        "ctaText": "Zobacz produkty",
+        "ctaLink": "/products",
+        "backgroundImageUrl": null
+      },
+      "promoBanners": [
+        {
+          "id": "banner-outlet",
+          "headline": "Outlet",
+          "subtext": "Krotkie daty, promocje i okazje w jednym miejscu.",
+          "ctaText": "Zobacz outlet",
+          "ctaLink": "/outlet",
+          "gradient": "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "banner-korean-pantry",
+          "headline": "Korean pantry",
+          "subtext": "Ryz, sosy, makarony i podstawy kuchni koreanskiej.",
+          "ctaText": "Otworz kolekcje",
+          "ctaLink": "/collections/korean-pantry",
+          "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 1
+        }
+      ],
+      "blocks": [],
+      "sections": [
+        {
+          "id": "shopByZone",
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "deals",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "id": "freshPicks",
+          "enabled": true,
+          "order": 2
+        },
+        {
+          "id": "recipes",
+          "enabled": false,
+          "order": 3
+        }
+      ]
+    },
+    "layout": {
+      "header": {
+        "navItems": [
+          {
+            "label": "Home",
+            "href": "/",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "label": "Kategorie",
+            "href": "/categories",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "label": "Produkty",
+            "href": "/products",
+            "enabled": true,
+            "order": 2
+          }
+        ],
+        "showSearch": true,
+        "showWishlist": true,
+        "showLanguageSwitcher": true,
+        "showThemeToggle": false,
+        "cta": {
+          "text": "",
+          "link": "",
+          "enabled": false
+        }
+      },
+      "footer": {
+        "tagline": "Azjatyckie produkty spozywcze do codziennego gotowania.",
+        "columns": [
+          {
+            "title": "Sklep",
+            "links": [
+              {
+                "label": "Kategorie",
+                "href": "/categories"
+              },
+              {
+                "label": "Produkty",
+                "href": "/products"
+              },
+              {
+                "label": "Outlet",
+                "href": "/outlet"
+              },
+              {
+                "label": "Korean pantry",
+                "href": "/collections/korean-pantry"
+              }
+            ]
+          },
+          {
+            "title": "Informacje",
+            "links": [
+              {
+                "label": "Kontakt",
+                "href": "/privacy"
+              },
+              {
+                "label": "Dostawa",
+                "href": "/terms"
+              }
+            ]
+          },
+          {
+            "title": "Legal",
+            "links": [
+              {
+                "label": "Privacy",
+                "href": "/privacy"
+              },
+              {
+                "label": "Terms",
+                "href": "/terms"
+              }
+            ]
+          }
+        ],
+        "copyrightText": "\u00a9 {year} Kamito."
+      },
+      "priceDisplay": {
+        "position": "below-image",
+        "showDiscountBadge": true,
+        "showOriginalPrice": true
+      },
+      "bannerPosition": "below-hero"
+    },
+    "tracking": {
+      "facebookPixel": {
+        "enabled": false,
+        "pixelId": ""
+      },
+      "googleAnalytics": {
+        "enabled": false,
+        "measurementId": ""
+      },
+      "googleTagManager": {
+        "enabled": false,
+        "containerId": ""
+      },
+      "hotjar": {
+        "enabled": false,
+        "siteId": ""
+      }
+    },
+    "seo": {
+      "defaultTitle": "Kamito - azjatyckie produkty spozywcze",
+      "defaultDescription": "Kimchi, sosy, makarony, ryz i produkty kuchni azjatyckiej.",
+      "ogImageUrl": null,
+      "canonical": ""
+    },
+    "general": {
+      "phone": "",
+      "email": "",
+      "address": "",
+      "socialLinks": [],
+      "policyLinks": {
+        "privacy": "/privacy",
+        "terms": "/terms",
+        "about": "/privacy"
+      },
+      "freeShippingThreshold": 150,
+      "sameDayShippingCutoff": "12:00",
+      "lowStockThreshold": 10
+    },
+    "commercial": {
+      "enabled": true,
+      "quickLinks": [
+        {
+          "id": "quick-outlet",
+          "label": "Outlet",
+          "href": "/outlet",
+          "kind": "outlet",
+          "description": "Promocje i krotkie daty",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "quick-korean-pantry",
+          "label": "Korean pantry",
+          "href": "/collections/korean-pantry",
+          "kind": "collection",
+          "description": "Podstawy kuchni koreanskiej",
+          "imageUrl": null,
+          "enabled": true,
+          "order": 1
+        }
+      ],
+      "collections": [
+        {
+          "slug": "korean-pantry",
+          "title": "Korean pantry",
+          "subtitle": "Ryz, sosy, makarony i podstawowe skladniki do kuchni koreanskiej.",
+          "heroImageUrl": null,
+          "enabled": true,
+          "order": 0,
+          "tiles": [
+            {
+              "id": "tile-kimchi",
+              "title": "Kimchi",
+              "href": "/categories/kimchi",
+              "description": "Fermentowane dodatki, pasty i chlodzone produkty.",
+              "imageUrl": null,
+              "enabled": true,
+              "order": 0
+            },
+            {
+              "id": "tile-sauces",
+              "title": "Sosy i pasty",
+              "href": "/products?search=sos",
+              "description": "Gochujang, sojowe, sezamowe i ostre bazy smaku.",
+              "imageUrl": null,
+              "enabled": true,
+              "order": 1
+            },
+            {
+              "id": "tile-noodles",
+              "title": "Makarony i ryz",
+              "href": "/products?search=makaron",
+              "description": "Codzienne podstawy do szybkich dan.",
+              "imageUrl": null,
+              "enabled": true,
+              "order": 2
+            }
+          ]
+        }
+      ],
+      "outlet": {
+        "enabled": true,
+        "label": "Outlet",
+        "collectionSlug": "korean-pantry"
+      }
+    }
+  },
+  "version": 3,
+  "updatedAt": "2026-05-23T00:00:00.000Z"
+}

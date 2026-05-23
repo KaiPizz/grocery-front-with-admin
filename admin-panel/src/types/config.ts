@@ -265,6 +265,52 @@ export interface GeneralConfig {
   lowStockThreshold: number;
 }
 
+export type CommercialSurfaceKind = 'category' | 'collection' | 'outlet' | 'external';
+
+export interface CommercialQuickLink {
+  id: string;
+  label: string;
+  href: string;
+  kind: CommercialSurfaceKind;
+  description: string | null;
+  imageUrl: string | null;
+  enabled: boolean;
+  order: number;
+}
+
+export interface CommercialCollectionTile {
+  id: string;
+  title: string;
+  href: string;
+  description: string | null;
+  imageUrl: string | null;
+  enabled: boolean;
+  order: number;
+}
+
+export interface CommercialCollection {
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  heroImageUrl: string | null;
+  enabled: boolean;
+  order: number;
+  tiles: CommercialCollectionTile[];
+}
+
+export interface CommercialOutletConfig {
+  enabled: boolean;
+  label: string;
+  collectionSlug: string | null;
+}
+
+export interface CommercialConfig {
+  enabled: boolean;
+  quickLinks: CommercialQuickLink[];
+  collections: CommercialCollection[];
+  outlet: CommercialOutletConfig;
+}
+
 // --- Top-level config ---
 
 export interface StorefrontConfig {
@@ -274,6 +320,7 @@ export interface StorefrontConfig {
   tracking: TrackingConfig;
   seo: SeoConfig;
   general: GeneralConfig;
+  commercial: CommercialConfig;
 }
 
 // --- API response wrapper ---

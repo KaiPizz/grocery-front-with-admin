@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { withStorefrontConfigDefaults } from '@/lib/storefront-config';
 import type { StorefrontConfig } from '@/types/storefront-config';
 
 const CONFIG_API_URL = process.env.NEXT_PUBLIC_CONFIG_API_URL?.trim() || null;
@@ -32,7 +33,7 @@ interface ConfigProviderProps {
  * - Injects CSS custom properties from config.branding.colors
  */
 export function ConfigProvider({ initialConfig, children }: ConfigProviderProps) {
-  const [config, setConfig] = useState<StorefrontConfig | null>(initialConfig);
+  const [config, setConfig] = useState<StorefrontConfig | null>(withStorefrontConfigDefaults(initialConfig));
 
   const refreshConfig = useCallback(async () => {
     if (!CONFIG_API_URL) return;
@@ -43,8 +44,8 @@ export function ConfigProvider({ initialConfig, children }: ConfigProviderProps)
       });
       if (!res.ok) return;
       const json = await res.json();
-      const fresh: StorefrontConfig = json.data?.config ?? json.config ?? null;
-      if (fresh) setConfig(fresh);
+      const fresh: StorefrontConfig | null = json.data?.config ?? json.config ?? null;
+      if (fresh) setConfig(withStorefrontConfigDefaults(fresh));
     } catch {
       // Keep current config on error
     }

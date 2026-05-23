@@ -181,4 +181,15 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
     sameDayShippingCutoff: '12:00',
     lowStockThreshold: 10,
   },
+
+  commercial: {
+    enabled: false,
+    quickLinks: [],
+    collections: [],
+    outlet: {
+      enabled: false,
+      label: 'Outlet',
+      collectionSlug: null,
+    },
+  },
 };

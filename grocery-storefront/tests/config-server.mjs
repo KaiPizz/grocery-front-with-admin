@@ -210,6 +210,66 @@ const config = {
     sameDayShippingCutoff: '12:00',
     lowStockThreshold: 10,
   },
+  commercial: {
+    enabled: true,
+    quickLinks: [
+      {
+        id: 'quick-outlet',
+        label: 'Outlet',
+        href: '/outlet',
+        kind: 'outlet',
+        description: 'Discounted and short-date picks',
+        imageUrl: null,
+        enabled: true,
+        order: 0,
+      },
+      {
+        id: 'quick-korean-pantry',
+        label: 'Korean pantry',
+        href: '/collections/korean-pantry',
+        kind: 'collection',
+        description: 'Rice, noodles, sauces, and daily staples',
+        imageUrl: null,
+        enabled: true,
+        order: 1,
+      },
+    ],
+    collections: [
+      {
+        slug: 'korean-pantry',
+        title: 'Korean pantry',
+        subtitle: 'Rice, noodles, sauces, and everyday staples',
+        heroImageUrl: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=1200&q=80',
+        enabled: true,
+        order: 0,
+        tiles: [
+          {
+            id: 'tile-kimchi',
+            title: 'Kimchi',
+            href: '/categories/fruit',
+            description: 'Fermented essentials and chilled sides',
+            imageUrl: null,
+            enabled: true,
+            order: 0,
+          },
+          {
+            id: 'tile-noodles',
+            title: 'Noodles',
+            href: '/products?search=noodles',
+            description: 'Fast pantry meals',
+            imageUrl: null,
+            enabled: true,
+            order: 1,
+          },
+        ],
+      },
+    ],
+    outlet: {
+      enabled: true,
+      label: 'Outlet',
+      collectionSlug: 'korean-pantry',
+    },
+  },
 };
 
 function sendJson(response, status, body) {

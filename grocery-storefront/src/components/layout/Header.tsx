@@ -12,6 +12,7 @@ import { useWishlistStore } from '@/stores/wishlist-store';
 import { useMobileChromeStore } from '@/stores/mobile-chrome-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
+import { getEnabledCommercialQuickLinks } from '@/lib/commercial-config';
 import { MiniCart } from './MiniCart';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeToggle } from './ThemeToggle';
@@ -70,6 +71,7 @@ export function Header() {
   const navItems = configuredNavItems && configuredNavItems.length > 0
     ? configuredNavItems
     : fallbackNavItems;
+  const commercialQuickLinks = getEnabledCommercialQuickLinks(siteConfig);
   const showSearch = headerCfg?.showSearch ?? true;
   const showWishlist = headerCfg?.showWishlist ?? true;
   const showLanguageSwitcher = headerCfg?.showLanguageSwitcher ?? true;
@@ -386,6 +388,16 @@ export function Header() {
               </Link>
             );
           })}
+          {commercialQuickLinks.map(({ id, href, label }) => (
+            <Link
+              key={`commercial-${id}`}
+              href={href}
+              className="px-3 py-2 text-sm font-semibold rounded-lg hover-surface"
+              style={{ color: 'var(--color-primary)' }}
+            >
+              {label}
+            </Link>
+          ))}
         </nav>
 
         {showSearch && <div className="hidden md:flex flex-1 max-w-md">
@@ -637,10 +649,11 @@ export function Header() {
           )}
           {[
             ...navItems,
+            ...commercialQuickLinks.map(({ href, label, order }) => ({ href, label, enabled: true, order })),
             { href: '/cart', label: `${t('cart')}${isMounted && cartInitialized && itemCount > 0 ? ` (${itemCount})` : ''}`, enabled: true, order: 99 },
-          ].map(({ href, label }) => (
+          ].map(({ href, label }, index) => (
             <Link
-              key={href}
+              key={`${href}-${index}`}
               href={href}
               className="block px-4 py-3.5 text-sm font-medium border-b hover-surface"
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
