@@ -15,7 +15,6 @@ import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
 import { getEnabledCommercialQuickLinks } from '@/lib/commercial-config';
 import { MiniCart } from './MiniCart';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { ThemeToggle } from './ThemeToggle';
 import { ShippingCountdown } from './ShippingCountdown';
 import { CategoryMegaMenu } from './CategoryMegaMenu';
 
@@ -75,7 +74,6 @@ export function Header() {
   const showSearch = headerCfg?.showSearch ?? true;
   const showWishlist = headerCfg?.showWishlist ?? true;
   const showLanguageSwitcher = headerCfg?.showLanguageSwitcher ?? true;
-  const showThemeToggle = headerCfg?.showThemeToggle ?? true;
 
   useEffect(() => setIsMounted(true), []);
 
@@ -426,9 +424,6 @@ export function Header() {
             )}
           </button>
 
-          {showThemeToggle && <div className="hidden md:block" data-testid="mobile-header-theme">
-            <ThemeToggle />
-          </div>}
           {showLanguageSwitcher && <div className="hidden md:block" data-testid="mobile-header-language">
             <LanguageSwitcher />
           </div>}
@@ -567,20 +562,15 @@ export function Header() {
           style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
           aria-label="Mobile navigation"
         >
-          <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
-            <div className="grid grid-cols-2 gap-2">
-              <ThemeToggle
-                className="w-full justify-center rounded-xl border px-3 py-3 text-sm"
-                showLabel
-                buttonTestId="mobile-nav-theme"
-              />
+          {showLanguageSwitcher && (
+            <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
               <LanguageSwitcher
                 className="w-full justify-center rounded-xl border px-3 py-3 text-sm"
                 showLabel
                 buttonTestId="mobile-nav-language"
               />
             </div>
-          </div>
+          )}
 
           {isAuthenticated ? (
             <>

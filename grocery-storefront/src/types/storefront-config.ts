@@ -183,7 +183,6 @@ export interface HeaderConfig {
   showSearch: boolean;
   showWishlist: boolean;
   showLanguageSwitcher: boolean;
-  showThemeToggle: boolean;
   cta?: HeaderCta;
 }
 

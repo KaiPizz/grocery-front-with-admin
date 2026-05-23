@@ -266,7 +266,6 @@ export const vi: Translations = {
       showSearch: 'Thanh tìm kiếm',
       showWishlist: 'Biểu tượng yêu thích',
       showLanguage: 'Chuyển đổi ngôn ngữ',
-      showTheme: 'Chuyển đổi giao diện',
       navTitle: 'Mục điều hướng',
       navDescription: 'Các liên kết hiển thị trong thanh điều hướng header',
       navLabelPlaceholder: 'Nhãn',

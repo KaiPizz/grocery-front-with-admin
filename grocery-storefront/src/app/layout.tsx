@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import { getLocale } from 'next-intl/server';
-import Script from 'next/script';
 import { GraphQLProvider } from '@/lib/graphql/provider';
 import { CartBootstrap } from '@/components/CartBootstrap';
 import { SalonLoader } from '@/components/SalonLoader';
@@ -56,14 +55,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`try {
-            var theme = localStorage.getItem('grocery-theme') === 'dark' ? 'dark' : 'light';
-            document.documentElement.dataset.theme = theme;
-          } catch (error) {
-            document.documentElement.dataset.theme = 'light';
-          }`}
-        </Script>
         <ConfigProvider initialConfig={initialConfig}>
           <GraphQLProvider>
             {!process.env.NEXT_PUBLIC_CHANNEL && <SalonLoader />}

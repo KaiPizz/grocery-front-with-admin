@@ -209,7 +209,6 @@ const headerSchema = z.object({
   showSearch: z.boolean(),
   showWishlist: z.boolean(),
   showLanguageSwitcher: z.boolean(),
-  showThemeToggle: z.boolean(),
   cta: headerCtaSchema.optional(),
 });
 

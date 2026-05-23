@@ -415,11 +415,5 @@
     "addressDeleteFailed": "Nie udało się usunąć adresu.",
     "addressDefaultSet": "Domyślny adres zaktualizowany.",
     "addressDefaultFailed": "Nie udało się ustawić domyślnego adresu."
-  },
-  "theme": {
-    "light": "Jasny",
-    "dark": "Ciemny",
-    "switchTo": "Przełącz na motyw {theme}"
   }
 }
-

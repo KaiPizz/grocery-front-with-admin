@@ -65,13 +65,24 @@ test.describe('mobile storefront smoke', () => {
     await expect(page.getByTestId('mobile-bottom-nav-home')).toBeVisible();
     await expect(page.getByTestId('mobile-bottom-nav-wishlist')).toBeVisible();
     await expect(page.getByTestId('mobile-bottom-nav-cart')).toBeVisible();
-    await expect(page.getByTestId('mobile-header-theme')).toBeHidden();
+    await expect(page.getByTestId('mobile-header-theme')).toHaveCount(0);
     await expect(page.getByTestId('mobile-header-language')).toBeHidden();
 
     await page.getByRole('button', { name: /open menu/i }).click();
 
-    await expect(page.getByTestId('mobile-nav-theme')).toBeVisible();
+    await expect(page.getByTestId('mobile-nav-theme')).toHaveCount(0);
     await expect(page.getByTestId('mobile-nav-language')).toBeVisible();
+  });
+
+  test('ignores stale dark theme preference because theme switching is disabled', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.addInitScript(() => {
+      window.localStorage.setItem('grocery-theme', 'dark');
+    });
+
+    await page.goto('/en/products');
+
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme ?? '')).not.toBe('dark');
   });
 
   test('opens mobile filters in a drawer and uses overlay product actions', async ({ page }) => {

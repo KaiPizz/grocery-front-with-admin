@@ -113,7 +113,6 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
       showSearch: true,
       showWishlist: true,
       showLanguageSwitcher: true,
-      showThemeToggle: true,
       cta: { text: '', link: '', enabled: false },
     },
     footer: {

@@ -175,7 +175,6 @@ const config = {
       showSearch: true,
       showWishlist: true,
       showLanguageSwitcher: true,
-      showThemeToggle: true,
     },
     footer: {
       tagline: '',

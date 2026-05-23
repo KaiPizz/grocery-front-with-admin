@@ -291,3 +291,9 @@
 - **Cause:** The test mixed desktop layout with a mobile-emulated browser context, and the URL assertion became stale while the app-rendered route content had already changed.
 - **Fix:** Assert the quick link's `href`, assert the collection page content after click, and keep direct route tests for `/collections/[slug]` and `/outlet`.
 - **Rule:** When a Playwright project uses mobile emulation but a test forces desktop layout, do not rely on URL alone for SPA navigation. Verify the link target plus rendered route content, and keep direct route/status tests for bookmarkable URLs.
+
+### Validated unrelated schema blockers in a narrow config test
+- **Error:** A RED test for removing `showThemeToggle` from the admin config schema failed first on `homepage.blocks[0].slides[0].imageUrl` being null, not on the legacy theme flag.
+- **Cause:** `DEFAULT_CONFIG` is useful as an app fallback but is not directly schema-valid for publishable banner blocks because enabled hero slides require images.
+- **Fix:** The test fixture now sets a valid hero image before checking that validation strips the legacy theme flag.
+- **Rule:** When testing one config field through the full storefront schema, first make unrelated required config branches valid so the failure proves the target behavior.

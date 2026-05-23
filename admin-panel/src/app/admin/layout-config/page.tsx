@@ -121,7 +121,6 @@ export default function LayoutConfigPage() {
               ['showSearch', t('layout.header.showSearch')],
               ['showWishlist', t('layout.header.showWishlist')],
               ['showLanguageSwitcher', t('layout.header.showLanguage')],
-              ['showThemeToggle', t('layout.header.showTheme')],
             ] as const).map(([key, label]) => (
               <label key={key} className="flex items-center gap-2 cursor-pointer">
                 <input

@@ -266,7 +266,6 @@ export const pl: Translations = {
       showSearch: 'Pasek wyszukiwania',
       showWishlist: 'Ikona ulubionych',
       showLanguage: 'Przełącznik języka',
-      showTheme: 'Przełącznik motywu',
       navTitle: 'Elementy nawigacji',
       navDescription: 'Linki wyświetlane w pasku nawigacyjnym nagłówka',
       navLabelPlaceholder: 'Etykieta',

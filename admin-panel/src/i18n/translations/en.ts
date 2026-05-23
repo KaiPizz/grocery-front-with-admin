@@ -264,7 +264,6 @@ export const en = {
       showSearch: 'Search Bar',
       showWishlist: 'Wishlist Icon',
       showLanguage: 'Language Switcher',
-      showTheme: 'Theme Toggle',
       navTitle: 'Navigation Items',
       navDescription: 'Links shown in the header navigation bar',
       navLabelPlaceholder: 'Label',
