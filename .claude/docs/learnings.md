@@ -142,6 +142,12 @@
 - **Fix:** Re-enabled `NEXT_PUBLIC_CONFIG_API_URL`, aligned admin/storefront slug to `kamito`, published `config-kamito.json`, and promoted admin hero blocks into the first homepage hero slot with a regression test.
 - **Rule:** For admin integration, verify all three layers: admin slug, config API URL, and storefront render surface. A URL bookmark is not a data integration.
 
+### Tracked tenant config overwrote local admin banner content
+- **Error:** Merging the commercial-navigation branch into `main` made the Kamito storefront lose admin-created homepage banners and fall back to the legacy text hero.
+- **Cause:** The branch added a tracked `admin-panel/data/config-kamito.json` whose `homepage.blocks` arrays were empty. That tracked file replaced the local tenant data that the admin API had been serving.
+- **Fix:** Restored Kamito `homepage.blocks` from the surviving Chesaigon config media block data, kept Kamito branding/commercial settings, and removed the misleading `.gitignore` entry for a file that is tracked.
+- **Rule:** Never add a tenant config file to a branch unless its draft and published content are the intended source of truth. If tenant data is local-only, untrack it before merging; `.gitignore` does not protect files once they are tracked.
+
 ### Left a transparent hover gap between the header and category mega menu
 - **Error:** Moving from the Categories nav item into the desktop mega menu was brittle, and the page could still scroll behind the open category overlay.
 - **Cause:** The fixed menu wrapper used top padding below the header, so the pointer crossed a dead zone that triggered immediate `onMouseLeave`. The menu also had no body scroll lock and Escape handling was scoped too narrowly to focused header elements.

@@ -10,9 +10,6 @@ node_modules/
 .env.local
 .env.*.local
 
-# Local admin panel tenant data generated during dev
-admin-panel/data/config-kamito.json
-
 # OS junk
 .DS_Store
 Thumbs.db
