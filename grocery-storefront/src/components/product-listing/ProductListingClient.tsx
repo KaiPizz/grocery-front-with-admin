@@ -67,6 +67,12 @@ interface ProductListingClientProps {
   withContainer?: boolean;
 }
 
+interface CategoryFilterOption {
+  id: string;
+  name: string;
+  count: number;
+}
+
 function getProductsErrorMessage(error: CombinedError | undefined | null, fallbackMessage: string) {
   if (!error) return null;
 
@@ -238,6 +244,26 @@ export function ProductListingClient({
   const availableCertifications = useMemo(() => (
     CERT_OPTIONS.filter((certification) => filterSourceProducts.some((product) => extractProductCertifications(product as GroceryProduct & Record<string, any>).includes(certification)))
   ), [filterSourceProducts]);
+  const availableCategories = useMemo(() => {
+    const categories = new Map<string, CategoryFilterOption>();
+
+    for (const product of filterSourceProducts) {
+      const category = (product as GroceryProduct & Record<string, any>)?.category;
+      const id = typeof category?.id === 'string' ? category.id : null;
+      const name = typeof category?.name === 'string' ? category.name : null;
+
+      if (!id || !name) continue;
+
+      const existing = categories.get(id);
+      categories.set(id, {
+        id,
+        name,
+        count: (existing?.count ?? 0) + 1,
+      });
+    }
+
+    return Array.from(categories.values()).sort((left, right) => left.name.localeCompare(right.name));
+  }, [filterSourceProducts]);
 
   const normalizedCommittedFilters = useMemo(
     () => normalizeFiltersState(committedFilters, priceBounds),
@@ -290,11 +316,50 @@ export function ProductListingClient({
     const dietaryFilterUnavailable = availableDietaryTags.length === 0;
     const zoneFilterUnavailable = availableStorageZones.length === 0;
     const certificationFilterUnavailable = availableCertifications.length === 0;
+    const categoryFilterUnavailable = availableCategories.length === 0;
     const localActiveFilterCount = countActiveFilters(normalizedFilters);
     const unavailableMessage = t('filterUnavailable');
 
     return (
       <>
+        {!categoryId && (
+          <fieldset className="space-y-3">
+            <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+              {t('categoryFilter')}
+            </legend>
+            <div className="flex flex-wrap gap-2" role="group">
+              {availableCategories.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setFilters((prev) => ({
+                    ...prev,
+                    categoryIds: toggleMultiValue(prev.categoryIds, category.id),
+                  }))}
+                  disabled={categoryFilterUnavailable}
+                  className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{
+                    borderColor: normalizedFilters.categoryIds.includes(category.id) ? 'var(--color-primary)' : 'var(--color-border)',
+                    backgroundColor: normalizedFilters.categoryIds.includes(category.id) ? 'var(--color-accent)' : 'transparent',
+                    color: normalizedFilters.categoryIds.includes(category.id) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                  }}
+                  aria-pressed={normalizedFilters.categoryIds.includes(category.id)}
+                >
+                  {category.name}
+                  <span className="ml-1 tabular-nums" aria-hidden="true">
+                    {category.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+            {categoryFilterUnavailable && (
+              <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                {unavailableMessage}
+              </p>
+            )}
+          </fieldset>
+        )}
+
         <fieldset className="space-y-3">
           <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
             {t('priceFilter')}

@@ -11,6 +11,7 @@ const ALLERGEN_ALIASES: Record<string, string> = {
 };
 
 export interface ProductFiltersState {
+  categoryIds: string[];
   excludeAllergens: string[];
   dietaryTags: string[];
   certifications: string[];
@@ -20,6 +21,7 @@ export interface ProductFiltersState {
 }
 
 export const DEFAULT_FILTERS: ProductFiltersState = {
+  categoryIds: [],
   excludeAllergens: [],
   dietaryTags: [],
   certifications: [],
@@ -77,6 +79,7 @@ export function normalizeFiltersState(
   }
 
   return {
+    categoryIds: Array.from(new Set(filters.categoryIds.filter(Boolean))),
     excludeAllergens: Array.from(new Set(filters.excludeAllergens.map(normalizeAllergenCode).filter(Boolean))),
     dietaryTags: Array.from(new Set(filters.dietaryTags.filter(Boolean))),
     certifications: Array.from(new Set(filters.certifications.filter(Boolean))),
@@ -88,7 +91,8 @@ export function normalizeFiltersState(
 
 export function countActiveFilters(filters: ProductFiltersState) {
   return (
-    filters.excludeAllergens.length
+    filters.categoryIds.length
+    + filters.excludeAllergens.length
     + filters.dietaryTags.length
     + filters.certifications.length
     + (filters.storageZone ? 1 : 0)
@@ -101,6 +105,8 @@ export function areFiltersEqual(left: ProductFiltersState, right: ProductFilters
     left.storageZone === right.storageZone
     && left.priceMin === right.priceMin
     && left.priceMax === right.priceMax
+    && left.categoryIds.length === right.categoryIds.length
+    && left.categoryIds.every((value, index) => value === right.categoryIds[index])
     && left.excludeAllergens.length === right.excludeAllergens.length
     && left.excludeAllergens.every((value, index) => value === right.excludeAllergens[index])
     && left.dietaryTags.length === right.dietaryTags.length
@@ -117,7 +123,11 @@ export function buildProductFilter(
 ) {
   const nextFilter: Record<string, unknown> = {};
 
-  if (categoryId) nextFilter.categories = [categoryId];
+  if (categoryId) {
+    nextFilter.categories = [categoryId];
+  } else if (filters.categoryIds.length > 0) {
+    nextFilter.categories = filters.categoryIds;
+  }
   if (filters.excludeAllergens.length > 0) nextFilter.excludeAllergens = filters.excludeAllergens;
   if (filters.dietaryTags.length > 0) nextFilter.dietaryTags = filters.dietaryTags;
   if (filters.certifications.length > 0) nextFilter.certifications = filters.certifications;

@@ -162,6 +162,35 @@ test.describe('mobile products page', () => {
     await expect(filterPanel.getByRole('button', { name: /organic/i })).toBeDisabled();
   });
 
+  test('lets desktop shoppers narrow all products by category', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products');
+
+    await expect(page.getByTestId('product-card')).toHaveCount(4);
+    await page.getByRole('button', { name: /filters/i }).click();
+
+    const filterPanel = page.locator('#filter-panel');
+    await expect(filterPanel.getByText(/categories/i)).toBeVisible();
+    await filterPanel.getByRole('button', { name: /bakery/i }).click();
+
+    await expect(page.getByTestId('product-card')).toHaveCount(1);
+    await expect(page.getByRole('link', { name: /sourdough sandwich bread/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /organic gala apples/i })).toHaveCount(0);
+    expect(
+      productQueries.some((variables) => {
+        const filter = variables.filter as Record<string, any> | undefined;
+        return Array.isArray(filter?.categories) && filter.categories.includes('cat-bakery');
+      })
+    ).toBe(true);
+  });
+
   test('applies mobile filters only after save', async ({ page }) => {
     const productQueries: Array<Record<string, any>> = [];
 
@@ -206,6 +235,47 @@ test.describe('mobile products page', () => {
       productQueries.some((variables) => {
         const filter = variables.filter as Record<string, any> | undefined;
         return filter?.price?.gte === 10;
+      })
+    ).toBe(true);
+  });
+
+  test('applies mobile category filters only after save', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/products');
+
+    const cards = page.getByTestId('mobile-product-card');
+    await expect(cards).toHaveCount(4);
+
+    await page.getByRole('button', { name: /filters/i }).click();
+    const filterSheet = page.getByTestId('mobile-filter-sheet');
+
+    await expect(filterSheet).toBeVisible();
+    await expect(filterSheet.getByText(/categories/i)).toBeVisible();
+    await filterSheet.getByRole('button', { name: /bakery/i }).click();
+
+    expect(
+      productQueries.some((variables) => {
+        const filter = variables.filter as Record<string, any> | undefined;
+        return Array.isArray(filter?.categories) && filter.categories.includes('cat-bakery');
+      })
+    ).toBe(false);
+    await expect(cards).toHaveCount(4);
+
+    await filterSheet.getByRole('button', { name: /apply filters/i }).click();
+
+    await expect(cards).toHaveCount(1);
+    await expect(page.getByRole('link', { name: /sourdough sandwich bread/i })).toBeVisible();
+    expect(
+      productQueries.some((variables) => {
+        const filter = variables.filter as Record<string, any> | undefined;
+        return Array.isArray(filter?.categories) && filter.categories.includes('cat-bakery');
       })
     ).toBe(true);
   });
