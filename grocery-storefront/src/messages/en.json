@@ -41,6 +41,20 @@
     "countdown": "Order in {time} for same-day shipping",
     "tomorrow": "Ships tomorrow at {time}"
   },
+  "fulfillment": {
+    "pickupService": "Pickup/self-collection available",
+    "bankTransferService": "Bank transfer payment",
+    "productPickupNotice": "Pickup/self-collection only for this store.",
+    "productBankTransferNotice": "Bank transfer is the active payment method.",
+    "cartPickupNotice": "Pickup/self-collection only. Shipping progress does not apply to this store.",
+    "cartBankTransferNotice": "Payment is handled by bank transfer after checkout.",
+    "checkoutPickupNotice": "Pickup/self-collection is the only fulfillment path for this store.",
+    "checkoutBankTransferNotice": "Payment is handled by bank transfer after the order is placed.",
+    "checkoutReviewNotice": "After placing the order, complete the bank transfer and wait for pickup confirmation.",
+    "confirmationBankTransfer": "Next step: complete the bank transfer using the store instructions.",
+    "confirmationPickup": "Pickup next step: wait for manual pickup or contact confirmation before collecting the order.",
+    "orderHistory": "Order history"
+  },
   "search": {
     "recentSearches": "Recent searches",
     "suggestions": "Suggestions",
@@ -53,6 +67,7 @@
     "hero": "Fresh groceries, delivered to your door",
     "heroSub": "Quality products with full nutritional transparency",
     "quickCategories": "Popular categories",
+    "categoryShortcuts": "Popular categories",
     "shopByZone": "Shop by storage zone",
     "frozen": "Frozen",
     "chilled": "Chilled",
@@ -120,6 +135,8 @@
     "shopCategory": "Shop category",
     "loading": "Loading categories...",
     "allCategories": "Categories",
+    "searchLabel": "Search categories",
+    "searchPlaceholder": "Search categories",
     "notFound": "Category not found.",
     "emptyCategory": "Products for this category will appear here when they are available.",
     "loadMore": "Load more",

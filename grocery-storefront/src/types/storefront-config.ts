@@ -241,6 +241,19 @@ export interface GeneralConfig {
   freeShippingThreshold: number;
   sameDayShippingCutoff: string;
   lowStockThreshold: number;
+  fulfillment: FulfillmentConfig;
+}
+
+export type FulfillmentMode = 'delivery' | 'pickup';
+export type PaymentPromise = 'backend' | 'bank_transfer';
+export type StockDisplayMode = 'exact_when_low' | 'availability_only';
+
+export interface FulfillmentConfig {
+  mode: FulfillmentMode;
+  paymentPromise: PaymentPromise;
+  stockDisplayMode: StockDisplayMode;
+  pickupInstructions: string | null;
+  bankTransferInstructions: string | null;
 }
 
 export type CommercialSurfaceKind = 'category' | 'collection' | 'outlet' | 'external';

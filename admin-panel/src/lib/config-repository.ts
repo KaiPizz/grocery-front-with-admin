@@ -18,9 +18,13 @@ async function ensureDataDir(): Promise<void> {
   }
 }
 
-function withConfigDefaults(config: StorefrontConfig): StorefrontConfig {
+export function withConfigDefaults(config: StorefrontConfig): StorefrontConfig {
   return {
     ...config,
+    general: {
+      ...config.general,
+      fulfillment: config.general.fulfillment ?? DEFAULT_CONFIG.general.fulfillment,
+    },
     commercial: config.commercial ?? DEFAULT_CONFIG.commercial,
   };
 }
@@ -152,6 +156,7 @@ export async function patchDraftConfig(
       ...currentDraft.general,
       ...partial.general,
       policyLinks: partial.general?.policyLinks ? { ...currentDraft.general.policyLinks, ...partial.general.policyLinks } : currentDraft.general.policyLinks,
+      fulfillment: partial.general?.fulfillment ? { ...currentDraft.general.fulfillment, ...partial.general.fulfillment } : currentDraft.general.fulfillment,
     } : currentDraft.general,
     commercial: partial.commercial ? {
       ...currentDraft.commercial,

@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-23
+> **Last updated:** 2026-05-24
 
 ---
 
@@ -63,6 +63,12 @@
 - **Cause:** Important backend-bot findings were living in chat/downloaded notes instead of durable docs. The live backend schema has `Category.slug: String!` fixed by production commit `f0c0133a`, `availablePaymentMethods(channel)` with `PaymentMethod.id`, and legacy checkout promo mutations that run after `checkoutCreateFull`.
 - **Fix:** Recorded the contract in the wiki vault at `D:\kaipizz-second-brain\store-front-brain\wiki\decisions\enail-storefront-zyra-storefront-contract.md`. Frontend work should use category slug routes, query `availablePaymentMethods(channel) { id name description provider isActive fee { amount currency } }`, pass `id` as `CheckoutPaymentInput.gateway`, and apply promo codes with `checkoutPromoCodeAdd(input: { checkoutId, promoCode })` after checkout creation.
 - **Rule:** Before changing Zyra GraphQL operations, read the vault contract page first. Do not resurrect old probes or stale schema guesses unless live verification disproves the documented contract.
+
+### Treated checkout completion as guaranteed after shipping/payment setup
+- **Error:** Checkout review could assume the order would be created once shipping and payment handoff were complete.
+- **Cause:** Backend confirmed `INSUFFICIENT_STOCK` is only returned by `checkoutComplete`, while cart creation, cart line updates, checkout creation, shipping selection, and payment initialization can all succeed first. Kamito stock values are still seed placeholders, so this is a normal launch failure mode.
+- **Fix:** Handle `checkoutComplete.errors[].code === "INSUFFICIENT_STOCK"` explicitly: keep the shopper on checkout, show a visible stock banner, rehydrate cart state, and do not redirect to confirmation.
+- **Rule:** Treat `checkoutComplete` as the final stock gate. Never consider a checkout safe just because cart, shipping, and payment steps succeeded.
 
 ### Trusted a recent live product-count snapshot as if it were durable
 - **Error:** Treated the 2026-05-13 `chesaigon` snapshot of 121 storefront-visible products as still true while planning the next slice on 2026-05-15.
@@ -129,6 +135,12 @@
 ---
 
 ## Config & Navigation Errors
+
+### Mixed launch audit blockers with normal regression tests
+- **Error:** A Kamito config audit that checks missing canonical/contact fields would fail the normal unit suite even after the code change is correct, because owner data is still intentionally missing.
+- **Cause:** Tenant-specific launch readiness is stricter than generic admin/storefront regression safety. Treating the audit as a global publish or unit-test blocker would stop unrelated tenants and make local verification noisy.
+- **Fix:** Kept generic fulfillment normalization in unit tests, added a separate `audit:kamito-config` release script for the tracked Kamito config, and documented the remaining owner-data debt.
+- **Rule:** Keep tenant launch audits targeted and explicit. Do not mix owner-content launch blockers into generic regression tests unless the data is actually expected to be present in every environment.
 
 ### Removed config env but code still had localhost fallback
 - **Error:** Treating "drop `NEXT_PUBLIC_CONFIG_API_URL`" as an env-only change would still make the storefront call `http://localhost:4100/api/config/{slug}`.

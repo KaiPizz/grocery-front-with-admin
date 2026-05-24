@@ -2,8 +2,8 @@
   "slug": "kamito",
   "published": {
     "branding": {
-      "logoUrl": "http://localhost:4100/uploads/1774518246036-chu-cho-mungu.jpg",
-      "faviconUrl": "http://localhost:4100/uploads/1774966165791-Portrait_of_Edward_VI_of_England.jpg",
+      "logoUrl": null,
+      "faviconUrl": null,
       "storeName": "Kamito",
       "colors": {
         "primary": "#16a34a",
@@ -56,138 +56,7 @@
           "order": 1
         }
       ],
-      "blocks": [
-        {
-          "id": "block-hero-1775036077507",
-          "type": "hero",
-          "enabled": true,
-          "order": 0,
-          "autoPlay": true,
-          "autoPlayInterval": 3000,
-          "slides": [
-            {
-              "id": "slide-1775036077507",
-              "imageUrl": "http://localhost:4100/uploads/1775036247136-hero.png",
-              "mobileImageUrl": null,
-              "title": "",
-              "ctaText": "Shop Now",
-              "ctaLink": "/products",
-              "enabled": true
-            },
-            {
-              "id": "hero-slide-1775036992504",
-              "imageUrl": "http://localhost:4100/uploads/1775037098988-Website-Banner-1920-x-600-Images.png",
-              "mobileImageUrl": null,
-              "title": "",
-              "ctaText": "Test",
-              "ctaLink": "/products",
-              "enabled": true
-            },
-            {
-              "id": "hero-slide-1775037109988",
-              "imageUrl": "http://localhost:4100/uploads/1775037338023-9a0c9fc93d51a9c87d569384.jpg",
-              "mobileImageUrl": null,
-              "title": "",
-              "ctaText": "Check it",
-              "ctaLink": "/products",
-              "enabled": true
-            }
-          ]
-        },
-        {
-          "id": "block-horizontal-1775037627960",
-          "type": "horizontal",
-          "enabled": true,
-          "order": 1,
-          "imageUrl": "http://localhost:4100/uploads/1774441144526-test-banner.jpg",
-          "mobileImageUrl": null,
-          "title": "",
-          "ctaText": "",
-          "ctaLink": ""
-        },
-        {
-          "id": "block-horizontal-1775037828876",
-          "type": "horizontal",
-          "enabled": true,
-          "order": 2,
-          "imageUrl": "http://localhost:4100/uploads/1775037973424-stilllifeweb.jpg",
-          "mobileImageUrl": null,
-          "title": "",
-          "ctaText": "",
-          "ctaLink": ""
-        },
-        {
-          "id": "block-horizontal-1775038043035",
-          "type": "horizontal",
-          "enabled": true,
-          "order": 3,
-          "imageUrl": "http://localhost:4100/uploads/1775038065297-Lamplugh_Glacier_1_2011_.jpg",
-          "mobileImageUrl": null,
-          "title": "",
-          "ctaText": "",
-          "ctaLink": ""
-        },
-        {
-          "id": "block-grid-1775056851124",
-          "type": "grid",
-          "enabled": true,
-          "order": 4,
-          "columns": 3,
-          "items": [
-            {
-              "id": "grid-item-1775056853424",
-              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            },
-            {
-              "id": "grid-item-1775056872099",
-              "imageUrl": "http://localhost:4100/uploads/1775056874483-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            },
-            {
-              "id": "grid-item-1775056875937",
-              "imageUrl": "http://localhost:4100/uploads/1775056878568-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            }
-          ]
-        },
-        {
-          "id": "block-round_grid-1775660273825",
-          "type": "round_grid",
-          "enabled": true,
-          "order": 5,
-          "columns": 3,
-          "items": [
-            {
-              "id": "grid-item-1775660277904",
-              "imageUrl": "http://localhost:4100/uploads/1775056874483-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            },
-            {
-              "id": "grid-item-1775660287824",
-              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            },
-            {
-              "id": "grid-item-1775660291682",
-              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            }
-          ]
-        }
-      ],
+      "blocks": [],
       "sections": [
         {
           "id": "shopByZone",
@@ -338,7 +207,14 @@
       },
       "freeShippingThreshold": 150,
       "sameDayShippingCutoff": "12:00",
-      "lowStockThreshold": 10
+      "lowStockThreshold": 10,
+      "fulfillment": {
+        "mode": "pickup",
+        "paymentPromise": "bank_transfer",
+        "stockDisplayMode": "availability_only",
+        "pickupInstructions": null,
+        "bankTransferInstructions": null
+      }
     },
     "commercial": {
       "enabled": true,
@@ -412,8 +288,8 @@
   },
   "draft": {
     "branding": {
-      "logoUrl": "http://localhost:4100/uploads/1774518246036-chu-cho-mungu.jpg",
-      "faviconUrl": "http://localhost:4100/uploads/1774966165791-Portrait_of_Edward_VI_of_England.jpg",
+      "logoUrl": null,
+      "faviconUrl": null,
       "storeName": "Kamito",
       "colors": {
         "primary": "#16a34a",
@@ -466,138 +342,7 @@
           "order": 1
         }
       ],
-      "blocks": [
-        {
-          "id": "block-hero-1775036077507",
-          "type": "hero",
-          "enabled": true,
-          "order": 0,
-          "autoPlay": true,
-          "autoPlayInterval": 3000,
-          "slides": [
-            {
-              "id": "slide-1775036077507",
-              "imageUrl": "http://localhost:4100/uploads/1775036247136-hero.png",
-              "mobileImageUrl": null,
-              "title": "",
-              "ctaText": "Shop Now",
-              "ctaLink": "/products",
-              "enabled": true
-            },
-            {
-              "id": "hero-slide-1775036992504",
-              "imageUrl": "http://localhost:4100/uploads/1775037098988-Website-Banner-1920-x-600-Images.png",
-              "mobileImageUrl": null,
-              "title": "",
-              "ctaText": "Test",
-              "ctaLink": "/products",
-              "enabled": true
-            },
-            {
-              "id": "hero-slide-1775037109988",
-              "imageUrl": "http://localhost:4100/uploads/1775037338023-9a0c9fc93d51a9c87d569384.jpg",
-              "mobileImageUrl": null,
-              "title": "",
-              "ctaText": "Check it",
-              "ctaLink": "/products",
-              "enabled": true
-            }
-          ]
-        },
-        {
-          "id": "block-horizontal-1775037627960",
-          "type": "horizontal",
-          "enabled": true,
-          "order": 1,
-          "imageUrl": "http://localhost:4100/uploads/1774441144526-test-banner.jpg",
-          "mobileImageUrl": null,
-          "title": "",
-          "ctaText": "",
-          "ctaLink": ""
-        },
-        {
-          "id": "block-horizontal-1775037828876",
-          "type": "horizontal",
-          "enabled": true,
-          "order": 2,
-          "imageUrl": "http://localhost:4100/uploads/1775037973424-stilllifeweb.jpg",
-          "mobileImageUrl": null,
-          "title": "",
-          "ctaText": "",
-          "ctaLink": ""
-        },
-        {
-          "id": "block-horizontal-1775038043035",
-          "type": "horizontal",
-          "enabled": true,
-          "order": 3,
-          "imageUrl": "http://localhost:4100/uploads/1775038065297-Lamplugh_Glacier_1_2011_.jpg",
-          "mobileImageUrl": null,
-          "title": "",
-          "ctaText": "",
-          "ctaLink": ""
-        },
-        {
-          "id": "block-grid-1775056851124",
-          "type": "grid",
-          "enabled": true,
-          "order": 4,
-          "columns": 3,
-          "items": [
-            {
-              "id": "grid-item-1775056853424",
-              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            },
-            {
-              "id": "grid-item-1775056872099",
-              "imageUrl": "http://localhost:4100/uploads/1775056874483-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            },
-            {
-              "id": "grid-item-1775056875937",
-              "imageUrl": "http://localhost:4100/uploads/1775056878568-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            }
-          ]
-        },
-        {
-          "id": "block-round_grid-1775660273825",
-          "type": "round_grid",
-          "enabled": true,
-          "order": 5,
-          "columns": 3,
-          "items": [
-            {
-              "id": "grid-item-1775660277904",
-              "imageUrl": "http://localhost:4100/uploads/1775056874483-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            },
-            {
-              "id": "grid-item-1775660287824",
-              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            },
-            {
-              "id": "grid-item-1775660291682",
-              "imageUrl": "http://localhost:4100/uploads/1775056860755-486730i6E74F145087D03C3.webp",
-              "title": "",
-              "href": "/products",
-              "enabled": true
-            }
-          ]
-        }
-      ],
+      "blocks": [],
       "sections": [
         {
           "id": "shopByZone",
@@ -748,7 +493,14 @@
       },
       "freeShippingThreshold": 150,
       "sameDayShippingCutoff": "12:00",
-      "lowStockThreshold": 10
+      "lowStockThreshold": 10,
+      "fulfillment": {
+        "mode": "pickup",
+        "paymentPromise": "bank_transfer",
+        "stockDisplayMode": "availability_only",
+        "pickupInstructions": null,
+        "bankTransferInstructions": null
+      }
     },
     "commercial": {
       "enabled": true,

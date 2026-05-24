@@ -18,6 +18,13 @@ import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
+import {
+  getConfiguredText,
+  getFulfillmentConfig,
+  isPickupFulfillment,
+  usesAvailabilityOnlyStock,
+  usesBankTransferPromise,
+} from '@/lib/fulfillment';
 import { DEFAULT_SAME_DAY_SHIPPING_CUTOFF, isBeforeShippingCutoff } from '@/lib/shipping-cutoff';
 import { useChannel } from '@/hooks/use-channel';
 
@@ -53,8 +60,14 @@ export default function ProductDetailPage() {
   const [inlineActionsNode, setInlineActionsNode] = useState<HTMLDivElement | null>(null);
   const channel = useChannel();
   const siteConfig = useStorefrontConfig();
+  const fulfillment = getFulfillmentConfig(siteConfig);
+  const pickupMode = isPickupFulfillment(siteConfig);
+  const bankTransferMode = usesBankTransferPromise(siteConfig);
+  const availabilityOnlyStock = usesAvailabilityOnlyStock(siteConfig);
   const cutoffStr = siteConfig?.general?.sameDayShippingCutoff ?? DEFAULT_SAME_DAY_SHIPPING_CUTOFF;
   const lowStockThreshold = siteConfig?.general?.lowStockThreshold ?? 10;
+  const pickupNotice = getConfiguredText(fulfillment.pickupInstructions, t('fulfillment.productPickupNotice'));
+  const bankTransferNotice = getConfiguredText(fulfillment.bankTransferInstructions, t('fulfillment.productBankTransferNotice'));
 
   // Resolve same-day-shipping cutoff on client only to avoid SSR/CSR
   // hydration mismatch on Date(). Cutoff comes from admin config (HH:MM).
@@ -236,22 +249,40 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Stock + delivery promise */}
-          {inStock && variant && (
+          {variant && (
             <div className="mb-5 flex items-center gap-2 text-sm" data-testid="pd-stock-promise">
               <Truck className="h-4 w-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
               <span style={{ color: 'var(--color-foreground)' }}>
                 {(() => {
+                  if (!inStock) return t('product.outOfStock') || 'Out of stock';
                   const qty = variant.quantityAvailable ?? 0;
                   const lowStock = qty <= lowStockThreshold;
-                  const stockText = lowStock
+                  const stockText = availabilityOnlyStock
+                    ? (t('product.inStock') || 'In stock')
+                    : lowStock
                     ? (t('product.lowStockCount', { count: qty }) || `Only ${qty} left`)
                     : (t('product.inStock') || 'In stock');
+                  if (availabilityOnlyStock) return stockText;
                   const shipText = shipPromise === 'today'
                     ? (t('product.shipsToday') || 'ships today')
                     : (t('product.shipsTomorrow') || 'ships tomorrow');
                   return `${stockText} — ${shipText}`;
                 })()}
               </span>
+            </div>
+          )}
+
+          {(pickupMode || bankTransferMode) && (
+            <div
+              className="mb-5 rounded-lg border p-3 text-sm"
+              style={{
+                borderColor: 'var(--color-border)',
+                backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
+                color: 'var(--color-foreground)',
+              }}
+            >
+              {pickupMode && <p>{pickupNotice}</p>}
+              {bankTransferMode && <p className={pickupMode ? 'mt-1' : undefined}>{bankTransferNotice}</p>}
             </div>
           )}
 

@@ -41,6 +41,20 @@
     "countdown": "Zamów w ciągu {time}, a wyślemy dziś",
     "tomorrow": "Wysyłka jutro o {time}"
   },
+  "fulfillment": {
+    "pickupService": "Dostepny odbior osobisty",
+    "bankTransferService": "Platnosc przelewem bankowym",
+    "productPickupNotice": "Ten sklep obsluguje wylacznie odbior osobisty.",
+    "productBankTransferNotice": "Aktywna metoda platnosci to przelew bankowy.",
+    "cartPickupNotice": "Tylko odbior osobisty. Pasek darmowej dostawy nie dotyczy tego sklepu.",
+    "cartBankTransferNotice": "Platnosc odbywa sie przelewem bankowym po checkoutcie.",
+    "checkoutPickupNotice": "Odbior osobisty jest jedyna sciezka realizacji dla tego sklepu.",
+    "checkoutBankTransferNotice": "Platnosc odbywa sie przelewem bankowym po zlozeniu zamowienia.",
+    "checkoutReviewNotice": "Po zlozeniu zamowienia wykonaj przelew bankowy i poczekaj na potwierdzenie odbioru.",
+    "confirmationBankTransfer": "Nastepny krok: wykonaj przelew bankowy zgodnie z instrukcjami sklepu.",
+    "confirmationPickup": "Odbior: poczekaj na reczne potwierdzenie odbioru lub kontakt przed odebraniem zamowienia.",
+    "orderHistory": "Historia zamowien"
+  },
   "search": {
     "recentSearches": "Ostatnie wyszukiwania",
     "suggestions": "Sugestie",
@@ -53,6 +67,7 @@
     "hero": "Świeże produkty, prosto do Twoich drzwi",
     "heroSub": "Produkty najwyższej jakości z pełną przejrzystością wartości odżywczych",
     "quickCategories": "Popularne kategorie",
+    "categoryShortcuts": "Popularne kategorie",
     "shopByZone": "Zakupy według strefy przechowywania",
     "frozen": "Mrożone",
     "chilled": "Chłodzone",
@@ -120,6 +135,8 @@
     "shopCategory": "Zobacz kategorię",
     "loading": "Wczytywanie kategorii...",
     "allCategories": "Kategorie",
+    "searchLabel": "Szukaj kategorii",
+    "searchPlaceholder": "Szukaj kategorii",
     "notFound": "Nie znaleziono kategorii.",
     "emptyCategory": "Produkty z tej kategorii pojawią się tutaj, gdy będą dostępne.",
     "loadMore": "Załaduj więcej",

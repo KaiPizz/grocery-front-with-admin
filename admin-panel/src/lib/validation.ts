@@ -277,6 +277,14 @@ const socialLinkSchema = z.object({
   url: z.string().max(500),
 });
 
+const fulfillmentSchema = z.object({
+  mode: z.enum(['delivery', 'pickup']),
+  paymentPromise: z.enum(['backend', 'bank_transfer']),
+  stockDisplayMode: z.enum(['exact_when_low', 'availability_only']),
+  pickupInstructions: z.string().max(1000).nullable(),
+  bankTransferInstructions: z.string().max(1000).nullable(),
+});
+
 const generalSchema = z.object({
   phone: z.string().max(50),
   email: z.string().max(200),
@@ -290,6 +298,13 @@ const generalSchema = z.object({
   freeShippingThreshold: z.number().min(0).max(100000),
   sameDayShippingCutoff: z.string().regex(/^([01]?\d|2[0-3]):[0-5]\d$/, 'Must be HH:MM'),
   lowStockThreshold: z.number().int().min(0).max(10000),
+  fulfillment: fulfillmentSchema.default({
+    mode: 'delivery',
+    paymentPromise: 'backend',
+    stockDisplayMode: 'exact_when_low',
+    pickupInstructions: null,
+    bankTransferInstructions: null,
+  }),
 });
 
 // --- Commercial ---

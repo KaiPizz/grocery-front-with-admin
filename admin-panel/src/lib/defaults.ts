@@ -179,6 +179,13 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
     freeShippingThreshold: 150,
     sameDayShippingCutoff: '12:00',
     lowStockThreshold: 10,
+    fulfillment: {
+      mode: 'delivery',
+      paymentPromise: 'backend',
+      stockDisplayMode: 'exact_when_low',
+      pickupInstructions: null,
+      bankTransferInstructions: null,
+    },
   },
 
   commercial: {

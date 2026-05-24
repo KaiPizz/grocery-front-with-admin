@@ -10,11 +10,18 @@ import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { StorageZoneGroup } from '@/components/grocery/StorageZoneGroup';
 import { Link } from '@/i18n/navigation';
 import { useHydrated } from '@/hooks/use-hydrated';
+import {
+  getConfiguredText,
+  getFulfillmentConfig,
+  isPickupFulfillment,
+  usesBankTransferPromise,
+} from '@/lib/fulfillment';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { CartItem } from '@/types';
 
 export default function CartPage() {
   const t = useTranslations('cart');
+  const tFulfillment = useTranslations('fulfillment');
   const tCommon = useTranslations('common');
   const tWishlist = useTranslations('wishlist');
   const isHydrated = useHydrated();
@@ -28,7 +35,12 @@ export default function CartPage() {
   const addWishlistItem = useWishlistStore((state) => state.addItem);
 
   const siteConfig = useStorefrontConfig();
+  const fulfillment = getFulfillmentConfig(siteConfig);
+  const pickupMode = isPickupFulfillment(siteConfig);
+  const bankTransferMode = usesBankTransferPromise(siteConfig);
   const freeShippingThreshold = siteConfig?.general?.freeShippingThreshold ?? 150;
+  const pickupNotice = getConfiguredText(fulfillment.pickupInstructions, tFulfillment('cartPickupNotice'));
+  const bankTransferNotice = getConfiguredText(fulfillment.bankTransferInstructions, tFulfillment('cartBankTransferNotice'));
 
   const displayItems = isHydrated && initialized ? items : [];
   const subtotal = isHydrated && initialized ? getSubtotal() : 0;
@@ -146,6 +158,24 @@ export default function CartPage() {
     );
   }
 
+  function renderFulfillmentNotice(compact = false) {
+    if (!pickupMode && !bankTransferMode) return null;
+
+    return (
+      <div
+        className={compact ? 'mb-2.5 rounded-lg border px-3 py-2 text-[11px]' : 'mb-5 rounded-lg border p-3 text-sm'}
+        style={{
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
+          color: 'var(--color-foreground)',
+        }}
+      >
+        {pickupMode && <p>{pickupNotice}</p>}
+        {bankTransferMode && <p className={pickupMode ? 'mt-1' : undefined}>{bankTransferNotice}</p>}
+      </div>
+    );
+  }
+
   if (!isHydrated || !initialized) {
     return (
       <div className="container-grocery py-16 text-center">
@@ -222,7 +252,7 @@ export default function CartPage() {
               </span>
             </div>
 
-            {(() => {
+            {pickupMode ? renderFulfillmentNotice() : (() => {
               const progress = freeShippingThreshold > 0 ? Math.min(subtotal / freeShippingThreshold, 1) : 1;
               const remaining = Math.max(freeShippingThreshold - subtotal, 0);
               return (
@@ -268,7 +298,7 @@ export default function CartPage() {
         data-testid="mobile-cart-summary-bar"
       >
         <div className="container-grocery py-3">
-          {(() => {
+          {pickupMode ? renderFulfillmentNotice(true) : (() => {
             const progress = freeShippingThreshold > 0 ? Math.min(subtotal / freeShippingThreshold, 1) : 1;
             const remaining = Math.max(freeShippingThreshold - subtotal, 0);
             return (

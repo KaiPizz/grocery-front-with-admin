@@ -6,7 +6,7 @@ import { FormCard } from '@/components/FormCard';
 import { FieldLabel } from '@/components/FieldLabel';
 import { SaveBar } from '@/components/SaveBar';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
-import type { GeneralConfig, SocialLink } from '@/types/config';
+import type { FulfillmentConfig, GeneralConfig, SocialLink } from '@/types/config';
 import { useLanguage } from '@/i18n';
 
 const PLATFORM_OPTIONS = ['Facebook', 'Instagram', 'Twitter/X', 'TikTok', 'YouTube', 'LINE', 'WhatsApp', 'Telegram', 'LinkedIn', 'Pinterest'];
@@ -47,6 +47,10 @@ export default function GeneralPage() {
     updateGeneral({ policyLinks: { ...general.policyLinks, [key]: value } });
   }
 
+  function updateFulfillment(partial: Partial<FulfillmentConfig>) {
+    updateGeneral({ fulfillment: { ...general.fulfillment, ...partial } });
+  }
+
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
       <div className="flex-1 space-y-6 pb-6">
@@ -82,6 +86,64 @@ export default function GeneralPage() {
               placeholder="123 Main St, Bangkok, Thailand"
             />
           </FieldLabel>
+        </FormCard>
+
+        <FormCard
+          title={t('general.fulfillmentTitle')}
+          description={t('general.fulfillmentDescription')}
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <FieldLabel label={t('general.fulfillmentMode')}>
+              <select
+                value={general.fulfillment.mode}
+                onChange={(e) => updateFulfillment({ mode: e.target.value as FulfillmentConfig['mode'] })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none bg-white"
+              >
+                <option value="delivery">{t('general.deliveryMode')}</option>
+                <option value="pickup">{t('general.pickupMode')}</option>
+              </select>
+            </FieldLabel>
+            <FieldLabel label={t('general.paymentPromise')}>
+              <select
+                value={general.fulfillment.paymentPromise}
+                onChange={(e) => updateFulfillment({ paymentPromise: e.target.value as FulfillmentConfig['paymentPromise'] })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none bg-white"
+              >
+                <option value="backend">{t('general.backendPayment')}</option>
+                <option value="bank_transfer">{t('general.bankTransferPayment')}</option>
+              </select>
+            </FieldLabel>
+            <FieldLabel label={t('general.stockDisplayMode')}>
+              <select
+                value={general.fulfillment.stockDisplayMode}
+                onChange={(e) => updateFulfillment({ stockDisplayMode: e.target.value as FulfillmentConfig['stockDisplayMode'] })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none bg-white"
+              >
+                <option value="exact_when_low">{t('general.exactWhenLowStock')}</option>
+                <option value="availability_only">{t('general.availabilityOnlyStock')}</option>
+              </select>
+            </FieldLabel>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FieldLabel label={t('general.pickupInstructions')}>
+              <textarea
+                value={general.fulfillment.pickupInstructions ?? ''}
+                onChange={(e) => updateFulfillment({ pickupInstructions: e.target.value.trim() ? e.target.value : null })}
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none resize-none"
+              />
+              <p className="mt-1 text-xs text-gray-500">{t('general.pickupInstructionsHint')}</p>
+            </FieldLabel>
+            <FieldLabel label={t('general.bankTransferInstructions')}>
+              <textarea
+                value={general.fulfillment.bankTransferInstructions ?? ''}
+                onChange={(e) => updateFulfillment({ bankTransferInstructions: e.target.value.trim() ? e.target.value : null })}
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none resize-none"
+              />
+              <p className="mt-1 text-xs text-gray-500">{t('general.bankTransferInstructionsHint')}</p>
+            </FieldLabel>
+          </div>
         </FormCard>
 
         <FormCard

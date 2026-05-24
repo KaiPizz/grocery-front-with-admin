@@ -11,7 +11,7 @@ import {
   Sun,
   Thermometer,
 } from 'lucide-react';
-import { PRODUCTS_QUERY, RECIPES_QUERY } from '@/lib/graphql/operations/grocery';
+import { CATEGORIES_QUERY, PRODUCTS_QUERY, RECIPES_QUERY } from '@/lib/graphql/operations/grocery';
 import { ProductCard } from '@/components/product/ProductCard';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { PromoBanner } from '@/components/grocery/PromoBanner';
@@ -20,7 +20,10 @@ import { RecipeCard } from '@/components/grocery/RecipeCard';
 import { Link } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
-import type { HomepageSectionId } from '@/types/storefront-config';
+import { getEnabledCommercialQuickLinks } from '@/lib/commercial-config';
+import { groupCategories, type GroupableCategory } from '@/lib/category-groups';
+import { usesAvailabilityOnlyStock } from '@/lib/fulfillment';
+import type { CommercialQuickLink, HomepageSectionId } from '@/types/storefront-config';
 
 interface HomeProduct {
   id: string;
@@ -75,6 +78,18 @@ interface HomeRecipe {
   difficulty?: string | null;
 }
 
+interface HomeCategory extends GroupableCategory {
+  products: {
+    totalCount: number;
+  } | null;
+}
+
+interface HomeCategoriesResponse {
+  categories: {
+    edges: Array<{ node: HomeCategory }>;
+  } | null;
+}
+
 const DESKTOP_ZONE_CARDS = [
   { zone: 'FROZEN', icon: Snowflake, colorVar: 'var(--color-frozen)' },
   { zone: 'CHILLED', icon: Thermometer, colorVar: 'var(--color-chilled)' },
@@ -97,12 +112,90 @@ function HomeShelfSkeleton() {
   );
 }
 
+function formatCategoryCount(count: number) {
+  return count === 1 ? '1 product' : `${count} products`;
+}
+
+function HomeCategoryShortcuts({
+  categories,
+  quickLinks,
+}: {
+  categories: HomeCategory[];
+  quickLinks: CommercialQuickLink[];
+}) {
+  const t = useTranslations('home');
+  const groupedCategories = groupCategories(categories);
+  const visibleCategories = groupedCategories.flatMap((group) => group.categories).slice(0, 6);
+  const visibleQuickLinks = quickLinks.slice(0, 3);
+
+  if (visibleCategories.length === 0 && visibleQuickLinks.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="container-grocery py-5" data-testid="home-category-shortcuts">
+      <h2
+        className="heading-section mb-4 text-xl md:text-2xl"
+        style={{ color: 'var(--color-foreground)' }}
+      >
+        {t('categoryShortcuts')}
+      </h2>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+        {visibleCategories.map((category) => {
+          const count = category.products?.totalCount ?? 0;
+          const countLabel = formatCategoryCount(count);
+
+          return (
+            <Link
+              key={category.id}
+              href={`/categories/${category.slug}`}
+              aria-label={`${category.name}, ${countLabel}`}
+              className="rounded-lg border p-3 transition-transform duration-fast hover:-translate-y-0.5"
+              style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+            >
+              <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                {category.name}
+              </span>
+              <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                {countLabel}
+              </span>
+            </Link>
+          );
+        })}
+
+        {visibleQuickLinks.map((link) => (
+          <Link
+            key={link.id}
+            href={link.href}
+            className="rounded-lg border p-3 transition-transform duration-fast hover:-translate-y-0.5"
+            style={{
+              borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
+              backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
+            }}
+          >
+            <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+              {link.label}
+            </span>
+            {link.description && (
+              <span className="mt-1 line-clamp-2 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                {link.description}
+              </span>
+            )}
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function HomePage() {
   const t = useTranslations('home');
   const tNav = useTranslations('nav');
   const tCommon = useTranslations('common');
   const channel = useChannel();
   const siteConfig = useStorefrontConfig();
+  const availabilityOnlyStock = usesAvailabilityOnlyStock(siteConfig);
+  const commercialQuickLinks = getEnabledCommercialQuickLinks(siteConfig);
 
   const homepageHero = siteConfig?.homepage?.hero;
   const homepageBlocks = siteConfig?.homepage?.blocks ?? [];
@@ -135,8 +228,14 @@ export default function HomePage() {
     variables: { channel, first: 4 },
   });
 
+  const [categoriesResult] = useQuery<HomeCategoriesResponse>({
+    query: CATEGORIES_QUERY,
+    variables: { channel },
+  });
+
   const products = (productsResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
   const recipes = (recipesResult.data?.recipes?.edges?.map((edge: { node: HomeRecipe }) => edge.node) ?? []) as HomeRecipe[];
+  const categories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
 
   const saleProducts = products
     .filter((product) => {
@@ -267,6 +366,16 @@ export default function HomePage() {
         {orderedSections.map((sectionId) => {
           switch (sectionId) {
             case 'shopByZone':
+              if (availabilityOnlyStock) {
+                return (
+                  <HomeCategoryShortcuts
+                    key="categoryShortcuts"
+                    categories={categories}
+                    quickLinks={commercialQuickLinks}
+                  />
+                );
+              }
+
               return (
                 <section key="shopByZone" className="container-grocery py-5">
                   <h2
@@ -482,6 +591,16 @@ export default function HomePage() {
         {orderedSections.map((sectionId) => {
           switch (sectionId) {
             case 'shopByZone':
+              if (availabilityOnlyStock) {
+                return (
+                  <HomeCategoryShortcuts
+                    key="categoryShortcuts"
+                    categories={categories}
+                    quickLinks={commercialQuickLinks}
+                  />
+                );
+              }
+
               return (
                 <section key="shopByZone" className="container-grocery py-16 md:py-20">
                   <h2

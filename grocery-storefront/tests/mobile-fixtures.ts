@@ -522,12 +522,34 @@ function buildCartLine(quantity = 1, cartCosts: 'priced' | 'zero' = 'priced'): C
   };
 }
 
-function buildCheckoutState(): CheckoutState {
+const PICKUP_ONLY_DELIVERY_OPTIONS = [
+  {
+    id: 'PICKUP',
+    name: 'Pickup in store',
+    price: {
+      amount: 0,
+      currency: 'PLN',
+    },
+  },
+];
+
+const BANK_TRANSFER_PAYMENT_METHODS = [
+  {
+    id: 'bank_transfer',
+    name: 'Bank transfer',
+    description: 'Pay by bank transfer after placing the order',
+    provider: 'bank_transfer',
+    isActive: true,
+    fee: { amount: 0, currency: 'PLN' },
+  },
+];
+
+function buildCheckoutState(deliveryOptions = DELIVERY_OPTIONS): CheckoutState {
   return {
     id: 'checkout-1',
     email: 'mobile@example.com',
-    availableShippingMethods: DELIVERY_OPTIONS,
-    shippingPrice: DELIVERY_OPTIONS[0].price,
+    availableShippingMethods: deliveryOptions,
+    shippingPrice: deliveryOptions[0].price,
     totalPrice: {
       gross: {
         amount: 22.98,
@@ -592,6 +614,8 @@ export async function seedAuthSession(page: Page) {
 interface MockMobileStorefrontOptions {
   cart?: 'empty' | 'single-item';
   cartCosts?: 'priced' | 'zero';
+  checkoutProfile?: 'delivery' | 'pickup-bank-transfer';
+  checkoutComplete?: 'success' | 'insufficient-stock';
   products?: 'ok' | 'error';
   facets?: 'populated' | 'empty';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
@@ -609,8 +633,14 @@ export async function mockMobileStorefront(
   const categoryFixtures = buildCategoryFixtures(products);
   const featuredProduct = products[0] ?? PRIMARY_PRODUCT;
   const cartCostMode = options.cartCosts ?? 'priced';
+  const deliveryOptions = options.checkoutProfile === 'pickup-bank-transfer'
+    ? PICKUP_ONLY_DELIVERY_OPTIONS
+    : DELIVERY_OPTIONS;
+  const paymentMethods = options.checkoutProfile === 'pickup-bank-transfer'
+    ? BANK_TRANSFER_PAYMENT_METHODS
+    : PAYMENT_METHODS;
   let cart = buildCart(options.cart === 'single-item' ? [buildCartLine(1, cartCostMode)] : []);
-  let checkout = buildCheckoutState();
+  let checkout = buildCheckoutState(deliveryOptions);
   let wishlistItems = (() => {
     if (options.wishlist === 'single-item' || options.wishlist === 'stale-remove') {
       return [buildWishlistServerItem(featuredProduct.id)].filter(Boolean) as WishlistServerItemState[];
@@ -931,7 +961,7 @@ export async function mockMobileStorefront(
 
     if (operationName === 'CartDeliveryOptions' || query.includes('query CartDeliveryOptions')) {
       await fulfill(route, {
-        cartDeliveryOptions: DELIVERY_OPTIONS,
+        cartDeliveryOptions: deliveryOptions,
       });
       return;
     }
@@ -948,7 +978,7 @@ export async function mockMobileStorefront(
 
     if (operationName === 'AvailablePaymentMethods' || query.includes('query AvailablePaymentMethods')) {
       await fulfill(route, {
-        availablePaymentMethods: PAYMENT_METHODS,
+        availablePaymentMethods: paymentMethods,
       });
       return;
     }
@@ -996,7 +1026,9 @@ export async function mockMobileStorefront(
     }
 
     if (operationName === 'CheckoutShippingMethodUpdate' || query.includes('mutation CheckoutShippingMethodUpdate')) {
-      const shippingPrice = DELIVERY_OPTIONS[0].price;
+      const requestedMethodId = body.variables?.input?.shippingMethodId;
+      const selectedMethod = deliveryOptions.find((option) => option.id === requestedMethodId) ?? deliveryOptions[0];
+      const shippingPrice = selectedMethod.price;
       checkout = {
         ...checkout,
         shippingPrice,
@@ -1075,6 +1107,24 @@ export async function mockMobileStorefront(
     }
 
     if (operationName === 'CheckoutComplete' || query.includes('mutation CheckoutComplete')) {
+      if (options.checkoutComplete === 'insufficient-stock') {
+        await fulfill(route, {
+          checkoutComplete: {
+            order: null,
+            confirmationNeeded: false,
+            errors: [
+              {
+                field: 'quantity',
+                message: 'Insufficient stock for "Organic Gala Apples Family Value Pack". Available: 0, Requested: 5',
+                code: 'INSUFFICIENT_STOCK',
+                variants: ['variant-apples'],
+              },
+            ],
+          },
+        });
+        return;
+      }
+
       await fulfill(route, {
         checkoutComplete: {
           order: {

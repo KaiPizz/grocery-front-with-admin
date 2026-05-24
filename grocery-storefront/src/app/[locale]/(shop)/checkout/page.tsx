@@ -39,6 +39,13 @@ import { useChannel } from '@/hooks/use-channel';
 import { useHydrated } from '@/hooks/use-hydrated';
 import { useCartStore } from '@/stores/cart-store';
 import { useAuthStore } from '@/stores/auth-store';
+import { useStorefrontConfig } from '@/components/ConfigProvider';
+import {
+  getConfiguredText,
+  getFulfillmentConfig,
+  isPickupFulfillment,
+  usesBankTransferPromise,
+} from '@/lib/fulfillment';
 import type { CartDeliveryOption, CustomerAddress } from '@/types';
 import type { CheckoutStep, PaymentMethod } from '@/types/checkout';
 
@@ -236,6 +243,10 @@ function getRequestMessage(
   return getGraphqlErrorMessage(topLevelErrors) ?? getPayloadMessage(payloadErrors) ?? fallback;
 }
 
+function getInsufficientStockError(errors?: CheckoutMutationError[] | null): CheckoutMutationError | null {
+  return errors?.find((error) => error.code === 'INSUFFICIENT_STOCK') ?? null;
+}
+
 function getPaymentIcon(method: PaymentMethod) {
   const source = `${method.id} ${method.provider ?? ''} ${method.name}`.toLowerCase();
 
@@ -303,11 +314,18 @@ export default function CheckoutPage() {
   const locale = useLocale();
   const t = useTranslations('checkout');
   const tCart = useTranslations('cart');
+  const tFulfillment = useTranslations('fulfillment');
   const tCommon = useTranslations('common');
   const router = useRouter();
   const searchParams = useSearchParams();
   const isHydrated = useHydrated();
   const channel = useChannel();
+  const siteConfig = useStorefrontConfig();
+  const fulfillment = getFulfillmentConfig(siteConfig);
+  const pickupMode = isPickupFulfillment(siteConfig);
+  const bankTransferMode = usesBankTransferPromise(siteConfig);
+  const checkoutPickupNotice = getConfiguredText(fulfillment.pickupInstructions, tFulfillment('checkoutPickupNotice'));
+  const checkoutBankTransferNotice = getConfiguredText(fulfillment.bankTransferInstructions, tFulfillment('checkoutBankTransferNotice'));
 
   const items = useCartStore((state) => state.items);
   const cost = useCartStore((state) => state.cost);
@@ -323,6 +341,7 @@ export default function CheckoutPage() {
   const updateNote = useCartStore((state) => state.updateNote);
   const fetchDeliveryOptions = useCartStore((state) => state.fetchDeliveryOptions);
   const selectDeliveryOption = useCartStore((state) => state.selectDeliveryOption);
+  const hydrateCart = useCartStore((state) => state.hydrateCart);
   const clearCart = useCartStore((state) => state.clearCart);
 
   const sessionEmail = buyerIdentity?.email ?? '';
@@ -373,6 +392,10 @@ export default function CheckoutPage() {
       noneLabel: locale === 'pl' ? 'Brak' : 'None',
       notSelected: locale === 'pl' ? 'Nie wybrano' : 'Not selected',
       paymentNotInitialized: locale === 'pl' ? 'Płatność nie została zainicjalizowana' : 'Payment not initialized',
+      insufficientStock:
+        locale === 'pl'
+          ? 'Nie ma wystarczającego stanu magazynowego, aby złożyć to zamówienie. Sprawdź koszyk i zmień ilości przed ponowną próbą.'
+          : 'Not enough stock to complete this order. Review your cart and adjust quantities before trying again.',
     }),
     [locale]
   );
@@ -626,6 +649,21 @@ export default function CheckoutPage() {
       </div>
     </>
   );
+
+  function renderCheckoutNotice(message: string) {
+    return (
+      <div
+        className="mb-4 rounded-lg border px-4 py-3 text-sm"
+        style={{
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
+          color: 'var(--color-foreground)',
+        }}
+      >
+        {message}
+      </div>
+    );
+  }
 
   function setFieldValue<K extends keyof DeliveryFormState>(key: K, value: DeliveryFormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -1063,9 +1101,15 @@ export default function CheckoutPage() {
         },
       });
       const payload = response.data?.checkoutComplete;
-      const message = getRequestMessage(response.errors, payload?.errors, 'Failed to complete checkout.');
+      const insufficientStockError = getInsufficientStockError(payload?.errors);
+      const message = insufficientStockError
+        ? `${uiText.insufficientStock} ${insufficientStockError.message}`
+        : getRequestMessage(response.errors, payload?.errors, 'Failed to complete checkout.');
 
       if (getGraphqlErrorMessage(response.errors) || getPayloadMessage(payload?.errors) || !payload?.order) {
+        if (insufficientStockError) {
+          await hydrateCart();
+        }
         setErrorBanner(message);
         toast.error(message);
         return;
@@ -1144,6 +1188,7 @@ export default function CheckoutPage() {
       {(errorBanner || cartError) && (
         <div
           className="mb-6 rounded-2xl border px-4 py-3 text-sm"
+          role="alert"
           style={{
             borderColor: 'color-mix(in srgb, var(--color-destructive) 40%, var(--color-border))',
             backgroundColor: 'color-mix(in srgb, var(--color-destructive) 8%, transparent)',
@@ -1335,6 +1380,8 @@ export default function CheckoutPage() {
                 {t('selectShipping')}
               </p>
 
+              {pickupMode && renderCheckoutNotice(checkoutPickupNotice)}
+
               <div className="space-y-3">
                 {deliveryOptions.map((option) => {
                   const selected = selectedDeliveryOption?.id === option.id;
@@ -1396,6 +1443,8 @@ export default function CheckoutPage() {
                 </button>
               </div>
 
+              {bankTransferMode && renderCheckoutNotice(checkoutBankTransferNotice)}
+
               {paymentMethods.length === 0 ? (
                 <div className="rounded-2xl border px-4 py-4 text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
                   {uiText.noPaymentMethods}
@@ -1447,6 +1496,8 @@ export default function CheckoutPage() {
             completedSteps={completedSteps}
             onToggle={setStep}
           >
+              {(pickupMode || bankTransferMode) && renderCheckoutNotice(tFulfillment('checkoutReviewNotice'))}
+
               <div className="grid gap-5 md:grid-cols-2 mb-5">
                   <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--color-border)' }}>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>

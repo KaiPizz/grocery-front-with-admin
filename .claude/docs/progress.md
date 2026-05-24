@@ -1,10 +1,21 @@
 # Feature Progress
 
-> **Last updated:** 2026-05-23
+> **Last updated:** 2026-05-24
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-05-24 Kamito Launch Hardening Update
+
+- Storefront `StorefrontConfig.general.fulfillment` is now synced across admin and storefront with delivery/backend/exact-stock defaults and Kamito pickup/bank-transfer/availability-only config.
+- Header service strip, product detail, cart, checkout, and order confirmation now use generic fulfillment config so pickup tenants do not show false same-day shipping, free-shipping, exact-stock, or automated notification promises.
+- `/categories` is now a grouped searchable category hub over real category links/counts; the homepage can show real category shortcuts plus commercial quick links instead of storage-zone cards when stock display is availability-only.
+- `admin-panel/data/config-kamito.json` no longer tracks localhost media URLs; logo/favicon/image blocks are null/removed until owner assets are supplied.
+- Added targeted Kamito config audit plumbing and launch Playwright coverage for pickup/bank-transfer truth, grouped categories, and mobile homepage category shortcuts.
+- Backend follow-up confirmed Kamito uses shipping method id `PICKUP` and payment gateway `bank_transfer`; storefront launch tests now use that real pickup id and checkout shows a persistent error instead of redirecting when `checkoutComplete` returns `INSUFFICIENT_STOCK`.
+- Storefront now supports explicit `NEXT_PUBLIC_STATIC_CONFIG_URL` fallback and tracks `public/config/kamito.json` so Kamito launch truth can load without a backend/admin config API and without touching shared backend or Chesaigon.
+
 
 ## Grocery Storefront
 
@@ -21,7 +32,7 @@
 | Recipes listing (`/recipes`) | ✅ | Recipe grid with cards. |
 | Recipe detail (`/recipes/[slug]`) | ✅ | 11KB page. Steps, ingredients with product links, cook time, difficulty. 2026-05-12: add-all-to-cart accepts legacy variant `price`/`currency` when nested variant pricing is absent. |
 | Cart (`/cart`) | ✅ | Storage zone grouping, quantity controls, save-for-later (→ wishlist), free shipping progress bar (desktop sidebar + 2026-05-10 mobile sticky bar), mobile sticky summary bar. 2026-05-12: free-shipping threshold now reads from `StorefrontConfig.general` (B21). 2026-05-12: accessibility audit pass for mobile cart; per-line actions now have product-specific accessible names and the hidden BottomNav/sticky checkout CTA contract is covered. 2026-05-12: cart line prices and subtotal fall back to positive product metadata when OMS cart cost returns zero. |
-| Checkout (`/checkout`) | ✅ | Multi-step flow: delivery → shipping → payment → review. Saved address selection (auto-advance), promo codes, legacy Zyra checkout handoff, session draft persistence. 2026-05-10: progress bar now sticky-on-mobile (top: var(--header-height), z-30, backdrop-blur), static on desktop. 2026-05-12: accessibility audit pass for mobile checkout; invalid delivery fields focus the first error and connect `aria-describedby`, shipping/payment choices expose `aria-pressed`, inactive accordion panels are `aria-hidden` + inert, and the mobile summary toggle controls its panel. 2026-05-12: order summary now uses the corrected cart subtotal when OMS cart totals are zeroed. 2026-05-13: checkout payment methods now use backend `availablePaymentMethods(channel)` with `id` as `CheckoutPaymentInput.gateway`; promo apply/remove now use legacy checkout promo mutations after checkout creation instead of cart discount mutations. |
+| Checkout (`/checkout`) | ✅ | Multi-step flow: delivery → shipping → payment → review. Saved address selection (auto-advance), promo codes, legacy Zyra checkout handoff, session draft persistence. 2026-05-10: progress bar now sticky-on-mobile (top: var(--header-height), z-30, backdrop-blur), static on desktop. 2026-05-12: accessibility audit pass for mobile checkout; invalid delivery fields focus the first error and connect `aria-describedby`, shipping/payment choices expose `aria-pressed`, inactive accordion panels are `aria-hidden` + inert, and the mobile summary toggle controls its panel. 2026-05-12: order summary now uses the corrected cart subtotal when OMS cart totals are zeroed. 2026-05-13: checkout payment methods now use backend `availablePaymentMethods(channel)` with `id` as `CheckoutPaymentInput.gateway`; promo apply/remove now use legacy checkout promo mutations after checkout creation instead of cart discount mutations. 2026-05-24: `checkoutComplete` `INSUFFICIENT_STOCK` errors now keep the shopper on checkout, show a visible stock banner, and rehydrate cart state. |
 | Wishlist (`/wishlist`) | ✅ | Grid cards with images. Move-to-cart action. Remove action. 2026-05-12: accessibility audit pass for BottomNav tab flow; image links are removed from keyboard tab order and add/remove actions have product-specific accessible names. |
 | Account (`/account`) | ✅ | Tab-based: Profile, Orders, Addresses. |
 | Account → Orders (`/account/orders`) | ✅ | Order list panel. |
@@ -49,7 +60,7 @@
 | ThemeToggle | ✅ | Removed 2026-05-23 by product decision; storefront is light-only and no toggle UI remains. |
 | ScrollToTopButton | ✅ | Appears after scroll. |
 | CheckoutProgress | ✅ | Step indicator bar for checkout flow. |
-| ConfigProvider | ✅ | Runtime config injection via context + CSS variables. 2026-05-22: `NEXT_PUBLIC_CONFIG_API_URL` is now opt-in; when omitted/blank, storefront skips server/client config fetch instead of falling back to localhost. |
+| ConfigProvider | ✅ | Runtime config injection via context + CSS variables. 2026-05-22: `NEXT_PUBLIC_CONFIG_API_URL` is now opt-in; when omitted/blank, storefront skips server/client config fetch instead of falling back to localhost. 2026-05-24: optional `NEXT_PUBLIC_STATIC_CONFIG_URL` can provide a static published config fallback for launch tenants without a production admin config API. |
 | MobileBottomNav | ✅ | 2026-05-11. Fixed bottom nav (mobile-only). Active route highlight, hydration-gated count badges, safe-area-inset-bottom for hardware insets. Hidden on `/cart` + `/checkout/*` (own bottom CTAs). PD sticky add-to-cart stacks above. Supersedes the 2026-05-10 MobileFloatingCart pill. 2026-05-13: added Categories tab after B1 category browsing shipped; nav now exposes Home / Categories / Wishlist / Cart. |
 | UnitPrice (grocery/) | ✅ | 2026-05-10. Tiny shared component for EU-mandated per-unit price line ("X zł / kg", "X zł / l"). Used on MobileProductCard, ProductCard, and PD page (price block + mobile sticky bar). Drops the prior `sellByWeight &&` gate so prepackaged items render too. Includes UNIT_LABELS mapping (KG → kg, LITER → l, etc.). |
 | BlockRenderer | ✅ | Dispatches to block components. |
@@ -185,6 +196,8 @@
 | Standalone `/products` has no category selector | Medium | 2026-05-15: category slug pages now pass category context into shared listing controls, but the uncategorized `/products` page still does not expose a category picker/filter of its own. Keep this separate from category-page listing UX. |
 | Live `chesaigon` catalog regressed to 1 visible product | High | 2026-05-15: fresh GraphQL probe returned `totalCount: 1` for `products(channel:"chesaigon")`, contradicting the 2026-05-13 snapshot of 121 storefront-visible products. Product-data-dependent UI validation is unreliable until backend restores representative channel data or confirms a replacement source. |
 | Kamito production content still lacks owner assets/contact details | Medium | 2026-05-23: cleaned `config-kamito.json` removes placeholders, localhost media, stale brand names, and dead footer links, but real logo/favicon/hero imagery, contact details, canonical URL, and legal/contact page routing still need owner-provided production data. |
+| Kamito release audit intentionally fails until owner data exists | Medium | 2026-05-24: `npm run audit:kamito-config` checks tracked Kamito config for localhost/placeholder/stale brand/content and missing production fields. Current config is clean of localhost media but still missing canonical/contact/owner assets, so this remains a launch blocker rather than a normal publish blocker. |
+| Kamito backend ops notifications are not wired | High | 2026-05-24: backend confirmed `ORDER_CREATED` webhook/subscription is not configured and checkout completion emits no event. Storefront must not promise automated email/SMS; launch needs backend webhook/event wiring or manual ops order monitoring. |
 
 ---
 

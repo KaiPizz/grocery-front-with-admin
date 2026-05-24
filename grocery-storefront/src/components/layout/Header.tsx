@@ -15,7 +15,7 @@ import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
 import { getEnabledCommercialQuickLinks } from '@/lib/commercial-config';
 import { MiniCart } from './MiniCart';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { ShippingCountdown } from './ShippingCountdown';
+import { ServiceStrip } from './ServiceStrip';
 import { CategoryMegaMenu } from './CategoryMegaMenu';
 
 export function Header() {
@@ -320,7 +320,7 @@ export function Header() {
       role="banner"
       data-testid="mobile-sticky-header"
     >
-      <ShippingCountdown cutoff={siteConfig?.general?.sameDayShippingCutoff} />
+      <ServiceStrip />
 
       <div
         className="container-grocery flex items-center justify-between gap-4"

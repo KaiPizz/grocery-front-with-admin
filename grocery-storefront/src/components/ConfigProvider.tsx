@@ -1,11 +1,14 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { withStorefrontConfigDefaults } from '@/lib/storefront-config';
+import {
+  extractStorefrontConfig,
+  getStorefrontConfigUrls,
+  withStorefrontConfigDefaults,
+} from '@/lib/storefront-config';
 import type { StorefrontConfig } from '@/types/storefront-config';
 
-const CONFIG_API_URL = process.env.NEXT_PUBLIC_CONFIG_API_URL?.trim() || null;
-const SALON_SLUG = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
+const CONFIG_URLS = getStorefrontConfigUrls();
 
 const ConfigContext = createContext<StorefrontConfig | null>(null);
 
@@ -36,18 +39,23 @@ export function ConfigProvider({ initialConfig, children }: ConfigProviderProps)
   const [config, setConfig] = useState<StorefrontConfig | null>(withStorefrontConfigDefaults(initialConfig));
 
   const refreshConfig = useCallback(async () => {
-    if (!CONFIG_API_URL) return;
+    if (CONFIG_URLS.length === 0) return;
 
-    try {
-      const res = await fetch(`${CONFIG_API_URL}/api/config/${SALON_SLUG}`, {
-        cache: 'no-store',
-      });
-      if (!res.ok) return;
-      const json = await res.json();
-      const fresh: StorefrontConfig | null = json.data?.config ?? json.config ?? null;
-      if (fresh) setConfig(withStorefrontConfigDefaults(fresh));
-    } catch {
-      // Keep current config on error
+    for (const url of CONFIG_URLS) {
+      try {
+        const res = await fetch(url, {
+          cache: 'no-store',
+        });
+        if (!res.ok) continue;
+        const json = await res.json();
+        const fresh = extractStorefrontConfig(json);
+        if (fresh) {
+          setConfig(fresh);
+          return;
+        }
+      } catch {
+        // Keep current config and try the next source.
+      }
     }
   }, []);
 

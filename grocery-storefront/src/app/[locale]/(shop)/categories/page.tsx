@@ -1,10 +1,11 @@
 import { getLocale, getTranslations } from 'next-intl/server';
-import { ArrowRight, Layers3, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 import { Link } from '@/i18n/navigation';
 import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
+import { CategoryHubClient } from '@/components/categories/CategoryHubClient';
 
 interface CategoryChildNode {
   id: string;
@@ -107,54 +108,7 @@ export default async function CategoriesPage() {
       )}
 
       {categories.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-testid="categories-grid">
-          {categories.map((category) => {
-            const count = getProductCount(category);
-            const childCount = category.children?.edges.length ?? 0;
-            const countLabel = count > 0 ? formatProductCount(locale, count) : t('comingSoon');
-
-            return (
-              <Link
-                key={category.id}
-                href={`/categories/${category.slug}`}
-                aria-label={`${category.name}, ${countLabel}`}
-                className="group flex min-h-36 flex-col justify-between rounded-lg border p-4 transition-transform duration-fast hover:-translate-y-0.5"
-                style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
-              >
-                <span>
-                  <span className="flex items-start justify-between gap-3">
-                    <span className="text-lg font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                      {category.name}
-                    </span>
-                    <Layers3 className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
-                  </span>
-                  {category.description && (
-                    <span className="mt-2 line-clamp-2 block text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {category.description}
-                    </span>
-                  )}
-                </span>
-                <span className="mt-5 flex items-center justify-between gap-3">
-                  <span
-                    className="rounded-full px-3 py-1 text-xs font-semibold"
-                    style={{
-                      backgroundColor: count > 0
-                        ? 'color-mix(in srgb, var(--color-primary) 12%, transparent)'
-                        : 'color-mix(in srgb, var(--color-foreground) 7%, transparent)',
-                      color: count > 0 ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                    }}
-                  >
-                    {countLabel}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
-                    {childCount > 0 ? t('subcategories', { count: childCount }) : t('browse')}
-                    <ArrowRight className="h-4 w-4 transition-transform duration-fast group-hover:translate-x-0.5" aria-hidden="true" />
-                  </span>
-                </span>
-              </Link>
-            );
-          })}
-        </div>
+        <CategoryHubClient categories={categories} />
       )}
     </div>
   );
