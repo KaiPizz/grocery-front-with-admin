@@ -6,6 +6,14 @@
 
 ---
 
+## Project Documentation
+
+### Project docs live under `.claude`, not `.Codex`, in this checkout
+- **Error:** Task instructions referenced `.Codex/docs/progress.md`, `.Codex/docs/learnings.md`, and `.Codex/rules/`, but those paths did not exist in this repository.
+- **Cause:** The active checkout uses the equivalent `.claude/docs/` and `.claude/rules/` structure while `AGENTS.md` still references the older `.Codex` paths.
+- **Fix:** Read and updated `.claude/docs/progress.md` and `.claude/docs/learnings.md`, and used `.claude/rules/` as the live project rules directory.
+- **Rule:** If `.Codex` docs are missing in this repo, check `.claude` before assuming the project docs are absent.
+
 ## Performance Errors
 
 ### Used `background-attachment: fixed` on body gradient

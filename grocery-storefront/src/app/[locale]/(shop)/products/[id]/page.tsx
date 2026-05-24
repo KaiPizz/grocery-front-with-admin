@@ -1,16 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Info, Package, Check, Minus, Plus, Truck, Heart } from 'lucide-react';
+import { ShoppingCart, Package, Check, Minus, Plus, Truck, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { PRODUCT_BY_SLUG_QUERY, PRODUCT_RECIPES_QUERY } from '@/lib/graphql/operations/grocery';
 import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
-import { NutritionModal } from '@/components/grocery/NutritionModal';
 import { RecipeCard } from '@/components/grocery/RecipeCard';
 import { Breadcrumb } from '@/components/grocery/Breadcrumb';
 import { UnitPrice } from '@/components/grocery/UnitPrice';
@@ -27,6 +26,338 @@ import {
 } from '@/lib/fulfillment';
 import { DEFAULT_SAME_DAY_SHIPPING_CUTOFF, isBeforeShippingCutoff } from '@/lib/shipping-cutoff';
 import { useChannel } from '@/hooks/use-channel';
+import type { Freshness, NutritionFacts, StorageZone } from '@/types';
+
+interface ProductGalleryMedia {
+  url?: string | null;
+  alt?: string | null;
+  type?: string | null;
+}
+
+interface ProductGalleryThumbnail {
+  url?: string | null;
+  alt?: string | null;
+}
+
+interface ProductGallerySource {
+  name: string;
+  media?: ProductGalleryMedia[] | null;
+  thumbnail?: ProductGalleryThumbnail | null;
+  freshness?: Freshness | null;
+  nearestExpiry?: string | null;
+}
+
+interface ProductGalleryImage {
+  key: string;
+  src: string;
+  alt: string;
+}
+
+interface ProductGalleryProps {
+  product: ProductGallerySource;
+}
+
+interface PurchaseFact {
+  label: string;
+  value: string;
+}
+
+interface ProductInformationSource {
+  description?: string | null;
+  ingredients?: string | null;
+  allergens?: string[] | null;
+  dietaryTags?: string[] | null;
+  nutritionFacts?: NutritionFacts | null;
+  countryOfOrigin?: string | null;
+  storageZone?: StorageZone | null;
+  certifications?: string[] | null;
+}
+
+interface ProductInformationSectionsProps {
+  product: ProductInformationSource;
+  sku: string | null;
+}
+
+interface NutritionRow {
+  label: string;
+  value: string;
+}
+
+interface DetailFact {
+  label: string;
+  value: string;
+}
+
+function appendGalleryImage(
+  images: ProductGalleryImage[],
+  seenSources: Set<string>,
+  url: string | null | undefined,
+  alt: string | null | undefined,
+  productName: string,
+) {
+  const src = getImageSrc(url);
+  if (!src || seenSources.has(src)) return;
+
+  seenSources.add(src);
+  images.push({
+    key: src,
+    src,
+    alt: alt?.trim() || productName,
+  });
+}
+
+function normalizeProductGalleryImages(product: ProductGallerySource): ProductGalleryImage[] {
+  const images: ProductGalleryImage[] = [];
+  const seenSources = new Set<string>();
+
+  for (const media of product.media ?? []) {
+    const mediaType = media.type?.toUpperCase();
+    if (mediaType && mediaType !== 'IMAGE') continue;
+    appendGalleryImage(images, seenSources, media.url, media.alt, product.name);
+  }
+
+  appendGalleryImage(images, seenSources, product.thumbnail?.url, product.thumbnail?.alt, product.name);
+
+  return images;
+}
+
+function ProductGallery({ product }: ProductGalleryProps) {
+  const images = normalizeProductGalleryImages(product);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const thumbnailRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const activeIndex = selectedIndex < images.length ? selectedIndex : 0;
+  const activeImage = images[activeIndex] ?? null;
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [product.name]);
+
+  function handleGalleryImageSelect(index: number) {
+    setSelectedIndex(index);
+    thumbnailRefs.current[index]?.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }
+
+  return (
+    <section className="space-y-3 md:sticky md:top-24" aria-label={`${product.name} images`} data-testid="product-gallery">
+      <div
+        className="relative aspect-square overflow-hidden rounded-xl"
+        style={{ backgroundColor: 'var(--color-muted)' }}
+        data-testid="product-gallery-main"
+      >
+        {activeImage ? (
+          <Image
+            src={activeImage.src}
+            alt={activeImage.alt}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
+            unoptimized={isImageProxySrc(activeImage.src)}
+          />
+        ) : (
+          <div
+            className="flex h-full items-center justify-center"
+            aria-label="No product image available"
+            data-testid="product-gallery-placeholder"
+          >
+            <Package className="h-16 w-16 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
+          </div>
+        )}
+
+        {product.freshness && (
+          <div className="absolute left-4 top-4">
+            <FreshnessBadge freshness={product.freshness} nearestExpiry={product.nearestExpiry ?? undefined} />
+          </div>
+        )}
+      </div>
+
+      {images.length > 1 && (
+        <div className="flex snap-x gap-2 overflow-x-auto pb-1" role="list" aria-label="Product image thumbnails">
+          {images.map((image, index) => {
+            const selected = index === activeIndex;
+
+            return (
+              <button
+                key={image.key}
+                type="button"
+                ref={(node) => {
+                  thumbnailRefs.current[index] = node;
+                }}
+                onClick={() => handleGalleryImageSelect(index)}
+                className="relative h-16 w-16 shrink-0 snap-start overflow-hidden rounded-lg border-2 transition-transform duration-fast hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 sm:h-20 sm:w-20"
+                style={{
+                  borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
+                  backgroundColor: 'var(--color-card)',
+                  outlineColor: 'var(--color-ring)',
+                }}
+                aria-label={`View ${image.alt}`}
+                aria-pressed={selected}
+                data-testid="product-gallery-thumbnail"
+              >
+                <Image
+                  src={image.src}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="80px"
+                  unoptimized={isImageProxySrc(image.src)}
+                />
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function formatNutritionAmount(value: number | null | undefined, unit: string): string | null {
+  if (value == null) return null;
+  return `${value} ${unit}`;
+}
+
+function ProductInformationSections({ product, sku }: ProductInformationSectionsProps) {
+  const t = useTranslations();
+  const nutrition = product.nutritionFacts ?? null;
+  const allergens = Array.isArray(product.allergens) ? product.allergens : [];
+  const dietaryTags = Array.isArray(product.dietaryTags) ? product.dietaryTags : [];
+  const certifications = Array.isArray(product.certifications) ? product.certifications : [];
+  const nutritionRows: NutritionRow[] = [];
+  const detailFacts: DetailFact[] = [];
+
+  const calories = formatNutritionAmount(nutrition?.calories, 'kcal');
+  if (calories) nutritionRows.push({ label: t('product.calories'), value: calories });
+
+  const fat = formatNutritionAmount(nutrition?.fat, 'g');
+  if (fat) nutritionRows.push({ label: t('product.fat'), value: fat });
+
+  const saturatedFat = formatNutritionAmount(nutrition?.saturatedFat, 'g');
+  if (saturatedFat) nutritionRows.push({ label: t('product.saturatedFat'), value: saturatedFat });
+
+  const carbs = formatNutritionAmount(nutrition?.carbs, 'g');
+  if (carbs) nutritionRows.push({ label: t('product.carbs'), value: carbs });
+
+  const sugar = formatNutritionAmount(nutrition?.sugar, 'g');
+  if (sugar) nutritionRows.push({ label: t('product.sugar'), value: sugar });
+
+  const fiber = formatNutritionAmount(nutrition?.fiber, 'g');
+  if (fiber) nutritionRows.push({ label: t('product.fiber'), value: fiber });
+
+  const protein = formatNutritionAmount(nutrition?.protein, 'g');
+  if (protein) nutritionRows.push({ label: t('product.protein'), value: protein });
+
+  const salt = formatNutritionAmount(nutrition?.salt, 'g');
+  if (salt) nutritionRows.push({ label: t('product.salt'), value: salt });
+
+  if (nutrition?.servingSize) {
+    nutritionRows.push({ label: t('product.servingSize'), value: nutrition.servingSize });
+  }
+
+  if (product.countryOfOrigin) {
+    detailFacts.push({ label: t('product.origin'), value: product.countryOfOrigin });
+  }
+
+  if (product.storageZone) {
+    detailFacts.push({ label: t('product.storage'), value: t(`cart.zoneNote.${product.storageZone}` as any) });
+  }
+
+  if (dietaryTags.length > 0) {
+    detailFacts.push({ label: t('product.dietary'), value: dietaryTags.join(', ') });
+  }
+
+  if (certifications.length > 0) {
+    detailFacts.push({ label: t('product.certifications'), value: certifications.join(', ') });
+  }
+
+  if (sku) {
+    detailFacts.push({ label: t('product.sku'), value: sku });
+  }
+
+  const hasMainSections = Boolean(product.description || product.ingredients || allergens.length > 0 || nutritionRows.length > 0);
+  if (!hasMainSections && detailFacts.length === 0) return null;
+
+  return (
+    <section className="mt-12 border-t pt-8" style={{ borderColor: 'var(--color-border)' }} data-testid="pdp-food-label-sections">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.8fr)]">
+        <div className="space-y-8">
+          {product.description && (
+            <section>
+              <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
+                {t('product.description')}
+              </h2>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
+                {product.description}
+              </p>
+            </section>
+          )}
+
+          {product.ingredients && (
+            <section>
+              <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
+                {t('product.ingredients')}
+              </h2>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
+                {product.ingredients}
+              </p>
+            </section>
+          )}
+
+          {allergens.length > 0 && (
+            <section>
+              <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
+                {t('product.allergens')}
+              </h2>
+              <div className="flex flex-wrap gap-1.5" role="list" aria-label={t('product.allergens')}>
+                {allergens.map((allergen) => (
+                  <span key={allergen} className="allergen-chip" role="listitem">{t(`allergens.${allergen}` as any)}</span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {nutritionRows.length > 0 && (
+            <section>
+              <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
+                {t('product.nutrition')}
+              </h2>
+              <div className="overflow-hidden rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
+                <table className="w-full text-sm" aria-label={t('product.nutrition')}>
+                  <tbody>
+                    {nutritionRows.map((row) => (
+                      <tr key={row.label} className="border-b last:border-b-0" style={{ borderColor: 'var(--color-border)' }}>
+                        <th className="px-3 py-2 text-left font-medium" scope="row" style={{ color: 'var(--color-muted-foreground)' }}>
+                          {row.label}
+                        </th>
+                        <td className="px-3 py-2 text-right font-semibold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
+                          {row.value}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+        </div>
+
+        {detailFacts.length > 0 && (
+          <aside className="space-y-3">
+            {detailFacts.map((fact) => (
+              <div key={fact.label} className="border-b pb-3 last:border-b-0" style={{ borderColor: 'var(--color-border)' }}>
+                <p className="text-xs font-semibold uppercase" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {fact.label}
+                </p>
+                <p className="mt-1 text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+                  {fact.value}
+                </p>
+              </div>
+            ))}
+          </aside>
+        )}
+      </div>
+    </section>
+  );
+}
 
 function DetailSkeleton() {
   return (
@@ -52,7 +383,6 @@ export default function ProductDetailPage() {
   const wishlistItems = useWishlistStore((state) => state.items);
   const addWishlistItem = useWishlistStore((state) => state.addItem);
   const removeWishlistItem = useWishlistStore((state) => state.removeItem);
-  const [nutritionOpen, setNutritionOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
   const [showStickyAdd, setShowStickyAdd] = useState(false);
@@ -129,6 +459,35 @@ export default function ProductDetailPage() {
   const inStock = (variant?.quantityAvailable ?? 0) > 0;
   const imageUrl = getImageSrc(product?.thumbnail?.url);
   const isWishlisted = wishlistItems.some((item) => item.productId === product.id);
+  const purchaseFacts: PurchaseFact[] = [];
+  const sku = typeof variant?.sku === 'string' && variant.sku.trim() ? variant.sku.trim() : null;
+
+  if (product.category?.name) {
+    purchaseFacts.push({ label: t('product.category'), value: product.category.name });
+  }
+
+  if (product.countryOfOrigin) {
+    purchaseFacts.push({ label: t('product.origin'), value: product.countryOfOrigin });
+  }
+
+  if (product.storageZone) {
+    purchaseFacts.push({ label: t('product.storage'), value: t(`cart.zoneGroup.${product.storageZone}` as any) });
+  }
+
+  if (Array.isArray(product.dietaryTags) && product.dietaryTags.length > 0) {
+    purchaseFacts.push({ label: t('product.dietary'), value: product.dietaryTags.join(', ') });
+  }
+
+  if (Array.isArray(product.allergens) && product.allergens.length > 0) {
+    purchaseFacts.push({
+      label: t('product.allergens'),
+      value: t('product.allergenCount', { count: product.allergens.length }),
+    });
+  }
+
+  if (sku) {
+    purchaseFacts.push({ label: t('product.sku'), value: sku });
+  }
 
   function handleAddToCart() {
     if (!variant || !inStock) return;
@@ -202,26 +561,19 @@ export default function ProductDetailPage() {
       ]} />
 
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Image */}
-        <div className="relative aspect-square rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--color-muted)' }}>
-          {imageUrl ? (
-            <Image src={imageUrl} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" priority unoptimized={isImageProxySrc(imageUrl)} />
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <Package className="w-16 h-16 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
-            </div>
-          )}
-
-          {/* Freshness badge overlay */}
-          {product.freshness && (
-            <div className="absolute top-4 left-4">
-              <FreshnessBadge freshness={product.freshness} nearestExpiry={product.nearestExpiry} />
-            </div>
-          )}
-        </div>
+        <ProductGallery product={product} />
 
         {/* Details */}
-        <div>
+        <div className="space-y-6">
+          <section
+            className="rounded-xl border p-4 sm:p-5"
+            style={{
+              borderColor: 'var(--color-border)',
+              backgroundColor: 'var(--color-card)',
+              color: 'var(--color-card-foreground)',
+            }}
+            data-testid="pdp-purchase-panel"
+          >
           {product.category && (
             <p className="text-sm mb-2" style={{ color: 'var(--color-muted-foreground)' }}>
               {product.category.name}
@@ -283,56 +635,10 @@ export default function ProductDetailPage() {
             >
               {pickupMode && <p>{pickupNotice}</p>}
               {bankTransferMode && <p className={pickupMode ? 'mt-1' : undefined}>{bankTransferNotice}</p>}
-            </div>
-          )}
-
-          {/* Allergen chips */}
-          {product.allergens?.length > 0 && (
-            <div className="mb-4" role="list" aria-label={t('product.allergens')}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: 'var(--color-allergen)' }}>
-                {t('product.allergens')}
+              <p className="mt-2 border-t pt-2 text-xs" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                {t('fulfillment.manualFulfillmentNotice')}
               </p>
-              <div className="flex flex-wrap gap-1.5">
-                {product.allergens.map((a: string) => (
-                  <span key={a} className="allergen-chip" role="listitem">{t(`allergens.${a}` as any)}</span>
-                ))}
-              </div>
             </div>
-          )}
-
-          {/* Dietary tags */}
-          {product.dietaryTags?.length > 0 && (
-            <div className="mb-4">
-              <p className="text-xs font-semibold mb-1.5" style={{ color: 'var(--color-foreground)' }}>
-                {t('product.dietary')}
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {product.dietaryTags.map((tag: string) => (
-                  <span key={tag} className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-accent-foreground)' }}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Nutrition button */}
-          {product.nutritionFacts && (
-            <button
-              type="button"
-              onClick={() => setNutritionOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium mb-6 transition-colors duration-fast hover-surface"
-              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-              aria-label={`${t('product.nutrition')} — ${product.name}`}
-            >
-              <Info className="w-4 h-4" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
-              {t('product.nutrition')}
-              {product.nutritionFacts.calories && (
-                <span className="text-xs tabular-nums" style={{ color: 'var(--color-muted-foreground)' }}>
-                  {product.nutritionFacts.calories} kcal
-                </span>
-              )}
-            </button>
           )}
 
           {/* Add to cart */}
@@ -394,37 +700,33 @@ export default function ProductDetailPage() {
             </button>
           </div>
 
-          {/* Description */}
-          {product.description && (
-            <div className="mt-8 pt-6 border-t" style={{ borderColor: 'var(--color-border)' }}>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
-                {product.description}
-              </p>
-            </div>
+          {purchaseFacts.length > 0 && (
+            <dl className="mt-5 grid grid-cols-2 gap-2" data-testid="pdp-purchase-facts">
+              {purchaseFacts.map((fact) => (
+                <div
+                  key={fact.label}
+                  className="rounded-lg border p-2"
+                  style={{
+                    borderColor: 'var(--color-border)',
+                    backgroundColor: 'color-mix(in srgb, var(--color-foreground) 3%, var(--color-card))',
+                  }}
+                >
+                  <dt className="text-[10px] font-semibold uppercase" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {fact.label}
+                  </dt>
+                  <dd className="mt-1 text-xs font-medium" style={{ color: 'var(--color-foreground)' }}>
+                    {fact.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           )}
+          </section>
 
-          {/* Ingredients */}
-          {product.ingredients && (
-            <div className="mt-6">
-              <h3 className="text-sm font-semibold mb-1" style={{ color: 'var(--color-foreground)' }}>
-                {t('product.ingredients')}
-              </h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
-                {product.ingredients}
-              </p>
-            </div>
-          )}
-
-          {/* Country of origin */}
-          {product.countryOfOrigin && (
-            <div className="mt-4">
-              <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                {t('product.origin')}: {product.countryOfOrigin}
-              </span>
-            </div>
-          )}
         </div>
       </div>
+
+      <ProductInformationSections product={product} sku={sku} />
 
       {/* Related recipes */}
       {recipes.length > 0 && (
@@ -519,18 +821,6 @@ export default function ProductDetailPage() {
         </div>
       )}
 
-      {/* Nutrition modal */}
-      <NutritionModal
-        open={nutritionOpen}
-        onOpenChange={setNutritionOpen}
-        productName={product.name}
-        nutritionFacts={product.nutritionFacts}
-        ingredients={product.ingredients}
-        allergens={product.allergens}
-        dietaryTags={product.dietaryTags}
-        certifications={product.certifications}
-        countryOfOrigin={product.countryOfOrigin}
-      />
     </div>
   );
 }

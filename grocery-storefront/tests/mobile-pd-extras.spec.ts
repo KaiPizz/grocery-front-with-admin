@@ -137,4 +137,94 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     // Ravioli qty = 9 → "Only 9 left — ships ..."
     await expect(promise).toContainText(/only 9 left/i);
   });
+
+  test('delivery-mode purchase panel preserves low-stock and shipping promise copy', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.goto('/en/products/spinach-ravioli-family-pack');
+
+    const panel = page.getByTestId('pdp-purchase-panel');
+    const promise = panel.getByTestId('pd-stock-promise');
+    await expect(panel.getByRole('heading', { name: /spinach ravioli family pack/i })).toBeVisible();
+    await expect(promise).toContainText(/only 9 left/i);
+    await expect(promise).toContainText(/ships today|ships tomorrow/i);
+    await expect(panel.getByTestId('product-detail-add')).toBeVisible();
+  });
+});
+
+test.describe('PDP gallery production hardening', () => {
+  test('renders ordered product media as selectable gallery images without duplicating the thumbnail fallback', async ({ page }) => {
+    await mockMobileStorefront(page, { productDetailImages: 'multi-media' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const gallery = page.getByTestId('product-gallery');
+    await expect(gallery).toBeVisible();
+
+    // Protects the PDP production plan: media[] is the primary gallery source,
+    // and a matching thumbnail should not create a duplicate fourth image.
+    await expect(gallery.getByTestId('product-gallery-thumbnail')).toHaveCount(3);
+    await expect(gallery.getByTestId('product-gallery-main').getByRole('img')).toHaveAttribute(
+      'alt',
+      /front package/i,
+    );
+
+    await gallery.getByRole('button', { name: /nutrition label/i }).click();
+    await expect(gallery.getByTestId('product-gallery-main').getByRole('img')).toHaveAttribute(
+      'alt',
+      /nutrition label/i,
+    );
+  });
+
+  test('falls back to the product thumbnail when media is empty', async ({ page }) => {
+    await mockMobileStorefront(page, { productDetailImages: 'thumbnail-only' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const gallery = page.getByTestId('product-gallery');
+    await expect(gallery.getByTestId('product-gallery-main').getByRole('img')).toHaveAttribute(
+      'alt',
+      /fresh produce arranged/i,
+    );
+    await expect(gallery.getByTestId('product-gallery-thumbnail')).toHaveCount(0);
+    await expect(gallery.getByTestId('product-gallery-placeholder')).toHaveCount(0);
+  });
+
+  test('shows the package placeholder when neither media nor thumbnail exists', async ({ page }) => {
+    await mockMobileStorefront(page, { productDetailImages: 'no-image' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const gallery = page.getByTestId('product-gallery');
+    await expect(gallery.getByTestId('product-gallery-placeholder')).toBeVisible();
+    await expect(gallery.getByRole('img')).toHaveCount(0);
+  });
+});
+
+test.describe('PDP food-label sections', () => {
+  test('renders ingredients, allergens, and nutrition inline without opening the nutrition modal', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.goto('/en/products/organic-gala-apples');
+
+    const sections = page.getByTestId('pdp-food-label-sections');
+    await expect(sections).toBeVisible();
+    await expect(sections.getByRole('heading', { name: /description/i })).toBeVisible();
+    await expect(sections.getByRole('heading', { name: /ingredients/i })).toBeVisible();
+    await expect(sections).toContainText(/Apples/i);
+    await expect(sections.getByRole('heading', { name: /allergens/i })).toBeVisible();
+    await expect(sections.getByRole('listitem').filter({ hasText: /nuts/i })).toBeVisible();
+    await expect(sections.getByRole('heading', { name: /nutrition facts/i })).toBeVisible();
+    await expect(sections.getByRole('table', { name: /nutrition facts/i })).toBeVisible();
+    await expect(sections).toContainText(/52 kcal/i);
+    await expect(sections).toContainText(/14 g/i);
+    await expect(page.getByRole('dialog', { name: /nutrition facts/i })).toHaveCount(0);
+  });
+
+  test('does not render empty label headings when ingredients and nutrition are missing', async ({ page }) => {
+    await mockMobileStorefront(page, { productDetailLabels: 'missing' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const sections = page.getByTestId('pdp-food-label-sections');
+    await expect(sections).toBeVisible();
+    await expect(sections.getByRole('heading', { name: /description/i })).toBeVisible();
+    await expect(sections.getByRole('heading', { name: /ingredients/i })).toHaveCount(0);
+    await expect(sections.getByRole('heading', { name: /nutrition facts/i })).toHaveCount(0);
+    await expect(sections.getByRole('heading', { name: /allergens/i })).toHaveCount(0);
+  });
 });

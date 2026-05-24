@@ -303,6 +303,71 @@ const PRODUCTS_WITH_EMPTY_FACETS = PRODUCTS.map((product) => ({
   certifications: [],
 }));
 
+type ProductDetailImageMode = 'default' | 'multi-media' | 'thumbnail-only' | 'no-image';
+type ProductDetailLabelMode = 'complete' | 'missing';
+type ProductFixture = (typeof PRODUCTS)[number];
+
+const PRODUCT_DETAIL_MEDIA = [
+  {
+    url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80',
+    alt: 'Organic Gala Apples front package',
+    type: 'IMAGE',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=900&q=80',
+    alt: 'Organic Gala Apples nutrition label',
+    type: 'IMAGE',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=80',
+    alt: 'Organic Gala Apples serving suggestion',
+    type: 'IMAGE',
+  },
+];
+
+function buildProductDetailFixture(
+  product: ProductFixture,
+  imageMode: ProductDetailImageMode = 'default',
+  labelMode: ProductDetailLabelMode = 'complete'
+) {
+  const labelProduct = labelMode === 'missing'
+    ? {
+      ...product,
+      allergens: [],
+      dietaryTags: [],
+      ingredients: null,
+      nutritionFacts: null,
+      countryOfOrigin: null,
+      certifications: [],
+    }
+    : product;
+
+  if (imageMode === 'multi-media') {
+    return {
+      ...labelProduct,
+      thumbnail: {
+        id: 'thumb-gallery-duplicate',
+        url: PRODUCT_DETAIL_MEDIA[0].url,
+        alt: PRODUCT_DETAIL_MEDIA[0].alt,
+      },
+      media: PRODUCT_DETAIL_MEDIA,
+    };
+  }
+
+  if (imageMode === 'no-image') {
+    return {
+      ...labelProduct,
+      thumbnail: null,
+      media: [],
+    };
+  }
+
+  return {
+    ...labelProduct,
+    media: [],
+  };
+}
+
 const RECIPES = [
   {
     id: 'recipe-salad',
@@ -617,6 +682,8 @@ interface MockMobileStorefrontOptions {
   checkoutProfile?: 'delivery' | 'pickup-bank-transfer';
   checkoutComplete?: 'success' | 'insufficient-stock';
   products?: 'ok' | 'error';
+  productDetailImages?: ProductDetailImageMode;
+  productDetailLabels?: ProductDetailLabelMode;
   facets?: 'populated' | 'empty';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   onProductsQuery?: (variables: Record<string, unknown>) => void;
@@ -814,10 +881,7 @@ export async function mockMobileStorefront(
         ? products.find((p) => p.slug === requestedSlug) ?? featuredProduct
         : featuredProduct;
       await fulfill(route, {
-        product: {
-          ...matchedProduct,
-          media: [],
-        },
+        product: buildProductDetailFixture(matchedProduct, options.productDetailImages, options.productDetailLabels),
       });
       return;
     }

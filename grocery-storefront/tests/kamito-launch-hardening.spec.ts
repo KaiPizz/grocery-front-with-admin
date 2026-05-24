@@ -177,6 +177,27 @@ test.describe('Kamito launch truth copy', () => {
     await expect(page.getByText(/bank transfer/i).first()).toBeVisible();
   });
 
+  test('keeps Kamito fulfillment truth and compact product facts inside the purchase panel', async ({ page }) => {
+    await mockPickupConfig(page);
+    await mockMobileStorefront(page);
+    await page.goto('/en/products/organic-gala-apples');
+
+    const panel = page.getByTestId('pdp-purchase-panel');
+    await expect(panel).toBeVisible();
+    await expect(panel.getByTestId('pd-stock-promise')).toContainText(/in stock/i);
+    await expect(panel).not.toContainText(/only 20 left|ships today|ships tomorrow/i);
+    await expect(panel).toContainText(/pickup/i);
+    await expect(panel).toContainText(/bank transfer/i);
+    await expect(panel).toContainText(/confirmed manually/i);
+    await expect(panel).toContainText(/fruit/i);
+    await expect(panel).toContainText(/poland/i);
+    await expect(panel).toContainText(/shelf-stable/i);
+    await expect(panel).toContainText(/vegan/i);
+    await expect(panel).toContainText(/3 allergens/i);
+    await expect(panel).toContainText(/APPLE-1KG/i);
+    await expect(panel.getByTestId('product-detail-add')).toBeVisible();
+  });
+
   test('hides cart free-shipping progress and shows pickup notice', async ({ page }) => {
     await mockPickupConfig(page);
     await seedCartStorage(page);
