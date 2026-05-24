@@ -8,11 +8,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingCart, Package, Check, Minus, Plus, Truck, Heart } from 'lucide-react';
 import { toast } from 'sonner';
-import { PRODUCT_BY_SLUG_QUERY, PRODUCT_RECIPES_QUERY } from '@/lib/graphql/operations/grocery';
+import { PRODUCT_BY_SLUG_QUERY, PRODUCT_RECIPES_QUERY, PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
 import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
 import { RecipeCard } from '@/components/grocery/RecipeCard';
 import { Breadcrumb } from '@/components/grocery/Breadcrumb';
 import { UnitPrice } from '@/components/grocery/UnitPrice';
+import { ProductCard } from '@/components/product/ProductCard';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
@@ -26,7 +27,7 @@ import {
 } from '@/lib/fulfillment';
 import { DEFAULT_SAME_DAY_SHIPPING_CUTOFF, isBeforeShippingCutoff } from '@/lib/shipping-cutoff';
 import { useChannel } from '@/hooks/use-channel';
-import type { Freshness, NutritionFacts, StorageZone } from '@/types';
+import type { Freshness, GroceryProduct, NutritionFacts, StorageZone } from '@/types';
 
 interface ProductGalleryMedia {
   url?: string | null;
@@ -76,6 +77,11 @@ interface ProductInformationSource {
 interface ProductInformationSectionsProps {
   product: ProductInformationSource;
   sku: string | null;
+}
+
+interface RelatedProductsSectionProps {
+  products: GroceryProduct[];
+  categoryName: string | null;
 }
 
 interface NutritionRow {
@@ -359,6 +365,39 @@ function ProductInformationSections({ product, sku }: ProductInformationSections
   );
 }
 
+function RelatedProductsSection({ products, categoryName }: RelatedProductsSectionProps) {
+  const t = useTranslations();
+
+  if (!categoryName || products.length === 0) return null;
+
+  return (
+    <section
+      className="mt-12 border-t pt-8 md:mt-16"
+      style={{ borderColor: 'var(--color-border)' }}
+      data-testid="pdp-related-products"
+    >
+      <div className="mb-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-muted-foreground)' }}>
+          {t('product.relatedProducts')}
+        </p>
+        <h2 className="heading-section mt-1 text-xl md:text-2xl" style={{ color: 'var(--color-foreground)' }}>
+          {t('product.relatedProductsFromCategory', { category: categoryName })}
+        </h2>
+      </div>
+
+      <div className="grid auto-cols-[minmax(10rem,42vw)] grid-flow-col gap-3 overflow-x-auto pb-2 sm:auto-cols-[minmax(12rem,16rem)] md:grid-flow-row md:auto-cols-auto md:grid-cols-3 md:overflow-visible md:pb-0 lg:grid-cols-4">
+        {products.map((relatedProduct, index) => (
+          <ProductCard
+            key={relatedProduct.id}
+            product={relatedProduct}
+            imagePriority={index < 2}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function DetailSkeleton() {
   return (
     <div className="container-grocery py-8">
@@ -433,6 +472,16 @@ export default function ProductDetailPage() {
     pause: !product?.id,
   });
 
+  const [relatedProductsResult] = useQuery({
+    query: PRODUCTS_QUERY,
+    variables: {
+      channel,
+      first: 9,
+      filter: { categories: product?.category?.id ? [product.category.id] : [] },
+    },
+    pause: !product?.category?.id,
+  });
+
   const recipes = recipesResult.data?.productRecipes?.edges?.map((e: any) => e.node) || [];
 
   if (productResult.fetching) {
@@ -461,6 +510,10 @@ export default function ProductDetailPage() {
   const isWishlisted = wishlistItems.some((item) => item.productId === product.id);
   const purchaseFacts: PurchaseFact[] = [];
   const sku = typeof variant?.sku === 'string' && variant.sku.trim() ? variant.sku.trim() : null;
+  const relatedProducts = (relatedProductsResult.data?.products?.edges ?? [])
+    .map((edge: any) => edge.node as GroceryProduct)
+    .filter((relatedProduct: GroceryProduct) => relatedProduct.id !== product.id)
+    .slice(0, 8);
 
   if (product.category?.name) {
     purchaseFacts.push({ label: t('product.category'), value: product.category.name });
@@ -727,6 +780,11 @@ export default function ProductDetailPage() {
       </div>
 
       <ProductInformationSections product={product} sku={sku} />
+
+      <RelatedProductsSection
+        products={relatedProducts}
+        categoryName={product.category?.name ?? null}
+      />
 
       {/* Related recipes */}
       {recipes.length > 0 && (

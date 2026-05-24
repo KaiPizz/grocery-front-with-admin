@@ -166,6 +166,8 @@
     "storage": "Storage",
     "sku": "SKU",
     "bestBefore": "Best before",
+    "relatedProducts": "Related products",
+    "relatedProductsFromCategory": "More from {category}",
     "relatedRecipes": "Recipes with this product",
     "addToCartSuccess": "Added to cart",
     "outOfStock": "Out of stock",

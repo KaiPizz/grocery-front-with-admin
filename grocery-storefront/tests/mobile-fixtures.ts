@@ -305,6 +305,7 @@ const PRODUCTS_WITH_EMPTY_FACETS = PRODUCTS.map((product) => ({
 
 type ProductDetailImageMode = 'default' | 'multi-media' | 'thumbnail-only' | 'no-image';
 type ProductDetailLabelMode = 'complete' | 'missing';
+type ProductDetailCategoryMode = 'present' | 'missing';
 type ProductFixture = (typeof PRODUCTS)[number];
 
 const PRODUCT_DETAIL_MEDIA = [
@@ -328,7 +329,8 @@ const PRODUCT_DETAIL_MEDIA = [
 function buildProductDetailFixture(
   product: ProductFixture,
   imageMode: ProductDetailImageMode = 'default',
-  labelMode: ProductDetailLabelMode = 'complete'
+  labelMode: ProductDetailLabelMode = 'complete',
+  categoryMode: ProductDetailCategoryMode = 'present'
 ) {
   const labelProduct = labelMode === 'missing'
     ? {
@@ -341,10 +343,16 @@ function buildProductDetailFixture(
       certifications: [],
     }
     : product;
+  const detailProduct = categoryMode === 'missing'
+    ? {
+      ...labelProduct,
+      category: null,
+    }
+    : labelProduct;
 
   if (imageMode === 'multi-media') {
     return {
-      ...labelProduct,
+      ...detailProduct,
       thumbnail: {
         id: 'thumb-gallery-duplicate',
         url: PRODUCT_DETAIL_MEDIA[0].url,
@@ -356,14 +364,14 @@ function buildProductDetailFixture(
 
   if (imageMode === 'no-image') {
     return {
-      ...labelProduct,
+      ...detailProduct,
       thumbnail: null,
       media: [],
     };
   }
 
   return {
-    ...labelProduct,
+    ...detailProduct,
     media: [],
   };
 }
@@ -684,6 +692,7 @@ interface MockMobileStorefrontOptions {
   products?: 'ok' | 'error';
   productDetailImages?: ProductDetailImageMode;
   productDetailLabels?: ProductDetailLabelMode;
+  productDetailCategory?: ProductDetailCategoryMode;
   facets?: 'populated' | 'empty';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   onProductsQuery?: (variables: Record<string, unknown>) => void;
@@ -881,7 +890,12 @@ export async function mockMobileStorefront(
         ? products.find((p) => p.slug === requestedSlug) ?? featuredProduct
         : featuredProduct;
       await fulfill(route, {
-        product: buildProductDetailFixture(matchedProduct, options.productDetailImages, options.productDetailLabels),
+        product: buildProductDetailFixture(
+          matchedProduct,
+          options.productDetailImages,
+          options.productDetailLabels,
+          options.productDetailCategory
+        ),
       });
       return;
     }

@@ -228,3 +228,44 @@ test.describe('PDP food-label sections', () => {
     await expect(sections.getByRole('heading', { name: /allergens/i })).toHaveCount(0);
   });
 });
+
+test.describe('PDP related product rail', () => {
+  test('renders same-category recommendations after label sections and excludes the current product', async ({ page }) => {
+    const productQueries: Array<Record<string, unknown>> = [];
+
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => productQueries.push(variables),
+    });
+    await page.goto('/en/products/organic-gala-apples');
+
+    await expect(page.getByTestId('pdp-food-label-sections')).toBeVisible();
+    const related = page.getByTestId('pdp-related-products');
+    await expect(related).toBeVisible();
+    await expect(related.getByRole('heading', { name: /more from fruit/i })).toBeVisible();
+    await expect(related.getByRole('link', { name: /blueberries snack box/i })).toBeVisible();
+    await expect(related.getByRole('link', { name: /organic gala apples/i })).toHaveCount(0);
+
+    expect(
+      productQueries.some((variables) => {
+        const filter = variables.filter as { categories?: string[] } | undefined;
+        return variables.first === 9 && filter?.categories?.includes('cat-fruit') === true;
+      })
+    ).toBe(true);
+  });
+
+  test('skips the related product rail when the product has no category', async ({ page }) => {
+    await mockMobileStorefront(page, { productDetailCategory: 'missing' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    await expect(page.getByTestId('pdp-food-label-sections')).toBeVisible();
+    await expect(page.getByTestId('pdp-related-products')).toHaveCount(0);
+  });
+
+  test('skips the related product rail when the category only returns the current product', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.goto('/en/products/spinach-ravioli-family-pack');
+
+    await expect(page.getByRole('heading', { name: /spinach ravioli family pack/i })).toBeVisible();
+    await expect(page.getByTestId('pdp-related-products')).toHaveCount(0);
+  });
+});

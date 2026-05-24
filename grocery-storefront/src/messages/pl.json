@@ -166,6 +166,8 @@
     "storage": "Przechowywanie",
     "sku": "SKU",
     "bestBefore": "Najlepiej spożyć przed",
+    "relatedProducts": "Powiązane produkty",
+    "relatedProductsFromCategory": "Więcej z kategorii {category}",
     "relatedRecipes": "Przepisy z tym produktem",
     "addToCartSuccess": "Dodano do koszyka",
     "outOfStock": "Brak w magazynie",
