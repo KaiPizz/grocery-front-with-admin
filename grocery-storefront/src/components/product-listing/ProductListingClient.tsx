@@ -19,7 +19,6 @@ import {
   CERT_OPTIONS,
   DEFAULT_FILTERS,
   DIETARY_OPTIONS,
-  NO_PRODUCTS_MATCH_MESSAGE,
   ZONE_OPTIONS,
   areFiltersEqual,
   buildProductFilter,
@@ -71,6 +70,12 @@ interface CategoryFilterOption {
   id: string;
   name: string;
   count: number;
+}
+
+interface ActiveFilterChip {
+  key: string;
+  label: string;
+  onRemove: () => void;
 }
 
 function getProductsErrorMessage(error: CombinedError | undefined | null, fallbackMessage: string) {
@@ -142,6 +147,7 @@ export function ProductListingClient({
   const t = useTranslations('products');
   const tCommon = useTranslations('common');
   const tHome = useTranslations('home');
+  const tAllergens = useTranslations('allergens');
   const searchParams = useSearchParams();
   const router = useRouter();
   const isHydrated = useHydrated();
@@ -264,6 +270,7 @@ export function ProductListingClient({
 
     return Array.from(categories.values()).sort((left, right) => left.name.localeCompare(right.name));
   }, [filterSourceProducts]);
+  const categoryNameById = useMemo(() => new Map(availableCategories.map((category) => [category.id, category.name])), [availableCategories]);
 
   const normalizedCommittedFilters = useMemo(
     () => normalizeFiltersState(committedFilters, priceBounds),
@@ -604,6 +611,172 @@ export function ProductListingClient({
     setFiltersOpen(false);
   }
 
+  function getActiveFilterChips() {
+    const chips: ActiveFilterChip[] = [];
+
+    for (const selectedCategoryId of normalizedCommittedFilters.categoryIds) {
+      const label = categoryNameById.get(selectedCategoryId) ?? selectedCategoryId;
+      chips.push({
+        key: `category-${selectedCategoryId}`,
+        label,
+        onRemove: () => setCommittedFilters((prev) => ({
+          ...prev,
+          categoryIds: prev.categoryIds.filter((categoryIdValue) => categoryIdValue !== selectedCategoryId),
+        })),
+      });
+    }
+
+    if (normalizedCommittedFilters.priceMin || normalizedCommittedFilters.priceMax) {
+      const currency = tCommon('currency');
+      const label = normalizedCommittedFilters.priceMin && normalizedCommittedFilters.priceMax
+        ? t('priceBetween', {
+          min: normalizedCommittedFilters.priceMin,
+          max: normalizedCommittedFilters.priceMax,
+          currency,
+        })
+        : normalizedCommittedFilters.priceMin
+          ? t('priceFrom', { price: `${normalizedCommittedFilters.priceMin} ${currency}` })
+          : t('priceTo', { price: `${normalizedCommittedFilters.priceMax} ${currency}` });
+
+      chips.push({
+        key: 'price',
+        label,
+        onRemove: () => setCommittedFilters((prev) => ({
+          ...prev,
+          priceMin: '',
+          priceMax: '',
+        })),
+      });
+    }
+
+    for (const allergen of normalizedCommittedFilters.excludeAllergens) {
+      const label = t('withoutFilter', { value: tAllergens(allergen as any) });
+      chips.push({
+        key: `allergen-${allergen}`,
+        label,
+        onRemove: () => setCommittedFilters((prev) => ({
+          ...prev,
+          excludeAllergens: prev.excludeAllergens.filter((allergenValue) => allergenValue !== allergen),
+        })),
+      });
+    }
+
+    for (const tag of normalizedCommittedFilters.dietaryTags) {
+      chips.push({
+        key: `dietary-${tag}`,
+        label: t(tag as any),
+        onRemove: () => setCommittedFilters((prev) => ({
+          ...prev,
+          dietaryTags: prev.dietaryTags.filter((tagValue) => tagValue !== tag),
+        })),
+      });
+    }
+
+    if (normalizedCommittedFilters.storageZone) {
+      const selectedZone = normalizedCommittedFilters.storageZone;
+      chips.push({
+        key: `zone-${selectedZone}`,
+        label: tHome(selectedZone.toLowerCase() as any),
+        onRemove: () => setCommittedFilters((prev) => ({
+          ...prev,
+          storageZone: '',
+        })),
+      });
+    }
+
+    for (const certification of normalizedCommittedFilters.certifications) {
+      chips.push({
+        key: `certification-${certification}`,
+        label: t(certification as any),
+        onRemove: () => setCommittedFilters((prev) => ({
+          ...prev,
+          certifications: prev.certifications.filter((certificationValue) => certificationValue !== certification),
+        })),
+      });
+    }
+
+    return chips;
+  }
+
+  function renderActiveFilterSummary(isCompact = false) {
+    const chips = getActiveFilterChips();
+
+    if (chips.length === 0) {
+      return null;
+    }
+
+    return (
+      <section
+        data-testid="product-filter-summary"
+        className={`rounded-[1.15rem] border ${isCompact ? 'space-y-3 px-3 py-3' : 'mb-6 flex flex-wrap items-center justify-between gap-3 px-4 py-3'}`}
+        style={{
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'color-mix(in srgb, var(--color-card) 82%, var(--color-accent))',
+        }}
+        aria-label={t('activeFilters')}
+      >
+        <p className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+          {t('showing', { count: loadedProducts.length, total: totalCount })}
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          {chips.map((chip) => (
+            <button
+              key={chip.key}
+              type="button"
+              onClick={chip.onRemove}
+              className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast hover-surface"
+              style={{
+                borderColor: 'var(--color-border)',
+                backgroundColor: 'var(--color-card)',
+                color: 'var(--color-foreground)',
+              }}
+              aria-label={t('removeFilter', { filter: chip.label })}
+            >
+              {chip.label}
+              <X className="h-3 w-3" aria-hidden="true" />
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={clearCommittedFilters}
+            className="px-2 py-1.5 text-xs font-semibold transition-opacity duration-fast hover:opacity-80"
+            style={{ color: 'var(--color-primary)' }}
+          >
+            {t('clearAllFilters')}
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  function renderEmptyState(isCompact = false) {
+    const hasActiveFilters = activeFilterCount > 0;
+
+    return (
+      <div
+        className={`${isCompact ? 'rounded-[1.75rem] px-5 py-10' : 'rounded-2xl px-6 py-14'} border text-center`}
+        style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+      >
+        <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+          {hasActiveFilters ? t('emptyFilteredTitle') : t('emptyTitle')}
+        </p>
+        <p className="mx-auto mt-2 max-w-md text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+          {hasActiveFilters ? t('emptyFilteredDescription') : t('emptyDescription')}
+        </p>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={clearCommittedFilters}
+            className="mt-4 inline-flex items-center justify-center rounded-full border px-4 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
+            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+          >
+            {t('clearFilters')}
+          </button>
+        )}
+      </div>
+    );
+  }
+
   function renderMobileProductsContent() {
     if (isInitialLoading) {
       return (
@@ -665,23 +838,7 @@ export function ProductListingClient({
       );
     }
 
-    return (
-      <div className="rounded-[1.75rem] border px-5 py-10 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
-        <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          {NO_PRODUCTS_MATCH_MESSAGE}
-        </p>
-        {activeFilterCount > 0 && (
-          <button
-            type="button"
-            onClick={clearCommittedFilters}
-            className="mt-3 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
-            style={{ color: 'var(--color-primary)' }}
-          >
-            {t('clearFilters')}
-          </button>
-        )}
-      </div>
-    );
+    return renderEmptyState(true);
   }
 
   function renderDesktopProductsContent() {
@@ -745,23 +902,7 @@ export function ProductListingClient({
       );
     }
 
-    return (
-      <div className="text-center py-16">
-        <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          {NO_PRODUCTS_MATCH_MESSAGE}
-        </p>
-        {activeFilterCount > 0 && (
-          <button
-            type="button"
-            onClick={clearCommittedFilters}
-            className="mt-3 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
-            style={{ color: 'var(--color-primary)' }}
-          >
-            {t('clearFilters')}
-          </button>
-        )}
-      </div>
-    );
+    return renderEmptyState(false);
   }
 
   function renderMobileShell() {
@@ -828,7 +969,7 @@ export function ProductListingClient({
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               aria-expanded={filtersOpen}
               aria-controls="mobile-filter-sheet"
-              aria-label={`${t('filters')}${activeFilterCount > 0 ? `, ${activeFilterCount} active` : ''}`}
+              aria-label={activeFilterCount > 0 ? `${t('filters')}, ${t('activeFilterCount', { count: activeFilterCount })}` : t('filters')}
             >
               <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
               {t('filters')}
@@ -846,6 +987,8 @@ export function ProductListingClient({
 
           <div className="h-px w-full" style={{ backgroundColor: 'color-mix(in srgb, var(--color-border) 88%, transparent)' }} />
         </header>
+
+        {renderActiveFilterSummary(true)}
 
         {filtersOpen && (
           <div className="fixed inset-0 z-[70]" data-testid="mobile-filter-sheet" role="dialog" aria-modal="true" aria-label={t('filters')}>
@@ -869,7 +1012,7 @@ export function ProductListingClient({
                   </p>
                   {draftFilterCount > 0 && (
                     <p className="mt-1 text-sm" style={{ color: 'var(--color-foreground)' }}>
-                      {`${draftFilterCount} active`}
+                      {t('activeFilterCount', { count: draftFilterCount })}
                     </p>
                   )}
                 </div>
@@ -941,7 +1084,7 @@ export function ProductListingClient({
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               aria-expanded={filtersOpen}
               aria-controls="filter-panel"
-              aria-label={`${t('filters')}${activeFilterCount > 0 ? `, ${activeFilterCount} active` : ''}`}
+              aria-label={activeFilterCount > 0 ? `${t('filters')}, ${t('activeFilterCount', { count: activeFilterCount })}` : t('filters')}
             >
               <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
               {t('filters')}
@@ -969,6 +1112,8 @@ export function ProductListingClient({
             {renderFilterContent(committedFilters, normalizedCommittedFilters, setCommittedFilters, clearCommittedFilters)}
           </div>
         )}
+
+        {renderActiveFilterSummary(false)}
 
         {renderDesktopProductsContent()}
       </>

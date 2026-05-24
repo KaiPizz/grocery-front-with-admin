@@ -110,6 +110,12 @@
 
 ## CSS & Theming Errors
 
+### Product listing price filters are normalized to current catalog bounds
+- **Error:** A mobile listing empty-state test tried to force zero results by entering a minimum price of `999`.
+- **Cause:** `normalizeFiltersState()` intentionally clamps price inputs to the available catalog price range, so the impossible value became the current maximum price and still matched the most expensive product.
+- **Fix:** Changed the spec to create an empty result with a valid combined filter (`Bakery` category plus a minimum price above that category's product price) instead of relying on an out-of-range price.
+- **Rule:** Product listing tests should respect price-bound normalization. To test empty filtered results, combine valid filters that legitimately exclude the fixture products.
+
 ### Assumed the icon library covered every social platform
 - **Error:** Treating "use lucide-react for social icons" as if the installed icon set covered every admin platform would have left TikTok, LINE, WhatsApp, Telegram, and Pinterest without reliable icons or pushed the project toward an unnecessary dependency.
 - **Cause:** `lucide-react` ships some brand icons (Facebook, Instagram, Twitter, YouTube, LinkedIn) but not the full admin `PLATFORM_OPTIONS` list.

@@ -4,7 +4,6 @@ export const ALLERGEN_OPTIONS = ['cereals', 'crustaceans', 'eggs', 'fish', 'pean
 export const DIETARY_OPTIONS = ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'sugar-free'];
 export const CERT_OPTIONS = ['organic', 'halal', 'kosher'];
 export const ZONE_OPTIONS: StorageZone[] = ['FROZEN', 'CHILLED', 'AMBIENT'];
-export const NO_PRODUCTS_MATCH_MESSAGE = 'No products match your filters.';
 
 const ALLERGEN_ALIASES: Record<string, string> = {
   gluten: 'cereals',

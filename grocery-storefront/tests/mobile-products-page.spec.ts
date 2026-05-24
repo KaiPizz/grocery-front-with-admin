@@ -191,6 +191,26 @@ test.describe('mobile products page', () => {
     ).toBe(true);
   });
 
+  test('surfaces active desktop filters and lets shoppers remove them from the catalog toolbar', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products');
+
+    await page.getByRole('button', { name: /filters/i }).click();
+    const filterPanel = page.locator('#filter-panel');
+    await filterPanel.getByRole('button', { name: /bakery/i }).click();
+
+    const filterSummary = page.getByTestId('product-filter-summary');
+    await expect(filterSummary).toBeVisible();
+    await expect(filterSummary).toContainText(/showing 1 of 1/i);
+    await expect(filterSummary.getByRole('button', { name: /remove bakery filter/i })).toBeVisible();
+
+    await filterSummary.getByRole('button', { name: /remove bakery filter/i }).click();
+
+    await expect(page.getByTestId('product-card')).toHaveCount(4);
+    await expect(filterSummary.getByRole('button', { name: /remove bakery filter/i })).toHaveCount(0);
+  });
+
   test('applies mobile filters only after save', async ({ page }) => {
     const productQueries: Array<Record<string, any>> = [];
 
@@ -278,6 +298,34 @@ test.describe('mobile products page', () => {
         return Array.isArray(filter?.categories) && filter.categories.includes('cat-bakery');
       })
     ).toBe(true);
+  });
+
+  test('gives mobile shoppers an active-filter trail and clear path when filters remove every product', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/products');
+
+    const cards = page.getByTestId('mobile-product-card');
+    await expect(cards).toHaveCount(4);
+
+    await page.getByRole('button', { name: /filters/i }).click();
+    const filterSheet = page.getByTestId('mobile-filter-sheet');
+    await filterSheet.getByRole('button', { name: /bakery/i }).click();
+    await filterSheet.getByLabel(/minimum price/i).fill('10');
+    await filterSheet.getByRole('button', { name: /apply filters/i }).click();
+
+    const filterSummary = page.getByTestId('product-filter-summary');
+    await expect(filterSummary).toBeVisible();
+    await expect(filterSummary).toContainText(/showing 0 of 0/i);
+    await expect(filterSummary.getByRole('button', { name: /remove bakery filter/i })).toBeVisible();
+    await expect(filterSummary.getByRole('button', { name: /remove from 10 PLN filter/i })).toBeVisible();
+    await expect(page.getByText(/no matching products/i)).toBeVisible();
+    await expect(page.getByText(/try clearing filters or widening your price range/i)).toBeVisible();
+
+    await page.getByRole('button', { name: /clear filters/i }).click();
+
+    await expect(cards).toHaveCount(4);
+    await expect(page.getByTestId('product-filter-summary')).toHaveCount(0);
   });
 
   test('keeps products visible when mobile filters are applied without changes', async ({ page }) => {
