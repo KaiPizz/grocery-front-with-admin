@@ -303,7 +303,7 @@ const PRODUCTS_WITH_EMPTY_FACETS = PRODUCTS.map((product) => ({
   certifications: [],
 }));
 
-type ProductDetailImageMode = 'default' | 'multi-media' | 'thumbnail-only' | 'no-image';
+type ProductDetailImageMode = 'default' | 'multi-media' | 'unordered-media' | 'thumbnail-only' | 'no-image';
 type ProductDetailLabelMode = 'complete' | 'missing';
 type ProductDetailCategoryMode = 'present' | 'missing';
 type ProductFixture = (typeof PRODUCTS)[number];
@@ -313,17 +313,26 @@ const PRODUCT_DETAIL_MEDIA = [
     url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80',
     alt: 'Organic Gala Apples front package',
     type: 'IMAGE',
+    sortOrder: 1,
   },
   {
     url: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=900&q=80',
     alt: 'Organic Gala Apples nutrition label',
     type: 'IMAGE',
+    sortOrder: 2,
   },
   {
     url: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=80',
     alt: 'Organic Gala Apples serving suggestion',
     type: 'IMAGE',
+    sortOrder: 3,
   },
+];
+
+const PRODUCT_DETAIL_UNORDERED_MEDIA = [
+  PRODUCT_DETAIL_MEDIA[2],
+  PRODUCT_DETAIL_MEDIA[0],
+  PRODUCT_DETAIL_MEDIA[1],
 ];
 
 function buildProductDetailFixture(
@@ -359,6 +368,18 @@ function buildProductDetailFixture(
         alt: PRODUCT_DETAIL_MEDIA[0].alt,
       },
       media: PRODUCT_DETAIL_MEDIA,
+    };
+  }
+
+  if (imageMode === 'unordered-media') {
+    return {
+      ...detailProduct,
+      thumbnail: {
+        id: 'thumb-gallery-duplicate',
+        url: PRODUCT_DETAIL_MEDIA[0].url,
+        alt: PRODUCT_DETAIL_MEDIA[0].alt,
+      },
+      media: PRODUCT_DETAIL_UNORDERED_MEDIA,
     };
   }
 
@@ -696,6 +717,7 @@ interface MockMobileStorefrontOptions {
   facets?: 'populated' | 'empty';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   onProductsQuery?: (variables: Record<string, unknown>) => void;
+  onProductDetailQuery?: (query: string, variables: Record<string, unknown>) => void;
   onSearchProductsIndexQuery?: (variables: Record<string, unknown>) => void;
   onWishlistSyncMutation?: (productIds: string[]) => void;
 }
@@ -885,6 +907,7 @@ export async function mockMobileStorefront(
     }
 
     if (operationName === 'GroceryProduct' || query.includes('query GroceryProduct')) {
+      options.onProductDetailQuery?.(query, body.variables ?? {});
       const requestedSlug = body.variables?.slug;
       const matchedProduct = typeof requestedSlug === 'string'
         ? products.find((p) => p.slug === requestedSlug) ?? featuredProduct

@@ -174,6 +174,27 @@ test.describe('PDP gallery production hardening', () => {
     );
   });
 
+  test('requests and applies backend media sort order before thumbnail fallback', async ({ page }) => {
+    let productDetailQuery = '';
+    await mockMobileStorefront(page, {
+      productDetailImages: 'unordered-media',
+      onProductDetailQuery: (query) => {
+        productDetailQuery = query;
+      },
+    });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const gallery = page.getByTestId('product-gallery');
+    await expect(gallery).toBeVisible();
+
+    expect(productDetailQuery).toContain('sortOrder');
+    await expect(gallery.getByTestId('product-gallery-thumbnail')).toHaveCount(3);
+    await expect(gallery.getByTestId('product-gallery-main').getByRole('img')).toHaveAttribute(
+      'alt',
+      /front package/i,
+    );
+  });
+
   test('falls back to the product thumbnail when media is empty', async ({ page }) => {
     await mockMobileStorefront(page, { productDetailImages: 'thumbnail-only' });
     await page.goto('/en/products/organic-gala-apples');

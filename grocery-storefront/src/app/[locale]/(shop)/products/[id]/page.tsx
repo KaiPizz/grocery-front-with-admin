@@ -33,6 +33,7 @@ interface ProductGalleryMedia {
   url?: string | null;
   alt?: string | null;
   type?: string | null;
+  sortOrder?: number | null;
 }
 
 interface ProductGalleryThumbnail {
@@ -115,8 +116,19 @@ function appendGalleryImage(
 function normalizeProductGalleryImages(product: ProductGallerySource): ProductGalleryImage[] {
   const images: ProductGalleryImage[] = [];
   const seenSources = new Set<string>();
+  const orderedMedia = (product.media ?? [])
+    .map((media, index) => ({ media, index }))
+    .sort((a, b) => {
+      const aOrder = typeof a.media.sortOrder === 'number' ? a.media.sortOrder : null;
+      const bOrder = typeof b.media.sortOrder === 'number' ? b.media.sortOrder : null;
 
-  for (const media of product.media ?? []) {
+      if (aOrder !== null && bOrder !== null && aOrder !== bOrder) return aOrder - bOrder;
+      if (aOrder !== null && bOrder === null) return -1;
+      if (aOrder === null && bOrder !== null) return 1;
+      return a.index - b.index;
+    });
+
+  for (const { media } of orderedMedia) {
     const mediaType = media.type?.toUpperCase();
     if (mediaType && mediaType !== 'IMAGE') continue;
     appendGalleryImage(images, seenSources, media.url, media.alt, product.name);

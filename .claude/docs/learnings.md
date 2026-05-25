@@ -66,6 +66,12 @@
 - **Fix:** Backend unbanned the current public IP (`46.134.113.125`). Verified `https://zira-ai.com/api/v1/health` and a valid `/api/graphql` category query through the local Next proxy returned 200.
 - **Rule:** Do not run bursty malformed GraphQL probes against production. In PowerShell, avoid hand-quoted curl JSON with `$variables`; use Node `JSON.stringify`, a saved JSON file, or a GraphQL client. If dev probing is needed, whitelist the current dev IP in fail2ban or use a local backend.
 
+### Product media does not accept pagination arguments
+- **Error:** A live Kamito probe used `media(first: 5)` on `Product.media` because the wiki contract showed that shape for listing samples.
+- **Cause:** Production Storefront GraphQL rejects the `first` argument on `Product.media` with `Unknown argument "first" on field "Product.media"`. The valid live shape is argument-free `media { url alt type sortOrder }`, and it returns multiple Kamito images on both list and detail products.
+- **Fix:** Switched probes and PDP query code to argument-free `media`, requested `sortOrder`, and verified a live product (`KIMCHI-5216`) returns five media images.
+- **Rule:** For Kamito product images, query `media { url alt type sortOrder }` without pagination args. If limiting is needed later, ask backend to confirm a new schema field before adding arguments.
+
 ### Assumed GraphQL response fields were non-null
 - **Error:** Code like `product.pricing.priceRange.start.gross.amount` crashed with "Cannot read property of null" because intermediate fields were null.
 - **Cause:** Zyra returns nullable fields at every nesting level. A variant can have `pricing: null` even though the product has a price elsewhere.

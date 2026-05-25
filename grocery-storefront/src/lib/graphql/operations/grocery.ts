@@ -107,7 +107,7 @@ export const PRODUCT_BY_SLUG_QUERY = `
   query GroceryProduct($channel: String!, $slug: String!) {
     product(channel: $channel, slug: $slug) {
       ...GroceryProductFields
-      media { url alt type }
+      media { url alt type sortOrder }
     }
   }
 `;
