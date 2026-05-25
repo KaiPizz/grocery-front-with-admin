@@ -195,6 +195,28 @@ test.describe('PDP gallery production hardening', () => {
     );
   });
 
+  test('keeps crowded mobile thumbnail galleries within the viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 740 });
+    await mockMobileStorefront(page, { productDetailImages: 'crowded-media' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const gallery = page.getByTestId('product-gallery');
+    await expect(gallery.getByTestId('product-gallery-thumbnail')).toHaveCount(5);
+
+    const layout = await page.evaluate(() => {
+      const galleryBox = document.querySelector('[data-testid="product-gallery"]')?.getBoundingClientRect();
+
+      return {
+        clientWidth: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        galleryRight: galleryBox?.right ?? 0,
+      };
+    });
+
+    expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth);
+    expect(layout.galleryRight).toBeLessThanOrEqual(layout.clientWidth);
+  });
+
   test('falls back to the product thumbnail when media is empty', async ({ page }) => {
     await mockMobileStorefront(page, { productDetailImages: 'thumbnail-only' });
     await page.goto('/en/products/organic-gala-apples');

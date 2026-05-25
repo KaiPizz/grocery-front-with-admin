@@ -72,6 +72,12 @@
 - **Fix:** Switched probes and PDP query code to argument-free `media`, requested `sortOrder`, and verified a live product (`KIMCHI-5216`) returns five media images.
 - **Rule:** For Kamito product images, query `media { url alt type sortOrder }` without pagination args. If limiting is needed later, ask backend to confirm a new schema field before adding arguments.
 
+### Kamito media duplicates can have different URLs
+- **Error:** PDP gallery showed duplicate product images even though URL de-dupe was already in place.
+- **Cause:** The live CDN serves exact duplicate bytes under different media URLs. Verified examples: `KIMCHI-5216` `/2.webp` equals `/4.webp` and `/3.webp` equals `/5.webp`; `KIMCHI-5215` `/2.webp` equals `/4.webp`.
+- **Fix:** Documented this as backend/import data debt. Frontend should not fetch every gallery image to compute hashes just to paper over duplicate media assets.
+- **Rule:** If Kamito gallery duplicates persist after URL de-dupe, inspect CDN bytes and ask backend/ops to clean media import output rather than adding expensive client-side image hashing.
+
 ### Assumed GraphQL response fields were non-null
 - **Error:** Code like `product.pricing.priceRange.start.gross.amount` crashed with "Cannot read property of null" because intermediate fields were null.
 - **Cause:** Zyra returns nullable fields at every nesting level. A variant can have `pricing: null` even though the product has a price elsewhere.
@@ -121,6 +127,12 @@
 ---
 
 ## CSS & Theming Errors
+
+### PDP gallery thumbnails forced mobile horizontal overflow
+- **Error:** On narrow mobile widths, a PDP with five gallery thumbnails could horizontally scroll and clip the page; at 320px viewport, `documentElement.scrollWidth` became `368`.
+- **Cause:** The PDP gallery sits inside a CSS grid item. The thumbnail row is a non-wrapping horizontal flex strip, so its min-content width was `5 * 64px + 4 * 8px = 352px`; with container padding, the grid track refused to shrink below the viewport.
+- **Fix:** Added `min-w-0` to the PDP grid, gallery section, and detail column so the thumbnail row uses its own `overflow-x-auto` instead of widening the document. Added a 320px Playwright regression with five media thumbnails.
+- **Rule:** Any grid/flex child that contains horizontal scrollers, long names, or non-wrapping controls needs an explicit `min-w-0` at the grid/flex boundary.
 
 ### Product listing price filters are normalized to current catalog bounds
 - **Error:** A mobile listing empty-state test tried to force zero results by entering a minimum price of `999`.

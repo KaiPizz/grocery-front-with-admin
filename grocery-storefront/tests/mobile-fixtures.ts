@@ -303,7 +303,7 @@ const PRODUCTS_WITH_EMPTY_FACETS = PRODUCTS.map((product) => ({
   certifications: [],
 }));
 
-type ProductDetailImageMode = 'default' | 'multi-media' | 'unordered-media' | 'thumbnail-only' | 'no-image';
+type ProductDetailImageMode = 'default' | 'multi-media' | 'unordered-media' | 'crowded-media' | 'thumbnail-only' | 'no-image';
 type ProductDetailLabelMode = 'complete' | 'missing';
 type ProductDetailCategoryMode = 'present' | 'missing';
 type ProductFixture = (typeof PRODUCTS)[number];
@@ -333,6 +333,22 @@ const PRODUCT_DETAIL_UNORDERED_MEDIA = [
   PRODUCT_DETAIL_MEDIA[2],
   PRODUCT_DETAIL_MEDIA[0],
   PRODUCT_DETAIL_MEDIA[1],
+];
+
+const PRODUCT_DETAIL_CROWDED_MEDIA = [
+  ...PRODUCT_DETAIL_MEDIA,
+  {
+    url: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80',
+    alt: 'Organic Gala Apples detail crop',
+    type: 'IMAGE',
+    sortOrder: 4,
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?auto=format&fit=crop&w=900&q=80',
+    alt: 'Organic Gala Apples alternate package',
+    type: 'IMAGE',
+    sortOrder: 5,
+  },
 ];
 
 function buildProductDetailFixture(
@@ -380,6 +396,18 @@ function buildProductDetailFixture(
         alt: PRODUCT_DETAIL_MEDIA[0].alt,
       },
       media: PRODUCT_DETAIL_UNORDERED_MEDIA,
+    };
+  }
+
+  if (imageMode === 'crowded-media') {
+    return {
+      ...detailProduct,
+      thumbnail: {
+        id: 'thumb-gallery-duplicate',
+        url: PRODUCT_DETAIL_CROWDED_MEDIA[0].url,
+        alt: PRODUCT_DETAIL_CROWDED_MEDIA[0].alt,
+      },
+      media: PRODUCT_DETAIL_CROWDED_MEDIA,
     };
   }
 

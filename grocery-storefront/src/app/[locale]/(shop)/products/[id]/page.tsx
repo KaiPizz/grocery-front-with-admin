@@ -156,7 +156,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
   }
 
   return (
-    <section className="space-y-3 md:sticky md:top-24" aria-label={`${product.name} images`} data-testid="product-gallery">
+    <section className="min-w-0 space-y-3 md:sticky md:top-24" aria-label={`${product.name} images`} data-testid="product-gallery">
       <div
         className="relative aspect-square overflow-hidden rounded-xl"
         style={{ backgroundColor: 'var(--color-muted)' }}
@@ -625,11 +625,11 @@ export default function ProductDetailPage() {
         { label: product.name },
       ]} />
 
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+      <div className="grid min-w-0 md:grid-cols-2 gap-8 lg:gap-12">
         <ProductGallery product={product} />
 
         {/* Details */}
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <section
             className="rounded-xl border p-4 sm:p-5"
             style={{
