@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-24
+> **Last updated:** 2026-05-25
 
 ---
 
@@ -31,6 +31,12 @@
 ---
 
 ## React State Bugs
+
+### Listing card changes can leak into homepage and PDP rails
+- **Error:** A listing scan-value pass initially added promo, availability, fulfillment, and catalog fact rows directly inside `ProductCard` and `MobileProductCard` without a scope gate.
+- **Cause:** Both card components are reused outside listing pages, including homepage product sections and PDP related-product rails. Changing the component default would silently redesign unrelated surfaces.
+- **Fix:** Added an opt-in `showCatalogFacts` prop and enabled it only from `ProductListingClient`, keeping homepage and PDP card instances on their previous surface.
+- **Rule:** Before changing shared card components for listing-only work, grep all call sites and gate listing-specific UI behind an explicit prop.
 
 ### Read React state immediately after `setState` — got stale value
 - **Error:** In checkout, `handleSavedAddressSelect()` called `setForm(nextForm)` then immediately called `handleDeliveryContinue()` which read `form` — but got the old form, not the one just set.

@@ -817,7 +817,7 @@ export function ProductListingClient({
         <>
           <div data-testid="mobile-products-grid" className="grid grid-cols-2 gap-3">
             {loadedProducts.map((product, index) => (
-              <MobileProductCard key={product.id} product={product} imagePriority={index < 8} />
+              <MobileProductCard key={product.id} product={product} imagePriority={index < 8} showCatalogFacts />
             ))}
           </div>
 
@@ -881,7 +881,7 @@ export function ProductListingClient({
         <>
           <div className="product-grid grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
             {loadedProducts.map((product, index) => (
-              <ProductCard key={product.id} product={product} imagePriority={index < 8} />
+              <ProductCard key={product.id} product={product} imagePriority={index < 8} showCatalogFacts />
             ))}
           </div>
 

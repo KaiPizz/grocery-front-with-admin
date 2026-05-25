@@ -61,8 +61,10 @@ test.describe('mobile products page', () => {
     await expect(firstImage).toBeVisible();
     await expect(firstTitle).toBeVisible();
     await expect(firstCard.getByTestId('mobile-product-card-stepper')).toBeVisible();
-    await expect(firstCard.getByTestId('mobile-product-card-meta')).toHaveCount(0);
-    await expect(firstCard).not.toContainText(/vegan|soybeans|milk|nutrition/i);
+    await expect(firstCard.getByTestId('mobile-product-card-scan-facts')).toContainText(/fruit/i);
+    await expect(firstCard.getByTestId('mobile-product-card-scan-facts')).toContainText(/poland/i);
+    await expect(firstCard.getByTestId('mobile-product-card-availability')).toContainText(/in stock/i);
+    await expect(firstCard).not.toContainText(/soybeans|milk|nutrition/i);
 
     const titleStyles = await firstTitle.evaluate((element) => {
       const styles = getComputedStyle(element);

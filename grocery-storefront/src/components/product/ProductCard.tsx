@@ -8,19 +8,31 @@ import { toast } from 'sonner';
 import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
 import { NutritionModal } from '@/components/grocery/NutritionModal';
 import { UnitPrice } from '@/components/grocery/UnitPrice';
+import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { Link } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import {
+  getConfiguredText,
+  getFulfillmentConfig,
+  isPickupFulfillment,
+  usesBankTransferPromise,
+} from '@/lib/fulfillment';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
 
 interface ProductCardProps {
   product: GroceryProduct;
   imagePriority?: boolean;
+  showCatalogFacts?: boolean;
 }
 
-export function ProductCard({ product, imagePriority = false }: ProductCardProps) {
+export function ProductCard({ product, imagePriority = false, showCatalogFacts = false }: ProductCardProps) {
   const t = useTranslations();
+  const siteConfig = useStorefrontConfig();
+  const fulfillment = getFulfillmentConfig(siteConfig);
+  const pickupMode = isPickupFulfillment(siteConfig);
+  const bankTransferMode = usesBankTransferPromise(siteConfig);
   const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
   const cartItem = useCartStore((s) => {
@@ -42,6 +54,11 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
   const inStock = (variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 0) > 0;
   const price = variant?.pricing?.price?.gross?.amount ?? (product as any).pricing?.priceRange?.start?.gross?.amount ?? 0;
   const currency = variant?.pricing?.price?.gross?.currency ?? (product as any).pricing?.priceRange?.start?.gross?.currency ?? 'PLN';
+  const compareAtPrice = showCatalogFacts
+    ? product.compareAtPrice ?? (product as any).pricing?.priceRangeUndiscounted?.start?.gross?.amount ?? null
+    : product.compareAtPrice ?? null;
+  const showCompareAtPrice = typeof compareAtPrice === 'number' && compareAtPrice > price;
+  const showPromo = showCatalogFacts && showCompareAtPrice;
   const imageUrl = getImageSrc(product.thumbnail?.url);
   const maxQuantity = Math.max(1, variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 99);
   const cartQuantity = cartItem?.quantity ?? 0;
@@ -56,6 +73,12 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
         ? '\u2603'
         : '\u2600'
     : null;
+  const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
+  const scanFacts = [product.category?.name, product.countryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
+  const pickupText = pickupMode ? getConfiguredText(fulfillment.pickupInstructions, t('fulfillment.pickupService')) : null;
+  const bankTransferText = bankTransferMode ? getConfiguredText(fulfillment.bankTransferInstructions, t('fulfillment.bankTransferService')) : null;
+  const fulfillmentFacts = [pickupText, bankTransferText, pickupMode || bankTransferMode ? t('fulfillment.manualConfirmationShort') : null]
+    .filter((value): value is string => Boolean(value));
 
   function updateQuantity(e: React.MouseEvent, delta: number) {
     e.preventDefault();
@@ -356,21 +379,67 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
 
           <div className="mt-2.5">
             <div>
-              <span className="text-base font-bold tabular-nums tracking-tight" style={{ color: 'var(--color-foreground)' }}>
-                {formatPrice(price, currency)}
-              </span>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-base font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
+                  {formatPrice(price, currency)}
+                </span>
+                {showPromo && (
+                  <span
+                    className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
+                    style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-accent-foreground)' }}
+                    data-testid="product-card-promo"
+                  >
+                    {t('product.promo')}
+                  </span>
+                )}
+              </div>
               <UnitPrice
                 pricePerUnit={product.pricePerUnit}
                 unitOfMeasure={product.unitOfMeasure}
                 currency={currency}
                 className="block text-[10px] mt-0.5"
               />
-              {product.compareAtPrice && product.compareAtPrice > price && (
+              {showCompareAtPrice && (
                 <span className="text-xs line-through ml-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
-                  {formatPrice(product.compareAtPrice, currency)}
+                  {formatPrice(compareAtPrice, currency)}
                 </span>
               )}
             </div>
+
+            {showCatalogFacts && (
+              <div className="mt-2 space-y-1.5 text-[11px] leading-snug" style={{ color: 'var(--color-muted-foreground)' }}>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span
+                    className="rounded-full px-2 py-0.5 font-semibold"
+                    style={{
+                      backgroundColor: inStock ? 'color-mix(in srgb, var(--color-primary) 10%, transparent)' : 'var(--color-muted)',
+                      color: inStock ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                    }}
+                    data-testid="product-card-availability"
+                  >
+                    {inStock ? t('product.inStock') : t('product.outOfStock')}
+                  </span>
+                  {scanFacts.length > 0 && (
+                    <span className="min-w-0 truncate" data-testid="product-card-facts">
+                      {scanFacts.join(' · ')}
+                    </span>
+                  )}
+                </div>
+                {fulfillmentFacts.length > 0 && (
+                  <div className="flex flex-wrap gap-1" data-testid="product-card-fulfillment">
+                    {fulfillmentFacts.map((fact) => (
+                      <span
+                        key={fact}
+                        className="rounded-full border px-2 py-0.5"
+                        style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}
+                      >
+                        {fact}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="mt-3 sm:grid sm:grid-cols-[92px,minmax(0,1fr)] sm:items-start sm:gap-2">
               <div className="group/quantity" data-testid="product-card-quantity" data-in-cart={isInCart ? 'true' : 'false'}>
