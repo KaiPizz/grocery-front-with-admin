@@ -33,7 +33,7 @@ export function ScrollToTopButton() {
     <button
       type="button"
       onClick={scrollToTop}
-      className={`fixed bottom-5 right-5 z-40 w-12 h-12 rounded-full border shadow-lg flex items-center justify-center transition-all duration-normal ${
+      className={`fixed bottom-[calc(8.75rem+env(safe-area-inset-bottom,0px))] right-5 z-20 flex h-12 w-12 items-center justify-center rounded-full border shadow-lg transition-all duration-normal md:bottom-5 md:z-40 ${
         isVisible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
       }`}
       style={{

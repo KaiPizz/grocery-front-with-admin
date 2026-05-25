@@ -707,24 +707,28 @@ export default function ProductDetailPage() {
           )}
 
           {/* Add to cart */}
-          <div ref={setInlineActionsNode} className="flex items-center gap-2 sm:gap-3" data-testid="product-detail-actions">
-            <div className="flex items-center border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
+          <div
+            ref={setInlineActionsNode}
+            className="grid min-w-0 grid-cols-[minmax(0,1fr)_44px] items-center gap-2 sm:flex sm:gap-3"
+            data-testid="product-detail-actions"
+          >
+            <div className="flex h-11 min-w-0 items-center justify-between rounded-lg border sm:justify-start" style={{ borderColor: 'var(--color-border)' }}>
               <button
                 type="button"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-11 h-11 flex items-center justify-center text-lg font-medium transition-colors duration-fast hover-surface"
+                className="flex h-11 w-11 shrink-0 items-center justify-center text-lg font-medium transition-colors duration-fast hover-surface"
                 style={{ color: 'var(--color-foreground)' }}
                 aria-label="Decrease quantity"
               >
                 <Minus className="w-4 h-4" aria-hidden="true" />
               </button>
-              <span className="px-3 py-2 text-sm font-medium tabular-nums min-w-[40px] text-center" style={{ color: 'var(--color-foreground)' }} aria-live="polite">
+              <span className="min-w-[40px] px-3 py-2 text-center text-sm font-medium tabular-nums" style={{ color: 'var(--color-foreground)' }} aria-live="polite">
                 {quantity}
               </span>
               <button
                 type="button"
                 onClick={() => setQuantity(quantity + 1)}
-                className="w-11 h-11 flex items-center justify-center text-lg font-medium transition-colors duration-fast hover-surface"
+                className="flex h-11 w-11 shrink-0 items-center justify-center text-lg font-medium transition-colors duration-fast hover-surface"
                 style={{ color: 'var(--color-foreground)' }}
                 aria-label="Increase quantity"
               >
@@ -749,7 +753,7 @@ export default function ProductDetailPage() {
               type="button"
               onClick={handleAddToCart}
               disabled={!inStock}
-              className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-white transition-all duration-fast disabled:opacity-50 active:scale-[0.98] hover:brightness-90 hover:shadow-md sm:h-10 sm:gap-2 sm:px-4 sm:text-base"
+              className="col-span-2 flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-3 text-sm font-semibold text-white transition-all duration-fast disabled:opacity-50 active:scale-[0.98] hover:brightness-90 hover:shadow-md sm:h-10 sm:gap-2 sm:px-4 sm:text-base"
               style={{
                 backgroundColor: justAdded ? 'var(--color-fresh)' : 'var(--color-primary)',
               }}
@@ -757,11 +761,11 @@ export default function ProductDetailPage() {
               aria-label={inStock ? `${t('common.addToCart')} — ${product.name}` : t('product.outOfStock')}
             >
               {justAdded ? (
-                <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+                <Check className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true" />
               ) : (
-                <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+                <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true" />
               )}
-              {inStock ? t('common.addToCart') : t('product.outOfStock')}
+              <span className="truncate">{inStock ? t('common.addToCart') : t('product.outOfStock')}</span>
             </button>
           </div>
 
@@ -830,8 +834,8 @@ export default function ProductDetailPage() {
           aria-hidden={!showStickyAdd}
           data-testid="mobile-pd-sticky-bar"
         >
-          <div className="container-grocery flex items-center gap-2 py-3">
-            <div className="min-w-0 flex-1">
+          <div className="container-grocery grid grid-cols-[minmax(0,1fr)_minmax(8.75rem,auto)] items-center gap-2 py-3">
+            <div className="min-w-0" data-testid="mobile-pd-sticky-price">
               <p className="truncate text-base font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
                 {formatPrice(price * quantity, currency)}
               </p>
@@ -843,40 +847,11 @@ export default function ProductDetailPage() {
               />
             </div>
 
-            <div className="flex items-center rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
-              <button
-                type="button"
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="flex h-11 w-11 items-center justify-center transition-colors duration-fast hover-surface"
-                style={{ color: 'var(--color-foreground)' }}
-                aria-label="Decrease quantity"
-                tabIndex={showStickyAdd ? 0 : -1}
-              >
-                <Minus className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <span
-                className="min-w-[24px] px-1 text-center text-sm font-medium tabular-nums"
-                style={{ color: 'var(--color-foreground)' }}
-              >
-                {quantity}
-              </span>
-              <button
-                type="button"
-                onClick={() => setQuantity(quantity + 1)}
-                className="flex h-11 w-11 items-center justify-center transition-colors duration-fast hover-surface"
-                style={{ color: 'var(--color-foreground)' }}
-                aria-label="Increase quantity"
-                tabIndex={showStickyAdd ? 0 : -1}
-              >
-                <Plus className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-
             <button
               type="button"
               onClick={handleAddToCart}
               disabled={!inStock}
-              className="checkout-btn inline-flex h-11 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-white transition-all duration-fast active:scale-[0.98] disabled:opacity-50"
+              className="checkout-btn inline-flex h-11 min-w-[8.75rem] max-w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-3 text-sm font-semibold text-white transition-all duration-fast active:scale-[0.98] disabled:opacity-50"
               style={{
                 backgroundColor: justAdded ? 'var(--color-fresh)' : 'var(--color-primary)',
               }}
@@ -884,8 +859,8 @@ export default function ProductDetailPage() {
               tabIndex={showStickyAdd ? 0 : -1}
               data-testid="mobile-pd-sticky-add"
             >
-              {justAdded ? <Check className="h-4 w-4" aria-hidden="true" /> : <ShoppingCart className="h-4 w-4" aria-hidden="true" />}
-              <span>{t('common.addToCart')}</span>
+              {justAdded ? <Check className="h-4 w-4 shrink-0" aria-hidden="true" /> : <ShoppingCart className="h-4 w-4 shrink-0" aria-hidden="true" />}
+              <span className="truncate">{t('common.addToCart')}</span>
             </button>
           </div>
         </div>

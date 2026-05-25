@@ -22,6 +22,25 @@ async function useShortMobileViewport(page: Page) {
   });
 }
 
+async function getVisibleTextLineCount(locator: Locator) {
+  return locator.evaluate((element) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let lineCount = 0;
+
+    while (walker.nextNode()) {
+      const textNode = walker.currentNode;
+      if (!textNode.textContent?.trim()) continue;
+
+      const range = document.createRange();
+      range.selectNodeContents(textNode);
+      lineCount += Array.from(range.getClientRects()).filter((rect) => rect.width > 1 && rect.height > 1).length;
+      range.detach();
+    }
+
+    return lineCount;
+  });
+}
+
 test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-stock badge', () => {
   test('PD sticky add-to-cart is hidden while the inline CTA is in view', async ({ page }) => {
     await mockMobileStorefront(page);
@@ -70,7 +89,7 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     await expect(sticky).toHaveAttribute('aria-hidden', 'true');
   });
 
-  test('PD sticky add-to-cart buttons meet 44×44 tap-target floor (Tier 1)', async ({ page }) => {
+  test('PD sticky add-to-cart and inline quantity buttons meet 44×44 tap-target floor (Tier 1)', async ({ page }) => {
     await useShortMobileViewport(page);
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');
@@ -83,8 +102,8 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     await expect(sticky).toHaveAttribute('aria-hidden', 'false');
 
     const addBox = await sticky.getByTestId('mobile-pd-sticky-add').boundingBox();
-    const decBox = await sticky.getByRole('button', { name: /decrease quantity/i }).boundingBox();
-    const incBox = await sticky.getByRole('button', { name: /increase quantity/i }).boundingBox();
+    const decBox = await page.getByTestId('product-detail-actions').getByRole('button', { name: /decrease quantity/i }).boundingBox();
+    const incBox = await page.getByTestId('product-detail-actions').getByRole('button', { name: /increase quantity/i }).boundingBox();
 
     expect(addBox).not.toBeNull();
     expect(decBox).not.toBeNull();
@@ -94,6 +113,75 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     expect(Math.round(decBox!.width)).toBeGreaterThanOrEqual(44);
     expect(Math.round(incBox!.height)).toBeGreaterThanOrEqual(44);
     expect(Math.round(incBox!.width)).toBeGreaterThanOrEqual(44);
+  });
+
+  test('Polish mobile purchase controls do not wrap or clip at 320px', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 740 });
+    await mockMobileStorefront(page, { checkoutProfile: 'pickup-bank-transfer' });
+    await page.goto('/pl/products/organic-gala-apples');
+
+    const inlineActions = page.getByTestId('product-detail-actions');
+    const inlineAdd = page.getByTestId('product-detail-add');
+    await expect(inlineAdd).toBeVisible();
+
+    const inlineLayout = await inlineActions.evaluate((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    }));
+    expect(inlineLayout.scrollWidth).toBeLessThanOrEqual(inlineLayout.clientWidth);
+    expect(await getVisibleTextLineCount(inlineAdd)).toBe(1);
+
+    await scrollInlineAddIntoView(inlineAdd);
+    await scrollInlineAddOutOfView(page);
+    const sticky = page.getByTestId('mobile-pd-sticky-bar');
+    const stickyAdd = sticky.getByTestId('mobile-pd-sticky-add');
+    await expect(sticky).toHaveAttribute('aria-hidden', 'false');
+    await expect(stickyAdd).toBeVisible();
+
+    const stickyLayout = await sticky.evaluate((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    }));
+    expect(stickyLayout.scrollWidth).toBeLessThanOrEqual(stickyLayout.clientWidth);
+    expect(await getVisibleTextLineCount(stickyAdd)).toBe(1);
+  });
+
+  test('scroll-to-top control stays clear of mobile bottom purchase chrome', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 640 });
+    await mockMobileStorefront(page);
+    await page.goto('/en/products/organic-gala-apples');
+
+    const inlineAdd = page.getByTestId('product-detail-add');
+    const scrollButton = page.getByRole('button', { name: /scroll to top/i });
+    const bottomNav = page.getByTestId('mobile-bottom-nav');
+    const stickyBar = page.getByTestId('mobile-pd-sticky-bar');
+
+    await expect(inlineAdd).toBeVisible();
+    await expect(bottomNav).toBeVisible();
+    await scrollInlineAddIntoView(inlineAdd);
+    await scrollInlineAddOutOfView(page);
+    await expect.poll(async () => page.evaluate(() => window.scrollY)).toBeGreaterThan(360);
+    await expect(stickyBar).toHaveAttribute('aria-hidden', 'false');
+    await expect
+      .poll(async () => scrollButton.evaluate((element) => getComputedStyle(element).opacity))
+      .toBe('1');
+
+    const overlap = await page.evaluate(() => {
+      const scrollBox = document.querySelector('button[aria-label="Scroll to top"]')?.getBoundingClientRect();
+      const navBox = document.querySelector('[data-testid="mobile-bottom-nav"]')?.getBoundingClientRect();
+      const stickyBox = document.querySelector('[data-testid="mobile-pd-sticky-bar"]')?.getBoundingClientRect();
+
+      if (!scrollBox || !navBox) return true;
+
+      const overlapsNav = scrollBox.bottom > navBox.top && scrollBox.top < navBox.bottom;
+      const overlapsSticky = stickyBox
+        ? scrollBox.bottom > stickyBox.top && scrollBox.top < stickyBox.bottom
+        : false;
+
+      return overlapsNav || overlapsSticky;
+    });
+
+    expect(overlap).toBe(false);
   });
 
   test('unit price renders on PD when product has pricePerUnit + unitOfMeasure (Tier 2)', async ({ page }) => {

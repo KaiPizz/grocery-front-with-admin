@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element -- Runtime-configured admin media can use arbitrary URLs until the production media loader policy is defined. */
+
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChevronRight } from 'lucide-react';

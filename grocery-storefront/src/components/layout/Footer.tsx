@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element -- Runtime-configured storefront logos can use arbitrary URLs until the production media loader policy is defined. */
+
 import { useTranslations } from 'next-intl';
 import { Leaf } from 'lucide-react';
 import { SocialBar } from '@/components/layout/SocialBar';

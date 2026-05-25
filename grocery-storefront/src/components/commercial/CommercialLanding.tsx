@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element -- Runtime-configured commercial media can use arbitrary URLs until the production media loader policy is defined. */
+
 import { ArrowRight } from 'lucide-react';
 
 import { Link } from '@/i18n/navigation';

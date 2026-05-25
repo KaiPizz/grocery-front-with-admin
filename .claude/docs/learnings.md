@@ -128,6 +128,12 @@
 
 ## CSS & Theming Errors
 
+### PDP purchase controls cannot all fit in one 320px mobile row
+- **Error:** Mobile PDP action rows tried to keep quantity, wishlist/add actions, price, and Polish "do koszyka" copy in a single row, causing horizontal overflow, clipped price text, and wrapped CTA labels.
+- **Cause:** The fixed 44px tap targets plus the minimum readable CTA width exceed the usable 320px viewport width once card padding and gaps are included.
+- **Fix:** Changed the purchase panel to a deliberate two-row mobile grid, kept quantity controls inline in the panel, and simplified the sticky bar to price + add-to-cart only. Added Playwright coverage for 320px Polish controls and BottomNav overlap.
+- **Rule:** For 320px mobile PDPs, do not force every purchase control into one row. Preserve tap targets and use deliberate row breaks or remove duplicate sticky controls.
+
 ### PDP gallery thumbnails forced mobile horizontal overflow
 - **Error:** On narrow mobile widths, a PDP with five gallery thumbnails could horizontally scroll and clip the page; at 320px viewport, `documentElement.scrollWidth` became `368`.
 - **Cause:** The PDP gallery sits inside a CSS grid item. The thumbnail row is a non-wrapping horizontal flex strip, so its min-content width was `5 * 64px + 4 * 8px = 352px`; with container padding, the grid track refused to shrink below the viewport.

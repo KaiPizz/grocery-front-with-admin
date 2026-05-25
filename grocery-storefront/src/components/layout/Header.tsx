@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element -- Runtime-configured storefront logos can use arbitrary URLs until the production media loader policy is defined. */
+
 import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
