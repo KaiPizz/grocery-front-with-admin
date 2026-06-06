@@ -3,7 +3,7 @@
     "branding": {
       "logoUrl": null,
       "faviconUrl": null,
-      "storeName": "Kamito",
+      "storeName": "Kenmito",
       "colors": {
         "primary": "#16a34a",
         "primaryHover": "#15803d",
@@ -33,17 +33,6 @@
       },
       "promoBanners": [
         {
-          "id": "banner-outlet",
-          "headline": "Outlet",
-          "subtext": "Krotkie daty, promocje i okazje w jednym miejscu.",
-          "ctaText": "Zobacz outlet",
-          "ctaLink": "/outlet",
-          "gradient": "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 70%, #000))",
-          "imageUrl": null,
-          "enabled": true,
-          "order": 0
-        },
-        {
           "id": "banner-korean-pantry",
           "headline": "Korean pantry",
           "subtext": "Ryz, sosy, makarony i podstawy kuchni koreanskiej.",
@@ -52,13 +41,13 @@
           "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
           "imageUrl": null,
           "enabled": true,
-          "order": 1
+          "order": 0
         }
       ],
       "blocks": [],
       "sections": [
         { "id": "shopByZone", "enabled": true, "order": 0 },
-        { "id": "deals", "enabled": true, "order": 1 },
+        { "id": "deals", "enabled": false, "order": 1 },
         { "id": "freshPicks", "enabled": true, "order": 2 },
         { "id": "recipes", "enabled": false, "order": 3 }
       ]
@@ -83,15 +72,7 @@
             "links": [
               { "label": "Kategorie", "href": "/categories" },
               { "label": "Produkty", "href": "/products" },
-              { "label": "Outlet", "href": "/outlet" },
               { "label": "Korean pantry", "href": "/collections/korean-pantry" }
-            ]
-          },
-          {
-            "title": "Informacje",
-            "links": [
-              { "label": "Kontakt", "href": "/privacy" },
-              { "label": "Dostawa", "href": "/terms" }
             ]
           },
           {
@@ -102,7 +83,7 @@
             ]
           }
         ],
-        "copyrightText": "© {year} Kamito."
+        "copyrightText": "© {year} Kenmito."
       },
       "priceDisplay": {
         "position": "below-image",
@@ -118,7 +99,7 @@
       "hotjar": { "enabled": false, "siteId": "" }
     },
     "seo": {
-      "defaultTitle": "Kamito - azjatyckie produkty spozywcze",
+      "defaultTitle": "Kenmito - azjatyckie produkty spozywcze",
       "defaultDescription": "Kimchi, sosy, makarony, ryz i produkty kuchni azjatyckiej.",
       "ogImageUrl": null,
       "canonical": "https://kamito.enail.pro"
@@ -148,16 +129,6 @@
       "enabled": true,
       "quickLinks": [
         {
-          "id": "quick-outlet",
-          "label": "Outlet",
-          "href": "/outlet",
-          "kind": "outlet",
-          "description": "Promocje i krotkie daty",
-          "imageUrl": null,
-          "enabled": true,
-          "order": 0
-        },
-        {
           "id": "quick-korean-pantry",
           "label": "Korean pantry",
           "href": "/collections/korean-pantry",
@@ -165,7 +136,7 @@
           "description": "Podstawy kuchni koreanskiej",
           "imageUrl": null,
           "enabled": true,
-          "order": 1
+          "order": 0
         }
       ],
       "collections": [
@@ -208,12 +179,12 @@
         }
       ],
       "outlet": {
-        "enabled": true,
+        "enabled": false,
         "label": "Outlet",
-        "collectionSlug": "korean-pantry"
+        "collectionSlug": null
       }
     }
   },
-  "version": 1,
-  "updatedAt": "2026-05-24T00:00:00.000Z"
+  "version": 2,
+  "updatedAt": "2026-06-06T00:00:00.000Z"
 }

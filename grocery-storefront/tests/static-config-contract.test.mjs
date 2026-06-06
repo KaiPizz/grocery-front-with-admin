@@ -13,7 +13,7 @@ test('storefront can load a static config source when no admin config API is con
   assert.match(clientProviderSource, /extractStorefrontConfig/);
 });
 
-test('tracked Kamito static config carries launch fulfillment truth', () => {
+test('tracked Kamito static config carries Kenmito launch truth', () => {
   assert.equal(existsSync(staticConfigUrl), true, 'Missing public/config/kamito.json');
 
   const raw = readFileSync(staticConfigUrl, 'utf8');
@@ -21,10 +21,18 @@ test('tracked Kamito static config carries launch fulfillment truth', () => {
 
   const envelope = JSON.parse(raw);
   const config = envelope.config;
+  const dealsSection = config.homepage.sections.find((section) => section.id === 'deals');
+  const footerLinks = config.layout.footer.columns.flatMap((column) => column.links);
 
-  assert.equal(config.branding.storeName, 'Kamito');
+  assert.equal(config.branding.storeName, 'Kenmito');
   assert.equal(config.general.fulfillment.mode, 'pickup');
   assert.equal(config.general.fulfillment.paymentPromise, 'bank_transfer');
   assert.equal(config.general.fulfillment.stockDisplayMode, 'availability_only');
-  assert.match(config.seo.defaultTitle, /^Kamito\b/);
+  assert.match(config.seo.defaultTitle, /^Kenmito\b/);
+  assert.equal(dealsSection?.enabled, false);
+  assert.equal(config.commercial.outlet.enabled, false);
+  assert.equal(config.commercial.outlet.collectionSlug, null);
+  assert.equal(config.commercial.quickLinks.some((link) => link.kind === 'outlet' && link.enabled), false);
+  assert.equal(footerLinks.some((link) => link.label === 'Kontakt' && link.href === '/privacy'), false);
+  assert.equal(footerLinks.some((link) => link.label === 'Dostawa' && link.href === '/terms'), false);
 });

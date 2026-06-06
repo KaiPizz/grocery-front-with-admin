@@ -63,7 +63,7 @@ test('normalizes older stored configs without fulfillment config', () => {
 test('Kamito launch audit reports localhost media and missing owner details', () => {
   const config = makeSchemaValidConfig();
 
-  config.branding.storeName = 'Kamito';
+  config.branding.storeName = 'Kenmito';
   config.branding.logoUrl = 'http://localhost:4100/uploads/logo.jpg';
   config.seo.canonical = '';
   config.general.email = '';

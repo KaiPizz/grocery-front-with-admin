@@ -8,7 +8,7 @@ function pickupConfigEnvelope() {
       branding: {
         logoUrl: null,
         faviconUrl: null,
-        storeName: 'Kamito',
+        storeName: 'Kenmito',
         colors: {
           primary: '#16a34a',
           primaryHover: '#15803d',
@@ -28,7 +28,7 @@ function pickupConfigEnvelope() {
       homepage: {
         hero: {
           enabled: true,
-          headline: 'Kamito market essentials',
+          headline: 'Kenmito market essentials',
           subtitle: 'Asian pantry, kimchi, noodles, sauces, and snacks for pickup.',
           ctaText: 'Browse categories',
           ctaLink: '/categories',
@@ -60,8 +60,8 @@ function pickupConfigEnvelope() {
         hotjar: { enabled: false, siteId: '' },
       },
       seo: {
-        defaultTitle: 'Kamito',
-        defaultDescription: 'Kamito storefront',
+        defaultTitle: 'Kenmito',
+        defaultDescription: 'Kenmito storefront',
         ogImageUrl: null,
         canonical: 'https://kamito.example.test',
       },

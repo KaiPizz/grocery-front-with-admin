@@ -302,6 +302,14 @@ const PRODUCTS_WITH_EMPTY_FACETS = PRODUCTS.map((product) => ({
   storageZone: '',
   certifications: [],
 }));
+const PRODUCTS_WITHOUT_SALES = PRODUCTS.map((product) => ({
+  ...product,
+  pricing: {
+    ...product.pricing,
+    priceRangeUndiscounted: product.pricing.priceRange,
+    onSale: false,
+  },
+}));
 
 type ProductDetailImageMode = 'default' | 'multi-media' | 'unordered-media' | 'crowded-media' | 'thumbnail-only' | 'no-image';
 type ProductDetailLabelMode = 'complete' | 'missing';
@@ -739,6 +747,7 @@ interface MockMobileStorefrontOptions {
   checkoutProfile?: 'delivery' | 'pickup-bank-transfer';
   checkoutComplete?: 'success' | 'insufficient-stock';
   products?: 'ok' | 'error';
+  productPromotions?: 'mixed' | 'none';
   productDetailImages?: ProductDetailImageMode;
   productDetailLabels?: ProductDetailLabelMode;
   productDetailCategory?: ProductDetailCategoryMode;
@@ -754,7 +763,11 @@ export async function mockMobileStorefront(
   page: Page,
   options: MockMobileStorefrontOptions = {}
 ) {
-  const products = options.facets === 'empty' ? PRODUCTS_WITH_EMPTY_FACETS : PRODUCTS;
+  const products = options.productPromotions === 'none'
+    ? PRODUCTS_WITHOUT_SALES
+    : options.facets === 'empty'
+      ? PRODUCTS_WITH_EMPTY_FACETS
+      : PRODUCTS;
   const productsById = new Map(products.map((product) => [product.id, product]));
   const categoryFixtures = buildCategoryFixtures(products);
   const featuredProduct = products[0] ?? PRIMARY_PRODUCT;

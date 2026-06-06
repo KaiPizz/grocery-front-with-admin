@@ -2,11 +2,23 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-05-25
+> **Last updated:** 2026-06-06
 
 ---
 
 ## Project Documentation
+
+### Repeated JSON fields need ID-scoped patch context and parsed verification
+- **Error:** A broad patch intended to disable the `deals` section in both admin config branches matched the preceding `shopByZone.enabled` fields instead.
+- **Cause:** Published and draft JSON contain repeated `"enabled": true` values, and the initial patch context did not include the unique section `id`.
+- **Fix:** Repatched each section with its `id` in context, then parsed both admin branches and the static config to compare store name, section flags, banners, quick links, Outlet state, and canonical URL.
+- **Rule:** When editing repeated tenant JSON, anchor patches on unique IDs and immediately parse every duplicated config branch to verify semantic values, not just JSON syntax.
+
+### A homepage test encoded the fake Deals fallback
+- **Error:** The existing mobile homepage test required four deal cards even though its fixture contained only two products with real sale pricing.
+- **Cause:** The test was written around the implementation that padded the Deals shelf with regular products instead of the product contract.
+- **Fix:** Added a no-sale RED regression, removed the production fallback, and changed the existing assertion to require exactly the two discounted products while excluding the two regular-price products.
+- **Rule:** Promotion tests must derive expectations from pricing semantics, not from a fixed merchandising card count.
 
 ### Project docs live under `.claude`, not `.Codex`, in this checkout
 - **Error:** Task instructions referenced `.Codex/docs/progress.md`, `.Codex/docs/learnings.md`, and `.Codex/rules/`, but those paths did not exist in this repository.

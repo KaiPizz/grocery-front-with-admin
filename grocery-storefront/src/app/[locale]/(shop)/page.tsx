@@ -244,17 +244,18 @@ export default function HomePage() {
       return Boolean(product.pricing?.onSale) || Boolean(discounted && currentPrice && discounted > currentPrice);
     })
     .slice(0, 4);
-  const productsForDeals = [
-    ...saleProducts,
-    ...products.filter((product) => !saleProducts.some((saleProduct) => saleProduct.id === product.id)),
-  ].slice(0, 4);
+  const productsForDeals = saleProducts;
   const highlightedProductIds = new Set(productsForDeals.map((product) => product.id));
   const freshPicks = products
     .filter((product) => !highlightedProductIds.has(product.id))
     .slice(0, 4);
   const productsForFreshPicks = freshPicks.length > 0 ? freshPicks : products.slice(0, 4);
 
-  const heroHighlights = [t('onSale'), t('shopByZone')];
+  const dealsAvailable = orderedSections.includes('deals')
+    && (productsResult.fetching || productsForDeals.length > 0);
+  const heroHighlights = dealsAvailable
+    ? [t('onSale'), t('shopByZone')]
+    : [t('shopByZone')];
   return (
     <div className="pb-12">
       <div className="md:hidden">
@@ -317,18 +318,20 @@ export default function HomePage() {
                   {heroCtaText}
                   <ChevronRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
-                <a
-                  href="#home-deals"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors duration-fast"
-                  style={{
-                    borderColor: 'color-mix(in srgb, var(--color-primary) 16%, var(--color-border))',
-                    color: 'var(--color-foreground)',
-                    backgroundColor: 'rgba(255,255,255,0.7)',
-                  }}
-                >
-                  {t('seeAllDeals')}
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                </a>
+                {dealsAvailable && (
+                  <a
+                    href="#home-deals"
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors duration-fast"
+                    style={{
+                      borderColor: 'color-mix(in srgb, var(--color-primary) 16%, var(--color-border))',
+                      color: 'var(--color-foreground)',
+                      backgroundColor: 'rgba(255,255,255,0.7)',
+                    }}
+                  >
+                    {t('seeAllDeals')}
+                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                )}
               </div>
 
               <div className="mt-5 flex flex-wrap justify-center gap-2">
@@ -409,6 +412,8 @@ export default function HomePage() {
               );
 
             case 'deals':
+              if (!productsResult.fetching && productsForDeals.length === 0) return null;
+
               return (
                 <section key="deals" id="home-deals" className="container-grocery py-5" data-testid="mobile-home-deals">
                   <div className="mb-4 flex items-end justify-between gap-3">
@@ -634,6 +639,8 @@ export default function HomePage() {
               );
 
             case 'deals':
+              if (!productsResult.fetching && productsForDeals.length === 0) return null;
+
               return (
                 <section key="deals" className="container-grocery py-16 md:py-20">
                   <div className="mb-8 flex items-center justify-between">

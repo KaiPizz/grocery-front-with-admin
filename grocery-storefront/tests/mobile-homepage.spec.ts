@@ -106,9 +106,9 @@ async function mockHomepageHeroConfig(page: Page) {
   const envelope = configEnvelope();
   envelope.config.homepage.hero = {
     enabled: true,
-    headline: 'Kamito market essentials',
+    headline: 'Kenmito market essentials',
     subtitle: 'Korean, Japanese, and Asian pantry picks ready for local delivery.',
-    ctaText: 'Shop Kamito',
+    ctaText: 'Shop Kenmito',
     ctaLink: '/categories',
     backgroundImageUrl: null,
   };
@@ -133,9 +133,9 @@ test.describe('mobile homepage', () => {
 
     const hero = page.getByTestId('desktop-home-hero');
 
-    await expect(hero.getByRole('heading', { name: 'Kamito market essentials' })).toBeVisible();
+    await expect(hero.getByRole('heading', { name: 'Kenmito market essentials' })).toBeVisible();
     await expect(hero.getByText('Korean, Japanese, and Asian pantry picks ready for local delivery.')).toBeVisible();
-    await expect(hero.getByRole('link', { name: 'Shop Kamito' })).toBeVisible();
+    await expect(hero.getByRole('link', { name: 'Shop Kenmito' })).toBeVisible();
   });
 
   test('uses a compact Stitch-inspired landing page layout for fast shopping', async ({ page }) => {
@@ -159,7 +159,11 @@ test.describe('mobile homepage', () => {
     await expect(page.getByRole('link', { name: /shop ambient products/i })).toBeVisible();
     await expect(deals).toBeVisible();
     await expect(freshPicks).toBeVisible();
-    await expect(page.getByTestId('mobile-home-deal-card')).toHaveCount(4);
+    await expect(page.getByTestId('mobile-home-deal-card')).toHaveCount(2);
+    await expect(deals.getByText('Organic Gala Apples Family Value Pack')).toBeVisible();
+    await expect(deals.getByText('Sourdough Sandwich Bread')).toBeVisible();
+    await expect(deals.getByText('Blueberries Snack Box')).toHaveCount(0);
+    await expect(deals.getByText('Spinach Ravioli Family Pack')).toHaveCount(0);
     const firstDealCard = page.getByTestId('mobile-home-deal-card').first();
     const firstFreshCard = freshPicks.getByTestId('mobile-home-product-card').first();
 
@@ -169,6 +173,17 @@ test.describe('mobile homepage', () => {
     await expect(firstFreshCard.getByTestId('mobile-product-card-media')).toBeVisible();
     await expect(firstFreshCard.getByTestId('mobile-product-card-stepper')).toBeVisible();
     await expect(hero.getByRole('link', { name: /shop now|products/i })).toBeVisible();
+  });
+
+  test('does not present regular products as deals when the catalog has no sale pricing', async ({ page }) => {
+    await mockHomepageConfig(page);
+    await mockMobileStorefront(page, { productPromotions: 'none' });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en');
+
+    await expect(page.getByTestId('mobile-home-fresh-picks')).toBeVisible();
+    await expect(page.getByTestId('mobile-home-deals')).toHaveCount(0);
+    await expect(page.getByTestId('mobile-home-deal-card')).toHaveCount(0);
   });
 
   test('keeps the Stitch-inspired redesign scoped to mobile and preserves the desktop homepage layout', async ({ page }) => {
