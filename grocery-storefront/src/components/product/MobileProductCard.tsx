@@ -5,17 +5,10 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Check, Heart, Minus, Package, Plus, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
-import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { Link } from '@/i18n/navigation';
 import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
-import {
-  getConfiguredText,
-  getFulfillmentConfig,
-  isPickupFulfillment,
-  usesBankTransferPromise,
-} from '@/lib/fulfillment';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
 
@@ -26,12 +19,29 @@ interface MobileProductCardProps {
   showCatalogFacts?: boolean;
 }
 
+interface MobileProductCardMedia {
+  url?: string | null;
+  type?: string | null;
+}
+
+function getMediaImageCount(product: GroceryProduct): number {
+  const media = (product as { media?: MobileProductCardMedia[] }).media;
+  if (!Array.isArray(media)) return product.thumbnail?.url ? 1 : 0;
+
+  const sources = new Set<string>();
+  for (const item of media) {
+    const mediaType = item.type?.toUpperCase();
+    if (mediaType && mediaType !== 'IMAGE') continue;
+
+    const src = getImageSrc(item.url);
+    if (src) sources.add(src);
+  }
+
+  return sources.size || (product.thumbnail?.url ? 1 : 0);
+}
+
 export function MobileProductCard({ product, imagePriority = false, testId, showCatalogFacts = false }: MobileProductCardProps) {
   const t = useTranslations();
-  const siteConfig = useStorefrontConfig();
-  const fulfillment = getFulfillmentConfig(siteConfig);
-  const pickupMode = isPickupFulfillment(siteConfig);
-  const bankTransferMode = usesBankTransferPromise(siteConfig);
   const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
   const cartItem = useCartStore((s) => {
@@ -55,16 +65,13 @@ export function MobileProductCard({ product, imagePriority = false, testId, show
   const compareAtPrice = product.compareAtPrice ?? (product as any).pricing?.priceRangeUndiscounted?.start?.gross?.amount ?? null;
   const showPromo = showCatalogFacts && typeof compareAtPrice === 'number' && compareAtPrice > price;
   const imageUrl = getImageSrc(product.thumbnail?.url);
+  const imageCount = getMediaImageCount(product);
   const maxQuantity = Math.max(1, variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 99);
   const cartQuantity = cartItem?.quantity ?? 0;
   const isInCart = cartQuantity > 0;
   const displayedQuantity = isInCart ? cartQuantity : quantity;
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
   const scanFacts = [product.category?.name, product.countryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
-  const pickupText = pickupMode ? getConfiguredText(fulfillment.pickupInstructions, t('fulfillment.pickupService')) : null;
-  const bankTransferText = bankTransferMode ? getConfiguredText(fulfillment.bankTransferInstructions, t('fulfillment.bankTransferService')) : null;
-  const fulfillmentFacts = [pickupText, bankTransferText, pickupMode || bankTransferMode ? t('fulfillment.manualConfirmationShort') : null]
-    .filter((value): value is string => Boolean(value));
 
   function updateQuantity(e: React.MouseEvent, delta: number) {
     e.preventDefault();
@@ -208,6 +215,19 @@ export function MobileProductCard({ product, imagePriority = false, testId, show
             </div>
           )}
 
+          {imageCount > 1 && (
+            <span
+              className="absolute bottom-1 right-1 z-10 rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
+              style={{
+                backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)',
+                color: 'var(--color-foreground)',
+              }}
+              data-testid="mobile-product-card-image-counter"
+            >
+              1/{imageCount}
+            </span>
+          )}
+
           <div className="absolute right-1 top-1 z-10">
             <button
               type="button"
@@ -314,58 +334,47 @@ export function MobileProductCard({ product, imagePriority = false, testId, show
                 </span>
               )}
             </div>
-            {fulfillmentFacts.length > 0 && (
-              <div className="flex flex-wrap gap-1" data-testid="mobile-product-card-fulfillment">
-                {fulfillmentFacts.map((fact) => (
-                  <span
-                    key={fact}
-                    className="rounded-full border px-1.5 py-0.5"
-                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}
-                  >
-                    {fact}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
         )}
 
-        <div
-          className="mt-3 grid h-11 grid-cols-3 overflow-hidden rounded-full border"
-          style={{
-            borderColor: isInCart ? 'var(--color-primary)' : 'var(--color-border)',
-            backgroundColor: isInCart ? 'var(--color-accent)' : 'var(--color-card)',
-          }}
-          data-testid="mobile-product-card-stepper"
-          data-in-cart={isInCart ? 'true' : 'false'}
-        >
-          <button
-            type="button"
-            onClick={(e) => updateQuantity(e, -1)}
-            disabled={!inStock || busy || (!isInCart && quantity <= 1)}
-            className="flex items-center justify-center transition-colors duration-fast disabled:opacity-40"
-            aria-label={t('product.decreaseQuantity', { name: product.name })}
+        {isInCart && (
+          <div
+            className="mt-3 grid h-11 grid-cols-3 overflow-hidden rounded-full border"
+            style={{
+              borderColor: 'var(--color-primary)',
+              backgroundColor: 'var(--color-accent)',
+            }}
+            data-testid="mobile-product-card-stepper"
+            data-in-cart="true"
           >
-            <Minus className="h-4 w-4" aria-hidden="true" />
-          </button>
-          <span
-            className="flex items-center justify-center text-base font-semibold tabular-nums"
-            style={{ color: 'var(--color-foreground)' }}
-            aria-live="polite"
-            data-testid="mobile-product-card-quantity-value"
-          >
-            {displayedQuantity}
-          </span>
-          <button
-            type="button"
-            onClick={(e) => updateQuantity(e, 1)}
-            disabled={!inStock || busy || displayedQuantity >= maxQuantity}
-            className="flex items-center justify-center transition-colors duration-fast disabled:opacity-40"
-            aria-label={t('product.increaseQuantity', { name: product.name })}
-          >
-            <Plus className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={(e) => updateQuantity(e, -1)}
+              disabled={!inStock || busy}
+              className="flex items-center justify-center transition-colors duration-fast disabled:opacity-40"
+              aria-label={t('product.decreaseQuantity', { name: product.name })}
+            >
+              <Minus className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <span
+              className="flex items-center justify-center text-base font-semibold tabular-nums"
+              style={{ color: 'var(--color-foreground)' }}
+              aria-live="polite"
+              data-testid="mobile-product-card-quantity-value"
+            >
+              {displayedQuantity}
+            </span>
+            <button
+              type="button"
+              onClick={(e) => updateQuantity(e, 1)}
+              disabled={!inStock || busy || displayedQuantity >= maxQuantity}
+              className="flex items-center justify-center transition-colors duration-fast disabled:opacity-40"
+              aria-label={t('product.increaseQuantity', { name: product.name })}
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+        )}
       </div>
     </Link>
   );

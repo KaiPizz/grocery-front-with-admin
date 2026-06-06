@@ -59,6 +59,27 @@ type WishlistServerItemState = {
   price?: number | null;
 };
 
+const LISTING_PRODUCT_MEDIA = [
+  {
+    url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80',
+    alt: 'Organic Gala Apples front package',
+    type: 'IMAGE',
+    sortOrder: 1,
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=900&q=80',
+    alt: 'Organic Gala Apples nutrition label',
+    type: 'IMAGE',
+    sortOrder: 2,
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=80',
+    alt: 'Organic Gala Apples serving suggestion',
+    type: 'IMAGE',
+    sortOrder: 3,
+  },
+];
+
 const PRIMARY_PRODUCT = {
   id: 'prod-apples',
   name: 'Organic Gala Apples Family Value Pack',
@@ -69,6 +90,7 @@ const PRIMARY_PRODUCT = {
     url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
     alt: 'Fresh produce arranged on a market table',
   },
+  media: LISTING_PRODUCT_MEDIA,
   allergens: ['nuts', 'milk', 'soybeans'],
   dietaryTags: ['vegan'],
   calories: 52,
@@ -675,11 +697,13 @@ const BANK_TRANSFER_PAYMENT_METHODS = [
 ];
 
 function buildCheckoutState(deliveryOptions = DELIVERY_OPTIONS): CheckoutState {
+  const shippingPrice = deliveryOptions[0]?.price ?? { amount: 0, currency: 'PLN' };
+
   return {
     id: 'checkout-1',
     email: 'mobile@example.com',
     availableShippingMethods: deliveryOptions,
-    shippingPrice: deliveryOptions[0].price,
+    shippingPrice,
     totalPrice: {
       gross: {
         amount: 22.98,
@@ -744,7 +768,7 @@ export async function seedAuthSession(page: Page) {
 interface MockMobileStorefrontOptions {
   cart?: 'empty' | 'single-item';
   cartCosts?: 'priced' | 'zero';
-  checkoutProfile?: 'delivery' | 'pickup-bank-transfer';
+  checkoutProfile?: 'delivery' | 'pickup-bank-transfer' | 'pickup-no-payment' | 'unconfigured';
   checkoutComplete?: 'success' | 'insufficient-stock';
   products?: 'ok' | 'error';
   productPromotions?: 'mixed' | 'none';
@@ -772,12 +796,16 @@ export async function mockMobileStorefront(
   const categoryFixtures = buildCategoryFixtures(products);
   const featuredProduct = products[0] ?? PRIMARY_PRODUCT;
   const cartCostMode = options.cartCosts ?? 'priced';
-  const deliveryOptions = options.checkoutProfile === 'pickup-bank-transfer'
-    ? PICKUP_ONLY_DELIVERY_OPTIONS
-    : DELIVERY_OPTIONS;
-  const paymentMethods = options.checkoutProfile === 'pickup-bank-transfer'
-    ? BANK_TRANSFER_PAYMENT_METHODS
-    : PAYMENT_METHODS;
+  const deliveryOptions = options.checkoutProfile === 'unconfigured'
+    ? []
+    : options.checkoutProfile === 'pickup-bank-transfer' || options.checkoutProfile === 'pickup-no-payment'
+      ? PICKUP_ONLY_DELIVERY_OPTIONS
+      : DELIVERY_OPTIONS;
+  const paymentMethods = options.checkoutProfile === 'unconfigured' || options.checkoutProfile === 'pickup-no-payment'
+    ? []
+    : options.checkoutProfile === 'pickup-bank-transfer'
+      ? BANK_TRANSFER_PAYMENT_METHODS
+      : PAYMENT_METHODS;
   let cart = buildCart(options.cart === 'single-item' ? [buildCartLine(1, cartCostMode)] : []);
   let checkout = buildCheckoutState(deliveryOptions);
   let wishlistItems = (() => {

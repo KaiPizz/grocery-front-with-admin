@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Package, Check, Minus, Plus, Truck, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingCart, Package, Check, Minus, Plus, Truck, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { PRODUCT_BY_SLUG_QUERY, PRODUCT_RECIPES_QUERY, PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
 import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
@@ -155,6 +155,13 @@ function ProductGallery({ product }: ProductGalleryProps) {
     thumbnailRefs.current[index]?.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
 
+  function handleGalleryImageStep(delta: number) {
+    if (images.length < 2) return;
+
+    const nextIndex = (activeIndex + delta + images.length) % images.length;
+    handleGalleryImageSelect(nextIndex);
+  }
+
   return (
     <section className="min-w-0 space-y-3 md:sticky md:top-24" aria-label={`${product.name} images`} data-testid="product-gallery">
       <div
@@ -167,7 +174,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
             src={activeImage.src}
             alt={activeImage.alt}
             fill
-            className="object-cover"
+            className="object-contain p-4 sm:p-6"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
             unoptimized={isImageProxySrc(activeImage.src)}
@@ -186,6 +193,48 @@ function ProductGallery({ product }: ProductGalleryProps) {
           <div className="absolute left-4 top-4">
             <FreshnessBadge freshness={product.freshness} nearestExpiry={product.nearestExpiry ?? undefined} />
           </div>
+        )}
+
+        {images.length > 1 && (
+          <>
+            <span
+              className="absolute right-4 top-4 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums"
+              style={{
+                backgroundColor: 'color-mix(in srgb, var(--color-card) 88%, transparent)',
+                color: 'var(--color-foreground)',
+              }}
+              aria-live="polite"
+              data-testid="product-gallery-counter"
+            >
+              {activeIndex + 1}/{images.length}
+            </span>
+            <button
+              type="button"
+              onClick={() => handleGalleryImageStep(-1)}
+              className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border transition-transform duration-fast active:scale-[0.98]"
+              style={{
+                backgroundColor: 'color-mix(in srgb, var(--color-card) 88%, transparent)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-foreground)',
+              }}
+              aria-label="Previous product image"
+            >
+              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleGalleryImageStep(1)}
+              className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border transition-transform duration-fast active:scale-[0.98]"
+              style={{
+                backgroundColor: 'color-mix(in srgb, var(--color-card) 88%, transparent)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-foreground)',
+              }}
+              aria-label="Next product image"
+            >
+              <ChevronRight className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </>
         )}
       </div>
 
@@ -208,7 +257,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
                   backgroundColor: 'var(--color-card)',
                   outlineColor: 'var(--color-ring)',
                 }}
-                aria-label={`View ${image.alt}`}
+                aria-label={`View image ${index + 1} of ${images.length}: ${image.alt}`}
                 aria-pressed={selected}
                 data-testid="product-gallery-thumbnail"
               >
@@ -216,7 +265,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
                   src={image.src}
                   alt=""
                   fill
-                  className="object-cover"
+                  className="object-contain p-1.5"
                   sizes="80px"
                   unoptimized={isImageProxySrc(image.src)}
                 />

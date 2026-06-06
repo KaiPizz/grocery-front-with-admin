@@ -8,16 +8,9 @@ import { toast } from 'sonner';
 import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
 import { NutritionModal } from '@/components/grocery/NutritionModal';
 import { UnitPrice } from '@/components/grocery/UnitPrice';
-import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { Link } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
-import {
-  getConfiguredText,
-  getFulfillmentConfig,
-  isPickupFulfillment,
-  usesBankTransferPromise,
-} from '@/lib/fulfillment';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
 
@@ -27,12 +20,54 @@ interface ProductCardProps {
   showCatalogFacts?: boolean;
 }
 
+interface ProductCardImage {
+  src: string;
+  alt: string;
+}
+
+interface ProductCardMedia {
+  url?: string | null;
+  alt?: string | null;
+  type?: string | null;
+  sortOrder?: number | null;
+}
+
+function getProductCardImages(product: GroceryProduct): ProductCardImage[] {
+  const seenSources = new Set<string>();
+  const images: ProductCardImage[] = [];
+  const media = Array.isArray((product as { media?: ProductCardMedia[] }).media)
+    ? [...((product as { media?: ProductCardMedia[] }).media ?? [])]
+        .filter((item) => {
+          const mediaType = item.type?.toUpperCase();
+          return !mediaType || mediaType === 'IMAGE';
+        })
+        .sort((a, b) => {
+          const aOrder = typeof a.sortOrder === 'number' ? a.sortOrder : Number.POSITIVE_INFINITY;
+          const bOrder = typeof b.sortOrder === 'number' ? b.sortOrder : Number.POSITIVE_INFINITY;
+          return aOrder - bOrder;
+        })
+    : [];
+
+  const sources = media.length > 0
+    ? media.map((item) => ({ url: item.url, alt: item.alt }))
+    : [{ url: product.thumbnail?.url, alt: product.thumbnail?.alt }];
+
+  for (const source of sources) {
+    const src = getImageSrc(source.url);
+    if (!src || seenSources.has(src)) continue;
+
+    seenSources.add(src);
+    images.push({
+      src,
+      alt: source.alt?.trim() || product.name,
+    });
+  }
+
+  return images;
+}
+
 export function ProductCard({ product, imagePriority = false, showCatalogFacts = false }: ProductCardProps) {
   const t = useTranslations();
-  const siteConfig = useStorefrontConfig();
-  const fulfillment = getFulfillmentConfig(siteConfig);
-  const pickupMode = isPickupFulfillment(siteConfig);
-  const bankTransferMode = usesBankTransferPromise(siteConfig);
   const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
   const cartItem = useCartStore((s) => {
@@ -50,6 +85,7 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
   const [justAdded, setJustAdded] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [busy, setBusy] = useState(false);
+  const [previewingSecondImage, setPreviewingSecondImage] = useState(false);
 
   const inStock = (variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 0) > 0;
   const price = variant?.pricing?.price?.gross?.amount ?? (product as any).pricing?.priceRange?.start?.gross?.amount ?? 0;
@@ -59,7 +95,11 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
     : product.compareAtPrice ?? null;
   const showCompareAtPrice = typeof compareAtPrice === 'number' && compareAtPrice > price;
   const showPromo = showCatalogFacts && showCompareAtPrice;
-  const imageUrl = getImageSrc(product.thumbnail?.url);
+  const cardImages = getProductCardImages(product);
+  const primaryImage = cardImages[0] ?? null;
+  const secondaryImage = cardImages[1] ?? null;
+  const activeImageIndex = previewingSecondImage && secondaryImage ? 1 : 0;
+  const imageUrl = primaryImage?.src ?? '';
   const maxQuantity = Math.max(1, variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 99);
   const cartQuantity = cartItem?.quantity ?? 0;
   const isInCart = cartQuantity > 0;
@@ -75,10 +115,6 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
     : null;
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
   const scanFacts = [product.category?.name, product.countryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
-  const pickupText = pickupMode ? getConfiguredText(fulfillment.pickupInstructions, t('fulfillment.pickupService')) : null;
-  const bankTransferText = bankTransferMode ? getConfiguredText(fulfillment.bankTransferInstructions, t('fulfillment.bankTransferService')) : null;
-  const fulfillmentFacts = [pickupText, bankTransferText, pickupMode || bankTransferMode ? t('fulfillment.manualConfirmationShort') : null]
-    .filter((value): value is string => Boolean(value));
 
   function updateQuantity(e: React.MouseEvent, delta: number) {
     e.preventDefault();
@@ -200,23 +236,62 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
         className="group block overflow-hidden rounded-none border-0 card-hover sm:rounded-xl sm:border"
         style={{ borderColor: 'var(--color-border)' }}
         aria-label={`${product.name}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
+        onMouseEnter={() => {
+          if (secondaryImage) setPreviewingSecondImage(true);
+        }}
+        onMouseLeave={() => setPreviewingSecondImage(false)}
+        onFocus={() => {
+          if (secondaryImage) setPreviewingSecondImage(true);
+        }}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            setPreviewingSecondImage(false);
+          }
+        }}
         data-testid="product-card"
       >
         <div className="relative aspect-square overflow-hidden" style={{ backgroundColor: 'var(--color-muted)' }}>
-          {imageUrl ? (
+          {primaryImage ? (
             <Image
-              src={imageUrl}
+              src={primaryImage.src}
               alt=""
               fill
               priority={imagePriority}
-              className="object-cover scale-[1.06] transition-transform duration-slow sm:scale-100 sm:group-hover:scale-105"
+              className="object-contain p-3 transition-transform duration-slow motion-reduce:transition-none sm:p-4 sm:group-hover:scale-[1.02]"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              unoptimized={isImageProxySrc(imageUrl)}
+              unoptimized={isImageProxySrc(primaryImage.src)}
+              data-testid="product-card-image-primary"
             />
           ) : (
             <div className="flex items-center justify-center h-full">
               <Package className="w-10 h-10 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
             </div>
+          )}
+
+          {secondaryImage && (
+            <Image
+              src={secondaryImage.src}
+              alt=""
+              fill
+              className={`hidden object-contain p-4 transition-opacity duration-fast motion-reduce:transition-none sm:block ${previewingSecondImage ? 'opacity-100' : 'opacity-0'}`}
+              sizes="(max-width: 1024px) 33vw, 25vw"
+              unoptimized={isImageProxySrc(secondaryImage.src)}
+              data-testid="product-card-image-secondary"
+            />
+          )}
+
+          {cardImages.length > 1 && (
+            <span
+              className="absolute bottom-2.5 right-2.5 z-10 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
+              style={{
+                backgroundColor: 'color-mix(in srgb, var(--color-card) 88%, transparent)',
+                color: 'var(--color-foreground)',
+              }}
+              aria-live="polite"
+              data-testid="product-card-image-counter"
+            >
+              {activeImageIndex + 1}/{cardImages.length}
+            </span>
           )}
 
           {product.freshness && (
@@ -425,19 +500,6 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
                     </span>
                   )}
                 </div>
-                {fulfillmentFacts.length > 0 && (
-                  <div className="flex flex-wrap gap-1" data-testid="product-card-fulfillment">
-                    {fulfillmentFacts.map((fact) => (
-                      <span
-                        key={fact}
-                        className="rounded-full border px-2 py-0.5"
-                        style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}
-                      >
-                        {fact}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
 

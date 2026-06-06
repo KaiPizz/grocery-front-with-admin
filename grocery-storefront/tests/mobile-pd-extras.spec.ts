@@ -250,16 +250,27 @@ test.describe('PDP gallery production hardening', () => {
     // Protects the PDP production plan: media[] is the primary gallery source,
     // and a matching thumbnail should not create a duplicate fourth image.
     await expect(gallery.getByTestId('product-gallery-thumbnail')).toHaveCount(3);
+    await expect(gallery.getByTestId('product-gallery-counter')).toHaveText('1/3');
     await expect(gallery.getByTestId('product-gallery-main').getByRole('img')).toHaveAttribute(
       'alt',
       /front package/i,
     );
+    const mainImageFit = await gallery.getByTestId('product-gallery-main').getByRole('img').evaluate((element) => {
+      return getComputedStyle(element).objectFit;
+    });
+    expect(mainImageFit).toBe('contain');
 
-    await gallery.getByRole('button', { name: /nutrition label/i }).click();
+    await gallery.getByRole('button', { name: /next product image/i }).click();
+    await expect(gallery.getByTestId('product-gallery-counter')).toHaveText('2/3');
     await expect(gallery.getByTestId('product-gallery-main').getByRole('img')).toHaveAttribute(
       'alt',
       /nutrition label/i,
     );
+    await gallery.getByRole('button', { name: /previous product image/i }).click();
+    await expect(gallery.getByTestId('product-gallery-counter')).toHaveText('1/3');
+
+    await gallery.getByRole('button', { name: /view image 2 of 3: organic gala apples nutrition label/i }).click();
+    await expect(gallery.getByTestId('product-gallery-counter')).toHaveText('2/3');
   });
 
   test('requests and applies backend media sort order before thumbnail fallback', async ({ page }) => {

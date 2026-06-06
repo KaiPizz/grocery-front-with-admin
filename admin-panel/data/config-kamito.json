@@ -26,9 +26,9 @@
     "homepage": {
       "hero": {
         "enabled": true,
-        "headline": "Azjatyckie produkty spozywcze",
-        "subtitle": "Kimchi, sosy, makarony, ryz i codzienne skladniki do kuchni azjatyckiej.",
-        "ctaText": "Zobacz produkty",
+        "headline": "Azjatyckie składniki na codzienny stół",
+        "subtitle": "Kimchi, ryż, sosy, makarony i podstawy kuchni azjatyckiej. Sprawdź dostępność i zamów z odbiorem osobistym.",
+        "ctaText": "Przeglądaj produkty",
         "ctaLink": "/products",
         "backgroundImageUrl": null
       },
@@ -41,7 +41,7 @@
           "ctaLink": "/collections/korean-pantry",
           "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
           "imageUrl": null,
-          "enabled": true,
+          "enabled": false,
           "order": 0
         }
       ],
@@ -101,7 +101,7 @@
         }
       },
       "footer": {
-        "tagline": "Azjatyckie produkty spozywcze do codziennego gotowania.",
+        "tagline": "Azjatyckie produkty spożywcze do codziennego gotowania.",
         "columns": [
           {
             "title": "Sklep",
@@ -162,8 +162,8 @@
       }
     },
     "seo": {
-      "defaultTitle": "Kenmito - azjatyckie produkty spozywcze",
-      "defaultDescription": "Kimchi, sosy, makarony, ryz i produkty kuchni azjatyckiej.",
+      "defaultTitle": "Kenmito - azjatyckie produkty spożywcze",
+      "defaultDescription": "Kimchi, sosy, makarony, ryż i produkty kuchni azjatyckiej.",
       "ogImageUrl": null,
       "canonical": "https://kamito.enail.pro"
     },
@@ -274,9 +274,9 @@
     "homepage": {
       "hero": {
         "enabled": true,
-        "headline": "Azjatyckie produkty spozywcze",
-        "subtitle": "Kimchi, sosy, makarony, ryz i codzienne skladniki do kuchni azjatyckiej.",
-        "ctaText": "Zobacz produkty",
+        "headline": "Azjatyckie składniki na codzienny stół",
+        "subtitle": "Kimchi, ryż, sosy, makarony i podstawy kuchni azjatyckiej. Sprawdź dostępność i zamów z odbiorem osobistym.",
+        "ctaText": "Przeglądaj produkty",
         "ctaLink": "/products",
         "backgroundImageUrl": null
       },
@@ -289,7 +289,7 @@
           "ctaLink": "/collections/korean-pantry",
           "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
           "imageUrl": null,
-          "enabled": true,
+          "enabled": false,
           "order": 0
         }
       ],
@@ -349,7 +349,7 @@
         }
       },
       "footer": {
-        "tagline": "Azjatyckie produkty spozywcze do codziennego gotowania.",
+        "tagline": "Azjatyckie produkty spożywcze do codziennego gotowania.",
         "columns": [
           {
             "title": "Sklep",
@@ -410,8 +410,8 @@
       }
     },
     "seo": {
-      "defaultTitle": "Kenmito - azjatyckie produkty spozywcze",
-      "defaultDescription": "Kimchi, sosy, makarony, ryz i produkty kuchni azjatyckiej.",
+      "defaultTitle": "Kenmito - azjatyckie produkty spożywcze",
+      "defaultDescription": "Kimchi, sosy, makarony, ryż i produkty kuchni azjatyckiej.",
       "ogImageUrl": null,
       "canonical": "https://kamito.enail.pro"
     },

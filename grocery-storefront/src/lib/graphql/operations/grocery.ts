@@ -7,6 +7,7 @@ const GROCERY_PRODUCT_FIELDS = `
     slug
     description
     thumbnail { url alt }
+    media { url alt type sortOrder }
     allergens
     dietaryTags
     calories
@@ -107,7 +108,6 @@ export const PRODUCT_BY_SLUG_QUERY = `
   query GroceryProduct($channel: String!, $slug: String!) {
     product(channel: $channel, slug: $slug) {
       ...GroceryProductFields
-      media { url alt type sortOrder }
     }
   }
 `;

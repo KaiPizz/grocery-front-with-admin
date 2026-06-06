@@ -371,9 +371,13 @@ export default function CheckoutPage() {
           ? 'Płatność wróciła do checkoutu. Sprawdź zamówienie i dokończ je, jeśli bramka zakończyła się sukcesem.'
           : 'Payment returned to checkout. Review the order and finish if the gateway succeeded.',
       noDeliveryOptions:
-        locale === 'pl'
-          ? 'Dla tego koszyka nie ma jeszcze dostępnych metod dostawy.'
-          : 'No delivery options are available for this cart yet.',
+        pickupMode
+          ? locale === 'pl'
+            ? 'Odbiór osobisty nie jest jeszcze dostępny dla tego sklepu. Sklep musi dokończyć konfigurację odbioru przed przyjęciem zamówień.'
+            : 'Pickup is not available for this store yet. The store must finish pickup setup before accepting orders.'
+          : locale === 'pl'
+            ? 'Dla tego koszyka nie ma jeszcze dostępnych metod dostawy.'
+            : 'No delivery options are available for this cart yet.',
       failedDeliverySelection:
         locale === 'pl'
           ? 'Nie udało się zapisać wybranej metody dostawy.'
@@ -385,8 +389,8 @@ export default function CheckoutPage() {
       retryHandoff: locale === 'pl' ? 'Ponów przekazanie checkoutu' : 'Retry handoff',
       noPaymentMethods:
         locale === 'pl'
-          ? 'Metody płatności są już skonfigurowane, ale checkout nie został jeszcze poprawnie przekazany z powodu błędu backendu.'
-          : 'Payment methods are configured, but checkout handoff has not completed yet because the backend bridge is failing.',
+          ? 'Metody płatności nie są jeszcze dostępne dla tego sklepu. Sklep musi dokończyć konfigurację płatności przed przyjęciem zamówień.'
+          : 'Payment methods are not available for this store yet. The store must finish payment setup before accepting orders.',
       calculatedNext: locale === 'pl' ? 'Wyliczymy dalej' : 'Calculated next',
       discountLabel: locale === 'pl' ? 'Rabat' : 'Discount',
       noneLabel: locale === 'pl' ? 'Brak' : 'None',
@@ -397,7 +401,7 @@ export default function CheckoutPage() {
           ? 'Nie ma wystarczającego stanu magazynowego, aby złożyć to zamówienie. Sprawdź koszyk i zmień ilości przed ponowną próbą.'
           : 'Not enough stock to complete this order. Review your cart and adjust quantities before trying again.',
     }),
-    [locale]
+    [locale, pickupMode]
   );
 
   const loadPaymentMethods = useCallback(async () => {

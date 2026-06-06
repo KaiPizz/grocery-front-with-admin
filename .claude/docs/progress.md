@@ -6,6 +6,25 @@
 
 ---
 
+## 2026-06-06 Kenmito Retail Polish And Checkout Readiness
+
+- Product listing images now use a no-crop package policy and can display a secondary catalog image on desktop hover/focus when Zyra provides multiple `media` images.
+- Product cards no longer repeat pickup, bank-transfer, and manual-confirmation operations chips on every item; those promises belong to page-level trust/checkout surfaces.
+- Mobile product cards keep compact add/wishlist touch actions and reveal the full quantity stepper only after the product is in the cart.
+- Product detail galleries now use contained package images, visible `1/n` counters, previous/next controls, and index-specific thumbnail labels while preserving the 320px overflow fix.
+- Checkout now states the real launch blocker when backend returns no pickup/shipping or payment methods for the channel instead of implying a generic checkout handoff bug.
+- Polish fulfillment copy touched by launch surfaces now uses correct diacritics.
+- Backend audit from 2026-06-06 supersedes older notes that said Kamito had active `PICKUP` and `bank_transfer`: current production is browse-only and checkout remains NO-GO until backend links shipping/payment methods, maps warehouse if required, proves test orders, and wires staff order notification.
+
+## 2026-06-06 Kenmito Catalog-First Homepage
+
+- The legacy homepage hero now uses one responsive catalog-first visual system on mobile and desktop, with real product thumbnails from the existing product query and a clean no-media fallback.
+- Availability-only storefronts now show visual real-category cards ordered by assortment size, configured commercial links, and a truthful pickup/bank-transfer/manual-confirmation trust strip.
+- Generic homepage labels no longer claim category popularity or product recency without supporting data.
+- Kenmito's hero copy now describes Asian pantry ingredients and pickup honestly; the image-less Korean pantry promo banner is disabled while its quick link and curated collection remain active.
+- An explicitly empty or fully disabled `homepage.promoBanners` list now renders no carousel instead of falling back to generic promotional claims.
+- Owner-approved logo, hero/category photography, contact details, and pickup/payment instructions remain open content work.
+
 ## 2026-06-06 Kenmito Display Brand And Promotion Cleanup
 
 - The shopper-facing brand is now `Kenmito` in admin draft/published config and the tracked storefront static config; technical tenant/channel/slug/file identifiers remain `kamito`.
@@ -33,7 +52,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Homepage (`/`) | ✅ | Mobile + desktop layouts, hero section, Shop by Zone, Deals, Fresh Picks, Recipes. Config-driven section ordering and banner blocks. Skeleton loading states. 2026-05-22: admin Hero Banner blocks now occupy the first hero slot instead of rendering below the hardcoded legacy hero; legacy hero copy/CTA also reads `homepage.hero` config. 2026-06-06: Deals now renders real discounted products only and disappears when the loaded catalog has no sale pricing; Kenmito disables this section until backend sale data exists. |
+| Homepage (`/`) | ✅ | Mobile + desktop layouts, hero section, Shop by Zone, Deals, Fresh Picks, Recipes. Config-driven section ordering and banner blocks. Skeleton loading states. 2026-05-22: admin Hero Banner blocks now occupy the first hero slot instead of rendering below the hardcoded legacy hero; legacy hero copy/CTA also reads `homepage.hero` config. 2026-06-06: Deals now renders real discounted products only and disappears when the loaded catalog has no sale pricing; Kenmito disables this section until backend sale data exists. 2026-06-06: the legacy hero now uses real catalog media across breakpoints; availability-only stores get visual category discovery and truthful fulfillment trust, and unsupported popularity/recency labels were removed. |
 | Products listing (`/products`) | ✅ | Search, sort, category/zone/allergen/dietary/certification/price filtering, pagination. Responsive grid. 2026-05-15: listing state/filter/grid behavior moved into shared `ProductListingClient`; `/products` remains the uncategorized catalog surface while category pages pass category context into the same controls. 2026-05-24: standalone `/products` now exposes category filter chips in the desktop filter panel and mobile draft/apply filter sheet, matching the reference stores' category-first catalog pattern. 2026-05-24: committed filters now render an active-filter summary with result count, removable chips, clear-all action, and localized empty-state recovery copy. 2026-05-25: product listing cards opt into a catalog scan hierarchy for price/unit price, promo, availability-only stock, category/origin/storage facts, and Kamito pickup/bank-transfer/manual confirmation truth without changing homepage card surfaces. |
 | Categories (`/categories`, `/categories/[slug]`) | ✅ | 2026-05-13: added flat-first category browsing from Zyra GraphQL `categories(channel)` and nested `Category.products(channel, first)`. Keeps empty storefront categories visible with Coming soon/Wkrótce badges, shows per-category `totalCount`, and renders category slug product grids with load-more support. 2026-05-14: refactored to SSR-first/no-JS first render, added deterministic GraphQL SSR Playwright mock coverage, and updated current admin config nav/footer links to expose `/categories`. 2026-05-15: category slug pages now reuse product listing sort/filter/grid controls and query `products(filter: { categories: [id], ... })` when JS is enabled, while preserving SSR/no-JS first render. |
 | Commercial collections (`/collections/[slug]`) | ✅ | 2026-05-23: added config-backed curated landing pages with hero, optional image, and ordered tiles from `StorefrontConfig.commercial.collections`. Disabled or missing collections return 404. |
@@ -206,6 +225,7 @@
 | Live `chesaigon` catalog regressed to 1 visible product | High | 2026-05-15: fresh GraphQL probe returned `totalCount: 1` for `products(channel:"chesaigon")`, contradicting the 2026-05-13 snapshot of 121 storefront-visible products. Product-data-dependent UI validation is unreliable until backend restores representative channel data or confirms a replacement source. |
 | Kenmito production content still lacks owner assets/contact details | Medium | 2026-06-06: display branding and canonical URL are set, but phone, email, address, prepared logo/favicon/hero imagery, pickup/bank-transfer instructions, and legal/contact routing still need owner-approved production data. The existing 320x320 KENMITO JPG has excessive whitespace and is not wired as a production header logo. |
 | Kamito tenant release audit intentionally fails until owner data exists | Medium | 2026-06-06: `npm run audit:kamito-config` now has the canonical URL and clean promotional config; it should continue to fail only for missing owner phone, email, and address until real values are supplied. |
+| Kamito checkout backend methods are not wired in production | High | 2026-06-06 backend audit: `availablePaymentMethods(channel:"kamito")=[]` and `availableShippingMethods(channel:"kamito")=[]`, so checkout cannot complete. Frontend must not fake `bank_transfer` or `PICKUP`; backend must link/create the channel methods and prove guest/auth test orders. |
 | Kamito backend ops notifications are not wired | High | 2026-05-24: backend confirmed `ORDER_CREATED` webhook/subscription is not configured and checkout completion emits no event. Storefront must not promise automated email/SMS; launch needs backend webhook/event wiring or manual ops order monitoring. |
 | Kamito product media contains duplicate CDN assets | Medium | 2026-05-25: live CDN bytes confirm duplicate image files under different URLs on multi-image products, e.g. `KIMCHI-5216` sort orders 2/4 and 3/5 are exact SHA-256 matches, and `KIMCHI-5215` sort orders 2/4 match. Frontend URL de-dupe cannot catch this because URLs differ; backend importer/data cleanup needs to remove duplicate assets. |
 

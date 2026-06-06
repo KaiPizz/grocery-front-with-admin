@@ -42,11 +42,11 @@ test.describe('listing cart controls', () => {
     await page.goto('/en/products');
 
     const card = page.getByTestId('mobile-product-card').first();
-    const stepper = card.getByTestId('mobile-product-card-stepper');
 
-    await expect(stepper).toHaveAttribute('data-in-cart', 'false');
+    await expect(card.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await card.getByTestId('mobile-product-card-add').click();
 
+    const stepper = card.getByTestId('mobile-product-card-stepper');
     await expect(stepper).toHaveAttribute('data-in-cart', 'true');
     await expect(card.getByTestId('mobile-product-card-quantity-value')).toHaveText('1');
     await expect(page.getByTestId('mobile-bottom-nav-cart-badge')).toHaveText('1');

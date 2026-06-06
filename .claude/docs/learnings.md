@@ -8,6 +8,18 @@
 
 ## Project Documentation
 
+### New backend audit supersedes old Kamito checkout notes
+- **Error:** Older wiki/progress notes still described Kamito `PICKUP` and `bank_transfer` as active, which would lead frontend work to treat checkout as configured.
+- **Cause:** Backend state changed or the earlier confirmation was not true for the current production channel wiring; the 2026-06-06 read-only audit showed `availableShippingMethods(channel:"kamito")=[]` and `availablePaymentMethods(channel:"kamito")=[]`.
+- **Fix:** Updated progress/debt and checkout empty-state copy to treat current production as browse-only until backend links the methods and proves test orders.
+- **Rule:** For launch gates, newest tenant-scoped production audit beats older wiki snapshots. Do not hardcode frontend fallbacks for missing backend shipping/payment methods.
+
+### Repeated config patch regressed the category section while disabling a banner
+- **Error:** A patch intended to disable the repeated `banner-korean-pantry` entries also changed `shopByZone.enabled` to `false` in both admin config branches.
+- **Cause:** The patch included a generic `"enabled": true` replacement after editing nearby hero fields instead of anchoring every change to the banner ID.
+- **Fix:** Inspected the semantic git diff, restored both `shopByZone` entries with ID-scoped patches, then parsed static, published, and draft config summaries to compare hero, banner, sections, quick link, and collection state.
+- **Rule:** Treat repeated tenant JSON as structured data: patch each target with its unique ID in context and compare parsed semantic summaries before continuing.
+
 ### Repeated JSON fields need ID-scoped patch context and parsed verification
 - **Error:** A broad patch intended to disable the `deals` section in both admin config branches matched the preceding `shopByZone.enabled` fields instead.
 - **Cause:** Published and draft JSON contain repeated `"enabled": true` values, and the initial patch context did not include the unique section `id`.
@@ -43,6 +55,12 @@
 ---
 
 ## React State Bugs
+
+### An explicitly empty promo config still rendered generic fallback promotions
+- **Error:** Kenmito's disabled promo banner left a large desktop carousel and generic promotion content between the hero and categories.
+- **Cause:** `PromoBanner` treated both a missing `promoBanners` field and an explicitly empty/fully-disabled list as the same fallback case.
+- **Fix:** Reserve fallback slides for legacy configs where the field is `undefined`; return no carousel when the configured list exists but has no enabled slides.
+- **Rule:** Distinguish absent legacy configuration from an explicit empty configuration. Empty admin content is often a deliberate product decision, not permission to invent fallback marketing.
 
 ### Listing card changes can leak into homepage and PDP rails
 - **Error:** A listing scan-value pass initially added promo, availability, fulfillment, and catalog fact rows directly inside `ProductCard` and `MobileProductCard` without a scope gate.
@@ -252,6 +270,18 @@
 
 ## Testing Errors
 
+### Parallel Playwright runs collide on the fixed config-server port
+- **Error:** Running multiple Playwright commands in parallel caused one worker to fail before tests with `EADDRINUSE: address already in use 127.0.0.1:4199`.
+- **Cause:** `playwright.config.ts` starts `node tests/config-server.mjs` on the fixed port `4199` with `reuseExistingServer: false`; simultaneous commands race for the same port.
+- **Fix:** Reran the affected specs sequentially and treated the parallel failure as harness setup noise, not a storefront behavior failure.
+- **Rule:** Do not run separate Playwright commands in parallel for this storefront. Batch specs in one command or run them sequentially.
+
+### Homepage specs must follow shared mobile card contracts
+- **Error:** The targeted launch Playwright run failed because `mobile-homepage.spec.ts` still expected homepage mobile product cards to show a full quantity stepper before add.
+- **Cause:** The retail-polish slice intentionally changed `MobileProductCard` so the full stepper appears only after the product is in the cart, but the homepage spec carried the older card contract while listing specs were updated.
+- **Fix:** Updated the homepage spec to assert media plus compact add/wishlist actions before add and `mobile-product-card-stepper` count `0`.
+- **Rule:** When changing a shared card contract, grep all page-level specs that render the card, not only listing-specific specs.
+
 ### Imported Lucide `Image` directly on an admin page and triggered a false accessibility warning
 - **Error:** `next lint` reported `jsx-a11y/alt-text` on the admin dashboard even though the node was a Lucide icon component, not an HTML `<img>`.
 - **Cause:** Naming the imported icon `Image` makes the JSX lint rule treat `<Image />` like an image element that requires `alt`.
@@ -263,6 +293,12 @@
 - **Cause:** The build was started in parallel with Playwright, whose web server was running `npx next dev` in the same app directory. Both processes touched `.next` at the same time.
 - **Fix:** Waited for Playwright to finish, then reran `npm run build` sequentially; the build passed.
 - **Rule:** Do not run `next build` concurrently with Playwright or any active `next dev` process for the same workspace. Run Next build and Playwright sequentially.
+
+### Interrupted Next dev left a missing vendor chunk in `.next`
+- **Error:** Storefront returned a 500 on `/en` with `Cannot find module './vendor-chunks/tailwind-merge.js'` from `.next/server/webpack-runtime.js`, while `node_modules/tailwind-merge` was installed.
+- **Cause:** A stale/interrupted Next dev build left `.next/server/app/.../page.js` requiring `vendor-chunks/tailwind-merge`, but `.next/server/vendor-chunks/tailwind-merge.js` was absent.
+- **Fix:** Stopped the old `grocery-storefront` Next dev processes, deleted only `grocery-storefront/.next`, restarted `npm run dev`, and verified `/en` returned 200 with the vendor chunk regenerated.
+- **Rule:** When a dev server reports a missing `.next/server/vendor-chunks/*.js` file but the dependency exists in `node_modules`, treat `.next` as corrupt build output: stop all Next processes for that app, remove `.next`, and restart dev. Do not edit source or reinstall dependencies first.
 
 ### `npm run dev` failed because port 3008 was already held by stale Next dev
 - **Error:** Storefront `npm run dev` failed with `listen EADDRINUSE: address already in use :::3008`.

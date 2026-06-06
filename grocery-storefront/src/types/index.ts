@@ -22,6 +22,13 @@ export interface ProductImage {
   height?: number;
 }
 
+export interface ProductMedia {
+  url?: string | null;
+  alt?: string | null;
+  type?: string | null;
+  sortOrder?: number | null;
+}
+
 export interface ProductVariant {
   id: string;
   name: string;
@@ -47,6 +54,7 @@ export interface GroceryProduct {
   description?: string;
   thumbnail?: ProductImage;
   images?: ProductImage[];
+  media?: ProductMedia[];
   category?: {
     id: string;
     name: string;

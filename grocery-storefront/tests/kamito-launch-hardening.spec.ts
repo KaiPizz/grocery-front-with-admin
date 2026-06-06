@@ -237,6 +237,36 @@ test.describe('Kamito launch truth copy', () => {
     await expect(reviewSection).toContainText(/pickup confirmation/i);
   });
 
+  test('checkout blocks honestly when backend exposes no pickup method for the channel', async ({ page }) => {
+    await mockPickupConfig(page);
+    await seedCartStorage(page);
+    await mockMobileStorefront(page, { cart: 'single-item', checkoutProfile: 'unconfigured' });
+    await page.goto('/en/checkout');
+
+    await fillDeliveryForm(page);
+    await page.getByRole('button', { name: /continue/i }).click();
+
+    const shippingAlert = page.getByRole('alert').filter({ hasText: /pickup is not available for this store yet/i });
+    await expect(shippingAlert).toBeVisible();
+    await expect(page.locator('#checkout-panel-shipping').getByRole('button', { name: /pickup in store/i })).toHaveCount(0);
+  });
+
+  test('checkout blocks honestly when backend exposes pickup but no payment methods for the channel', async ({ page }) => {
+    await mockPickupConfig(page);
+    await seedCartStorage(page);
+    await mockMobileStorefront(page, { cart: 'single-item', checkoutProfile: 'pickup-no-payment' });
+    await page.goto('/en/checkout');
+
+    await fillDeliveryForm(page);
+    await page.getByRole('button', { name: /continue/i }).click();
+
+    const pickupMethod = page.locator('#checkout-panel-shipping').getByRole('button', { name: /pickup in store/i });
+    await expect(pickupMethod).toBeVisible();
+    await pickupMethod.click();
+
+    await expect(page.locator('#checkout-panel-payment')).toContainText(/payment methods are not available for this store yet/i);
+  });
+
   test('checkout complete explains insufficient stock without placing the order', async ({ page }) => {
     await mockPickupConfig(page);
     await seedCartStorage(page);
@@ -252,7 +282,7 @@ test.describe('Kamito launch truth copy', () => {
     await expect(summaryPanel).toBeVisible();
     await summaryPanel.getByRole('button', { name: /^close$/i }).click();
     await expect(summaryPanel).toHaveCount(0);
-    await page.getByRole('button', { name: /place order/i }).click({ force: true });
+    await page.getByTestId('checkout-section-review').getByRole('button', { name: /place order/i }).click();
 
     const alert = page.getByRole('alert').filter({ hasText: /not enough stock/i });
     await expect(alert).toBeVisible();
@@ -295,10 +325,27 @@ test.describe('Kamito category discovery', () => {
     await page.goto('/en');
 
     await expect(page.getByTestId('mobile-home-hero')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /popular categories/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /browse categories/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /fruit/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /outlet/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /korean pantry/i })).toBeVisible();
     await expect(page.getByRole('heading', { name: /shop by storage zone/i })).toHaveCount(0);
+    await expect(page.locator('[data-testid="home-category-card-image"]:visible')).toHaveCount(1);
+    await expect(page.getByRole('heading', { name: /new arrivals/i })).toHaveCount(0);
+
+    const trust = page.locator('[data-testid="home-fulfillment-trust"]:visible');
+    await expect(trust).toBeVisible();
+    await expect(trust.getByText(/pickup.*available/i)).toBeVisible();
+    await expect(trust.getByText(/bank transfer/i)).toBeVisible();
+    await expect(trust.getByText(/manual confirmation/i)).toBeVisible();
+  });
+
+  test('does not invent a desktop promotion carousel when config has no banners', async ({ page }) => {
+    await mockPickupConfig(page);
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en');
+
+    await expect(page.locator('[aria-roledescription="carousel"]')).toHaveCount(0);
   });
 });

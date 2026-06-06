@@ -22,14 +22,19 @@ test('tracked Kamito static config carries Kenmito launch truth', () => {
   const envelope = JSON.parse(raw);
   const config = envelope.config;
   const dealsSection = config.homepage.sections.find((section) => section.id === 'deals');
+  const categorySection = config.homepage.sections.find((section) => section.id === 'shopByZone');
+  const koreanPantryBanner = config.homepage.promoBanners.find((banner) => banner.id === 'banner-korean-pantry');
   const footerLinks = config.layout.footer.columns.flatMap((column) => column.links);
 
   assert.equal(config.branding.storeName, 'Kenmito');
+  assert.equal(config.homepage.hero.headline, 'Azjatyckie składniki na codzienny stół');
   assert.equal(config.general.fulfillment.mode, 'pickup');
   assert.equal(config.general.fulfillment.paymentPromise, 'bank_transfer');
   assert.equal(config.general.fulfillment.stockDisplayMode, 'availability_only');
   assert.match(config.seo.defaultTitle, /^Kenmito\b/);
+  assert.equal(categorySection?.enabled, true);
   assert.equal(dealsSection?.enabled, false);
+  assert.equal(koreanPantryBanner?.enabled, false);
   assert.equal(config.commercial.outlet.enabled, false);
   assert.equal(config.commercial.outlet.collectionSlug, null);
   assert.equal(config.commercial.quickLinks.some((link) => link.kind === 'outlet' && link.enabled), false);

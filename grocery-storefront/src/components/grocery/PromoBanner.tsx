@@ -47,7 +47,7 @@ export function PromoBanner() {
     },
   ];
 
-  const slides: BannerSlide[] = configBanners && configBanners.length > 0
+  const slides: BannerSlide[] = configBanners !== undefined
     ? configBanners
         .filter(b => b.enabled)
         .sort((a, b) => a.order - b.order)
@@ -55,16 +55,22 @@ export function PromoBanner() {
     : fallbackSlides;
 
   const next = useCallback(() => {
+    if (slides.length === 0) return;
     setCurrent((prev) => (prev + 1) % slides.length);
   }, [slides.length]);
 
   useEffect(() => {
+    if (slides.length === 0) return;
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mq.matches) return;
 
     const timer = setInterval(next, 5000);
     return () => clearInterval(timer);
-  }, [next]);
+  }, [next, slides.length]);
+
+  if (slides.length === 0) {
+    return null;
+  }
 
   return (
     <div

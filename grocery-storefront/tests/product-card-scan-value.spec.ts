@@ -109,7 +109,7 @@ async function mockPickupConfig(page: Page) {
 }
 
 test.describe('listing product card scan value', () => {
-  test('desktop cards expose grocery facts and Kamito fulfillment truth without exact stock or shipping promises', async ({ page }) => {
+  test('desktop cards expose product facts without cropping package images or repeating operational chips', async ({ page }) => {
     await mockPickupConfig(page);
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -126,17 +126,22 @@ test.describe('listing product card scan value', () => {
     await expect(facts).toContainText(/poland/i);
     await expect(facts).toContainText(/shelf-stable/i);
 
-    const fulfillment = card.getByTestId('product-card-fulfillment');
-    await expect.poll(async () => (await fulfillment.textContent()) ?? '', { timeout: 5000 }).toMatch(/pickup/i);
-    await expect(fulfillment).toContainText(/bank transfer/i);
-    await expect(fulfillment).toContainText(/manual confirmation/i);
+    await expect(card.getByTestId('product-card-fulfillment')).toHaveCount(0);
+
+    const primaryImageFit = await card.getByTestId('product-card-image-primary').evaluate((element) => {
+      return getComputedStyle(element).objectFit;
+    });
+    expect(primaryImageFit).toBe('contain');
+    await expect(card.getByTestId('product-card-image-counter')).toContainText('1/3');
+    await card.hover();
+    await expect(card.getByTestId('product-card-image-counter')).toContainText('2/3');
 
     await expect(card.getByRole('button', { name: /add to cart/i })).toBeVisible();
     await expect(card.getByRole('button', { name: /add to wishlist/i })).toBeVisible();
-    await expect(card).not.toContainText(/only 20 left|ships today|ships tomorrow|same-day shipping/i);
+    await expect(card).not.toContainText(/only 20 left|ships today|ships tomorrow|same-day shipping|pickup|bank transfer|manual confirmation/i);
   });
 
-  test('mobile cards keep purchase controls while surfacing price, availability, origin, promo, and pickup truth', async ({ page }) => {
+  test('mobile cards keep compact touch actions while surfacing product essentials without pre-add steppers', async ({ page }) => {
     await mockPickupConfig(page);
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 390, height: 844 });
@@ -153,14 +158,11 @@ test.describe('listing product card scan value', () => {
     await expect(scanFacts).toContainText(/poland/i);
     await expect(scanFacts).toContainText(/shelf-stable/i);
 
-    const fulfillment = card.getByTestId('mobile-product-card-fulfillment');
-    await expect.poll(async () => (await fulfillment.textContent()) ?? '', { timeout: 5000 }).toMatch(/pickup/i);
-    await expect(fulfillment).toContainText(/bank transfer/i);
-    await expect(fulfillment).toContainText(/manual confirmation/i);
-
     await expect(card.getByTestId('mobile-product-card-add')).toBeVisible();
     await expect(card.getByTestId('mobile-product-card-wishlist')).toBeVisible();
-    await expect(card.getByTestId('mobile-product-card-stepper')).toBeVisible();
-    await expect(card).not.toContainText(/only 20 left|ships today|ships tomorrow|same-day shipping/i);
+    await expect(card.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
+    await expect(card.getByTestId('mobile-product-card-image-counter')).toContainText('1/3');
+    await expect(card.getByTestId('mobile-product-card-fulfillment')).toHaveCount(0);
+    await expect(card).not.toContainText(/only 20 left|ships today|ships tomorrow|same-day shipping|pickup|bank transfer|manual confirmation/i);
   });
 });

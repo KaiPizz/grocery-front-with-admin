@@ -3,9 +3,10 @@
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
 import {
-  ArrowUpRight,
+  Banknote,
+  CheckCircle2,
   ChevronRight,
-  Leaf,
+  MapPin,
   Percent,
   Snowflake,
   Sun,
@@ -22,7 +23,12 @@ import { useChannel } from '@/hooks/use-channel';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { getEnabledCommercialQuickLinks } from '@/lib/commercial-config';
 import { groupCategories, type GroupableCategory } from '@/lib/category-groups';
-import { usesAvailabilityOnlyStock } from '@/lib/fulfillment';
+import {
+  isPickupFulfillment,
+  usesAvailabilityOnlyStock,
+  usesBankTransferPromise,
+} from '@/lib/fulfillment';
+import { normalizeImageUrl } from '@/lib/utils';
 import type { CommercialQuickLink, HomepageSectionId } from '@/types/storefront-config';
 
 interface HomeProduct {
@@ -79,6 +85,10 @@ interface HomeRecipe {
 }
 
 interface HomeCategory extends GroupableCategory {
+  backgroundImage?: {
+    url?: string | null;
+    alt?: string | null;
+  } | null;
   products: {
     totalCount: number;
   } | null;
@@ -112,8 +122,134 @@ function HomeShelfSkeleton() {
   );
 }
 
-function formatCategoryCount(count: number) {
-  return count === 1 ? '1 product' : `${count} products`;
+function HomeCatalogHero({
+  headline,
+  subtitle,
+  ctaText,
+  ctaLink,
+  products,
+  pickup,
+  loading,
+}: {
+  headline: string;
+  subtitle: string;
+  ctaText: string;
+  ctaLink: string;
+  products: HomeProduct[];
+  pickup: boolean;
+  loading: boolean;
+}) {
+  const t = useTranslations('home');
+  const tFulfillment = useTranslations('fulfillment');
+  const visualProducts = products
+    .map((product) => ({
+      id: product.id,
+      name: product.name,
+      imageUrl: normalizeImageUrl(product.thumbnail?.url),
+    }))
+    .filter((product): product is { id: string; name: string; imageUrl: string } => Boolean(product.imageUrl))
+    .slice(0, 4);
+
+  return (
+    <div
+      className="relative overflow-hidden rounded-[30px] border shadow-[0_28px_80px_-54px_rgba(25,78,48,0.5)] md:rounded-[38px]"
+      style={{
+        borderColor: 'color-mix(in srgb, var(--color-primary) 14%, var(--color-border))',
+        backgroundColor: 'color-mix(in srgb, var(--color-accent) 62%, var(--color-card))',
+      }}
+    >
+      <div className="grid items-stretch md:grid-cols-[1.08fr_0.92fr]">
+        <div className="flex flex-col justify-center px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-12 lg:px-14 lg:py-16">
+          <span
+            className="mb-4 inline-flex w-fit items-center rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em]"
+            style={{
+              borderColor: 'color-mix(in srgb, var(--color-primary) 22%, var(--color-border))',
+              backgroundColor: 'color-mix(in srgb, var(--color-card) 78%, transparent)',
+              color: 'var(--color-primary)',
+            }}
+          >
+            {pickup ? tFulfillment('pickupService') : t('categoryShortcuts')}
+          </span>
+          <h1
+            className="max-w-[14ch] text-[2rem] font-semibold leading-[0.98] tracking-[-0.055em] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.35rem]"
+            style={{ color: 'var(--color-foreground)', fontFamily: 'var(--font-display)' }}
+          >
+            {headline}
+          </h1>
+          <p
+            className="mt-4 max-w-[34rem] text-sm leading-6 sm:text-base md:text-lg md:leading-7"
+            style={{ color: 'var(--color-muted-foreground)' }}
+          >
+            {subtitle}
+          </p>
+          <Link
+            href={ctaLink}
+            className="mt-6 inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold text-white shadow-[0_16px_34px_-20px_rgba(22,101,62,0.9)] transition-transform duration-fast hover:-translate-y-0.5 active:translate-y-0"
+            style={{ backgroundColor: 'var(--color-primary)' }}
+          >
+            {ctaText}
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div
+          className="grid min-h-[104px] grid-cols-4 gap-1.5 p-2 sm:min-h-[128px] sm:gap-2 sm:p-3 md:min-h-full md:grid-cols-2 md:grid-rows-2 md:gap-3 md:p-4"
+          style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 7%, transparent)' }}
+          aria-label={t('catalogPreview')}
+        >
+          {visualProducts.length > 0 ? (
+            visualProducts.map((product, index) => (
+              <div
+                key={product.id}
+                className={`relative min-h-[92px] overflow-hidden rounded-[14px] border sm:min-h-[108px] md:min-h-[118px] md:rounded-[20px] ${
+                  visualProducts.length < 3 && index === 0 ? 'col-span-2 md:col-span-2' : ''
+                }`}
+                style={{
+                  borderColor: 'color-mix(in srgb, var(--color-card) 72%, transparent)',
+                  backgroundColor: 'var(--color-muted)',
+                }}
+              >
+                {/* Runtime catalog hosts are tenant-configurable, so this intentionally remains a plain image. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  loading={index < 2 ? 'eager' : 'lazy'}
+                  data-testid="home-hero-product-image"
+                />
+                <div
+                  className="absolute inset-x-0 bottom-0 hidden px-3 pb-2 pt-7 md:block"
+                  style={{ background: 'linear-gradient(180deg, transparent, rgba(15, 35, 23, 0.72))' }}
+                >
+                  <span className="line-clamp-1 text-xs font-semibold text-white">{product.name}</span>
+                </div>
+              </div>
+            ))
+          ) : loading ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="min-h-[92px] rounded-[14px] skeleton sm:min-h-[108px] md:min-h-[118px] md:rounded-[20px]"
+                aria-hidden="true"
+              />
+            ))
+          ) : (
+            <div
+              className="col-span-2 flex min-h-[210px] items-center justify-center rounded-[22px] border p-8 text-center"
+              style={{
+                borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
+                backgroundColor: 'color-mix(in srgb, var(--color-card) 78%, transparent)',
+                color: 'var(--color-muted-foreground)',
+              }}
+            >
+              <span className="max-w-[18rem] text-sm leading-6">{t('catalogPreviewFallback')}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function HomeCategoryShortcuts({
@@ -125,7 +261,10 @@ function HomeCategoryShortcuts({
 }) {
   const t = useTranslations('home');
   const groupedCategories = groupCategories(categories);
-  const visibleCategories = groupedCategories.flatMap((group) => group.categories).slice(0, 6);
+  const visibleCategories = groupedCategories
+    .flatMap((group) => group.categories)
+    .sort((left, right) => (right.products?.totalCount ?? 0) - (left.products?.totalCount ?? 0))
+    .slice(0, 6);
   const visibleQuickLinks = quickLinks.slice(0, 3);
 
   if (visibleCategories.length === 0 && visibleQuickLinks.length === 0) {
@@ -133,55 +272,176 @@ function HomeCategoryShortcuts({
   }
 
   return (
-    <section className="container-grocery py-5" data-testid="home-category-shortcuts">
-      <h2
-        className="heading-section mb-4 text-xl md:text-2xl"
-        style={{ color: 'var(--color-foreground)' }}
-      >
-        {t('categoryShortcuts')}
-      </h2>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+    <section className="container-grocery py-5 md:py-8" data-testid="home-category-shortcuts">
+      <div className="mb-4 flex items-end justify-between gap-4 md:mb-6">
+        <h2
+          className="heading-section text-xl md:text-2xl"
+          style={{ color: 'var(--color-foreground)' }}
+        >
+          {t('categoryShortcuts')}
+        </h2>
+        <Link href="/categories" className="text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
+          {t('seeAllCategories')}
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {visibleCategories.map((category) => {
           const count = category.products?.totalCount ?? 0;
-          const countLabel = formatCategoryCount(count);
+          const countLabel = t('productCount', { count });
+          const imageUrl = normalizeImageUrl(category.backgroundImage?.url);
 
           return (
             <Link
               key={category.id}
               href={`/categories/${category.slug}`}
               aria-label={`${category.name}, ${countLabel}`}
-              className="rounded-lg border p-3 transition-transform duration-fast hover:-translate-y-0.5"
+              className="group overflow-hidden rounded-[20px] border transition-transform duration-fast hover:-translate-y-0.5"
               style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
             >
-              <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                {category.name}
+              <span
+                className="relative flex aspect-[16/9] items-center justify-center overflow-hidden"
+                style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 8%, var(--color-muted))' }}
+              >
+                {imageUrl ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imageUrl}
+                      alt={category.backgroundImage?.alt || category.name}
+                      className="h-full w-full object-cover transition-transform duration-normal group-hover:scale-[1.03]"
+                      loading="lazy"
+                      data-testid="home-category-card-image"
+                    />
+                    <span
+                      className="absolute inset-0"
+                      style={{ background: 'linear-gradient(180deg, transparent 48%, rgba(15, 35, 23, 0.42))' }}
+                      aria-hidden="true"
+                    />
+                  </>
+                ) : (
+                  <span
+                    className="text-3xl font-semibold"
+                    style={{ color: 'color-mix(in srgb, var(--color-primary) 72%, var(--color-foreground))', fontFamily: 'var(--font-display)' }}
+                    aria-hidden="true"
+                  >
+                    {category.name.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
               </span>
-              <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                {countLabel}
+              <span className="block p-3">
+                <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                  {category.name}
+                </span>
+                <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {countLabel}
+                </span>
               </span>
             </Link>
           );
         })}
 
-        {visibleQuickLinks.map((link) => (
-          <Link
-            key={link.id}
-            href={link.href}
-            className="rounded-lg border p-3 transition-transform duration-fast hover:-translate-y-0.5"
-            style={{
-              borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
-              backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
-            }}
-          >
-            <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-              {link.label}
-            </span>
-            {link.description && (
-              <span className="mt-1 line-clamp-2 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                {link.description}
+        {visibleQuickLinks.map((link) => {
+          const imageUrl = normalizeImageUrl(link.imageUrl);
+
+          return (
+            <Link
+              key={link.id}
+              href={link.href}
+              className="group overflow-hidden rounded-[20px] border transition-transform duration-fast hover:-translate-y-0.5"
+              style={{
+                borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
+                backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
+              }}
+            >
+              <span
+                className="relative flex aspect-[16/9] items-center justify-center overflow-hidden"
+                style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 13%, var(--color-muted))' }}
+              >
+                {imageUrl ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imageUrl}
+                      alt=""
+                      className="h-full w-full object-cover transition-transform duration-normal group-hover:scale-[1.03]"
+                      loading="lazy"
+                    />
+                    <span
+                      className="absolute inset-0"
+                      style={{ background: 'linear-gradient(180deg, transparent 48%, rgba(15, 35, 23, 0.42))' }}
+                      aria-hidden="true"
+                    />
+                  </>
+                ) : (
+                  <ChevronRight className="h-8 w-8" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+                )}
               </span>
-            )}
-          </Link>
+              <span className="block p-3">
+                <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                  {link.label}
+                </span>
+                {link.description && (
+                  <span className="mt-1 line-clamp-2 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {link.description}
+                  </span>
+                )}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function HomeFulfillmentTrust({
+  pickup,
+  bankTransfer,
+  manualConfirmation,
+}: {
+  pickup: boolean;
+  bankTransfer: boolean;
+  manualConfirmation: boolean;
+}) {
+  const t = useTranslations('fulfillment');
+  const items = [
+    pickup ? { label: t('pickupService'), icon: MapPin } : null,
+    bankTransfer ? { label: t('bankTransferService'), icon: Banknote } : null,
+    manualConfirmation ? { label: t('manualConfirmationShort'), icon: CheckCircle2 } : null,
+  ].filter((item): item is { label: string; icon: typeof MapPin } => item !== null);
+
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="container-grocery py-5 md:py-8" data-testid="home-fulfillment-trust">
+      <div
+        className="grid gap-px overflow-hidden rounded-[22px] border sm:grid-cols-3"
+        style={{
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'var(--color-border)',
+        }}
+      >
+        {items.map(({ label, icon: Icon }) => (
+          <div
+            key={label}
+            className="flex min-h-16 items-center gap-3 px-4 py-3"
+            style={{ backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, var(--color-accent))' }}
+          >
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+              style={{
+                backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)',
+                color: 'var(--color-primary)',
+              }}
+            >
+              <Icon className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="text-sm font-semibold leading-5" style={{ color: 'var(--color-foreground)' }}>
+              {label}
+            </span>
+          </div>
         ))}
       </div>
     </section>
@@ -195,6 +455,8 @@ export default function HomePage() {
   const channel = useChannel();
   const siteConfig = useStorefrontConfig();
   const availabilityOnlyStock = usesAvailabilityOnlyStock(siteConfig);
+  const pickupFulfillment = isPickupFulfillment(siteConfig);
+  const bankTransferPromise = usesBankTransferPromise(siteConfig);
   const commercialQuickLinks = getEnabledCommercialQuickLinks(siteConfig);
 
   const homepageHero = siteConfig?.homepage?.hero;
@@ -250,12 +512,6 @@ export default function HomePage() {
     .filter((product) => !highlightedProductIds.has(product.id))
     .slice(0, 4);
   const productsForFreshPicks = freshPicks.length > 0 ? freshPicks : products.slice(0, 4);
-
-  const dealsAvailable = orderedSections.includes('deals')
-    && (productsResult.fetching || productsForDeals.length > 0);
-  const heroHighlights = dealsAvailable
-    ? [t('onSale'), t('shopByZone')]
-    : [t('shopByZone')];
   return (
     <div className="pb-12">
       <div className="md:hidden">
@@ -266,91 +522,17 @@ export default function HomePage() {
         ) : null}
 
         {showLegacyHero && (
-        <section className="container-grocery pb-4 pt-6 sm:pt-8">
-          <div
-            className="relative overflow-hidden rounded-[34px] border px-5 py-6 shadow-[0_35px_90px_-50px_rgba(22,163,74,0.35)] sm:px-8 sm:py-7"
-            style={{
-              borderColor: 'color-mix(in srgb, var(--color-primary) 12%, var(--color-border))',
-              background:
-                'radial-gradient(circle at top left, rgba(22, 163, 74, 0.18), transparent 26%), radial-gradient(circle at top right, rgba(187, 247, 208, 0.95), transparent 22%), linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(244,250,245,0.98) 100%)',
-            }}
-            data-testid="mobile-home-hero"
-          >
-            <div
-              className="absolute -left-12 bottom-0 h-28 w-28 rounded-full blur-2xl"
-              style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 20%, transparent)' }}
-              aria-hidden="true"
+          <section className="container-grocery pb-3 pt-5 sm:pt-7" data-testid="mobile-home-hero">
+            <HomeCatalogHero
+              headline={heroHeadline}
+              subtitle={heroSubtitle}
+              ctaText={heroCtaText}
+              ctaLink={heroCtaLink}
+              products={products}
+              pickup={pickupFulfillment}
+              loading={productsResult.fetching}
             />
-            <div
-              className="absolute -right-10 top-6 h-24 w-24 rounded-full blur-2xl"
-              style={{ backgroundColor: 'rgba(250, 204, 21, 0.18)' }}
-              aria-hidden="true"
-            />
-
-            <div className="relative mx-auto max-w-[30rem] text-center">
-              <span
-                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em]"
-                style={{
-                  backgroundColor: 'color-mix(in srgb, var(--color-primary) 14%, white)',
-                  color: 'var(--color-primary)',
-                }}
-              >
-                <Leaf className="h-3.5 w-3.5" aria-hidden="true" />
-                {t('promoTitle')}
-              </span>
-
-              <h1
-                className="mt-4 text-[1.85rem] font-semibold leading-[0.98] tracking-[-0.05em] sm:text-[2.75rem]"
-                style={{ color: 'var(--color-foreground)', fontFamily: 'var(--font-display)' }}
-              >
-                {heroHeadline}
-              </h1>
-              <p className="mx-auto mt-3 max-w-[24rem] text-sm leading-[1.45] sm:text-[15px]" style={{ color: 'var(--color-muted-foreground)' }}>
-                {heroSubtitle}
-              </p>
-
-              <div className="mt-5 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
-                <Link
-                  href={heroCtaLink}
-                  className="inline-flex h-11 min-w-[168px] items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold text-white shadow-[0_18px_32px_-18px_rgba(22,163,74,0.75)] transition-all duration-fast active:scale-[0.98]"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
-                >
-                  {heroCtaText}
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-                {dealsAvailable && (
-                  <a
-                    href="#home-deals"
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors duration-fast"
-                    style={{
-                      borderColor: 'color-mix(in srgb, var(--color-primary) 16%, var(--color-border))',
-                      color: 'var(--color-foreground)',
-                      backgroundColor: 'rgba(255,255,255,0.7)',
-                    }}
-                  >
-                    {t('seeAllDeals')}
-                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                )}
-              </div>
-
-              <div className="mt-5 flex flex-wrap justify-center gap-2">
-                {heroHighlights.map((label) => (
-                  <span
-                    key={label}
-                    className="rounded-full px-3 py-1.5 text-xs font-medium"
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.75)',
-                      color: 'var(--color-muted-foreground)',
-                    }}
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
         )}
 
         {(() => {
@@ -532,6 +714,11 @@ export default function HomePage() {
               return null;
           }
         })}
+        <HomeFulfillmentTrust
+          pickup={pickupFulfillment}
+          bankTransfer={bankTransferPromise}
+          manualConfirmation={availabilityOnlyStock}
+        />
       </div>
 
       <div className="hidden md:block">
@@ -542,38 +729,17 @@ export default function HomePage() {
         ) : null}
 
         {showLegacyHero && (
-        <section className="py-20 md:py-32" style={{ backgroundColor: 'var(--color-accent)' }} data-testid="desktop-home-hero">
-          <div className="container-grocery text-center">
-            <div className="mb-6 flex items-center justify-center gap-2">
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-2xl"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              >
-                <Leaf className="h-6 w-6 text-white" aria-hidden="true" />
-              </div>
-            </div>
-            <h1
-              className="heading-display mb-5 text-4xl md:text-5xl lg:text-6xl"
-              style={{ color: 'var(--color-foreground)' }}
-            >
-              {heroHeadline}
-            </h1>
-            <p
-              className="mx-auto mb-10 max-w-xl text-lg leading-relaxed md:text-xl"
-              style={{ color: 'var(--color-muted-foreground)' }}
-            >
-              {heroSubtitle}
-            </p>
-            <Link
-              href={heroCtaLink}
-              className="inline-flex items-center gap-2 rounded-xl px-8 py-3.5 font-semibold text-white transition-all duration-fast active:scale-95 hover:opacity-90"
-              style={{ backgroundColor: 'var(--color-primary)' }}
-            >
-              {heroCtaText}
-              <ChevronRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </section>
+          <section className="container-grocery py-8 lg:py-10" data-testid="desktop-home-hero">
+            <HomeCatalogHero
+              headline={heroHeadline}
+              subtitle={heroSubtitle}
+              ctaText={heroCtaText}
+              ctaLink={heroCtaLink}
+              products={products}
+              pickup={pickupFulfillment}
+              loading={productsResult.fetching}
+            />
+          </section>
         )}
 
         {(() => {
@@ -766,6 +932,11 @@ export default function HomePage() {
               return null;
           }
         })}
+        <HomeFulfillmentTrust
+          pickup={pickupFulfillment}
+          bankTransfer={bankTransferPromise}
+          manualConfirmation={availabilityOnlyStock}
+        />
       </div>
     </div>
   );

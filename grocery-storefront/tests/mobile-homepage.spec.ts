@@ -136,6 +136,7 @@ test.describe('mobile homepage', () => {
     await expect(hero.getByRole('heading', { name: 'Kenmito market essentials' })).toBeVisible();
     await expect(hero.getByText('Korean, Japanese, and Asian pantry picks ready for local delivery.')).toBeVisible();
     await expect(hero.getByRole('link', { name: 'Shop Kenmito' })).toBeVisible();
+    await expect(hero.getByTestId('home-hero-product-image')).toHaveCount(4);
   });
 
   test('uses a compact Stitch-inspired landing page layout for fast shopping', async ({ page }) => {
@@ -168,10 +169,12 @@ test.describe('mobile homepage', () => {
     const firstFreshCard = freshPicks.getByTestId('mobile-home-product-card').first();
 
     await expect(firstDealCard.getByTestId('mobile-product-card-media')).toBeVisible();
-    await expect(firstDealCard.getByTestId('mobile-product-card-stepper')).toBeVisible();
+    await expect(firstDealCard.getByTestId('mobile-product-card-add')).toBeVisible();
     await expect(firstDealCard.getByTestId('mobile-product-card-wishlist')).toBeVisible();
+    await expect(firstDealCard.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(firstFreshCard.getByTestId('mobile-product-card-media')).toBeVisible();
-    await expect(firstFreshCard.getByTestId('mobile-product-card-stepper')).toBeVisible();
+    await expect(firstFreshCard.getByTestId('mobile-product-card-add')).toBeVisible();
+    await expect(firstFreshCard.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(hero.getByRole('link', { name: /shop now|products/i })).toBeVisible();
   });
 
@@ -186,9 +189,10 @@ test.describe('mobile homepage', () => {
     await expect(page.getByTestId('mobile-home-deal-card')).toHaveCount(0);
   });
 
-  test('keeps the Stitch-inspired redesign scoped to mobile and preserves the desktop homepage layout', async ({ page }) => {
-    // Protects: PRD section 5.1 responsive enhancement. Desktop keeps its
-    // existing hero + three-zone grid while the compact card layout is mobile-only.
+  test('uses the catalog-first visual system on desktop while preserving delivery browsing', async ({ page }) => {
+    // Protects: PRD section 5.1 responsive enhancement. The hero should share
+    // the catalog-first visual system across breakpoints while delivery stores
+    // retain their three-zone browsing model.
     await mockHomepageConfig(page);
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -196,6 +200,7 @@ test.describe('mobile homepage', () => {
 
     await expect(page.getByTestId('mobile-home-hero')).toBeHidden();
     await expect(page.getByTestId('desktop-home-hero')).toBeVisible();
+    await expect(page.getByTestId('desktop-home-hero').getByTestId('home-hero-product-image')).toHaveCount(4);
     await expect(page.getByTestId('desktop-home-zone-grid')).toBeVisible();
 
     const columnCount = await page.getByTestId('desktop-home-zone-grid').evaluate((element) => {
