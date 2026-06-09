@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { ShoppingCart, Info, Package, Check, Minus, Plus, Heart } from 'lucide-react';
@@ -18,6 +18,7 @@ interface ProductCardProps {
   product: GroceryProduct;
   imagePriority?: boolean;
   showCatalogFacts?: boolean;
+  actionVisibility?: ProductCardActionVisibility;
 }
 
 interface ProductCardImage {
@@ -25,12 +26,17 @@ interface ProductCardImage {
   alt: string;
 }
 
+type ProductCardActionVisibility = 'always' | 'reveal';
+
 interface ProductCardMedia {
   url?: string | null;
   alt?: string | null;
   type?: string | null;
   sortOrder?: number | null;
 }
+
+const PRODUCT_PREVIEW_INTERVAL_MS = 3000;
+const PRODUCT_PREVIEW_MAX_IMAGES = 5;
 
 function getProductCardImages(product: GroceryProduct): ProductCardImage[] {
   const seenSources = new Set<string>();
@@ -66,7 +72,12 @@ function getProductCardImages(product: GroceryProduct): ProductCardImage[] {
   return images;
 }
 
-export function ProductCard({ product, imagePriority = false, showCatalogFacts = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  imagePriority = false,
+  showCatalogFacts = false,
+  actionVisibility = 'always',
+}: ProductCardProps) {
   const t = useTranslations();
   const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
@@ -85,7 +96,11 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
   const [justAdded, setJustAdded] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [busy, setBusy] = useState(false);
-  const [previewingSecondImage, setPreviewingSecondImage] = useState(false);
+  const [carouselReady, setCarouselReady] = useState(false);
+  const [previewingImages, setPreviewingImages] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const previewFrameRef = useRef<number | null>(null);
 
   const inStock = (variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 0) > 0;
   const price = variant?.pricing?.price?.gross?.amount ?? (product as any).pricing?.priceRange?.start?.gross?.amount ?? 0;
@@ -96,9 +111,9 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
   const showCompareAtPrice = typeof compareAtPrice === 'number' && compareAtPrice > price;
   const showPromo = showCatalogFacts && showCompareAtPrice;
   const cardImages = getProductCardImages(product);
+  const previewImages = cardImages.slice(0, PRODUCT_PREVIEW_MAX_IMAGES);
   const primaryImage = cardImages[0] ?? null;
-  const secondaryImage = cardImages[1] ?? null;
-  const activeImageIndex = previewingSecondImage && secondaryImage ? 1 : 0;
+  const hasPreviewImages = previewImages.length > 1;
   const imageUrl = primaryImage?.src ?? '';
   const maxQuantity = Math.max(1, variant?.quantityAvailable ?? (product as any)?.quantityAvailable ?? 99);
   const cartQuantity = cartItem?.quantity ?? 0;
@@ -115,6 +130,64 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
     : null;
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
   const scanFacts = [product.category?.name, product.countryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
+  const revealIdleActions = actionVisibility === 'reveal';
+  const hiddenActionClass = 'invisible pointer-events-none translate-y-1 opacity-0 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100';
+  const wishlistActionClass = revealIdleActions && !isWishlisted ? hiddenActionClass : 'translate-y-0 opacity-100';
+  const cartActionClass = revealIdleActions && !isInCart ? hiddenActionClass : 'translate-y-0 opacity-100';
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function handleReducedMotionChange() {
+      setReducedMotion(mediaQuery.matches);
+    }
+
+    handleReducedMotionChange();
+    mediaQuery.addEventListener('change', handleReducedMotionChange);
+
+    return () => mediaQuery.removeEventListener('change', handleReducedMotionChange);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (previewFrameRef.current !== null) {
+        window.cancelAnimationFrame(previewFrameRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!previewingImages || reducedMotion || !hasPreviewImages) return;
+
+    const intervalId = window.setInterval(() => {
+      setActiveImageIndex((current) => (current + 1) % previewImages.length);
+    }, PRODUCT_PREVIEW_INTERVAL_MS);
+
+    return () => window.clearInterval(intervalId);
+  }, [hasPreviewImages, previewImages.length, previewingImages, reducedMotion]);
+
+  function handlePreviewStart() {
+    if (!hasPreviewImages) return;
+
+    setCarouselReady(true);
+    setActiveImageIndex(reducedMotion ? 0 : 1);
+    if (previewFrameRef.current !== null) {
+      window.cancelAnimationFrame(previewFrameRef.current);
+    }
+    previewFrameRef.current = window.requestAnimationFrame(() => {
+      previewFrameRef.current = null;
+      setPreviewingImages(true);
+    });
+  }
+
+  function handlePreviewEnd() {
+    if (previewFrameRef.current !== null) {
+      window.cancelAnimationFrame(previewFrameRef.current);
+      previewFrameRef.current = null;
+    }
+    setPreviewingImages(false);
+    setActiveImageIndex(0);
+  }
 
   function updateQuantity(e: React.MouseEvent, delta: number) {
     e.preventDefault();
@@ -236,16 +309,12 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
         className="group block overflow-hidden rounded-none border-0 card-hover sm:rounded-xl sm:border"
         style={{ borderColor: 'var(--color-border)' }}
         aria-label={`${product.name}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
-        onMouseEnter={() => {
-          if (secondaryImage) setPreviewingSecondImage(true);
-        }}
-        onMouseLeave={() => setPreviewingSecondImage(false)}
-        onFocus={() => {
-          if (secondaryImage) setPreviewingSecondImage(true);
-        }}
+        onMouseEnter={handlePreviewStart}
+        onMouseLeave={handlePreviewEnd}
+        onFocus={handlePreviewStart}
         onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-            setPreviewingSecondImage(false);
+            handlePreviewEnd();
           }
         }}
         data-testid="product-card"
@@ -268,29 +337,50 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
             </div>
           )}
 
-          {secondaryImage && (
-            <Image
-              src={secondaryImage.src}
-              alt=""
-              fill
-              className={`hidden object-contain p-4 transition-opacity duration-fast motion-reduce:transition-none sm:block ${previewingSecondImage ? 'opacity-100' : 'opacity-0'}`}
-              sizes="(max-width: 1024px) 33vw, 25vw"
-              unoptimized={isImageProxySrc(secondaryImage.src)}
-              data-testid="product-card-image-secondary"
-            />
+          {hasPreviewImages && carouselReady && (
+            <div
+              className={`absolute inset-0 z-[1] hidden transition-opacity duration-slow motion-reduce:transition-none sm:block ${previewingImages ? 'opacity-100' : 'opacity-0'}`}
+              data-testid="product-card-image-carousel"
+            >
+              {previewImages.map((image, index) => (
+                <Image
+                  key={image.src}
+                  src={image.src}
+                  alt=""
+                  fill
+                  className={`object-contain p-4 transition-opacity duration-slow motion-reduce:transition-none ${index === activeImageIndex ? 'opacity-100' : 'opacity-0'}`}
+                  sizes="(max-width: 1024px) 33vw, 25vw"
+                  unoptimized={isImageProxySrc(image.src)}
+                  data-testid="product-card-image-slide"
+                />
+              ))}
+            </div>
           )}
 
-          {cardImages.length > 1 && (
+          {hasPreviewImages && (
             <span
-              className="absolute bottom-2.5 right-2.5 z-10 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
+              className="absolute bottom-2.5 left-2.5 z-10 overflow-hidden rounded-full border px-2.5 py-1 text-[11px] font-semibold leading-none tabular-nums"
               style={{
-                backgroundColor: 'color-mix(in srgb, var(--color-card) 88%, transparent)',
-                color: 'var(--color-foreground)',
+                backgroundColor: 'color-mix(in srgb, var(--color-card) 92%, transparent)',
+                borderColor: 'color-mix(in srgb, var(--color-border) 75%, transparent)',
+                color: 'var(--color-muted-foreground)',
               }}
               aria-live="polite"
               data-testid="product-card-image-counter"
             >
-              {activeImageIndex + 1}/{cardImages.length}
+              <span
+                key={activeImageIndex}
+                className="product-card-preview-fill absolute inset-0"
+                data-active={previewingImages && !reducedMotion ? 'true' : 'false'}
+                style={{
+                  backgroundColor: 'color-mix(in srgb, var(--color-primary) 18%, transparent)',
+                  ['--product-preview-duration' as string]: `${PRODUCT_PREVIEW_INTERVAL_MS}ms`,
+                }}
+                data-testid="product-card-image-progress"
+              />
+              <span className="relative z-10">
+                {activeImageIndex + 1}/{previewImages.length}
+              </span>
             </span>
           )}
 
@@ -343,7 +433,7 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
             <button
               type="button"
               onClick={handleWishlistToggle}
-              className="w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-fast hover:scale-105"
+              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-[opacity,transform] duration-fast hover:scale-105 ${wishlistActionClass}`}
               style={{
                 backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)',
                 borderColor: isWishlisted ? 'var(--color-primary)' : 'var(--color-border)',
@@ -504,7 +594,7 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
             )}
 
             <div className="mt-3 sm:grid sm:grid-cols-[92px,minmax(0,1fr)] sm:items-start sm:gap-2">
-              <div className="group/quantity" data-testid="product-card-quantity" data-in-cart={isInCart ? 'true' : 'false'}>
+              <div className={`group/quantity transition-[opacity,transform] duration-fast ${cartActionClass}`} data-testid="product-card-quantity" data-in-cart={isInCart ? 'true' : 'false'}>
                 <div
                   className="grid grid-cols-3 h-11 rounded-xl border overflow-hidden"
                   style={{
@@ -551,7 +641,7 @@ export function ProductCard({ product, imagePriority = false, showCatalogFacts =
                 type="button"
                 onClick={handleAddToCart}
                 disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
-                className="hidden h-11 w-full items-center justify-center gap-2 rounded-xl px-3 font-semibold transition-all duration-fast disabled:opacity-40 active:scale-[0.98] sm:flex checkout-btn"
+                className={`hidden h-11 w-full items-center justify-center gap-2 rounded-xl px-3 font-semibold transition-[opacity,transform,box-shadow] duration-fast disabled:opacity-40 active:scale-[0.98] sm:flex checkout-btn ${cartActionClass}`}
                 style={{
                   backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-muted)',
                   color: inStock ? 'white' : 'var(--color-muted-foreground)',

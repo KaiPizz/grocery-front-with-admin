@@ -17,7 +17,10 @@ interface MobileProductCardProps {
   imagePriority?: boolean;
   testId?: string;
   showCatalogFacts?: boolean;
+  quickActions?: MobileProductQuickActions;
 }
+
+type MobileProductQuickActions = 'always' | 'landing-compact';
 
 interface MobileProductCardMedia {
   url?: string | null;
@@ -40,7 +43,13 @@ function getMediaImageCount(product: GroceryProduct): number {
   return sources.size || (product.thumbnail?.url ? 1 : 0);
 }
 
-export function MobileProductCard({ product, imagePriority = false, testId, showCatalogFacts = false }: MobileProductCardProps) {
+export function MobileProductCard({
+  product,
+  imagePriority = false,
+  testId,
+  showCatalogFacts = false,
+  quickActions = 'always',
+}: MobileProductCardProps) {
   const t = useTranslations();
   const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
@@ -72,6 +81,9 @@ export function MobileProductCard({ product, imagePriority = false, testId, show
   const displayedQuantity = isInCart ? cartQuantity : quantity;
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
   const scanFacts = [product.category?.name, product.countryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
+  const showIdleQuickActions = quickActions === 'always';
+  const showAddAction = showIdleQuickActions;
+  const showWishlistAction = showIdleQuickActions || isWishlisted;
 
   function updateQuantity(e: React.MouseEvent, delta: number) {
     e.preventDefault();
@@ -228,44 +240,48 @@ export function MobileProductCard({ product, imagePriority = false, testId, show
             </span>
           )}
 
-          <div className="absolute right-1 top-1 z-10">
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast disabled:opacity-40 active:scale-[0.98]"
-              style={{
-                backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-muted)',
-                borderColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-border)',
-                color: inStock ? 'white' : 'var(--color-muted-foreground)',
-              }}
-              aria-label={inStock ? t('product.addToCartWithQuantity', { quantity: displayedQuantity }) : t('product.outOfStock')}
-              data-testid="mobile-product-card-add"
-            >
-              {justAdded ? (
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-              ) : (
-                <ShoppingCart className="h-3.5 w-3.5" aria-hidden="true" />
-              )}
-            </button>
-          </div>
+          {showAddAction && (
+            <div className="absolute right-1 top-1 z-10">
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
+                className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast disabled:opacity-40 active:scale-[0.98]"
+                style={{
+                  backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-muted)',
+                  borderColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-border)',
+                  color: inStock ? 'white' : 'var(--color-muted-foreground)',
+                }}
+                aria-label={inStock ? t('product.addToCartWithQuantity', { quantity: displayedQuantity }) : t('product.outOfStock')}
+                data-testid="mobile-product-card-add"
+              >
+                {justAdded ? (
+                  <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                ) : (
+                  <ShoppingCart className="h-3.5 w-3.5" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+          )}
 
-          <div className="absolute bottom-1 left-1 z-10">
-            <button
-              type="button"
-              onClick={handleWishlistToggle}
-              className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98]"
-              style={{
-                backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, transparent)',
-                borderColor: isWishlisted ? 'var(--color-primary)' : 'var(--color-border)',
-                color: isWishlisted ? 'var(--color-primary)' : 'var(--color-foreground)',
-              }}
-              aria-label={isWishlisted ? t('wishlist.remove') : t('wishlist.add')}
-              data-testid="mobile-product-card-wishlist"
-            >
-              <Heart className={`h-3.5 w-3.5 ${isWishlisted ? 'fill-current' : ''}`} aria-hidden="true" />
-            </button>
-          </div>
+          {showWishlistAction && (
+            <div className="absolute bottom-1 left-1 z-10">
+              <button
+                type="button"
+                onClick={handleWishlistToggle}
+                className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98]"
+                style={{
+                  backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, transparent)',
+                  borderColor: isWishlisted ? 'var(--color-primary)' : 'var(--color-border)',
+                  color: isWishlisted ? 'var(--color-primary)' : 'var(--color-foreground)',
+                }}
+                aria-label={isWishlisted ? t('wishlist.remove') : t('wishlist.add')}
+                data-testid="mobile-product-card-wishlist"
+              >
+                <Heart className={`h-3.5 w-3.5 ${isWishlisted ? 'fill-current' : ''}`} aria-hidden="true" />
+              </button>
+            </div>
+          )}
 
           {!inStock && (
             <div

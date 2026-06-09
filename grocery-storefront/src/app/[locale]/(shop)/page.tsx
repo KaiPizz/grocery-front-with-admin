@@ -622,6 +622,7 @@ export default function HomePage() {
                           key={product.id}
                           product={product as never}
                           imagePriority={index < 2}
+                          quickActions="landing-compact"
                           testId="mobile-home-deal-card"
                         />
                       ))}
@@ -660,6 +661,7 @@ export default function HomePage() {
                           key={product.id}
                           product={product as never}
                           imagePriority={index < 2}
+                          quickActions="landing-compact"
                           testId="mobile-home-product-card"
                         />
                       ))}
@@ -834,7 +836,12 @@ export default function HomePage() {
                   ) : productsForDeals.length > 0 ? (
                     <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4" data-testid="desktop-home-deals">
                       {productsForDeals.map((product, index) => (
-                        <ProductCard key={product.id} product={product as never} imagePriority={index < 2} />
+                        <ProductCard
+                          key={product.id}
+                          product={product as never}
+                          imagePriority={index < 2}
+                          actionVisibility="reveal"
+                        />
                       ))}
                     </div>
                   ) : (
@@ -873,7 +880,12 @@ export default function HomePage() {
                   ) : products.length > 0 ? (
                     <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
                       {products.map((product, index) => (
-                        <ProductCard key={product.id} product={product as never} imagePriority={index < 4} />
+                        <ProductCard
+                          key={product.id}
+                          product={product as never}
+                          imagePriority={index < 4}
+                          actionVisibility="reveal"
+                        />
                       ))}
                     </div>
                   ) : (

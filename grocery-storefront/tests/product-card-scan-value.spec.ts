@@ -132,9 +132,19 @@ test.describe('listing product card scan value', () => {
       return getComputedStyle(element).objectFit;
     });
     expect(primaryImageFit).toBe('contain');
-    await expect(card.getByTestId('product-card-image-counter')).toContainText('1/3');
+    const imageCounter = card.getByTestId('product-card-image-counter');
+    await expect(imageCounter).toContainText('1/3');
     await card.hover();
-    await expect(card.getByTestId('product-card-image-counter')).toContainText('2/3');
+    await expect(imageCounter.getByTestId('product-card-image-progress')).toBeVisible();
+    await expect(card.getByTestId('product-card-image-slide')).toHaveCount(3);
+    const slideTransition = await card.getByTestId('product-card-image-slide').first().evaluate((element) => {
+      return getComputedStyle(element).transition;
+    });
+    expect(slideTransition).toContain('opacity');
+    await expect(imageCounter).toContainText('2/3');
+    await expect(imageCounter).toContainText('3/3');
+    await page.mouse.move(20, 20);
+    await expect(imageCounter).toContainText('1/3');
 
     await expect(card.getByRole('button', { name: /add to cart/i })).toBeVisible();
     await expect(card.getByRole('button', { name: /add to wishlist/i })).toBeVisible();

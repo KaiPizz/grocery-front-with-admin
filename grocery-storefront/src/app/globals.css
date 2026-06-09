@@ -250,6 +250,16 @@ body::before {
   }
 }
 
+@keyframes product-card-preview-progress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @keyframes slide-up {
   from {
     opacity: 0;
@@ -278,6 +288,15 @@ body::before {
 
 .animate-fade-in {
   animation: fade-in var(--duration-normal) var(--ease-out) both;
+}
+
+.product-card-preview-fill {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.product-card-preview-fill[data-active='true'] {
+  animation: product-card-preview-progress var(--product-preview-duration, var(--duration-slower)) linear forwards;
 }
 
 .animate-slide-up {

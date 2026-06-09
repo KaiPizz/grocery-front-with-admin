@@ -169,11 +169,12 @@ test.describe('mobile homepage', () => {
     const firstFreshCard = freshPicks.getByTestId('mobile-home-product-card').first();
 
     await expect(firstDealCard.getByTestId('mobile-product-card-media')).toBeVisible();
-    await expect(firstDealCard.getByTestId('mobile-product-card-add')).toBeVisible();
-    await expect(firstDealCard.getByTestId('mobile-product-card-wishlist')).toBeVisible();
+    await expect(firstDealCard.getByTestId('mobile-product-card-add')).toHaveCount(0);
+    await expect(firstDealCard.getByTestId('mobile-product-card-wishlist')).toHaveCount(0);
     await expect(firstDealCard.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(firstFreshCard.getByTestId('mobile-product-card-media')).toBeVisible();
-    await expect(firstFreshCard.getByTestId('mobile-product-card-add')).toBeVisible();
+    await expect(firstFreshCard.getByTestId('mobile-product-card-add')).toHaveCount(0);
+    await expect(firstFreshCard.getByTestId('mobile-product-card-wishlist')).toHaveCount(0);
     await expect(firstFreshCard.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(hero.getByRole('link', { name: /shop now|products/i })).toBeVisible();
   });
@@ -202,6 +203,15 @@ test.describe('mobile homepage', () => {
     await expect(page.getByTestId('desktop-home-hero')).toBeVisible();
     await expect(page.getByTestId('desktop-home-hero').getByTestId('home-hero-product-image')).toHaveCount(4);
     await expect(page.getByTestId('desktop-home-zone-grid')).toBeVisible();
+    const firstDealCard = page.getByTestId('desktop-home-deals').getByTestId('product-card').first();
+    const firstDealAddButton = firstDealCard.getByRole('button', { name: /add to cart/i });
+    const firstDealWishlistButton = firstDealCard.getByRole('button', { name: /add to wishlist/i });
+
+    await expect(firstDealAddButton).toBeHidden();
+    await expect(firstDealWishlistButton).toBeHidden();
+    await firstDealCard.hover();
+    await expect(firstDealAddButton).toBeVisible();
+    await expect(firstDealWishlistButton).toBeVisible();
 
     const columnCount = await page.getByTestId('desktop-home-zone-grid').evaluate((element) => {
       return getComputedStyle(element).gridTemplateColumns.split(' ').filter(Boolean).length;
