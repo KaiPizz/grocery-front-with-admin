@@ -119,7 +119,6 @@ export function ProductCard({
   const cartQuantity = cartItem?.quantity ?? 0;
   const isInCart = cartQuantity > 0;
   const displayedQuantity = isInCart ? cartQuantity : quantity;
-  const quantityUnitLabel = t('product.quantityUnitShort');
   const addToCartLabel = t('common.addToCart');
   const storageZoneSymbol = product.storageZone
     ? product.storageZone === 'FROZEN'
@@ -306,7 +305,7 @@ export function ProductCard({
     <>
       <Link
         href={`/products/${product.slug}`}
-        className="group block overflow-hidden rounded-none border-0 card-hover sm:rounded-xl sm:border"
+        className="group flex h-full flex-col overflow-hidden rounded-none border-0 card-hover sm:rounded-xl sm:border"
         style={{ borderColor: 'var(--color-border)' }}
         aria-label={`${product.name}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
         onMouseEnter={handlePreviewStart}
@@ -319,14 +318,14 @@ export function ProductCard({
         }}
         data-testid="product-card"
       >
-        <div className="relative aspect-square overflow-hidden" style={{ backgroundColor: 'var(--color-muted)' }}>
+        <div className="relative aspect-square shrink-0 overflow-hidden" style={{ backgroundColor: 'var(--color-muted)' }}>
           {primaryImage ? (
             <Image
               src={primaryImage.src}
               alt=""
               fill
               priority={imagePriority}
-              className="object-contain p-3 transition-transform duration-slow motion-reduce:transition-none sm:p-4 sm:group-hover:scale-[1.02]"
+              className="object-contain p-3 motion-reduce:transition-none sm:p-4"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               unoptimized={isImageProxySrc(primaryImage.src)}
               data-testid="product-card-image-primary"
@@ -339,7 +338,8 @@ export function ProductCard({
 
           {hasPreviewImages && carouselReady && (
             <div
-              className={`absolute inset-0 z-[1] hidden transition-opacity duration-slow motion-reduce:transition-none sm:block ${previewingImages ? 'opacity-100' : 'opacity-0'}`}
+              className={`pointer-events-none absolute inset-0 z-[1] hidden transition-opacity duration-slow motion-reduce:transition-none sm:block ${previewingImages ? 'opacity-100' : 'opacity-0'}`}
+              style={{ backgroundColor: 'var(--color-card)' }}
               data-testid="product-card-image-carousel"
             >
               {previewImages.map((image, index) => (
@@ -385,17 +385,17 @@ export function ProductCard({
           )}
 
           {product.freshness && (
-            <div className="absolute top-2.5 left-2.5 hidden sm:block">
+            <div className="absolute left-2.5 top-2.5 z-20 hidden sm:block">
               <FreshnessBadge freshness={product.freshness} nearestExpiry={product.nearestExpiry} compact />
             </div>
           )}
 
-          <div className="absolute right-2.5 top-2.5 z-10 sm:hidden">
+          <div className="absolute right-1.5 top-1.5 z-10 sm:hidden">
             <button
               type="button"
               onClick={handleAddToCart}
               disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-fast disabled:opacity-40 active:scale-[0.98]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border shadow-sm transition-all duration-fast disabled:opacity-40 active:scale-[0.98]"
               style={{
                 backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'color-mix(in srgb, var(--color-primary) 92%, transparent)' : 'var(--color-muted)',
                 borderColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-border)',
@@ -412,11 +412,11 @@ export function ProductCard({
             </button>
           </div>
 
-          <div className="absolute bottom-2.5 left-2.5 z-10 sm:hidden">
+          <div className="absolute bottom-1.5 left-1.5 z-10 sm:hidden">
             <button
               type="button"
               onClick={handleWishlistToggle}
-              className="flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border shadow-sm transition-all duration-fast active:scale-[0.98]"
               style={{
                 backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)',
                 borderColor: isWishlisted ? 'var(--color-primary)' : 'var(--color-border)',
@@ -429,11 +429,11 @@ export function ProductCard({
             </button>
           </div>
 
-          <div className="absolute top-2.5 right-2.5 hidden flex-col items-end gap-2 sm:flex">
+          <div className="absolute right-2.5 top-2.5 z-20 hidden flex-col items-end gap-2 sm:flex">
             <button
               type="button"
               onClick={handleWishlistToggle}
-              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-[opacity,transform] duration-fast hover:scale-105 ${wishlistActionClass}`}
+              className={`flex h-11 w-11 items-center justify-center rounded-lg border shadow-sm transition-[opacity,transform,box-shadow] duration-fast hover:scale-[1.03] ${wishlistActionClass}`}
               style={{
                 backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)',
                 borderColor: isWishlisted ? 'var(--color-primary)' : 'var(--color-border)',
@@ -458,7 +458,7 @@ export function ProductCard({
             <button
               type="button"
               onClick={handleNutritionClick}
-              className="absolute bottom-2.5 right-2.5 hidden h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast hover:scale-110 sm:flex"
+              className="absolute bottom-2.5 right-2.5 z-20 hidden h-11 w-11 items-center justify-center rounded-lg border shadow-sm transition-[opacity,transform,box-shadow] duration-fast hover:scale-[1.03] sm:flex"
               style={{ backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)', borderColor: 'var(--color-border)' }}
               aria-label={`${t('product.nutrition')} - ${product.name}`}
             >
@@ -475,7 +475,7 @@ export function ProductCard({
           )}
         </div>
 
-        <div className="p-3.5 sm:bg-[var(--color-card)]">
+        <div className="flex flex-1 flex-col p-3.5 sm:bg-[var(--color-card)]">
           {(product.freshness || product.storageZone || product.nutritionFacts) && (
             <div className="mb-2 flex items-start justify-between gap-2 sm:hidden">
               <div className="flex min-w-0 flex-wrap items-center gap-1">
@@ -535,14 +535,14 @@ export function ProductCard({
           )}
 
           <h3
-            className="mb-1.5 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-semibold leading-snug sm:line-clamp-2 sm:whitespace-normal"
+            className="mb-1.5 min-h-[1.15rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm font-semibold leading-snug sm:line-clamp-2 sm:min-h-[2.35rem] sm:whitespace-normal"
             style={{ color: 'var(--color-foreground)' }}
             data-testid="product-card-title"
           >
             {product.name}
           </h3>
 
-          <div className="mt-2.5">
+          <div className="mt-auto pt-2.5">
             <div>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-base font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
@@ -596,7 +596,7 @@ export function ProductCard({
             <div className="mt-3 sm:grid sm:grid-cols-[92px,minmax(0,1fr)] sm:items-start sm:gap-2">
               <div className={`group/quantity transition-[opacity,transform] duration-fast ${cartActionClass}`} data-testid="product-card-quantity" data-in-cart={isInCart ? 'true' : 'false'}>
                 <div
-                  className="grid grid-cols-3 h-11 rounded-xl border overflow-hidden"
+                  className="grid h-11 grid-cols-3 overflow-hidden rounded-full border"
                   style={{
                     borderColor: isInCart ? 'var(--color-primary)' : 'var(--color-border)',
                     backgroundColor: isInCart ? 'var(--color-accent)' : 'var(--color-card)',
@@ -629,19 +629,13 @@ export function ProductCard({
                     <Plus className="w-4 h-4 opacity-80 transition-opacity duration-fast group-hover/quantity:opacity-100" aria-hidden="true" />
                   </button>
                 </div>
-                <span
-                  className="block text-center text-[11px] mt-1 transition-all duration-fast opacity-0 translate-y-1 group-hover/quantity:opacity-100 group-hover/quantity:translate-y-0 group-focus-within/quantity:opacity-100 group-focus-within/quantity:translate-y-0"
-                  style={{ color: 'var(--color-muted-foreground)' }}
-                >
-                  {quantityUnitLabel}
-                </span>
               </div>
 
               <button
                 type="button"
                 onClick={handleAddToCart}
                 disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
-                className={`hidden h-11 w-full items-center justify-center gap-2 rounded-xl px-3 font-semibold transition-[opacity,transform,box-shadow] duration-fast disabled:opacity-40 active:scale-[0.98] sm:flex checkout-btn ${cartActionClass}`}
+                className={`hidden h-11 w-full items-center justify-center gap-2 rounded-full px-3 font-semibold transition-[opacity,transform,box-shadow] duration-fast disabled:opacity-40 active:scale-[0.98] sm:flex checkout-btn ${cartActionClass}`}
                 style={{
                   backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-muted)',
                   color: inStock ? 'white' : 'var(--color-muted-foreground)',

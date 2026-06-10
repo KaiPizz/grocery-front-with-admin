@@ -12,7 +12,6 @@ import {
   Settings,
   Menu,
   X,
-  Rocket,
   Home,
   LogOut,
   ImageIcon,
@@ -36,6 +35,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const { t } = useLanguage();
+  const salonSlug = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
+  const activeNav = NAV_HREFS.find(({ href }) => href === '/admin' ? pathname === '/admin' : pathname.startsWith(href));
 
   async function handleLogout() {
     setLoggingOut(true);
@@ -49,11 +50,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-slate-100">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-30 bg-slate-950/50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -61,32 +62,37 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside
         className={`
-          fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-indigo-950 text-indigo-100
+          fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-slate-950 text-slate-100
           transform transition-transform duration-200 ease-out
           lg:static lg:translate-x-0
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
         {/* Logo area */}
-        <div className="flex h-16 items-center justify-between px-5 border-b border-indigo-900/50">
-          <Link href="/admin" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-              <Rocket className="w-4 h-4 text-white" />
+        <div className="flex h-16 items-center justify-between border-b border-white/10 px-5">
+          <Link href="/admin" className="flex min-w-0 items-center gap-2.5">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-slate-950">
+              <PanelTop className="h-4 w-4" />
             </div>
-            <span className="font-semibold text-sm text-white tracking-tight">
-              Asia-Deli Admin
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-semibold tracking-tight text-white">
+                {t('login.title')}
+              </span>
+              <span className="block truncate text-[11px] text-slate-400">
+                {salonSlug}
+              </span>
             </span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1.5 rounded-md hover:bg-indigo-900/50"
+            className="rounded-md p-1.5 text-slate-300 hover:bg-white/10 hover:text-white lg:hidden"
           >
-            <X className="w-5 h-5" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
           {NAV_HREFS.map(({ href, key, icon: Icon }) => {
             const isActive = href === '/admin'
               ? pathname === '/admin'
@@ -98,28 +104,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={href}
                 onClick={() => setSidebarOpen(false)}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                  transition-colors duration-150
+                  flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium
+                  transition-[background-color,color,box-shadow] duration-150
                   ${isActive
-                    ? 'bg-indigo-800/60 text-white'
-                    : 'text-indigo-300 hover:bg-indigo-900/40 hover:text-white'}
+                    ? 'bg-white/10 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'}
                 `}
               >
-                <Icon className="w-4.5 h-4.5 shrink-0" />
-                <span>{t(key)}</span>
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="truncate">{t(key)}</span>
               </Link>
             );
           })}
         </nav>
 
         {/* Footer with logout */}
-        <div className="px-3 py-3 border-t border-indigo-900/50">
+        <div className="border-t border-white/10 px-3 py-3">
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-indigo-300 hover:bg-indigo-900/40 hover:text-white transition-colors disabled:opacity-50"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 transition-colors hover:bg-white/5 hover:text-white disabled:opacity-50"
           >
-            <LogOut className="w-4 h-4 shrink-0" />
+            <LogOut className="h-4 w-4 shrink-0" />
             <span>{loggingOut ? t('common.signingOut') : t('common.signOut')}</span>
           </button>
         </div>
@@ -128,23 +134,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main content area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex h-16 items-center gap-4 border-b border-gray-200 bg-white px-4 lg:px-6">
+        <header className="flex h-16 items-center gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur lg:px-6">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            className="rounded-md p-2 hover:bg-slate-100 lg:hidden"
           >
-            <Menu className="w-5 h-5 text-gray-600" />
+            <Menu className="h-5 w-5 text-slate-600" />
           </button>
-          <div className="flex-1" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-slate-900">
+              {activeNav ? t(activeNav.key) : t('login.title')}
+            </p>
+            <p className="hidden truncate text-xs text-slate-500 sm:block">
+              {t('dashboard.description')}
+            </p>
+          </div>
           <LangSwitcher />
-          <span className="text-xs text-gray-400">
-            Slug: <code className="font-mono text-indigo-600">{process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store'}</code>
+          <span className="hidden items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-500 sm:inline-flex">
+            Slug: <code className="ml-1 font-mono text-slate-800">{salonSlug}</code>
           </span>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
-          {children}
+        <main className="flex-1 overflow-y-auto bg-gradient-to-b from-white to-slate-100 p-4 lg:p-6">
+          <div className="mx-auto w-full max-w-7xl">
+            {children}
+          </div>
         </main>
       </div>
     </div>

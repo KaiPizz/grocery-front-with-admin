@@ -214,7 +214,7 @@ function HomeCatalogHero({
                 <img
                   src={product.imageUrl}
                   alt={product.name}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="absolute inset-0 h-full w-full object-contain p-3 sm:p-4"
                   loading={index < 2 ? 'eager' : 'lazy'}
                   data-testid="home-hero-product-image"
                 />
@@ -272,7 +272,7 @@ function HomeCategoryShortcuts({
   }
 
   return (
-    <section className="container-grocery py-5 md:py-8" data-testid="home-category-shortcuts">
+    <section className="container-grocery py-6 md:py-10" data-testid="home-category-shortcuts">
       <div className="mb-4 flex items-end justify-between gap-4 md:mb-6">
         <h2
           className="heading-section text-xl md:text-2xl"
@@ -280,27 +280,40 @@ function HomeCategoryShortcuts({
         >
           {t('categoryShortcuts')}
         </h2>
-        <Link href="/categories" className="text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
+        <Link
+          href="/categories"
+          className="inline-flex min-h-10 items-center gap-1 rounded-full border px-3 text-sm font-semibold transition-colors duration-fast hover:opacity-80"
+          style={{ borderColor: 'var(--color-border)', color: 'var(--color-primary)' }}
+        >
           {t('seeAllCategories')}
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {visibleCategories.map((category) => {
+        {visibleCategories.map((category, index) => {
           const count = category.products?.totalCount ?? 0;
           const countLabel = t('productCount', { count });
           const imageUrl = normalizeImageUrl(category.backgroundImage?.url);
+          const featured = index === 0 && visibleCategories.length > 3;
 
           return (
             <Link
               key={category.id}
               href={`/categories/${category.slug}`}
               aria-label={`${category.name}, ${countLabel}`}
-              className="group overflow-hidden rounded-[20px] border transition-transform duration-fast hover:-translate-y-0.5"
-              style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+              className={`group overflow-hidden rounded-[20px] border shadow-[0_18px_36px_-32px_rgba(15,35,23,0.32)] transition-[border-color,transform,box-shadow] duration-fast hover:-translate-y-0.5 hover:shadow-[0_20px_46px_-30px_rgba(15,35,23,0.42)] ${
+                featured ? 'col-span-2 sm:col-span-1 lg:col-span-2' : ''
+              }`}
+              style={{
+                borderColor: 'color-mix(in srgb, var(--color-border) 86%, white)',
+                backgroundColor: 'var(--color-card)',
+              }}
             >
               <span
-                className="relative flex aspect-[16/9] items-center justify-center overflow-hidden"
-                style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 8%, var(--color-muted))' }}
+                className={`relative flex items-center justify-center overflow-hidden ${
+                  featured ? 'aspect-[2/1] sm:aspect-[4/3] lg:aspect-[2/1]' : 'aspect-[4/3]'
+                }`}
+                style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 7%, var(--color-muted))' }}
               >
                 {imageUrl ? (
                   <>
@@ -314,26 +327,53 @@ function HomeCategoryShortcuts({
                     />
                     <span
                       className="absolute inset-0"
-                      style={{ background: 'linear-gradient(180deg, transparent 48%, rgba(15, 35, 23, 0.42))' }}
+                      style={{ background: 'linear-gradient(180deg, transparent 42%, rgba(15, 35, 23, 0.45))' }}
                       aria-hidden="true"
                     />
                   </>
                 ) : (
-                  <span
-                    className="text-3xl font-semibold"
-                    style={{ color: 'color-mix(in srgb, var(--color-primary) 72%, var(--color-foreground))', fontFamily: 'var(--font-display)' }}
-                    aria-hidden="true"
-                  >
-                    {category.name.slice(0, 1).toUpperCase()}
+                  <span className="grid h-full w-full grid-cols-2 gap-1.5 p-3" aria-hidden="true">
+                    <span
+                      className="rounded-[14px]"
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 16%, var(--color-card))' }}
+                    />
+                    <span
+                      className="rounded-[14px]"
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--color-accent) 72%, var(--color-card))' }}
+                    />
+                    <span
+                      className="col-span-2 rounded-[14px]"
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--color-muted) 78%, var(--color-card))' }}
+                    />
+                    <span
+                      className="absolute inset-0 flex items-center justify-center text-4xl font-semibold"
+                      style={{ color: 'color-mix(in srgb, var(--color-primary) 72%, var(--color-foreground))', fontFamily: 'var(--font-display)' }}
+                    >
+                      {category.name.slice(0, 1).toUpperCase()}
+                    </span>
                   </span>
                 )}
+                <span
+                  className="absolute left-2.5 top-2.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold leading-none"
+                  style={{
+                    backgroundColor: 'color-mix(in srgb, var(--color-card) 92%, transparent)',
+                    borderColor: 'color-mix(in srgb, var(--color-border) 72%, transparent)',
+                    color: 'var(--color-foreground)',
+                  }}
+                >
+                  {countLabel}
+                </span>
               </span>
-              <span className="block p-3">
-                <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+              <span className="flex min-h-[72px] items-center justify-between gap-3 p-3">
+                <span className="line-clamp-2 text-sm font-semibold leading-snug" style={{ color: 'var(--color-foreground)' }}>
                   {category.name}
                 </span>
-                <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                  {countLabel}
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors duration-fast group-hover:border-[var(--color-primary)]"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-primary)' }}
+                  aria-hidden="true"
+                >
+                  <ChevronRight className="h-4 w-4" />
                 </span>
               </span>
             </Link>
@@ -347,14 +387,14 @@ function HomeCategoryShortcuts({
             <Link
               key={link.id}
               href={link.href}
-              className="group overflow-hidden rounded-[20px] border transition-transform duration-fast hover:-translate-y-0.5"
+              className="group overflow-hidden rounded-[20px] border shadow-[0_18px_36px_-32px_rgba(15,35,23,0.32)] transition-[border-color,transform,box-shadow] duration-fast hover:-translate-y-0.5 hover:shadow-[0_20px_46px_-30px_rgba(15,35,23,0.42)]"
               style={{
                 borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
                 backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
               }}
             >
               <span
-                className="relative flex aspect-[16/9] items-center justify-center overflow-hidden"
+                className="relative flex aspect-[4/3] items-center justify-center overflow-hidden"
                 style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 13%, var(--color-muted))' }}
               >
                 {imageUrl ? (
@@ -376,15 +416,24 @@ function HomeCategoryShortcuts({
                   <ChevronRight className="h-8 w-8" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
                 )}
               </span>
-              <span className="block p-3">
-                <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                  {link.label}
-                </span>
-                {link.description && (
-                  <span className="mt-1 line-clamp-2 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                    {link.description}
+              <span className="flex min-h-[72px] items-center justify-between gap-3 p-3">
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                    {link.label}
                   </span>
-                )}
+                  {link.description && (
+                    <span className="mt-1 line-clamp-2 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                      {link.description}
+                    </span>
+                  )}
+                </span>
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors duration-fast group-hover:border-[var(--color-primary)]"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-primary)' }}
+                  aria-hidden="true"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </span>
               </span>
             </Link>
           );
@@ -622,7 +671,6 @@ export default function HomePage() {
                           key={product.id}
                           product={product as never}
                           imagePriority={index < 2}
-                          quickActions="landing-compact"
                           testId="mobile-home-deal-card"
                         />
                       ))}
@@ -661,7 +709,6 @@ export default function HomePage() {
                           key={product.id}
                           product={product as never}
                           imagePriority={index < 2}
-                          quickActions="landing-compact"
                           testId="mobile-home-product-card"
                         />
                       ))}
@@ -840,6 +887,7 @@ export default function HomePage() {
                           key={product.id}
                           product={product as never}
                           imagePriority={index < 2}
+                          showCatalogFacts
                           actionVisibility="reveal"
                         />
                       ))}
@@ -884,6 +932,7 @@ export default function HomePage() {
                           key={product.id}
                           product={product as never}
                           imagePriority={index < 4}
+                          showCatalogFacts
                           actionVisibility="reveal"
                         />
                       ))}

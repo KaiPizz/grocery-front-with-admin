@@ -141,13 +141,53 @@ test.describe('listing product card scan value', () => {
       return getComputedStyle(element).transition;
     });
     expect(slideTransition).toContain('opacity');
+    const imageLayerMetrics = await card.evaluate((element) => {
+      const primaryImage = element.querySelector('[data-testid="product-card-image-primary"]');
+      const imageContainer = primaryImage?.parentElement;
+      const carouselLayer = element.querySelector('[data-testid="product-card-image-carousel"]');
+      const imageRect = primaryImage?.getBoundingClientRect();
+      const containerRect = imageContainer?.getBoundingClientRect();
+
+      return {
+        primaryImage: imageRect ? { width: imageRect.width, height: imageRect.height } : null,
+        container: containerRect ? { width: containerRect.width, height: containerRect.height } : null,
+        carouselBackground: carouselLayer ? getComputedStyle(carouselLayer).backgroundColor : null,
+      };
+    });
+    expect(imageLayerMetrics.primaryImage).not.toBeNull();
+    expect(imageLayerMetrics.container).not.toBeNull();
+    expect(imageLayerMetrics.primaryImage!.width).toBeLessThanOrEqual(imageLayerMetrics.container!.width + 0.5);
+    expect(imageLayerMetrics.primaryImage!.height).toBeLessThanOrEqual(imageLayerMetrics.container!.height + 0.5);
+    expect(imageLayerMetrics.carouselBackground).not.toBe('rgba(0, 0, 0, 0)');
     await expect(imageCounter).toContainText('2/3');
     await expect(imageCounter).toContainText('3/3');
+
+    const wishlistButton = card.getByRole('button', { name: /add to wishlist/i });
+    const wishlistBox = await wishlistButton.boundingBox();
+    expect(wishlistBox).not.toBeNull();
+    const wishlistHitTarget = await page.evaluate(({ x, y }) => {
+      const element = document.elementFromPoint(x, y);
+      return element?.closest('button')?.getAttribute('aria-label') ?? null;
+    }, {
+      x: wishlistBox!.x + wishlistBox!.width / 2,
+      y: wishlistBox!.y + wishlistBox!.height / 2,
+    });
+    expect(wishlistHitTarget ?? '').toMatch(/add to wishlist/i);
+
     await page.mouse.move(20, 20);
     await expect(imageCounter).toContainText('1/3');
 
     await expect(card.getByRole('button', { name: /add to cart/i })).toBeVisible();
-    await expect(card.getByRole('button', { name: /add to wishlist/i })).toBeVisible();
+    await expect(wishlistButton).toBeVisible();
+    expect(wishlistBox!.width).toBeGreaterThanOrEqual(44);
+    expect(wishlistBox!.height).toBeGreaterThanOrEqual(44);
+
+    const addButtonBox = await card.getByRole('button', { name: /add to cart/i }).boundingBox();
+    const cardBox = await card.boundingBox();
+    expect(addButtonBox).not.toBeNull();
+    expect(cardBox).not.toBeNull();
+    expect(cardBox!.y + cardBox!.height - (addButtonBox!.y + addButtonBox!.height)).toBeLessThanOrEqual(18);
+
     await expect(card).not.toContainText(/only 20 left|ships today|ships tomorrow|same-day shipping|pickup|bank transfer|manual confirmation/i);
   });
 
@@ -170,6 +210,14 @@ test.describe('listing product card scan value', () => {
 
     await expect(card.getByTestId('mobile-product-card-add')).toBeVisible();
     await expect(card.getByTestId('mobile-product-card-wishlist')).toBeVisible();
+    const mobileAddBox = await card.getByTestId('mobile-product-card-add').boundingBox();
+    const mobileWishlistBox = await card.getByTestId('mobile-product-card-wishlist').boundingBox();
+    expect(mobileAddBox).not.toBeNull();
+    expect(mobileWishlistBox).not.toBeNull();
+    expect(mobileAddBox!.width).toBeGreaterThanOrEqual(44);
+    expect(mobileAddBox!.height).toBeGreaterThanOrEqual(44);
+    expect(mobileWishlistBox!.width).toBeGreaterThanOrEqual(44);
+    expect(mobileWishlistBox!.height).toBeGreaterThanOrEqual(44);
     await expect(card.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(card.getByTestId('mobile-product-card-image-counter')).toContainText('1/3');
     await expect(card.getByTestId('mobile-product-card-fulfillment')).toHaveCount(0);

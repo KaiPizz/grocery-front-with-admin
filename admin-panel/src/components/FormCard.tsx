@@ -6,12 +6,12 @@ interface FormCardProps {
 
 export function FormCard({ title, description, children }: FormCardProps) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
-      <div className="border-b border-gray-100 px-5 py-4">
-        <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
-        {description && <p className="mt-0.5 text-xs text-gray-500">{description}</p>}
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm shadow-slate-200/50">
+      <div className="border-b border-slate-100 bg-slate-50/60 px-5 py-4">
+        <h2 className="text-sm font-semibold text-slate-950">{title}</h2>
+        {description && <p className="mt-0.5 max-w-2xl text-xs leading-5 text-slate-500">{description}</p>}
       </div>
-      <div className="px-5 py-4 space-y-4">
+      <div className="space-y-4 px-5 py-4">
         {children}
       </div>
     </div>

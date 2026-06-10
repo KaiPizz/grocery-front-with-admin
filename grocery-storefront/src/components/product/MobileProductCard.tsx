@@ -196,13 +196,13 @@ export function MobileProductCard({
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group block overflow-hidden rounded-[1.45rem] border bg-[var(--color-card)] shadow-[0_18px_36px_-30px_rgba(66,109,72,0.35)] transition-transform duration-fast active:scale-[0.99]"
+      className="group flex h-full flex-col overflow-hidden rounded-[1.45rem] border bg-[var(--color-card)] shadow-[0_18px_36px_-30px_rgba(66,109,72,0.35)] transition-transform duration-fast active:scale-[0.99]"
       style={{ borderColor: 'color-mix(in srgb, var(--color-border) 88%, white)' }}
       aria-label={`${product.name}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
       data-testid={testId ?? 'mobile-product-card'}
     >
       <div
-        className="relative overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.96),_rgba(246,249,243,0.92)_72%)]"
+        className="relative shrink-0 overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.96),_rgba(246,249,243,0.92)_72%)]"
         data-testid="mobile-product-card-media"
       >
         <div className="relative aspect-square">
@@ -212,7 +212,7 @@ export function MobileProductCard({
               alt=""
               fill
               priority={imagePriority}
-              className="object-contain p-0.5 transition-transform duration-slow group-hover:scale-[1.02]"
+              className="object-contain p-2 transition-transform duration-slow group-hover:scale-[1.02]"
               sizes="(max-width: 767px) 50vw, 25vw"
               unoptimized={isImageProxySrc(imageUrl)}
               data-testid="mobile-product-card-image"
@@ -299,16 +299,16 @@ export function MobileProductCard({
         </div>
       </div>
 
-      <div className="px-2.5 pb-2 pt-2.5">
+      <div className="flex flex-1 flex-col px-2.5 pb-2 pt-2.5">
         <h2
-          className="overflow-hidden text-ellipsis whitespace-nowrap text-[0.84rem] font-semibold leading-tight"
+          className="line-clamp-2 min-h-[1.95rem] overflow-hidden text-[0.84rem] font-semibold leading-tight"
           style={{ color: 'var(--color-foreground)' }}
           data-testid="mobile-product-card-title"
         >
           {product.name}
         </h2>
 
-        <div className="mt-2">
+        <div className="mt-auto pt-2">
           <div className="flex items-center justify-between gap-1.5">
             <span className="text-[0.98rem] font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
               {formatPrice(price, currency)}
