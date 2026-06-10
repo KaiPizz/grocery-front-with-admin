@@ -176,11 +176,14 @@ test.describe('mobile homepage', () => {
     await page.goto('/en');
 
     const hero = page.getByTestId('mobile-home-hero');
+    const campaign = page.locator('[data-testid="home-campaign-band"]:visible').first();
     const deals = page.getByTestId('mobile-home-deals');
     const freshPicks = page.getByTestId('mobile-home-fresh-picks');
     const shopByZone = page.getByRole('heading', { name: /shop by storage zone/i });
 
     await expect(hero).toBeVisible();
+    await expect(campaign).toBeVisible();
+    await expect(campaign.getByTestId('home-campaign-product')).toHaveCount(3);
     await expect(shopByZone).toBeVisible();
     await expect(page.getByRole('link', { name: /shop frozen products/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /shop chilled products/i })).toBeVisible();
@@ -229,6 +232,7 @@ test.describe('mobile homepage', () => {
     await expect(page.getByTestId('mobile-home-hero')).toBeHidden();
     await expect(page.getByTestId('desktop-home-hero')).toBeVisible();
     await expect(page.getByTestId('desktop-home-hero').getByTestId('home-hero-product-image')).toHaveCount(4);
+    await expect(page.locator('[data-testid="home-campaign-band"]:visible').first()).toBeVisible();
     await expect(page.getByTestId('desktop-home-zone-grid')).toBeVisible();
     const firstDealCard = page.getByTestId('desktop-home-deals').getByTestId('product-card').first();
     const firstDealAddButton = firstDealCard.getByRole('button', { name: /add to cart/i });
@@ -267,7 +271,8 @@ test.describe('mobile homepage', () => {
 
     const shortcuts = page.locator('[data-testid="home-category-shortcuts"]:visible').first();
     await expect(shortcuts.getByTestId('home-category-chip').first()).toBeVisible();
-    await expect(shortcuts.getByTestId('home-category-card-fallback').first()).toBeVisible();
+    await expect(shortcuts.getByTestId('home-category-card-fallback')).toHaveCount(0);
+    await expect(shortcuts.getByTestId('home-category-card-grid')).toHaveCount(0);
 
     await expect(page.getByTestId('footer-service-notes')).toContainText(/pickup/i);
     await expect(page.locator('footer a[href="#"]')).toHaveCount(0);

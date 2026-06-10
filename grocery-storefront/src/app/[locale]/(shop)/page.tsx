@@ -152,6 +152,9 @@ function HomeCatalogHero({
     }))
     .filter((product): product is { id: string; name: string; imageUrl: string } => Boolean(product.imageUrl))
     .slice(0, 4);
+  const visualPanelClassName = loading && visualProducts.length === 0
+    ? 'hidden min-h-[104px] grid-cols-4 gap-1.5 p-2 sm:min-h-[128px] sm:gap-2 sm:p-3 md:grid md:min-h-full md:grid-cols-2 md:grid-rows-2 md:gap-3 md:p-4'
+    : 'grid min-h-[104px] grid-cols-4 gap-1.5 p-2 sm:min-h-[128px] sm:gap-2 sm:p-3 md:min-h-full md:grid-cols-2 md:grid-rows-2 md:gap-3 md:p-4';
 
   return (
     <div
@@ -196,7 +199,7 @@ function HomeCatalogHero({
         </div>
 
         <div
-          className="grid min-h-[104px] grid-cols-4 gap-1.5 p-2 sm:min-h-[128px] sm:gap-2 sm:p-3 md:min-h-full md:grid-cols-2 md:grid-rows-2 md:gap-3 md:p-4"
+          className={visualPanelClassName}
           style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 7%, transparent)' }}
           aria-label={t('catalogPreview')}
         >
@@ -255,6 +258,110 @@ function HomeCatalogHero({
   );
 }
 
+function HomeCampaignBand({
+  products,
+  quickLinks,
+  loading,
+}: {
+  products: HomeProduct[];
+  quickLinks: CommercialQuickLink[];
+  loading: boolean;
+}) {
+  const t = useTranslations('home');
+  const primaryLink = quickLinks[0];
+  const visualProducts = products
+    .map((product) => ({
+      id: product.id,
+      name: product.name,
+      href: `/products/${product.slug}`,
+      imageUrl: normalizeImageUrl(product.thumbnail?.url),
+    }))
+    .filter((product): product is { id: string; name: string; href: string; imageUrl: string } => Boolean(product.imageUrl))
+    .slice(0, 3);
+
+  if (!loading && visualProducts.length === 0 && !primaryLink) {
+    return null;
+  }
+
+  return (
+    <section className="container-grocery py-3 md:py-5" data-testid="home-campaign-band">
+      <div
+        className="grid overflow-hidden rounded-[24px] border md:grid-cols-[minmax(0,1fr)_minmax(300px,0.72fr)]"
+        style={{
+          borderColor: 'color-mix(in srgb, var(--color-primary) 16%, var(--color-border))',
+          backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
+        }}
+      >
+        <div className="flex flex-col justify-center px-5 py-5 sm:px-6 md:px-8 md:py-7">
+          <span
+            className="mb-2 inline-flex w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
+            style={{
+              backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)',
+              color: 'var(--color-primary)',
+            }}
+          >
+            {t('campaignEyebrow')}
+          </span>
+          <h2
+            className="max-w-[17ch] text-2xl font-semibold leading-tight tracking-normal md:text-3xl"
+            style={{ color: 'var(--color-foreground)', fontFamily: 'var(--font-display)' }}
+          >
+            {primaryLink?.label ?? t('campaignTitle')}
+          </h2>
+          <p className="mt-2 max-w-[40rem] text-sm leading-6 md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
+            {primaryLink?.description ?? t('campaignSubtitle')}
+          </p>
+          <Link
+            href={primaryLink?.href ?? '/products'}
+            className="mt-4 inline-flex h-10 w-fit items-center gap-2 rounded-full px-4 text-sm font-semibold text-white transition-transform duration-fast hover:-translate-y-0.5 active:translate-y-0"
+            style={{ backgroundColor: 'var(--color-primary)' }}
+          >
+            {t('campaignCta')}
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div
+          className="flex gap-2 overflow-x-auto px-4 pb-4 [scrollbar-width:none] md:grid md:grid-cols-3 md:gap-3 md:overflow-visible md:p-4 [&::-webkit-scrollbar]:hidden"
+          style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 8%, transparent)' }}
+        >
+          {loading && visualProducts.length === 0
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="h-32 min-w-[116px] rounded-[18px] skeleton md:h-auto md:min-h-[152px] md:min-w-0" aria-hidden="true" />
+              ))
+            : visualProducts.map((product, index) => (
+                <Link
+                  key={product.id}
+                  href={product.href}
+                  className="group relative h-32 min-w-[116px] overflow-hidden rounded-[18px] border md:h-auto md:min-h-[152px] md:min-w-0"
+                  style={{
+                    borderColor: 'color-mix(in srgb, var(--color-card) 72%, transparent)',
+                    backgroundColor: 'var(--color-card)',
+                  }}
+                  data-testid="home-campaign-product"
+                >
+                  {/* Runtime catalog hosts are tenant-configurable, so this intentionally remains a plain image. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-normal group-hover:scale-[1.04]"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                  />
+                  <span
+                    className="absolute inset-x-0 bottom-0 hidden px-2.5 pb-2 pt-8 md:block"
+                    style={{ background: 'linear-gradient(180deg, transparent, rgba(15, 35, 23, 0.72))' }}
+                  >
+                    <span className="line-clamp-2 text-xs font-semibold leading-snug text-white">{product.name}</span>
+                  </span>
+                </Link>
+              ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HomeCategoryShortcuts({
   categories,
   quickLinks,
@@ -269,7 +376,35 @@ function HomeCategoryShortcuts({
     .sort((left, right) => (right.products?.totalCount ?? 0) - (left.products?.totalCount ?? 0))
     .slice(0, 6);
   const visibleQuickLinks = quickLinks.slice(0, 3);
-  const chipCategories = visibleCategories.slice(0, 6);
+  const shortcutItems = [
+    ...visibleQuickLinks.map((link) => ({
+      id: `quick-${link.id}`,
+      label: link.label,
+      href: link.href,
+      count: null,
+    })),
+    ...visibleCategories.slice(0, 6).map((category) => ({
+      id: `category-${category.id}`,
+      label: category.name,
+      href: `/categories/${category.slug}`,
+      count: category.products?.totalCount ?? 0,
+    })),
+  ].slice(0, 8);
+  const richCategoryCards = visibleCategories
+    .map((category) => ({
+      category,
+      imageUrl: normalizeImageUrl(category.backgroundImage?.url),
+    }))
+    .filter((item): item is { category: HomeCategory; imageUrl: string } => Boolean(item.imageUrl))
+    .slice(0, 4);
+  const richQuickLinks = visibleQuickLinks
+    .map((link) => ({
+      link,
+      imageUrl: normalizeImageUrl(link.imageUrl),
+    }))
+    .filter((item): item is { link: CommercialQuickLink; imageUrl: string } => Boolean(item.imageUrl))
+    .slice(0, 3);
+  const hasRichCards = richCategoryCards.length + richQuickLinks.length >= 2;
 
   if (visibleCategories.length === 0 && visibleQuickLinks.length === 0) {
     return null;
@@ -294,47 +429,45 @@ function HomeCategoryShortcuts({
         </Link>
       </div>
 
-      {chipCategories.length > 0 && (
+      {shortcutItems.length > 0 && (
         <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0 [&::-webkit-scrollbar]:hidden">
-          {chipCategories.map((category) => {
-            const count = category.products?.totalCount ?? 0;
-
-            return (
-              <Link
-                key={`chip-${category.id}`}
-                href={`/categories/${category.slug}`}
-                className="group inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-3 text-xs font-semibold transition-[border-color,transform,background-color] duration-fast hover:-translate-y-0.5"
+          {shortcutItems.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              className="group inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-3 text-xs font-semibold transition-[border-color,transform,background-color] duration-fast hover:-translate-y-0.5"
+              style={{
+                borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
+                backgroundColor: 'color-mix(in srgb, var(--color-card) 92%, var(--color-accent))',
+                color: 'var(--color-foreground)',
+              }}
+              data-testid="home-category-chip"
+            >
+              <span
+                className="flex h-6 w-6 items-center justify-center rounded-full text-[11px]"
                 style={{
-                  borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
-                  backgroundColor: 'color-mix(in srgb, var(--color-card) 92%, var(--color-accent))',
-                  color: 'var(--color-foreground)',
+                  backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)',
+                  color: 'var(--color-primary)',
                 }}
-                data-testid="home-category-chip"
+                aria-hidden="true"
               >
-                <span
-                  className="flex h-6 w-6 items-center justify-center rounded-full text-[11px]"
-                  style={{
-                    backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)',
-                    color: 'var(--color-primary)',
-                  }}
-                  aria-hidden="true"
-                >
-                  {category.name.slice(0, 1).toUpperCase()}
-                </span>
-                <span className="max-w-[9rem] truncate">{category.name}</span>
-                <span style={{ color: 'var(--color-muted-foreground)' }}>{count}</span>
-              </Link>
-            );
-          })}
+                {item.label.slice(0, 1).toUpperCase()}
+              </span>
+              <span className="max-w-[9rem] truncate">{item.label}</span>
+              {item.count !== null && (
+                <span style={{ color: 'var(--color-muted-foreground)' }}>{item.count}</span>
+              )}
+            </Link>
+          ))}
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {visibleCategories.map((category, index) => {
+      {hasRichCards && (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" data-testid="home-category-card-grid">
+          {richCategoryCards.map(({ category, imageUrl }, index) => {
           const count = category.products?.totalCount ?? 0;
           const countLabel = t('productCount', { count });
-          const imageUrl = normalizeImageUrl(category.backgroundImage?.url);
-          const featured = index === 0 && visibleCategories.length > 3;
+          const featured = index === 0 && richCategoryCards.length > 3;
 
           return (
             <Link
@@ -348,6 +481,7 @@ function HomeCategoryShortcuts({
                 borderColor: 'color-mix(in srgb, var(--color-border) 86%, white)',
                 backgroundColor: 'var(--color-card)',
               }}
+              data-testid="home-category-card"
             >
               <span
                 className={`relative flex items-center justify-center overflow-hidden ${
@@ -355,60 +489,20 @@ function HomeCategoryShortcuts({
                 }`}
                 style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 7%, var(--color-muted))' }}
               >
-                {imageUrl ? (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={imageUrl}
-                      alt={category.backgroundImage?.alt || category.name}
-                      className="h-full w-full object-cover transition-transform duration-normal group-hover:scale-[1.03]"
-                      loading="lazy"
-                      data-testid="home-category-card-image"
-                    />
-                    <span
-                      className="absolute inset-0"
-                      style={{ background: 'linear-gradient(180deg, transparent 42%, rgba(15, 35, 23, 0.45))' }}
-                      aria-hidden="true"
-                    />
-                  </>
-                ) : (
-                  <span
-                    className="relative flex h-full w-full items-center justify-center overflow-hidden p-4"
-                    aria-hidden="true"
-                    data-testid="home-category-card-fallback"
-                  >
-                    <span
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          'radial-gradient(circle at 24% 18%, color-mix(in srgb, var(--color-primary) 16%, transparent), transparent 34%), radial-gradient(circle at 82% 74%, color-mix(in srgb, var(--color-accent) 42%, transparent), transparent 32%)',
-                      }}
-                    />
-                    <span
-                      className="absolute inset-x-4 bottom-4 h-10 rounded-full"
-                      style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)' }}
-                    />
-                    <span
-                      className="relative flex h-20 w-20 items-center justify-center rounded-full border shadow-[0_16px_32px_-28px_rgba(15,35,23,0.5)]"
-                      style={{
-                        borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
-                        backgroundColor: 'color-mix(in srgb, var(--color-card) 86%, transparent)',
-                        color: 'var(--color-primary)',
-                      }}
-                    >
-                      <Package className="h-8 w-8" aria-hidden="true" />
-                    </span>
-                    <span
-                      className="absolute inset-x-3 bottom-3 line-clamp-1 rounded-full px-3 py-1 text-center text-xs font-semibold leading-snug"
-                      style={{
-                        backgroundColor: 'color-mix(in srgb, var(--color-card) 84%, transparent)',
-                        color: 'color-mix(in srgb, var(--color-primary) 72%, var(--color-foreground))',
-                      }}
-                    >
-                      {category.name}
-                    </span>
-                  </span>
-                )}
+                {/* Runtime catalog hosts are tenant-configurable, so this intentionally remains a plain image. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imageUrl}
+                  alt={category.backgroundImage?.alt || category.name}
+                  className="h-full w-full object-cover transition-transform duration-normal group-hover:scale-[1.03]"
+                  loading="lazy"
+                  data-testid="home-category-card-image"
+                />
+                <span
+                  className="absolute inset-0"
+                  style={{ background: 'linear-gradient(180deg, transparent 42%, rgba(15, 35, 23, 0.45))' }}
+                  aria-hidden="true"
+                />
                 <span
                   className="absolute left-2.5 top-2.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold leading-none"
                   style={{
@@ -434,11 +528,9 @@ function HomeCategoryShortcuts({
               </span>
             </Link>
           );
-        })}
+          })}
 
-        {visibleQuickLinks.map((link) => {
-          const imageUrl = normalizeImageUrl(link.imageUrl);
-
+          {richQuickLinks.map(({ link, imageUrl }) => {
           return (
             <Link
               key={link.id}
@@ -448,29 +540,24 @@ function HomeCategoryShortcuts({
                 borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
                 backgroundColor: 'color-mix(in srgb, var(--color-primary) 6%, var(--color-card))',
               }}
+              data-testid="home-commercial-card"
             >
               <span
                 className="relative flex aspect-[4/3] items-center justify-center overflow-hidden"
                 style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 13%, var(--color-muted))' }}
               >
-                {imageUrl ? (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={imageUrl}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-normal group-hover:scale-[1.03]"
-                      loading="lazy"
-                    />
-                    <span
-                      className="absolute inset-0"
-                      style={{ background: 'linear-gradient(180deg, transparent 48%, rgba(15, 35, 23, 0.42))' }}
-                      aria-hidden="true"
-                    />
-                  </>
-                ) : (
-                  <ChevronRight className="h-8 w-8" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
-                )}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imageUrl}
+                  alt=""
+                  className="h-full w-full object-cover transition-transform duration-normal group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                <span
+                  className="absolute inset-0"
+                  style={{ background: 'linear-gradient(180deg, transparent 48%, rgba(15, 35, 23, 0.42))' }}
+                  aria-hidden="true"
+                />
               </span>
               <span className="flex min-h-[72px] items-center justify-between gap-3 p-3">
                 <span className="min-w-0">
@@ -493,8 +580,9 @@ function HomeCategoryShortcuts({
               </span>
             </Link>
           );
-        })}
-      </div>
+          })}
+        </div>
+      )}
     </section>
   );
 }
@@ -664,6 +752,12 @@ export default function HomePage() {
           pickup={pickupFulfillment}
           bankTransfer={bankTransferPromise}
           manualConfirmation={availabilityOnlyStock}
+        />
+
+        <HomeCampaignBand
+          products={products}
+          quickLinks={commercialQuickLinks}
+          loading={productsResult.fetching}
         />
 
         {orderedSections.map((sectionId) => {
@@ -876,6 +970,12 @@ export default function HomePage() {
           pickup={pickupFulfillment}
           bankTransfer={bankTransferPromise}
           manualConfirmation={availabilityOnlyStock}
+        />
+
+        <HomeCampaignBand
+          products={products}
+          quickLinks={commercialQuickLinks}
+          loading={productsResult.fetching}
         />
 
         {orderedSections.map((sectionId) => {
