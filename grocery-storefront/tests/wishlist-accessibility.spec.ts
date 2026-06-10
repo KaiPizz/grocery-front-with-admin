@@ -8,6 +8,20 @@ import { mockMobileStorefront, seedAuthSession } from './mobile-fixtures';
 // - Bottom-nav audit order: Wishlist is the tab after Home.
 
 test.describe('wishlist accessibility', () => {
+  test('explains the desktop wishlist shortcut on keyboard focus', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en');
+
+    const wishlistShortcut = page.locator('header').getByRole('link', { name: /wishlist/i }).first();
+
+    await wishlistShortcut.focus();
+
+    const popover = page.getByTestId('header-wishlist-popover');
+    await expect(popover).toBeVisible();
+    await expect(popover).toContainText(/save for later/i);
+  });
+
   test('keeps saved-item links and actions uniquely named for keyboard shoppers', async ({ page }) => {
     await seedAuthSession(page);
     await mockMobileStorefront(page, { wishlist: 'single-item' });

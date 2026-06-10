@@ -102,6 +102,33 @@ async function mockHomepageConfig(page: Page) {
   });
 }
 
+async function mockPickupHomepageConfig(page: Page) {
+  const envelope = configEnvelope();
+
+  await page.route('**/api/config/**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...envelope,
+        config: {
+          ...envelope.config,
+          general: {
+            ...envelope.config.general,
+            fulfillment: {
+              mode: 'pickup',
+              paymentPromise: 'bank_transfer',
+              stockDisplayMode: 'availability_only',
+              pickupInstructions: null,
+              bankTransferInstructions: null,
+            },
+          },
+        },
+      }),
+    });
+  });
+}
+
 async function mockHomepageHeroConfig(page: Page) {
   const envelope = configEnvelope();
   envelope.config.homepage.hero = {
@@ -169,12 +196,12 @@ test.describe('mobile homepage', () => {
     const firstFreshCard = freshPicks.getByTestId('mobile-home-product-card').first();
 
     await expect(firstDealCard.getByTestId('mobile-product-card-media')).toBeVisible();
-    await expect(firstDealCard.getByTestId('mobile-product-card-add')).toHaveCount(0);
-    await expect(firstDealCard.getByTestId('mobile-product-card-wishlist')).toHaveCount(0);
+    await expect(firstDealCard.getByTestId('mobile-product-card-add')).toBeVisible();
+    await expect(firstDealCard.getByTestId('mobile-product-card-wishlist')).toBeVisible();
     await expect(firstDealCard.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(firstFreshCard.getByTestId('mobile-product-card-media')).toBeVisible();
-    await expect(firstFreshCard.getByTestId('mobile-product-card-add')).toHaveCount(0);
-    await expect(firstFreshCard.getByTestId('mobile-product-card-wishlist')).toHaveCount(0);
+    await expect(firstFreshCard.getByTestId('mobile-product-card-add')).toBeVisible();
+    await expect(firstFreshCard.getByTestId('mobile-product-card-wishlist')).toBeVisible();
     await expect(firstFreshCard.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(hero.getByRole('link', { name: /shop now|products/i })).toBeVisible();
   });
@@ -207,9 +234,6 @@ test.describe('mobile homepage', () => {
     const firstDealAddButton = firstDealCard.getByRole('button', { name: /add to cart/i });
     const firstDealWishlistButton = firstDealCard.getByRole('button', { name: /add to wishlist/i });
 
-    await expect(firstDealAddButton).toBeHidden();
-    await expect(firstDealWishlistButton).toBeHidden();
-    await firstDealCard.hover();
     await expect(firstDealAddButton).toBeVisible();
     await expect(firstDealWishlistButton).toBeVisible();
 
@@ -218,6 +242,35 @@ test.describe('mobile homepage', () => {
     });
 
     expect(columnCount).toBe(3);
+  });
+
+  test('surfaces pickup-first retail landing affordances on desktop', async ({ page }) => {
+    await mockPickupHomepageConfig(page);
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en');
+
+    const header = page.locator('header');
+    const hero = page.getByTestId('desktop-home-hero');
+
+    await expect(header.getByText('Test Store').first()).toBeVisible();
+    await expect(header.getByRole('combobox', { name: /search products/i })).toBeVisible();
+    await expect(header.getByRole('link', { name: /wishlist/i }).first()).toBeVisible();
+    await expect(header.getByRole('link', { name: /cart/i }).first()).toBeVisible();
+    await expect(hero.getByRole('link', { name: /shop now|products/i })).toBeVisible();
+    await expect(hero.getByTestId('home-hero-product-image')).toHaveCount(4);
+
+    const trust = page.locator('[data-testid="home-fulfillment-trust"]:visible').first();
+    await expect(trust).toContainText(/pickup/i);
+    await expect(trust).toContainText(/bank transfer/i);
+    await expect(trust).toContainText(/manual confirmation/i);
+
+    const shortcuts = page.locator('[data-testid="home-category-shortcuts"]:visible').first();
+    await expect(shortcuts.getByTestId('home-category-chip').first()).toBeVisible();
+    await expect(shortcuts.getByTestId('home-category-card-fallback').first()).toBeVisible();
+
+    await expect(page.getByTestId('footer-service-notes')).toContainText(/pickup/i);
+    await expect(page.locator('footer a[href="#"]')).toHaveCount(0);
   });
 
   test('serves a favicon instead of returning 404', async ({ page }) => {

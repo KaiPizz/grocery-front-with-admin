@@ -181,6 +181,11 @@ test.describe('listing product card scan value', () => {
     await expect(wishlistButton).toBeVisible();
     expect(wishlistBox!.width).toBeGreaterThanOrEqual(44);
     expect(wishlistBox!.height).toBeGreaterThanOrEqual(44);
+    await expect(card.getByTestId('product-card-wishlist-desktop')).toHaveAttribute('aria-pressed', 'false');
+
+    await card.getByTestId('product-card-wishlist-desktop').click();
+    await expect(card.getByRole('button', { name: /remove from wishlist/i })).toHaveAttribute('aria-pressed', 'true');
+    await expect(card.getByTestId('product-card-saved-state')).toContainText(/saved for later/i);
 
     const addButtonBox = await card.getByRole('button', { name: /add to cart/i }).boundingBox();
     const cardBox = await card.boundingBox();
@@ -218,6 +223,10 @@ test.describe('listing product card scan value', () => {
     expect(mobileAddBox!.height).toBeGreaterThanOrEqual(44);
     expect(mobileWishlistBox!.width).toBeGreaterThanOrEqual(44);
     expect(mobileWishlistBox!.height).toBeGreaterThanOrEqual(44);
+    await expect(card.getByTestId('mobile-product-card-wishlist')).toHaveAttribute('aria-pressed', 'false');
+    await card.getByTestId('mobile-product-card-wishlist').click();
+    await expect(card.getByTestId('mobile-product-card-wishlist')).toHaveAttribute('aria-pressed', 'true');
+    await expect(card.getByTestId('mobile-product-card-saved-state')).toContainText(/saved for later/i);
     await expect(card.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(card.getByTestId('mobile-product-card-image-counter')).toContainText('1/3');
     await expect(card.getByTestId('mobile-product-card-fulfillment')).toHaveCount(0);
