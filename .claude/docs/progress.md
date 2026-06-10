@@ -1,10 +1,18 @@
 # Feature Progress
 
-> **Last updated:** 2026-06-06
+> **Last updated:** 2026-06-09
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-06-09 Landing Product Card Hover And Density Fix
+
+- Product card image preview layers no longer intercept wishlist clicks while cycling through multi-image media on hover/focus.
+- Desktop product-card overlays now keep wishlist, freshness, and nutrition controls above decorative carousel layers with explicit stacking.
+- Product card action rows no longer reserve bottom space for an invisible quantity unit label, bringing the bottom padding closer to NaSushi/JaponiaCentralna-style dense product cards.
+- Product card primary images no longer scale beyond their no-crop container on hover, and carousel previews now provide an opaque backdrop so wide preview images do not expose the primary image underneath.
+- Added Playwright regression coverage for wishlist hit-target ownership after hover, 44px wishlist control sizing, compact CTA bottom spacing, no-crop hover geometry, and carousel backdrop coverage.
 
 ## 2026-06-06 Kenmito Retail Polish And Checkout Readiness
 

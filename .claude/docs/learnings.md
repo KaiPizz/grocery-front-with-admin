@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-06-06
+> **Last updated:** 2026-06-09
 
 ---
 
@@ -157,6 +157,18 @@
 ---
 
 ## CSS & Theming Errors
+
+### Product preview carousel covered desktop wishlist controls
+- **Error:** Hovering a multi-image desktop product card made the carousel layer cover the wishlist hit target, and the card bottom looked oversized because an opacity-hidden quantity unit label still occupied layout space.
+- **Cause:** The decorative image carousel had an explicit z-index while desktop action overlays did not, so the preview layer won the stacking order. The hidden quantity helper used opacity/transform but stayed in normal flow.
+- **Fix:** Made the carousel pointer-events-none, gave desktop overlays explicit z-index, kept wishlist/nutrition controls at 44px, and removed the hidden label from the action-row layout. Added Playwright coverage for hit-target ownership, control size, and compact bottom spacing.
+- **Rule:** Decorative media preview layers must never intercept pointer events or sit above purchase/wishlist controls. Invisible helper text should not reserve layout space inside dense product cards.
+
+### `object-contain` still cropped when hover scale exceeded the image frame
+- **Error:** Some multi-image product cards appeared cropped during hover preview, especially wide Dubai Chocolate media, while other products looked fine.
+- **Cause:** The primary image used `object-contain` but also scaled to `102%` on group hover inside an `overflow-hidden` square. Wide carousel slides left letterbox space, and the transparent carousel layer exposed the scaled primary image underneath.
+- **Fix:** Removed the primary image hover scale and gave the carousel layer its own opaque card-colored backdrop. Verified the live Dubai Chocolate card keeps the image box equal to its container and no longer shows the primary image through wide preview letterboxing.
+- **Rule:** A no-crop package image policy forbids hover scale inside overflow-hidden image frames. Any media carousel that crossfades differently shaped images needs an opaque backdrop, not a transparent layer over another image.
 
 ### PDP purchase controls cannot all fit in one 320px mobile row
 - **Error:** Mobile PDP action rows tried to keep quantity, wishlist/add actions, price, and Polish "do koszyka" copy in a single row, causing horizontal overflow, clipped price text, and wrapped CTA labels.
