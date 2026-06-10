@@ -6,6 +6,24 @@
 
 ---
 
+## 2026-06-10 Kenmito Landing Visual Direction Polish
+
+- Landing page now moves closer to the approved JaponiaCentralna/NaSushi reference direction without adding dishonest commerce claims: first viewport remains Kenmito green/serif/pickup-led, but the page is denser and more transactional.
+- Desktop and mobile homepage now surface the trust strip near the hero, with only supported claims: pickup/self-collection, manual confirmation, live catalog availability, wishlist saving, and repeat-order cart readiness. Mobile uses a horizontal trust rail so the fixed bottom nav does not bury the strip.
+- Category discovery now includes compact popular-category chips and more intentional fallback category visuals instead of large initial-letter blocks that read like loading placeholders.
+- Homepage product cards on desktop now expose quantity and add-to-cart actions immediately, matching the product-first behavior learned from JaponiaCentralna, while preserving Kenmito's multi-image hover preview.
+- Header polish now keeps the Kenmito wordmark visible on mobile, adds a NaSushi-style desktop wishlist hover/focus popover, and groups the mobile drawer into wishlist/cart, account, and shopping navigation sections.
+- Tests were updated to lock the new transactional card behavior instead of the previous hover-only homepage action model.
+- Intentionally skipped for now: fake shipping countdowns, fake review widgets, fake free-delivery thresholds, and inactive newsletter/payment/contact claims until owner-backed data exists.
+
+### Completion Follow-Up
+
+- Added a pickup-first desktop landing regression test covering header brand/search/cart/wishlist, hero CTA/product imagery, trust strip, category chips/fallback visuals, footer service notes, and absence of `href="#"` footer links.
+- Strengthened product-card wishlist states on desktop and mobile with `aria-pressed`, visible saved-state chips, and focused E2E coverage while preserving the existing hover image preview behavior.
+- Reworked category fallback art so categories without configured images render an intentional package/category surface instead of letter-block placeholder grids.
+- Footer fallback now avoids inactive `#` links and only shows service/contact/service-note claims backed by config or fulfillment mode.
+- Verified: `npm run test:e2e -- tests/mobile-homepage.spec.ts --project=pixel-7`, `npm run test:e2e -- tests/product-card-scan-value.spec.ts tests/wishlist-accessibility.spec.ts`, `npm run lint`, `npx tsc --noEmit`, and `git diff --check` (CRLF warnings only).
+
 ## 2026-06-09 Landing Product Card Hover And Density Fix
 
 - Product card image preview layers no longer intercept wishlist clicks while cycling through multi-image media on hover/focus.
