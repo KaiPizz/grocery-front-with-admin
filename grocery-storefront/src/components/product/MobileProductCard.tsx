@@ -269,12 +269,16 @@ export function MobileProductCard({
               <button
                 type="button"
                 onClick={handleWishlistToggle}
-                className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2"
                 style={{
-                  backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, transparent)',
+                  backgroundColor: isWishlisted
+                    ? 'color-mix(in srgb, var(--color-primary) 12%, var(--color-card))'
+                    : 'color-mix(in srgb, var(--color-card) 94%, transparent)',
                   borderColor: isWishlisted ? 'var(--color-primary)' : 'var(--color-border)',
                   color: isWishlisted ? 'var(--color-primary)' : 'var(--color-foreground)',
+                  ['--tw-ring-color' as string]: 'var(--color-ring)',
                 }}
+                aria-pressed={isWishlisted}
                 aria-label={isWishlisted ? t('wishlist.remove') : t('wishlist.add')}
                 data-testid="mobile-product-card-wishlist"
               >
@@ -347,6 +351,18 @@ export function MobileProductCard({
               {scanFacts.length > 0 && (
                 <span className="min-w-0 truncate" data-testid="mobile-product-card-scan-facts">
                   {scanFacts.join(' · ')}
+                </span>
+              )}
+              {isWishlisted && (
+                <span
+                  className="rounded-full px-2 py-0.5 font-semibold"
+                  style={{
+                    backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)',
+                    color: 'var(--color-primary)',
+                  }}
+                  data-testid="mobile-product-card-saved-state"
+                >
+                  {t('wishlist.savedForLater')}
                 </span>
               )}
             </div>
