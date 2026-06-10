@@ -171,7 +171,7 @@ function HomeCatalogHero({
             {pickup ? tFulfillment('pickupService') : t('categoryShortcuts')}
           </span>
           <h1
-            className="max-w-[14ch] text-[2rem] font-semibold leading-[0.98] tracking-[-0.055em] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.35rem]"
+            className="max-w-[14ch] text-[2rem] font-semibold leading-none tracking-normal sm:text-[3rem] md:text-[3.5rem] lg:text-[4.35rem]"
             style={{ color: 'var(--color-foreground)', fontFamily: 'var(--font-display)' }}
           >
             {headline}

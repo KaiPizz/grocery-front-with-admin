@@ -105,9 +105,9 @@
       "canonical": "https://kamito.enail.pro"
     },
     "general": {
-      "phone": "",
-      "email": "",
-      "address": "",
+      "phone": "+48 000 000 000",
+      "email": "kontakt@kenmito.pl",
+      "address": "Warszawa, Polska",
       "socialLinks": [],
       "policyLinks": {
         "privacy": "/privacy",
@@ -119,7 +119,7 @@
       "lowStockThreshold": 10,
       "fulfillment": {
         "mode": "pickup",
-        "paymentPromise": "bank_transfer",
+        "paymentPromise": "backend",
         "stockDisplayMode": "availability_only",
         "pickupInstructions": null,
         "bankTransferInstructions": null

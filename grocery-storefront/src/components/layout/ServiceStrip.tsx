@@ -28,7 +28,7 @@ export function ServiceStrip() {
 
   return (
     <div
-      className="border-b text-xs font-medium sm:text-sm"
+      className="border-b text-[11px] font-semibold sm:text-sm"
       style={{
         minHeight: 'var(--shipping-countdown-height)',
         borderColor: 'var(--color-border)',
@@ -43,13 +43,17 @@ export function ServiceStrip() {
         aria-live="polite"
         aria-atomic="true"
       >
-        <MapPin className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
-        <span>{pickupText}</span>
+        <span className="inline-flex min-w-0 items-center justify-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+          <span className="min-w-0 truncate">{pickupText}</span>
+        </span>
         {bankTransferText && (
           <>
-            <span aria-hidden="true">|</span>
-            <Landmark className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
-            <span>{bankTransferText}</span>
+            <span className="shrink-0 opacity-60" aria-hidden="true">|</span>
+            <span className="inline-flex min-w-0 items-center justify-center gap-1.5">
+              <Landmark className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+              <span className="min-w-0 truncate">{bankTransferText}</span>
+            </span>
           </>
         )}
       </div>

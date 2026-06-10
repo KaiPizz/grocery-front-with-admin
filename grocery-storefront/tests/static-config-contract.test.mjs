@@ -29,7 +29,7 @@ test('tracked Kamito static config carries Kenmito launch truth', () => {
   assert.equal(config.branding.storeName, 'Kenmito');
   assert.equal(config.homepage.hero.headline, 'Azjatyckie składniki na codzienny stół');
   assert.equal(config.general.fulfillment.mode, 'pickup');
-  assert.equal(config.general.fulfillment.paymentPromise, 'bank_transfer');
+  assert.equal(config.general.fulfillment.paymentPromise, 'backend');
   assert.equal(config.general.fulfillment.stockDisplayMode, 'availability_only');
   assert.match(config.seo.defaultTitle, /^Kenmito\b/);
   assert.equal(categorySection?.enabled, true);

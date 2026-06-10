@@ -8,14 +8,14 @@ import { ScrollToTopButton } from '@/components/layout/ScrollToTopButton';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 import { usePathname } from '@/i18n/navigation';
 
-const NAV_HIDDEN_PREFIXES = ['/cart', '/checkout'] as const;
+const NAV_HIDDEN_PREFIXES = ['/cart', '/checkout', '/login', '/register', '/account'] as const;
 
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
   const tCommon = useTranslations('common');
   const pathname = usePathname();
   const navHidden = NAV_HIDDEN_PREFIXES.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
-  );
+  ) || /^\/products\/[^/]+/.test(pathname);
 
   function handleSkipToContent() {
     const mainContent = document.getElementById('main-content');

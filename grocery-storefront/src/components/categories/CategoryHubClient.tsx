@@ -25,6 +25,10 @@ function getProductCount(category: GroupableCategory) {
   return category.products?.totalCount ?? 0;
 }
 
+function getCategoryInitial(category: GroupableCategory) {
+  return category.name.trim().charAt(0).toUpperCase() || '#';
+}
+
 export function CategoryHubClient({ categories }: CategoryHubClientProps) {
   const t = useTranslations('categories');
   const locale = useLocale();
@@ -114,34 +118,45 @@ export function CategoryHubClient({ categories }: CategoryHubClientProps) {
                       key={category.id}
                       href={`/categories/${category.slug}`}
                       aria-label={`${category.name}, ${countLabel}`}
-                      className="group flex min-h-28 flex-col justify-between rounded-lg border p-4 transition-transform duration-fast hover:-translate-y-0.5"
+                      className="group grid grid-cols-[3.75rem_minmax(0,1fr)] gap-3 rounded-lg border p-3 transition-transform duration-fast hover:-translate-y-0.5"
                       style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
                     >
-                      <span>
-                        <span className="text-base font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                      <span
+                        className="flex aspect-square items-center justify-center rounded-lg border text-xl font-semibold"
+                        style={{
+                          borderColor: 'color-mix(in srgb, var(--color-primary) 18%, transparent)',
+                          backgroundColor: 'color-mix(in srgb, var(--color-primary) 9%, var(--color-card))',
+                          color: 'var(--color-primary)',
+                        }}
+                        aria-hidden="true"
+                      >
+                        {getCategoryInitial(category)}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="line-clamp-2 text-base font-semibold leading-snug" style={{ color: 'var(--color-foreground)' }}>
                           {category.name}
                         </span>
                         {category.description && (
-                          <span className="mt-2 line-clamp-2 block text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                          <span className="mt-1 line-clamp-1 block text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                             {category.description}
                           </span>
                         )}
-                      </span>
-                      <span className="mt-4 flex items-center justify-between gap-3">
-                        <span
-                          className="rounded-full px-3 py-1 text-xs font-semibold"
-                          style={{
-                            backgroundColor: count > 0
-                              ? 'color-mix(in srgb, var(--color-primary) 12%, transparent)'
-                              : 'color-mix(in srgb, var(--color-foreground) 7%, transparent)',
-                            color: count > 0 ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                          }}
-                        >
-                          {countLabel}
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
-                          {t('browse')}
-                          <ArrowRight className="h-4 w-4 transition-transform duration-fast group-hover:translate-x-0.5" aria-hidden="true" />
+                        <span className="mt-3 flex items-center justify-between gap-3">
+                          <span
+                            className="rounded-full px-2.5 py-1 text-xs font-semibold"
+                            style={{
+                              backgroundColor: count > 0
+                                ? 'color-mix(in srgb, var(--color-primary) 12%, transparent)'
+                                : 'color-mix(in srgb, var(--color-foreground) 7%, transparent)',
+                              color: count > 0 ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                            }}
+                          >
+                            {countLabel}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                            {t('browse')}
+                            <ArrowRight className="h-4 w-4 transition-transform duration-fast group-hover:translate-x-0.5" aria-hidden="true" />
+                          </span>
                         </span>
                       </span>
                     </Link>

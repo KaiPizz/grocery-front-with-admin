@@ -65,6 +65,10 @@ function getProductCount(category: CategoryNode) {
   return category.products?.totalCount ?? 0;
 }
 
+function getCategoryInitial(category: CategoryNode) {
+  return category.name.trim().charAt(0).toUpperCase() || '#';
+}
+
 function splitIntoColumns(categories: CategoryNode[]) {
   const columnSize = Math.ceil(categories.length / COLUMN_COUNT);
 
@@ -218,7 +222,7 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                 }}
                 onClick={onNavigate}
               >
-                {featuredCategory.backgroundImage?.url && (
+                {featuredCategory.backgroundImage?.url ? (
                   <span className="relative block h-36 w-full overflow-hidden">
                     <Image
                       src={featuredCategory.backgroundImage.url}
@@ -228,6 +232,27 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                       className="object-cover"
                       unoptimized
                     />
+                  </span>
+                ) : (
+                  <span
+                    className="flex h-36 w-full items-center justify-center border-b"
+                    style={{
+                      borderColor: 'var(--color-border)',
+                      background:
+                        'linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 16%, white), color-mix(in srgb, var(--color-primary) 5%, var(--color-card)))',
+                    }}
+                  >
+                    <span
+                      className="flex h-16 w-16 items-center justify-center rounded-full border text-3xl font-semibold"
+                      style={{
+                        borderColor: 'color-mix(in srgb, var(--color-primary) 22%, transparent)',
+                        color: 'var(--color-primary)',
+                        backgroundColor: 'color-mix(in srgb, var(--color-card) 80%, transparent)',
+                      }}
+                      aria-hidden="true"
+                    >
+                      {getCategoryInitial(featuredCategory)}
+                    </span>
                   </span>
                 )}
                 <span className="flex flex-1 flex-col justify-between p-4">
@@ -243,6 +268,9 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                         {featuredCategory.description}
                       </span>
                     )}
+                    <span className="mt-3 inline-flex rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)', color: 'var(--color-primary)' }}>
+                      {formatProductCount(locale, getProductCount(featuredCategory))}
+                    </span>
                   </span>
                   <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
                     {t('shopCategory')}

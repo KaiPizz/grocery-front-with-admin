@@ -359,14 +359,26 @@ function ProductInformationSections({ product, sku }: ProductInformationSections
           )}
 
           {product.ingredients && (
-            <section>
-              <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
-                {t('product.ingredients')}
-              </h2>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
+            <details
+              className="group rounded-lg border p-4"
+              style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+            >
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+                <span className="heading-section text-xl" style={{ color: 'var(--color-foreground)' }}>
+                  {t('product.ingredients')}
+                </span>
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-lg font-semibold leading-none transition-transform duration-fast group-open:rotate-45"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-primary)' }}
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+              </summary>
+              <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
                 {product.ingredients}
               </p>
-            </section>
+            </details>
           )}
 
           {allergens.length > 0 && (
@@ -513,7 +525,10 @@ export default function ProductDetailPage() {
   useEffect(() => {
     if (!inlineActionsNode) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setShowStickyAdd(!entry.isIntersecting),
+      ([entry]) => {
+        const inlineActionsAreAboveViewport = entry.boundingClientRect.top < 0;
+        setShowStickyAdd(!entry.isIntersecting && inlineActionsAreAboveViewport);
+      },
       { rootMargin: '-80px 0px 0px 0px' },
     );
     observer.observe(inlineActionsNode);
@@ -868,15 +883,14 @@ export default function ProductDetailPage() {
         </section>
       )}
 
-      {/* Mobile sticky add-to-cart bar — appears when inline CTA scrolls out of view.
-          Sits above the MobileBottomNav (3.5rem + safe-area). */}
+      {/* Mobile sticky add-to-cart bar appears when inline CTA scrolls out of view. */}
       {inStock && (
         <div
           className={`fixed inset-x-0 z-40 border-t backdrop-blur transition-all duration-normal ease-out md:hidden ${
             showStickyAdd ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0'
           }`}
           style={{
-            bottom: 'calc(3.5rem + env(safe-area-inset-bottom, 0px))',
+            bottom: 'env(safe-area-inset-bottom, 0px)',
             borderColor: 'var(--color-border)',
             backgroundColor: 'color-mix(in srgb, var(--color-card) 96%, transparent)',
           }}

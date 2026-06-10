@@ -12,11 +12,11 @@ import { useHydrated } from '@/hooks/use-hydrated';
  * Mobile bottom navigation for high-frequency storefront routes.
  *
  * Hidden on routes that own their own bottom CTA real estate (`/cart`,
- * `/checkout`). On product detail, the PD sticky add-to-cart bar is shifted
- * up to sit above this nav.
+ * `/checkout`, product detail) or form/account flows where a fixed nav
+ * competes with primary actions.
  */
 
-const HIDE_PREFIXES = ['/cart', '/checkout'] as const;
+const HIDE_PREFIXES = ['/cart', '/checkout', '/login', '/register', '/account'] as const;
 
 interface NavItem {
   href: string;
@@ -42,7 +42,7 @@ export function MobileBottomNav() {
 
   const hidden = HIDE_PREFIXES.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
-  );
+  ) || /^\/products\/[^/]+/.test(pathname);
   if (hidden) return null;
 
   const items: NavItem[] = [
