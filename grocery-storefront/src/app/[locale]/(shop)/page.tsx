@@ -6,8 +6,11 @@ import {
   Banknote,
   CheckCircle2,
   ChevronRight,
+  Heart,
   MapPin,
+  Package,
   Percent,
+  ShoppingCart,
   Snowflake,
   Sun,
   Thermometer,
@@ -266,14 +269,15 @@ function HomeCategoryShortcuts({
     .sort((left, right) => (right.products?.totalCount ?? 0) - (left.products?.totalCount ?? 0))
     .slice(0, 6);
   const visibleQuickLinks = quickLinks.slice(0, 3);
+  const chipCategories = visibleCategories.slice(0, 6);
 
   if (visibleCategories.length === 0 && visibleQuickLinks.length === 0) {
     return null;
   }
 
   return (
-    <section className="container-grocery py-6 md:py-10" data-testid="home-category-shortcuts">
-      <div className="mb-4 flex items-end justify-between gap-4 md:mb-6">
+    <section className="container-grocery py-5 md:py-8" data-testid="home-category-shortcuts">
+      <div className="mb-3 flex items-end justify-between gap-4 md:mb-4">
         <h2
           className="heading-section text-xl md:text-2xl"
           style={{ color: 'var(--color-foreground)' }}
@@ -289,6 +293,42 @@ function HomeCategoryShortcuts({
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
+
+      {chipCategories.length > 0 && (
+        <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0 [&::-webkit-scrollbar]:hidden">
+          {chipCategories.map((category) => {
+            const count = category.products?.totalCount ?? 0;
+
+            return (
+              <Link
+                key={`chip-${category.id}`}
+                href={`/categories/${category.slug}`}
+                className="group inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-3 text-xs font-semibold transition-[border-color,transform,background-color] duration-fast hover:-translate-y-0.5"
+                style={{
+                  borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
+                  backgroundColor: 'color-mix(in srgb, var(--color-card) 92%, var(--color-accent))',
+                  color: 'var(--color-foreground)',
+                }}
+                data-testid="home-category-chip"
+              >
+                <span
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-[11px]"
+                  style={{
+                    backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)',
+                    color: 'var(--color-primary)',
+                  }}
+                  aria-hidden="true"
+                >
+                  {category.name.slice(0, 1).toUpperCase()}
+                </span>
+                <span className="max-w-[9rem] truncate">{category.name}</span>
+                <span style={{ color: 'var(--color-muted-foreground)' }}>{count}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {visibleCategories.map((category, index) => {
           const count = category.products?.totalCount ?? 0;
@@ -332,24 +372,40 @@ function HomeCategoryShortcuts({
                     />
                   </>
                 ) : (
-                  <span className="grid h-full w-full grid-cols-2 gap-1.5 p-3" aria-hidden="true">
+                  <span
+                    className="relative flex h-full w-full items-center justify-center overflow-hidden p-4"
+                    aria-hidden="true"
+                    data-testid="home-category-card-fallback"
+                  >
                     <span
-                      className="rounded-[14px]"
-                      style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 16%, var(--color-card))' }}
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          'radial-gradient(circle at 24% 18%, color-mix(in srgb, var(--color-primary) 16%, transparent), transparent 34%), radial-gradient(circle at 82% 74%, color-mix(in srgb, var(--color-accent) 42%, transparent), transparent 32%)',
+                      }}
                     />
                     <span
-                      className="rounded-[14px]"
-                      style={{ backgroundColor: 'color-mix(in srgb, var(--color-accent) 72%, var(--color-card))' }}
+                      className="absolute inset-x-4 bottom-4 h-10 rounded-full"
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)' }}
                     />
                     <span
-                      className="col-span-2 rounded-[14px]"
-                      style={{ backgroundColor: 'color-mix(in srgb, var(--color-muted) 78%, var(--color-card))' }}
-                    />
-                    <span
-                      className="absolute inset-0 flex items-center justify-center text-4xl font-semibold"
-                      style={{ color: 'color-mix(in srgb, var(--color-primary) 72%, var(--color-foreground))', fontFamily: 'var(--font-display)' }}
+                      className="relative flex h-20 w-20 items-center justify-center rounded-full border shadow-[0_16px_32px_-28px_rgba(15,35,23,0.5)]"
+                      style={{
+                        borderColor: 'color-mix(in srgb, var(--color-primary) 18%, var(--color-border))',
+                        backgroundColor: 'color-mix(in srgb, var(--color-card) 86%, transparent)',
+                        color: 'var(--color-primary)',
+                      }}
                     >
-                      {category.name.slice(0, 1).toUpperCase()}
+                      <Package className="h-8 w-8" aria-hidden="true" />
+                    </span>
+                    <span
+                      className="absolute inset-x-3 bottom-3 line-clamp-1 rounded-full px-3 py-1 text-center text-xs font-semibold leading-snug"
+                      style={{
+                        backgroundColor: 'color-mix(in srgb, var(--color-card) 84%, transparent)',
+                        color: 'color-mix(in srgb, var(--color-primary) 72%, var(--color-foreground))',
+                      }}
+                    >
+                      {category.name}
                     </span>
                   </span>
                 )}
@@ -453,30 +509,37 @@ function HomeFulfillmentTrust({
   manualConfirmation: boolean;
 }) {
   const t = useTranslations('fulfillment');
-  const items = [
+  const items: Array<{ label: string; icon: typeof MapPin }> = [
     pickup ? { label: t('pickupService'), icon: MapPin } : null,
     bankTransfer ? { label: t('bankTransferService'), icon: Banknote } : null,
     manualConfirmation ? { label: t('manualConfirmationShort'), icon: CheckCircle2 } : null,
-  ].filter((item): item is { label: string; icon: typeof MapPin } => item !== null);
+    { label: t('liveCatalogService'), icon: Package },
+    { label: t('wishlistService'), icon: Heart },
+    { label: t('cartService'), icon: ShoppingCart },
+  ].filter((item): item is { label: string; icon: typeof MapPin } => item !== null).slice(0, 5);
 
   if (items.length === 0) {
     return null;
   }
 
   return (
-    <section className="container-grocery py-5 md:py-8" data-testid="home-fulfillment-trust">
+    <section className="container-grocery py-4 md:py-6" data-testid="home-fulfillment-trust">
       <div
-        className="grid gap-px overflow-hidden rounded-[22px] border sm:grid-cols-3"
+        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:grid md:gap-px md:overflow-hidden md:rounded-[22px] md:border md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden"
         style={{
           borderColor: 'var(--color-border)',
           backgroundColor: 'var(--color-border)',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
         }}
       >
         {items.map(({ label, icon: Icon }) => (
           <div
             key={label}
-            className="flex min-h-16 items-center gap-3 px-4 py-3"
-            style={{ backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, var(--color-accent))' }}
+            className="flex min-h-16 min-w-[212px] items-center gap-3 rounded-[18px] border px-4 py-3 md:min-w-0 md:rounded-none md:border-0"
+            style={{
+              borderColor: 'var(--color-border)',
+              backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, var(--color-accent))',
+            }}
           >
             <span
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
@@ -562,16 +625,16 @@ export default function HomePage() {
     .slice(0, 4);
   const productsForFreshPicks = freshPicks.length > 0 ? freshPicks : products.slice(0, 4);
   return (
-    <div className="pb-12">
+    <div className="pb-24 md:pb-12">
       <div className="md:hidden">
         {heroBlock ? (
-          <section className="container-grocery pb-4 pt-6 sm:pt-8" data-testid="mobile-home-hero">
+          <section className="container-grocery pb-3 pt-5 sm:pt-7" data-testid="mobile-home-hero">
             <BlockRenderer block={heroBlock} />
           </section>
         ) : null}
 
         {showLegacyHero && (
-          <section className="container-grocery pb-3 pt-5 sm:pt-7" data-testid="mobile-home-hero">
+          <section className="container-grocery pb-2 pt-4 sm:pt-6" data-testid="mobile-home-hero">
             <HomeCatalogHero
               headline={heroHeadline}
               subtitle={heroSubtitle}
@@ -596,6 +659,12 @@ export default function HomePage() {
           }
           return null;
         })()}
+
+        <HomeFulfillmentTrust
+          pickup={pickupFulfillment}
+          bankTransfer={bankTransferPromise}
+          manualConfirmation={availabilityOnlyStock}
+        />
 
         {orderedSections.map((sectionId) => {
           switch (sectionId) {
@@ -763,22 +832,17 @@ export default function HomePage() {
               return null;
           }
         })}
-        <HomeFulfillmentTrust
-          pickup={pickupFulfillment}
-          bankTransfer={bankTransferPromise}
-          manualConfirmation={availabilityOnlyStock}
-        />
       </div>
 
       <div className="hidden md:block">
         {heroBlock ? (
-          <section className="container-grocery py-8 md:py-12" data-testid="desktop-home-hero">
+          <section className="container-grocery pb-6 pt-8 md:pt-10" data-testid="desktop-home-hero">
             <BlockRenderer block={heroBlock} />
           </section>
         ) : null}
 
         {showLegacyHero && (
-          <section className="container-grocery py-8 lg:py-10" data-testid="desktop-home-hero">
+          <section className="container-grocery pb-6 pt-8 lg:pt-10" data-testid="desktop-home-hero">
             <HomeCatalogHero
               headline={heroHeadline}
               subtitle={heroSubtitle}
@@ -802,11 +866,17 @@ export default function HomePage() {
             );
           }
           return (
-            <section className="container-grocery py-8 md:py-12">
+            <section className="container-grocery py-6 md:py-8">
               <PromoBanner />
             </section>
           );
         })()}
+
+        <HomeFulfillmentTrust
+          pickup={pickupFulfillment}
+          bankTransfer={bankTransferPromise}
+          manualConfirmation={availabilityOnlyStock}
+        />
 
         {orderedSections.map((sectionId) => {
           switch (sectionId) {
@@ -888,7 +958,7 @@ export default function HomePage() {
                           product={product as never}
                           imagePriority={index < 2}
                           showCatalogFacts
-                          actionVisibility="reveal"
+                          actionVisibility="always"
                         />
                       ))}
                     </div>
@@ -933,7 +1003,7 @@ export default function HomePage() {
                           product={product as never}
                           imagePriority={index < 4}
                           showCatalogFacts
-                          actionVisibility="reveal"
+                          actionVisibility="always"
                         />
                       ))}
                     </div>
@@ -993,11 +1063,6 @@ export default function HomePage() {
               return null;
           }
         })}
-        <HomeFulfillmentTrust
-          pickup={pickupFulfillment}
-          bankTransfer={bankTransferPromise}
-          manualConfirmation={availabilityOnlyStock}
-        />
       </div>
     </div>
   );

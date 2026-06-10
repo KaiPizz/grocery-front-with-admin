@@ -25,6 +25,7 @@ export function Header() {
   const tAuth = useTranslations('auth');
   const tAccount = useTranslations('account');
   const tCommon = useTranslations('common');
+  const tWishlist = useTranslations('wishlist');
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -310,6 +311,11 @@ export function Header() {
     router.push('/');
   }
 
+  const mobileShopItems = [
+    ...navItems,
+    ...commercialQuickLinks.map(({ href, label, order }) => ({ href, label, enabled: true, order })),
+  ];
+
   return (
     <header
       className="sticky top-0 z-50 border-b backdrop-blur-md transition-transform duration-normal ease-out md:translate-y-0"
@@ -339,7 +345,7 @@ export function Header() {
               <Leaf className="w-5 h-5 text-white" />
             </div>
           )}
-          <span className="font-display text-lg font-bold hidden sm:block tracking-tight" style={{ color: 'var(--color-foreground)' }}>
+          <span className="block max-w-[6.75rem] truncate font-display text-base font-bold tracking-tight sm:max-w-none sm:text-lg" style={{ color: 'var(--color-foreground)' }}>
             {storeName}
           </span>
         </Link>
@@ -430,22 +436,60 @@ export function Header() {
             <LanguageSwitcher />
           </div>}
 
-          {showWishlist && <Link
-            href="/wishlist"
-            className="relative hidden md:inline-flex p-2.5 rounded-xl hover-surface"
-            aria-label={`${t('wishlist')}${isMounted && wishlistCount > 0 ? `, ${tCommon('itemCount', { count: wishlistCount })}` : ''}`}
-          >
-            <Heart className="w-5 h-5" style={{ color: 'var(--color-foreground)' }} />
-            {isMounted && wishlistCount > 0 && (
-              <span
-                className="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-                aria-hidden="true"
+          {showWishlist && (
+            <div className="relative hidden md:inline-flex group/wishlist">
+              <Link
+                href="/wishlist"
+                className="relative inline-flex p-2.5 rounded-xl hover-surface"
+                aria-label={`${t('wishlist')}${isMounted && wishlistCount > 0 ? `, ${tCommon('itemCount', { count: wishlistCount })}` : ''}`}
               >
-                {wishlistCount > 99 ? '99+' : wishlistCount}
-              </span>
-            )}
-          </Link>}
+                <Heart className="w-5 h-5" style={{ color: 'var(--color-foreground)' }} />
+                {isMounted && wishlistCount > 0 && (
+                  <span
+                    className="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
+                    style={{ backgroundColor: 'var(--color-primary)' }}
+                    aria-hidden="true"
+                  >
+                    {wishlistCount > 99 ? '99+' : wishlistCount}
+                  </span>
+                )}
+              </Link>
+              <div
+                className="pointer-events-none absolute right-0 top-full w-[268px] pt-2 opacity-0 invisible translate-y-1 transition-all duration-fast group-hover/wishlist:visible group-hover/wishlist:translate-y-0 group-hover/wishlist:opacity-100 group-focus-within/wishlist:visible group-focus-within/wishlist:translate-y-0 group-focus-within/wishlist:opacity-100"
+                data-testid="header-wishlist-popover"
+              >
+                <div
+                  className="rounded-2xl border p-4 shadow-lg"
+                  style={{
+                    borderColor: 'var(--color-border)',
+                    backgroundColor: 'color-mix(in srgb, var(--color-card) 97%, white)',
+                  }}
+                >
+                  <div className="flex items-start gap-3">
+                    <span
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                      style={{
+                        backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)',
+                        color: 'var(--color-primary)',
+                      }}
+                    >
+                      <Heart className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                        {tWishlist('saveForLater')}
+                      </span>
+                      <span className="mt-1 block text-xs leading-5" style={{ color: 'var(--color-muted-foreground)' }}>
+                        {isMounted && wishlistCount > 0
+                          ? tCommon('itemCount', { count: wishlistCount })
+                          : tWishlist('emptyDesc')}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           <MiniCart />
 
@@ -564,96 +608,119 @@ export function Header() {
           style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
           aria-label="Mobile navigation"
         >
-          {showLanguageSwitcher && (
-            <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
-              <LanguageSwitcher
-                className="w-full justify-center rounded-xl border px-3 py-3 text-sm"
-                showLabel
-                buttonTestId="mobile-nav-language"
-              />
-            </div>
-          )}
-
-          {isAuthenticated ? (
-            <>
-              <div
-                className="px-4 py-3.5 text-sm font-medium border-b flex items-center gap-2"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-              >
-                <UserRound className="w-4 h-4" aria-hidden="true" />
-                <span>{session.user?.fullName || t('account')}</span>
+          <div className="max-h-[calc(100vh-var(--header-height)-env(safe-area-inset-bottom,0px))] overflow-y-auto px-4 py-4">
+            {showLanguageSwitcher && (
+              <div className="mb-3">
+                <LanguageSwitcher
+                  className="w-full justify-center rounded-xl border px-3 py-3 text-sm"
+                  showLabel
+                  buttonTestId="mobile-nav-language"
+                />
               </div>
-              <Link
-                href="/account"
-                className="block px-4 py-3.5 text-sm font-medium border-b hover-surface"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {tAccount('menuAccount')}
-              </Link>
+            )}
+
+            <div className="grid grid-cols-2 gap-2">
               <Link
                 href="/wishlist"
-                className="block px-4 py-3.5 text-sm font-medium border-b hover-surface"
+                className="min-h-[72px] rounded-2xl border p-3 transition-colors duration-fast hover-surface"
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                 onClick={() => setMenuOpen(false)}
               >
-                {t('wishlist')}
-                {isMounted && wishlistCount > 0 ? ` (${wishlistCount})` : ''}
-              </Link>
-              <button
-                type="button"
-                onClick={() => void handleLogout()}
-                className="w-full text-left px-4 py-3.5 text-sm font-medium border-b hover-surface flex items-center gap-2"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-              >
-                <LogOut className="w-4 h-4" aria-hidden="true" />
-                <span>{t('logout')}</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="block px-4 py-3.5 text-sm font-medium border-b hover-surface"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {t('login')}
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <Heart className="h-4 w-4" aria-hidden="true" />
+                  {t('wishlist')}
+                </span>
+                <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {isMounted && wishlistCount > 0 ? tCommon('itemCount', { count: wishlistCount }) : tWishlist('saveForLater')}
+                </span>
               </Link>
               <Link
-                href="/register"
-                className="block px-4 py-3.5 text-sm font-medium border-b hover-surface"
+                href="/cart"
+                className="min-h-[72px] rounded-2xl border p-3 transition-colors duration-fast hover-surface"
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                 onClick={() => setMenuOpen(false)}
               >
-                {t('register')}
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <ShoppingCart className="h-4 w-4" aria-hidden="true" />
+                  {t('cart')}
+                </span>
+                <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {isMounted && cartInitialized && itemCount > 0 ? tCommon('itemCount', { count: itemCount }) : tCommon('addToCart')}
+                </span>
               </Link>
-              <Link
-                href="/wishlist"
-                className="block px-4 py-3.5 text-sm font-medium border-b hover-surface"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {t('wishlist')}
-                {isMounted && wishlistCount > 0 ? ` (${wishlistCount})` : ''}
-              </Link>
-            </>
-          )}
-          {[
-            ...navItems,
-            ...commercialQuickLinks.map(({ href, label, order }) => ({ href, label, enabled: true, order })),
-            { href: '/cart', label: `${t('cart')}${isMounted && cartInitialized && itemCount > 0 ? ` (${itemCount})` : ''}`, enabled: true, order: 99 },
-          ].map(({ href, label }, index) => (
-            <Link
-              key={`${href}-${index}`}
-              href={href}
-              className="block px-4 py-3.5 text-sm font-medium border-b hover-surface"
-              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-              onClick={() => setMenuOpen(false)}
-            >
-              {label}
-            </Link>
-          ))}
+            </div>
+
+            <div className="mt-4 rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
+              <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                {t('account')}
+              </div>
+              {isAuthenticated ? (
+                <>
+                  <div
+                    className="flex items-center gap-2 px-3 py-3 text-sm font-medium border-b"
+                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                  >
+                    <UserRound className="w-4 h-4" aria-hidden="true" />
+                    <span>{session.user?.fullName || t('account')}</span>
+                  </div>
+                  <Link
+                    href="/account"
+                    className="block px-3 py-3 text-sm font-medium border-b hover-surface"
+                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {tAccount('menuAccount')}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => void handleLogout()}
+                    className="w-full text-left px-3 py-3 text-sm font-medium hover-surface flex items-center gap-2"
+                    style={{ color: 'var(--color-foreground)' }}
+                  >
+                    <LogOut className="w-4 h-4" aria-hidden="true" />
+                    <span>{t('logout')}</span>
+                  </button>
+                </>
+              ) : (
+                <div className="grid grid-cols-2 gap-px overflow-hidden rounded-b-2xl" style={{ backgroundColor: 'var(--color-border)' }}>
+                  <Link
+                    href="/login"
+                    className="px-3 py-3 text-sm font-medium hover-surface"
+                    style={{ backgroundColor: 'var(--color-card)', color: 'var(--color-foreground)' }}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {t('login')}
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-3 py-3 text-sm font-medium hover-surface"
+                    style={{ backgroundColor: 'var(--color-card)', color: 'var(--color-foreground)' }}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {t('register')}
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
+              <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                {t('products')}
+              </div>
+              {mobileShopItems.map(({ href, label }, index) => (
+                <Link
+                  key={`${href}-${index}`}
+                  href={href}
+                  className="flex items-center justify-between gap-3 border-b px-3 py-3 text-sm font-medium last:border-b-0 hover-surface"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <span>{label}</span>
+                  <ChevronDown className="-rotate-90 h-4 w-4 opacity-60" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+          </div>
         </nav>
       )}
     </header>

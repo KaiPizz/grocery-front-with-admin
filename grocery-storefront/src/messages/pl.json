@@ -47,6 +47,9 @@
     "productPickupNotice": "Ten sklep obsługuje wyłącznie odbiór osobisty.",
     "productBankTransferNotice": "Aktywna metoda płatności to przelew bankowy.",
     "manualConfirmationShort": "Potwierdzenie ręczne",
+    "liveCatalogService": "Aktualna dostępność katalogu",
+    "wishlistService": "Zapisz ulubione na później",
+    "cartService": "Koszyk gotowy na kolejne zakupy",
     "manualFulfillmentNotice": "Dostępność, termin odbioru i potwierdzenie przelewu są potwierdzane ręcznie przez sklep.",
     "cartPickupNotice": "Tylko odbiór osobisty. Pasek darmowej dostawy nie dotyczy tego sklepu.",
     "cartBankTransferNotice": "Płatność odbywa się przelewem bankowym po checkoutcie.",
@@ -341,7 +344,8 @@
     "contact": "Kontakt",
     "privacy": "Polityka prywatności",
     "terms": "Warunki korzystania z usługi",
-    "delivery": "Informacje o dostawie"
+    "delivery": "Informacje o dostawie",
+    "catalogNote": "Przeglądaj aktualny katalog i zarządzaj zapisanymi produktami z konta."
   },
   "legal": {
     "privacyTitle": "Polityka prywatności",

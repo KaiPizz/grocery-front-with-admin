@@ -47,6 +47,9 @@
     "productPickupNotice": "Pickup/self-collection only for this store.",
     "productBankTransferNotice": "Bank transfer is the active payment method.",
     "manualConfirmationShort": "Manual confirmation",
+    "liveCatalogService": "Live catalog availability",
+    "wishlistService": "Save favorites for later",
+    "cartService": "Cart ready for repeat orders",
     "manualFulfillmentNotice": "Order availability, pickup timing, and bank-transfer confirmation are confirmed manually by the store.",
     "cartPickupNotice": "Pickup/self-collection only. Shipping progress does not apply to this store.",
     "cartBankTransferNotice": "Payment is handled by bank transfer after checkout.",
@@ -341,7 +344,8 @@
     "contact": "Contact",
     "privacy": "Privacy policy",
     "terms": "Terms of service",
-    "delivery": "Delivery info"
+    "delivery": "Delivery info",
+    "catalogNote": "Browse the live catalog and manage saved products from your account."
   },
   "legal": {
     "privacyTitle": "Privacy Policy",
