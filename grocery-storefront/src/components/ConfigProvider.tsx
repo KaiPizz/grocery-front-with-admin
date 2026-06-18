@@ -37,11 +37,14 @@ interface ConfigProviderProps {
  */
 export function ConfigProvider({ initialConfig, children }: ConfigProviderProps) {
   const [config, setConfig] = useState<StorefrontConfig | null>(withStorefrontConfigDefaults(initialConfig));
+  const hasInitialConfig = Boolean(initialConfig);
 
   const refreshConfig = useCallback(async () => {
     if (CONFIG_URLS.length === 0) return;
 
-    for (const url of CONFIG_URLS) {
+    const urlsToTry = hasInitialConfig ? CONFIG_URLS.slice(0, 1) : CONFIG_URLS;
+
+    for (const url of urlsToTry) {
       try {
         const res = await fetch(url, {
           cache: 'no-store',
@@ -57,7 +60,7 @@ export function ConfigProvider({ initialConfig, children }: ConfigProviderProps)
         // Keep current config and try the next source.
       }
     }
-  }, []);
+  }, [hasInitialConfig]);
 
   useEffect(() => {
     refreshConfig();

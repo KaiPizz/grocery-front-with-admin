@@ -174,7 +174,11 @@ export default function HomepagePage() {
         </FormCard>
 
         {/* Banner Blocks */}
-        <FormCard title="Banner Blocks" description="Hero carousel, horizontal banners, grid tiles, sidebar banners, or sticky announcements. Each block enforces strict upload dimensions.">
+        <FormCard
+          title="Banner Blocks"
+          description="Hero carousel, horizontal banners, grid tiles, sidebar banners, or sticky announcements. Each block enforces strict upload dimensions."
+          overflow="visible"
+        >
           <BlockBuilder
             blocks={homepage.blocks ?? []}
             onChange={updateBlocks}

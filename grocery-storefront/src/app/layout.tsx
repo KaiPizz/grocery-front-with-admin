@@ -10,6 +10,9 @@ import { TrackingScripts } from '@/components/TrackingScripts';
 import { fetchServerConfig, getConfigString } from '@/lib/storefront-config';
 import './globals.css';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const FALLBACK_TITLE = process.env.NEXT_PUBLIC_STORE_NAME || 'Grocery Store';
 const FALLBACK_DESCRIPTION = process.env.NEXT_PUBLIC_STORE_DESCRIPTION || 'Fresh groceries with full nutritional transparency';
 
