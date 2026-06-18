@@ -5,9 +5,9 @@ import { mockMobileStorefront } from './mobile-fixtures';
 // SPEC SOURCES:
 // - `.claude/docs/PRD.md`: shoppers need fast mobile-first product browsing,
 //   clear prices, and quick add-to-cart from large grocery catalogs.
-// - `.claude/docs/progress.md`: Kamito is pickup-only, bank-transfer/manual
+// - `.claude/docs/progress.md`: Kenmito is pickup-only, bank-transfer/manual
 //   ops, and availability-only stock display.
-// - Kamito PDP production plan: copy the reference stores' catalog facts
+// - Kenmito PDP production plan: copy the reference stores' catalog facts
 //   structure without fake shipping, exact-stock, or automated notification
 //   promises.
 
@@ -67,7 +67,7 @@ function pickupConfigEnvelope() {
         defaultTitle: 'Kenmito',
         defaultDescription: 'Kenmito storefront',
         ogImageUrl: null,
-        canonical: 'https://kamito.example.test',
+        canonical: 'https://kenmito.example.test',
       },
       general: {
         phone: '',

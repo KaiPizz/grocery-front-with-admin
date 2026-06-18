@@ -1,6 +1,6 @@
 import type { BannerBlock, StorefrontConfig } from '../types/config';
 
-export interface KamitoConfigAuditIssue {
+export interface KenmitoConfigAuditIssue {
   id: string;
   message: string;
 }
@@ -41,49 +41,49 @@ function hasMissingEnabledBlockMedia(block: BannerBlock): boolean {
   return block.items.some((item) => item.enabled && !item.imageUrl);
 }
 
-export function auditKamitoConfig(config: StorefrontConfig): KamitoConfigAuditIssue[] {
-  const issues: KamitoConfigAuditIssue[] = [];
+export function auditKenmitoConfig(config: StorefrontConfig): KenmitoConfigAuditIssue[] {
+  const issues: KenmitoConfigAuditIssue[] = [];
   const strings = collectStrings(config);
 
   if (strings.some((value) => value.toLowerCase().includes('localhost'))) {
     issues.push({
-      id: 'kamito.localhost-media',
-      message: 'Kamito config must not contain localhost media or links.',
+      id: 'kenmito.localhost-media',
+      message: 'Kenmito config must not contain localhost media or links.',
     });
   }
 
   if (strings.some((value) => value.toLowerCase().includes('alo123'))) {
     issues.push({
-      id: 'kamito.placeholder-copy',
-      message: 'Kamito config still contains placeholder copy.',
+      id: 'kenmito.placeholder-copy',
+      message: 'Kenmito config still contains placeholder copy.',
     });
   }
 
   if (strings.some((value) => /asia deli|chesaigon|grocery store/i.test(value))) {
     issues.push({
-      id: 'kamito.stale-brand-copy',
-      message: 'Kamito config still contains stale non-Kamito brand copy.',
+      id: 'kenmito.stale-brand-copy',
+      message: 'Kenmito config still contains stale non-Kenmito brand copy.',
     });
   }
 
   if (!config.seo.canonical.trim()) {
     issues.push({
-      id: 'kamito.canonical-missing',
-      message: 'Kamito config needs a production canonical URL.',
+      id: 'kenmito.canonical-missing',
+      message: 'Kenmito config needs a production canonical URL.',
     });
   }
 
   if (!config.general.phone.trim() || !config.general.email.trim() || !config.general.address.trim()) {
     issues.push({
-      id: 'kamito.owner-contact-missing',
-      message: 'Kamito config needs owner phone, email, and address.',
+      id: 'kenmito.owner-contact-missing',
+      message: 'Kenmito config needs owner phone, email, and address.',
     });
   }
 
   if (config.homepage.blocks.some(hasMissingEnabledBlockMedia)) {
     issues.push({
-      id: 'kamito.enabled-image-block-missing-media',
-      message: 'Enabled Kamito image blocks need production media or must be disabled.',
+      id: 'kenmito.enabled-image-block-missing-media',
+      message: 'Enabled Kenmito image blocks need production media or must be disabled.',
     });
   }
 

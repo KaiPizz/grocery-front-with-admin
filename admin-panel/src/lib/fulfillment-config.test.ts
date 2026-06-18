@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import { DEFAULT_CONFIG } from './defaults';
-import { auditKamitoConfig } from './kamito-config-audit';
+import { auditKenmitoConfig } from './kenmito-config-audit';
 import { withConfigDefaults } from './config-repository';
 import { storefrontConfigSchema } from './validation';
 
@@ -60,7 +60,7 @@ test('normalizes older stored configs without fulfillment config', () => {
   assert.equal(normalized.general.fulfillment.stockDisplayMode, 'exact_when_low');
 });
 
-test('Kamito launch audit reports localhost media and missing owner details', () => {
+test('Kenmito launch audit reports localhost media and missing owner details', () => {
   const config = makeSchemaValidConfig();
 
   config.branding.storeName = 'Kenmito';
@@ -70,14 +70,14 @@ test('Kamito launch audit reports localhost media and missing owner details', ()
   config.general.phone = '';
   config.general.address = '';
 
-  const issues = auditKamitoConfig(config);
+  const issues = auditKenmitoConfig(config);
 
-  assert.ok(issues.some((issue) => issue.id === 'kamito.localhost-media'));
-  assert.ok(issues.some((issue) => issue.id === 'kamito.owner-contact-missing'));
-  assert.ok(issues.some((issue) => issue.id === 'kamito.canonical-missing'));
+  assert.ok(issues.some((issue) => issue.id === 'kenmito.localhost-media'));
+  assert.ok(issues.some((issue) => issue.id === 'kenmito.owner-contact-missing'));
+  assert.ok(issues.some((issue) => issue.id === 'kenmito.canonical-missing'));
 });
 
-test('Kamito launch audit fails enabled image blocks without production media', () => {
+test('Kenmito launch audit fails enabled image blocks without production media', () => {
   const config = makeSchemaValidConfig();
   const heroBlock = config.homepage.blocks[0];
 
@@ -87,7 +87,7 @@ test('Kamito launch audit fails enabled image blocks without production media', 
 
   heroBlock.slides[0].imageUrl = null;
 
-  const issues = auditKamitoConfig(config);
+  const issues = auditKenmitoConfig(config);
 
-  assert.ok(issues.some((issue) => issue.id === 'kamito.enabled-image-block-missing-media'));
+  assert.ok(issues.some((issue) => issue.id === 'kenmito.enabled-image-block-missing-media'));
 });

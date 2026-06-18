@@ -63,7 +63,7 @@ function pickupConfigEnvelope() {
         defaultTitle: 'Kenmito',
         defaultDescription: 'Kenmito storefront',
         ogImageUrl: null,
-        canonical: 'https://kamito.example.test',
+        canonical: 'https://kenmito.example.test',
       },
       general: {
         phone: '',
@@ -151,7 +151,7 @@ async function completePickupBankTransferSelection(page: Page) {
   await bankTransfer.click();
 }
 
-test.describe('Kamito launch truth copy', () => {
+test.describe('Kenmito launch truth copy', () => {
   test('replaces the header shipping countdown with pickup and bank transfer copy', async ({ page }) => {
     await mockPickupConfig(page);
     await mockMobileStorefront(page);
@@ -177,7 +177,7 @@ test.describe('Kamito launch truth copy', () => {
     await expect(page.getByText(/bank transfer/i).first()).toBeVisible();
   });
 
-  test('keeps Kamito fulfillment truth and compact product facts inside the purchase panel', async ({ page }) => {
+  test('keeps Kenmito fulfillment truth and compact product facts inside the purchase panel', async ({ page }) => {
     await mockPickupConfig(page);
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');
@@ -303,7 +303,7 @@ test.describe('Kamito launch truth copy', () => {
   });
 });
 
-test.describe('Kamito category discovery', () => {
+test.describe('Kenmito category discovery', () => {
   test('groups and searches flat categories without fake child routes', async ({ page }) => {
     await mockPickupConfig(page);
     await mockMobileStorefront(page);

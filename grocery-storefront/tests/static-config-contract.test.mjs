@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 
 const serverConfigSource = readFileSync(new URL('../src/lib/storefront-config.ts', import.meta.url), 'utf8');
 const clientProviderSource = readFileSync(new URL('../src/components/ConfigProvider.tsx', import.meta.url), 'utf8');
-const staticConfigUrl = new URL('../public/config/kamito.json', import.meta.url);
+const staticConfigUrl = new URL('../public/config/kenmito.json', import.meta.url);
 
 test('storefront can load a static config source when no admin config API is configured', () => {
   assert.match(serverConfigSource, /NEXT_PUBLIC_STATIC_CONFIG_URL/);
@@ -13,8 +13,8 @@ test('storefront can load a static config source when no admin config API is con
   assert.match(clientProviderSource, /extractStorefrontConfig/);
 });
 
-test('tracked Kamito static config carries Kenmito launch truth', () => {
-  assert.equal(existsSync(staticConfigUrl), true, 'Missing public/config/kamito.json');
+test('tracked Kenmito static config carries Kenmito launch truth', () => {
+  assert.equal(existsSync(staticConfigUrl), true, 'Missing public/config/kenmito.json');
 
   const raw = readFileSync(staticConfigUrl, 'utf8');
   assert.doesNotMatch(raw, /localhost|alo123|Chesaigon|BasenGreen/i);

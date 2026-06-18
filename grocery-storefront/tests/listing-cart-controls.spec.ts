@@ -5,7 +5,7 @@ import { mockMobileStorefront } from './mobile-fixtures';
 // - `.claude/docs/progress.md`: ProductCard and MobileProductCard already own
 //   listing add-to-cart affordances; cart state must stay consistent across
 //   header, listing cards, and the cart page.
-// - Storefront next scope, 2026-05-22: make the Kamito catalog shopping loop
+// - Storefront next scope, 2026-05-22: make the Kenmito catalog shopping loop
 //   behave like Kimchi-style fast grocery browsing: list -> add -> +/- -> cart.
 
 test.describe('listing cart controls', () => {
