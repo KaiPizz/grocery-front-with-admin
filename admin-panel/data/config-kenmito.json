@@ -102,15 +102,15 @@
             {
               "id": "kenmito-grid-korean-pantry",
               "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5781/1.webp",
-              "title": "Koreańska spiżarnia",
-              "href": "/pl/collections/korean-pantry",
+              "title": "Sosy i pasty",
+              "href": "/pl/categories/sosy-pasty-i-przyprawy",
               "enabled": true
             },
             {
               "id": "kenmito-grid-drinks",
               "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5029/1.webp",
               "title": "Napoje",
-              "href": "/pl/categories/napoje",
+              "href": "/pl/categories/napoje-herbaty-i-kawy",
               "enabled": true
             },
             {
@@ -118,6 +118,36 @@
               "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-2472/1.webp",
               "title": "Dania gotowe",
               "href": "/pl/categories/dania-gotowe",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "kenmito-category-grid-more-20260618",
+          "type": "grid",
+          "enabled": true,
+          "order": 2,
+          "columns": 3,
+          "items": [
+            {
+              "id": "kenmito-grid-kimchi",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-2168/1.webp",
+              "title": "Kimchi i kiszonki",
+              "href": "/pl/categories/kimchi-i-kiszonki",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-noodles-rice",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-1136/1.webp",
+              "title": "Makaron i ryż",
+              "href": "/pl/categories/makaron-i-ryz",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-snacks-sweets",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5215/1.webp",
+              "title": "Przekąski i słodycze",
+              "href": "/pl/categories/przekaski-i-slodycze",
               "enabled": true
             }
           ]
@@ -291,7 +321,7 @@
             {
               "id": "tile-kimchi",
               "title": "Kimchi",
-              "href": "/categories/kimchi",
+              "href": "/categories/kimchi-i-kiszonki",
               "description": "Fermentowane dodatki, pasty i chlodzone produkty.",
               "imageUrl": null,
               "enabled": true,
@@ -427,15 +457,15 @@
             {
               "id": "kenmito-grid-korean-pantry",
               "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5781/1.webp",
-              "title": "Koreańska spiżarnia",
-              "href": "/pl/collections/korean-pantry",
+              "title": "Sosy i pasty",
+              "href": "/pl/categories/sosy-pasty-i-przyprawy",
               "enabled": true
             },
             {
               "id": "kenmito-grid-drinks",
               "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5029/1.webp",
               "title": "Napoje",
-              "href": "/pl/categories/napoje",
+              "href": "/pl/categories/napoje-herbaty-i-kawy",
               "enabled": true
             },
             {
@@ -443,6 +473,36 @@
               "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-2472/1.webp",
               "title": "Dania gotowe",
               "href": "/pl/categories/dania-gotowe",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "kenmito-category-grid-more-20260618",
+          "type": "grid",
+          "enabled": true,
+          "order": 2,
+          "columns": 3,
+          "items": [
+            {
+              "id": "kenmito-grid-kimchi",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-2168/1.webp",
+              "title": "Kimchi i kiszonki",
+              "href": "/pl/categories/kimchi-i-kiszonki",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-noodles-rice",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-1136/1.webp",
+              "title": "Makaron i ryż",
+              "href": "/pl/categories/makaron-i-ryz",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-snacks-sweets",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5215/1.webp",
+              "title": "Przekąski i słodycze",
+              "href": "/pl/categories/przekaski-i-slodycze",
               "enabled": true
             }
           ]
@@ -616,7 +676,7 @@
             {
               "id": "tile-kimchi",
               "title": "Kimchi",
-              "href": "/categories/kimchi",
+              "href": "/categories/kimchi-i-kiszonki",
               "description": "Fermentowane dodatki, pasty i chlodzone produkty.",
               "imageUrl": null,
               "enabled": true,
@@ -651,6 +711,6 @@
     }
   },
   "version": 26,
-  "updatedAt": "2026-06-18T17:04:18.614Z",
+  "updatedAt": "2026-06-18T17:21:27.964Z",
   "publishedAt": "2026-06-18T11:35:41.982Z"
 }
