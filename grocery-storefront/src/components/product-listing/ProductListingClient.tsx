@@ -325,7 +325,8 @@ export function ProductListingClient({
   const productsErrorMessage = getProductsErrorMessage(result.error, tCommon('error'));
   const hasProductsError = Boolean(productsErrorMessage) && loadedProducts.length === 0;
   const isInitialLoading = result.fetching && loadedProducts.length === 0 && !hasProductsError;
-  const hasDesktopSidebar = categoryNavigation.length > 0;
+  const hasCategoryNavigation = categoryNavigation.length > 0;
+  const hasDesktopSidebar = hasCategoryNavigation;
 
   function renderFilterContent(
     filters: ProductFiltersState,
@@ -1001,6 +1002,52 @@ export function ProductListingClient({
     );
   }
 
+  function renderMobileCategoryRail() {
+    if (!hasCategoryNavigation) return null;
+
+    return (
+      <section className="-mx-4 space-y-2 overflow-hidden" data-testid="mobile-category-rail" aria-label={t('categoryFilter')}>
+        <div className="px-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: 'var(--color-muted-foreground)' }}>
+            {t('categoryFilter')}
+          </p>
+        </div>
+        <div className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {categoryNavigation.map((category) => {
+            const isActive = currentCategorySlug === category.slug;
+
+            return (
+              <Link
+                key={category.id}
+                href={`/categories/${category.slug}`}
+                className="inline-flex min-h-[2.45rem] shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-semibold shadow-[0_12px_24px_-24px_rgba(66,109,72,0.35)] transition-colors duration-fast"
+                style={{
+                  borderColor: isActive ? 'var(--color-primary)' : 'var(--color-border)',
+                  backgroundColor: isActive ? 'var(--color-accent)' : 'var(--color-card)',
+                  color: isActive ? 'var(--color-primary)' : 'var(--color-foreground)',
+                }}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <span>{category.name}</span>
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums"
+                  style={{
+                    backgroundColor: isActive
+                      ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
+                      : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
+                    color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                  }}
+                >
+                  {category.count}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
+
   function renderMobileShell() {
     return (
       <div data-testid="mobile-products-shell" className="space-y-4">
@@ -1081,6 +1128,8 @@ export function ProductListingClient({
             </button>
           </div>
 
+          {renderMobileCategoryRail()}
+
           <div className="h-px w-full" style={{ backgroundColor: 'color-mix(in srgb, var(--color-border) 88%, transparent)' }} />
         </header>
 
@@ -1095,15 +1144,15 @@ export function ProductListingClient({
               onClick={closeMobileSort}
             />
             <div
-              className="absolute inset-x-0 bottom-0 z-10 flex max-h-[64vh] w-full flex-col overflow-hidden rounded-t-[1.5rem] border animate-bottom-sheet-in"
+              className="absolute inset-x-0 bottom-0 z-10 flex max-h-[56vh] w-full flex-col overflow-hidden rounded-t-[1.35rem] border animate-bottom-sheet-in"
               style={{
                 borderColor: 'var(--color-border)',
                 backgroundColor: '#fff',
                 boxShadow: '0 -18px 42px -28px rgba(15, 23, 42, 0.45)',
               }}
             >
-              <div className="mx-auto mt-3 h-1.5 w-12 rounded-full" style={{ backgroundColor: 'var(--color-border)' }} />
-              <div className="flex items-center justify-between gap-3 border-b px-4 pb-4 pt-4" style={{ borderColor: 'var(--color-border)' }}>
+              <div className="mx-auto mt-2.5 h-1.5 w-12 rounded-full" style={{ backgroundColor: 'var(--color-border)' }} />
+              <div className="flex items-center justify-between gap-3 border-b px-4 pb-3 pt-3.5" style={{ borderColor: 'var(--color-border)' }}>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
                     {t('sortBy')}
@@ -1124,7 +1173,7 @@ export function ProductListingClient({
                 </button>
               </div>
 
-              <div className="space-y-2 overflow-y-auto px-4 py-4" role="radiogroup" aria-label={t('sortBy')}>
+              <div className="space-y-1.5 overflow-y-auto px-4 py-3" role="radiogroup" aria-label={t('sortBy')}>
                 {SORT_OPTIONS.map((option) => {
                   const isSelected = draftSort === option.value;
 
@@ -1135,7 +1184,7 @@ export function ProductListingClient({
                       role="radio"
                       aria-checked={isSelected}
                       onClick={() => setDraftSort(option.value)}
-                    className="flex min-h-[3.25rem] w-full items-center justify-between gap-3 rounded-[1rem] border px-4 py-3 text-left text-base font-medium transition-colors duration-fast"
+                      className="flex min-h-[2.85rem] w-full items-center justify-between gap-3 rounded-[0.9rem] border px-4 py-2.5 text-left text-sm font-semibold transition-colors duration-fast"
                       style={{
                         borderColor: isSelected ? 'var(--color-primary)' : 'var(--color-border)',
                         backgroundColor: isSelected ? 'var(--color-accent)' : 'transparent',
@@ -1159,7 +1208,7 @@ export function ProductListingClient({
               </div>
 
               <div
-                className="grid grid-cols-2 gap-3 border-t px-4 pb-4 pt-3"
+                className="grid grid-cols-2 gap-3 border-t px-4 pb-3 pt-3"
                 style={{
                   borderColor: 'var(--color-border)',
                   paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
@@ -1168,7 +1217,7 @@ export function ProductListingClient({
                 <button
                   type="button"
                   onClick={closeMobileSort}
-                  className="rounded-full border px-4 py-3.5 text-base font-semibold transition-colors duration-fast hover-surface"
+                  className="rounded-full border px-4 py-3 text-base font-semibold transition-colors duration-fast hover-surface"
                   style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                 >
                   {t('cancelSort')}
@@ -1176,7 +1225,7 @@ export function ProductListingClient({
                 <button
                   type="button"
                   onClick={applyMobileSort}
-                  className="rounded-full px-4 py-3.5 text-base font-semibold text-white transition-opacity duration-fast hover:opacity-90"
+                  className="rounded-full px-4 py-3 text-base font-semibold text-white transition-opacity duration-fast hover:opacity-90"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                 >
                   {t('applySort')}
@@ -1195,15 +1244,15 @@ export function ProductListingClient({
               onClick={closeMobileFilters}
             />
             <div
-              className="absolute inset-x-0 bottom-0 z-10 flex max-h-[86vh] w-full flex-col overflow-hidden rounded-t-[1.5rem] border animate-bottom-sheet-in"
+              className="absolute inset-x-0 bottom-0 z-10 flex max-h-[82vh] w-full flex-col overflow-hidden rounded-t-[1.35rem] border animate-bottom-sheet-in"
               style={{
                 borderColor: 'var(--color-border)',
                 backgroundColor: '#fff',
                 boxShadow: '0 -18px 42px -28px rgba(15, 23, 42, 0.45)',
               }}
             >
-              <div className="mx-auto mt-3 h-1.5 w-12 rounded-full" style={{ backgroundColor: 'var(--color-border)' }} />
-              <div className="flex items-center justify-between gap-3 border-b px-4 pb-4 pt-4" style={{ borderColor: 'var(--color-border)' }}>
+              <div className="mx-auto mt-2.5 h-1.5 w-12 rounded-full" style={{ backgroundColor: 'var(--color-border)' }} />
+              <div className="flex items-center justify-between gap-3 border-b px-4 pb-3 pt-3.5" style={{ borderColor: 'var(--color-border)' }}>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
                     {t('filters')}
@@ -1226,14 +1275,14 @@ export function ProductListingClient({
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-4 py-5">
-                <div className="space-y-5">
+              <div className="flex-1 overflow-y-auto px-4 py-4">
+                <div className="space-y-4">
                   {renderFilterContent(draftFilters, normalizedDraftFilters, setDraftFilters, clearDraftFilters)}
                 </div>
               </div>
 
               <div
-                className="border-t px-4 pb-4 pt-3"
+                className="border-t px-4 pb-3 pt-3"
                 style={{
                   borderColor: 'var(--color-border)',
                   paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
@@ -1242,7 +1291,7 @@ export function ProductListingClient({
                 <button
                   type="button"
                   onClick={applyMobileFilters}
-                  className="w-full rounded-[1rem] px-4 py-3.5 text-base font-semibold text-white transition-opacity duration-fast hover:opacity-90"
+                  className="w-full rounded-full px-4 py-3 text-base font-semibold text-white transition-opacity duration-fast hover:opacity-90"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                 >
                   {t('applyFilters')}
