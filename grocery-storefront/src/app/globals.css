@@ -282,6 +282,16 @@ body::before {
   }
 }
 
+@keyframes slide-in-right {
+  from {
+    transform: translateX(18px);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
 .animate-fade-up {
   animation: fade-up var(--duration-slow) var(--ease-out) both;
 }
@@ -305,6 +315,10 @@ body::before {
 
 .animate-bottom-sheet-in {
   animation: bottom-sheet-in var(--duration-slow) var(--ease-out) both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right var(--duration-slow) var(--ease-out) both;
 }
 
 /* Product grid stagger — CSS custom property approach, scales to any count */

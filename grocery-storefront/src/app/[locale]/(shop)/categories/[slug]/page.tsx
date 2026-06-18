@@ -70,6 +70,14 @@ function formatProductCount(locale: string, count: number) {
   return count === 1 ? '1 product' : `${count} products`;
 }
 
+function decodeRouteSlug(slug: string) {
+  try {
+    return decodeURIComponent(slug);
+  } catch {
+    return slug;
+  }
+}
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const [locale, t, tCommon] = await Promise.all([
     getLocale(),
@@ -77,9 +85,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     getTranslations('common'),
   ]);
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
+  const categorySlug = decodeRouteSlug(params.slug);
   const result = await serverGraphqlRequest<CategoryBySlugResponse>(CATEGORY_BY_SLUG_QUERY, {
     channel,
-    slug: params.slug,
+    slug: categorySlug,
     first: PAGE_SIZE,
   });
   const category = result.data?.category ?? null;
@@ -178,10 +187,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           )}
 
           {products.length > 0 ? (
-            <ProductListingClient
-              channel={channel}
-              basePath={`/categories/${params.slug}`}
-              title={category.name}
+              <ProductListingClient
+                channel={channel}
+                basePath={`/categories/${category?.slug ?? categorySlug}`}
+                title={category.name}
               categoryId={category.id}
               initialProducts={products}
               initialEndCursor={pageInfo.endCursor}

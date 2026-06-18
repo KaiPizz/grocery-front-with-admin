@@ -182,6 +182,27 @@ export function Header() {
   }, [menuOpen, searchOpen, setMobileHeaderVisible]);
 
   useEffect(() => {
+    if (!menuOpen || !isMounted) return;
+    if (typeof window === 'undefined' || window.innerWidth >= 768) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function handleDocumentKeyDown(event: globalThis.KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+      }
+    }
+
+    document.addEventListener('keydown', handleDocumentKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.removeEventListener('keydown', handleDocumentKeyDown);
+    };
+  }, [menuOpen, isMounted]);
+
+  useEffect(() => {
     return () => {
       if (categoryMenuCloseTimeoutRef.current) {
         clearTimeout(categoryMenuCloseTimeoutRef.current);
@@ -602,126 +623,154 @@ export function Header() {
       )}
 
       {menuOpen && (
-        <nav
-          id="mobile-nav"
-          className="md:hidden border-t animate-fade-up"
-          style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
-          aria-label="Mobile navigation"
-        >
-          <div className="max-h-[calc(100vh-var(--header-height)-env(safe-area-inset-bottom,0px))] overflow-y-auto px-4 py-4">
-            {showLanguageSwitcher && (
-              <div className="mb-3">
-                <LanguageSwitcher
-                  className="w-full justify-center rounded-xl border px-3 py-3 text-sm"
-                  showLabel
-                  buttonTestId="mobile-nav-language"
-                />
+        <div className="fixed inset-0 z-[70] md:hidden" role="presentation">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/35 backdrop-blur-[1px]"
+            aria-label={tCommon('closeMenu')}
+            onClick={() => setMenuOpen(false)}
+          />
+          <nav
+            id="mobile-nav"
+            className="absolute right-0 top-0 flex h-[100dvh] w-[min(88vw,360px)] max-w-full animate-slide-in-right flex-col border-l shadow-2xl"
+            style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+            aria-label="Mobile navigation"
+          >
+            <div className="flex items-center justify-between border-b px-4 py-3" style={{ borderColor: 'var(--color-border)' }}>
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: 'var(--color-muted-foreground)' }}>
+                  Menu
+                </p>
+                <p className="truncate font-display text-lg font-bold" style={{ color: 'var(--color-foreground)' }}>
+                  {storeName}
+                </p>
               </div>
-            )}
-
-            <div className="grid grid-cols-2 gap-2">
-              <Link
-                href="/wishlist"
-                className="min-h-[72px] rounded-2xl border p-3 transition-colors duration-fast hover-surface"
+              <button
+                type="button"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors duration-fast hover-surface"
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                aria-label={tCommon('closeMenu')}
                 onClick={() => setMenuOpen(false)}
               >
-                <span className="flex items-center gap-2 text-sm font-semibold">
-                  <Heart className="h-4 w-4" aria-hidden="true" />
-                  {t('wishlist')}
-                </span>
-                <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                  {isMounted && wishlistCount > 0 ? tCommon('itemCount', { count: wishlistCount }) : tWishlist('saveForLater')}
-                </span>
-              </Link>
-              <Link
-                href="/cart"
-                className="min-h-[72px] rounded-2xl border p-3 transition-colors duration-fast hover-surface"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                onClick={() => setMenuOpen(false)}
-              >
-                <span className="flex items-center gap-2 text-sm font-semibold">
-                  <ShoppingCart className="h-4 w-4" aria-hidden="true" />
-                  {t('cart')}
-                </span>
-                <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                  {isMounted && cartInitialized && itemCount > 0 ? tCommon('itemCount', { count: itemCount }) : tCommon('addToCart')}
-                </span>
-              </Link>
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
             </div>
 
-            <div className="mt-4 rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
-              <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
-                {t('account')}
-              </div>
-              {isAuthenticated ? (
-                <>
-                  <div
-                    className="flex items-center gap-2 px-3 py-3 text-sm font-medium border-b"
-                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                  >
-                    <UserRound className="w-4 h-4" aria-hidden="true" />
-                    <span>{session.user?.fullName || t('account')}</span>
-                  </div>
-                  <Link
-                    href="/account"
-                    className="block px-3 py-3 text-sm font-medium border-b hover-surface"
-                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {tAccount('menuAccount')}
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => void handleLogout()}
-                    className="w-full text-left px-3 py-3 text-sm font-medium hover-surface flex items-center gap-2"
-                    style={{ color: 'var(--color-foreground)' }}
-                  >
-                    <LogOut className="w-4 h-4" aria-hidden="true" />
-                    <span>{t('logout')}</span>
-                  </button>
-                </>
-              ) : (
-                <div className="grid grid-cols-2 gap-px overflow-hidden rounded-b-2xl" style={{ backgroundColor: 'var(--color-border)' }}>
-                  <Link
-                    href="/login"
-                    className="px-3 py-3 text-sm font-medium hover-surface"
-                    style={{ backgroundColor: 'var(--color-card)', color: 'var(--color-foreground)' }}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {t('login')}
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="px-3 py-3 text-sm font-medium hover-surface"
-                    style={{ backgroundColor: 'var(--color-card)', color: 'var(--color-foreground)' }}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {t('register')}
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-4 rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
-              <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
-                {t('products')}
-              </div>
-              {mobileShopItems.map(({ href, label }, index) => (
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
+              <div className="grid grid-cols-2 gap-2">
                 <Link
-                  key={`${href}-${index}`}
-                  href={href}
-                  className="flex items-center justify-between gap-3 border-b px-3 py-3 text-sm font-medium last:border-b-0 hover-surface"
+                  href="/wishlist"
+                  className="min-h-[74px] rounded-2xl border p-3 transition-colors duration-fast hover-surface"
                   style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                   onClick={() => setMenuOpen(false)}
                 >
-                  <span>{label}</span>
-                  <ChevronDown className="-rotate-90 h-4 w-4 opacity-60" aria-hidden="true" />
+                  <span className="flex items-center gap-2 text-sm font-semibold">
+                    <Heart className="h-4 w-4" aria-hidden="true" />
+                    {t('wishlist')}
+                  </span>
+                  <span className="mt-1 block text-xs leading-4" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {isMounted && wishlistCount > 0 ? tCommon('itemCount', { count: wishlistCount }) : tWishlist('saveForLater')}
+                  </span>
                 </Link>
-              ))}
+                <Link
+                  href="/cart"
+                  className="min-h-[74px] rounded-2xl border p-3 transition-colors duration-fast hover-surface"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <span className="flex items-center gap-2 text-sm font-semibold">
+                    <ShoppingCart className="h-4 w-4" aria-hidden="true" />
+                    {t('cart')}
+                  </span>
+                  <span className="mt-1 block text-xs leading-4" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {isMounted && cartInitialized && itemCount > 0 ? tCommon('itemCount', { count: itemCount }) : tCommon('addToCart')}
+                  </span>
+                </Link>
+              </div>
+
+              <div className="mt-4 overflow-hidden rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
+                <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                  {t('products')}
+                </div>
+                {mobileShopItems.map(({ href, label }, index) => (
+                  <Link
+                    key={`${href}-${index}`}
+                    href={href}
+                    className="flex min-h-[48px] items-center justify-between gap-3 border-b px-3 py-3 text-sm font-medium last:border-b-0 hover-surface"
+                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span className="truncate">{label}</span>
+                    <ChevronDown className="-rotate-90 h-4 w-4 shrink-0 opacity-60" aria-hidden="true" />
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mt-4 overflow-hidden rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
+                <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                  {t('account')}
+                </div>
+                {isAuthenticated ? (
+                  <>
+                    <div
+                      className="flex items-center gap-2 border-b px-3 py-3 text-sm font-medium"
+                      style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                    >
+                      <UserRound className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      <span className="truncate">{session.user?.fullName || t('account')}</span>
+                    </div>
+                    <Link
+                      href="/account"
+                      className="block border-b px-3 py-3 text-sm font-medium hover-surface"
+                      style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {tAccount('menuAccount')}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => void handleLogout()}
+                      className="flex w-full items-center gap-2 px-3 py-3 text-left text-sm font-medium hover-surface"
+                      style={{ color: 'var(--color-foreground)' }}
+                    >
+                      <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      <span>{t('logout')}</span>
+                    </button>
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-px" style={{ backgroundColor: 'var(--color-border)' }}>
+                    <Link
+                      href="/login"
+                      className="px-3 py-3 text-center text-sm font-medium hover-surface"
+                      style={{ backgroundColor: 'var(--color-card)', color: 'var(--color-foreground)' }}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {t('login')}
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="px-3 py-3 text-center text-sm font-medium hover-surface"
+                      style={{ backgroundColor: 'var(--color-card)', color: 'var(--color-foreground)' }}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {t('register')}
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {showLanguageSwitcher && (
+                <div className="mt-4">
+                  <LanguageSwitcher
+                    className="w-full justify-center rounded-2xl border px-3 py-3 text-sm"
+                    showLabel
+                    buttonTestId="mobile-nav-language"
+                  />
+                </div>
+              )}
             </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
       )}
     </header>
   );
