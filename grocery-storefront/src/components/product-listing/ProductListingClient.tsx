@@ -11,7 +11,7 @@ import { SortDropdown, SORT_OPTIONS } from '@/components/grocery/SortDropdown';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useHydrated } from '@/hooks/use-hydrated';
-import { useRouter } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
 import type { GroceryProduct, StorageZone } from '@/types';
 import {
@@ -64,10 +64,19 @@ interface ProductListingClientProps {
   layoutMode?: 'adaptive' | 'responsive';
   showTitle?: boolean;
   withContainer?: boolean;
+  categoryNavigation?: CategoryNavigationItem[];
+  currentCategorySlug?: string | null;
 }
 
 interface CategoryFilterOption {
   id: string;
+  name: string;
+  count: number;
+}
+
+interface CategoryNavigationItem {
+  id: string;
+  slug: string;
   name: string;
   count: number;
 }
@@ -143,6 +152,8 @@ export function ProductListingClient({
   layoutMode = 'adaptive',
   showTitle = true,
   withContainer = true,
+  categoryNavigation = [],
+  currentCategorySlug = null,
 }: ProductListingClientProps) {
   const t = useTranslations('products');
   const tCommon = useTranslations('common');
@@ -314,6 +325,7 @@ export function ProductListingClient({
   const productsErrorMessage = getProductsErrorMessage(result.error, tCommon('error'));
   const hasProductsError = Boolean(productsErrorMessage) && loadedProducts.length === 0;
   const isInitialLoading = result.fetching && loadedProducts.length === 0 && !hasProductsError;
+  const hasDesktopSidebar = categoryNavigation.length > 0;
 
   function renderFilterContent(
     filters: ProductFiltersState,
@@ -850,9 +862,13 @@ export function ProductListingClient({
   }
 
   function renderDesktopProductsContent() {
+    const gridClassName = hasDesktopSidebar
+      ? 'product-grid grid grid-cols-2 gap-5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 2xl:grid-cols-4'
+      : 'product-grid grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4';
+
     if (isInitialLoading) {
       return (
-        <div className="product-grid grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+        <div className={gridClassName}>
           {Array.from({ length: 12 }).map((_, index) => (
             <ProductSkeleton key={index} />
           ))}
@@ -887,7 +903,7 @@ export function ProductListingClient({
     if (loadedProducts.length > 0) {
       return (
         <>
-          <div className="product-grid grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+          <div className={gridClassName}>
             {loadedProducts.map((product, index) => (
               <ProductCard key={product.id} product={product} imagePriority={index < 8} showCatalogFacts />
             ))}
@@ -911,6 +927,78 @@ export function ProductListingClient({
     }
 
     return renderEmptyState(false);
+  }
+
+  function renderDesktopSidebar() {
+    if (!hasDesktopSidebar) return null;
+
+    return (
+      <aside className="hidden w-[17.5rem] shrink-0 space-y-5 lg:block" data-testid="desktop-category-sidebar">
+        <section
+          className="rounded-[1.15rem] border bg-[var(--color-card)] p-4"
+          style={{ borderColor: 'var(--color-border)' }}
+          aria-label={t('categoryFilter')}
+        >
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--color-muted-foreground)' }}>
+            {t('categoryFilter')}
+          </h2>
+          <nav className="max-h-[30rem] space-y-1.5 overflow-y-auto pr-1">
+            {categoryNavigation.map((category) => {
+              const isActive = currentCategorySlug === category.slug;
+
+              return (
+                <Link
+                  key={category.id}
+                  href={`/categories/${category.slug}`}
+                  className="flex min-h-[2.75rem] items-center justify-between gap-3 rounded-[0.9rem] px-3 py-2 text-sm font-semibold transition-colors duration-fast hover-surface"
+                  style={{
+                    backgroundColor: isActive ? 'var(--color-accent)' : 'transparent',
+                    color: isActive ? 'var(--color-primary)' : 'var(--color-foreground)',
+                  }}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <span className="min-w-0 leading-snug">{category.name}</span>
+                  <span
+                    className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
+                    style={{
+                      backgroundColor: isActive
+                        ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
+                        : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
+                      color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                    }}
+                  >
+                    {category.count}
+                  </span>
+                </Link>
+              );
+            })}
+          </nav>
+        </section>
+
+        <section
+          className="sticky top-28 rounded-[1.15rem] border bg-[var(--color-card)] p-4"
+          style={{ borderColor: 'var(--color-border)' }}
+          aria-label={t('filters')}
+        >
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--color-muted-foreground)' }}>
+              {t('filters')}
+            </h2>
+            {activeFilterCount > 0 && (
+              <span
+                className="rounded-full px-2 py-0.5 text-[11px] font-bold text-white"
+                style={{ backgroundColor: 'var(--color-primary)' }}
+              >
+                {activeFilterCount}
+              </span>
+            )}
+          </div>
+          <div className="space-y-5">
+            {renderFilterContent(committedFilters, normalizedCommittedFilters, setCommittedFilters, clearCommittedFilters)}
+          </div>
+        </section>
+      </aside>
+    );
   }
 
   function renderMobileShell() {
@@ -1170,9 +1258,9 @@ export function ProductListingClient({
   }
 
   function renderDesktopShell() {
-    return (
-      <>
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+    const content = (
+      <div className="min-w-0 flex-1">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           {showTitle ? (
             <h1 className="heading-display text-2xl md:text-3xl" style={{ color: 'var(--color-foreground)' }}>
               {title}
@@ -1187,31 +1275,33 @@ export function ProductListingClient({
           )}
           <div className="flex items-center gap-2">
             <SortDropdown value={sort} onChange={handleSortChange} />
-            <button
-              type="button"
-              onClick={() => setFiltersOpen(!filtersOpen)}
-              className="inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
-              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-              aria-expanded={filtersOpen}
-              aria-controls="filter-panel"
-              aria-label={activeFilterCount > 0 ? `${t('filters')}, ${t('activeFilterCount', { count: activeFilterCount })}` : t('filters')}
-            >
-              <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
-              {t('filters')}
-              {activeFilterCount > 0 && (
-                <span
-                  className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
-                  aria-hidden="true"
-                >
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
+            {!hasDesktopSidebar && (
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(!filtersOpen)}
+                className="inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
+                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                aria-expanded={filtersOpen}
+                aria-controls="filter-panel"
+                aria-label={activeFilterCount > 0 ? `${t('filters')}, ${t('activeFilterCount', { count: activeFilterCount })}` : t('filters')}
+              >
+                <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
+                {t('filters')}
+                {activeFilterCount > 0 && (
+                  <span
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                    style={{ backgroundColor: 'var(--color-primary)' }}
+                    aria-hidden="true"
+                  >
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            )}
           </div>
         </div>
 
-        {filtersOpen && (
+        {!hasDesktopSidebar && filtersOpen && (
           <div
             id="filter-panel"
             className="mb-6 space-y-5 rounded-xl border p-5 animate-fade-up"
@@ -1226,8 +1316,19 @@ export function ProductListingClient({
         {renderActiveFilterSummary(false)}
 
         {renderDesktopProductsContent()}
-      </>
+      </div>
     );
+
+    if (hasDesktopSidebar) {
+      return (
+        <div className="flex items-start gap-6">
+          {renderDesktopSidebar()}
+          {content}
+        </div>
+      );
+    }
+
+    return content;
   }
 
   function renderContent() {

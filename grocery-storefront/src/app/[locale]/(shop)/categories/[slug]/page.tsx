@@ -3,7 +3,7 @@ import { ArrowLeft, PackageOpen, RefreshCw } from 'lucide-react';
 
 import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { Link } from '@/i18n/navigation';
-import { CATEGORY_BY_SLUG_QUERY } from '@/lib/graphql/operations/grocery';
+import { CATEGORIES_QUERY, CATEGORY_BY_SLUG_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
 import type { GroceryProduct } from '@/types';
@@ -54,6 +54,21 @@ interface CategoryBySlugResponse {
   category: CategoryNode | null;
 }
 
+interface CategoriesResponse {
+  categories: {
+    edges: Array<{
+      node: {
+        id: string;
+        slug: string;
+        name: string;
+        products?: {
+          totalCount: number;
+        } | null;
+      };
+    }>;
+  } | null;
+}
+
 interface CategoryPageProps {
   params: {
     slug: string;
@@ -86,16 +101,36 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   ]);
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
   const categorySlug = decodeRouteSlug(params.slug);
-  const result = await serverGraphqlRequest<CategoryBySlugResponse>(CATEGORY_BY_SLUG_QUERY, {
-    channel,
-    slug: categorySlug,
-    first: PAGE_SIZE,
-  });
+  const [result, categoriesResult] = await Promise.all([
+    serverGraphqlRequest<CategoryBySlugResponse>(CATEGORY_BY_SLUG_QUERY, {
+      channel,
+      slug: categorySlug,
+      first: PAGE_SIZE,
+    }),
+    serverGraphqlRequest<CategoriesResponse>(CATEGORIES_QUERY, { channel }),
+  ]);
   const category = result.data?.category ?? null;
   const totalCount = category?.products.totalCount ?? 0;
   const childCategories = category?.children?.edges.map((edge) => edge.node) ?? [];
   const products = category?.products.edges.map((edge) => edge.node) ?? [];
   const pageInfo = category?.products.pageInfo ?? { hasNextPage: false, endCursor: null };
+  const categoryNavigation = categoriesResult.data?.categories?.edges
+    .map((edge) => {
+      const count = edge.node.products?.totalCount ?? 0;
+
+      return {
+        id: edge.node.id,
+        slug: edge.node.slug,
+        name: edge.node.name,
+        count,
+      };
+    })
+    .filter((item) => item.count > 0)
+    .sort((left, right) => {
+      if (left.slug === categorySlug) return -1;
+      if (right.slug === categorySlug) return 1;
+      return right.count - left.count || left.name.localeCompare(right.name);
+    });
 
   return (
     <div className="container-grocery py-8 md:py-12">
@@ -200,6 +235,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               layoutMode="responsive"
               showTitle={false}
               withContainer={false}
+              categoryNavigation={categoryNavigation}
+              currentCategorySlug={category.slug}
             />
           ) : (
             <div className="rounded-lg border px-5 py-10 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
