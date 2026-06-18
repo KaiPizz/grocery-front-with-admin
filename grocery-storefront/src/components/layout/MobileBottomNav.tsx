@@ -11,12 +11,12 @@ import { useHydrated } from '@/hooks/use-hydrated';
 /**
  * Mobile bottom navigation for high-frequency storefront routes.
  *
- * Hidden on routes that own their own bottom CTA real estate (`/cart`,
- * `/checkout`, product detail) or form/account flows where a fixed nav
+ * Hidden on routes that own their own bottom CTA real estate (`/checkout`,
+ * product detail) or form/account flows where a fixed nav
  * competes with primary actions.
  */
 
-const HIDE_PREFIXES = ['/cart', '/checkout', '/login', '/register', '/account'] as const;
+const HIDE_PREFIXES = ['/checkout', '/login', '/register', '/account'] as const;
 
 interface NavItem {
   href: string;

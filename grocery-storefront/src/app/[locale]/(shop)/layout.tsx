@@ -8,7 +8,7 @@ import { ScrollToTopButton } from '@/components/layout/ScrollToTopButton';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 import { usePathname } from '@/i18n/navigation';
 
-const NAV_HIDDEN_PREFIXES = ['/cart', '/checkout', '/login', '/register', '/account'] as const;
+const NAV_HIDDEN_PREFIXES = ['/checkout', '/login', '/register', '/account'] as const;
 
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
   const tCommon = useTranslations('common');

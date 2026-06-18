@@ -203,7 +203,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container-grocery py-8 pb-28 md:py-12 md:pb-12">
+    <div className="container-grocery py-8 pb-56 md:py-12 md:pb-12">
       <h1 className="heading-display mb-6 text-2xl md:text-3xl" style={{ color: 'var(--color-foreground)' }}>
         {t('title')}
         <span className="ml-2 text-base font-normal tabular-nums" style={{ color: 'var(--color-muted-foreground)' }}>
@@ -289,11 +289,12 @@ export default function CartPage() {
       </div>
 
       <div
-        className="fixed inset-x-0 bottom-0 z-40 border-t backdrop-blur lg:hidden"
+        className="fixed inset-x-0 z-40 border-t backdrop-blur lg:hidden"
         style={{
           borderColor: 'var(--color-border)',
           backgroundColor: 'color-mix(in srgb, var(--color-card) 96%, transparent)',
-          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)',
+          bottom: 'calc(3.5rem + env(safe-area-inset-bottom, 0px))',
+          paddingBottom: '0.75rem',
         }}
         data-testid="mobile-cart-summary-bar"
       >
