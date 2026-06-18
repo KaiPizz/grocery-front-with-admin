@@ -161,6 +161,36 @@
           "title": "Szybki lunch po azjatycku",
           "ctaText": "Zobacz dania gotowe",
           "ctaLink": "/pl/categories/dania-gotowe"
+        },
+        {
+          "id": "kenmito-round-category-preview-20260618",
+          "type": "round_grid",
+          "enabled": true,
+          "order": 4,
+          "columns": 3,
+          "items": [
+            {
+              "id": "kenmito-round-sushi-algae",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-14/1.webp",
+              "title": "Sushi i algi",
+              "href": "/pl/categories/sushi-i-algi",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-round-mushrooms-tofu",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-1428/1.webp",
+              "title": "Grzyby i tofu",
+              "href": "/pl/categories/grzyby-warzywa-i-tofu",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-round-kitchen-tools",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-2617/1.webp",
+              "title": "Akcesoria kuchenne",
+              "href": "/pl/categories/akcesoria-kuchenne",
+              "enabled": true
+            }
+          ]
         }
       ],
       "sections": [
