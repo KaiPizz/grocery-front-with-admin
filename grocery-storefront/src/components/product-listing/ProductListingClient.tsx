@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowDownUp, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { useClient, useQuery, type CombinedError } from 'urql';
 
 import { AllergenFilter } from '@/components/grocery/AllergenFilter';
@@ -936,51 +936,44 @@ export function ProductListingClient({
             </h1>
           )}
 
-          <div data-testid="mobile-products-toolbar" className="flex items-center justify-between gap-3">
-            <div data-testid="mobile-products-sort" className="min-w-0 flex-1">
-              <label
-                className="mb-1.5 block text-sm font-medium leading-tight"
-                style={{ color: 'var(--color-foreground)' }}
-                htmlFor="mobile-products-sort-trigger"
-                data-testid="mobile-products-sort-label"
-              >
-                {t('sortBy')}
-              </label>
-              <div className="relative">
-                <button
-                  id="mobile-products-sort-trigger"
-                  type="button"
-                  onClick={openMobileSort}
-                  className="flex min-h-[3rem] w-full items-center justify-between gap-3 rounded-[1rem] border bg-[var(--color-card)] py-3 pl-4 pr-3 text-left text-base font-medium focus:outline-none focus-visible:ring-2"
-                  style={{
-                    borderColor: 'var(--color-border)',
-                    color: 'var(--color-foreground)',
-                  }}
-                  aria-haspopup="dialog"
-                  aria-expanded={sortOpen}
-                  aria-controls="mobile-sort-sheet"
-                  data-testid="mobile-products-sort-trigger"
-                >
-                  <span className="min-w-0 truncate">{t(sortOption.label as any)}</span>
-                  <ChevronDown
-                    className="h-4 w-4 shrink-0"
-                    style={{ color: 'var(--color-muted-foreground)' }}
-                    aria-hidden="true"
-                  />
-                </button>
-                <input type="hidden" value={sort} data-testid="mobile-products-sort-select" readOnly />
-                <ChevronDown
-                  className="pointer-events-none absolute right-3 top-1/2 hidden h-4 w-4 -translate-y-1/2"
+          <div data-testid="mobile-products-toolbar" className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+            <button
+              id="mobile-products-sort-trigger"
+              type="button"
+              onClick={openMobileSort}
+              className="flex min-h-[3rem] min-w-0 items-center gap-3 rounded-full border bg-[var(--color-card)] px-3.5 py-2 text-left shadow-[0_16px_30px_-28px_rgba(66,109,72,0.45)] transition-colors duration-fast hover-surface focus:outline-none focus-visible:ring-2"
+              style={{
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-foreground)',
+              }}
+              aria-haspopup="dialog"
+              aria-expanded={sortOpen}
+              aria-controls="mobile-sort-sheet"
+              data-testid="mobile-products-sort-trigger"
+            >
+              <ArrowDownUp className="h-4 w-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+              <span className="min-w-0 flex-1">
+                <span
+                  className="block text-[10px] font-semibold uppercase tracking-[0.12em]"
                   style={{ color: 'var(--color-muted-foreground)' }}
-                  aria-hidden="true"
-                />
-              </div>
-            </div>
+                  data-testid="mobile-products-sort-label"
+                >
+                  {t('sortBy')}
+                </span>
+                <span className="mt-0.5 block truncate text-sm font-semibold">{t(sortOption.label as any)}</span>
+              </span>
+              <ChevronDown
+                className="h-4 w-4 shrink-0"
+                style={{ color: 'var(--color-muted-foreground)' }}
+                aria-hidden="true"
+              />
+              <input type="hidden" value={sort} data-testid="mobile-products-sort-select" readOnly />
+            </button>
 
             <button
               type="button"
               onClick={openMobileFilters}
-              className="mt-[1.55rem] inline-flex shrink-0 items-center gap-2 rounded-[1rem] border bg-[var(--color-card)] px-4 py-3 text-base font-medium transition-colors duration-fast hover-surface"
+              className="inline-flex min-h-[3rem] shrink-0 items-center gap-2 rounded-full border bg-[var(--color-card)] px-3.5 py-2 text-sm font-semibold shadow-[0_16px_30px_-28px_rgba(66,109,72,0.45)] transition-colors duration-fast hover-surface"
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               aria-expanded={filtersOpen}
               aria-controls="mobile-filter-sheet"
@@ -1006,18 +999,19 @@ export function ProductListingClient({
         {renderActiveFilterSummary(true)}
 
         {sortOpen && (
-          <div className="fixed inset-0 z-[70] md:hidden" data-testid="mobile-sort-sheet" role="dialog" aria-modal="true" aria-label={t('sortBy')}>
+          <div className="fixed inset-0 isolate z-[70] md:hidden" data-testid="mobile-sort-sheet" role="dialog" aria-modal="true" aria-label={t('sortBy')}>
             <button
               type="button"
-              className="absolute inset-0 bg-black/45"
+              className="absolute inset-0 z-0 bg-black/45"
               aria-label={`${tCommon('close')} ${t('sortBy').toLowerCase()}`}
               onClick={closeMobileSort}
             />
             <div
-              className="absolute inset-x-0 bottom-0 flex max-h-[78vh] w-full flex-col overflow-hidden rounded-t-[1.75rem] border animate-bottom-sheet-in"
+              className="absolute inset-x-0 bottom-0 z-10 flex max-h-[64vh] w-full flex-col overflow-hidden rounded-t-[1.5rem] border animate-bottom-sheet-in"
               style={{
                 borderColor: 'var(--color-border)',
-                backgroundColor: 'var(--color-card)',
+                backgroundColor: '#fff',
+                boxShadow: '0 -18px 42px -28px rgba(15, 23, 42, 0.45)',
               }}
             >
               <div className="mx-auto mt-3 h-1.5 w-12 rounded-full" style={{ backgroundColor: 'var(--color-border)' }} />
@@ -1053,7 +1047,7 @@ export function ProductListingClient({
                       role="radio"
                       aria-checked={isSelected}
                       onClick={() => setDraftSort(option.value)}
-                      className="flex min-h-[3.5rem] w-full items-center justify-between gap-3 rounded-[1rem] border px-4 py-3 text-left text-base font-medium transition-colors duration-fast"
+                    className="flex min-h-[3.25rem] w-full items-center justify-between gap-3 rounded-[1rem] border px-4 py-3 text-left text-base font-medium transition-colors duration-fast"
                       style={{
                         borderColor: isSelected ? 'var(--color-primary)' : 'var(--color-border)',
                         backgroundColor: isSelected ? 'var(--color-accent)' : 'transparent',
@@ -1105,20 +1099,22 @@ export function ProductListingClient({
         )}
 
         {filtersOpen && (
-          <div className="fixed inset-0 z-[70]" data-testid="mobile-filter-sheet" role="dialog" aria-modal="true" aria-label={t('filters')}>
+          <div className="fixed inset-0 isolate z-[70]" data-testid="mobile-filter-sheet" role="dialog" aria-modal="true" aria-label={t('filters')}>
             <button
               type="button"
-              className="absolute inset-0 bg-black/45"
+              className="absolute inset-0 z-0 bg-black/45"
               aria-label={`${tCommon('close')} ${t('filters').toLowerCase()}`}
               onClick={closeMobileFilters}
             />
             <div
-              className="absolute inset-x-0 bottom-0 flex h-4/5 w-full flex-col overflow-hidden rounded-t-[1.75rem] border animate-bottom-sheet-in"
+              className="absolute inset-x-0 bottom-0 z-10 flex max-h-[86vh] w-full flex-col overflow-hidden rounded-t-[1.5rem] border animate-bottom-sheet-in"
               style={{
                 borderColor: 'var(--color-border)',
-                backgroundColor: 'var(--color-card)',
+                backgroundColor: '#fff',
+                boxShadow: '0 -18px 42px -28px rgba(15, 23, 42, 0.45)',
               }}
             >
+              <div className="mx-auto mt-3 h-1.5 w-12 rounded-full" style={{ backgroundColor: 'var(--color-border)' }} />
               <div className="flex items-center justify-between gap-3 border-b px-4 pb-4 pt-4" style={{ borderColor: 'var(--color-border)' }}>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
