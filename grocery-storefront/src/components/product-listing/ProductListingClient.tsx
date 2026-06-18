@@ -50,6 +50,16 @@ interface ProductsQueryResponse {
   products: ProductConnection | null;
 }
 
+interface ProductPageSnapshot {
+  products: GroceryProduct[];
+  totalCount: number;
+  startCursor: string | null;
+  endCursor: string | null;
+  hasMore: boolean;
+  hasPreviousPage: boolean;
+  afterCursor: string | null;
+}
+
 interface ProductListingClientProps {
   channel: string;
   basePath: string;
@@ -190,6 +200,18 @@ export function ProductListingClient({
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [hasPreviousPage, setHasPreviousPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageAfterCursors, setPageAfterCursors] = useState<Record<number, string | null>>({ 1: null });
+  const [pageSnapshots, setPageSnapshots] = useState<Record<number, ProductPageSnapshot>>(() => ({
+    1: {
+      products: initialProducts,
+      totalCount: initialTotalCount,
+      startCursor: null,
+      endCursor: initialEndCursor,
+      hasMore: initialHasMore,
+      hasPreviousPage: false,
+      afterCursor: null,
+    },
+  }));
   const [loadingPage, setLoadingPage] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState<boolean | null>(layoutMode === 'adaptive' ? null : false);
 
@@ -328,6 +350,8 @@ export function ProductListingClient({
 
   useEffect(() => {
     setCurrentPage(1);
+    setPageAfterCursors({ 1: null });
+    setPageSnapshots({});
   }, [queryFilter, sortOption.value]);
 
   useEffect(() => {
@@ -339,6 +363,22 @@ export function ProductListingClient({
       setEndCursor(result.data.products.pageInfo?.endCursor || null);
       setHasMore(result.data.products.pageInfo?.hasNextPage || false);
       setHasPreviousPage(result.data.products.pageInfo?.hasPreviousPage || false);
+      const initialPageCursors: Record<number, string | null> = { 1: null };
+      if (result.data.products.pageInfo?.hasNextPage && result.data.products.pageInfo.endCursor) {
+        initialPageCursors[2] = result.data.products.pageInfo.endCursor;
+      }
+      setPageAfterCursors(initialPageCursors);
+      setPageSnapshots({
+        1: {
+          products,
+          totalCount: result.data.products.totalCount ?? 0,
+          startCursor: result.data.products.pageInfo?.startCursor || null,
+          endCursor: result.data.products.pageInfo?.endCursor || null,
+          hasMore: result.data.products.pageInfo?.hasNextPage || false,
+          hasPreviousPage: result.data.products.pageInfo?.hasPreviousPage || false,
+          afterCursor: null,
+        },
+      });
     }
   }, [result.data]);
 
@@ -616,14 +656,104 @@ export function ProductListingClient({
     setFiltersOpen(false);
   }
 
+  function applyPageResult(productsResult: NonNullable<ProductsQueryResponse['products']>, nextPage: number, afterCursorForPage: string | null) {
+    const products = productsResult.edges?.map((edge) => edge.node) || [];
+    const nextStartCursor = productsResult.pageInfo?.startCursor || null;
+    const nextEndCursor = productsResult.pageInfo?.endCursor || null;
+    const nextHasMore = productsResult.pageInfo?.hasNextPage || false;
+
+    setLoadedProducts(products);
+    setVisibleTotalCount(productsResult.totalCount ?? totalCount);
+    setStartCursor(nextStartCursor);
+    setEndCursor(nextEndCursor);
+    setHasMore(nextHasMore);
+    setHasPreviousPage(productsResult.pageInfo?.hasPreviousPage || nextPage > 1);
+    setCurrentPage(Math.min(totalPages, Math.max(1, nextPage)));
+    setPageAfterCursors((cursors) => ({
+      ...cursors,
+      [nextPage]: afterCursorForPage,
+      ...(nextHasMore && nextEndCursor ? { [nextPage + 1]: nextEndCursor } : {}),
+    }));
+    setPageSnapshots((snapshots) => ({
+      ...snapshots,
+      [nextPage]: {
+        products,
+        totalCount: productsResult.totalCount ?? totalCount,
+        startCursor: nextStartCursor,
+        endCursor: nextEndCursor,
+        hasMore: nextHasMore,
+        hasPreviousPage: productsResult.pageInfo?.hasPreviousPage || nextPage > 1,
+        afterCursor: afterCursorForPage,
+      },
+    }));
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  function applyPageSnapshot(targetPage: number, snapshot: ProductPageSnapshot) {
+    setLoadedProducts(snapshot.products);
+    setVisibleTotalCount(snapshot.totalCount);
+    setStartCursor(snapshot.startCursor);
+    setEndCursor(snapshot.endCursor);
+    setHasMore(snapshot.hasMore);
+    setHasPreviousPage(snapshot.hasPreviousPage || targetPage > 1);
+    setCurrentPage(targetPage);
+    setPageAfterCursors((cursors) => ({
+      ...cursors,
+      [targetPage]: snapshot.afterCursor,
+      ...(snapshot.hasMore && snapshot.endCursor ? { [targetPage + 1]: snapshot.endCursor } : {}),
+    }));
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  async function fetchPageByCursor(targetPage: number, afterCursorForPage: string | null) {
+    setLoadingPage(true);
+
+    try {
+      const result2 = await client.query<ProductsQueryResponse>(PRODUCTS_QUERY, {
+        channel,
+        first: pageSize,
+        last: null,
+        after: afterCursorForPage,
+        before: null,
+        filter: queryFilter,
+        sortBy: { field: sortOption.field, direction: sortOption.direction },
+      }).toPromise();
+
+      if (result2.data?.products) {
+        applyPageResult(result2.data.products, targetPage, afterCursorForPage);
+      }
+    } finally {
+      setLoadingPage(false);
+    }
+  }
+
   async function handlePageMove(direction: 'next' | 'previous') {
     if (loadingPage) return;
     if (direction === 'next' && !endCursor) return;
     if (direction === 'previous' && !startCursor) return;
 
+    const nextPage = direction === 'next'
+      ? Math.min(totalPages, currentPage + 1)
+      : Math.max(1, currentPage - 1);
+
+    if (
+      direction === 'previous'
+      && Object.prototype.hasOwnProperty.call(pageAfterCursors, nextPage)
+    ) {
+      await fetchPageByCursor(nextPage, pageAfterCursors[nextPage] ?? null);
+      return;
+    }
+
     setLoadingPage(true);
 
     try {
+      const afterCursorForPage = direction === 'next'
+        ? endCursor
+        : (pageAfterCursors[nextPage] ?? null);
       const result2 = await client.query<ProductsQueryResponse>(PRODUCTS_QUERY, {
         channel,
         first: direction === 'next' ? pageSize : null,
@@ -635,25 +765,57 @@ export function ProductListingClient({
       }).toPromise();
 
       if (result2.data?.products) {
-        const products = result2.data.products.edges?.map((edge) => edge.node) || [];
-        setLoadedProducts(products);
-        setVisibleTotalCount(result2.data.products.totalCount ?? totalCount);
-        setStartCursor(result2.data.products.pageInfo?.startCursor || null);
-        setEndCursor(result2.data.products.pageInfo?.endCursor || null);
-        setHasMore(result2.data.products.pageInfo?.hasNextPage || false);
-        setHasPreviousPage(result2.data.products.pageInfo?.hasPreviousPage || false);
-        setCurrentPage((page) => (
-          direction === 'next'
-            ? Math.min(totalPages, page + 1)
-            : Math.max(1, page - 1)
-        ));
-        window.requestAnimationFrame(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        applyPageResult(result2.data.products, nextPage, afterCursorForPage);
       }
     } finally {
       setLoadingPage(false);
     }
+  }
+
+  async function handlePageSelect(targetPage: number) {
+    if (loadingPage || targetPage === currentPage || targetPage < 1 || targetPage > totalPages) return;
+    const snapshot = pageSnapshots[targetPage];
+    if (snapshot) {
+      applyPageSnapshot(targetPage, snapshot);
+      return;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(pageAfterCursors, targetPage)) {
+      await fetchPageByCursor(targetPage, pageAfterCursors[targetPage] ?? null);
+      return;
+    }
+
+    if (targetPage === currentPage + 1) {
+      await handlePageMove('next');
+      return;
+    }
+    if (targetPage === currentPage - 1) {
+      await handlePageMove('previous');
+      return;
+    }
+
+  }
+
+  function getPaginationItems(): Array<number | 'ellipsis'> {
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    }
+
+    const pages = new Set<number>([1, currentPage]);
+    if (currentPage > 1) pages.add(currentPage - 1);
+    if (currentPage < totalPages) pages.add(currentPage + 1);
+
+    return Array.from(pages)
+      .filter((page) => page >= 1 && page <= totalPages)
+      .sort((a, b) => a - b)
+      .reduce<Array<number | 'ellipsis'>>((items, page) => {
+        const previous = items[items.length - 1];
+        if (typeof previous === 'number' && page - previous > 1) {
+          items.push('ellipsis');
+        }
+        items.push(page);
+        return items;
+      }, []);
   }
 
   function clearCommittedFilters() {
@@ -847,6 +1009,7 @@ export function ProductListingClient({
 
     const canGoPrevious = hasPreviousPage && currentPage > 1;
     const canGoNext = hasMore;
+    const paginationItems = getPaginationItems();
 
     return (
       <nav
@@ -872,17 +1035,47 @@ export function ProductListingClient({
           >
             {t('previousPage')}
           </button>
-          <span
-            className="inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold tabular-nums"
-            style={{
-              borderColor: 'var(--color-border)',
-              backgroundColor: 'var(--color-card)',
-              color: 'var(--color-foreground)',
-            }}
-            aria-current="page"
-          >
-            {t('pageStatus', { current: currentPage, total: totalPages })}
-          </span>
+          <div className="flex min-w-0 flex-1 items-center justify-center gap-1 overflow-x-auto px-1 sm:flex-none" aria-label={t('pageStatus', { current: currentPage, total: totalPages })}>
+            {paginationItems.map((item, index) => {
+              if (item === 'ellipsis') {
+                return (
+                  <span
+                    key={`ellipsis-${index}`}
+                    className="inline-flex min-h-11 min-w-8 items-center justify-center px-1 text-sm font-semibold"
+                    style={{ color: 'var(--color-muted-foreground)' }}
+                    aria-hidden="true"
+                  >
+                    ...
+                  </span>
+                );
+              }
+
+              const canSelectPage = item === currentPage
+                || (item === currentPage + 1 && canGoNext)
+                || (item === currentPage - 1 && canGoPrevious)
+                || Boolean(pageSnapshots[item])
+                || Object.prototype.hasOwnProperty.call(pageAfterCursors, item);
+              const isCurrentPage = item === currentPage;
+
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => void handlePageSelect(item)}
+                  disabled={loadingPage || isCurrentPage || !canSelectPage}
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 py-2 text-sm font-semibold tabular-nums transition-colors duration-fast hover-surface disabled:cursor-not-allowed disabled:opacity-45"
+                  style={{
+                    borderColor: isCurrentPage ? 'var(--color-primary)' : 'var(--color-border)',
+                    backgroundColor: isCurrentPage ? 'var(--color-primary)' : 'var(--color-card)',
+                    color: isCurrentPage ? 'var(--color-primary-foreground)' : 'var(--color-foreground)',
+                  }}
+                  aria-current={isCurrentPage ? 'page' : undefined}
+                >
+                  {item}
+                </button>
+              );
+            })}
+          </div>
           <button
             type="button"
             onClick={() => void handlePageMove('next')}
