@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireApiKey } from '@/lib/auth';
-import { publishConfig } from '@/lib/config-repository';
+import { PublishValidationError, publishConfig } from '@/lib/config-repository';
 
 interface RouteParams {
   params: { slug: string };
@@ -23,7 +23,25 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     );
   }
 
-  const stored = await publishConfig(slug);
+  let stored;
+  try {
+    stored = await publishConfig(slug);
+  } catch (err) {
+    if (err instanceof PublishValidationError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: err.message,
+          details: {
+            blockingIssues: err.blockingIssues,
+          },
+        },
+        { status: 422 }
+      );
+    }
+
+    throw err;
+  }
 
   return NextResponse.json({
     success: true,

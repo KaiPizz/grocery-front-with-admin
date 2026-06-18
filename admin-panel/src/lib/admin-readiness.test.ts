@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import { DEFAULT_CONFIG } from './defaults';
 import { getAdminReadiness, getPublishBlockerMessage } from './admin-readiness';
+import { storefrontConfigSchema } from './validation';
 
 import type { StorefrontConfig } from '../types/config';
 
@@ -35,6 +36,13 @@ test('blocks publish when an enabled hero slide is missing its desktop image', (
   assert.equal(readiness.canPublish, false);
   assert.equal(readiness.blockingIssues[0]?.id, 'homepage.hero-slide-image-missing');
   assert.equal(readiness.firstBlockingSection?.id, 'homepage');
+});
+
+test('allows draft validation for incomplete banner blocks so editors can save work in progress', () => {
+  const config = cloneConfig();
+  const result = storefrontConfigSchema.safeParse(config);
+
+  assert.equal(result.success, true);
 });
 
 test('reports both sticky banner image blockers when required images are missing', () => {

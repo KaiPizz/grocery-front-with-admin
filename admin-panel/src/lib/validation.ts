@@ -67,11 +67,9 @@ const homepageSectionSchema = z.object({
 
 // --- Banner Blocks V2 ---
 
-const requiredImageUrl = z.string().min(1, 'Image is required').max(2000);
-
 const heroSlideSchema = z.object({
   id: z.string().min(1),
-  imageUrl: requiredImageUrl,
+  imageUrl: optionalUrl,
   mobileImageUrl: optionalUrl.optional().default(null),
   title: z.string().max(200),
   ctaText: z.string().max(100),
@@ -94,7 +92,7 @@ const horizontalBannerBlockSchema = z.object({
   type: z.literal('horizontal'),
   enabled: z.boolean(),
   order: z.number().int().min(0),
-  imageUrl: requiredImageUrl,
+  imageUrl: optionalUrl,
   mobileImageUrl: optionalUrl.optional().default(null),
   title: z.string().max(200),
   ctaText: z.string().max(100),
@@ -103,7 +101,7 @@ const horizontalBannerBlockSchema = z.object({
 
 const gridItemSchema = z.object({
   id: z.string().min(1),
-  imageUrl: requiredImageUrl,
+  imageUrl: optionalUrl,
   title: z.string().max(100),
   href: z.string().max(500),
   enabled: z.boolean(),
@@ -132,7 +130,7 @@ const sidebarBannerBlockSchema = z.object({
   type: z.literal('sidebar'),
   enabled: z.boolean(),
   order: z.number().int().min(0),
-  imageUrl: requiredImageUrl,
+  imageUrl: optionalUrl,
   title: z.string().max(200),
   ctaText: z.string().max(100),
   ctaLink: z.string().max(500),
@@ -143,8 +141,8 @@ const smallStickyBannerBlockSchema = z.object({
   type: z.literal('small_sticky'),
   enabled: z.boolean(),
   order: z.number().int().min(0),
-  desktopImageUrl: requiredImageUrl,
-  mobileImageUrl: requiredImageUrl,
+  desktopImageUrl: optionalUrl,
+  mobileImageUrl: optionalUrl,
   title: z.string().max(200),
   ctaText: z.string().max(100),
   ctaLink: z.string().max(500),

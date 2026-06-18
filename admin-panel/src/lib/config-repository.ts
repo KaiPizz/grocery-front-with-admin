@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import type { StorefrontConfig, ConfigEnvelope } from '@/types/config';
 import { DEFAULT_CONFIG } from './defaults';
+import { getAdminReadiness, getPublishBlockerMessage, type ReadinessIssue } from './admin-readiness';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 
@@ -35,6 +36,16 @@ export interface StoredConfig {
   draft: StorefrontConfig;
   version: number;
   updatedAt: string;
+}
+
+export class PublishValidationError extends Error {
+  constructor(
+    message: string,
+    public readonly blockingIssues: ReadinessIssue[]
+  ) {
+    super(message);
+    this.name = 'PublishValidationError';
+  }
 }
 
 /**
@@ -193,9 +204,18 @@ export async function publishConfig(slug: string): Promise<StoredConfig> {
     return stored;
   }
 
+  const draft = withConfigDefaults(existing.draft);
+  const readiness = getAdminReadiness(draft);
+  if (!readiness.canPublish) {
+    throw new PublishValidationError(
+      getPublishBlockerMessage(readiness.blockingIssues[0]),
+      readiness.blockingIssues
+    );
+  }
+
   const stored: StoredConfig = {
     ...existing,
-    published: withConfigDefaults(existing.draft),
+    published: draft,
     version: existing.version + 1,
     updatedAt: new Date().toISOString(),
   };
