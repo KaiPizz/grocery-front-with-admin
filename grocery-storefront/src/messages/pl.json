@@ -123,6 +123,8 @@
     "sortPrice": "Cena: rosnąco",
     "sortPriceDesc": "Cena: malejąco",
     "sortName": "Nazwa A-Z",
+    "applySort": "Zastosuj",
+    "cancelSort": "Anuluj",
     "priceFilter": "Zakres cen",
     "minimumPrice": "Cena minimalna",
     "maximumPrice": "Cena maksymalna",

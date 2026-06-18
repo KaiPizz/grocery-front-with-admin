@@ -123,6 +123,8 @@
     "sortPrice": "Price: low to high",
     "sortPriceDesc": "Price: high to low",
     "sortName": "Name A-Z",
+    "applySort": "Apply",
+    "cancelSort": "Cancel",
     "priceFilter": "Price range",
     "minimumPrice": "Minimum price",
     "maximumPrice": "Maximum price",
@@ -469,4 +471,3 @@
     "addressDefaultFailed": "Failed to set default address."
   }
 }
-

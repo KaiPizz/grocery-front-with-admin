@@ -162,6 +162,8 @@ export function ProductListingClient({
     storageZone: initialZone || '',
   }));
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
+  const [draftSort, setDraftSort] = useState(initialSort);
   const [search, setSearch] = useState(initialSearch);
   const [sort, setSort] = useState(initialSort);
   const [loadedProducts, setLoadedProducts] = useState<GroceryProduct[]>(initialProducts);
@@ -545,6 +547,7 @@ export function ProductListingClient({
 
   function handleSortChange(newSort: string) {
     setSort(newSort);
+    setDraftSort(newSort);
     setLoadedProducts([]);
     router.replace(buildListingUrl(newSort, search), { scroll: false });
   }
@@ -552,6 +555,22 @@ export function ProductListingClient({
   function openMobileFilters() {
     setDraftFilters(normalizedCommittedFilters);
     setFiltersOpen(true);
+  }
+
+  function openMobileSort() {
+    setDraftSort(sort);
+    setSortOpen(true);
+  }
+
+  function closeMobileSort() {
+    setSortOpen(false);
+  }
+
+  function applyMobileSort() {
+    setSortOpen(false);
+    if (draftSort !== sort) {
+      handleSortChange(draftSort);
+    }
   }
 
   function closeMobileFilters() {
@@ -922,29 +941,36 @@ export function ProductListingClient({
               <label
                 className="mb-1.5 block text-sm font-medium leading-tight"
                 style={{ color: 'var(--color-foreground)' }}
-                htmlFor="mobile-products-sort-select"
+                htmlFor="mobile-products-sort-trigger"
                 data-testid="mobile-products-sort-label"
               >
                 {t('sortBy')}
               </label>
               <div className="relative">
-                <select
-                  id="mobile-products-sort-select"
-                  value={sort}
-                  onChange={(event) => handleSortChange(event.target.value)}
-                  className="w-full appearance-none rounded-[1rem] border bg-[var(--color-card)] py-3 pl-4 pr-10 text-base font-medium focus:outline-none focus-visible:ring-2"
-                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                  aria-label={t('sortBy')}
-                  data-testid="mobile-products-sort-select"
+                <button
+                  id="mobile-products-sort-trigger"
+                  type="button"
+                  onClick={openMobileSort}
+                  className="flex min-h-[3rem] w-full items-center justify-between gap-3 rounded-[1rem] border bg-[var(--color-card)] py-3 pl-4 pr-3 text-left text-base font-medium focus:outline-none focus-visible:ring-2"
+                  style={{
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-foreground)',
+                  }}
+                  aria-haspopup="dialog"
+                  aria-expanded={sortOpen}
+                  aria-controls="mobile-sort-sheet"
+                  data-testid="mobile-products-sort-trigger"
                 >
-                  {SORT_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {t(option.label as any)}
-                    </option>
-                  ))}
-                </select>
+                  <span className="min-w-0 truncate">{t(sortOption.label as any)}</span>
+                  <ChevronDown
+                    className="h-4 w-4 shrink-0"
+                    style={{ color: 'var(--color-muted-foreground)' }}
+                    aria-hidden="true"
+                  />
+                </button>
+                <input type="hidden" value={sort} data-testid="mobile-products-sort-select" readOnly />
                 <ChevronDown
-                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                  className="pointer-events-none absolute right-3 top-1/2 hidden h-4 w-4 -translate-y-1/2"
                   style={{ color: 'var(--color-muted-foreground)' }}
                   aria-hidden="true"
                 />
@@ -978,6 +1004,105 @@ export function ProductListingClient({
         </header>
 
         {renderActiveFilterSummary(true)}
+
+        {sortOpen && (
+          <div className="fixed inset-0 z-[70] md:hidden" data-testid="mobile-sort-sheet" role="dialog" aria-modal="true" aria-label={t('sortBy')}>
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/45"
+              aria-label={`${tCommon('close')} ${t('sortBy').toLowerCase()}`}
+              onClick={closeMobileSort}
+            />
+            <div
+              className="absolute inset-x-0 bottom-0 flex max-h-[78vh] w-full flex-col overflow-hidden rounded-t-[1.75rem] border animate-bottom-sheet-in"
+              style={{
+                borderColor: 'var(--color-border)',
+                backgroundColor: 'var(--color-card)',
+              }}
+            >
+              <div className="mx-auto mt-3 h-1.5 w-12 rounded-full" style={{ backgroundColor: 'var(--color-border)' }} />
+              <div className="flex items-center justify-between gap-3 border-b px-4 pb-4 pt-4" style={{ borderColor: 'var(--color-border)' }}>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {t('sortBy')}
+                  </p>
+                  <p className="mt-1 text-sm" style={{ color: 'var(--color-foreground)' }}>
+                    {t((SORT_OPTIONS.find((option) => option.value === draftSort) || SORT_OPTIONS[0]).label as any)}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium hover-surface"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                  aria-label={`${tCommon('close')} ${t('sortBy').toLowerCase()}`}
+                  onClick={closeMobileSort}
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                  {tCommon('close')}
+                </button>
+              </div>
+
+              <div className="space-y-2 overflow-y-auto px-4 py-4" role="radiogroup" aria-label={t('sortBy')}>
+                {SORT_OPTIONS.map((option) => {
+                  const isSelected = draftSort === option.value;
+
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      onClick={() => setDraftSort(option.value)}
+                      className="flex min-h-[3.5rem] w-full items-center justify-between gap-3 rounded-[1rem] border px-4 py-3 text-left text-base font-medium transition-colors duration-fast"
+                      style={{
+                        borderColor: isSelected ? 'var(--color-primary)' : 'var(--color-border)',
+                        backgroundColor: isSelected ? 'var(--color-accent)' : 'transparent',
+                        color: isSelected ? 'var(--color-primary)' : 'var(--color-foreground)',
+                      }}
+                    >
+                      <span>{t(option.label as any)}</span>
+                      <span
+                        className="flex h-5 w-5 items-center justify-center rounded-full border"
+                        style={{
+                          borderColor: isSelected ? 'var(--color-primary)' : 'var(--color-border)',
+                          backgroundColor: isSelected ? 'var(--color-primary)' : 'transparent',
+                        }}
+                        aria-hidden="true"
+                      >
+                        {isSelected && <span className="h-2 w-2 rounded-full bg-white" />}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div
+                className="grid grid-cols-2 gap-3 border-t px-4 pb-4 pt-3"
+                style={{
+                  borderColor: 'var(--color-border)',
+                  paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={closeMobileSort}
+                  className="rounded-full border px-4 py-3.5 text-base font-semibold transition-colors duration-fast hover-surface"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                >
+                  {t('cancelSort')}
+                </button>
+                <button
+                  type="button"
+                  onClick={applyMobileSort}
+                  className="rounded-full px-4 py-3.5 text-base font-semibold text-white transition-opacity duration-fast hover:opacity-90"
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                >
+                  {t('applySort')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {filtersOpen && (
           <div className="fixed inset-0 z-[70]" data-testid="mobile-filter-sheet" role="dialog" aria-modal="true" aria-label={t('filters')}>
