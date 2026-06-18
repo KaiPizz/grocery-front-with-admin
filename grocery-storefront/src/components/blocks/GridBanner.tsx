@@ -21,12 +21,12 @@ export function GridBanner({ block }: GridBannerProps) {
           href={item.href}
           className="group flex flex-col items-center gap-2"
         >
-          <div className="relative w-full overflow-hidden rounded-lg md:rounded-xl border border-gray-100 bg-gray-50 aspect-square">
+          <div className="relative w-full overflow-hidden rounded-lg md:rounded-xl border border-gray-100 bg-white aspect-square">
             {item.imageUrl ? (
               <img
                 src={item.imageUrl}
                 alt={item.title || 'Category'}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105 md:p-3"
                 loading="lazy"
               />
             ) : (

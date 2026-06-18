@@ -25,7 +25,7 @@
     },
     "homepage": {
       "hero": {
-        "enabled": true,
+        "enabled": false,
         "headline": "Azjatyckie składniki na codzienny stół",
         "subtitle": "Kimchi, ryż, sosy, makarony i podstawy kuchni azjatyckiej. Sprawdź dostępność i zamów z odbiorem osobistym.",
         "ctaText": "Przeglądaj produkty",
@@ -42,10 +42,87 @@
           "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
           "imageUrl": null,
           "enabled": false,
-          "order": 0
+          "order": 1
         }
       ],
-      "blocks": [],
+      "blocks": [
+        {
+          "id": "kenmito-real-hero-20260618",
+          "type": "hero",
+          "enabled": true,
+          "order": 0,
+          "autoPlay": true,
+          "autoPlayInterval": 4000,
+          "slides": [
+            {
+              "id": "kenmito-real-hero-slide-1",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
+              "title": "Azjatycka spiżarnia na każdy dzień",
+              "ctaText": "Przeglądaj produkty",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-2",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
+              "title": "Pantry staples in one place",
+              "ctaText": "Shop pantry",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-3",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
+              "title": "Korean flavors ready to enjoy",
+              "ctaText": "Browse food",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-4",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
+              "title": "Noodles, sauces and pantry essentials",
+              "ctaText": "Shop pantry",
+              "ctaLink": "/products",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "kenmito-category-grid-20260618",
+          "type": "grid",
+          "enabled": true,
+          "order": 1,
+          "columns": 3,
+          "items": [
+            {
+              "id": "kenmito-grid-korean-pantry",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5781/1.webp",
+              "title": "Koreańska spiżarnia",
+              "href": "/pl/collections/korean-pantry",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-drinks",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5029/1.webp",
+              "title": "Napoje",
+              "href": "/pl/categories/napoje",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-ready-meals",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-2472/1.webp",
+              "title": "Dania gotowe",
+              "href": "/pl/categories/dania-gotowe",
+              "enabled": true
+            }
+          ]
+        }
+      ],
       "sections": [
         {
           "id": "shopByZone",
@@ -273,7 +350,7 @@
     },
     "homepage": {
       "hero": {
-        "enabled": true,
+        "enabled": false,
         "headline": "Azjatyckie składniki na codzienny stół",
         "subtitle": "Kimchi, ryż, sosy, makarony i podstawy kuchni azjatyckiej. Sprawdź dostępność i zamów z odbiorem osobistym.",
         "ctaText": "Przeglądaj produkty",
@@ -290,10 +367,87 @@
           "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
           "imageUrl": null,
           "enabled": false,
-          "order": 0
+          "order": 1
         }
       ],
-      "blocks": [],
+      "blocks": [
+        {
+          "id": "kenmito-real-hero-20260618",
+          "type": "hero",
+          "enabled": true,
+          "order": 0,
+          "autoPlay": true,
+          "autoPlayInterval": 4000,
+          "slides": [
+            {
+              "id": "kenmito-real-hero-slide-1",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
+              "title": "Azjatycka spiżarnia na każdy dzień",
+              "ctaText": "Przeglądaj produkty",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-2",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
+              "title": "Pantry staples in one place",
+              "ctaText": "Shop pantry",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-3",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
+              "title": "Korean flavors ready to enjoy",
+              "ctaText": "Browse food",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-4",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
+              "title": "Noodles, sauces and pantry essentials",
+              "ctaText": "Shop pantry",
+              "ctaLink": "/products",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "kenmito-category-grid-20260618",
+          "type": "grid",
+          "enabled": true,
+          "order": 1,
+          "columns": 3,
+          "items": [
+            {
+              "id": "kenmito-grid-korean-pantry",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5781/1.webp",
+              "title": "Koreańska spiżarnia",
+              "href": "/pl/collections/korean-pantry",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-drinks",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5029/1.webp",
+              "title": "Napoje",
+              "href": "/pl/categories/napoje",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-ready-meals",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-2472/1.webp",
+              "title": "Dania gotowe",
+              "href": "/pl/categories/dania-gotowe",
+              "enabled": true
+            }
+          ]
+        }
+      ],
       "sections": [
         {
           "id": "shopByZone",
@@ -496,6 +650,7 @@
       }
     }
   },
-  "version": 7,
-  "updatedAt": "2026-06-06T00:00:00.000Z"
+  "version": 26,
+  "updatedAt": "2026-06-18T17:04:18.614Z",
+  "publishedAt": "2026-06-18T11:35:41.982Z"
 }

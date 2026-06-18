@@ -24,7 +24,7 @@
     },
     "homepage": {
       "hero": {
-        "enabled": true,
+        "enabled": false,
         "headline": "Azjatyckie składniki na codzienny stół",
         "subtitle": "Kimchi, ryż, sosy, makarony i podstawy kuchni azjatyckiej. Sprawdź dostępność i zamów z odbiorem osobistym.",
         "ctaText": "Przeglądaj produkty",
@@ -41,28 +41,140 @@
           "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
           "imageUrl": null,
           "enabled": false,
-          "order": 0
+          "order": 1
         }
       ],
-      "blocks": [],
+      "blocks": [
+        {
+          "id": "kenmito-real-hero-20260618",
+          "type": "hero",
+          "enabled": true,
+          "order": 0,
+          "autoPlay": true,
+          "autoPlayInterval": 4000,
+          "slides": [
+            {
+              "id": "kenmito-real-hero-slide-1",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
+              "title": "Azjatycka spiżarnia na każdy dzień",
+              "ctaText": "Przeglądaj produkty",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-2",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
+              "title": "Pantry staples in one place",
+              "ctaText": "Shop pantry",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-3",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
+              "title": "Korean flavors ready to enjoy",
+              "ctaText": "Browse food",
+              "ctaLink": "/products",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-real-hero-slide-4",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
+              "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
+              "title": "Noodles, sauces and pantry essentials",
+              "ctaText": "Shop pantry",
+              "ctaLink": "/products",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "kenmito-category-grid-20260618",
+          "type": "grid",
+          "enabled": true,
+          "order": 1,
+          "columns": 3,
+          "items": [
+            {
+              "id": "kenmito-grid-korean-pantry",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5781/1.webp",
+              "title": "Koreańska spiżarnia",
+              "href": "/pl/collections/korean-pantry",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-drinks",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-5029/1.webp",
+              "title": "Napoje",
+              "href": "/pl/categories/napoje",
+              "enabled": true
+            },
+            {
+              "id": "kenmito-grid-ready-meals",
+              "imageUrl": "https://img.zira.pl/kamito/products/KIMCHI-2472/1.webp",
+              "title": "Dania gotowe",
+              "href": "/pl/categories/dania-gotowe",
+              "enabled": true
+            }
+          ]
+        }
+      ],
       "sections": [
-        { "id": "shopByZone", "enabled": true, "order": 0 },
-        { "id": "deals", "enabled": false, "order": 1 },
-        { "id": "freshPicks", "enabled": true, "order": 2 },
-        { "id": "recipes", "enabled": false, "order": 3 }
+        {
+          "id": "shopByZone",
+          "enabled": true,
+          "order": 0
+        },
+        {
+          "id": "deals",
+          "enabled": false,
+          "order": 1
+        },
+        {
+          "id": "freshPicks",
+          "enabled": true,
+          "order": 2
+        },
+        {
+          "id": "recipes",
+          "enabled": false,
+          "order": 3
+        }
       ]
     },
     "layout": {
       "header": {
         "navItems": [
-          { "label": "Home", "href": "/", "enabled": true, "order": 0 },
-          { "label": "Kategorie", "href": "/categories", "enabled": true, "order": 1 },
-          { "label": "Produkty", "href": "/products", "enabled": true, "order": 2 }
+          {
+            "label": "Home",
+            "href": "/",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "label": "Kategorie",
+            "href": "/categories",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "label": "Produkty",
+            "href": "/products",
+            "enabled": true,
+            "order": 2
+          }
         ],
         "showSearch": true,
         "showWishlist": true,
         "showLanguageSwitcher": true,
-        "cta": { "text": "", "link": "", "enabled": false }
+        "cta": {
+          "text": "",
+          "link": "",
+          "enabled": false
+        }
       },
       "footer": {
         "tagline": "Azjatyckie produkty spożywcze do codziennego gotowania.",
@@ -70,16 +182,31 @@
           {
             "title": "Sklep",
             "links": [
-              { "label": "Kategorie", "href": "/categories" },
-              { "label": "Produkty", "href": "/products" },
-              { "label": "Korean pantry", "href": "/collections/korean-pantry" }
+              {
+                "label": "Kategorie",
+                "href": "/categories"
+              },
+              {
+                "label": "Produkty",
+                "href": "/products"
+              },
+              {
+                "label": "Korean pantry",
+                "href": "/collections/korean-pantry"
+              }
             ]
           },
           {
             "title": "Legal",
             "links": [
-              { "label": "Privacy", "href": "/privacy" },
-              { "label": "Terms", "href": "/terms" }
+              {
+                "label": "Privacy",
+                "href": "/privacy"
+              },
+              {
+                "label": "Terms",
+                "href": "/terms"
+              }
             ]
           }
         ],
@@ -93,10 +220,22 @@
       "bannerPosition": "below-hero"
     },
     "tracking": {
-      "facebookPixel": { "enabled": false, "pixelId": "" },
-      "googleAnalytics": { "enabled": false, "measurementId": "" },
-      "googleTagManager": { "enabled": false, "containerId": "" },
-      "hotjar": { "enabled": false, "siteId": "" }
+      "facebookPixel": {
+        "enabled": false,
+        "pixelId": ""
+      },
+      "googleAnalytics": {
+        "enabled": false,
+        "measurementId": ""
+      },
+      "googleTagManager": {
+        "enabled": false,
+        "containerId": ""
+      },
+      "hotjar": {
+        "enabled": false,
+        "siteId": ""
+      }
     },
     "seo": {
       "defaultTitle": "Kenmito - azjatyckie produkty spożywcze",
@@ -185,6 +324,6 @@
       }
     }
   },
-  "version": 2,
-  "updatedAt": "2026-06-06T00:00:00.000Z"
+  "version": 26,
+  "updatedAt": "2026-06-18T17:04:18.614Z"
 }
