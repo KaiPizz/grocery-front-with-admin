@@ -110,7 +110,7 @@ export default function HomepagePage() {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
-      <div className="flex-1 space-y-6 pb-6">
+      <div className="flex-1 space-y-6 pb-28">
         <PageHeader title={t('homepage.title')} description={t('homepage.description')} />
 
         {/* Hero Banner */}
