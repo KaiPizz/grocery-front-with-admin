@@ -1,13 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from 'urql';
 
 import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { useChannel } from '@/hooks/use-channel';
 import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
+import { buildPublicCategories } from '@/lib/public-taxonomy';
 import type { StorageZone } from '@/types';
 
 const PAGE_SIZE = 24;
@@ -29,6 +30,7 @@ interface CategoriesResponse {
 
 export default function ProductsPage() {
   const t = useTranslations('products');
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const channel = useChannel();
   const initialZone = searchParams.get('zone') as StorageZone | null;
@@ -40,20 +42,16 @@ export default function ProductsPage() {
   });
 
   const categoryNavigation = useMemo(() => (
-    categoriesResult.data?.categories?.edges
-      .map((edge) => {
-        const count = edge.node.products?.totalCount ?? 0;
-
-        return {
-          id: edge.node.id,
-          slug: edge.node.slug,
-          name: edge.node.name,
-          count,
-        };
-      })
-      .filter((item) => item.count > 0)
-      .sort((left, right) => right.count - left.count || left.name.localeCompare(right.name)) ?? []
-  ), [categoriesResult.data]);
+    buildPublicCategories(
+      categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [],
+      locale,
+    ).map((category) => ({
+      id: category.id,
+      slug: category.slug,
+      name: category.name,
+      count: category.products.totalCount,
+    }))
+  ), [categoriesResult.data, locale]);
 
   return (
     <ProductListingClient

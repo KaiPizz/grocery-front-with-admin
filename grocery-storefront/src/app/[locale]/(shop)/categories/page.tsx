@@ -6,6 +6,7 @@ import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
 import { CategoryHubClient } from '@/components/categories/CategoryHubClient';
+import { buildPublicCategories, type PublicCategory } from '@/lib/public-taxonomy';
 
 interface CategoryChildNode {
   id: string;
@@ -49,7 +50,7 @@ function formatProductCount(locale: string, count: number) {
   return count === 1 ? '1 product' : `${count} products`;
 }
 
-function getProductCount(category: CategoryNode) {
+function getProductCount(category: PublicCategory) {
   return category.products?.totalCount ?? 0;
 }
 
@@ -62,7 +63,8 @@ export default async function CategoriesPage() {
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
   const result = await serverGraphqlRequest<CategoriesResponse>(CATEGORIES_QUERY, { channel });
   const categories = result.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  const totalProducts = categories.reduce((sum, category) => sum + getProductCount(category), 0);
+  const publicCategories = buildPublicCategories(categories, locale);
+  const totalProducts = publicCategories.reduce((sum, category) => sum + getProductCount(category), 0);
 
   return (
     <div className="container-grocery py-8 md:py-12">
@@ -99,7 +101,7 @@ export default async function CategoriesPage() {
         </div>
       )}
 
-      {!result.errorMessage && categories.length === 0 && (
+      {!result.errorMessage && publicCategories.length === 0 && (
         <div className="rounded-lg border px-5 py-8 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
           <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
             {t('empty')}
@@ -107,8 +109,8 @@ export default async function CategoriesPage() {
         </div>
       )}
 
-      {categories.length > 0 && (
-        <CategoryHubClient categories={categories} />
+      {publicCategories.length > 0 && (
+        <CategoryHubClient categories={publicCategories} />
       )}
     </div>
   );

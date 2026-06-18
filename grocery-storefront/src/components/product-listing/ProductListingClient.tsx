@@ -39,6 +39,8 @@ interface ProductConnection {
   }>;
   pageInfo: {
     hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor: string | null;
     endCursor: string | null;
   };
   totalCount: number;
@@ -53,6 +55,7 @@ interface ProductListingClientProps {
   basePath: string;
   title: string;
   categoryId?: string | null;
+  categoryIds?: string[];
   initialProducts?: GroceryProduct[];
   initialEndCursor?: string | null;
   initialHasMore?: boolean;
@@ -86,6 +89,8 @@ interface ActiveFilterChip {
   label: string;
   onRemove: () => void;
 }
+
+const EMPTY_CATEGORY_IDS: string[] = [];
 
 function getProductsErrorMessage(error: CombinedError | undefined | null, fallbackMessage: string) {
   if (!error) return null;
@@ -141,6 +146,7 @@ export function ProductListingClient({
   basePath,
   title,
   categoryId = null,
+  categoryIds = EMPTY_CATEGORY_IDS,
   initialProducts = [],
   initialEndCursor = null,
   initialHasMore = false,
@@ -178,9 +184,13 @@ export function ProductListingClient({
   const [search, setSearch] = useState(initialSearch);
   const [sort, setSort] = useState(initialSort);
   const [loadedProducts, setLoadedProducts] = useState<GroceryProduct[]>(initialProducts);
+  const [visibleTotalCount, setVisibleTotalCount] = useState(initialTotalCount);
+  const [startCursor, setStartCursor] = useState<string | null>(null);
   const [endCursor, setEndCursor] = useState(initialEndCursor);
   const [hasMore, setHasMore] = useState(initialHasMore);
-  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasPreviousPage, setHasPreviousPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState<boolean | null>(layoutMode === 'adaptive' ? null : false);
 
   useEffect(() => {
@@ -204,9 +214,12 @@ export function ProductListingClient({
   }, [isHydrated, layoutMode]);
 
   const sortOption = SORT_OPTIONS.find((option) => option.value === sort) || SORT_OPTIONS[0];
+  const activeCategoryIds = useMemo(() => (
+    categoryIds.length > 0 ? categoryIds : categoryId ? [categoryId] : []
+  ), [categoryId, categoryIds]);
   const catalogFilter = useMemo(() => (
-    categoryId ? { categories: [categoryId] } : undefined
-  ), [categoryId]);
+    activeCategoryIds.length > 0 ? { categories: activeCategoryIds } : undefined
+  ), [activeCategoryIds]);
   const [catalogResult] = useQuery<ProductsQueryResponse>({
     query: PRODUCTS_QUERY,
     variables: {
@@ -295,8 +308,8 @@ export function ProductListingClient({
   );
 
   const filter = useMemo(
-    () => buildProductFilter(normalizedCommittedFilters, search, categoryId),
-    [categoryId, normalizedCommittedFilters, search],
+    () => buildProductFilter(normalizedCommittedFilters, search, activeCategoryIds),
+    [activeCategoryIds, normalizedCommittedFilters, search],
   );
   const queryFilter = Object.keys(filter).length > 0 ? filter : undefined;
 
@@ -305,21 +318,34 @@ export function ProductListingClient({
     variables: {
       channel,
       first: pageSize,
+      last: null,
+      after: null,
+      before: null,
       filter: queryFilter,
       sortBy: { field: sortOption.field, direction: sortOption.direction },
     },
   });
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [queryFilter, sortOption.value]);
+
+  useEffect(() => {
     if (result.data?.products) {
       const products = result.data.products.edges?.map((edge) => edge.node) || [];
       setLoadedProducts(products);
+      setVisibleTotalCount(result.data.products.totalCount ?? 0);
+      setStartCursor(result.data.products.pageInfo?.startCursor || null);
       setEndCursor(result.data.products.pageInfo?.endCursor || null);
       setHasMore(result.data.products.pageInfo?.hasNextPage || false);
+      setHasPreviousPage(result.data.products.pageInfo?.hasPreviousPage || false);
     }
   }, [result.data]);
 
-  const totalCount = result.data?.products?.totalCount ?? initialTotalCount;
+  const totalCount = visibleTotalCount;
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const currentRangeStart = loadedProducts.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0;
+  const currentRangeEnd = loadedProducts.length > 0 ? Math.min(totalCount, currentRangeStart + loadedProducts.length - 1) : 0;
   const activeFilterCount = countActiveFilters(normalizedCommittedFilters);
   const draftFilterCount = countActiveFilters(normalizedDraftFilters);
   const productsErrorMessage = getProductsErrorMessage(result.error, tCommon('error'));
@@ -344,7 +370,7 @@ export function ProductListingClient({
 
     return (
       <>
-        {!categoryId && !categoryFilterUnavailable && (
+        {activeCategoryIds.length === 0 && !categoryFilterUnavailable && (
           <fieldset className="space-y-3">
             <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
               {t('categoryFilter')}
@@ -590,27 +616,43 @@ export function ProductListingClient({
     setFiltersOpen(false);
   }
 
-  async function handleLoadMore() {
-    if (!endCursor || loadingMore) return;
-    setLoadingMore(true);
+  async function handlePageMove(direction: 'next' | 'previous') {
+    if (loadingPage) return;
+    if (direction === 'next' && !endCursor) return;
+    if (direction === 'previous' && !startCursor) return;
+
+    setLoadingPage(true);
 
     try {
       const result2 = await client.query<ProductsQueryResponse>(PRODUCTS_QUERY, {
         channel,
-        first: pageSize,
-        after: endCursor,
+        first: direction === 'next' ? pageSize : null,
+        last: direction === 'previous' ? pageSize : null,
+        after: direction === 'next' ? endCursor : null,
+        before: direction === 'previous' ? startCursor : null,
         filter: queryFilter,
         sortBy: { field: sortOption.field, direction: sortOption.direction },
       }).toPromise();
 
       if (result2.data?.products) {
-        const newProducts = result2.data.products.edges?.map((edge) => edge.node) || [];
-        setLoadedProducts((prev) => [...prev, ...newProducts]);
+        const products = result2.data.products.edges?.map((edge) => edge.node) || [];
+        setLoadedProducts(products);
+        setVisibleTotalCount(result2.data.products.totalCount ?? totalCount);
+        setStartCursor(result2.data.products.pageInfo?.startCursor || null);
         setEndCursor(result2.data.products.pageInfo?.endCursor || null);
         setHasMore(result2.data.products.pageInfo?.hasNextPage || false);
+        setHasPreviousPage(result2.data.products.pageInfo?.hasPreviousPage || false);
+        setCurrentPage((page) => (
+          direction === 'next'
+            ? Math.min(totalPages, page + 1)
+            : Math.max(1, page - 1)
+        ));
+        window.requestAnimationFrame(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
       }
     } finally {
-      setLoadingMore(false);
+      setLoadingPage(false);
     }
   }
 
@@ -798,6 +840,63 @@ export function ProductListingClient({
     );
   }
 
+  function renderPaginationControls(isCompact = false) {
+    if (totalCount <= pageSize || loadedProducts.length === 0) {
+      return null;
+    }
+
+    const canGoPrevious = hasPreviousPage && currentPage > 1;
+    const canGoNext = hasMore;
+
+    return (
+      <nav
+        className={`mt-8 flex ${isCompact ? 'flex-col items-stretch gap-3' : 'flex-wrap items-center justify-between gap-3'}`}
+        aria-label={t('pagination')}
+        data-testid="product-pagination"
+      >
+        <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+          {t('showingRange', {
+            from: currentRangeStart,
+            to: currentRangeEnd,
+            total: totalCount,
+          })}
+        </p>
+
+        <div className={`flex items-center ${isCompact ? 'justify-between' : 'justify-end'} gap-2`}>
+          <button
+            type="button"
+            onClick={() => void handlePageMove('previous')}
+            disabled={!canGoPrevious || loadingPage}
+            className="inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition-colors duration-fast hover-surface disabled:cursor-not-allowed disabled:opacity-45"
+            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+          >
+            {t('previousPage')}
+          </button>
+          <span
+            className="inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold tabular-nums"
+            style={{
+              borderColor: 'var(--color-border)',
+              backgroundColor: 'var(--color-card)',
+              color: 'var(--color-foreground)',
+            }}
+            aria-current="page"
+          >
+            {t('pageStatus', { current: currentPage, total: totalPages })}
+          </span>
+          <button
+            type="button"
+            onClick={() => void handlePageMove('next')}
+            disabled={!canGoNext || loadingPage}
+            className="inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition-colors duration-fast hover-surface disabled:cursor-not-allowed disabled:opacity-45"
+            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+          >
+            {loadingPage ? tCommon('loading') : t('nextPage')}
+          </button>
+        </div>
+      </nav>
+    );
+  }
+
   function renderMobileProductsContent() {
     if (isInitialLoading) {
       return (
@@ -842,19 +941,7 @@ export function ProductListingClient({
             ))}
           </div>
 
-          {hasMore && (
-            <div className="mt-8 flex justify-center">
-              <button
-                type="button"
-                onClick={() => void handleLoadMore()}
-                disabled={loadingMore}
-                className="inline-flex items-center gap-2 rounded-[1.15rem] border px-6 py-3 text-base font-medium transition-colors duration-fast hover-surface disabled:opacity-60"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-              >
-                {loadingMore ? tCommon('loading') : `${t('loadMore')} (${loadedProducts.length} / ${totalCount})`}
-              </button>
-            </div>
-          )}
+          {renderPaginationControls(true)}
         </>
       );
     }
@@ -910,19 +997,7 @@ export function ProductListingClient({
             ))}
           </div>
 
-          {hasMore && (
-            <div className="text-center mt-8">
-              <button
-                type="button"
-                onClick={() => void handleLoadMore()}
-                disabled={loadingMore}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border text-sm font-medium transition-colors duration-fast hover-surface disabled:opacity-60"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-              >
-                {loadingMore ? tCommon('loading') : `${t('loadMore')} (${loadedProducts.length} / ${totalCount})`}
-              </button>
-            </div>
-          )}
+          {renderPaginationControls(false)}
         </>
       );
     }

@@ -62,6 +62,8 @@ export const PRODUCTS_QUERY = `
     $channel: String!
     $first: Int
     $after: String
+    $last: Int
+    $before: String
     $filter: ProductFilterInput
     $sortBy: ProductOrder
   ) {
@@ -69,6 +71,8 @@ export const PRODUCTS_QUERY = `
       channel: $channel
       first: $first
       after: $after
+      last: $last
+      before: $before
       filter: $filter
       sortBy: $sortBy
     ) {
@@ -76,7 +80,7 @@ export const PRODUCTS_QUERY = `
         node { ...GroceryProductFields }
         cursor
       }
-      pageInfo { hasNextPage endCursor }
+      pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
       totalCount
     }
   }
@@ -114,7 +118,7 @@ export const PRODUCT_BY_SLUG_QUERY = `
 
 export const CATEGORIES_QUERY = `
   query Categories($channel: String!) {
-    categories(channel: $channel, first: 50) {
+    categories(channel: $channel, first: 200) {
       edges {
         node {
           id
@@ -158,7 +162,7 @@ export const CATEGORY_BY_SLUG_QUERY = `
           node { ...GroceryProductFields }
           cursor
         }
-        pageInfo { hasNextPage endCursor }
+        pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
         totalCount
       }
     }

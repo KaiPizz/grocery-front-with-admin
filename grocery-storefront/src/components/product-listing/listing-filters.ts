@@ -118,12 +118,13 @@ export function areFiltersEqual(left: ProductFiltersState, right: ProductFilters
 export function buildProductFilter(
   filters: ProductFiltersState,
   search: string,
-  categoryId: string | null,
+  categoryIds: string[] = [],
 ) {
   const nextFilter: Record<string, unknown> = {};
+  const scopedCategoryIds = Array.from(new Set(categoryIds.filter(Boolean)));
 
-  if (categoryId) {
-    nextFilter.categories = [categoryId];
+  if (scopedCategoryIds.length > 0) {
+    nextFilter.categories = scopedCategoryIds;
   } else if (filters.categoryIds.length > 0) {
     nextFilter.categories = filters.categoryIds;
   }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { ArrowRight, Layers3 } from 'lucide-react';
 import { useQuery } from 'urql';
@@ -9,15 +8,9 @@ import { useQuery } from 'urql';
 import { Link } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
 import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
+import { buildPublicCategories, type PublicCategory } from '@/lib/public-taxonomy';
 
 const COLUMN_COUNT = 4;
-
-interface CategoryChildNode {
-  id: string;
-  slug: string;
-  name: string;
-  level: number | null;
-}
 
 interface CategoryNode {
   id: string;
@@ -28,9 +21,6 @@ interface CategoryNode {
   backgroundImage: {
     url: string;
     alt: string | null;
-  } | null;
-  children: {
-    edges: Array<{ node: CategoryChildNode }>;
   } | null;
   products: {
     totalCount: number;
@@ -61,15 +51,15 @@ function formatProductCount(locale: string, count: number) {
   return count === 1 ? '1 product' : `${count} products`;
 }
 
-function getProductCount(category: CategoryNode) {
+function getProductCount(category: PublicCategory) {
   return category.products?.totalCount ?? 0;
 }
 
-function getCategoryInitial(category: CategoryNode) {
+function getCategoryInitial(category: PublicCategory) {
   return category.name.trim().charAt(0).toUpperCase() || '#';
 }
 
-function splitIntoColumns(categories: CategoryNode[]) {
+function splitIntoColumns(categories: PublicCategory[]) {
   const columnSize = Math.ceil(categories.length / COLUMN_COUNT);
 
   return Array.from({ length: COLUMN_COUNT }, (_, index) => {
@@ -97,14 +87,15 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
   });
 
   const categories = useMemo(() => {
-    return result.data?.categories?.edges
+    const rawCategories = result.data?.categories?.edges
       .map((edge) => edge.node)
       .filter((category) => category.slug && category.name) ?? [];
-  }, [result.data]);
+
+    return buildPublicCategories(rawCategories, locale);
+  }, [locale, result.data]);
 
   const columns = useMemo(() => splitIntoColumns(categories), [categories]);
-  const featuredCategory = categories.find((category) => category.backgroundImage?.url)
-    ?? categories.find((category) => getProductCount(category) > 0)
+  const featuredCategory = categories.find((category) => getProductCount(category) > 0)
     ?? categories[0]
     ?? null;
 
@@ -166,8 +157,6 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                   {column.map((category) => {
                     const count = getProductCount(category);
                     const countLabel = count > 0 ? formatProductCount(locale, count) : t('comingSoon');
-                    const childCategories = category.children?.edges.map((edge) => edge.node) ?? [];
-
                     return (
                       <div key={category.id} className="min-w-0">
                         <Link
@@ -188,21 +177,6 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                           </span>
                         </Link>
 
-                        {childCategories.length > 0 && (
-                          <div className="mt-1 space-y-1 pl-3">
-                            {childCategories.slice(0, 4).map((child) => (
-                              <Link
-                                key={child.id}
-                                href={`/categories/${child.slug}`}
-                                className="block rounded-md px-2 py-1 text-xs transition-colors duration-fast hover-surface"
-                                style={{ color: 'var(--color-muted-foreground)' }}
-                                onClick={onNavigate}
-                              >
-                                {child.name}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
                       </div>
                     );
                   })}
@@ -222,39 +196,26 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                 }}
                 onClick={onNavigate}
               >
-                {featuredCategory.backgroundImage?.url ? (
-                  <span className="relative block h-36 w-full overflow-hidden">
-                    <Image
-                      src={featuredCategory.backgroundImage.url}
-                      alt={featuredCategory.backgroundImage.alt ?? `${featuredCategory.name} category`}
-                      fill
-                      sizes="18rem"
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </span>
-                ) : (
+                <span
+                  className="flex h-36 w-full items-center justify-center border-b"
+                  style={{
+                    borderColor: 'var(--color-border)',
+                    background:
+                      'linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 16%, white), color-mix(in srgb, var(--color-primary) 5%, var(--color-card)))',
+                  }}
+                >
                   <span
-                    className="flex h-36 w-full items-center justify-center border-b"
+                    className="flex h-16 w-16 items-center justify-center rounded-full border text-3xl font-semibold"
                     style={{
-                      borderColor: 'var(--color-border)',
-                      background:
-                        'linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 16%, white), color-mix(in srgb, var(--color-primary) 5%, var(--color-card)))',
+                      borderColor: 'color-mix(in srgb, var(--color-primary) 22%, transparent)',
+                      color: 'var(--color-primary)',
+                      backgroundColor: 'color-mix(in srgb, var(--color-card) 80%, transparent)',
                     }}
+                    aria-hidden="true"
                   >
-                    <span
-                      className="flex h-16 w-16 items-center justify-center rounded-full border text-3xl font-semibold"
-                      style={{
-                        borderColor: 'color-mix(in srgb, var(--color-primary) 22%, transparent)',
-                        color: 'var(--color-primary)',
-                        backgroundColor: 'color-mix(in srgb, var(--color-card) 80%, transparent)',
-                      }}
-                      aria-hidden="true"
-                    >
-                      {getCategoryInitial(featuredCategory)}
-                    </span>
+                    {getCategoryInitial(featuredCategory)}
                   </span>
-                )}
+                </span>
                 <span className="flex flex-1 flex-col justify-between p-4">
                   <span>
                     <span className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>

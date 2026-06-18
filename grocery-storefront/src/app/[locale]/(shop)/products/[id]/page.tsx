@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -71,13 +71,19 @@ interface ProductInformationSource {
   dietaryTags?: string[] | null;
   nutritionFacts?: NutritionFacts | null;
   countryOfOrigin?: string | null;
+  pricePerUnit?: number | null;
+  unitOfMeasure?: string | null;
   storageZone?: StorageZone | null;
   certifications?: string[] | null;
+  nearestExpiry?: string | null;
+  spiceLevel?: number | null;
+  isAlcohol?: boolean | null;
 }
 
 interface ProductInformationSectionsProps {
   product: ProductInformationSource;
   sku: string | null;
+  currency: string;
 }
 
 interface RelatedProductsSectionProps {
@@ -283,8 +289,31 @@ function formatNutritionAmount(value: number | null | undefined, unit: string): 
   return `${value} ${unit}`;
 }
 
-function ProductInformationSections({ product, sku }: ProductInformationSectionsProps) {
+function formatDisplayUnit(unit: string): string {
+  const labels: Record<string, string> = {
+    KG: 'kg',
+    GRAM: 'g',
+    G: 'g',
+    LITER: 'l',
+    L: 'l',
+    ML: 'ml',
+    PIECE: 'szt.',
+    PCS: 'szt.',
+  };
+  const key = unit.trim().toUpperCase();
+  return labels[key] ?? unit.toLowerCase();
+}
+
+function formatProductDate(value: string | null | undefined, locale: string): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat(locale, { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+}
+
+function ProductInformationSections({ product, sku, currency }: ProductInformationSectionsProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const nutrition = product.nutritionFacts ?? null;
   const allergens = Array.isArray(product.allergens) ? product.allergens : [];
   const dietaryTags = Array.isArray(product.dietaryTags) ? product.dietaryTags : [];
@@ -320,28 +349,44 @@ function ProductInformationSections({ product, sku }: ProductInformationSections
     nutritionRows.push({ label: t('product.servingSize'), value: nutrition.servingSize });
   }
 
-  if (product.countryOfOrigin) {
-    detailFacts.push({ label: t('product.origin'), value: product.countryOfOrigin });
-  }
+  detailFacts.push({ label: t('product.sku'), value: sku ?? t('product.catalogMissing') });
 
-  if (product.storageZone) {
-    detailFacts.push({ label: t('product.storage'), value: t(`cart.zoneNote.${product.storageZone}` as any) });
-  }
+  detailFacts.push({
+    label: t('product.unitPrice'),
+    value:
+      product.pricePerUnit != null && product.unitOfMeasure
+        ? `${formatPrice(product.pricePerUnit, currency)} / ${formatDisplayUnit(product.unitOfMeasure)}`
+        : t('product.catalogMissing'),
+  });
+
+  detailFacts.push({ label: t('product.netWeight'), value: t('product.checkPackageLabel') });
+  detailFacts.push({ label: t('product.origin'), value: product.countryOfOrigin ?? t('product.catalogMissing') });
+
+  detailFacts.push({
+    label: t('product.storage'),
+    value: product.storageZone ? t(`cart.zoneNote.${product.storageZone}` as any) : t('product.catalogMissing'),
+  });
+
+  detailFacts.push({
+    label: t('product.bestBefore'),
+    value: formatProductDate(product.nearestExpiry, locale) ?? t('product.bestBeforeOnPackage'),
+  });
 
   if (dietaryTags.length > 0) {
     detailFacts.push({ label: t('product.dietary'), value: dietaryTags.join(', ') });
   }
 
+  if (product.spiceLevel != null) {
+    detailFacts.push({ label: t('product.spiceLevel'), value: t('product.spiceLevelValue', { level: product.spiceLevel }) });
+  }
+
+  if (product.isAlcohol) {
+    detailFacts.push({ label: t('product.warnings'), value: t('product.containsAlcohol') });
+  }
+
   if (certifications.length > 0) {
     detailFacts.push({ label: t('product.certifications'), value: certifications.join(', ') });
   }
-
-  if (sku) {
-    detailFacts.push({ label: t('product.sku'), value: sku });
-  }
-
-  const hasMainSections = Boolean(product.description || product.ingredients || allergens.length > 0 || nutritionRows.length > 0);
-  if (!hasMainSections && detailFacts.length === 0) return null;
 
   return (
     <section className="mt-12 border-t pt-8" style={{ borderColor: 'var(--color-border)' }} data-testid="pdp-food-label-sections">
@@ -358,47 +403,50 @@ function ProductInformationSections({ product, sku }: ProductInformationSections
             </section>
           )}
 
-          {product.ingredients && (
-            <details
-              className="group rounded-lg border p-4"
-              style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
-                <span className="heading-section text-xl" style={{ color: 'var(--color-foreground)' }}>
-                  {t('product.ingredients')}
-                </span>
-                <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-lg font-semibold leading-none transition-transform duration-fast group-open:rotate-45"
-                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-primary)' }}
-                  aria-hidden="true"
-                >
-                  +
-                </span>
-              </summary>
-              <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
-                {product.ingredients}
-              </p>
-            </details>
-          )}
+          <details
+            className="group rounded-lg border p-4"
+            style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+            open={Boolean(product.ingredients)}
+          >
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+              <span className="heading-section text-xl" style={{ color: 'var(--color-foreground)' }}>
+                {t('product.ingredients')}
+              </span>
+              <span
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-lg font-semibold leading-none transition-transform duration-fast group-open:rotate-45"
+                style={{ borderColor: 'var(--color-border)', color: 'var(--color-primary)' }}
+                aria-hidden="true"
+              >
+                +
+              </span>
+            </summary>
+            <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
+              {product.ingredients || t('product.ingredientsMissing')}
+            </p>
+          </details>
 
-          {allergens.length > 0 && (
-            <section>
-              <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
-                {t('product.allergens')}
-              </h2>
+          <section>
+            <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
+              {t('product.allergens')}
+            </h2>
+            {allergens.length > 0 ? (
               <div className="flex flex-wrap gap-1.5" role="list" aria-label={t('product.allergens')}>
                 {allergens.map((allergen) => (
                   <span key={allergen} className="allergen-chip" role="listitem">{t(`allergens.${allergen}` as any)}</span>
                 ))}
               </div>
-            </section>
-          )}
+            ) : (
+              <p className="rounded-lg border p-4 text-sm leading-relaxed" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                {t('product.allergensMissing')}
+              </p>
+            )}
+          </section>
 
-          {nutritionRows.length > 0 && (
-            <section>
-              <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
-                {t('product.nutrition')}
-              </h2>
+          <section>
+            <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
+              {t('product.nutrition')}
+            </h2>
+            {nutritionRows.length > 0 ? (
               <div className="overflow-hidden rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
                 <table className="w-full text-sm" aria-label={t('product.nutrition')}>
                   <tbody>
@@ -415,12 +463,26 @@ function ProductInformationSections({ product, sku }: ProductInformationSections
                   </tbody>
                 </table>
               </div>
-            </section>
-          )}
+            ) : (
+              <p className="rounded-lg border p-4 text-sm leading-relaxed" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                {t('product.nutritionMissing')}
+              </p>
+            )}
+          </section>
         </div>
 
-        {detailFacts.length > 0 && (
-          <aside className="space-y-3">
+        <aside
+          className="rounded-xl border p-4"
+          style={{
+            borderColor: 'var(--color-border)',
+            backgroundColor: 'color-mix(in srgb, var(--color-primary) 5%, var(--color-card))',
+          }}
+          data-testid="pdp-compliance-summary"
+        >
+          <h2 className="heading-section mb-4 text-lg" style={{ color: 'var(--color-foreground)' }}>
+            {t('product.productInformation')}
+          </h2>
+          <div className="space-y-3">
             {detailFacts.map((fact) => (
               <div key={fact.label} className="border-b pb-3 last:border-b-0" style={{ borderColor: 'var(--color-border)' }}>
                 <p className="text-xs font-semibold uppercase" style={{ color: 'var(--color-muted-foreground)' }}>
@@ -431,8 +493,8 @@ function ProductInformationSections({ product, sku }: ProductInformationSections
                 </p>
               </div>
             ))}
-          </aside>
-        )}
+          </div>
+        </aside>
       </div>
     </section>
   );
@@ -859,7 +921,7 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      <ProductInformationSections product={product} sku={sku} />
+      <ProductInformationSections product={product} sku={sku} currency={currency} />
 
       <RelatedProductsSection
         products={relatedProducts}
