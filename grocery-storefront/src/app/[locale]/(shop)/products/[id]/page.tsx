@@ -680,7 +680,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="container-grocery py-4 pb-28 md:py-12">
+    <div className="container-grocery py-4 pb-44 md:py-12 md:pb-28">
       {/* Breadcrumb */}
       <Breadcrumb items={[
         { label: t('nav.home'), href: '/' },
@@ -890,14 +890,14 @@ export default function ProductDetailPage() {
             showStickyAdd ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0'
           }`}
           style={{
-            bottom: 0,
+            bottom: 'calc(3.5rem + env(safe-area-inset-bottom, 0px))',
             borderColor: 'var(--color-border)',
             backgroundColor: 'color-mix(in srgb, var(--color-card) 96%, transparent)',
           }}
           aria-hidden={!showStickyAdd}
           data-testid="mobile-pd-sticky-bar"
         >
-          <div className="container-grocery grid grid-cols-[minmax(0,1fr)_minmax(8.75rem,auto)] items-center gap-2 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3">
+          <div className="container-grocery grid grid-cols-[minmax(0,1fr)_minmax(8.75rem,auto)] items-center gap-2 py-3">
             <div className="min-w-0" data-testid="mobile-pd-sticky-price">
               <p className="truncate text-base font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
                 {formatPrice(price * quantity, currency)}
