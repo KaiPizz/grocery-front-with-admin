@@ -163,9 +163,9 @@ function ProductGallery({ product }: ProductGalleryProps) {
   }
 
   return (
-    <section className="min-w-0 space-y-3 md:sticky md:top-24" aria-label={`${product.name} images`} data-testid="product-gallery">
+    <section className="min-w-0 space-y-2.5 md:sticky md:top-24 md:space-y-3" aria-label={`${product.name} images`} data-testid="product-gallery">
       <div
-        className="relative aspect-square overflow-hidden rounded-xl"
+        className="relative aspect-[4/3] max-h-[58vh] overflow-hidden rounded-2xl sm:aspect-square md:rounded-xl"
         style={{ backgroundColor: 'var(--color-muted)' }}
         data-testid="product-gallery-main"
       >
@@ -174,7 +174,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
             src={activeImage.src}
             alt={activeImage.alt}
             fill
-            className="object-contain p-4 sm:p-6"
+            className="object-contain p-3 sm:p-6"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
             unoptimized={isImageProxySrc(activeImage.src)}
@@ -211,7 +211,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
             <button
               type="button"
               onClick={() => handleGalleryImageStep(-1)}
-              className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border transition-transform duration-fast active:scale-[0.98]"
+              className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border transition-transform duration-fast active:scale-[0.98] sm:left-3 sm:h-11 sm:w-11"
               style={{
                 backgroundColor: 'color-mix(in srgb, var(--color-card) 88%, transparent)',
                 borderColor: 'var(--color-border)',
@@ -224,7 +224,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
             <button
               type="button"
               onClick={() => handleGalleryImageStep(1)}
-              className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border transition-transform duration-fast active:scale-[0.98]"
+              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border transition-transform duration-fast active:scale-[0.98] sm:right-3 sm:h-11 sm:w-11"
               style={{
                 backgroundColor: 'color-mix(in srgb, var(--color-card) 88%, transparent)',
                 borderColor: 'var(--color-border)',
@@ -251,7 +251,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
                   thumbnailRefs.current[index] = node;
                 }}
                 onClick={() => handleGalleryImageSelect(index)}
-                className="relative h-16 w-16 shrink-0 snap-start overflow-hidden rounded-lg border-2 transition-transform duration-fast hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 sm:h-20 sm:w-20"
+                className="relative h-14 w-14 shrink-0 snap-start overflow-hidden rounded-lg border-2 transition-transform duration-fast hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 sm:h-20 sm:w-20"
                 style={{
                   borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
                   backgroundColor: 'var(--color-card)',
@@ -473,10 +473,10 @@ function RelatedProductsSection({ products, categoryName }: RelatedProductsSecti
 
 function DetailSkeleton() {
   return (
-    <div className="container-grocery py-8">
+    <div className="container-grocery py-5 md:py-8">
       <div className="h-4 skeleton rounded w-20 mb-6" />
       <div className="grid md:grid-cols-2 gap-8">
-        <div className="aspect-square skeleton rounded-xl" />
+        <div className="aspect-[4/3] skeleton rounded-2xl sm:aspect-square md:rounded-xl" />
         <div className="space-y-4">
           <div className="h-6 skeleton rounded w-2/3" />
           <div className="h-4 skeleton rounded w-1/3" />
@@ -680,7 +680,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="container-grocery py-8 pb-28 md:py-12">
+    <div className="container-grocery py-4 pb-28 md:py-12">
       {/* Breadcrumb */}
       <Breadcrumb items={[
         { label: t('nav.home'), href: '/' },
@@ -689,13 +689,13 @@ export default function ProductDetailPage() {
         { label: product.name },
       ]} />
 
-      <div className="grid min-w-0 md:grid-cols-2 gap-8 lg:gap-12">
+      <div className="grid min-w-0 gap-5 md:grid-cols-2 md:gap-8 lg:gap-12">
         <ProductGallery product={product} />
 
         {/* Details */}
-        <div className="min-w-0 space-y-6">
+        <div className="min-w-0 space-y-5 md:space-y-6">
           <section
-            className="rounded-xl border p-4 sm:p-5"
+            className="rounded-2xl border p-4 sm:p-5 md:rounded-xl"
             style={{
               borderColor: 'var(--color-border)',
               backgroundColor: 'var(--color-card)',
@@ -704,21 +704,21 @@ export default function ProductDetailPage() {
             data-testid="pdp-purchase-panel"
           >
           {product.category && (
-            <p className="text-sm mb-2" style={{ color: 'var(--color-muted-foreground)' }}>
+            <p className="mb-2 text-xs font-medium sm:text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
               {product.category.name}
             </p>
           )}
 
           <h1
-            className="heading-display text-2xl md:text-3xl mb-4"
+            className="heading-display mb-3 text-xl leading-tight sm:text-2xl md:mb-4 md:text-3xl"
             style={{ color: 'var(--color-foreground)' }}
           >
             {product.name}
           </h1>
 
           {/* Price */}
-          <div className="mb-4">
-            <span className="text-3xl font-bold tabular-nums tracking-tight" style={{ color: 'var(--color-foreground)' }}>
+          <div className="mb-3 md:mb-4">
+            <span className="text-2xl font-bold tabular-nums tracking-tight sm:text-3xl" style={{ color: 'var(--color-foreground)' }}>
               {formatPrice(price, currency)}
             </span>
             <UnitPrice
@@ -731,7 +731,7 @@ export default function ProductDetailPage() {
 
           {/* Stock + delivery promise */}
           {variant && (
-            <div className="mb-5 flex items-center gap-2 text-sm" data-testid="pd-stock-promise">
+            <div className="mb-4 flex items-center gap-2 text-sm md:mb-5" data-testid="pd-stock-promise">
               <Truck className="h-4 w-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
               <span style={{ color: 'var(--color-foreground)' }}>
                 {(() => {
@@ -834,7 +834,7 @@ export default function ProductDetailPage() {
           </div>
 
           {purchaseFacts.length > 0 && (
-            <dl className="mt-5 grid grid-cols-2 gap-2" data-testid="pdp-purchase-facts">
+            <dl className="mt-4 grid grid-cols-2 gap-2 md:mt-5" data-testid="pdp-purchase-facts">
               {purchaseFacts.map((fact) => (
                 <div
                   key={fact.label}
@@ -847,7 +847,7 @@ export default function ProductDetailPage() {
                   <dt className="text-[10px] font-semibold uppercase" style={{ color: 'var(--color-muted-foreground)' }}>
                     {fact.label}
                   </dt>
-                  <dd className="mt-1 text-xs font-medium" style={{ color: 'var(--color-foreground)' }}>
+                  <dd className="mt-1 break-words text-xs font-medium" style={{ color: 'var(--color-foreground)' }}>
                     {fact.value}
                   </dd>
                 </div>
@@ -890,14 +890,14 @@ export default function ProductDetailPage() {
             showStickyAdd ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0'
           }`}
           style={{
-            bottom: 'env(safe-area-inset-bottom, 0px)',
+            bottom: 0,
             borderColor: 'var(--color-border)',
             backgroundColor: 'color-mix(in srgb, var(--color-card) 96%, transparent)',
           }}
           aria-hidden={!showStickyAdd}
           data-testid="mobile-pd-sticky-bar"
         >
-          <div className="container-grocery grid grid-cols-[minmax(0,1fr)_minmax(8.75rem,auto)] items-center gap-2 py-3">
+          <div className="container-grocery grid grid-cols-[minmax(0,1fr)_minmax(8.75rem,auto)] items-center gap-2 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3">
             <div className="min-w-0" data-testid="mobile-pd-sticky-price">
               <p className="truncate text-base font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
                 {formatPrice(price * quantity, currency)}
