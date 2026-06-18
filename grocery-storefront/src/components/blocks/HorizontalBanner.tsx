@@ -50,7 +50,7 @@ export function HorizontalBanner({ block }: HorizontalBannerProps) {
     </div>
   );
 
-  if (block.ctaLink && !block.ctaText) {
+  if (block.ctaLink) {
     return <Link href={block.ctaLink} className="block w-full">{content}</Link>;
   }
 

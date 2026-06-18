@@ -150,6 +150,17 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "kenmito-horizontal-quick-lunch-20260618",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 3,
+          "imageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1600&q=80",
+          "mobileImageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=80",
+          "title": "Szybki lunch po azjatycku",
+          "ctaText": "Zobacz dania gotowe",
+          "ctaLink": "/pl/categories/dania-gotowe"
         }
       ],
       "sections": [
