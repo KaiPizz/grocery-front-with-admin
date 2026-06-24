@@ -79,13 +79,13 @@ export function CategoryHubClient({ categories }: CategoryHubClientProps) {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filteredCategories.map((category) => {
             const count = category.products.totalCount;
-            const countLabel = count > 0 ? formatProductCount(locale, count) : t('comingSoon');
+            const countLabel = typeof count === 'number' && count > 0 ? formatProductCount(locale, count) : null;
 
             return (
               <Link
                 key={category.id}
                 href={`/categories/${category.slug}`}
-                aria-label={`${category.name}, ${countLabel}`}
+                aria-label={countLabel ? `${category.name}, ${countLabel}` : category.name}
                 className="group grid grid-cols-[3.75rem_minmax(0,1fr)] gap-3 rounded-lg border p-3 transition-transform duration-fast hover:-translate-y-0.5"
                 style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
               >
@@ -108,17 +108,17 @@ export function CategoryHubClient({ categories }: CategoryHubClientProps) {
                     {category.description}
                   </span>
                   <span className="mt-3 flex items-center justify-between gap-3">
-                    <span
-                      className="rounded-full px-2.5 py-1 text-xs font-semibold"
-                      style={{
-                        backgroundColor: count > 0
-                          ? 'color-mix(in srgb, var(--color-primary) 12%, transparent)'
-                          : 'color-mix(in srgb, var(--color-foreground) 7%, transparent)',
-                        color: count > 0 ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                      }}
-                    >
-                      {countLabel}
-                    </span>
+                    {countLabel && (
+                      <span
+                        className="rounded-full px-2.5 py-1 text-xs font-semibold"
+                        style={{
+                          backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)',
+                          color: 'var(--color-primary)',
+                        }}
+                      >
+                        {countLabel}
+                      </span>
+                    )}
                     <span className="inline-flex items-center gap-1 text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
                       {t('browse')}
                       <ArrowRight className="h-4 w-4 transition-transform duration-fast group-hover:translate-x-0.5" aria-hidden="true" />

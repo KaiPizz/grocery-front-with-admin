@@ -247,6 +247,22 @@ export const CATEGORIES_QUERY = `
   }
 `;
 
+export const PUBLIC_CATEGORIES_QUERY = `
+  query PublicCategories($channel: String!) {
+    categories(channel: $channel, first: 200) {
+      edges {
+        node {
+          id
+          slug
+          name
+          description
+        }
+      }
+      totalCount
+    }
+  }
+`;
+
 export const CATEGORY_BY_SLUG_QUERY = `
   ${GROCERY_PRODUCT_FIELDS}
   query CategoryBySlug($channel: String!, $slug: String!, $first: Int!, $after: String) {

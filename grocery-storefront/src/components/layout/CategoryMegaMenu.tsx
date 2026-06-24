@@ -7,7 +7,7 @@ import { useQuery } from 'urql';
 
 import { Link } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
-import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
+import { PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { buildPublicCategories, type PublicCategory } from '@/lib/public-taxonomy';
 
 const COLUMN_COUNT = 4;
@@ -16,13 +16,8 @@ interface CategoryNode {
   id: string;
   slug: string;
   name: string;
-  level: number | null;
   description: string | null;
-  backgroundImage: {
-    url: string;
-    alt: string | null;
-  } | null;
-  products: {
+  products?: {
     totalCount: number;
   } | null;
 }
@@ -52,7 +47,7 @@ function formatProductCount(locale: string, count: number) {
 }
 
 function getProductCount(category: PublicCategory) {
-  return category.products?.totalCount ?? 0;
+  return category.products?.totalCount ?? null;
 }
 
 function getCategoryInitial(category: PublicCategory) {
@@ -81,7 +76,7 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
   }, [open]);
 
   const [result] = useQuery<CategoriesResponse>({
-    query: CATEGORIES_QUERY,
+    query: PUBLIC_CATEGORIES_QUERY,
     variables: { channel },
     pause: !requested,
   });
@@ -91,13 +86,14 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
       .map((edge) => edge.node)
       .filter((category) => category.slug && category.name) ?? [];
 
-    return buildPublicCategories(rawCategories, locale);
+    return buildPublicCategories(rawCategories, locale, { requireProductCount: false });
   }, [locale, result.data]);
 
   const columns = useMemo(() => splitIntoColumns(categories), [categories]);
-  const featuredCategory = categories.find((category) => getProductCount(category) > 0)
-    ?? categories[0]
-    ?? null;
+  const featuredCategory = categories.find((category) => {
+    const count = getProductCount(category);
+    return typeof count === 'number' && count > 0;
+  }) ?? categories[0] ?? null;
 
   if (!open) {
     return null;
@@ -156,12 +152,12 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                 <div key={`category-column-${columnIndex}`} className="space-y-4">
                   {column.map((category) => {
                     const count = getProductCount(category);
-                    const countLabel = count > 0 ? formatProductCount(locale, count) : t('comingSoon');
+                    const countLabel = typeof count === 'number' && count > 0 ? formatProductCount(locale, count) : null;
                     return (
                       <div key={category.id} className="min-w-0">
                         <Link
                           href={`/categories/${category.slug}`}
-                          aria-label={`${category.name}, ${countLabel}`}
+                          aria-label={countLabel ? `${category.name}, ${countLabel}` : category.name}
                           className="group block rounded-lg px-2.5 py-2 transition-colors duration-fast hover-surface"
                           style={{ color: 'var(--color-foreground)' }}
                           onClick={onNavigate}
@@ -172,9 +168,11 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                             </span>
                             <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-0 transition-opacity duration-fast group-hover:opacity-100" aria-hidden="true" />
                           </span>
-                          <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                            {countLabel}
-                          </span>
+                          {countLabel && (
+                            <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                              {countLabel}
+                            </span>
+                          )}
                         </Link>
 
                       </div>
@@ -229,9 +227,11 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
                         {featuredCategory.description}
                       </span>
                     )}
-                    <span className="mt-3 inline-flex rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)', color: 'var(--color-primary)' }}>
-                      {formatProductCount(locale, getProductCount(featuredCategory))}
-                    </span>
+                    {typeof getProductCount(featuredCategory) === 'number' && (
+                      <span className="mt-3 inline-flex rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)', color: 'var(--color-primary)' }}>
+                        {formatProductCount(locale, getProductCount(featuredCategory) ?? 0)}
+                      </span>
+                    )}
                   </span>
                   <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
                     {t('shopCategory')}

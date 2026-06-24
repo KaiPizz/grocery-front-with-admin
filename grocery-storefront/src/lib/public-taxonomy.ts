@@ -14,7 +14,7 @@ export interface PublicCategory {
   name: string;
   description: string;
   products: {
-    totalCount: number;
+    totalCount: number | null;
   };
   rawCategoryIds: string[];
   rawCategorySlugs: string[];
@@ -32,6 +32,10 @@ interface PublicCategoryDefinition {
   };
   rawSlugs?: string[];
   keywords?: string[];
+}
+
+interface BuildPublicCategoriesOptions {
+  requireProductCount?: boolean;
 }
 
 const HIDDEN_CATEGORY_KEYWORDS = [
@@ -173,19 +177,32 @@ function findDefinition(category: PublicTaxonomyRawCategory) {
   }) ?? null;
 }
 
-export function buildPublicCategories(categories: PublicTaxonomyRawCategory[], locale = 'pl'): PublicCategory[] {
+function mergeProductCounts(left: number | null, right: number | null) {
+  if (left === null || right === null) return null;
+  return left + right;
+}
+
+export function buildPublicCategories(
+  categories: PublicTaxonomyRawCategory[],
+  locale = 'pl',
+  options: BuildPublicCategoriesOptions = {},
+): PublicCategory[] {
+  const requireProductCount = options.requireProductCount ?? true;
   const groups = new Map<string, PublicCategory>();
 
   for (const category of categories) {
-    const count = category.products?.totalCount ?? 0;
-    if (count <= 0 || isHiddenCategory(category)) continue;
+    const count = category.products?.totalCount;
+    const hasKnownCount = typeof count === 'number';
+    if (isHiddenCategory(category)) continue;
+    if (requireProductCount && (!hasKnownCount || count <= 0)) continue;
+    if (hasKnownCount && count <= 0) continue;
 
     const definition = findDefinition(category);
     if (!definition) continue;
 
     const existing = groups.get(definition.slug);
     if (existing) {
-      existing.products.totalCount += count;
+      existing.products.totalCount = mergeProductCounts(existing.products.totalCount, hasKnownCount ? count : null);
       existing.rawCategoryIds.push(category.id);
       existing.rawCategorySlugs.push(category.slug);
       continue;
@@ -196,7 +213,7 @@ export function buildPublicCategories(categories: PublicTaxonomyRawCategory[], l
       slug: definition.slug,
       name: locale === 'en' ? definition.names.en : definition.names.pl,
       description: locale === 'en' ? definition.descriptions.en : definition.descriptions.pl,
-      products: { totalCount: count },
+      products: { totalCount: hasKnownCount ? count : null },
       rawCategoryIds: [category.id],
       rawCategorySlugs: [category.slug],
     });
@@ -211,6 +228,7 @@ export function findPublicCategory(
   categories: PublicTaxonomyRawCategory[],
   slug: string,
   locale = 'pl',
+  options: BuildPublicCategoriesOptions = {},
 ) {
-  return buildPublicCategories(categories, locale).find((category) => category.slug === slug) ?? null;
+  return buildPublicCategories(categories, locale, options).find((category) => category.slug === slug) ?? null;
 }

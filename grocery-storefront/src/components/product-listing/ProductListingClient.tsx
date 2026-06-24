@@ -91,7 +91,7 @@ interface CategoryNavigationItem {
   id: string;
   slug: string;
   name: string;
-  count: number;
+  count: number | null;
 }
 
 interface ActiveFilterChip {
@@ -1227,17 +1227,19 @@ export function ProductListingClient({
                   aria-current={isActive ? 'page' : undefined}
                 >
                   <span className="min-w-0 leading-snug">{category.name}</span>
-                  <span
-                    className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
-                    style={{
-                      backgroundColor: isActive
-                        ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
-                        : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
-                      color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                    }}
-                  >
-                    {category.count}
-                  </span>
+                  {typeof category.count === 'number' && (
+                    <span
+                      className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
+                      style={{
+                        backgroundColor: isActive
+                          ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
+                          : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
+                        color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                      }}
+                    >
+                      {category.count}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -1297,17 +1299,19 @@ export function ProductListingClient({
                 aria-current={isActive ? 'page' : undefined}
               >
                 <span>{category.name}</span>
-                <span
-                  className="rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums"
-                  style={{
-                    backgroundColor: isActive
-                      ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
-                      : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
-                    color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                  }}
-                >
-                  {category.count}
-                </span>
+                {typeof category.count === 'number' && (
+                  <span
+                    className="rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums"
+                    style={{
+                      backgroundColor: isActive
+                        ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
+                        : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
+                      color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                    }}
+                  >
+                    {category.count}
+                  </span>
+                )}
               </Link>
             );
           })}

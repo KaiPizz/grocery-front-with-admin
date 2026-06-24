@@ -7,7 +7,7 @@ import { useQuery } from 'urql';
 
 import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { useChannel } from '@/hooks/use-channel';
-import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
+import { PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { buildPublicCategories } from '@/lib/public-taxonomy';
 import type { StorageZone } from '@/types';
 
@@ -20,6 +20,7 @@ interface CategoriesResponse {
         id: string;
         slug: string;
         name: string;
+        description: string | null;
         products?: {
           totalCount: number;
         } | null;
@@ -37,7 +38,7 @@ export default function ProductsPage() {
   const initialSearch = searchParams.get('search') || '';
   const initialSort = searchParams.get('sort') || 'newest';
   const [categoriesResult] = useQuery<CategoriesResponse>({
-    query: CATEGORIES_QUERY,
+    query: PUBLIC_CATEGORIES_QUERY,
     variables: { channel },
   });
 
@@ -45,6 +46,7 @@ export default function ProductsPage() {
     buildPublicCategories(
       categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [],
       locale,
+      { requireProductCount: false },
     ).map((category) => ({
       id: category.id,
       slug: category.slug,

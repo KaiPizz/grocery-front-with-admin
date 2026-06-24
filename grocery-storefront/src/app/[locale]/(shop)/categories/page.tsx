@@ -2,33 +2,18 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { RefreshCw } from 'lucide-react';
 
 import { Link } from '@/i18n/navigation';
-import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
+import { PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
 import { CategoryHubClient } from '@/components/categories/CategoryHubClient';
 import { buildPublicCategories, type PublicCategory } from '@/lib/public-taxonomy';
 
-interface CategoryChildNode {
-  id: string;
-  slug: string;
-  name: string;
-  level: number | null;
-}
-
 interface CategoryNode {
   id: string;
   slug: string;
   name: string;
-  level: number | null;
   description: string | null;
-  backgroundImage: {
-    url: string;
-    alt: string | null;
-  } | null;
-  children: {
-    edges: Array<{ node: CategoryChildNode }>;
-  } | null;
-  products: {
+  products?: {
     totalCount: number;
   } | null;
 }
@@ -51,7 +36,7 @@ function formatProductCount(locale: string, count: number) {
 }
 
 function getProductCount(category: PublicCategory) {
-  return category.products?.totalCount ?? 0;
+  return category.products?.totalCount ?? null;
 }
 
 export default async function CategoriesPage() {
@@ -61,10 +46,13 @@ export default async function CategoriesPage() {
     getTranslations('common'),
   ]);
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
-  const result = await serverGraphqlRequest<CategoriesResponse>(CATEGORIES_QUERY, { channel });
+  const result = await serverGraphqlRequest<CategoriesResponse>(PUBLIC_CATEGORIES_QUERY, { channel });
   const categories = result.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  const publicCategories = buildPublicCategories(categories, locale);
-  const totalProducts = publicCategories.reduce((sum, category) => sum + getProductCount(category), 0);
+  const publicCategories = buildPublicCategories(categories, locale, { requireProductCount: false });
+  const allCountsKnown = publicCategories.every((category) => getProductCount(category) !== null);
+  const totalProducts = allCountsKnown
+    ? publicCategories.reduce((sum, category) => sum + (getProductCount(category) ?? 0), 0)
+    : null;
 
   return (
     <div className="container-grocery py-8 md:py-12">
@@ -77,9 +65,11 @@ export default async function CategoriesPage() {
             {t('title')}
           </h1>
         </div>
-        <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          {formatProductCount(locale, totalProducts)}
-        </p>
+        {totalProducts !== null && (
+          <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+            {formatProductCount(locale, totalProducts)}
+          </p>
+        )}
       </div>
 
       {result.errorMessage && categories.length === 0 && (

@@ -3,7 +3,7 @@ import { ArrowLeft, PackageOpen, RefreshCw } from 'lucide-react';
 
 import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { Link } from '@/i18n/navigation';
-import { CATEGORIES_QUERY, CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY } from '@/lib/graphql/operations/grocery';
+import { CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY, PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
 import { buildPublicCategories, findPublicCategory } from '@/lib/public-taxonomy';
@@ -66,6 +66,7 @@ interface CategoriesResponse {
         id: string;
         slug: string;
         name: string;
+        description: string | null;
         products?: {
           totalCount: number;
         } | null;
@@ -106,10 +107,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   ]);
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
   const categorySlug = decodeRouteSlug(params.slug);
-  const categoriesResult = await serverGraphqlRequest<CategoriesResponse>(CATEGORIES_QUERY, { channel });
+  const categoriesResult = await serverGraphqlRequest<CategoriesResponse>(PUBLIC_CATEGORIES_QUERY, { channel });
   const rawCategories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  const publicCategories = buildPublicCategories(rawCategories, locale);
-  const publicCategory = findPublicCategory(rawCategories, categorySlug, locale);
+  const publicCategories = buildPublicCategories(rawCategories, locale, { requireProductCount: false });
+  const publicCategory = findPublicCategory(rawCategories, categorySlug, locale, { requireProductCount: false });
   const publicProductsResult = publicCategory
     ? await serverGraphqlRequest<ProductsResponse>(PRODUCT_LISTING_QUERY, {
       channel,
@@ -138,7 +139,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       id: publicNavigationCategory.id,
       slug: publicNavigationCategory.slug,
       name: publicNavigationCategory.name,
-      count: publicNavigationCategory.products.totalCount,
+      count: publicNavigationCategory.slug === publicCategory?.slug
+        ? publicTotalCount
+        : publicNavigationCategory.products.totalCount,
     }))
     .sort((left, right) => {
       if (left.slug === categorySlug) return -1;
