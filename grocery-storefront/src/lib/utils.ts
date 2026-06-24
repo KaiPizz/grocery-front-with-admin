@@ -17,7 +17,7 @@ interface NormalizeImageUrlOptions {
   maxWidth?: number;
 }
 
-function normalizeWikimediaThumbnailUrl(parsed: URL, maxWidth: number) {
+function normalizeWikimediaThumbnailUrl(parsed: URL) {
   if (!parsed.hostname.endsWith('wikimedia.org')) {
     return;
   }
@@ -34,11 +34,12 @@ function normalizeWikimediaThumbnailUrl(parsed: URL, maxWidth: number) {
   }
 
   const currentWidth = Number(currentWidthMatch[1]);
-  if (!Number.isFinite(currentWidth) || currentWidth <= maxWidth) {
+  const targetWidth = Math.min(currentWidth, 1280);
+  if (!Number.isFinite(currentWidth) || currentWidth === targetWidth) {
     return;
   }
 
-  pathParts[filePartIndex] = `${maxWidth}px-${currentWidthMatch[2]}`;
+  pathParts[filePartIndex] = `${targetWidth}px-${currentWidthMatch[2]}`;
   parsed.pathname = pathParts.join('/');
 }
 
@@ -70,7 +71,7 @@ export function normalizeImageUrl(url?: string | null, options: NormalizeImageUr
         }
       }
 
-      normalizeWikimediaThumbnailUrl(parsed, options.maxWidth ?? 1200);
+      normalizeWikimediaThumbnailUrl(parsed);
 
       return parsed.toString();
     } catch {
