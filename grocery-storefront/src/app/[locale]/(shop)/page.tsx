@@ -15,7 +15,7 @@ import {
   Sun,
   Thermometer,
 } from 'lucide-react';
-import { CATEGORIES_QUERY, PRODUCTS_QUERY, RECIPES_QUERY } from '@/lib/graphql/operations/grocery';
+import { CATEGORIES_QUERY, PRODUCT_LISTING_QUERY, RECIPES_QUERY } from '@/lib/graphql/operations/grocery';
 import { ProductCard } from '@/components/product/ProductCard';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { PromoBanner } from '@/components/grocery/PromoBanner';
@@ -681,7 +681,7 @@ export default function HomePage() {
     : ['shopByZone', 'deals', 'freshPicks', 'recipes'];
 
   const [productsResult] = useQuery({
-    query: PRODUCTS_QUERY,
+    query: PRODUCT_LISTING_QUERY,
     variables: { channel, first: 8 },
   });
 

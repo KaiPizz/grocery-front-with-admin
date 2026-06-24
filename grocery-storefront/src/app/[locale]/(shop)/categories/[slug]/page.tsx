@@ -3,7 +3,7 @@ import { ArrowLeft, PackageOpen, RefreshCw } from 'lucide-react';
 
 import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { Link } from '@/i18n/navigation';
-import { CATEGORIES_QUERY, CATEGORY_BY_SLUG_QUERY, PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
+import { CATEGORIES_QUERY, CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
 import { buildPublicCategories, findPublicCategory } from '@/lib/public-taxonomy';
@@ -111,7 +111,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const publicCategories = buildPublicCategories(rawCategories, locale);
   const publicCategory = findPublicCategory(rawCategories, categorySlug, locale);
   const publicProductsResult = publicCategory
-    ? await serverGraphqlRequest<ProductsResponse>(PRODUCTS_QUERY, {
+    ? await serverGraphqlRequest<ProductsResponse>(PRODUCT_LISTING_QUERY, {
       channel,
       first: PAGE_SIZE,
       filter: { categories: publicCategory.rawCategoryIds },

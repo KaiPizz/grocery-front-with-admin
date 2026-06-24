@@ -12,7 +12,7 @@ import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useHydrated } from '@/hooks/use-hydrated';
 import { Link, useRouter } from '@/i18n/navigation';
-import { PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
+import { PRODUCT_FILTER_CATALOG_QUERY, PRODUCT_LISTING_QUERY } from '@/lib/graphql/operations/grocery';
 import type { GroceryProduct, StorageZone } from '@/types';
 import {
   ALLERGEN_OPTIONS,
@@ -243,7 +243,7 @@ export function ProductListingClient({
     activeCategoryIds.length > 0 ? { categories: activeCategoryIds } : undefined
   ), [activeCategoryIds]);
   const [catalogResult] = useQuery<ProductsQueryResponse>({
-    query: PRODUCTS_QUERY,
+    query: PRODUCT_FILTER_CATALOG_QUERY,
     variables: {
       channel,
       first: 100,
@@ -336,7 +336,7 @@ export function ProductListingClient({
   const queryFilter = Object.keys(filter).length > 0 ? filter : undefined;
 
   const [result, reexecuteProductsQuery] = useQuery<ProductsQueryResponse>({
-    query: PRODUCTS_QUERY,
+    query: PRODUCT_LISTING_QUERY,
     variables: {
       channel,
       first: pageSize,
@@ -713,7 +713,7 @@ export function ProductListingClient({
     setLoadingPage(true);
 
     try {
-      const result2 = await client.query<ProductsQueryResponse>(PRODUCTS_QUERY, {
+      const result2 = await client.query<ProductsQueryResponse>(PRODUCT_LISTING_QUERY, {
         channel,
         first: pageSize,
         last: null,
@@ -754,7 +754,7 @@ export function ProductListingClient({
       const afterCursorForPage = direction === 'next'
         ? endCursor
         : (pageAfterCursors[nextPage] ?? null);
-      const result2 = await client.query<ProductsQueryResponse>(PRODUCTS_QUERY, {
+      const result2 = await client.query<ProductsQueryResponse>(PRODUCT_LISTING_QUERY, {
         channel,
         first: direction === 'next' ? pageSize : null,
         last: direction === 'previous' ? pageSize : null,

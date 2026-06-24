@@ -56,6 +56,62 @@ const GROCERY_PRODUCT_FIELDS = `
   }
 `;
 
+const GROCERY_PRODUCT_LISTING_FIELDS = `
+  fragment GroceryProductListingFields on Product {
+    id
+    name
+    slug
+    thumbnail { url alt }
+    media { url alt type sortOrder }
+    allergens
+    dietaryTags
+    countryOfOrigin
+    pricePerUnit
+    unitOfMeasure
+    storageZone
+    freshness
+    nearestExpiry
+    category { id name slug }
+    pricing {
+      priceRange {
+        start { gross { amount currency } }
+      }
+      priceRangeUndiscounted {
+        start { gross { amount currency } }
+      }
+      onSale
+    }
+    variants {
+      id
+      name
+      sku
+      pricing { price { gross { amount currency } } }
+      quantityAvailable
+      preOrder { enabled date depositPercent maxQuantity }
+    }
+  }
+`;
+
+const GROCERY_PRODUCT_FILTER_FIELDS = `
+  fragment GroceryProductFilterFields on Product {
+    id
+    allergens
+    dietaryTags
+    certifications
+    storageZone
+    category { id name slug }
+    pricing {
+      priceRange {
+        start { gross { amount currency } }
+      }
+    }
+    variants {
+      id
+      pricing { price { gross { amount currency } } }
+    }
+  }
+`;
+
 export const PRODUCTS_QUERY = `
   ${GROCERY_PRODUCT_FIELDS}
   query GroceryProducts(
@@ -81,6 +137,56 @@ export const PRODUCTS_QUERY = `
         cursor
       }
       pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+      totalCount
+    }
+  }
+`;
+
+export const PRODUCT_LISTING_QUERY = `
+  ${GROCERY_PRODUCT_LISTING_FIELDS}
+  query GroceryProductListing(
+    $channel: String!
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+    $filter: ProductFilterInput
+    $sortBy: ProductOrder
+  ) {
+    products(
+      channel: $channel
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      filter: $filter
+      sortBy: $sortBy
+    ) {
+      edges {
+        node { ...GroceryProductListingFields }
+        cursor
+      }
+      pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+      totalCount
+    }
+  }
+`;
+
+export const PRODUCT_FILTER_CATALOG_QUERY = `
+  ${GROCERY_PRODUCT_FILTER_FIELDS}
+  query GroceryProductFilterCatalog(
+    $channel: String!
+    $first: Int
+    $filter: ProductFilterInput
+  ) {
+    products(
+      channel: $channel
+      first: $first
+      filter: $filter
+    ) {
+      edges {
+        node { ...GroceryProductFilterFields }
+      }
       totalCount
     }
   }

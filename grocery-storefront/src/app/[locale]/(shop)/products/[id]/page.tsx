@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ShoppingCart, Package, Check, Minus, Plus, Truck, Heart } from 'lucide-react';
 import { toast } from 'sonner';
-import { PRODUCT_BY_SLUG_QUERY, PRODUCT_RECIPES_QUERY, PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
+import { PRODUCT_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY, PRODUCT_RECIPES_QUERY } from '@/lib/graphql/operations/grocery';
 import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
 import { RecipeCard } from '@/components/grocery/RecipeCard';
 import { Breadcrumb } from '@/components/grocery/Breadcrumb';
@@ -611,7 +611,7 @@ export default function ProductDetailPage() {
   });
 
   const [relatedProductsResult] = useQuery({
-    query: PRODUCTS_QUERY,
+    query: PRODUCT_LISTING_QUERY,
     variables: {
       channel,
       first: 9,
