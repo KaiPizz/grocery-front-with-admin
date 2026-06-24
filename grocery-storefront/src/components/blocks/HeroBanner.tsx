@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { getImageSrc } from '@/lib/utils';
 import type { HeroBannerBlock } from '@/types/storefront-config';
 
 interface HeroBannerProps {
@@ -55,14 +56,14 @@ export function HeroBanner({ block }: HeroBannerProps) {
             <>
               {s.mobileImageUrl && (
                 <img
-                  src={s.mobileImageUrl}
+                  src={getImageSrc(s.mobileImageUrl, { maxWidth: 768 }) || s.mobileImageUrl}
                   alt={s.title || 'Banner'}
                   className="w-full h-full object-cover block md:hidden"
                   loading={i === 0 ? 'eager' : 'lazy'}
                 />
               )}
               <img
-                src={s.imageUrl || s.mobileImageUrl || ''}
+                src={getImageSrc(s.imageUrl || s.mobileImageUrl, { maxWidth: 1440 }) || s.imageUrl || s.mobileImageUrl || ''}
                 alt={s.title || 'Banner'}
                 className={`w-full h-full object-cover ${s.mobileImageUrl ? 'hidden md:block' : 'block'}`}
                 loading={i === 0 ? 'eager' : 'lazy'}

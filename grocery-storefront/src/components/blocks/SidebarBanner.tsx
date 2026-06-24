@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Runtime-configured admin media can use arbitrary URLs until the production media loader policy is defined. */
 
 import Link from 'next/link';
+import { getImageSrc } from '@/lib/utils';
 import type { SidebarBannerBlock } from '@/types/storefront-config';
 
 interface SidebarBannerProps {
@@ -14,7 +15,7 @@ export function SidebarBanner({ block }: SidebarBannerProps) {
     <div className="relative w-full overflow-hidden rounded-xl" style={{ aspectRatio: '1 / 2' }}>
       {block.imageUrl ? (
         <img
-          src={block.imageUrl}
+          src={getImageSrc(block.imageUrl, { maxWidth: 640 }) || block.imageUrl}
           alt={block.title || 'Sidebar banner'}
           className="w-full h-full object-cover"
           loading="lazy"

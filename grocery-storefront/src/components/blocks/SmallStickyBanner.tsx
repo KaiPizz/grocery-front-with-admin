@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Link from 'next/link';
+import { getImageSrc } from '@/lib/utils';
 import type { SmallStickyBannerBlock } from '@/types/storefront-config';
 
 interface SmallStickyBannerProps {
@@ -37,14 +38,14 @@ export function SmallStickyBanner({ block }: SmallStickyBannerProps) {
     <>
       {block.desktopImageUrl && (
         <img
-          src={block.desktopImageUrl}
+          src={getImageSrc(block.desktopImageUrl, { maxWidth: 1440 }) || block.desktopImageUrl}
           alt={block.title || 'Announcement'}
           className="hidden md:block h-full w-auto object-contain mx-auto"
         />
       )}
       {block.mobileImageUrl && (
         <img
-          src={block.mobileImageUrl}
+          src={getImageSrc(block.mobileImageUrl, { maxWidth: 768 }) || block.mobileImageUrl}
           alt={block.title || 'Announcement'}
           className="block md:hidden h-full w-auto object-contain mx-auto"
         />

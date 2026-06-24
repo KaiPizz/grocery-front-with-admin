@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Runtime-configured admin media can use arbitrary URLs until the production media loader policy is defined. */
 
 import Link from 'next/link';
+import { getImageSrc } from '@/lib/utils';
 import type { RoundGridBannerBlock } from '@/types/storefront-config';
 
 interface RoundGridBannerProps {
@@ -24,7 +25,7 @@ export function RoundGridBanner({ block }: RoundGridBannerProps) {
           <div className="relative w-full overflow-hidden rounded-full border border-gray-100 bg-gray-50 aspect-square">
             {item.imageUrl ? (
               <img
-                src={item.imageUrl}
+                src={getImageSrc(item.imageUrl, { maxWidth: 640 }) || item.imageUrl}
                 alt={item.title || 'Category'}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"

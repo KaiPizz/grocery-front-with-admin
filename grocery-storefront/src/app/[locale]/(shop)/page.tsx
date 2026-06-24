@@ -31,7 +31,7 @@ import {
   usesAvailabilityOnlyStock,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
-import { normalizeImageUrl } from '@/lib/utils';
+import { getImageSrc } from '@/lib/utils';
 import type { CommercialQuickLink, HomepageSectionId } from '@/types/storefront-config';
 
 interface HomeProduct {
@@ -148,7 +148,7 @@ function HomeCatalogHero({
     .map((product) => ({
       id: product.id,
       name: product.name,
-      imageUrl: normalizeImageUrl(product.thumbnail?.url),
+      imageUrl: getImageSrc(product.thumbnail?.url, { maxWidth: 480 }),
     }))
     .filter((product): product is { id: string; name: string; imageUrl: string } => Boolean(product.imageUrl))
     .slice(0, 4);
@@ -274,7 +274,7 @@ function HomeCampaignBand({
       id: product.id,
       name: product.name,
       href: `/products/${product.slug}`,
-      imageUrl: normalizeImageUrl(product.thumbnail?.url),
+      imageUrl: getImageSrc(product.thumbnail?.url, { maxWidth: 480 }),
     }))
     .filter((product): product is { id: string; name: string; href: string; imageUrl: string } => Boolean(product.imageUrl))
     .slice(0, 3);
@@ -393,14 +393,14 @@ function HomeCategoryShortcuts({
   const richCategoryCards = visibleCategories
     .map((category) => ({
       category,
-      imageUrl: normalizeImageUrl(category.backgroundImage?.url),
+      imageUrl: getImageSrc(category.backgroundImage?.url, { maxWidth: 720 }),
     }))
     .filter((item): item is { category: HomeCategory; imageUrl: string } => Boolean(item.imageUrl))
     .slice(0, 4);
   const richQuickLinks = visibleQuickLinks
     .map((link) => ({
       link,
-      imageUrl: normalizeImageUrl(link.imageUrl),
+      imageUrl: getImageSrc(link.imageUrl, { maxWidth: 720 }),
     }))
     .filter((item): item is { link: CommercialQuickLink; imageUrl: string } => Boolean(item.imageUrl))
     .slice(0, 3);

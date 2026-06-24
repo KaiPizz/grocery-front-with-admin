@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Runtime-configured admin media can use arbitrary URLs until the production media loader policy is defined. */
 
 import Link from 'next/link';
+import { getImageSrc } from '@/lib/utils';
 import type { GridBannerBlock } from '@/types/storefront-config';
 
 interface GridBannerProps {
@@ -24,7 +25,7 @@ export function GridBanner({ block }: GridBannerProps) {
           <div className="relative w-full overflow-hidden rounded-lg md:rounded-xl border border-gray-100 bg-white aspect-square">
             {item.imageUrl ? (
               <img
-                src={item.imageUrl}
+                src={getImageSrc(item.imageUrl, { maxWidth: 640 }) || item.imageUrl}
                 alt={item.title || 'Category'}
                 className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105 md:p-3"
                 loading="lazy"

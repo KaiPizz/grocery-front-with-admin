@@ -13,7 +13,36 @@ export function formatPrice(amount: number, currency = 'PLN', locale = 'pl-PL'):
   }).format(amount);
 }
 
-export function normalizeImageUrl(url?: string | null): string | null {
+interface NormalizeImageUrlOptions {
+  maxWidth?: number;
+}
+
+function normalizeWikimediaThumbnailUrl(parsed: URL, maxWidth: number) {
+  if (!parsed.hostname.endsWith('wikimedia.org')) {
+    return;
+  }
+
+  const pathParts = parsed.pathname.split('/');
+  const filePartIndex = pathParts.findIndex((part) => /^\d+px-/i.test(part));
+  if (filePartIndex === -1) {
+    return;
+  }
+
+  const currentWidthMatch = pathParts[filePartIndex].match(/^(\d+)px-(.+)$/i);
+  if (!currentWidthMatch) {
+    return;
+  }
+
+  const currentWidth = Number(currentWidthMatch[1]);
+  if (!Number.isFinite(currentWidth) || currentWidth <= maxWidth) {
+    return;
+  }
+
+  pathParts[filePartIndex] = `${maxWidth}px-${currentWidthMatch[2]}`;
+  parsed.pathname = pathParts.join('/');
+}
+
+export function normalizeImageUrl(url?: string | null, options: NormalizeImageUrlOptions = {}): string | null {
   if (!url) return null;
 
   const trimmed = url.trim();
@@ -41,6 +70,8 @@ export function normalizeImageUrl(url?: string | null): string | null {
         }
       }
 
+      normalizeWikimediaThumbnailUrl(parsed, options.maxWidth ?? 1200);
+
       return parsed.toString();
     } catch {
       return normalized;
@@ -54,8 +85,8 @@ export function normalizeImageUrl(url?: string | null): string | null {
   return normalized;
 }
 
-export function getImageSrc(url?: string | null): string | null {
-  const normalized = normalizeImageUrl(url);
+export function getImageSrc(url?: string | null, options: NormalizeImageUrlOptions = {}): string | null {
+  const normalized = normalizeImageUrl(url, options);
   if (!normalized) return null;
 
   if (normalized.startsWith('http://') || normalized.startsWith('https://')) {

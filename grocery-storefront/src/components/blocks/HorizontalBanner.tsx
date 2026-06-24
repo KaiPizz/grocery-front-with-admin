@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Runtime-configured admin media can use arbitrary URLs until the production media loader policy is defined. */
 
 import Link from 'next/link';
+import { getImageSrc } from '@/lib/utils';
 import type { HorizontalBannerBlock } from '@/types/storefront-config';
 
 interface HorizontalBannerProps {
@@ -16,14 +17,14 @@ export function HorizontalBanner({ block }: HorizontalBannerProps) {
         <>
           {block.mobileImageUrl && (
             <img
-              src={block.mobileImageUrl}
+              src={getImageSrc(block.mobileImageUrl, { maxWidth: 768 }) || block.mobileImageUrl}
               alt={block.title || 'Banner'}
               className="w-full h-full object-cover block md:hidden"
               loading="lazy"
             />
           )}
           <img
-            src={block.imageUrl || block.mobileImageUrl || ''}
+            src={getImageSrc(block.imageUrl || block.mobileImageUrl, { maxWidth: 1440 }) || block.imageUrl || block.mobileImageUrl || ''}
             alt={block.title || 'Banner'}
             className={`w-full h-full object-cover ${block.mobileImageUrl ? 'hidden md:block' : 'block'}`}
             loading="lazy"
