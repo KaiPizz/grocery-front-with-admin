@@ -13,7 +13,7 @@ test('storefront can load a static config source when no admin config API is con
   assert.match(clientProviderSource, /extractStorefrontConfig/);
 });
 
-test('tracked Kenmito static config carries Kenmito launch truth', () => {
+test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.equal(existsSync(staticConfigUrl), true, 'Missing public/config/kenmito.json');
 
   const raw = readFileSync(staticConfigUrl, 'utf8');
@@ -26,12 +26,13 @@ test('tracked Kenmito static config carries Kenmito launch truth', () => {
   const koreanPantryBanner = config.homepage.promoBanners.find((banner) => banner.id === 'banner-korean-pantry');
   const footerLinks = config.layout.footer.columns.flatMap((column) => column.links);
 
-  assert.equal(config.branding.storeName, 'Kenmito');
+  assert.equal(config.branding.storeName, 'Asia Deli Go');
+  assert.equal(config.branding.logoUrl, '/brand/asia-deli-go-logo.jpg');
   assert.equal(config.homepage.hero.headline, 'Azjatyckie produkty spożywcze na co dzień');
   assert.equal(config.general.fulfillment.mode, 'pickup');
   assert.equal(config.general.fulfillment.paymentPromise, 'backend');
   assert.equal(config.general.fulfillment.stockDisplayMode, 'availability_only');
-  assert.match(config.seo.defaultTitle, /^Kenmito\b/);
+  assert.match(config.seo.defaultTitle, /^Asia Deli Go\b/);
   assert.equal(categorySection?.enabled, true);
   assert.equal(dealsSection?.enabled, false);
   assert.equal(koreanPantryBanner?.enabled, false);

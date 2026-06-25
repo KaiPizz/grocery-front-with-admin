@@ -59,10 +59,10 @@ export function auditKenmitoConfig(config: StorefrontConfig): KenmitoConfigAudit
     });
   }
 
-  if (strings.some((value) => /asia deli|chesaigon|grocery store/i.test(value))) {
+  if (strings.some((value) => /asia deli(?!\s+go)|chesaigon|grocery store/i.test(value))) {
     issues.push({
       id: 'kenmito.stale-brand-copy',
-      message: 'Kenmito config still contains stale non-Kenmito brand copy.',
+      message: 'Kenmito config still contains stale source brand copy.',
     });
   }
 

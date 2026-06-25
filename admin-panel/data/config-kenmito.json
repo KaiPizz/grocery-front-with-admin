@@ -2,25 +2,25 @@
   "slug": "kenmito",
   "published": {
     "branding": {
-      "logoUrl": null,
+      "logoUrl": "/brand/asia-deli-go-logo.jpg",
       "faviconUrl": null,
-      "storeName": "Kenmito",
+      "storeName": "Asia Deli Go",
       "colors": {
-        "primary": "#16a34a",
-        "primaryHover": "#15803d",
-        "checkoutBtnColor": "#16a34a",
-        "checkoutBtnHoverColor": "#75c547",
-        "background": "#fafaf9",
-        "foreground": "#1c1917",
-        "accent": "#f0fdf4",
-        "accentForeground": "#14532d",
-        "muted": "#f5f5f4",
-        "mutedForeground": "#78716c",
-        "border": "#e7e5e4",
+        "primary": "#169B45",
+        "primaryHover": "#0F7A35",
+        "checkoutBtnColor": "#169B45",
+        "checkoutBtnHoverColor": "#0F7A35",
+        "background": "#fbfdfa",
+        "foreground": "#111111",
+        "accent": "#eef9ef",
+        "accentForeground": "#0F5C2A",
+        "muted": "#f5f5f2",
+        "mutedForeground": "#6f6a62",
+        "border": "#e6e3dc",
         "card": "#ffffff",
-        "cardForeground": "#1c1917",
-        "destructive": "#dc2626",
-        "ring": "#16a34a"
+        "cardForeground": "#111111",
+        "destructive": "#E30613",
+        "ring": "#169B45"
       }
     },
     "homepage": {
@@ -260,7 +260,7 @@
         }
       },
       "footer": {
-        "tagline": "Azjatyckie produkty spożywcze, przekąski i gotowe dania z odbiorem osobistym.",
+        "tagline": "Azjatyckie produkty spożywcze do codziennych zakupów. Zamów online i odbierz osobiście w sklepie.",
         "columns": [
           {
             "title": "Sklep",
@@ -293,7 +293,7 @@
             ]
           }
         ],
-        "copyrightText": "© {year} Kenmito."
+        "copyrightText": "© {year} Asia Deli Go."
       },
       "priceDisplay": {
         "position": "below-image",
@@ -321,8 +321,8 @@
       }
     },
     "seo": {
-      "defaultTitle": "Kenmito - azjatyckie produkty spożywcze",
-      "defaultDescription": "Kimchi, sosy, makarony, ryż i produkty kuchni azjatyckiej.",
+      "defaultTitle": "Asia Deli Go - azjatyckie produkty spożywcze",
+      "defaultDescription": "Asia Deli Go: kimchi, ryż, sosy, makarony, napoje, przekąski i dania gotowe z odbiorem osobistym.",
       "ogImageUrl": null,
       "canonical": "https://kenmito.enail.pro"
     },
@@ -409,25 +409,25 @@
   },
   "draft": {
     "branding": {
-      "logoUrl": null,
+      "logoUrl": "/brand/asia-deli-go-logo.jpg",
       "faviconUrl": null,
-      "storeName": "Kenmito",
+      "storeName": "Asia Deli Go",
       "colors": {
-        "primary": "#16a34a",
-        "primaryHover": "#15803d",
-        "checkoutBtnColor": "#16a34a",
-        "checkoutBtnHoverColor": "#75c547",
-        "background": "#fafaf9",
-        "foreground": "#1c1917",
-        "accent": "#f0fdf4",
-        "accentForeground": "#14532d",
-        "muted": "#f5f5f4",
-        "mutedForeground": "#78716c",
-        "border": "#e7e5e4",
+        "primary": "#169B45",
+        "primaryHover": "#0F7A35",
+        "checkoutBtnColor": "#169B45",
+        "checkoutBtnHoverColor": "#0F7A35",
+        "background": "#fbfdfa",
+        "foreground": "#111111",
+        "accent": "#eef9ef",
+        "accentForeground": "#0F5C2A",
+        "muted": "#f5f5f2",
+        "mutedForeground": "#6f6a62",
+        "border": "#e6e3dc",
         "card": "#ffffff",
-        "cardForeground": "#1c1917",
-        "destructive": "#dc2626",
-        "ring": "#16a34a"
+        "cardForeground": "#111111",
+        "destructive": "#E30613",
+        "ring": "#169B45"
       }
     },
     "homepage": {
@@ -667,7 +667,7 @@
         }
       },
       "footer": {
-        "tagline": "Azjatyckie produkty spożywcze, przekąski i gotowe dania z odbiorem osobistym.",
+        "tagline": "Azjatyckie produkty spożywcze do codziennych zakupów. Zamów online i odbierz osobiście w sklepie.",
         "columns": [
           {
             "title": "Sklep",
@@ -700,7 +700,7 @@
             ]
           }
         ],
-        "copyrightText": "© {year} Kenmito."
+        "copyrightText": "© {year} Asia Deli Go."
       },
       "priceDisplay": {
         "position": "below-image",
@@ -728,8 +728,8 @@
       }
     },
     "seo": {
-      "defaultTitle": "Kenmito - azjatyckie produkty spożywcze",
-      "defaultDescription": "Kimchi, sosy, makarony, ryż i produkty kuchni azjatyckiej.",
+      "defaultTitle": "Asia Deli Go - azjatyckie produkty spożywcze",
+      "defaultDescription": "Asia Deli Go: kimchi, ryż, sosy, makarony, napoje, przekąski i dania gotowe z odbiorem osobistym.",
       "ogImageUrl": null,
       "canonical": "https://kenmito.enail.pro"
     },
@@ -815,6 +815,6 @@
     }
   },
   "version": 26,
-  "updatedAt": "2026-06-18T18:14:47.639Z",
+  "updatedAt": "2026-06-25T05:51:45.255Z",
   "publishedAt": "2026-06-18T11:35:41.982Z"
 }
