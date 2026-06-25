@@ -10,36 +10,36 @@
   --font-display: 'Fraunces', Georgia, serif;
   --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
 
-  /* Grocery-focused earthy green palette */
-  --color-primary: #16a34a;
-  --color-primary-hover: #15803d;
-  --color-primary-light: #dcfce7;
-  --color-background: #fafaf9;
-  --color-foreground: #1c1917;
-  --color-muted: #f5f5f4;
-  --color-muted-foreground: #78716c;
-  --color-border: #e7e5e4;
+  /* Asia Deli Go fallback palette. Runtime config can still override these tokens. */
+  --color-primary: #169B45;
+  --color-primary-hover: #0F7A35;
+  --color-primary-light: #e4f6e9;
+  --color-background: #fbfdfa;
+  --color-foreground: #111111;
+  --color-muted: #f5f5f2;
+  --color-muted-foreground: #6f6a62;
+  --color-border: #e6e3dc;
   --color-card: #ffffff;
-  --color-card-foreground: #1c1917;
-  --color-accent: #f0fdf4;
-  --color-accent-foreground: #14532d;
-  --color-destructive: #dc2626;
-  --color-ring: #16a34a;
+  --color-card-foreground: #111111;
+  --color-accent: #eef9ef;
+  --color-accent-foreground: #0F5C2A;
+  --color-destructive: #E30613;
+  --color-ring: #169B45;
 
   /* Freshness indicators */
-  --color-fresh: #16a34a;
-  --color-fresh-bg: #dcfce7;
-  --color-fresh-text: #166534;
+  --color-fresh: #169B45;
+  --color-fresh-bg: #e4f6e9;
+  --color-fresh-text: #0F5C2A;
   --color-expiring-soon: #ca8a04;
   --color-expiring-bg: #fef9c3;
   --color-expiring-text: #854d0e;
-  --color-last-chance: #dc2626;
+  --color-last-chance: #E30613;
   --color-last-chance-bg: #fee2e2;
   --color-last-chance-text: #991b1b;
   --page-background:
-    radial-gradient(circle at top left, rgba(22, 163, 74, 0.14), transparent 28%),
-    radial-gradient(circle at top right, rgba(59, 130, 246, 0.1), transparent 24%),
-    linear-gradient(180deg, #ffffff 0%, #f7faf7 52%, #eef6f0 100%);
+    radial-gradient(circle at top left, rgba(22, 155, 69, 0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(227, 6, 19, 0.07), transparent 24%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdfa 52%, #eef6ef 100%);
 
   /* Storage zones */
   --color-frozen: #3b82f6;
@@ -69,8 +69,8 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --color-primary: #22c55e;
-  --color-primary-hover: #16a34a;
+  --color-primary: #32bf62;
+  --color-primary-hover: #169B45;
   --color-primary-light: #052e16;
   --color-background: #1c1917;
   --color-foreground: #fafaf9;
@@ -90,8 +90,8 @@
   --color-last-chance-text: #fca5a5;
   --color-ambient: #f59e0b;
   --page-background:
-    radial-gradient(circle at top left, rgba(34, 197, 94, 0.16), transparent 24%),
-    radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 22%),
+    radial-gradient(circle at top left, rgba(50, 191, 98, 0.16), transparent 24%),
+    radial-gradient(circle at top right, rgba(227, 6, 19, 0.12), transparent 22%),
     linear-gradient(180deg, #090b0a 0%, #111513 48%, #19130f 100%);
 }
 

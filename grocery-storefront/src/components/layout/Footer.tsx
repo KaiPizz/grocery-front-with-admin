@@ -35,6 +35,7 @@ export function Footer() {
 
   const storeName = siteConfig?.branding?.storeName || 'Grocery';
   const logoUrl = siteConfig?.branding?.logoUrl;
+  const logoText = logoUrl && storeName.trim().toLowerCase() === 'asia deli go' ? 'Go' : storeName;
   const footerCfg = siteConfig?.layout?.footer;
   const tagline = footerCfg?.tagline || t('tagline');
   const socialLinks = siteConfig?.general?.socialLinks ?? [];
@@ -123,7 +124,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               {logoUrl ? (
-                <img src={logoUrl} alt={storeName} className="h-9 w-auto rounded-xl" />
+                <img src={logoUrl} alt={storeName} className="h-12 max-w-[8.5rem] w-auto rounded-lg object-contain" />
               ) : (
                 <div
                   className="w-9 h-9 rounded-xl flex items-center justify-center"
@@ -132,8 +133,11 @@ export function Footer() {
                   <Leaf className="w-4 h-4 text-white" aria-hidden="true" />
                 </div>
               )}
-              <span className="font-display font-bold text-lg tracking-tight" style={{ color: 'var(--color-foreground)' }}>
-                {storeName}
+              <span
+                className="font-display text-lg font-bold tracking-tight"
+                style={{ color: logoText === 'Go' ? 'var(--color-primary)' : 'var(--color-foreground)' }}
+              >
+                {logoText}
               </span>
             </div>
             <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-muted-foreground)' }}>

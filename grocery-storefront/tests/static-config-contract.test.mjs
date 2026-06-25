@@ -5,6 +5,8 @@ import assert from 'node:assert/strict';
 const serverConfigSource = readFileSync(new URL('../src/lib/storefront-config.ts', import.meta.url), 'utf8');
 const clientProviderSource = readFileSync(new URL('../src/components/ConfigProvider.tsx', import.meta.url), 'utf8');
 const staticConfigUrl = new URL('../public/config/kenmito.json', import.meta.url);
+const plMessages = readFileSync(new URL('../src/messages/pl.json', import.meta.url), 'utf8');
+const enMessages = readFileSync(new URL('../src/messages/en.json', import.meta.url), 'utf8');
 
 test('storefront can load a static config source when no admin config API is configured', () => {
   assert.match(serverConfigSource, /NEXT_PUBLIC_STATIC_CONFIG_URL/);
@@ -41,4 +43,11 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.equal(config.commercial.quickLinks.some((link) => link.kind === 'outlet' && link.enabled), false);
   assert.equal(footerLinks.some((link) => link.label === 'Kontakt' && link.href === '/privacy'), false);
   assert.equal(footerLinks.some((link) => link.label === 'Dostawa' && link.href === '/terms'), false);
+});
+
+test('homepage campaign copy uses Asia Deli Go branding', () => {
+  assert.match(plMessages, /Wybór Asia Deli Go/);
+  assert.match(enMessages, /Asia Deli Go picks/);
+  assert.doesNotMatch(plMessages, /Wybór Kenmito/);
+  assert.doesNotMatch(enMessages, /Kenmito picks/);
 });

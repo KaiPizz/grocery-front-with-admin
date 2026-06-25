@@ -51,6 +51,7 @@ export function Header() {
 
   const storeName = siteConfig?.branding?.storeName || 'Grocery';
   const logoUrl = siteConfig?.branding?.logoUrl;
+  const logoText = logoUrl && storeName.trim().toLowerCase() === 'asia deli go' ? 'Go' : storeName;
   const headerCfg = siteConfig?.layout?.header;
 
   const hrefToI18n: Record<string, string> = {
@@ -355,9 +356,13 @@ export function Header() {
         className="container-grocery flex items-center justify-between gap-4"
         style={{ height: 'var(--header-main-height)' }}
       >
-        <Link href="/" className="flex items-center gap-2.5 shrink-0 group" aria-label={`${storeName} Home`}>
+        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2.5 group" aria-label={`${storeName} Home`}>
           {logoUrl ? (
-            <img src={logoUrl} alt={storeName} className="h-9 w-auto rounded-xl transition-transform duration-fast group-hover:scale-105" />
+            <img
+              src={logoUrl}
+              alt={storeName}
+              className="h-10 max-w-[7.5rem] w-auto rounded-lg object-contain transition-transform duration-fast group-hover:scale-105 sm:max-w-[8rem]"
+            />
           ) : (
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center transition-transform duration-fast group-hover:scale-105"
@@ -366,8 +371,11 @@ export function Header() {
               <Leaf className="w-5 h-5 text-white" />
             </div>
           )}
-          <span className="block max-w-[6.75rem] truncate font-display text-base font-bold tracking-tight sm:max-w-none sm:text-lg" style={{ color: 'var(--color-foreground)' }}>
-            {storeName}
+          <span
+            className="block max-w-[6.75rem] truncate font-display text-base font-bold tracking-tight sm:max-w-none sm:text-lg"
+            style={{ color: logoText === 'Go' ? 'var(--color-primary)' : 'var(--color-foreground)' }}
+          >
+            {logoText}
           </span>
         </Link>
 
