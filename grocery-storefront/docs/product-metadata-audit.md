@@ -1,6 +1,6 @@
 # Product Metadata Audit
 
-Generated: 2026-06-25T17:35:44.223Z
+Generated: 2026-06-25T18:41:23.674Z
 Channel: kenmito
 Endpoint: https://zira-ai.com/graphql/storefront
 Inspected products: 1784 / 1784
@@ -18,7 +18,7 @@ This is a read-only dry-run report. It does not mutate product data.
 | ingredients | 1598 | 186 | 90% |
 | allergens | 0 | 1784 | 0% |
 | nutritionFacts | 0 | 1784 | 0% |
-| countryOfOrigin | 1679 | 105 | 94% |
+| countryOfOrigin | 1694 | 90 | 95% |
 | storageZone | 0 | 1784 | 0% |
 | unitPrice | 1588 | 196 | 89% |
 | category | 1784 | 0 | 100% |
@@ -28,7 +28,7 @@ This is a read-only dry-run report. It does not mutate product data.
 - unitPrice: 196 products missing
 - allergens: 1784 products missing
 - nutritionFacts: 1784 products missing
-- countryOfOrigin: 105 products missing
+- countryOfOrigin: 90 products missing
 - storageZone: 1784 products missing
 
 ## Sample Products With Missing Data
@@ -58,8 +58,8 @@ This is a read-only dry-run report. It does not mutate product data.
 | Baza do zupy hot pot, ostra (medium hot) 220g - HAIDILAO | buliony | KIMCHI-5721 | allergens, nutritionFacts, storageZone |
 | Baza do zupy hot pot w kostkach, ostra 4x90g (360g) - HAIDILAO | buliony | KIMCHI-5720 | allergens, nutritionFacts, storageZone |
 | Baza do zupy, pasta do Hot Pot po syczuańsku 70g - Lee Kum Kee | pasty-smakowe | KIMCHI-2004 | allergens, nutritionFacts, storageZone |
-| Baza do zupy Pho, łagodna 80g - Sen Soy | buliony | KIMCHI-2578 | allergens, nutritionFacts, countryOfOrigin, storageZone |
-| Baza do zupy Tom Yum, łagodna 80g - Sen Soy | buliony | KIMCHI-2579 | allergens, nutritionFacts, countryOfOrigin, storageZone |
+| Baza do zupy Pho, łagodna 80g - Sen Soy | buliony | KIMCHI-2578 | allergens, nutritionFacts, storageZone |
+| Baza do zupy Tom Yum, łagodna 80g - Sen Soy | buliony | KIMCHI-2579 | allergens, nutritionFacts, storageZone |
 | BBQ Tteokbokki, kluski ryżowe w sosie barbecue 260g - O'Food | dania-gotowe | KIMCHI-4595 | allergens, nutritionFacts, storageZone |
 | Bento Squid Snack Sweet & Spicy, przekąska z kałamarnicy słodko-ostra 20g - Bento & Co | dania-gotowe | KIMCHI-4437 | allergens, nutritionFacts, storageZone |
 | Bibim Men, makaron w słodko-ostrym sosie 130g - Paldo | ramyun-ramen | KIMCHI-1136 | allergens, nutritionFacts, storageZone |

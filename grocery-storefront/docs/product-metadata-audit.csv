@@ -22,8 +22,8 @@ ae4fe4e9-04e4-4d1d-becf-ec16718eef46,KIMCHI-5463,Aqua Petit BB 30ml - lekki krem
 a1174ab6-9194-4509-898d-e5d7237173bb,KIMCHI-5721,"Baza do zupy hot pot, ostra (medium hot) 220g - HAIDILAO",buliony,KIMCHI-5721,allergens|nutritionFacts|storageZone,Chiny,KG,90.45
 2430258e-f9a6-4e22-8168-903c6f9c773e,KIMCHI-5720,"Baza do zupy hot pot w kostkach, ostra 4x90g (360g) - HAIDILAO",buliony,KIMCHI-5720,allergens|nutritionFacts|storageZone,Chiny,KG,88.61
 d7190b58-a944-4fbc-a488-f56c7abd6435,KIMCHI-2004,"Baza do zupy, pasta do Hot Pot po syczuańsku 70g - Lee Kum Kee",pasty-smakowe,KIMCHI-2004,allergens|nutritionFacts|storageZone,Chiny,KG,140
-dda2f6bc-84b6-4ecb-afe1-e3c4d36882fd,KIMCHI-2578,"Baza do zupy Pho, łagodna 80g - Sen Soy",buliony,KIMCHI-2578,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,92.5
-c9fb3005-1b8c-440e-8390-122b1c88a26a,KIMCHI-2579,"Baza do zupy Tom Yum, łagodna 80g - Sen Soy",buliony,KIMCHI-2579,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,92.5
+dda2f6bc-84b6-4ecb-afe1-e3c4d36882fd,KIMCHI-2578,"Baza do zupy Pho, łagodna 80g - Sen Soy",buliony,KIMCHI-2578,allergens|nutritionFacts|storageZone,Wietnam,KG,92.5
+c9fb3005-1b8c-440e-8390-122b1c88a26a,KIMCHI-2579,"Baza do zupy Tom Yum, łagodna 80g - Sen Soy",buliony,KIMCHI-2579,allergens|nutritionFacts|storageZone,Tajlandia,KG,92.5
 8f609ee0-5dc2-437f-bee9-d5f9f80ad85e,KIMCHI-4595,"BBQ Tteokbokki, kluski ryżowe w sosie barbecue 260g - O'Food",dania-gotowe,KIMCHI-4595,allergens|nutritionFacts|storageZone,Korea Południowa,KG,118.85
 f530e430-4d1d-42d4-a1d3-d33d90b0a395,KIMCHI-4437,"Bento Squid Snack Sweet & Spicy, przekąska z kałamarnicy słodko-ostra 20g - Bento & Co",dania-gotowe,KIMCHI-4437,allergens|nutritionFacts|storageZone,Tajlandia,KG,480
 ef3cba79-21dc-412d-8924-144a806c4d07,KIMCHI-1136,"Bibim Men, makaron w słodko-ostrym sosie 130g - Paldo",ramyun-ramen,KIMCHI-1136,allergens|nutritionFacts|storageZone,Korea Południowa,KG,46.08
@@ -53,7 +53,7 @@ a36356e3-c4dd-445c-a484-dcec777db747,KIMCHI-2808,Bulion Dashida o smaku wołowym
 ebf50b98-1f86-4a59-ac87-7b539e31581c,KIMCHI-5511,Bulion do zupy Ramen Miso 440ml - ITA-SAN,ramyun-ramen,KIMCHI-5511,allergens|nutritionFacts|storageZone,Japonia,LITER,63.41
 121f4ca6-8d4f-4bc1-b6eb-507949e235c9,KIMCHI-5512,Bulion do zupy Ramen Shoyu 440ml - ITA-SAN,ramyun-ramen,KIMCHI-5512,allergens|nutritionFacts|storageZone,Niemcy,LITER,63.41
 b6b85c6e-aafb-4b49-add3-35cd1cfd4768,KIMCHI-5513,Bulion do zupy Ramen Tonkotsu 440ml - ITA-SAN,ramyun-ramen,KIMCHI-5513,allergens|nutritionFacts|storageZone,Niemcy,LITER,63.41
-cbc0def5-3404-45ce-9923-d8a8b3f34bc5,KIMCHI-4682,Bulion drobiowy w proszku 250g - Ajinomoto,buliony,KIMCHI-4682,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,131.6
+cbc0def5-3404-45ce-9923-d8a8b3f34bc5,KIMCHI-4682,Bulion drobiowy w proszku 250g - Ajinomoto,buliony,KIMCHI-4682,allergens|nutritionFacts|storageZone,Japonia,KG,131.6
 d3e83479-2ed9-4755-89b8-147e14312ab3,KIMCHI-4769,Bulion Hondashi z dodatkiem tuńczyka bonito 40g - Ajinomoto,buliony,KIMCHI-4769,allergens|nutritionFacts|storageZone,Japonia,KG,422.5
 6968ebdd-0942-43f6-b224-09e9624a77c5,KIMCHI-5545,"Bulion, koncentrat Dashi no Moto z wodorostów kombu 1kg - Shimaya",buliony,KIMCHI-5545,allergens|nutritionFacts|storageZone,Japonia,KG,96
 9f961137-4bb6-409e-8310-32613955ef8a,KIMCHI-5169,Bulion rybny gotowy Bonito Somi Tsuyu 500ml - Somi Food,ramyun-ramen,KIMCHI-5169,allergens|nutritionFacts|storageZone,Japonia,LITER,97.2
@@ -303,8 +303,8 @@ ddb76012-c5ea-4968-a0e9-02fd31742a1f,KIMCHI-1093,Glony do sushi Yaki Nori GOLD 5
 83158f9d-da2a-4cd7-acbe-e486b3819dca,KIMCHI-2650,Glony do sushi Yaki Nori GOLD 5 x 10 szt. - KC,arkusze-nori-gim,KIMCHI-2650,allergens|nutritionFacts|storageZone|unitPrice,Korea Południowa,,
 0a83c9a5-8292-424b-b300-291fade4a1ec,KIMCHI-5234,"Glony nori prażone z przyprawami 48 x 3,5g - Dongwon",słodycze-przekąski,KIMCHI-5234,allergens|nutritionFacts|storageZone,Korea Południowa,KG,744.05
 b1525c0c-150e-4ec3-8ea7-35d3bd6d19ec,KIMCHI-2326,"Glony Yaki Sushi Nori Gold, 50 szt. - Nobi",arkusze-nori-gim,KIMCHI-2326,allergens|nutritionFacts|storageZone|unitPrice,Korea Południowa,,
-1ac37bfa-e68d-4768-b780-2575f93a123a,KIMCHI-2329,"Glutaminian sodu, Aji-no-Moto MSG 200g - Ajinomoto",przyprawy,KIMCHI-2329,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,39
-91a4b6de-81e3-4c1a-9acc-536964cae9a5,KIMCHI-2518,"Glutaminian sodu, Aji-no-Moto MSG 454g - Ajinomoto",przyprawy,KIMCHI-2518,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,30.81
+1ac37bfa-e68d-4768-b780-2575f93a123a,KIMCHI-2329,"Glutaminian sodu, Aji-no-Moto MSG 200g - Ajinomoto",przyprawy,KIMCHI-2329,allergens|nutritionFacts|storageZone,Francja,KG,39
+91a4b6de-81e3-4c1a-9acc-536964cae9a5,KIMCHI-2518,"Glutaminian sodu, Aji-no-Moto MSG 454g - Ajinomoto",przyprawy,KIMCHI-2518,allergens|nutritionFacts|storageZone,Francja,KG,30.81
 5c5b4fa3-3fe7-4d11-b3ea-8dc11b12c3dc,KIMCHI-4916,"Gochujang Gluten Free Vegan Non-GMO, ostra pasta paprykowa bez glutenu 250g - Sempio",pasty-smakowe,KIMCHI-4916,allergens|nutritionFacts|storageZone,Korea Południowa,KG,67.6
 14e306dd-bfa9-4e42-9a6e-203df73dba27,KIMCHI-3809,Golden Curry Extra Hot (bardzo ostre) 220g - S&B - danie w 30 min,pasty-smakowe,KIMCHI-3809,allergens|nutritionFacts|storageZone,Japonia,KG,106.82
 9e07feb7-7dfb-48e7-85bf-dbeed6bb7c7b,KIMCHI-1853,Golden Curry Hot (ostre) 220g - S&B - danie w 30 min,pasty-smakowe,KIMCHI-1853,allergens|nutritionFacts|storageZone,Japonia,KG,95.41
@@ -975,7 +975,7 @@ b0f5bfc3-5959-4f3d-b8ce-95c0c589fa9e,KIMCHI-5024,Papryka Gochugaru do kimchi 500
 388b4226-7d90-441f-a0f0-95616db9a0b7,KIMCHI-1324,Papryka Gochugaru do kimchi 500g - Lim-Ga-Ne,przyprawy,KIMCHI-1324,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,79.98
 34717b00-9905-410c-9334-38a545df6271,KIMCHI-749,Papryka Gochugaru do kimchi 500g - PanAsia,przyprawy,KIMCHI-749,allergens|nutritionFacts|storageZone,Chiny,KG,59
 641da6a3-53a1-46c5-8a50-ebbc5944a478,KIMCHI-5828,Papryka Gochugaru do kimchi płatki 454g - Delief,przyprawy,KIMCHI-5828,allergens|nutritionFacts|storageZone,Korea Południowa,KG,52.64
-5c9eb798-b5ed-480d-b11a-acb9e8485814,KIMCHI-5378,Papryka Gochugaru do kimchi płatki 454g - Nongshim,przyprawy,KIMCHI-5378,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,59.45
+5c9eb798-b5ed-480d-b11a-acb9e8485814,KIMCHI-5378,Papryka Gochugaru do kimchi płatki 454g - Nongshim,przyprawy,KIMCHI-5378,allergens|nutritionFacts|storageZone,Chiny,KG,59.45
 b64b3c82-0dce-4cc7-8544-06576ded3741,KIMCHI-2972,"Papryka gochugaru, grubo mielona 100g - Asia Kitchen",przyprawy,KIMCHI-2972,allergens|nutritionFacts|storageZone,Chiny,KG,75
 dad1067d-35d7-4f3c-b335-434c2a0f99e0,KIMCHI-2973,"Papryka gochugaru, grubo mielona 500g - Asia Kitchen",przyprawy,KIMCHI-2973,allergens|nutritionFacts|storageZone,Chiny,KG,51.8
 9d856122-e046-4663-9b48-d4793a3d6379,KIMCHI-2707,"Papryka Gochugaru, grubo mielone płatki chili 200g -  Asia Foods",przyprawy,KIMCHI-2707,allergens|nutritionFacts|storageZone,Chiny,KG,69.5
@@ -1098,7 +1098,7 @@ c247e939-2734-416a-8785-e92228c5461e,KIMCHI-4013,"Pocket Onigiri Kombu, kulka ry
 12bc3d90-4469-4ee5-94b6-0684180194c5,KIMCHI-4010,"Pocket Onigiri Wakame, kulka ryżowa instant z algami 42g - Onisi",dania-gotowe,KIMCHI-4010,allergens|nutritionFacts|storageZone,Japonia,KG,440.48
 1f77cc6c-5b37-4b7a-a1cf-06041aa94e84,KIMCHI-903,"Pocky Double Choco, kakaowe paluszki z kremem czekoladowym 39g - Glico",słodycze-przekąski,KIMCHI-903,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,223.08
 7d465300-62c9-46d0-9fe2-0ff941f5be02,KIMCHI-5479,Pocky paluszki o smaku brzoskwiniowym Peach Flavor 55g - Glico,słodycze-przekąski,KIMCHI-5479,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,227.27
-86559a55-3cd4-46e1-a962-dac1028012ea,KIMCHI-5480,Pocky paluszki o smaku owoców leśnych Blueberry & Raspberry Flavour 55g - Glico,słodycze-przekąski,KIMCHI-5480,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,227.27
+86559a55-3cd4-46e1-a962-dac1028012ea,KIMCHI-5480,Pocky paluszki o smaku owoców leśnych Blueberry & Raspberry Flavour 55g - Glico,słodycze-przekąski,KIMCHI-5480,allergens|nutritionFacts|storageZone,Tajlandia,KG,227.27
 20555e2a-353a-4eb4-b1aa-a467751da671,KIMCHI-3633,Podstawka hashi-oki pod pałeczki Maneki Neko - 1 sztuka,pałeczki-i-sztućce,KIMCHI-3633,ingredients|allergens|nutritionFacts|countryOfOrigin|storageZone|unitPrice,,,
 1c33534d-893e-4684-a7b5-c280df9e2c30,KIMCHI-3634,Podstawka hashi-oki pod pałeczki Panda - 1 sztuka,pałeczki-i-sztućce,KIMCHI-3634,ingredients|allergens|nutritionFacts|countryOfOrigin|storageZone|unitPrice,,,
 64b3495b-cd86-4cea-b48d-88376b7cbbb2,KIMCHI-5356,"Podstawka, pierścień stabilizujący do woka 23-26cm",patelnie-wok-grill,KIMCHI-5356,ingredients|allergens|nutritionFacts|storageZone|unitPrice,Chiny,,
@@ -1299,7 +1299,7 @@ a418903f-3562-42dc-b9a4-b02c4aa9d136,KIMCHI-440,"Sos chili Sriracha z czosnkiem,
 39090034-fe6f-44dd-93af-8b9661578a96,KIMCHI-1287,"Sos chili z czosnkiem, pikantny 368g - Lee Kum Kee",sosy-marynaty,KIMCHI-1287,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,47.55
 ac86660f-11d0-4217-b1de-e9a7543d17d1,KIMCHI-1290,"Sos Cho Gochujang, ostro-kwaśny 300g - CJO Classic",sosy-marynaty,KIMCHI-1290,allergens|nutritionFacts|storageZone,Korea Południowa,KG,45.67
 4e84e84d-2447-43b2-809b-99e363fdb680,KIMCHI-3912,Sos czosnkowy 400g - Fanex,sosy-marynaty,KIMCHI-3912,allergens|nutritionFacts|storageZone,Polska,KG,27.47
-18a7b5c7-48ae-4c0f-9f64-68c287ac33fd,KIMCHI-2577,"Sos do dań z woka, łagodny 80g - Sen Soy",sosy-marynaty,KIMCHI-2577,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,92.5
+18a7b5c7-48ae-4c0f-9f64-68c287ac33fd,KIMCHI-2577,"Sos do dań z woka, łagodny 80g - Sen Soy",sosy-marynaty,KIMCHI-2577,allergens|nutritionFacts|storageZone,Chiny,KG,92.5
 ac5f717d-5b27-4bcc-9471-f51b046b47c3,KIMCHI-2538,Sos do makaronu Pad Thai 80g - Sen Soy,sosy-marynaty,KIMCHI-2538,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,92.5
 849b967b-398f-4639-bba2-c4254162b5b1,KIMCHI-1387,"Sos do Sindangdong Topokki, saszetka 180g - Sempio",sosy-marynaty,KIMCHI-1387,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,75
 abb37ea8-e700-4d1c-a5bc-2d953fa3d940,KIMCHI-1389,"Sos do topokki Spicy, saszetka 150g - Sempio",sosy-marynaty,KIMCHI-1389,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,66.6
@@ -1338,7 +1338,7 @@ ad8a2072-50e9-4e07-8096-4af46cf4ab89,KIMCHI-5297,Sos ostrygowy Panda 255g - Lee 
 9685e82f-fcf2-40ab-b3bc-83874eb07b4f,KIMCHI-4172,Sos ostrygowy Panda 510g - Lee Kum Kee,sosy-marynaty,KIMCHI-4172,allergens|nutritionFacts|storageZone,Hong Kong,KG,31.35
 c6f46e0f-1675-4434-b055-7f5f8191a654,KIMCHI-2635,Sos ostrygowy Premium 255g - Lee Kum Kee,sosy-marynaty,KIMCHI-2635,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,78.39
 ad65a47f-1298-42ed-bd0f-36e9876cce25,KIMCHI-5558,Sos ostrygowy wegański 260g - Lee Kum Kee,sosy-marynaty,KIMCHI-5558,allergens|nutritionFacts|storageZone,Chiny,KG,49.96
-24754319-d2c3-424f-96b3-248775dd4ccb,KIMCHI-3155,Sos Pad Thai do gotowania 330g - Sen Soy,sosy-marynaty,KIMCHI-3155,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,40.61
+24754319-d2c3-424f-96b3-248775dd4ccb,KIMCHI-3155,Sos Pad Thai do gotowania 330g - Sen Soy,sosy-marynaty,KIMCHI-3155,allergens|nutritionFacts|storageZone,Tajlandia,KG,40.61
 14921593-8444-427d-a63a-32826a395a24,KIMCHI-3108,Sos rybny 200ml - Asia Kitchen,sosy-marynaty,KIMCHI-3108,allergens|nutritionFacts|storageZone,Tajlandia,LITER,52.5
 2ed445d6-f7f7-41a1-822c-509dda9f18a2,KIMCHI-3499,Sos rybny 200ml - House of Asia,sosy-marynaty,KIMCHI-3499,allergens|nutritionFacts|storageZone,Tajlandia,LITER,72.5
 933817f4-574d-4411-8c83-59b5d406111b,KIMCHI-154,Sos rybny 300ml Squid,sosy-marynaty,KIMCHI-154,allergens|nutritionFacts|storageZone,Tajlandia,LITER,28.67
@@ -1397,7 +1397,7 @@ f2d4144a-7e0e-443e-bfac-703313735954,KIMCHI-1137,Sos sojowy Koikuchi z dyspenser
 367f9b17-18bc-4c05-887d-17eabad15863,KIMCHI-2602,"Sos sojowy - mniej soli, długo warzony 150ml - Sen Soy",sos-sojowy,KIMCHI-2602,allergens|nutritionFacts|countryOfOrigin|storageZone,,LITER,73.27
 0139efc2-ffed-41f3-8f01-b2813b647923,KIMCHI-2459,"Sos sojowy - mniej soli, naturalnie warzony 220ml - Sen Soy",sos-sojowy,KIMCHI-2459,allergens|nutritionFacts|countryOfOrigin|storageZone,,LITER,39.55
 da0bb923-fa21-4d03-95d7-e26ce81f5276,KIMCHI-1007,"Sos sojowy, najlepszy do zup 860ml - Sempio",sos-sojowy,KIMCHI-1007,allergens|nutritionFacts|storageZone,Korea Południowa,LITER,25
-f0f876e3-9b00-468a-9e19-407856bfb253,KIMCHI-2458,"Sos sojowy, naturalnie warzony 1L - Sen Soy",sos-sojowy,KIMCHI-2458,allergens|nutritionFacts|countryOfOrigin|storageZone,,LITER,16.99
+f0f876e3-9b00-468a-9e19-407856bfb253,KIMCHI-2458,"Sos sojowy, naturalnie warzony 1L - Sen Soy",sos-sojowy,KIMCHI-2458,allergens|nutritionFacts|storageZone,Japonia,LITER,16.99
 9d96ed24-853b-428d-9e82-79520409a56c,KIMCHI-1541,Sos sojowy o zmniejszonej zawartości soli 150ml - Kikkoman,sos-sojowy,KIMCHI-1541,allergens|nutritionFacts|countryOfOrigin|storageZone,,LITER,131.33
 4dc54c0a-34a7-40be-8358-112d5c7f4a87,KIMCHI-1619,Sos sojowy o zmniejszonej zawartości soli 975ml - Kikkoman,sos-sojowy,KIMCHI-1619,allergens|nutritionFacts|countryOfOrigin|storageZone,,LITER,48.1
 bb87d9f4-ef07-4938-a5a2-6f830b0bca3e,KIMCHI-3185,Sos sojowy Premium 1l - Asia Kitchen,sosy-sojowe,KIMCHI-3185,allergens|nutritionFacts|storageZone,Chiny,LITER,20.5
@@ -1416,10 +1416,10 @@ f2223a24-1194-418a-8d97-e57b656dfc17,KIMCHI-5477,"Sos Sriracha Mayo, ostry 215g 
 5b7e68dc-3a29-4bea-8e19-cd049696fb02,KIMCHI-741,"Sos Teriyaki, gęsty 150ml - House of Asia",sosy-marynaty-oleje,KIMCHI-741,allergens|nutritionFacts|storageZone,Chiny,LITER,81.33
 3ace9975-74c6-4b7e-acc4-906551fca882,KIMCHI-4902,"Sos Teriyaki, gęsty 1L - Asia Kitchen",sosy-marynaty-oleje,KIMCHI-4902,allergens|nutritionFacts|storageZone,Chiny,LITER,27.5
 30849b3d-495d-4a3e-994e-83af1f810c42,KIMCHI-327,"Sos Teriyaki, gęsty 200g - Lee Kum Kee",sosy-marynaty,KIMCHI-327,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,67.5
-97e07e17-aaa1-4876-bca5-97ab2a0e295d,KIMCHI-3156,"Sos Teriyaki, gęsty 330g - Sen Soy",sosy-marynaty,KIMCHI-3156,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,43.94
+97e07e17-aaa1-4876-bca5-97ab2a0e295d,KIMCHI-3156,"Sos Teriyaki, gęsty 330g - Sen Soy",sosy-marynaty,KIMCHI-3156,allergens|nutritionFacts|storageZone,Japonia,KG,43.94
 9f585e9c-6388-4356-9d9f-b7cc598769d6,KIMCHI-2271,"Sos Teriyaki, gęsty 500ml - Asia Kitchen",sosy-marynaty-oleje,KIMCHI-2271,allergens|nutritionFacts|storageZone,Chiny,LITER,34.4
 a81576f3-2885-4aaa-bc1e-baae91769340,KIMCHI-5569,Sos Teriyaki gęsty słodko-słony 180g - Daisho,sosy-marynaty,KIMCHI-5569,allergens|nutritionFacts|storageZone,Japonia,KG,102.78
-ed979eb2-c1d7-446b-b63f-6c22f4896eb1,KIMCHI-3088,"Sos Teriyaki, japońska marynata 1L - Sen Soy",sosy-marynaty,KIMCHI-3088,allergens|nutritionFacts|countryOfOrigin|storageZone,,LITER,19.9
+ed979eb2-c1d7-446b-b63f-6c22f4896eb1,KIMCHI-3088,"Sos Teriyaki, japońska marynata 1L - Sen Soy",sosy-marynaty,KIMCHI-3088,allergens|nutritionFacts|storageZone,Japonia,LITER,19.9
 daec7a49-7cdb-4605-8a3d-d1892f7d71cf,KIMCHI-2460,"Sos Teriyaki, japońska marynata 220ml - Sen Soy",sosy-marynaty,KIMCHI-2460,allergens|nutritionFacts|countryOfOrigin|storageZone,,LITER,49.55
 3c0c2b64-da21-4587-ab04-250930861416,KIMCHI-3218,Sos Teriyaki z sezamem 220ml - Sen Soy,sosy-marynaty,KIMCHI-3218,allergens|nutritionFacts|countryOfOrigin|storageZone,,LITER,50.91
 5ba52edf-52ca-4fb1-8f90-75e26b724176,KIMCHI-5361,"Sos Toban Djan, ostre chili z bobem 1kg - Lee Kum Kee",pasty-smakowe,KIMCHI-5361,allergens|nutritionFacts|storageZone,Chiny,KG,46
@@ -1729,9 +1729,9 @@ ec6b0385-6731-4979-955e-3e4a2bcbd3ce,KIMCHI-4734,"Zupa makaronowa Bodle Bodle Ch
 c7c5214c-bbda-47d2-8573-282a68f0c02a,KIMCHI-800,"Zupa makaronowa Champong Ramyun z owocami morza, ostra 124g - Nongshim",ramyun-ramen,KIMCHI-800,allergens|nutritionFacts|storageZone,Korea Południowa,KG,64.44
 4a561e87-71ce-478a-87fa-f2cc4830cd9e,KIMCHI-3071,Zupa makaronowa Demae Ramen o smaku kaczki 100g - Nissin,ramyun-ramen,KIMCHI-3071,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,53
 02c517b1-1b8f-4085-9465-f573d043f844,KIMCHI-3267,Zupa makaronowa Demae Ramen o smaku miso 100g - Nissin,ramyun-ramen,KIMCHI-3267,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,53
-310a5183-c496-4bf6-8c31-b522d07d9ec7,KIMCHI-3605,Zupa makaronowa Demae Ramen o smaku sezamowym 100g - Nissin,ramyun-ramen,KIMCHI-3605,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,54
-b7740e49-dbd1-4afd-8eb9-167a77108beb,KIMCHI-3270,Zupa makaronowa Demae Ramen o smaku tonkotsu 100g - Nissin,ramyun-ramen,KIMCHI-3270,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,53
-c5e4988c-8f84-4a07-a825-1f87fd41618d,KIMCHI-2994,Zupa makaronowa Demae Ramen o smaku wołowiny 100g - Nissin,ramyun-ramen,KIMCHI-2994,allergens|nutritionFacts|countryOfOrigin|storageZone,,KG,53.9
+310a5183-c496-4bf6-8c31-b522d07d9ec7,KIMCHI-3605,Zupa makaronowa Demae Ramen o smaku sezamowym 100g - Nissin,ramyun-ramen,KIMCHI-3605,allergens|nutritionFacts|storageZone,Japonia,KG,54
+b7740e49-dbd1-4afd-8eb9-167a77108beb,KIMCHI-3270,Zupa makaronowa Demae Ramen o smaku tonkotsu 100g - Nissin,ramyun-ramen,KIMCHI-3270,allergens|nutritionFacts|storageZone,Japonia,KG,53
+c5e4988c-8f84-4a07-a825-1f87fd41618d,KIMCHI-2994,Zupa makaronowa Demae Ramen o smaku wołowiny 100g - Nissin,ramyun-ramen,KIMCHI-2994,allergens|nutritionFacts|storageZone,Japonia,KG,53.9
 40db8d7c-0fc0-4f2f-90ba-7ab3b0f48483,KIMCHI-4849,Zupa makaronowa instant o smaku kurczaka 5 x 70g - Indomie,ramyun-ramen,KIMCHI-4849,allergens|nutritionFacts|storageZone,Indonezja,KG,39.71
 952a07f4-9dbf-4aca-a33f-0f57c3db7526,KIMCHI-5177,Zupa makaronowa instant o smaku kurczaka Special Chicken 5 x 75g - Indomie,ramyun-ramen,KIMCHI-5177,allergens|nutritionFacts|storageZone,Indonezja,KG,37.07
 fd1bbe7b-7910-4b9e-922c-5100c3bddfd1,KIMCHI-4795,Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie,ramyun-ramen,KIMCHI-4795,allergens|nutritionFacts|storageZone,Indonezja,KG,26.33
