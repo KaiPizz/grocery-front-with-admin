@@ -25,6 +25,8 @@ interface CategoriesResponse {
   } | null;
 }
 
+const CATEGORY_METADATA_REVALIDATE_SECONDS = 300;
+
 function formatProductCount(locale: string, count: number) {
   if (locale === 'pl') {
     if (count === 1) return '1 produkt';
@@ -46,7 +48,16 @@ export default async function CategoriesPage() {
     getTranslations('common'),
   ]);
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
-  const result = await serverGraphqlRequest<CategoriesResponse>(PUBLIC_CATEGORIES_QUERY, { channel });
+  const result = await serverGraphqlRequest<CategoriesResponse>(
+    PUBLIC_CATEGORIES_QUERY,
+    { channel },
+    {
+      next: {
+        revalidate: CATEGORY_METADATA_REVALIDATE_SECONDS,
+        tags: [`${channel}:public-categories`],
+      },
+    },
+  );
   const categories = result.data?.categories?.edges.map((edge) => edge.node) ?? [];
   const publicCategories = buildPublicCategories(categories, locale, { requireProductCount: false });
   const allCountsKnown = publicCategories.every((category) => getProductCount(category) !== null);

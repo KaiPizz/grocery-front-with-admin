@@ -10,6 +10,8 @@ import { buildPublicCategories, findPublicCategory } from '@/lib/public-taxonomy
 import type { GroceryProduct } from '@/types';
 
 const PAGE_SIZE = 24;
+const CATEGORY_METADATA_REVALIDATE_SECONDS = 300;
+const CATEGORY_PRODUCTS_REVALIDATE_SECONDS = 60;
 
 interface CategoryChildNode {
   id: string;
@@ -107,7 +109,16 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   ]);
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
   const categorySlug = decodeRouteSlug(params.slug);
-  const categoriesResult = await serverGraphqlRequest<CategoriesResponse>(PUBLIC_CATEGORIES_QUERY, { channel });
+  const categoriesResult = await serverGraphqlRequest<CategoriesResponse>(
+    PUBLIC_CATEGORIES_QUERY,
+    { channel },
+    {
+      next: {
+        revalidate: CATEGORY_METADATA_REVALIDATE_SECONDS,
+        tags: [`${channel}:public-categories`],
+      },
+    },
+  );
   const rawCategories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
   const publicCategories = buildPublicCategories(rawCategories, locale, { requireProductCount: false });
   const publicCategory = findPublicCategory(rawCategories, categorySlug, locale, { requireProductCount: false });
@@ -116,6 +127,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       channel,
       first: PAGE_SIZE,
       filter: { categories: publicCategory.rawCategoryIds },
+    }, {
+      next: {
+        revalidate: CATEGORY_PRODUCTS_REVALIDATE_SECONDS,
+        tags: [`${channel}:category-products:${publicCategory.slug}`],
+      },
     })
     : null;
   const result = publicCategory
@@ -124,6 +140,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       channel,
       slug: categorySlug,
       first: PAGE_SIZE,
+    }, {
+      next: {
+        revalidate: CATEGORY_PRODUCTS_REVALIDATE_SECONDS,
+        tags: [`${channel}:category:${categorySlug}`],
+      },
     });
   const category = result.data?.category ?? null;
   const publicProducts = publicProductsResult?.data?.products ?? null;

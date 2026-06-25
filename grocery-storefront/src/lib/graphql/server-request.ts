@@ -17,6 +17,14 @@ interface ServerGraphqlResult<TData> {
   errorMessage: string | null;
 }
 
+interface ServerGraphqlRequestOptions {
+  cache?: RequestCache;
+  next?: {
+    revalidate?: number;
+    tags?: string[];
+  };
+}
+
 const GRAPHQL_URL =
   process.env.NEXT_PUBLIC_GRAPHQL_URL || 'https://zira-ai.com/graphql/storefront';
 
@@ -47,16 +55,25 @@ function getGraphqlErrorMessage(errors: GraphQLErrorPayload[] | null | undefined
 export async function serverGraphqlRequest<TData>(
   query: string,
   variables: Record<string, unknown>,
+  options: ServerGraphqlRequestOptions = {},
 ): Promise<ServerGraphqlResult<TData>> {
   try {
-    const response = await fetch(GRAPHQL_URL, {
+    const requestInit: RequestInit & { next?: ServerGraphqlRequestOptions['next'] } = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store',
       body: JSON.stringify({ query, variables }),
-    });
+    };
+
+    if (options.next) {
+      requestInit.next = options.next;
+      if (options.cache) requestInit.cache = options.cache;
+    } else {
+      requestInit.cache = options.cache ?? 'no-store';
+    }
+
+    const response = await fetch(GRAPHQL_URL, requestInit);
 
     const payload = await response.json() as GraphQLPayload<TData>;
     const errorMessage = getGraphqlErrorMessage(payload.errors);
