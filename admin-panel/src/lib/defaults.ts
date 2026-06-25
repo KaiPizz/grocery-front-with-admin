@@ -142,7 +142,7 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
           ],
         },
       ],
-      copyrightText: '© {year} Asia Deli. Powered by Zira AI.',
+      copyrightText: '© {year} Asia Deli Go. Powered by Zira AI.',
     },
     priceDisplay: {
       position: 'below-image',
