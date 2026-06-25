@@ -33,10 +33,10 @@ const QUERY = `
 `;
 
 const UNIT_TO_BASE = {
-  g: { unitOfMeasure: 'kg', factor: 1000 },
-  kg: { unitOfMeasure: 'kg', factor: 1 },
-  ml: { unitOfMeasure: 'l', factor: 1000 },
-  l: { unitOfMeasure: 'l', factor: 1 },
+  g: { unitOfMeasure: 'KG', factor: 1000 },
+  kg: { unitOfMeasure: 'KG', factor: 1 },
+  ml: { unitOfMeasure: 'LITER', factor: 1000 },
+  l: { unitOfMeasure: 'LITER', factor: 1 },
 };
 
 function unquoteEnvValue(value) {
