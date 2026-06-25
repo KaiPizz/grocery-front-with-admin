@@ -99,6 +99,7 @@ interface NutritionRow {
 interface DetailFact {
   label: string;
   value: string;
+  isMissing?: boolean;
 }
 
 function appendGalleryImage(
@@ -320,6 +321,13 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
   const certifications = Array.isArray(product.certifications) ? product.certifications : [];
   const nutritionRows: NutritionRow[] = [];
   const detailFacts: DetailFact[] = [];
+  const hasIngredients = Boolean(product.ingredients?.trim());
+  const hasNutrition = Object.values(nutrition ?? {}).some((value) => value != null && value !== '');
+  const unitPrice = product.pricePerUnit ?? null;
+  const unitOfMeasure = product.unitOfMeasure?.trim() || null;
+  const hasUnitPrice = unitPrice != null && Boolean(unitOfMeasure);
+  const missingCatalogLabels: string[] = [];
+  const attributeChips: string[] = [];
 
   const calories = formatNutritionAmount(nutrition?.calories, 'kcal');
   if (calories) nutritionRows.push({ label: t('product.calories'), value: calories });
@@ -349,22 +357,24 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
     nutritionRows.push({ label: t('product.servingSize'), value: nutrition.servingSize });
   }
 
-  detailFacts.push({ label: t('product.sku'), value: sku ?? t('product.catalogMissing') });
+  detailFacts.push({ label: t('product.sku'), value: sku ?? t('product.catalogMissing'), isMissing: !sku });
 
   detailFacts.push({
     label: t('product.unitPrice'),
     value:
-      product.pricePerUnit != null && product.unitOfMeasure
-        ? `${formatPrice(product.pricePerUnit, currency)} / ${formatDisplayUnit(product.unitOfMeasure)}`
+      hasUnitPrice
+        ? `${formatPrice(unitPrice, currency)} / ${formatDisplayUnit(unitOfMeasure ?? '')}`
         : t('product.catalogMissing'),
+    isMissing: !hasUnitPrice,
   });
 
   detailFacts.push({ label: t('product.netWeight'), value: t('product.checkPackageLabel') });
-  detailFacts.push({ label: t('product.origin'), value: product.countryOfOrigin ?? t('product.catalogMissing') });
+  detailFacts.push({ label: t('product.origin'), value: product.countryOfOrigin ?? t('product.catalogMissing'), isMissing: !product.countryOfOrigin });
 
   detailFacts.push({
     label: t('product.storage'),
     value: product.storageZone ? t(`cart.zoneNote.${product.storageZone}` as any) : t('product.catalogMissing'),
+    isMissing: !product.storageZone,
   });
 
   detailFacts.push({
@@ -374,22 +384,81 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
 
   if (dietaryTags.length > 0) {
     detailFacts.push({ label: t('product.dietary'), value: dietaryTags.join(', ') });
+    attributeChips.push(...dietaryTags);
   }
 
   if (product.spiceLevel != null) {
     detailFacts.push({ label: t('product.spiceLevel'), value: t('product.spiceLevelValue', { level: product.spiceLevel }) });
+    attributeChips.push(t('product.spiceLevelValue', { level: product.spiceLevel }));
   }
 
   if (product.isAlcohol) {
     detailFacts.push({ label: t('product.warnings'), value: t('product.containsAlcohol') });
+    attributeChips.push(t('product.containsAlcohol'));
   }
 
   if (certifications.length > 0) {
     detailFacts.push({ label: t('product.certifications'), value: certifications.join(', ') });
+    attributeChips.push(...certifications);
   }
+
+  if (!hasIngredients) missingCatalogLabels.push(t('product.ingredients'));
+  if (allergens.length === 0) missingCatalogLabels.push(t('product.allergens'));
+  if (!hasNutrition) missingCatalogLabels.push(t('product.nutrition'));
+  if (!product.countryOfOrigin) missingCatalogLabels.push(t('product.origin'));
+  if (!hasUnitPrice) missingCatalogLabels.push(t('product.unitPrice'));
 
   return (
     <section className="mt-12 border-t pt-8" style={{ borderColor: 'var(--color-border)' }} data-testid="pdp-food-label-sections">
+      <div
+        className="mb-6 rounded-2xl border p-4 sm:p-5"
+        style={{
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'color-mix(in srgb, var(--color-primary) 5%, var(--color-card))',
+        }}
+        data-testid="pdp-food-compliance-notice"
+      >
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-muted-foreground)' }}>
+              {t('product.legalFoodInfo')}
+            </p>
+            <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--color-foreground)' }}>
+              {t('product.packageLabelNotice')}
+            </p>
+          </div>
+
+          {attributeChips.length > 0 && (
+            <div className="flex shrink-0 flex-wrap gap-1.5 sm:max-w-[40%]" role="list" aria-label={t('product.foodAttributes')}>
+              {attributeChips.map((chip) => (
+                <span
+                  key={chip}
+                  className="rounded-full px-2.5 py-1 text-xs font-semibold"
+                  style={{ backgroundColor: 'var(--color-card)', color: 'var(--color-foreground)' }}
+                  role="listitem"
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {missingCatalogLabels.length > 0 && (
+          <p
+            className="mt-3 rounded-xl border px-3 py-2 text-xs leading-relaxed"
+            style={{
+              borderColor: 'color-mix(in srgb, var(--color-warning, #f59e0b) 38%, var(--color-border))',
+              backgroundColor: 'color-mix(in srgb, #f59e0b 9%, var(--color-card))',
+              color: 'var(--color-foreground)',
+            }}
+            data-testid="pdp-missing-catalog-data"
+          >
+            {t('product.missingCatalogFields', { fields: missingCatalogLabels.join(', ') })}
+          </p>
+        )}
+      </div>
+
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.8fr)]">
         <div className="space-y-8">
           {product.description && (
@@ -406,7 +475,7 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
           <details
             className="group rounded-lg border p-4"
             style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
-            open={Boolean(product.ingredients)}
+            open={hasIngredients}
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
               <span className="heading-section text-xl" style={{ color: 'var(--color-foreground)' }}>
@@ -421,7 +490,7 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
               </span>
             </summary>
             <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
-              {product.ingredients || t('product.ingredientsMissing')}
+              {hasIngredients ? product.ingredients : t('product.ingredientsMissing')}
             </p>
           </details>
 
@@ -443,9 +512,14 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
           </section>
 
           <section>
-            <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
-              {t('product.nutrition')}
-            </h2>
+            <div className="mb-3">
+              <h2 className="heading-section text-xl" style={{ color: 'var(--color-foreground)' }}>
+                {t('product.nutrition')}
+              </h2>
+              <p className="mt-1 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                {t('product.nutritionPer100')}
+              </p>
+            </div>
             {nutritionRows.length > 0 ? (
               <div className="overflow-hidden rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
                 <table className="w-full text-sm" aria-label={t('product.nutrition')}>
@@ -488,7 +562,10 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
                 <p className="text-xs font-semibold uppercase" style={{ color: 'var(--color-muted-foreground)' }}>
                   {fact.label}
                 </p>
-                <p className="mt-1 text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+                <p
+                  className="mt-1 text-sm font-medium"
+                  style={{ color: fact.isMissing ? 'var(--color-muted-foreground)' : 'var(--color-foreground)' }}
+                >
                   {fact.value}
                 </p>
               </div>

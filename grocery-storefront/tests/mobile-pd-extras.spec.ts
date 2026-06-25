@@ -346,28 +346,35 @@ test.describe('PDP food-label sections', () => {
 
     const sections = page.getByTestId('pdp-food-label-sections');
     await expect(sections).toBeVisible();
+    await expect(sections.getByTestId('pdp-food-compliance-notice')).toContainText(/information for shoppers/i);
+    await expect(sections.getByTestId('pdp-food-compliance-notice')).toContainText(/product catalog/i);
     await expect(sections.getByRole('heading', { name: /description/i })).toBeVisible();
     await expect(sections.getByRole('heading', { name: /ingredients/i })).toBeVisible();
     await expect(sections).toContainText(/Apples/i);
     await expect(sections.getByRole('heading', { name: /allergens/i })).toBeVisible();
     await expect(sections.getByRole('listitem').filter({ hasText: /nuts/i })).toBeVisible();
     await expect(sections.getByRole('heading', { name: /nutrition facts/i })).toBeVisible();
+    await expect(sections).toContainText(/per 100g/i);
     await expect(sections.getByRole('table', { name: /nutrition facts/i })).toBeVisible();
     await expect(sections).toContainText(/52 kcal/i);
     await expect(sections).toContainText(/14 g/i);
     await expect(page.getByRole('dialog', { name: /nutrition facts/i })).toHaveCount(0);
   });
 
-  test('does not render empty label headings when ingredients and nutrition are missing', async ({ page }) => {
+  test('renders clear catalog-missing fallbacks when required label data is absent', async ({ page }) => {
     await mockMobileStorefront(page, { productDetailLabels: 'missing' });
     await page.goto('/en/products/organic-gala-apples');
 
     const sections = page.getByTestId('pdp-food-label-sections');
     await expect(sections).toBeVisible();
     await expect(sections.getByRole('heading', { name: /description/i })).toBeVisible();
-    await expect(sections.getByRole('heading', { name: /ingredients/i })).toHaveCount(0);
-    await expect(sections.getByRole('heading', { name: /nutrition facts/i })).toHaveCount(0);
-    await expect(sections.getByRole('heading', { name: /allergens/i })).toHaveCount(0);
+    await expect(sections.getByRole('heading', { name: /ingredients/i })).toBeVisible();
+    await expect(sections.getByRole('heading', { name: /nutrition facts/i })).toBeVisible();
+    await expect(sections.getByRole('heading', { name: /allergens/i })).toBeVisible();
+    await expect(sections.getByTestId('pdp-missing-catalog-data')).toContainText(/needs catalog completion/i);
+    await expect(sections.getByTestId('pdp-missing-catalog-data')).toContainText(/ingredients/i);
+    await expect(sections).toContainText(/Ingredients are missing from the catalog/i);
+    await expect(sections).toContainText(/Nutrition data is missing from the catalog/i);
   });
 });
 
