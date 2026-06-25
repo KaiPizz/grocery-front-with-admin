@@ -114,6 +114,7 @@
     "activeFilterCount": "{count, plural, one {# active} other {# active}}",
     "removeFilter": "Remove {filter} filter",
     "categoryFilter": "Categories",
+    "countryOriginFilter": "Country of origin",
     "allergenFilter": "Exclude allergens",
     "dietaryFilter": "Dietary preferences",
     "zoneFilter": "Storage zone",

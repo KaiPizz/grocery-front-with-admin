@@ -12,7 +12,7 @@ import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useHydrated } from '@/hooks/use-hydrated';
 import { Link, useRouter } from '@/i18n/navigation';
-import { PRODUCT_FILTER_CATALOG_QUERY, PRODUCT_LISTING_QUERY } from '@/lib/graphql/operations/grocery';
+import { PRODUCT_COUNTRY_ORIGINS_QUERY, PRODUCT_FILTER_CATALOG_QUERY, PRODUCT_LISTING_QUERY } from '@/lib/graphql/operations/grocery';
 import type { GroceryProduct, StorageZone } from '@/types';
 import {
   ALLERGEN_OPTIONS,
@@ -85,6 +85,15 @@ interface CategoryFilterOption {
   id: string;
   name: string;
   count: number;
+}
+
+interface CountryOriginFilterOption {
+  value: string;
+  count: number;
+}
+
+interface ProductCountryOriginsQueryResponse {
+  productCountryOrigins: CountryOriginFilterOption[] | null;
 }
 
 interface CategoryNavigationItem {
@@ -242,12 +251,21 @@ export function ProductListingClient({
   const catalogFilter = useMemo(() => (
     activeCategoryIds.length > 0 ? { categories: activeCategoryIds } : undefined
   ), [activeCategoryIds]);
+  const countryOriginCategoryIds = activeCategoryIds.length > 0 ? activeCategoryIds : null;
   const [catalogResult] = useQuery<ProductsQueryResponse>({
     query: PRODUCT_FILTER_CATALOG_QUERY,
     variables: {
       channel,
       first: 100,
       filter: catalogFilter,
+    },
+  });
+  const [countryOriginsResult] = useQuery<ProductCountryOriginsQueryResponse>({
+    query: PRODUCT_COUNTRY_ORIGINS_QUERY,
+    variables: {
+      channel,
+      first: 100,
+      categoryIds: countryOriginCategoryIds,
     },
   });
 
@@ -298,6 +316,22 @@ export function ProductListingClient({
   const availableCertifications = useMemo(() => (
     CERT_OPTIONS.filter((certification) => filterSourceProducts.some((product) => extractProductCertifications(product as GroceryProduct & Record<string, any>).includes(certification)))
   ), [filterSourceProducts]);
+  const availableCountryOrigins = useMemo(() => {
+    const origins = countryOriginsResult.data?.productCountryOrigins ?? [];
+
+    return origins
+      .filter((origin) => origin?.value?.trim())
+      .map((origin) => ({
+        value: origin.value.trim(),
+        count: Number(origin.count) || 0,
+      }))
+      .sort((left, right) => {
+        if (left.value === 'Wietnam') return -1;
+        if (right.value === 'Wietnam') return 1;
+        if (right.count !== left.count) return right.count - left.count;
+        return left.value.localeCompare(right.value, 'pl');
+      });
+  }, [countryOriginsResult.data]);
   const availableCategories = useMemo(() => {
     const categories = new Map<string, CategoryFilterOption>();
 
@@ -319,6 +353,7 @@ export function ProductListingClient({
     return Array.from(categories.values()).sort((left, right) => left.name.localeCompare(right.name));
   }, [filterSourceProducts]);
   const categoryNameById = useMemo(() => new Map(availableCategories.map((category) => [category.id, category.name])), [availableCategories]);
+  const countryOriginByValue = useMemo(() => new Map(availableCountryOrigins.map((origin) => [origin.value, origin.value])), [availableCountryOrigins]);
 
   const normalizedCommittedFilters = useMemo(
     () => normalizeFiltersState(committedFilters, priceBounds),
@@ -405,6 +440,7 @@ export function ProductListingClient({
     const zoneFilterUnavailable = availableStorageZones.length === 0;
     const certificationFilterUnavailable = availableCertifications.length === 0;
     const categoryFilterUnavailable = availableCategories.length === 0;
+    const countryFilterUnavailable = availableCountryOrigins.length === 0;
     const localActiveFilterCount = countActiveFilters(normalizedFilters);
     const unavailableMessage = t('filterUnavailable');
 
@@ -436,6 +472,38 @@ export function ProductListingClient({
                   {category.name}
                   <span className="ml-1 tabular-nums" aria-hidden="true">
                     {category.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        )}
+
+        {!countryFilterUnavailable && (
+          <fieldset className="space-y-3">
+            <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+              {t('countryOriginFilter')}
+            </legend>
+            <div className="flex flex-wrap gap-2" role="group">
+              {availableCountryOrigins.map((origin) => (
+                <button
+                  key={origin.value}
+                  type="button"
+                  onClick={() => setFilters((prev) => ({
+                    ...prev,
+                    countryOfOrigin: toggleMultiValue(prev.countryOfOrigin, origin.value),
+                  }))}
+                  className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast"
+                  style={{
+                    borderColor: normalizedFilters.countryOfOrigin.includes(origin.value) ? 'var(--color-primary)' : 'var(--color-border)',
+                    backgroundColor: normalizedFilters.countryOfOrigin.includes(origin.value) ? 'var(--color-accent)' : 'transparent',
+                    color: normalizedFilters.countryOfOrigin.includes(origin.value) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                  }}
+                  aria-pressed={normalizedFilters.countryOfOrigin.includes(origin.value)}
+                >
+                  {origin.value}
+                  <span className="ml-1 tabular-nums" aria-hidden="true">
+                    {origin.count}
                   </span>
                 </button>
               ))}
@@ -583,6 +651,7 @@ export function ProductListingClient({
           && allergenFilterUnavailable
           && dietaryFilterUnavailable
           && zoneFilterUnavailable
+          && countryFilterUnavailable
           && certificationFilterUnavailable && (
             <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
               {unavailableMessage}
@@ -905,6 +974,18 @@ export function ProductListingClient({
         onRemove: () => setCommittedFilters((prev) => ({
           ...prev,
           storageZone: '',
+        })),
+      });
+    }
+
+    for (const origin of normalizedCommittedFilters.countryOfOrigin) {
+      const label = countryOriginByValue.get(origin) ?? origin;
+      chips.push({
+        key: `origin-${origin}`,
+        label,
+        onRemove: () => setCommittedFilters((prev) => ({
+          ...prev,
+          countryOfOrigin: prev.countryOfOrigin.filter((countryValue) => countryValue !== origin),
         })),
       });
     }

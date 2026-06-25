@@ -14,6 +14,7 @@ export interface ProductFiltersState {
   excludeAllergens: string[];
   dietaryTags: string[];
   certifications: string[];
+  countryOfOrigin: string[];
   storageZone: StorageZone | '';
   priceMin: string;
   priceMax: string;
@@ -24,6 +25,7 @@ export const DEFAULT_FILTERS: ProductFiltersState = {
   excludeAllergens: [],
   dietaryTags: [],
   certifications: [],
+  countryOfOrigin: [],
   storageZone: '',
   priceMin: '',
   priceMax: '',
@@ -82,6 +84,7 @@ export function normalizeFiltersState(
     excludeAllergens: Array.from(new Set(filters.excludeAllergens.map(normalizeAllergenCode).filter(Boolean))),
     dietaryTags: Array.from(new Set(filters.dietaryTags.filter(Boolean))),
     certifications: Array.from(new Set(filters.certifications.filter(Boolean))),
+    countryOfOrigin: Array.from(new Set(filters.countryOfOrigin.map((country) => country.trim()).filter(Boolean))),
     storageZone: filters.storageZone,
     priceMin: formatPriceInput(minPrice),
     priceMax: formatPriceInput(maxPrice),
@@ -94,6 +97,7 @@ export function countActiveFilters(filters: ProductFiltersState) {
     + filters.excludeAllergens.length
     + filters.dietaryTags.length
     + filters.certifications.length
+    + filters.countryOfOrigin.length
     + (filters.storageZone ? 1 : 0)
     + (filters.priceMin || filters.priceMax ? 1 : 0)
   );
@@ -112,6 +116,8 @@ export function areFiltersEqual(left: ProductFiltersState, right: ProductFilters
     && left.dietaryTags.every((value, index) => value === right.dietaryTags[index])
     && left.certifications.length === right.certifications.length
     && left.certifications.every((value, index) => value === right.certifications[index])
+    && left.countryOfOrigin.length === right.countryOfOrigin.length
+    && left.countryOfOrigin.every((value, index) => value === right.countryOfOrigin[index])
   );
 }
 
@@ -131,6 +137,7 @@ export function buildProductFilter(
   if (filters.excludeAllergens.length > 0) nextFilter.excludeAllergens = filters.excludeAllergens;
   if (filters.dietaryTags.length > 0) nextFilter.dietaryTags = filters.dietaryTags;
   if (filters.certifications.length > 0) nextFilter.certifications = filters.certifications;
+  if (filters.countryOfOrigin.length > 0) nextFilter.countryOfOrigin = filters.countryOfOrigin;
   if (filters.storageZone) nextFilter.storageZone = filters.storageZone;
 
   const minimumPrice = parsePriceInput(filters.priceMin);

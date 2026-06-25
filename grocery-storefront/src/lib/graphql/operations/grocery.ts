@@ -98,6 +98,7 @@ const GROCERY_PRODUCT_FILTER_FIELDS = `
     allergens
     dietaryTags
     certifications
+    countryOfOrigin
     storageZone
     category { id name slug }
     pricing {
@@ -188,6 +189,15 @@ export const PRODUCT_FILTER_CATALOG_QUERY = `
         node { ...GroceryProductFilterFields }
       }
       totalCount
+    }
+  }
+`;
+
+export const PRODUCT_COUNTRY_ORIGINS_QUERY = `
+  query ProductCountryOrigins($channel: String!, $first: Int, $categoryIds: [ID!]) {
+    productCountryOrigins(channel: $channel, first: $first, categoryIds: $categoryIds) {
+      value
+      count
     }
   }
 `;
