@@ -9,7 +9,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_DIR="$ROOT_DIR/grocery-storefront"
 REMOTE="${KENMITO_REMOTE:-contabo-server}"
-REMOTE_BASE="${KENMITO_REMOTE_BASE:-/var/www/www/enail/kenmito-storefront}"
+REMOTE_BASE="${KENMITO_REMOTE_BASE:-/var/www/kenmito-storefront}"
 REMOTE_ENV="$REMOTE_BASE/shared/.env.runtime"
 LOCAL_ENV="$APP_DIR/.env.local"
 
@@ -21,6 +21,12 @@ fi
 if [[ ! -f "$LOCAL_ENV" ]]; then
   echo "Copying Kenmito runtime env for build. Values are not printed."
   scp "$REMOTE:$REMOTE_ENV" "$LOCAL_ENV"
+fi
+
+if ! ssh "$REMOTE" "test -s '$REMOTE_ENV'"; then
+  echo "Remote runtime env is missing: $REMOTE:$REMOTE_ENV" >&2
+  echo "Create it before deploying. Values are not printed." >&2
+  exit 1
 fi
 
 if ! grep -q '^NEXT_PUBLIC_CHANNEL=kenmito' "$LOCAL_ENV"; then
@@ -43,14 +49,14 @@ ssh "$REMOTE" "mkdir -p '$remote_release/.next/static' '$remote_release/public'"
 rsync -az --delete "$APP_DIR/.next/static/" "$REMOTE:$remote_release/.next/static/"
 rsync -az --delete "$APP_DIR/public/" "$REMOTE:$remote_release/public/"
 
-ssh "$REMOTE" "ln -sfn '$REMOTE_ENV' '$remote_release/.env.local' && ln -sfn '$remote_release' '$REMOTE_BASE/current'"
+ssh "$REMOTE" "ln -sfn '$REMOTE_ENV' '$remote_release/.env.local' && ln -sfnT '$remote_release' '$REMOTE_BASE/current'"
 
 echo "Restarting PM2 with Kenmito runtime env"
 ssh "$REMOTE" 'node - <<'"'"'NODE'"'"'
 const fs = require("fs");
 const { spawnSync } = require("child_process");
 
-const envFile = "/var/www/www/enail/kenmito-storefront/shared/.env.runtime";
+const envFile = "/var/www/kenmito-storefront/shared/.env.runtime";
 const env = { ...process.env, PORT: "3022", NODE_ENV: "production" };
 
 for (const rawLine of fs.readFileSync(envFile, "utf8").split(/\r?\n/)) {
@@ -70,7 +76,20 @@ for (const rawLine of fs.readFileSync(envFile, "utf8").split(/\r?\n/)) {
   env[key] = value;
 }
 
-for (const args of [["restart", "enail-grocery-kenmito", "--update-env"], ["save"]]) {
+spawnSync("pm2", ["delete", "enail-grocery-kenmito"], { env, stdio: "inherit" });
+
+for (const args of [
+  [
+    "start",
+    "server.js",
+    "--name",
+    "enail-grocery-kenmito",
+    "--cwd",
+    "/var/www/kenmito-storefront/current",
+    "--update-env",
+  ],
+  ["save"],
+]) {
   const result = spawnSync("pm2", args, { env, stdio: "inherit" });
   if (result.status !== 0) process.exit(result.status || 1);
 }
