@@ -1,10 +1,10 @@
 # Product Metadata Audit
 
-Generated: 2026-06-25T13:31:15.389Z
+Generated: 2026-06-25T16:58:42.513Z
 Channel: kenmito
 Endpoint: https://zira-ai.com/graphql/storefront
-Inspected products: 300 / 1784
-Mode: limited to 300
+Inspected products: 1784 / 1784
+Mode: full catalog
 
 This is a read-only dry-run report. It does not mutate product data.
 
@@ -12,24 +12,24 @@ This is a read-only dry-run report. It does not mutate product data.
 
 | Field | Present | Missing | Coverage |
 | --- | ---: | ---: | ---: |
-| sku | 300 | 0 | 100% |
-| grossPrice | 300 | 0 | 100% |
-| description | 300 | 0 | 100% |
-| ingredients | 293 | 7 | 98% |
-| allergens | 0 | 300 | 0% |
-| nutritionFacts | 0 | 300 | 0% |
-| countryOfOrigin | 292 | 8 | 97% |
-| storageZone | 0 | 300 | 0% |
-| unitPrice | 0 | 300 | 0% |
-| category | 300 | 0 | 100% |
+| sku | 1784 | 0 | 100% |
+| grossPrice | 1784 | 0 | 100% |
+| description | 1779 | 5 | 100% |
+| ingredients | 1598 | 186 | 90% |
+| allergens | 0 | 1784 | 0% |
+| nutritionFacts | 0 | 1784 | 0% |
+| countryOfOrigin | 1679 | 105 | 94% |
+| storageZone | 0 | 1784 | 0% |
+| unitPrice | 0 | 1784 | 0% |
+| category | 1784 | 0 | 100% |
 
 ## Highest Priority Missing Fields
 
-- unitPrice: 300 products missing
-- allergens: 300 products missing
-- nutritionFacts: 300 products missing
-- countryOfOrigin: 8 products missing
-- storageZone: 300 products missing
+- unitPrice: 1784 products missing
+- allergens: 1784 products missing
+- nutritionFacts: 1784 products missing
+- countryOfOrigin: 105 products missing
+- storageZone: 1784 products missing
 
 ## Sample Products With Missing Data
 
