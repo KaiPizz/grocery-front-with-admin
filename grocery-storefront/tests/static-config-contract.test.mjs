@@ -27,7 +27,7 @@ test('tracked Kenmito static config carries Kenmito launch truth', () => {
   const footerLinks = config.layout.footer.columns.flatMap((column) => column.links);
 
   assert.equal(config.branding.storeName, 'Kenmito');
-  assert.equal(config.homepage.hero.headline, 'Azjatyckie składniki na codzienny stół');
+  assert.equal(config.homepage.hero.headline, 'Azjatyckie produkty spożywcze na co dzień');
   assert.equal(config.general.fulfillment.mode, 'pickup');
   assert.equal(config.general.fulfillment.paymentPromise, 'backend');
   assert.equal(config.general.fulfillment.stockDisplayMode, 'availability_only');

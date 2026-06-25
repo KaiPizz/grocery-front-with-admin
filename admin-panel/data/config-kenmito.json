@@ -26,8 +26,8 @@
     "homepage": {
       "hero": {
         "enabled": false,
-        "headline": "Azjatyckie składniki na codzienny stół",
-        "subtitle": "Kimchi, ryż, sosy, makarony i podstawy kuchni azjatyckiej. Sprawdź dostępność i zamów z odbiorem osobistym.",
+        "headline": "Azjatyckie produkty spożywcze na co dzień",
+        "subtitle": "Kimchi, ryż, sosy, makarony, napoje i przekąski. Zamów online i odbierz osobiście w sklepie.",
         "ctaText": "Przeglądaj produkty",
         "ctaLink": "/products",
         "backgroundImageUrl": null
@@ -52,42 +52,42 @@
           "enabled": true,
           "order": 0,
           "autoPlay": true,
-          "autoPlayInterval": 4000,
+          "autoPlayInterval": 5000,
           "slides": [
             {
               "id": "kenmito-real-hero-slide-1",
               "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
               "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
-              "title": "Azjatycka spiżarnia na każdy dzień",
+              "title": "Azjatyckie produkty do codziennych zakupów",
               "ctaText": "Przeglądaj produkty",
-              "ctaLink": "/products",
+              "ctaLink": "/pl/products",
               "enabled": true
             },
             {
               "id": "kenmito-real-hero-slide-2",
               "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
               "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
-              "title": "Pantry staples in one place",
-              "ctaText": "Shop pantry",
-              "ctaLink": "/products",
+              "title": "Ryż, sosy i makarony w jednym miejscu",
+              "ctaText": "Zobacz spiżarnię",
+              "ctaLink": "/pl/categories/sosy-pasty-i-przyprawy",
               "enabled": true
             },
             {
               "id": "kenmito-real-hero-slide-3",
               "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
               "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
-              "title": "Korean flavors ready to enjoy",
-              "ctaText": "Browse food",
-              "ctaLink": "/products",
+              "title": "Gotowe dania i kimchi do szybkiego obiadu",
+              "ctaText": "Zobacz dania gotowe",
+              "ctaLink": "/pl/categories/dania-gotowe",
               "enabled": true
             },
             {
               "id": "kenmito-real-hero-slide-4",
               "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
               "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
-              "title": "Noodles, sauces and pantry essentials",
-              "ctaText": "Shop pantry",
-              "ctaLink": "/products",
+              "title": "Ramen, makarony i bazy do zup",
+              "ctaText": "Kup ramen i makarony",
+              "ctaLink": "/pl/categories/makaron-i-ryz",
               "enabled": true
             }
           ]
@@ -159,15 +159,26 @@
           "order": 3,
           "imageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1600&q=80",
           "mobileImageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=80",
-          "title": "Szybki lunch po azjatycku",
+          "title": "Ramen i gotowe dania na szybki obiad",
           "ctaText": "Zobacz dania gotowe",
           "ctaLink": "/pl/categories/dania-gotowe"
+        },
+        {
+          "id": "kenmito-horizontal-snacks-drinks-20260624",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 4,
+          "imageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=1600&q=80",
+          "mobileImageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=900&q=80",
+          "title": "Przekąski i napoje do koszyka",
+          "ctaText": "Zobacz przekąski",
+          "ctaLink": "/pl/categories/przekaski-i-slodycze"
         },
         {
           "id": "kenmito-round-category-preview-20260618",
           "type": "round_grid",
           "enabled": true,
-          "order": 4,
+          "order": 5,
           "columns": 3,
           "items": [
             {
@@ -221,7 +232,7 @@
       "header": {
         "navItems": [
           {
-            "label": "Home",
+            "label": "Strona główna",
             "href": "/",
             "enabled": true,
             "order": 0
@@ -249,7 +260,7 @@
         }
       },
       "footer": {
-        "tagline": "Azjatyckie produkty spożywcze do codziennego gotowania.",
+        "tagline": "Azjatyckie produkty spożywcze, przekąski i gotowe dania z odbiorem osobistym.",
         "columns": [
           {
             "title": "Sklep",
@@ -422,8 +433,8 @@
     "homepage": {
       "hero": {
         "enabled": false,
-        "headline": "Azjatyckie składniki na codzienny stół",
-        "subtitle": "Kimchi, ryż, sosy, makarony i podstawy kuchni azjatyckiej. Sprawdź dostępność i zamów z odbiorem osobistym.",
+        "headline": "Azjatyckie produkty spożywcze na co dzień",
+        "subtitle": "Kimchi, ryż, sosy, makarony, napoje i przekąski. Zamów online i odbierz osobiście w sklepie.",
         "ctaText": "Przeglądaj produkty",
         "ctaLink": "/products",
         "backgroundImageUrl": null
@@ -448,42 +459,42 @@
           "enabled": true,
           "order": 0,
           "autoPlay": true,
-          "autoPlayInterval": 4000,
+          "autoPlayInterval": 5000,
           "slides": [
             {
               "id": "kenmito-real-hero-slide-1",
               "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
               "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/20140909-0251_Costa_Mesa_Mitsuwa.JPG/1920px-20140909-0251_Costa_Mesa_Mitsuwa.JPG",
-              "title": "Azjatycka spiżarnia na każdy dzień",
+              "title": "Azjatyckie produkty do codziennych zakupów",
               "ctaText": "Przeglądaj produkty",
-              "ctaLink": "/products",
+              "ctaLink": "/pl/products",
               "enabled": true
             },
             {
               "id": "kenmito-real-hero-slide-2",
               "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
               "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Supermarket_shelves.jpg/1920px-Supermarket_shelves.jpg",
-              "title": "Pantry staples in one place",
-              "ctaText": "Shop pantry",
-              "ctaLink": "/products",
+              "title": "Ryż, sosy i makarony w jednym miejscu",
+              "ctaText": "Zobacz spiżarnię",
+              "ctaLink": "/pl/categories/sosy-pasty-i-przyprawy",
               "enabled": true
             },
             {
               "id": "kenmito-real-hero-slide-3",
               "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
               "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bulgogi_Bibimbap%2C_a_Korean_dish.jpg/1280px-Bulgogi_Bibimbap%2C_a_Korean_dish.jpg",
-              "title": "Korean flavors ready to enjoy",
-              "ctaText": "Browse food",
-              "ctaLink": "/products",
+              "title": "Gotowe dania i kimchi do szybkiego obiadu",
+              "ctaText": "Zobacz dania gotowe",
+              "ctaLink": "/pl/categories/dania-gotowe",
               "enabled": true
             },
             {
               "id": "kenmito-real-hero-slide-4",
               "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
               "mobileImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg/1280px-Sama_noedels%2C_Albert_Heijn_Winschoten_%282019%29.jpg",
-              "title": "Noodles, sauces and pantry essentials",
-              "ctaText": "Shop pantry",
-              "ctaLink": "/products",
+              "title": "Ramen, makarony i bazy do zup",
+              "ctaText": "Kup ramen i makarony",
+              "ctaLink": "/pl/categories/makaron-i-ryz",
               "enabled": true
             }
           ]
@@ -555,15 +566,26 @@
           "order": 3,
           "imageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1600&q=80",
           "mobileImageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=80",
-          "title": "Szybki lunch po azjatycku",
+          "title": "Ramen i gotowe dania na szybki obiad",
           "ctaText": "Zobacz dania gotowe",
           "ctaLink": "/pl/categories/dania-gotowe"
+        },
+        {
+          "id": "kenmito-horizontal-snacks-drinks-20260624",
+          "type": "horizontal",
+          "enabled": true,
+          "order": 4,
+          "imageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=1600&q=80",
+          "mobileImageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=900&q=80",
+          "title": "Przekąski i napoje do koszyka",
+          "ctaText": "Zobacz przekąski",
+          "ctaLink": "/pl/categories/przekaski-i-slodycze"
         },
         {
           "id": "kenmito-round-category-preview-20260618",
           "type": "round_grid",
           "enabled": true,
-          "order": 4,
+          "order": 5,
           "columns": 3,
           "items": [
             {
@@ -617,7 +639,7 @@
       "header": {
         "navItems": [
           {
-            "label": "Home",
+            "label": "Strona główna",
             "href": "/",
             "enabled": true,
             "order": 0
@@ -645,7 +667,7 @@
         }
       },
       "footer": {
-        "tagline": "Azjatyckie produkty spożywcze do codziennego gotowania.",
+        "tagline": "Azjatyckie produkty spożywcze, przekąski i gotowe dania z odbiorem osobistym.",
         "columns": [
           {
             "title": "Sklep",
