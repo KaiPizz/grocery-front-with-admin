@@ -35,9 +35,9 @@
       "promoBanners": [
         {
           "id": "banner-korean-pantry",
-          "headline": "Korean pantry",
-          "subtext": "Ryz, sosy, makarony i podstawy kuchni koreanskiej.",
-          "ctaText": "Otworz kolekcje",
+          "headline": "Koreańska spiżarnia",
+          "subtext": "Ryż, sosy, makarony i podstawy kuchni koreańskiej.",
+          "ctaText": "Otwórz kolekcję",
           "ctaLink": "/collections/korean-pantry",
           "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
           "imageUrl": null,
@@ -274,20 +274,20 @@
                 "href": "/products"
               },
               {
-                "label": "Korean pantry",
+                "label": "Koreańska spiżarnia",
                 "href": "/collections/korean-pantry"
               }
             ]
           },
           {
-            "title": "Legal",
+            "title": "Informacje",
             "links": [
               {
-                "label": "Privacy",
+                "label": "Polityka prywatności",
                 "href": "/privacy"
               },
               {
-                "label": "Terms",
+                "label": "Regulamin",
                 "href": "/terms"
               }
             ]
@@ -352,10 +352,10 @@
       "quickLinks": [
         {
           "id": "quick-korean-pantry",
-          "label": "Korean pantry",
+          "label": "Koreańska spiżarnia",
           "href": "/collections/korean-pantry",
           "kind": "collection",
-          "description": "Podstawy kuchni koreanskiej",
+          "description": "Podstawy kuchni koreańskiej",
           "imageUrl": null,
           "enabled": true,
           "order": 0
@@ -364,8 +364,8 @@
       "collections": [
         {
           "slug": "korean-pantry",
-          "title": "Korean pantry",
-          "subtitle": "Ryz, sosy, makarony i podstawowe skladniki do kuchni koreanskiej.",
+          "title": "Koreańska spiżarnia",
+          "subtitle": "Ryż, sosy, makarony i podstawowe składniki do kuchni koreańskiej.",
           "heroImageUrl": null,
           "enabled": true,
           "order": 0,
@@ -374,7 +374,7 @@
               "id": "tile-kimchi",
               "title": "Kimchi",
               "href": "/categories/kimchi-i-kiszonki",
-              "description": "Fermentowane dodatki, pasty i chlodzone produkty.",
+              "description": "Fermentowane dodatki, pasty i chłodzone produkty.",
               "imageUrl": null,
               "enabled": true,
               "order": 0
@@ -390,9 +390,9 @@
             },
             {
               "id": "tile-noodles",
-              "title": "Makarony i ryz",
+              "title": "Makarony i ryż",
               "href": "/products?search=makaron",
-              "description": "Codzienne podstawy do szybkich dan.",
+              "description": "Codzienne podstawy do szybkich dań.",
               "imageUrl": null,
               "enabled": true,
               "order": 2
@@ -442,9 +442,9 @@
       "promoBanners": [
         {
           "id": "banner-korean-pantry",
-          "headline": "Korean pantry",
-          "subtext": "Ryz, sosy, makarony i podstawy kuchni koreanskiej.",
-          "ctaText": "Otworz kolekcje",
+          "headline": "Koreańska spiżarnia",
+          "subtext": "Ryż, sosy, makarony i podstawy kuchni koreańskiej.",
+          "ctaText": "Otwórz kolekcję",
           "ctaLink": "/collections/korean-pantry",
           "gradient": "linear-gradient(135deg, var(--color-ambient), color-mix(in srgb, var(--color-ambient) 70%, #000))",
           "imageUrl": null,
@@ -681,20 +681,20 @@
                 "href": "/products"
               },
               {
-                "label": "Korean pantry",
+                "label": "Koreańska spiżarnia",
                 "href": "/collections/korean-pantry"
               }
             ]
           },
           {
-            "title": "Legal",
+            "title": "Informacje",
             "links": [
               {
-                "label": "Privacy",
+                "label": "Polityka prywatności",
                 "href": "/privacy"
               },
               {
-                "label": "Terms",
+                "label": "Regulamin",
                 "href": "/terms"
               }
             ]
@@ -759,10 +759,10 @@
       "quickLinks": [
         {
           "id": "quick-korean-pantry",
-          "label": "Korean pantry",
+          "label": "Koreańska spiżarnia",
           "href": "/collections/korean-pantry",
           "kind": "collection",
-          "description": "Podstawy kuchni koreanskiej",
+          "description": "Podstawy kuchni koreańskiej",
           "imageUrl": null,
           "enabled": true,
           "order": 0
@@ -771,8 +771,8 @@
       "collections": [
         {
           "slug": "korean-pantry",
-          "title": "Korean pantry",
-          "subtitle": "Ryz, sosy, makarony i podstawowe skladniki do kuchni koreanskiej.",
+          "title": "Koreańska spiżarnia",
+          "subtitle": "Ryż, sosy, makarony i podstawowe składniki do kuchni koreańskiej.",
           "heroImageUrl": null,
           "enabled": true,
           "order": 0,
@@ -781,7 +781,7 @@
               "id": "tile-kimchi",
               "title": "Kimchi",
               "href": "/categories/kimchi-i-kiszonki",
-              "description": "Fermentowane dodatki, pasty i chlodzone produkty.",
+              "description": "Fermentowane dodatki, pasty i chłodzone produkty.",
               "imageUrl": null,
               "enabled": true,
               "order": 0
@@ -797,9 +797,9 @@
             },
             {
               "id": "tile-noodles",
-              "title": "Makarony i ryz",
+              "title": "Makarony i ryż",
               "href": "/products?search=makaron",
-              "description": "Codzienne podstawy do szybkich dan.",
+              "description": "Codzienne podstawy do szybkich dań.",
               "imageUrl": null,
               "enabled": true,
               "order": 2
