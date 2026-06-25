@@ -59,7 +59,7 @@ export default async function CategoriesPage() {
     },
   );
   const categories = result.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  const publicCategories = buildPublicCategories(categories, locale, { requireProductCount: false });
+  const publicCategories = buildPublicCategories(categories, locale);
   const allCountsKnown = publicCategories.every((category) => getProductCount(category) !== null);
   const totalProducts = allCountsKnown
     ? publicCategories.reduce((sum, category) => sum + (getProductCount(category) ?? 0), 0)

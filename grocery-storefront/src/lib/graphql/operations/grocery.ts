@@ -266,6 +266,7 @@ export const PUBLIC_CATEGORIES_QUERY = `
           slug
           name
           description
+          products(channel: $channel, first: 0) { totalCount }
         }
       }
       totalCount

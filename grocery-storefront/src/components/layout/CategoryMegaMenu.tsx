@@ -86,7 +86,7 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
       .map((edge) => edge.node)
       .filter((category) => category.slug && category.name) ?? [];
 
-    return buildPublicCategories(rawCategories, locale, { requireProductCount: false });
+    return buildPublicCategories(rawCategories, locale);
   }, [locale, result.data]);
 
   const columns = useMemo(() => splitIntoColumns(categories), [categories]);

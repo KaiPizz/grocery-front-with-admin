@@ -46,7 +46,6 @@ export default function ProductsPage() {
     buildPublicCategories(
       categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [],
       locale,
-      { requireProductCount: false },
     ).map((category) => ({
       id: category.id,
       slug: category.slug,
