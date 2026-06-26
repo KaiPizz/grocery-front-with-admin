@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { ArrowDownUp, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
@@ -223,6 +223,7 @@ export function ProductListingClient({
   }));
   const [loadingPage, setLoadingPage] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState<boolean | null>(layoutMode === 'adaptive' ? null : false);
+  const listingQueryResetMountedRef = useRef(false);
 
   useEffect(() => {
     const urlSearch = searchParams.get('search') || '';
@@ -366,15 +367,28 @@ export function ProductListingClient({
     () => normalizeFiltersState(draftFilters, priceBounds),
     [draftFilters, priceBounds],
   );
+  const initialFilters = useMemo<ProductFiltersState>(() => ({
+    ...DEFAULT_FILTERS,
+    storageZone: initialZone || '',
+  }), [initialZone]);
+  const normalizedInitialFilters = useMemo(
+    () => normalizeFiltersState(initialFilters, priceBounds),
+    [initialFilters, priceBounds],
+  );
 
   const filter = useMemo(
     () => buildProductFilter(normalizedCommittedFilters, search, activeCategoryIds),
     [activeCategoryIds, normalizedCommittedFilters, search],
   );
   const queryFilter = Object.keys(filter).length > 0 ? filter : undefined;
+  const canUseInitialListingResult = initialProducts.length > 0
+    && search === initialSearch
+    && sort === initialSort
+    && areFiltersEqual(normalizedCommittedFilters, normalizedInitialFilters);
 
   const [result, reexecuteProductsQuery] = useQuery<ProductsQueryResponse>({
     query: PRODUCT_LISTING_QUERY,
+    pause: canUseInitialListingResult,
     variables: {
       channel,
       first: pageSize,
@@ -387,6 +401,11 @@ export function ProductListingClient({
   });
 
   useEffect(() => {
+    if (!listingQueryResetMountedRef.current) {
+      listingQueryResetMountedRef.current = true;
+      return;
+    }
+
     setCurrentPage(1);
     setPageAfterCursors({ 1: null });
     setPageSnapshots({});
