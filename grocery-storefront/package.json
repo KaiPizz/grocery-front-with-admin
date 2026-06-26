@@ -15,7 +15,9 @@
     "probe:cart:report": "node scripts/cart-endpoints-probe.mjs --output=docs/backend-cart-failure-report.md",
     "audit:product-metadata": "node scripts/product-metadata-audit.mjs",
     "dry-run:unit-price": "node scripts/unit-price-backfill-dry-run.mjs",
-    "dry-run:country-origin": "node scripts/country-origin-backfill-dry-run.mjs"
+    "dry-run:country-origin": "node scripts/country-origin-backfill-dry-run.mjs",
+    "dry-run:kimchi-source-metadata": "node scripts/kimchi-source-metadata-dry-run.mjs",
+    "plan:kimchi-source-metadata": "node scripts/kimchi-source-metadata-apply.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.1",

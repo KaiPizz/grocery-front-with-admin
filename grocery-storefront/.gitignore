@@ -14,3 +14,7 @@ dev-server.log
 
 # local address storage (workaround for backend bug)
 data/addresses.json
+
+# generated metadata import artifacts
+docs/kimchi-source-metadata-dry-run.csv
+docs/kimchi-source-metadata-apply.sql

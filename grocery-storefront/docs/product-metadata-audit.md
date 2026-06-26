@@ -1,6 +1,6 @@
 # Product Metadata Audit
 
-Generated: 2026-06-25T18:41:23.674Z
+Generated: 2026-06-26T06:14:59.682Z
 Channel: kenmito
 Endpoint: https://zira-ai.com/graphql/storefront
 Inspected products: 1784 / 1784
@@ -16,65 +16,65 @@ This is a read-only dry-run report. It does not mutate product data.
 | grossPrice | 1784 | 0 | 100% |
 | description | 1779 | 5 | 100% |
 | ingredients | 1598 | 186 | 90% |
-| allergens | 0 | 1784 | 0% |
-| nutritionFacts | 0 | 1784 | 0% |
+| allergens | 938 | 846 | 53% |
+| nutritionFacts | 1467 | 317 | 82% |
 | countryOfOrigin | 1694 | 90 | 95% |
-| storageZone | 0 | 1784 | 0% |
+| storageZone | 1182 | 602 | 66% |
 | unitPrice | 1588 | 196 | 89% |
 | category | 1784 | 0 | 100% |
 
 ## Highest Priority Missing Fields
 
 - unitPrice: 196 products missing
-- allergens: 1784 products missing
-- nutritionFacts: 1784 products missing
+- allergens: 846 products missing
+- nutritionFacts: 317 products missing
 - countryOfOrigin: 90 products missing
-- storageZone: 1784 products missing
+- storageZone: 602 products missing
 
 ## Sample Products With Missing Data
 
 | Product | Category | First SKU | Missing fields |
 | --- | --- | --- | --- |
-| 2 x Angel Hair Chocolate, zestaw czekolad z anielskim włosiem i pistacjami - biała i różowa 80g Mistachio | słodycze-przekąski | KIMCHI-5216 | allergens, nutritionFacts, storageZone |
-| 2 x Dubai Chocolate, zestaw czekolad dubajskich z kremem pistacjowym i ciastem kataifi - mleczna i biała 160g Q Chew | słodycze-przekąski | KIMCHI-5215 | allergens, nutritionFacts, storageZone |
-| Ajitsuke Menma, marynowane fermentowane pędy bambusa w plasterkach 100g - Momoya | pasty-smakowe | KIMCHI-5034 | allergens, nutritionFacts, storageZone |
-| Ajitsuke Shiitake, grzyby w słodkiej zalewie 500g - Asia Kitchen | grzyby-shiitake | KIMCHI-1428 | allergens, nutritionFacts, storageZone |
-| Algi nori do sushi, 6 listków - House of Asia | arkusze-nori-gim | KIMCHI-14 | allergens, nutritionFacts, storageZone, unitPrice |
-| Algi Sushi Nori Gold 50 szt. - Sen Soy | arkusze-nori-gim | KIMCHI-2761 | allergens, nutritionFacts, storageZone, unitPrice |
-| Algi Sushi Nori Premium Gold 10 szt - Asia Kitchen | arkusze-nori-gim | KIMCHI-2505 | allergens, nutritionFacts, storageZone, unitPrice |
-| Algi Sushi Nori Premium Gold 3 x 10 szt - Asia Kitchen | arkusze-nori-gim | KIMCHI-2506 | allergens, nutritionFacts, storageZone, unitPrice |
-| Algi Sushi Nori Premium Gold 5 x 10 szt - Asia Kitchen | arkusze-nori-gim | KIMCHI-2507 | allergens, nutritionFacts, storageZone, unitPrice |
+| Algi nori do sushi, 6 listków - House of Asia | arkusze-nori-gim | KIMCHI-14 | allergens, unitPrice |
+| Algi Sushi Nori Gold 50 szt. - Sen Soy | arkusze-nori-gim | KIMCHI-2761 | allergens, storageZone, unitPrice |
+| Algi Sushi Nori Premium Gold 10 szt - Asia Kitchen | arkusze-nori-gim | KIMCHI-2505 | allergens, storageZone, unitPrice |
+| Algi Sushi Nori Premium Gold 3 x 10 szt - Asia Kitchen | arkusze-nori-gim | KIMCHI-2506 | allergens, storageZone, unitPrice |
+| Algi Sushi Nori Premium Gold 5 x 10 szt - Asia Kitchen | arkusze-nori-gim | KIMCHI-2507 | allergens, storageZone, unitPrice |
 | Aloe 97% Soothing Gel Lotion Intensive Moisturizing 240ml - intensywnie nawilżający aloesowy balsam do ciała - Holika Holika | koreańskie-kosmetyki | KIMCHI-5450 | allergens, nutritionFacts, storageZone |
 | Aloe 99% Soothing Gel 250ml - wielofunkcyjny żel aloesowy do twarzy, ciała i włosów - Holika Holika | koreańskie-kosmetyki | KIMCHI-5449 | allergens, nutritionFacts, storageZone |
 | Aloe CICA Waterproof Sunscreen SPF 50+ PA++++ Wodoodporny żel przeciwsłoneczny o działaniu kojącym i nawilżającym 100ml Holika Holika | koreańskie-kosmetyki | KIMCHI-5452 | allergens, nutritionFacts, storageZone |
 | Aloe Facial Cleansing Foam Pianka do oczyszczania twarzy z ekstraktem z aloesu 150ml Holika Holika | koreańskie-kosmetyki | KIMCHI-5451 | allergens, nutritionFacts, storageZone |
 | Aloe Soothing Jelly Mask Fresh 23ml - Aloesowa maseczka do twarzy w płachcie - Holika Holika | koreańskie-kosmetyki | KIMCHI-5454 | allergens, nutritionFacts, storageZone |
-| Angel Hair White Chocolate, biała czekolada z pistacjami i anielskim włosiem 80g - Mistachio | słodycze-przekąski | KIMCHI-5214 | allergens, nutritionFacts, storageZone |
-| Anyż gwiaździsty, cały 50g - TRS | przyprawy-jednoskładnikowe | KIMCHI-3440 | allergens, nutritionFacts, storageZone |
+| Anyż gwiaździsty, cały 50g - TRS | przyprawy-jednoskładnikowe | KIMCHI-3440 | nutritionFacts |
 | Aqua Petit BB 30ml - lekki krem BB z ekstraktem z zielonej herbaty - Holika Holika | koreańskie-kosmetyki | KIMCHI-5463 | allergens, nutritionFacts, storageZone |
 | Aqua Petit Jelly BB SPF20 40ml - lekki krem BB + gąbeczka - Holika Holika | koreańskie-kosmetyki | KIMCHI-5832 | allergens, nutritionFacts, storageZone |
-| Bancha, zielona herbata z późnego zbioru 60g - Maruka | herbaty | KIMCHI-3795 | allergens, nutritionFacts, storageZone |
-| Baza do zupy hot pot, bardzo ostra 220g - HAIDILAO | buliony | KIMCHI-5722 | allergens, nutritionFacts, storageZone |
-| Baza do zupy hot pot, ostra (medium hot) 220g - HAIDILAO | buliony | KIMCHI-5721 | allergens, nutritionFacts, storageZone |
-| Baza do zupy hot pot w kostkach, ostra 4x90g (360g) - HAIDILAO | buliony | KIMCHI-5720 | allergens, nutritionFacts, storageZone |
-| Baza do zupy, pasta do Hot Pot po syczuańsku 70g - Lee Kum Kee | pasty-smakowe | KIMCHI-2004 | allergens, nutritionFacts, storageZone |
-| Baza do zupy Pho, łagodna 80g - Sen Soy | buliony | KIMCHI-2578 | allergens, nutritionFacts, storageZone |
-| Baza do zupy Tom Yum, łagodna 80g - Sen Soy | buliony | KIMCHI-2579 | allergens, nutritionFacts, storageZone |
-| BBQ Tteokbokki, kluski ryżowe w sosie barbecue 260g - O'Food | dania-gotowe | KIMCHI-4595 | allergens, nutritionFacts, storageZone |
-| Bento Squid Snack Sweet & Spicy, przekąska z kałamarnicy słodko-ostra 20g - Bento & Co | dania-gotowe | KIMCHI-4437 | allergens, nutritionFacts, storageZone |
-| Bibim Men, makaron w słodko-ostrym sosie 130g - Paldo | ramyun-ramen | KIMCHI-1136 | allergens, nutritionFacts, storageZone |
-| Big La Tiao przekąska Hot & Spicy 106g - Wei-Long | słodycze-przekąski | KIMCHI-4620 | allergens, nutritionFacts, storageZone |
-| Big La Tiao przekąska Hot & Spicy 400g - Wei-Long | słodycze-przekąski | KIMCHI-5473 | allergens, nutritionFacts, storageZone |
-| Boczek smażony, chipsy snacki mięsne, skórki wieprzowe BBQ barbecue 150g - Ok Snacks | słodycze-przekąski | KIMCHI-4670 | allergens, nutritionFacts, storageZone |
-| Boczek smażony, chipsy snacki mięsne, skórki wieprzowe solone 150g - Ok Snacks | słodycze-przekąski | KIMCHI-4669 | allergens, nutritionFacts, storageZone |
-| Bombonierka Alfort Mini Chocolate Rich Kyoto Uji Matcha, czekoladki z zieloną herbatą na herbatniku (12 sztuk) 60g - Bourbon | słodycze-przekąski | KIMCHI-5158 | allergens, nutritionFacts, storageZone |
-| Bori-cha, herbata jęczmienna (30 x 10g) 300g - Sempio | herbaty | KIMCHI-2685 | allergens, nutritionFacts, storageZone |
+| Bancha, zielona herbata z późnego zbioru 60g - Maruka | herbaty | KIMCHI-3795 | allergens, nutritionFacts |
+| Baza do zupy Pho, łagodna 80g - Sen Soy | buliony | KIMCHI-2578 | storageZone |
+| Baza do zupy Tom Yum, łagodna 80g - Sen Soy | buliony | KIMCHI-2579 | storageZone |
+| BBQ Tteokbokki, kluski ryżowe w sosie barbecue 260g - O'Food | dania-gotowe | KIMCHI-4595 | storageZone |
+| Bibim Men, makaron w słodko-ostrym sosie 130g - Paldo | ramyun-ramen | KIMCHI-1136 | storageZone |
+| Boczek smażony, chipsy snacki mięsne, skórki wieprzowe BBQ barbecue 150g - Ok Snacks | słodycze-przekąski | KIMCHI-4670 | allergens |
+| Boczek smażony, chipsy snacki mięsne, skórki wieprzowe solone 150g - Ok Snacks | słodycze-przekąski | KIMCHI-4669 | allergens |
+| Bori-cha, herbata jęczmienna (30 x 10g) 300g - Sempio | herbaty | KIMCHI-2685 | allergens |
 | Bouncing Petit BB 30 ml - rewitalizujący krem BB dla skóry dojrzałej - Holika Holika | koreańskie-kosmetyki | KIMCHI-5444 | allergens, nutritionFacts, storageZone |
-| Buchim Garu, miks na koreańskie naleśniki 1kg - CJ Beksul | mąki-panierki-tapioka | KIMCHI-3593 | allergens, nutritionFacts, storageZone |
-| Buldak Hot Sauce Carbonara Flavour - sos o smaku pikantnego kurczaka carbonara 165ml Samyang | ramyun-ramen | KIMCHI-5783 | allergens, nutritionFacts, storageZone |
-| Buldak Hot Sauce Extremely Spicy - sos o smaku ostrego kurczaka 2xSpicy 165ml Samyang | ramyun-ramen | KIMCHI-5782 | allergens, nutritionFacts, storageZone |
-| Buldak Hot Sauce Original - sos o smaku ostrego kurczaka 165ml Samyang | ramyun-ramen | KIMCHI-5781 | allergens, nutritionFacts, storageZone |
-| Buldak Ramyun 2xSpicy makaron instant o smaku bombowo ostrego kurczaka 40 x 140g (cały karton) - Samyang | ramyun-ramen | KIMCHI-3154 | allergens, nutritionFacts, storageZone |
+| Bulion do zupy Ramen Tonkotsu 440ml - ITA-SAN | ramyun-ramen | KIMCHI-5513 | allergens |
+| Bulion, koncentrat Dashi no Moto z wodorostów kombu 1kg - Shimaya | buliony | KIMCHI-5545 | allergens |
+| CeraBarrier Moisture Active Cream Special Edition 50ml + 30ml - zestaw do pielęgnacji twarzy, serum w kremie i toner Holika Holika | koreańskie-kosmetyki | KIMCHI-5434 | allergens, nutritionFacts, storageZone, unitPrice |
+| Chapagetti, makaron z sosem z czarnej fasoli, łagodny 140g - Nongshim | ramyun-ramen | KIMCHI-521 | storageZone |
+| Chicharon Hot & Spicy, chrupki mięsne, skórki wieprzowe o smaku ostrego chili 50g - Pinoy Kitchen | słodycze-przekąski | KIMCHI-4076 | allergens |
+| Chicharon Salt & Vinegar, chrupki mięsne, skórki wieprzowe o smaku soli i octu 50g - Pinoy Kitchen | słodycze-przekąski | KIMCHI-4077 | allergens |
+| Chińskie ciasteczka z wróżbą 100 szt. - Janeco | słodycze-przekąski | KIMCHI-935 | unitPrice |
+| Chińskie ciasteczka z wróżbą 280 szt. - Janeco | słodycze-przekąski | KIMCHI-1068 | unitPrice |
+| Chińskie ciasteczka z wróżbą 50 szt. - Janeco | słodycze-przekąski | KIMCHI-934 | unitPrice |
+| Chińskie wodne kasztany, całe 567g - Spring Happiness | owoce-marynowane-warzywa | KIMCHI-2162 | allergens |
+| Chiński nóż szefa kuchni, tasak 32,5 cm – do mięsa i warzyw - Xiao Tian Zi | noże | KIMCHI-2617 | ingredients, allergens, nutritionFacts, storageZone, unitPrice |
+| Chipsy Hi Tempura, algi nori w tempurze 40g - Tao Kae Noi | słodycze-przekąski | KIMCHI-1416 | storageZone |
+| Chipsy Hi Tempura, algi nori w tempurze chili & lime 40g - Tao Kae Noi | słodycze-przekąski | KIMCHI-5453 | storageZone |
+| Chipsy Hi Tempura, algi nori w tempurze Mushroom & Black Pepper 40g - Tao Kae Noi | słodycze-przekąski | KIMCHI-5352 | storageZone |
+| Chipsy Hi Tempura, algi nori w tempurze, pikantne 40g - Tao Kae Noi | słodycze-przekąski | KIMCHI-1448 | storageZone |
+| Chipsy Hi Tempura, algi nori w tempurze Smoked BBQ 40g - Tao Kae Noi | słodycze-przekąski | KIMCHI-5351 | storageZone |
+| Chipsy krewetkowe 75g - Nongshim | słodycze-przekąski | KIMCHI-238 | storageZone |
+| Chipsy krewetkowe, pikantne 75g - Nongshim | słodycze-przekąski | KIMCHI-443 | storageZone |
 
 ## Recommended Next Step
 
