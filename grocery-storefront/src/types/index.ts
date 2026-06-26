@@ -68,6 +68,7 @@ export interface GroceryProduct {
 
   // Food-specific fields
   allergens?: string[];
+  mayContainAllergens?: string[];
   dietaryTags?: string[];
   calories?: number;
   spiceLevel?: number;

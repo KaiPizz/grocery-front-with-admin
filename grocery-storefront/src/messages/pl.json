@@ -193,6 +193,8 @@
     "description": "Opis",
     "ingredients": "Skład",
     "allergens": "Alergeny",
+    "containsAllergens": "Zawiera alergeny",
+    "mayContainAllergens": "Może zawierać śladowe ilości",
     "allergenCount": "{count, plural, one {# alergen} few {# alergeny} many {# alergenów} other {# alergenu}}",
     "dietary": "Informacje dietetyczne",
     "certifications": "Certyfikaty",

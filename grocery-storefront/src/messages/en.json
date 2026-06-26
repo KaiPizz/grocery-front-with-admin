@@ -193,6 +193,8 @@
     "description": "Description",
     "ingredients": "Ingredients",
     "allergens": "Allergens",
+    "containsAllergens": "Contains allergens",
+    "mayContainAllergens": "May contain traces",
     "allergenCount": "{count, plural, one {# allergen} other {# allergens}}",
     "dietary": "Dietary info",
     "certifications": "Certifications",

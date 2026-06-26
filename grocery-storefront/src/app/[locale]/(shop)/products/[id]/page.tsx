@@ -68,6 +68,7 @@ interface ProductInformationSource {
   description?: string | null;
   ingredients?: string | null;
   allergens?: string[] | null;
+  mayContainAllergens?: string[] | null;
   dietaryTags?: string[] | null;
   nutritionFacts?: NutritionFacts | null;
   countryOfOrigin?: string | null;
@@ -317,6 +318,7 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
   const locale = useLocale();
   const nutrition = product.nutritionFacts ?? null;
   const allergens = Array.isArray(product.allergens) ? product.allergens : [];
+  const mayContainAllergens = Array.isArray(product.mayContainAllergens) ? product.mayContainAllergens : [];
   const dietaryTags = Array.isArray(product.dietaryTags) ? product.dietaryTags : [];
   const certifications = Array.isArray(product.certifications) ? product.certifications : [];
   const nutritionRows: NutritionRow[] = [];
@@ -403,7 +405,7 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
   }
 
   if (!hasIngredients) missingCatalogLabels.push(t('product.ingredients'));
-  if (allergens.length === 0) missingCatalogLabels.push(t('product.allergens'));
+  if (allergens.length === 0 && mayContainAllergens.length === 0) missingCatalogLabels.push(t('product.allergens'));
   if (!hasNutrition) missingCatalogLabels.push(t('product.nutrition'));
   if (!product.countryOfOrigin) missingCatalogLabels.push(t('product.origin'));
   if (!hasUnitPrice) missingCatalogLabels.push(t('product.unitPrice'));
@@ -498,11 +500,46 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
             <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
               {t('product.allergens')}
             </h2>
-            {allergens.length > 0 ? (
-              <div className="flex flex-wrap gap-1.5" role="list" aria-label={t('product.allergens')}>
-                {allergens.map((allergen) => (
-                  <span key={allergen} className="allergen-chip" role="listitem">{t(`allergens.${allergen}` as any)}</span>
-                ))}
+            {allergens.length > 0 || mayContainAllergens.length > 0 ? (
+              <div className="space-y-3">
+                {allergens.length > 0 && (
+                  <div>
+                    <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-muted-foreground)' }}>
+                      {t('product.containsAllergens')}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5" role="list" aria-label={t('product.containsAllergens')}>
+                      {allergens.map((allergen) => (
+                        <span key={allergen} className="allergen-chip" role="listitem">{t(`allergens.${allergen}` as any)}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {mayContainAllergens.length > 0 && (
+                  <div
+                    className="rounded-lg border p-3"
+                    style={{
+                      borderColor: 'color-mix(in srgb, var(--color-border) 80%, var(--color-primary))',
+                      backgroundColor: 'color-mix(in srgb, var(--color-primary) 4%, var(--color-card))',
+                    }}
+                  >
+                    <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-muted-foreground)' }}>
+                      {t('product.mayContainAllergens')}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5" role="list" aria-label={t('product.mayContainAllergens')}>
+                      {mayContainAllergens.map((allergen) => (
+                        <span
+                          key={allergen}
+                          className="rounded-full border px-2.5 py-1 text-xs font-semibold"
+                          style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}
+                          role="listitem"
+                        >
+                          {t(`allergens.${allergen}` as any)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <p className="rounded-lg border p-4 text-sm leading-relaxed" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>

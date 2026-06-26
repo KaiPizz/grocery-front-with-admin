@@ -296,8 +296,11 @@ export function ProductListingClient({
       const productAllergens = Array.isArray(product?.allergens)
         ? product.allergens.map((code) => normalizeAllergenCode(code))
         : [];
+      const productMayContainAllergens = Array.isArray(product?.mayContainAllergens)
+        ? product.mayContainAllergens.map((code) => normalizeAllergenCode(code))
+        : [];
 
-      for (const allergen of productAllergens) {
+      for (const allergen of [...productAllergens, ...productMayContainAllergens]) {
         allergenCodes.add(allergen);
       }
     }

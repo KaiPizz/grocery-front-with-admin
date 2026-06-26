@@ -9,6 +9,7 @@ const GROCERY_PRODUCT_FIELDS = `
     thumbnail { url alt }
     media { url alt type sortOrder }
     allergens
+    mayContainAllergens
     dietaryTags
     calories
     spiceLevel
@@ -64,6 +65,7 @@ const GROCERY_PRODUCT_LISTING_FIELDS = `
     thumbnail { url alt }
     media { url alt type sortOrder }
     allergens
+    mayContainAllergens
     dietaryTags
     countryOfOrigin
     pricePerUnit
@@ -96,6 +98,7 @@ const GROCERY_PRODUCT_FILTER_FIELDS = `
   fragment GroceryProductFilterFields on Product {
     id
     allergens
+    mayContainAllergens
     dietaryTags
     certifications
     countryOfOrigin

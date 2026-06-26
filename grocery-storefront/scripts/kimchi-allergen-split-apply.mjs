@@ -1,0 +1,277 @@
+#!/usr/bin/env node
+
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+
+const DEFAULT_INPUT = 'docs/kimchi-allergen-split-audit.csv';
+const DEFAULT_OUTPUT = 'docs/kimchi-allergen-split-apply.sql';
+const DEFAULT_REPORT = 'docs/kimchi-allergen-split-apply.md';
+const DEFAULT_CHANNEL = 'kenmito';
+
+const NON_FOOD_CATEGORIES = new Set([
+  'koreańskie-kosmetyki',
+  'komplety-do-sushi-i-herbaty',
+  'pałeczki-i-sztućce',
+  'noże',
+  'patelnie-wok-grill',
+  'miski',
+  'parowary-bambusowe',
+  'patelnie-tamago',
+  'koty-szczęścia-i-inne-gadżety',
+  'maty-do-zwijania',
+  'foremki',
+  'moździerze',
+  'zaparzacze-do-kawy',
+  'naczynia',
+  'prezenty',
+  'zestawy-do-sushi',
+]);
+
+function printUsage(exitCode = 0, errorMessage = null) {
+  if (errorMessage) {
+    console.error(`Error: ${errorMessage}`);
+    console.error('');
+  }
+  console.log('Usage: node scripts/kimchi-allergen-split-apply.mjs [options]');
+  console.log('');
+  console.log('Generates safe SQL to split Kenmito product allergens into contains vs may-contain.');
+  console.log('It does not connect to the database or mutate data.');
+  console.log('');
+  console.log('Options:');
+  console.log(`  --input <path>     Audit CSV (default: ${DEFAULT_INPUT})`);
+  console.log(`  --output <path>    SQL output path (default: ${DEFAULT_OUTPUT})`);
+  console.log(`  --report <path>    Markdown report path (default: ${DEFAULT_REPORT})`);
+  console.log(`  --channel <slug>   Storefront channel slug (default: ${DEFAULT_CHANNEL})`);
+  console.log('  --help             Show this help message');
+  process.exit(exitCode);
+}
+
+function parseArgs() {
+  const options = {
+    input: DEFAULT_INPUT,
+    output: DEFAULT_OUTPUT,
+    report: DEFAULT_REPORT,
+    channel: DEFAULT_CHANNEL,
+  };
+  const args = process.argv.slice(2);
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === '--help') printUsage(0);
+    if (!arg.startsWith('--')) printUsage(1, `Unexpected argument "${arg}"`);
+    const value = args[index + 1];
+    if (value == null || value.startsWith('--')) printUsage(1, `Missing value for "${arg}"`);
+    switch (arg.slice(2)) {
+      case 'input':
+        options.input = value;
+        break;
+      case 'output':
+        options.output = value;
+        break;
+      case 'report':
+        options.report = value;
+        break;
+      case 'channel':
+        options.channel = value;
+        break;
+      default:
+        printUsage(1, `Unknown option "${arg}"`);
+    }
+    index += 1;
+  }
+  return options;
+}
+
+function parseCsv(text) {
+  const records = [];
+  let row = [];
+  let field = '';
+  let inQuotes = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const nextChar = text[index + 1];
+    if (inQuotes) {
+      if (char === '"' && nextChar === '"') {
+        field += '"';
+        index += 1;
+      } else if (char === '"') {
+        inQuotes = false;
+      } else {
+        field += char;
+      }
+      continue;
+    }
+    if (char === '"') inQuotes = true;
+    else if (char === ',') {
+      row.push(field);
+      field = '';
+    } else if (char === '\n') {
+      row.push(field);
+      records.push(row);
+      row = [];
+      field = '';
+    } else if (char !== '\r') {
+      field += char;
+    }
+  }
+  if (field || row.length) {
+    row.push(field);
+    records.push(row);
+  }
+  return records;
+}
+
+function readCsv(filePath) {
+  const records = parseCsv(fs.readFileSync(filePath, 'utf8'));
+  const header = records.shift();
+  if (!header?.length) throw new Error(`CSV header missing in ${filePath}`);
+  return records
+    .map((record) => Object.fromEntries(header.map((key, index) => [key, record[index] ?? ''])))
+    .filter((row) => row.sku);
+}
+
+function parseCodes(value) {
+  return value ? value.split('|').map((code) => code.trim()).filter(Boolean) : [];
+}
+
+function sqlString(value) {
+  return `'${String(value ?? '').replace(/'/g, "''")}'`;
+}
+
+function sqlJson(value) {
+  return `${sqlString(JSON.stringify(value))}::jsonb`;
+}
+
+function buildRows(rows) {
+  return rows
+    .map((row) => ({
+      sku: row.sku,
+      name: row.name,
+      category: row.category,
+      oldAllergens: parseCodes(row.oldCandidateAllergens),
+      containsAllergens: parseCodes(row.containsAllergens),
+      mayContainAllergens: parseCodes(row.mayContainAllergens),
+    }))
+    .filter((row) => !NON_FOOD_CATEGORIES.has(row.category))
+    .filter((row) => (
+      row.oldAllergens.length > 0
+      || row.containsAllergens.length > 0
+      || row.mayContainAllergens.length > 0
+    ));
+}
+
+function writeSql(filePath, options, rows) {
+  const backupTable = `kenmito_allergen_split_backup_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
+  const values = rows.map((row) => [
+    sqlString(row.sku),
+    sqlJson(row.oldAllergens),
+    sqlJson(row.containsAllergens),
+    sqlJson(row.mayContainAllergens),
+  ].join(', '));
+
+  const sql = [
+    '-- Generated by scripts/kimchi-allergen-split-apply.mjs',
+    '-- Safe behavior: Kenmito channel only; backs up matched products; updates only rows whose current allergens still match the old imported candidate list.',
+    'BEGIN;',
+    '',
+    'ALTER TABLE "products"',
+    '  ADD COLUMN IF NOT EXISTS "may_contain_allergens" jsonb NOT NULL DEFAULT \'[]\';',
+    '',
+    `CREATE TABLE IF NOT EXISTS ${backupTable} (LIKE products INCLUDING ALL);`,
+    '',
+    'WITH source(sku, old_allergens, contains_allergens, may_contain_allergens) AS (',
+    `  VALUES\n  (${values.join('),\n  (')})`,
+    '), matched AS (',
+    '  SELECT DISTINCT p.*',
+    '  FROM source s',
+    `  JOIN channels ch ON ch.slug = ${sqlString(options.channel)} AND ch.is_active = true`,
+    '  JOIN product_variants v ON v.sku = s.sku AND v.salon_id = ch.salon_id',
+    '  JOIN products p ON p.id = v.template_id AND p.salon_id = ch.salon_id',
+    '  WHERE p.deleted_at IS NULL',
+    '), backup_insert AS (',
+    `  INSERT INTO ${backupTable}`,
+    '  SELECT m.* FROM matched m',
+    `  WHERE NOT EXISTS (SELECT 1 FROM ${backupTable} b WHERE b.id = m.id)`,
+    '  RETURNING id',
+    '), updated AS (',
+    '  UPDATE products p',
+    '  SET',
+    '    allergens = s.contains_allergens,',
+    '    may_contain_allergens = s.may_contain_allergens,',
+    '    updated_at = NOW()',
+    '  FROM source s',
+    `  JOIN channels ch ON ch.slug = ${sqlString(options.channel)} AND ch.is_active = true`,
+    '  JOIN product_variants v ON v.sku = s.sku AND v.salon_id = ch.salon_id',
+    '  WHERE p.id = v.template_id',
+    '    AND p.salon_id = ch.salon_id',
+    '    AND p.deleted_at IS NULL',
+    "    AND COALESCE(p.allergens, '[]'::jsonb) = s.old_allergens",
+    '    AND (',
+    "      COALESCE(p.allergens, '[]'::jsonb) IS DISTINCT FROM s.contains_allergens",
+    "      OR COALESCE(p.may_contain_allergens, '[]'::jsonb) IS DISTINCT FROM s.may_contain_allergens",
+    '    )',
+    '  RETURNING p.id, p.name',
+    ')',
+    'SELECT',
+    '  (SELECT COUNT(*) FROM source) AS source_rows,',
+    '  (SELECT COUNT(*) FROM matched) AS matched_products,',
+    '  (SELECT COUNT(*) FROM backup_insert) AS backed_up_products,',
+    '  (SELECT COUNT(*) FROM updated) AS updated_products;',
+    '',
+    'COMMIT;',
+    '',
+  ].join('\n');
+
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, sql);
+  return backupTable;
+}
+
+function writeReport(filePath, rows, backupTable, sqlPath) {
+  const changed = rows.filter((row) => (
+    JSON.stringify(row.oldAllergens) !== JSON.stringify(row.containsAllergens)
+    || row.mayContainAllergens.length > 0
+  ));
+  const lines = [
+    '# Kimchi Allergen Split Apply Plan',
+    '',
+    `Generated: ${new Date().toISOString()}`,
+    `SQL: ${sqlPath}`,
+    `Backup table: ${backupTable}`,
+    '',
+    'This report is generated from the allergen split audit CSV. The SQL is Kenmito-only and only updates products whose current `allergens` still match the old imported list.',
+    '',
+    '## Counts',
+    '',
+    '| Metric | Count |',
+    '| --- | ---: |',
+    `| candidate rows | ${rows.length} |`,
+    `| rows changing allergens or may-contain | ${changed.length} |`,
+    `| rows with may-contain allergens | ${rows.filter((row) => row.mayContainAllergens.length > 0).length} |`,
+    '',
+    '## Sample Changes',
+    '',
+    '| SKU | Product | Old allergens | Contains | May contain |',
+    '| --- | --- | --- | --- | --- |',
+  ];
+  for (const row of changed.slice(0, 60)) {
+    lines.push(`| ${row.sku} | ${row.name.replaceAll('|', '/')} | ${row.oldAllergens.join(' ') || '-'} | ${row.containsAllergens.join(' ') || '-'} | ${row.mayContainAllergens.join(' ') || '-'} |`);
+  }
+  lines.push('');
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, lines.join('\n'));
+}
+
+function main() {
+  const options = parseArgs();
+  const rows = buildRows(readCsv(options.input));
+  const backupTable = writeSql(options.output, options, rows);
+  writeReport(options.report, rows, backupTable, options.output);
+
+  console.log(`Read ${rows.length} allergen split rows.`);
+  console.log(`Wrote ${options.output}`);
+  console.log(`Wrote ${options.report}`);
+}
+
+main();
