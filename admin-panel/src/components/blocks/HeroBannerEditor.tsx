@@ -2,6 +2,7 @@
 
 import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 import { BannerImageUploader } from '@/components/blocks/BannerImageUploader';
+import { useLanguage } from '@/i18n';
 import type { HeroBannerBlock, HeroSlide } from '@/types/config';
 
 interface HeroBannerEditorProps {
@@ -9,19 +10,21 @@ interface HeroBannerEditorProps {
   onChange: (block: HeroBannerBlock) => void;
 }
 
-function defaultSlide(): HeroSlide {
+function defaultSlide(ctaText: string): HeroSlide {
   return {
     id: `hero-slide-${Date.now()}`,
     imageUrl: null,
     mobileImageUrl: null,
     title: '',
-    ctaText: 'Shop Now',
+    ctaText,
     ctaLink: '/products',
     enabled: true,
   };
 }
 
 export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
+  const { t } = useLanguage();
+
   function updateSlide(index: number, partial: Partial<HeroSlide>) {
     const slides = [...block.slides];
     slides[index] = { ...slides[index], ...partial };
@@ -30,7 +33,7 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
 
   function addSlide() {
     if (block.slides.length >= 5) return;
-    onChange({ ...block, slides: [...block.slides, defaultSlide()] });
+    onChange({ ...block, slides: [...block.slides, defaultSlide(t('homepage.blocks.defaultCtaText'))] });
   }
 
   function removeSlide(index: number) {
@@ -56,7 +59,7 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
             onChange={(e) => onChange({ ...block, autoPlay: e.target.checked })}
             className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
           />
-          Auto-play slides
+          {t('homepage.blocks.autoPlaySlides')}
         </label>
         {block.autoPlay && (
           <select
@@ -70,7 +73,9 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
             <option value={7000}>7 s</option>
           </select>
         )}
-        <span className="ml-auto text-xs text-gray-400">{block.slides.length} / 5 slides</span>
+        <span className="ml-auto text-xs text-gray-400">
+          {t('homepage.blocks.slidesSummary').replace('{count}', String(block.slides.length))}
+        </span>
       </div>
 
       <div className="space-y-3">
@@ -87,7 +92,9 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
                   />
                   <div className="w-8 h-4 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-4" />
                 </label>
-                <span className="text-sm font-medium text-gray-700">Slide {index + 1}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  {t('homepage.blocks.slideLabel').replace('{n}', String(index + 1))}
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <button type="button" onClick={() => moveSlide(index, -1)} disabled={index === 0} className="p-1 rounded hover:bg-gray-200 disabled:opacity-30">
@@ -108,7 +115,7 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
                 onChange={(url) => updateSlide(index, { imageUrl: url })}
                 requiredWidth={1920}
                 requiredHeight={600}
-                label="Desktop image"
+                label={t('homepage.blocks.desktopImage')}
                 required
               />
               <BannerImageUploader
@@ -116,7 +123,7 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
                 onChange={(url) => updateSlide(index, { mobileImageUrl: url })}
                 requiredWidth={768}
                 requiredHeight={480}
-                label="Mobile image"
+                label={t('homepage.blocks.mobileImage')}
               />
             </div>
 
@@ -125,14 +132,14 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
                 type="text"
                 value={slide.title}
                 onChange={(e) => updateSlide(index, { title: e.target.value })}
-                placeholder="Title (optional)"
+                placeholder={t('homepage.blocks.titleOptional')}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
               />
               <input
                 type="text"
                 value={slide.ctaText}
                 onChange={(e) => updateSlide(index, { ctaText: e.target.value })}
-                placeholder="Button text"
+                placeholder={t('homepage.blocks.buttonText')}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
               />
               <input
@@ -153,7 +160,7 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
           onClick={addSlide}
           className="inline-flex items-center gap-2 rounded-lg border border-dashed border-gray-300 px-4 py-2 text-sm text-gray-600 hover:border-indigo-400 hover:text-indigo-600 transition-colors"
         >
-          <Plus className="w-4 h-4" /> Add slide
+          <Plus className="w-4 h-4" /> {t('homepage.blocks.addSlide')}
         </button>
       )}
     </div>

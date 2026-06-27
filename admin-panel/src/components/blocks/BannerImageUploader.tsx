@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { Upload, X, Loader2, FolderOpen, AlertCircle } from 'lucide-react';
 import { uploadMedia } from '@/lib/api-client';
 import { MediaLibrary } from '@/components/MediaLibrary';
+import { useLanguage } from '@/i18n';
 
 interface BannerImageUploaderProps {
   value: string | null;
@@ -14,7 +15,24 @@ interface BannerImageUploaderProps {
   required?: boolean;
 }
 
+type Translate = (key: string) => string;
+
+function formatDimensionError(
+  t: Translate,
+  width: number,
+  height: number,
+  requiredWidth: number,
+  requiredHeight: number
+) {
+  return t('homepage.blocks.dimensionError')
+    .replace('{width}', String(width))
+    .replace('{height}', String(height))
+    .replace('{requiredWidth}', String(requiredWidth))
+    .replace('{requiredHeight}', String(requiredHeight));
+}
+
 function checkDimensionsFromFile(
+  t: Translate,
   file: File,
   reqW: number,
   reqH: number
@@ -29,7 +47,7 @@ function checkDimensionsFromFile(
       const hOk = img.height >= reqH * (1 - tolerance) && img.height <= reqH * (1 + tolerance);
       if (!wOk || !hOk) {
         resolve(
-          `Image is ${img.width}×${img.height} px — required ${reqW}×${reqH} px (±5%).`
+          formatDimensionError(t, img.width, img.height, reqW, reqH)
         );
       } else {
         resolve(null);
@@ -44,6 +62,7 @@ function checkDimensionsFromFile(
 }
 
 function checkDimensionsFromUrl(
+  t: Translate,
   src: string,
   reqW: number,
   reqH: number
@@ -56,13 +75,13 @@ function checkDimensionsFromUrl(
       const hOk = img.height >= reqH * (1 - tolerance) && img.height <= reqH * (1 + tolerance);
       if (!wOk || !hOk) {
         resolve(
-          `Image is ${img.width}×${img.height} px — required ${reqW}×${reqH} px (±5%).`
+          formatDimensionError(t, img.width, img.height, reqW, reqH)
         );
       } else {
         resolve(null);
       }
     };
-    img.onerror = () => resolve('Failed to load image for dimension check');
+    img.onerror = () => resolve(t('homepage.blocks.dimensionLoadError'));
     img.src = src;
   });
 }
@@ -80,11 +99,12 @@ export function BannerImageUploader({
   const [error, setError] = useState<string | null>(null);
   const [showLibrary, setShowLibrary] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLanguage();
 
   async function handleFile(file: File) {
     setError(null);
 
-    const dimError = await checkDimensionsFromFile(file, requiredWidth, requiredHeight);
+    const dimError = await checkDimensionsFromFile(t, file, requiredWidth, requiredHeight);
     if (dimError) {
       setError(dimError);
       return;
@@ -98,7 +118,10 @@ export function BannerImageUploader({
       });
       onChange(result.url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed');
+      const message = err instanceof Error && err.message !== 'Upload failed'
+        ? err.message
+        : t('homepage.blocks.uploadFailed');
+      setError(message);
     } finally {
       setUploading(false);
     }
@@ -115,7 +138,7 @@ export function BannerImageUploader({
 
       {validating && (
         <div className="flex items-center gap-2 text-sm text-gray-500">
-          <Loader2 className="w-4 h-4 animate-spin" /> Checking dimensions…
+          <Loader2 className="w-4 h-4 animate-spin" /> {t('homepage.blocks.checkingDimensions')}
         </div>
       )}
 
@@ -123,14 +146,14 @@ export function BannerImageUploader({
         <div className="relative inline-block">
           <img
             src={value}
-            alt="Uploaded banner"
+            alt={t('homepage.blocks.uploadedBannerAlt')}
             className="h-20 w-auto max-w-xs rounded-lg border border-gray-200 object-contain bg-gray-50"
           />
           <button
             type="button"
             onClick={() => onChange(null)}
             className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600"
-            title="Remove image"
+            title={t('homepage.blocks.removeImage')}
           >
             <X className="w-3 h-3" />
           </button>
@@ -153,7 +176,7 @@ export function BannerImageUploader({
               ) : (
                 <Upload className="w-4 h-4" />
               )}
-              {uploading ? 'Uploading…' : 'Upload image'}
+              {uploading ? t('common.uploading') : t('common.uploadImage')}
             </button>
             <button
               type="button"
@@ -161,11 +184,11 @@ export function BannerImageUploader({
               className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-500 hover:border-indigo-400 hover:text-indigo-600 transition-colors"
             >
               <FolderOpen className="w-4 h-4" />
-              Library
+              {t('common.library')}
             </button>
           </div>
           {required && (
-            <p className="text-xs text-red-500">Image is required before saving</p>
+            <p className="text-xs text-red-500">{t('homepage.blocks.imageRequired')}</p>
           )}
         </div>
       )}
@@ -196,14 +219,14 @@ export function BannerImageUploader({
             setError(null);
             setValidating(true);
             try {
-              const dimError = await checkDimensionsFromUrl(url, requiredWidth, requiredHeight);
+              const dimError = await checkDimensionsFromUrl(t, url, requiredWidth, requiredHeight);
               if (dimError) {
                 setError(dimError);
               } else {
                 onChange(url);
               }
             } catch {
-              setError('Failed to validate image dimensions');
+              setError(t('homepage.blocks.dimensionValidationFailed'));
             } finally {
               setValidating(false);
             }

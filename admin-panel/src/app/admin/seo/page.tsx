@@ -40,7 +40,7 @@ export default function SeoPage() {
               value={seo.defaultTitle}
               onChange={(e) => updateSeo({ defaultTitle: e.target.value })}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
-              placeholder="My Grocery Store"
+              placeholder={t('seo.defaultTitlePlaceholder')}
             />
           </FieldLabel>
 
@@ -51,7 +51,7 @@ export default function SeoPage() {
               rows={3}
               maxLength={500}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none resize-none"
-              placeholder="Fresh groceries delivered to your door..."
+              placeholder={t('seo.defaultDescriptionPlaceholder')}
             />
             <p className="mt-1 text-xs text-gray-400">{seo.defaultDescription.length}/500</p>
           </FieldLabel>

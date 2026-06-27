@@ -5,10 +5,31 @@ import { toast } from 'sonner';
 import type { StorefrontConfig } from '@/types/config';
 import { fetchDraftConfig, saveDraft, publishConfig as publishConfigApi } from '@/lib/api-client';
 import { DEFAULT_CONFIG } from '@/lib/defaults';
-import { getAdminReadiness, getPublishBlockerMessage } from '@/lib/admin-readiness';
+import { getAdminReadiness, type ReadinessIssue } from '@/lib/admin-readiness';
+import { useLanguage } from '@/i18n';
 
 const SLUG = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
 const HISTORY_LIMIT = 50;
+
+const PUBLISH_BLOCKER_TRANSLATION_KEYS: Record<string, string> = {
+  'homepage.hero-slide-image-missing': 'toast.publishBlockers.heroSlideImageMissing',
+  'homepage.horizontal-image-missing': 'toast.publishBlockers.horizontalImageMissing',
+  'homepage.grid-item-image-missing': 'toast.publishBlockers.gridItemImageMissing',
+  'homepage.round-grid-item-image-missing': 'toast.publishBlockers.roundGridItemImageMissing',
+  'homepage.sidebar-image-missing': 'toast.publishBlockers.sidebarImageMissing',
+  'homepage.sticky-desktop-image-missing': 'toast.publishBlockers.stickyDesktopImageMissing',
+  'homepage.sticky-mobile-image-missing': 'toast.publishBlockers.stickyMobileImageMissing',
+  'tracking.facebook-pixel-id-missing': 'toast.publishBlockers.facebookPixelIdMissing',
+  'tracking.google-analytics-id-missing': 'toast.publishBlockers.googleAnalyticsIdMissing',
+  'tracking.google-tag-manager-id-missing': 'toast.publishBlockers.googleTagManagerIdMissing',
+  'tracking.hotjar-id-missing': 'toast.publishBlockers.hotjarIdMissing',
+};
+
+function getTranslatedPublishBlockerMessage(t: (key: string) => string, issue: ReadinessIssue | undefined): string {
+  if (!issue) return t('toast.publishBlockedDefault');
+  const key = PUBLISH_BLOCKER_TRANSLATION_KEYS[issue.id];
+  return key ? t(key) : t('toast.publishBlockedDefault');
+}
 
 interface UseConfigReturn {
   config: StorefrontConfig;
@@ -30,6 +51,7 @@ interface UseConfigReturn {
 }
 
 export function useConfig(): UseConfigReturn {
+  const { t } = useLanguage();
   const [config, setConfig] = useState<StorefrontConfig>(DEFAULT_CONFIG);
   const [savedConfig, setSavedConfig] = useState<StorefrontConfig>(DEFAULT_CONFIG);
   const [loading, setLoading] = useState(true);
@@ -74,12 +96,12 @@ export function useConfig(): UseConfigReturn {
       }
     } catch (err) {
       if (mountedRef.current) {
-        setError(err instanceof Error ? err.message : 'Failed to load config');
+        setError(err instanceof Error ? err.message : t('toast.loadConfigFailed'));
       }
     } finally {
       if (mountedRef.current) setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -145,23 +167,23 @@ export function useConfig(): UseConfigReturn {
         setSavedConfig(envelope.config);
         setLastSaved(envelope.updatedAt);
       }
-      toast.success('Draft saved successfully');
+      toast.success(t('toast.draftSaved'));
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to save';
+      const msg = err instanceof Error ? err.message : t('toast.saveFailed');
       if (mountedRef.current) setError(msg);
-      toast.error('Failed to save draft', { description: msg });
+      toast.error(t('toast.saveDraftFailed'), { description: msg });
       throw err;
     } finally {
       if (mountedRef.current) setSaving(false);
     }
-  }, [config]);
+  }, [config, t]);
 
   const publish = useCallback(async () => {
     const readiness = getAdminReadiness(config);
     if (!readiness.canPublish) {
-      const msg = getPublishBlockerMessage(readiness.blockingIssues[0]);
+      const msg = getTranslatedPublishBlockerMessage(t, readiness.blockingIssues[0]);
       setError(msg);
-      toast.error('Failed to publish', { description: msg });
+      toast.error(t('toast.publishFailed'), { description: msg });
       throw new Error(msg);
     }
 
@@ -174,16 +196,16 @@ export function useConfig(): UseConfigReturn {
         setSavedConfig(envelope.config);
         setLastSaved(envelope.updatedAt);
       }
-      toast.success('Published!', { description: 'Changes are now live on the storefront.' });
+      toast.success(t('toast.published'), { description: t('toast.publishedDescription') });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to publish';
+      const msg = err instanceof Error ? err.message : t('toast.publishFailed');
       if (mountedRef.current) setError(msg);
-      toast.error('Failed to publish', { description: msg });
+      toast.error(t('toast.publishFailed'), { description: msg });
       throw err;
     } finally {
       if (mountedRef.current) setPublishing(false);
     }
-  }, [config]);
+  }, [config, t]);
 
   const isDirty = useMemo(
     () => JSON.stringify(config) !== JSON.stringify(savedConfig),

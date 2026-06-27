@@ -2,6 +2,7 @@
 
 import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 import { BannerImageUploader } from '@/components/blocks/BannerImageUploader';
+import { useLanguage } from '@/i18n';
 import type { RoundGridBannerBlock, GridItem } from '@/types/config';
 
 interface RoundGridBannerEditorProps {
@@ -20,6 +21,8 @@ function defaultItem(): GridItem {
 }
 
 export function RoundGridBannerEditor({ block, onChange }: RoundGridBannerEditorProps) {
+  const { t } = useLanguage();
+
   function updateItem(index: number, partial: Partial<GridItem>) {
     const items = [...block.items];
     items[index] = { ...items[index], ...partial };
@@ -46,8 +49,10 @@ export function RoundGridBannerEditor({ block, onChange }: RoundGridBannerEditor
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-        <span className="text-sm font-medium text-gray-700">Round grid tiles</span>
-        <span className="text-xs text-gray-400">{block.items.length} / 3 items · 3 per row</span>
+        <span className="text-sm font-medium text-gray-700">{t('homepage.blocks.roundGridTiles')}</span>
+        <span className="text-xs text-gray-400">
+          {t('homepage.blocks.itemsSummary').replace('{count}', String(block.items.length))}
+        </span>
       </div>
 
       <div className="space-y-3">
@@ -64,7 +69,9 @@ export function RoundGridBannerEditor({ block, onChange }: RoundGridBannerEditor
                   />
                   <div className="w-8 h-4 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-4" />
                 </label>
-                <span className="text-sm font-medium text-gray-700">Item {index + 1}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  {t('homepage.blocks.itemLabel').replace('{n}', String(index + 1))}
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <button type="button" onClick={() => moveItem(index, -1)} disabled={index === 0} className="p-1 rounded hover:bg-gray-200 disabled:opacity-30">
@@ -84,7 +91,7 @@ export function RoundGridBannerEditor({ block, onChange }: RoundGridBannerEditor
               onChange={(url) => updateItem(index, { imageUrl: url })}
               requiredWidth={400}
               requiredHeight={400}
-              label="Tile image"
+              label={t('homepage.blocks.tileImage')}
               required
             />
 
@@ -93,14 +100,14 @@ export function RoundGridBannerEditor({ block, onChange }: RoundGridBannerEditor
                 type="text"
                 value={item.title}
                 onChange={(e) => updateItem(index, { title: e.target.value })}
-                placeholder="Label (optional)"
+                placeholder={t('homepage.blocks.labelOptional')}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
               />
               <input
                 type="text"
                 value={item.href}
                 onChange={(e) => updateItem(index, { href: e.target.value })}
-                placeholder="Link URL (required)"
+                placeholder={t('homepage.blocks.linkUrlRequired')}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
               />
             </div>
@@ -114,7 +121,7 @@ export function RoundGridBannerEditor({ block, onChange }: RoundGridBannerEditor
           onClick={addItem}
           className="inline-flex items-center gap-2 rounded-lg border border-dashed border-gray-300 px-4 py-2 text-sm text-gray-600 hover:border-indigo-400 hover:text-indigo-600 transition-colors"
         >
-          <Plus className="w-4 h-4" /> Add tile
+          <Plus className="w-4 h-4" /> {t('homepage.blocks.addTile')}
         </button>
       )}
     </div>

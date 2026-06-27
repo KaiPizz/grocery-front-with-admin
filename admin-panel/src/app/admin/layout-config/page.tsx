@@ -41,7 +41,7 @@ export default function LayoutConfigPage() {
 
   function addNavItem() {
     const navItems = [...layout.header.navItems, {
-      label: 'New Link',
+      label: t('layout.header.newNavItem'),
       href: '/',
       enabled: true,
       order: layout.header.navItems.length,
@@ -74,7 +74,7 @@ export default function LayoutConfigPage() {
   }
 
   function addFooterColumn() {
-    const columns = [...layout.footer.columns, { title: 'New Column', links: [] }];
+    const columns = [...layout.footer.columns, { title: t('layout.footer.newColumn'), links: [] }];
     updateLayout({ footer: { ...layout.footer, columns } });
   }
 
@@ -87,7 +87,7 @@ export default function LayoutConfigPage() {
     const columns = [...layout.footer.columns];
     columns[colIndex] = {
       ...columns[colIndex],
-      links: [...columns[colIndex].links, { label: 'New Link', href: '#' }],
+      links: [...columns[colIndex].links, { label: t('layout.footer.newLink'), href: '#' }],
     };
     updateLayout({ footer: { ...layout.footer, columns } });
   }
@@ -198,7 +198,7 @@ export default function LayoutConfigPage() {
                   value={layout.header.cta?.text ?? ''}
                   onChange={(e) => updateLayout({ header: { ...layout.header, cta: { link: '', enabled: false, ...layout.header.cta, text: e.target.value } } })}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
-                  placeholder="Shop Now"
+                  placeholder={t('layout.header.ctaButtonTextPlaceholder')}
                 />
               </FieldLabel>
               <FieldLabel label={t('layout.header.ctaButtonLink')}>

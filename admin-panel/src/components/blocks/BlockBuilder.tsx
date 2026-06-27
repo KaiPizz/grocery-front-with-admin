@@ -8,6 +8,7 @@ import { GridBannerEditor } from '@/components/blocks/GridBannerEditor';
 import { RoundGridBannerEditor } from '@/components/blocks/RoundGridBannerEditor';
 import { SidebarBannerEditor } from '@/components/blocks/SidebarBannerEditor';
 import { SmallStickyBannerEditor } from '@/components/blocks/SmallStickyBannerEditor';
+import { useLanguage } from '@/i18n';
 import type {
   BannerBlock,
   HeroBannerBlock,
@@ -23,51 +24,51 @@ interface BlockBuilderProps {
   onChange: (blocks: BannerBlock[]) => void;
 }
 
-const BLOCK_META: Record<BannerBlock['type'], { label: string; description: string; hint: string; icon: React.ReactNode }> = {
+const BLOCK_META: Record<BannerBlock['type'], { labelKey: string; descriptionKey: string; hint: string; icon: React.ReactNode }> = {
   hero: {
-    label: 'Hero Banner',
-    description: 'Full-width carousel — up to 5 slides',
+    labelKey: 'homepage.blocks.meta.hero.label',
+    descriptionKey: 'homepage.blocks.meta.hero.description',
     hint: '1920 × 600 px',
     icon: <Monitor className="w-5 h-5" />,
   },
   horizontal: {
-    label: 'Horizontal Banner',
-    description: 'Single wide section banner',
+    labelKey: 'homepage.blocks.meta.horizontal.label',
+    descriptionKey: 'homepage.blocks.meta.horizontal.description',
     hint: '1200 × 300 px',
     icon: <LayoutTemplate className="w-5 h-5" />,
   },
   grid: {
-    label: 'Grid Banner',
-    description: 'Square tile grid — up to 12 items',
+    labelKey: 'homepage.blocks.meta.grid.label',
+    descriptionKey: 'homepage.blocks.meta.grid.description',
     hint: '400 × 400 px per tile',
     icon: <Grid2x2 className="w-5 h-5" />,
   },
   round_grid: {
-    label: 'Round Grid Banner',
-    description: 'Circular tile grid — up to 3 items',
+    labelKey: 'homepage.blocks.meta.roundGrid.label',
+    descriptionKey: 'homepage.blocks.meta.roundGrid.description',
     hint: '400 × 400 px per tile (circle crop)',
     icon: <Circle className="w-5 h-5" />,
   },
   sidebar: {
-    label: 'Sidebar Banner',
-    description: 'Vertical banner — desktop only',
+    labelKey: 'homepage.blocks.meta.sidebar.label',
+    descriptionKey: 'homepage.blocks.meta.sidebar.description',
     hint: '300 × 600 px',
     icon: <PanelRight className="w-5 h-5" />,
   },
   small_sticky: {
-    label: 'Small / Sticky Banner',
-    description: 'Sticky top or bottom announcement',
+    labelKey: 'homepage.blocks.meta.smallSticky.label',
+    descriptionKey: 'homepage.blocks.meta.smallSticky.description',
     hint: '728×90 px desktop · 320×50 px mobile',
     icon: <Bell className="w-5 h-5" />,
   },
 };
 
-function createBlock(type: BannerBlock['type'], order: number): BannerBlock {
+function createBlock(type: BannerBlock['type'], order: number, defaultCtaText: string): BannerBlock {
   const id = `block-${type}-${Date.now()}`;
   if (type === 'hero') {
     return {
       id, type: 'hero', enabled: true, order, autoPlay: true, autoPlayInterval: 4000,
-      slides: [{ id: `slide-${Date.now()}`, imageUrl: null, mobileImageUrl: null, title: '', ctaText: 'Shop Now', ctaLink: '/products', enabled: true }],
+      slides: [{ id: `slide-${Date.now()}`, imageUrl: null, mobileImageUrl: null, title: '', ctaText: defaultCtaText, ctaLink: '/products', enabled: true }],
     } satisfies HeroBannerBlock;
   }
   if (type === 'horizontal') {
@@ -95,6 +96,7 @@ const KNOWN_TYPES = new Set<string>(['hero', 'horizontal', 'grid', 'round_grid',
 export function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
   const [showTypePicker, setShowTypePicker] = useState(false);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const { t } = useLanguage();
 
   useEffect(() => {
     const filtered = blocks.filter((b) => KNOWN_TYPES.has(b.type));
@@ -105,7 +107,7 @@ export function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
   }, []);
 
   function addBlock(type: BannerBlock['type']) {
-    onChange([...blocks, createBlock(type, blocks.length)].map((b, i) => ({ ...b, order: i })));
+    onChange([...blocks, createBlock(type, blocks.length, t('homepage.blocks.defaultCtaText'))].map((b, i) => ({ ...b, order: i })));
     setShowTypePicker(false);
   }
 
@@ -133,7 +135,7 @@ export function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
     <div className="space-y-3">
       {blocks.length === 0 && (
         <div className="rounded-lg border border-dashed border-gray-300 py-10 text-center text-sm text-gray-500">
-          No banner blocks yet. Use &ldquo;Add block&rdquo; below to get started.
+          {t('homepage.blocks.empty')}
         </div>
       )}
 
@@ -155,7 +157,7 @@ export function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
               >
                 <span className="text-indigo-500 shrink-0">{meta.icon}</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-gray-800 truncate">{meta.label}</p>
+                  <p className="text-sm font-semibold text-gray-800 truncate">{t(meta.labelKey)}</p>
                   <p className="text-xs text-gray-400 font-mono">{meta.hint}</p>
                 </div>
                 <ChevronDown className={`w-4 h-4 text-gray-400 ml-auto shrink-0 transition-transform ${isCollapsed ? '' : 'rotate-180'}`} />
@@ -167,9 +169,9 @@ export function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
               </label>
 
               <div className="flex items-center gap-0.5 shrink-0">
-                <button type="button" onClick={() => moveBlock(index, -1)} disabled={index === 0} className="p-1 rounded hover:bg-gray-100 disabled:opacity-30" title="Move up"><ChevronUp className="w-4 h-4 text-gray-500" /></button>
-                <button type="button" onClick={() => moveBlock(index, 1)} disabled={index === blocks.length - 1} className="p-1 rounded hover:bg-gray-100 disabled:opacity-30" title="Move down"><ChevronDown className="w-4 h-4 text-gray-500" /></button>
-                <button type="button" onClick={() => removeBlock(block.id)} className="p-1 rounded hover:bg-red-50 text-red-500" title="Delete block"><Trash2 className="w-4 h-4" /></button>
+                <button type="button" onClick={() => moveBlock(index, -1)} disabled={index === 0} className="p-1 rounded hover:bg-gray-100 disabled:opacity-30" title={t('common.moveUp')}><ChevronUp className="w-4 h-4 text-gray-500" /></button>
+                <button type="button" onClick={() => moveBlock(index, 1)} disabled={index === blocks.length - 1} className="p-1 rounded hover:bg-gray-100 disabled:opacity-30" title={t('common.moveDown')}><ChevronDown className="w-4 h-4 text-gray-500" /></button>
+                <button type="button" onClick={() => removeBlock(block.id)} className="p-1 rounded hover:bg-red-50 text-red-500" title={t('common.delete')}><Trash2 className="w-4 h-4" /></button>
               </div>
             </div>
 
@@ -193,7 +195,7 @@ export function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
           onClick={() => setShowTypePicker((v) => !v)}
           className="inline-flex items-center gap-2 rounded-lg border border-dashed border-gray-300 px-4 py-2.5 text-sm text-gray-600 hover:border-indigo-400 hover:text-indigo-600 transition-colors"
         >
-          <Plus className="w-4 h-4" /> Add block
+          <Plus className="w-4 h-4" /> {t('homepage.blocks.addBlock')}
         </button>
 
         {showTypePicker && (
@@ -207,8 +209,8 @@ export function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
               >
                 <span className="mt-0.5 text-indigo-500 shrink-0">{meta.icon}</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-gray-800">{meta.label}</p>
-                  <p className="text-xs text-gray-500">{meta.description}</p>
+                  <p className="text-sm font-semibold text-gray-800">{t(meta.labelKey)}</p>
+                  <p className="text-xs text-gray-500">{t(meta.descriptionKey)}</p>
                   <p className="text-xs text-indigo-500 font-mono mt-0.5">{meta.hint}</p>
                 </div>
               </button>

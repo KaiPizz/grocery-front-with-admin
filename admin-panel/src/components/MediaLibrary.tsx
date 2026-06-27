@@ -43,14 +43,14 @@ export function MediaLibrary({ onSelect, onClose }: MediaLibraryProps) {
       if (json.success) {
         setItems(json.data);
       } else {
-        setError(json.error || 'Failed to load media');
+        setError(json.error || t('mediaLibrary.loadError'));
       }
     } catch {
-      setError('Failed to connect');
+      setError(t('mediaLibrary.connectError'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchMedia();
@@ -149,7 +149,7 @@ export function MediaLibrary({ onSelect, onClose }: MediaLibraryProps) {
                     onClick={(e) => { e.stopPropagation(); handleDelete(item.filename); }}
                     disabled={deleting === item.filename}
                     className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50"
-                    title="Delete"
+                    title={t('mediaLibrary.delete')}
                   >
                     {deleting === item.filename ? (
                       <Loader2 className="w-3 h-3 animate-spin text-gray-400" />
@@ -165,8 +165,12 @@ export function MediaLibrary({ onSelect, onClose }: MediaLibraryProps) {
 
         {/* Footer */}
         <div className="px-5 py-3 border-t border-gray-200 text-xs text-gray-400">
-          {items.length} file{items.length !== 1 ? 's' : ''}
-          {selected && <span className="ml-2 text-indigo-500">• 1 selected</span>}
+          {t('mediaLibrary.filesCount').replace('{count}', String(items.length))}
+          {selected && (
+            <span className="ml-2 text-indigo-500">
+              • {t('mediaLibrary.selectedCount').replace('{count}', '1')}
+            </span>
+          )}
         </div>
       </div>
     </div>

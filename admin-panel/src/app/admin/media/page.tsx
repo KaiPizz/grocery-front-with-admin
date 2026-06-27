@@ -42,7 +42,7 @@ export default function MediaPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => { fetchMedia(); }, [fetchMedia]);
 
@@ -55,7 +55,10 @@ export default function MediaPage() {
       toast.success(t('media.uploadSuccess'));
       fetchMedia();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t('media.uploadButton'));
+      const message = err instanceof Error && err.message !== 'Upload failed'
+        ? err.message
+        : t('imageUploader.uploadFailed');
+      toast.error(message);
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = '';
@@ -144,7 +147,7 @@ export default function MediaPage() {
                   <button
                     onClick={() => copyUrl(item.url)}
                     className="w-7 h-7 rounded-full bg-white/90 flex items-center justify-center hover:bg-white shadow-sm"
-                    title="Copy URL"
+                    title={t('common.copyUrl')}
                   >
                     {copiedUrl === item.url ? (
                       <Check className="w-3.5 h-3.5 text-green-600" />
@@ -156,7 +159,7 @@ export default function MediaPage() {
                     onClick={() => handleDelete(item.filename)}
                     disabled={deleting === item.filename}
                     className="w-7 h-7 rounded-full bg-white/90 flex items-center justify-center hover:bg-red-50 shadow-sm"
-                    title="Delete"
+                    title={t('common.delete')}
                   >
                     {deleting === item.filename ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-gray-400" />

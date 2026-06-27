@@ -82,11 +82,11 @@ export default function BrandingPage() {
             <input
               type="text"
               value={branding.storeName}
-              onChange={(e) => updateBranding({ storeName: e.target.value })}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
-              placeholder="My Store"
-            />
-          </FieldLabel>
+                  onChange={(e) => updateBranding({ storeName: e.target.value })}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
+                  placeholder={t('branding.identity.storeNamePlaceholder')}
+                />
+              </FieldLabel>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <ImageUploader
@@ -235,14 +235,18 @@ export default function BrandingPage() {
                   </div>
                 )}
                 <span className="font-bold text-[11px] tracking-tight" style={{ color: branding.colors.foreground, fontFamily: 'Georgia, serif' }}>{branding.storeName}</span>
-                {['Home', 'Products', 'Recipes'].map((item) => (
-                  <span key={item} className="px-1.5 py-0.5 rounded text-[8px] font-medium cursor-default transition-colors" style={{ color: branding.colors.foreground, backgroundColor: hoveredBtn === `nav-${item}` ? `color-mix(in srgb, ${branding.colors.foreground} 5%, transparent)` : 'transparent' }} onMouseEnter={() => setHoveredBtn(`nav-${item}`)} onMouseLeave={() => setHoveredBtn(null)}>{item}</span>
+                {[
+                  { id: 'home', label: t('branding.livePreview.navHome') },
+                  { id: 'products', label: t('branding.livePreview.navProducts') },
+                  { id: 'recipes', label: t('branding.livePreview.navRecipes') },
+                ].map((item) => (
+                  <span key={item.id} className="px-1.5 py-0.5 rounded text-[8px] font-medium cursor-default transition-colors" style={{ color: branding.colors.foreground, backgroundColor: hoveredBtn === `nav-${item.id}` ? `color-mix(in srgb, ${branding.colors.foreground} 5%, transparent)` : 'transparent' }} onMouseEnter={() => setHoveredBtn(`nav-${item.id}`)} onMouseLeave={() => setHoveredBtn(null)}>{item.label}</span>
                 ))}
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex items-center gap-1 rounded-lg border px-2 py-1" style={{ borderColor: branding.colors.border }}>
                   <svg className="w-3 h-3" style={{ color: branding.colors.mutedForeground }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                  <span className="text-[7px]" style={{ color: branding.colors.mutedForeground }}>Search...</span>
+                  <span className="text-[7px]" style={{ color: branding.colors.mutedForeground }}>{t('branding.livePreview.searchPlaceholder')}</span>
                 </div>
                 <svg className="w-3.5 h-3.5" style={{ color: branding.colors.foreground }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 <svg className="w-3.5 h-3.5" style={{ color: branding.colors.foreground }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
@@ -260,8 +264,8 @@ export default function BrandingPage() {
                   <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75" /></svg>
                 </div>
               </div>
-              <h2 className="text-lg font-bold mb-1.5 tracking-tight leading-tight" style={{ color: branding.colors.foreground, fontFamily: 'Georgia, serif' }}>Fresh groceries, delivered to your door</h2>
-              <p className="text-[10px] mb-3 max-w-xs mx-auto leading-relaxed" style={{ color: branding.colors.mutedForeground }}>Quality products with full nutritional transparency</p>
+              <h2 className="text-lg font-bold mb-1.5 tracking-tight leading-tight" style={{ color: branding.colors.foreground, fontFamily: 'Georgia, serif' }}>{t('branding.livePreview.heroTitle')}</h2>
+              <p className="text-[10px] mb-3 max-w-xs mx-auto leading-relaxed" style={{ color: branding.colors.mutedForeground }}>{t('branding.livePreview.heroSubtitle')}</p>
               <button
                 className="inline-flex items-center gap-1 px-4 py-1.5 rounded-xl text-white text-[10px] font-semibold transition-all cursor-default"
                 style={{
@@ -272,7 +276,7 @@ export default function BrandingPage() {
                 onMouseEnter={() => setHoveredBtn('hero-cta')}
                 onMouseLeave={() => setHoveredBtn(null)}
               >
-                Products
+                {t('branding.livePreview.productsCta')}
                 <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M9 5l7 7-7 7"/></svg>
               </button>
             </div>
@@ -354,16 +358,20 @@ export default function BrandingPage() {
                 <span className="text-[8px] font-bold" style={{ color: branding.colors.foreground, fontFamily: 'Georgia, serif' }}>{branding.storeName}</span>
               </div>
               <div className="flex gap-5 mb-2">
-                {['Shop', 'Info', 'Legal'].map((col) => (
+                {[
+                  t('branding.livePreview.footerShop'),
+                  t('branding.livePreview.footerInfo'),
+                  t('branding.livePreview.footerLegal'),
+                ].map((col) => (
                   <div key={col}>
                     <p className="text-[7px] font-semibold mb-0.5" style={{ color: branding.colors.foreground, fontFamily: 'Georgia, serif' }}>{col}</p>
-                    <p className="text-[6px]" style={{ color: branding.colors.mutedForeground }}>Products</p>
-                    <p className="text-[6px]" style={{ color: branding.colors.mutedForeground }}>Recipes</p>
+                    <p className="text-[6px]" style={{ color: branding.colors.mutedForeground }}>{t('branding.livePreview.navProducts')}</p>
+                    <p className="text-[6px]" style={{ color: branding.colors.mutedForeground }}>{t('branding.livePreview.navRecipes')}</p>
                   </div>
                 ))}
               </div>
               <div className="border-t pt-1.5 text-center" style={{ borderColor: branding.colors.border }}>
-                <p className="text-[6px]" style={{ color: branding.colors.mutedForeground }}>&copy; 2025 {branding.storeName}. Powered by Zira AI.</p>
+                <p className="text-[6px]" style={{ color: branding.colors.mutedForeground }}>&copy; 2025 {branding.storeName}. {t('branding.livePreview.poweredBy')}.</p>
               </div>
             </div>
           </div>

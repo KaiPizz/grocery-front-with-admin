@@ -55,28 +55,35 @@ export default function HomepagePage() {
 
   function getBlockImageErrors(blocks: BannerBlock[]): string[] {
     const errors: string[] = [];
+    const fillTitle = (template: string, title?: string) =>
+      template.replace('{title}', title || t('homepage.blocks.untitled'));
     for (const block of blocks) {
       if (!block.enabled) continue;
       switch (block.type) {
         case 'hero':
           for (const slide of block.slides) {
-            if (!slide.imageUrl) errors.push(`Hero slide "${slide.title || 'Untitled'}" is missing a desktop image`);
+            if (!slide.imageUrl) errors.push(fillTitle(t('homepage.blocks.missingHeroDesktop'), slide.title));
           }
           break;
         case 'horizontal':
-          if (!block.imageUrl) errors.push('Horizontal banner is missing a desktop image');
+          if (!block.imageUrl) errors.push(t('homepage.blocks.missingHorizontalDesktop'));
           break;
         case 'grid':
           for (const item of block.items) {
-            if (!item.imageUrl) errors.push(`Grid tile "${item.title || 'Untitled'}" is missing an image`);
+            if (!item.imageUrl) errors.push(fillTitle(t('homepage.blocks.missingGridTile'), item.title));
+          }
+          break;
+        case 'round_grid':
+          for (const item of block.items) {
+            if (!item.imageUrl) errors.push(fillTitle(t('homepage.blocks.missingRoundGridTile'), item.title));
           }
           break;
         case 'sidebar':
-          if (!block.imageUrl) errors.push('Sidebar banner is missing an image');
+          if (!block.imageUrl) errors.push(t('homepage.blocks.missingSidebarImage'));
           break;
         case 'small_sticky':
-          if (!block.desktopImageUrl) errors.push('Sticky banner is missing a desktop image');
-          if (!block.mobileImageUrl) errors.push('Sticky banner is missing a mobile image');
+          if (!block.desktopImageUrl) errors.push(t('homepage.blocks.missingStickyDesktop'));
+          if (!block.mobileImageUrl) errors.push(t('homepage.blocks.missingStickyMobile'));
           break;
       }
     }
@@ -86,8 +93,8 @@ export default function HomepagePage() {
   async function handleSave() {
     const errors = getBlockImageErrors(homepage.blocks ?? []);
     if (errors.length > 0) {
-      toast.error('Cannot save — missing images', {
-        description: errors[0] + (errors.length > 1 ? ` (+${errors.length - 1} more)` : ''),
+      toast.error(t('homepage.blocks.cannotSaveMissingImages'), {
+        description: errors[0] + (errors.length > 1 ? ` (${t('homepage.blocks.moreErrors').replace('{count}', String(errors.length - 1))})` : ''),
       });
       return;
     }
@@ -175,8 +182,8 @@ export default function HomepagePage() {
 
         {/* Banner Blocks */}
         <FormCard
-          title="Banner Blocks"
-          description="Hero carousel, horizontal banners, grid tiles, sidebar banners, or sticky announcements. Each block enforces strict upload dimensions."
+          title={t('homepage.blocks.title')}
+          description={t('homepage.blocks.description')}
           overflow="visible"
         >
           <BlockBuilder

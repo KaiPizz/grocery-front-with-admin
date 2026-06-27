@@ -26,7 +26,10 @@ export function ImageUploader({ value, onChange, label }: ImageUploaderProps) {
       const result = await uploadMedia(file);
       onChange(result.url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed');
+      const message = err instanceof Error && err.message !== 'Upload failed'
+        ? err.message
+        : t('imageUploader.uploadFailed');
+      setError(message);
     } finally {
       setUploading(false);
     }
@@ -44,13 +47,14 @@ export function ImageUploader({ value, onChange, label }: ImageUploaderProps) {
         <div className="relative inline-block">
           <img
             src={value}
-            alt="Uploaded"
+            alt={t('imageUploader.uploadedAlt')}
             className="h-20 w-auto rounded-lg border border-gray-200 object-contain bg-gray-50"
           />
           <button
             type="button"
             onClick={() => onChange(null)}
             className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600"
+            title={t('imageUploader.remove')}
           >
             <X className="w-3 h-3" />
           </button>
