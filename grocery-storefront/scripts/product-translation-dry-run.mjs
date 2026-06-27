@@ -266,6 +266,18 @@ function getSourceBrand(productName) {
     .trim();
 
   const words = normalizedTail.split(/\s+/).filter(Boolean);
+  const trailingBrandWords = [];
+  for (let index = words.length - 1; index >= 0; index -= 1) {
+    const word = words[index];
+    if (/^(?:[A-Z][\p{L}0-9&.'-]*|[A-Z0-9]{2,})$/u.test(word)) {
+      trailingBrandWords.unshift(word);
+      if (trailingBrandWords.length >= 4) break;
+      continue;
+    }
+    break;
+  }
+  if (trailingBrandWords.length) return trailingBrandWords.join(' ');
+
   if (words.length <= 2) return normalizedTail;
   return words.slice(-2).join(' ');
 }

@@ -1,41 +1,66 @@
 # Product English Translation Apply Report
 
-Generated: 2026-06-27T19:40:26.666Z
+Generated: 2026-06-27T20:03:29.678Z
 Mode: preview
 API base: https://zira-ai.com/api/v1
 Language: en
-Input rows: 25
-Rows included: 25
+Input rows: 50
+Rows included: 50
 Rows applied: 0
-Rows previewed: 25
+Rows previewed: 50
 Rows failed: 0
 
 ## Rows
 
 | Slug | Product ID | English name | Status | Message |
 | --- | --- | --- | --- | --- |
-| KIMCHI-5216 | adcd2bb3-9284-4ac4-9766-2d39c319ad86 | 2 x Angel Hair Chocolate, chocolate set with angel hair and pistachios - white and pink 80g Mistachio | preview | no write; pass --execute to apply |
-| KIMCHI-5215 | 7f821fb2-729b-411d-aa9a-f34886fea0ec | 2 x Dubai Chocolate, set of Dubai chocolates with pistachio cream and kataifi cake - milk and white 160g Q Chew | preview | no write; pass --execute to apply |
-| KIMCHI-5034 | 4afbcbc4-fb57-4059-b114-c1853c9fc1c6 | Ajitsuke Menma, marinated fermented bamboo shoots slices 100g - Momoya | preview | no write; pass --execute to apply |
-| KIMCHI-1428 | 1e6b429d-24aa-4f7f-9c60-2c8fb969f7f4 | Ajitsuke Shiitake, mushrooms in sweet marinade 500g - Asia Kitchen | preview | no write; pass --execute to apply |
-| KIMCHI-14 | 25a2c3c5-267e-41f7-9a00-a66d22c9407a | Nori Seaweed for Sushi, 6 Sheets - House of Asia | preview | no write; pass --execute to apply |
-| KIMCHI-2761 | 9772939b-e59e-4f3f-b110-0c629561662a | Sen Soy Nori Gold 50 Sheets | preview | no write; pass --execute to apply |
-| KIMCHI-2505 | 3c560dda-81db-4518-983b-c57dddd07b56 | Sushi Nori Seaweed Premium Gold 10 pcs - Asia Kitchen | preview | no write; pass --execute to apply |
-| KIMCHI-2506 | cc9d23b3-fb57-4788-8a28-e73456484a76 | Asia Kitchen Premium Gold Sushi Nori 3 x 10 sheets | preview | no write; pass --execute to apply |
-| KIMCHI-2507 | 15562453-ea2a-486c-af9b-69f839c457e8 | Sushi Nori Seaweed Premium Gold 5 x 10 pcs - Asia Kitchen | preview | no write; pass --execute to apply |
-| KIMCHI-5450 | 2cafcfd0-c8e2-4a5c-8d44-a01c2b52b34d | Aloe 97% Soothing Gel Lotion Intensive Moisturizing 240ml - Holika Holika | preview | no write; pass --execute to apply |
-| KIMCHI-5449 | dd214412-72a5-48c9-a6d0-8af96e14c5c2 | Aloe 99% Soothing Gel 250ml - multifunctional aloe gel for face, body, and hair - Holika Holika | preview | no write; pass --execute to apply |
-| KIMCHI-5452 | 3bf41da3-be08-4b66-aa9c-842cff3be645 | Aloe CICA Waterproof Sunscreen SPF 50+ PA++++ 100ml Holika Holika | preview | no write; pass --execute to apply |
-| KIMCHI-5451 | 5ad12147-8c27-425f-a503-711c2a89e59b | Aloe Facial Cleansing Foam 150ml Holika Holika | preview | no write; pass --execute to apply |
-| KIMCHI-5454 | 9989a4cc-b93d-4e84-96ed-e67661426a5a | Aloe Soothing Jelly Mask Fresh 23ml - Holika Holika | preview | no write; pass --execute to apply |
-| KIMCHI-5214 | 53d0154b-fa66-4312-b8a1-cd25fc308052 | Angel Hair White Chocolate with Pistachios 80g - Mistachio | preview | no write; pass --execute to apply |
-| KIMCHI-3440 | 1c4a4fb7-4e6c-418d-8f1e-250b4f2c72dd | Star Anise Whole 50g - TRS | preview | no write; pass --execute to apply |
-| KIMCHI-5463 | ae4fe4e9-04e4-4d1d-becf-ec16718eef46 | Aqua Petit BB 30ml - Light BB Cream with Green Tea Extract - Holika Holika | preview | no write; pass --execute to apply |
-| KIMCHI-5832 | 46403f5b-6402-4512-ad23-08e0cc2fdde0 | Aqua Petit Jelly BB SPF20 40ml - Light BB Cream + Sponge - Holika Holika | preview | no write; pass --execute to apply |
-| KIMCHI-3795 | 762e8c58-8152-4369-aeb0-f3bf39f653b2 | Bancha, Green Tea from Late Harvest 60g - Maruka | preview | no write; pass --execute to apply |
-| KIMCHI-5722 | 1d859284-0386-4d9f-8a13-7f38235880f0 | Hot Pot Soup Base, Very Spicy 220g - HAIDILAO | preview | no write; pass --execute to apply |
-| KIMCHI-5721 | a1174ab6-9194-4509-898d-e5d7237173bb | Hot Pot Soup Base, Medium Hot 220g - HAIDILAO | preview | no write; pass --execute to apply |
-| KIMCHI-5720 | 2430258e-f9a6-4e22-8168-903c6f9c773e | Hot Pot Soup Base Cubes, Spicy 4x90g (360g) - HAIDILAO | preview | no write; pass --execute to apply |
-| KIMCHI-2004 | d7190b58-a944-4fbc-a488-f56c7abd6435 | Hot Pot Base Paste Sichuan Style 70g - Lee Kum Kee | preview | no write; pass --execute to apply |
-| KIMCHI-2578 | dda2f6bc-84b6-4ecb-afe1-e3c4d36882fd | Pho Soup Base, Mild 80g - Sen Soy | preview | no write; pass --execute to apply |
-| KIMCHI-2579 | c9fb3005-1b8c-440e-8390-122b1c88a26a | Tom Yum Soup Base, Mild 80g - Sen Soy | preview | no write; pass --execute to apply |
+| KIMCHI-4595 | 8f609ee0-5dc2-437f-bee9-d5f9f80ad85e | BBQ Tteokbokki, Rice Cakes in Barbecue Sauce 260g - O'Food | preview | no write; pass --execute to apply |
+| KIMCHI-4437 | f530e430-4d1d-42d4-a1d3-d33d90b0a395 | Bento Squid Snack Sweet & Spicy 20g - Bento & Co | preview | no write; pass --execute to apply |
+| KIMCHI-1136 | ef3cba79-21dc-412d-8924-144a806c4d07 | Bibim Men, noodles in sweet and spicy sauce 130g - Paldo | preview | no write; pass --execute to apply |
+| KIMCHI-4620 | a6531550-a24a-4368-bda9-92f9dcbaa7b5 | Big La Tiao Hot & Spicy Snack 106g - Wei-Long | preview | no write; pass --execute to apply |
+| KIMCHI-5473 | e53bdf74-8b8e-491b-bc24-5e516ab28ca5 | Big La Tiao Hot & Spicy Snack 400g - Wei-Long | preview | no write; pass --execute to apply |
+| KIMCHI-4670 | 8342a9c4-78b5-4630-8971-4e1561af0f72 | Fried Bacon, Meat Snack Chips, BBQ Pork Rinds 150g - Ok Snacks | preview | no write; pass --execute to apply |
+| KIMCHI-4669 | 649cc5b3-be7c-4a67-adf5-269777c9248e | Fried Bacon, Meat Snack Chips, Salted Pork Rinds 150g - Ok Snacks | preview | no write; pass --execute to apply |
+| KIMCHI-5158 | 1f15c031-649c-45c5-8edc-743467e16124 | Alfort Mini Chocolate Rich Kyoto Uji Matcha, chocolate with green tea on biscuit (12 pieces) 60g - Bourbon | preview | no write; pass --execute to apply |
+| KIMCHI-2685 | 1c20fb32-369f-45aa-9b0d-624e157641f5 | Bori-cha, Barley Tea (30 x 10g) 300g - Sempio | preview | no write; pass --execute to apply |
+| KIMCHI-5444 | e5381192-8a60-4ee7-b611-6e9e18b09f5d | Bouncing Petit BB 30 ml - Revitalizing BB Cream for Mature Skin - Holika Holika | preview | no write; pass --execute to apply |
+| KIMCHI-3593 | 4b46f6f4-5891-45d6-bd53-135f1f0082e8 | Buchim Garu, mix for Korean pancakes 1kg - CJ Beksul | preview | no write; pass --execute to apply |
+| KIMCHI-5783 | afb16814-879c-48ce-aa7e-d444740c35ad | Buldak Hot Sauce Carbonara Flavour - 165ml Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-5782 | 764f07f9-6740-4d80-9d12-73cb6665897d | Buldak Hot Sauce Extremely Spicy - 2xSpicy Chicken Flavor 165ml Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-5781 | b502c137-a3bb-45b0-b085-d09ecc420324 | Buldak Hot Sauce Original - Spicy Chicken Flavor 165ml Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-3154 | 8c441f06-5936-4c6d-8e31-7bdf3a6bce19 | Buldak Ramyun 2xSpicy Instant Noodles Hot Chicken Flavor 40 x 140g (whole carton) - Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-2640 | 4ea70445-103c-46b8-8bd0-26de98664c94 | Buldak Ramyun 2xSpicy Instant Noodles 5 x 140g - Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-2472 | 1f8b3586-a2be-46e8-a779-7675f27a2132 | Buldak Ramyun 2xSpicy Instant Noodles, Large Bowl 105g - Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-2151 | 5a2ef1e3-30f7-41f7-bd26-132fd1bc1858 | Buldak Ramyun 2xSpicy Instant Noodles Cup 70g - Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-1350 | 49d23995-f604-4a9c-a95a-9b90e9a8e574 | Buldak Ramyun 2xSpicy Instant Noodles with Hot Chicken Flavor 140g - Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-4225 | 7e51c483-944b-454c-8072-93d5b1444829 | Buldak Ramyun Original Instant Noodles Spicy Chicken Flavor Cup 70g - Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-4754 | 593789ad-fd34-4ff8-8d10-09e30fe54976 | Buldak Ramyun Original Instant Noodles Spicy Chicken Flavor Cup 70g - Samyang Japan | preview | no write; pass --execute to apply |
+| KIMCHI-1149 | e8edf73f-163f-4a24-b32c-6961b1fd8894 | Buldak Ramyun Original Spicy Chicken Flavor Instant Noodles 140g - Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-2555 | dba6759d-9328-4528-a557-e3747a15cd1a | Buldak Ramyun Original Instant Noodles Spicy Chicken Flavor 5 x 140g - Samyang | preview | no write; pass --execute to apply |
+| KIMCHI-1001 | 27196b87-d1cc-4071-a74d-b2605652902d | Dashida Beef Flavor Broth 1kg - CJ (Cheiljedang) | preview | no write; pass --execute to apply |
+| KIMCHI-2808 | a36356e3-c4dd-445c-a484-dcec777db747 | Dashida Beef Flavor Broth 300g - CJ (Cheiljedang) | preview | no write; pass --execute to apply |
+| KIMCHI-5747 | 847c5d9b-203b-49bd-866a-0ad9b188d79f | Korean Style Granulated Dashi Broth Without MSG 130g - Youki | preview | no write; pass --execute to apply |
+| KIMCHI-5511 | ebf50b98-1f86-4a59-ac87-7b539e31581c | Miso Ramen Soup Broth 440ml - ITA-SAN | preview | no write; pass --execute to apply |
+| KIMCHI-5512 | 121f4ca6-8d4f-4bc1-b6eb-507949e235c9 | Ramen Shoyu Soup Broth 440ml - ITA-SAN | preview | no write; pass --execute to apply |
+| KIMCHI-5513 | b6b85c6e-aafb-4b49-add3-35cd1cfd4768 | Tonkotsu Ramen Soup Broth 440ml - ITA-SAN | preview | no write; pass --execute to apply |
+| KIMCHI-4682 | cbc0def5-3404-45ce-9923-d8a8b3f34bc5 | Chicken Broth Powder 250g - Ajinomoto | preview | no write; pass --execute to apply |
+| KIMCHI-4769 | d3e83479-2ed9-4755-89b8-147e14312ab3 | Hondashi Broth with Bonito Tuna 40g - Ajinomoto | preview | no write; pass --execute to apply |
+| KIMCHI-5545 | 6968ebdd-0942-43f6-b224-09e9624a77c5 | Dashi no Moto Concentrated Broth from Kombu Seaweed 1kg - Shimaya | preview | no write; pass --execute to apply |
+| KIMCHI-5169 | 9f961137-4bb6-409e-8310-32613955ef8a | Bonito Fish Broth Somi Tsuyu 500ml - Somi Food | preview | no write; pass --execute to apply |
+| KIMCHI-5170 | 046fb8f8-b408-445e-9670-00f6bcd3664c | Kyoto Wafu Dashi Fish Broth 500ml - Somi Food | preview | no write; pass --execute to apply |
+| KIMCHI-5171 | 5ad2ec35-a27e-4c80-bc93-88fd4f247fde | Somi Shiro Dashi Fish Broth 500ml - Somi Food | preview | no write; pass --execute to apply |
+| KIMCHI-5507 | fc69815e-4390-44a2-a147-0245fda1f9ae | Tori-Gara Chicken Broth Powder No MSG 130g - Youki | preview | no write; pass --execute to apply |
+| KIMCHI-5029 | 3f69488b-ce85-4d29-8ff0-eb72eaef1aca | Calpis Water, Non-carbonated Milk Drink 350ml - Asahi | preview | no write; pass --execute to apply |
+| KIMCHI-4539 | 9e260cb6-989f-4d8b-89b9-42f3ba93f179 | Century Eggs, 6 pieces 420g - Xu Ri | preview | no write; pass --execute to apply |
+| KIMCHI-5434 | e3b3b1a0-9e2a-41d5-ae29-9a707aebc623 | CeraBarrier Moisture Active Cream Special Edition 50ml + 30ml - Holika Holika | preview | no write; pass --execute to apply |
+| KIMCHI-521 | adf57654-2c38-46e5-b785-65917f23e4ed | Chapagetti, Black Bean Sauce Noodles, Mild 140g - Nongshim | preview | no write; pass --execute to apply |
+| KIMCHI-4076 | da2d4dbb-847e-49fd-8fda-b3634b519907 | Chicharon Hot & Spicy, 50g - Pinoy Kitchen | preview | no write; pass --execute to apply |
+| KIMCHI-4077 | dfd872ad-369a-4335-a3ba-1463be314045 | Chicharon Salt & Vinegar, 50g - Pinoy Kitchen | preview | no write; pass --execute to apply |
+| KIMCHI-935 | ad874371-a09b-4e56-ae30-187509431640 | Fortune Cookies 100 pcs - Janeco | preview | no write; pass --execute to apply |
+| KIMCHI-1068 | e54c23bb-88bb-4e22-a45b-fc1f1a484aa3 | Fortune Cookies 280 pcs - Janeco | preview | no write; pass --execute to apply |
+| KIMCHI-934 | 4c56552f-1b3a-4ae1-8f8f-f869b2b5bc5d | Fortune Cookies 50 pcs - Janeco | preview | no write; pass --execute to apply |
+| KIMCHI-2162 | 33fcf42b-de20-4875-9f22-a1dfc8098d58 | Whole Chinese Water Chestnuts 567g - Spring Happiness | preview | no write; pass --execute to apply |
+| KIMCHI-2617 | fd02698d-df76-435a-b64f-53a1522379e2 | Xiao Tian Zi Chinese Chef's Knife, Cleaver 32.5 cm – for Meat and Vegetables | preview | no write; pass --execute to apply |
+| KIMCHI-5527 | f443cf4b-3cdb-4eda-ad75-dd0000b7b577 | Chipsy Caribbean Spiced Chicken 100g - Pringles | preview | no write; pass --execute to apply |
+| KIMCHI-1416 | 8d103eb5-f028-4edc-8be6-48ff6f09a85a | Chipsy Hi Tempura, nori seaweed in tempura 40g - Tao Kae Noi | preview | no write; pass --execute to apply |
+| KIMCHI-5453 | b12ece9b-54ef-496e-ae41-a3baf5a56043 | Chipsy Hi Tempura, Nori Seaweed in Chili & Lime Tempura 40g - Tao Kae Noi | preview | no write; pass --execute to apply |
