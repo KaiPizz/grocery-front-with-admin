@@ -13,6 +13,11 @@ import { useLanguage } from '@/i18n';
 export default function LayoutConfigPage() {
   const { config, loading, saving, publishing, isDirty, error, lastSaved, updateConfig, save, publish, canUndo, canRedo, undo, redo } = useConfig();
   const { t } = useLanguage();
+  const pricePositionLabelKeys = {
+    'below-image': 'layout.display.belowImage',
+    overlay: 'layout.display.overlay',
+    inline: 'layout.display.inline',
+  } as const;
 
   if (loading) {
     return (
@@ -229,7 +234,7 @@ export default function LayoutConfigPage() {
                       onChange={() => updateLayout({ priceDisplay: { showDiscountBadge: true, showOriginalPrice: true, ...layout.priceDisplay, position: opt } })}
                       className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
                     />
-                    <span className="text-sm text-gray-700 capitalize">{t(`layout.display.${opt.replace('-', '')}` as string) || opt.replace('-', ' ')}</span>
+                    <span className="text-sm text-gray-700 capitalize">{t(pricePositionLabelKeys[opt])}</span>
                   </label>
                 ))}
               </div>
