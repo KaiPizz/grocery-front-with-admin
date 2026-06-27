@@ -4,7 +4,7 @@ import path from 'path';
 import { imageSize } from 'image-size';
 import { requireApiKey } from '@/lib/auth';
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
+const UPLOAD_DIR = process.env.ADMIN_UPLOAD_DIR || path.join(process.cwd(), 'public', 'uploads');
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 const ALLOWED_TYPES = new Set([
   'image/jpeg',

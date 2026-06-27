@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { requireApiKey } from '@/lib/auth';
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
+const UPLOAD_DIR = process.env.ADMIN_UPLOAD_DIR || path.join(process.cwd(), 'public', 'uploads');
 
 interface MediaItem {
   filename: string;
@@ -27,7 +27,12 @@ export async function GET(request: NextRequest) {
     for (const file of files) {
       if (file === '.gitkeep') continue;
       const filePath = path.join(UPLOAD_DIR, file);
-      const stat = await fs.stat(filePath);
+      let stat;
+      try {
+        stat = await fs.lstat(filePath);
+      } catch {
+        continue;
+      }
       if (!stat.isFile()) continue;
 
       const host = request.headers.get('host') || 'localhost:4100';
