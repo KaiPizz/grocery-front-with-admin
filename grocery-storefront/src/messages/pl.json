@@ -241,7 +241,15 @@
     "storageAria": "Przechowywanie: {zone}",
     "decreaseQuantity": "Zmniejsz ilość produktu {name}",
     "increaseQuantity": "Zwiększ ilość produktu {name}",
-    "addToCartWithQuantity": "Dodaj do koszyka, ilość {quantity}"
+    "addToCartWithQuantity": "Dodaj do koszyka, ilość {quantity}",
+    "galleryLabel": "Zdjęcia produktu {name}",
+    "noImageAvailable": "Brak zdjęcia produktu",
+    "previousImage": "Poprzednie zdjęcie produktu",
+    "nextImage": "Następne zdjęcie produktu",
+    "thumbnailList": "Miniatury zdjęć produktu",
+    "viewImage": "Zobacz zdjęcie {current} z {total}: {alt}",
+    "notFound": "Nie znaleziono produktu",
+    "backToProducts": "Powrót do produktów"
   },
   "wishlist": {
     "title": "Ulubione",
@@ -271,10 +279,20 @@
     "ingredients": "Składniki",
     "steps": "Kroki",
     "addAllToCart": "Dodaj wszystkie do koszyka",
+    "addAllToCartWithCount": "Dodaj wszystkie do koszyka, {count} pozycji",
     "inStock": "Dostępne",
     "unavailable": "Niedostępne",
     "optional": "opcjonalnie",
-    "shopIngredients": "Kup składniki"
+    "shopIngredients": "Kup składniki",
+    "notFound": "Nie znaleziono przepisu",
+    "backToRecipes": "Powrót do przepisów",
+    "partialAdded": "Dodano tylko {count} z {total} pozycji.",
+    "addedItems": "Dodano {count} pozycji do koszyka",
+    "cookingStepsAria": "Kroki gotowania",
+    "recipeIngredientsAria": "Składniki przepisu",
+    "stepImageAlt": "Krok {number}",
+    "unknownIngredient": "Nieznany składnik",
+    "noIngredients": "Brak listy składników."
   },
   "cart": {
     "title": "Twój koszyk",
@@ -284,6 +302,7 @@
     "subtotal": "Suma częściowa",
     "shipping": "Dostawa",
     "total": "Razem",
+    "summary": "Podsumowanie",
     "checkout": "Przejdź do kasy",
     "remove": "Usuń",
     "saveForLaterItem": "Zapisz {name} na później",
@@ -495,6 +514,19 @@
     "addressSaveFailed": "Nie udało się zapisać adresu.",
     "addressDeleteFailed": "Nie udało się usunąć adresu.",
     "addressDefaultSet": "Domyślny adres zaktualizowany.",
-    "addressDefaultFailed": "Nie udało się ustawić domyślnego adresu."
+    "addressDefaultFailed": "Nie udało się ustawić domyślnego adresu.",
+    "failedToLoadOrder": "Nie udało się załadować zamówienia.",
+    "orderNotFound": "Nie znaleziono zamówienia.",
+    "backToOrders": "Powrót do zamówień",
+    "order": "Zamówienie",
+    "paymentStatus": "Płatność: {status}",
+    "trackingNumber": "Śledzenie: {number}",
+    "orderItem": "Pozycja zamówienia",
+    "quantity": "Ilość: {quantity}",
+    "unitPrice": "Cena jednostkowa: {price}",
+    "shippingAddress": "Adres dostawy",
+    "billingAddress": "Adres rozliczeniowy",
+    "notAvailable": "Niedostępne",
+    "shippingMethod": "Metoda dostawy: {method}"
   }
 }

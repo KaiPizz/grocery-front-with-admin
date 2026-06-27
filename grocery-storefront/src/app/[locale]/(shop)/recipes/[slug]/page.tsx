@@ -50,6 +50,7 @@ export default function RecipeDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const t = useTranslations('recipes');
   const tCommon = useTranslations('common');
+  const tNav = useTranslations('nav');
   const addItem = useCartStore((s) => s.addItem);
   const channel = useChannel();
 
@@ -68,9 +69,9 @@ export default function RecipeDetailPage() {
     return (
       <div className="container-grocery py-16 text-center">
         <ChefHat className="w-12 h-12 mx-auto mb-3 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
-        <p className="text-sm mb-2" style={{ color: 'var(--color-muted-foreground)' }}>Recipe not found</p>
+        <p className="text-sm mb-2" style={{ color: 'var(--color-muted-foreground)' }}>{t('notFound')}</p>
         <Link href="/recipes" className="text-sm font-medium inline-block transition-opacity hover:opacity-80" style={{ color: 'var(--color-primary)' }}>
-          Back to recipes
+          {t('backToRecipes')}
         </Link>
       </div>
     );
@@ -108,18 +109,18 @@ export default function RecipeDetailPage() {
       }
 
       if (successCount < availableIngredients.length) {
-        toast.error(`Only ${successCount} of ${availableIngredients.length} items were added.`);
+        toast.error(t('partialAdded', { count: successCount, total: availableIngredients.length }));
         return;
       }
 
-      toast.success(`Added ${availableIngredients.length} items to cart`);
+      toast.success(t('addedItems', { count: availableIngredients.length }));
     })();
   }
 
   return (
     <article className="container-grocery py-8 md:py-12">
       <Breadcrumb items={[
-        { label: tCommon('back').replace('Back', 'Home'), href: '/' },
+        { label: tNav('home'), href: '/' },
         { label: t('title'), href: '/recipes' },
         { label: recipe.name },
       ]} />
@@ -177,7 +178,7 @@ export default function RecipeDetailPage() {
 
           {/* Steps */}
           {recipe.steps?.length > 0 && (
-            <section aria-label="Cooking steps">
+            <section aria-label={t('cookingStepsAria')}>
               <h2 className="heading-section text-lg mb-6" style={{ color: 'var(--color-foreground)' }}>
                 {t('steps')}
               </h2>
@@ -200,7 +201,7 @@ export default function RecipeDetailPage() {
                       </p>
                       {stepImage && (
                         <div className="mt-3 relative aspect-video rounded-lg overflow-hidden max-w-sm">
-                          <Image src={stepImage} alt={`Step ${step.stepNumber}`} fill className="object-cover" sizes="400px" unoptimized={isImageProxySrc(stepImage)} />
+                          <Image src={stepImage} alt={t('stepImageAlt', { number: step.stepNumber })} fill className="object-cover" sizes="400px" unoptimized={isImageProxySrc(stepImage)} />
                         </div>
                       )}
                     </div>
@@ -213,7 +214,7 @@ export default function RecipeDetailPage() {
         </div>
 
         {/* Right: Ingredients sidebar */}
-        <aside className="md:col-span-2" aria-label="Recipe ingredients">
+        <aside className="md:col-span-2" aria-label={t('recipeIngredientsAria')}>
           <div className="sticky top-20 rounded-xl border p-5" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
             <h2 className="heading-section text-lg mb-4" style={{ color: 'var(--color-foreground)' }}>
               {t('ingredients')}
@@ -226,9 +227,9 @@ export default function RecipeDetailPage() {
                     {/* Stock indicator */}
                     <div className="shrink-0 mt-0.5">
                       {ing.inStock ? (
-                        <Check className="w-4 h-4" style={{ color: 'var(--color-fresh)' }} aria-label="In stock" />
+                        <Check className="w-4 h-4" style={{ color: 'var(--color-fresh)' }} aria-label={t('inStock')} />
                       ) : ing.variant ? (
-                        <X className="w-4 h-4" style={{ color: 'var(--color-last-chance)' }} aria-label="Out of stock" />
+                        <X className="w-4 h-4" style={{ color: 'var(--color-last-chance)' }} aria-label={t('unavailable')} />
                       ) : (
                         <span className="w-4 h-4 block" />
                       )}
@@ -236,7 +237,7 @@ export default function RecipeDetailPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm" style={{ color: 'var(--color-foreground)' }}>
                         <span className="font-medium tabular-nums">{ing.quantity} {ing.unit}</span>{' '}
-                        {ing.displayName || ing.variant?.name || 'Unknown ingredient'}
+                        {ing.displayName || ing.variant?.name || t('unknownIngredient')}
                         {ing.isOptional && (
                           <span className="text-xs ml-1" style={{ color: 'var(--color-muted-foreground)' }}>
                             ({t('optional')})
@@ -254,7 +255,7 @@ export default function RecipeDetailPage() {
               </ul>
             ) : (
               <p className="text-sm mb-6" style={{ color: 'var(--color-muted-foreground)' }}>
-                No ingredients listed.
+                {t('noIngredients')}
               </p>
             )}
 
@@ -265,7 +266,7 @@ export default function RecipeDetailPage() {
                 onClick={addAllToCart}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-white transition-all duration-fast active:scale-[0.98]"
                 style={{ backgroundColor: 'var(--color-primary)' }}
-                aria-label={`${t('addAllToCart')} — ${availableIngredients.length} items`}
+                aria-label={t('addAllToCartWithCount', { count: availableIngredients.length })}
               >
                 <ShoppingCart className="w-5 h-5" aria-hidden="true" />
                 {t('addAllToCart')} ({availableIngredients.length})

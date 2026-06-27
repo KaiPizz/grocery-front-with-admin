@@ -148,6 +148,7 @@ function normalizeProductGalleryImages(product: ProductGallerySource): ProductGa
 }
 
 function ProductGallery({ product }: ProductGalleryProps) {
+  const t = useTranslations('product');
   const images = normalizeProductGalleryImages(product);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const thumbnailRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -171,7 +172,11 @@ function ProductGallery({ product }: ProductGalleryProps) {
   }
 
   return (
-    <section className="min-w-0 space-y-2.5 md:sticky md:top-24 md:space-y-3" aria-label={`${product.name} images`} data-testid="product-gallery">
+    <section
+      className="min-w-0 space-y-2.5 md:sticky md:top-24 md:space-y-3"
+      aria-label={t('galleryLabel', { name: product.name })}
+      data-testid="product-gallery"
+    >
       <div
         className="relative aspect-[4/3] max-h-[58vh] overflow-hidden rounded-2xl sm:aspect-square md:rounded-xl"
         style={{ backgroundColor: 'var(--color-muted)' }}
@@ -190,7 +195,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
         ) : (
           <div
             className="flex h-full items-center justify-center"
-            aria-label="No product image available"
+            aria-label={t('noImageAvailable')}
             data-testid="product-gallery-placeholder"
           >
             <Package className="h-16 w-16 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
@@ -225,7 +230,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
                 borderColor: 'var(--color-border)',
                 color: 'var(--color-foreground)',
               }}
-              aria-label="Previous product image"
+              aria-label={t('previousImage')}
             >
               <ChevronLeft className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -238,7 +243,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
                 borderColor: 'var(--color-border)',
                 color: 'var(--color-foreground)',
               }}
-              aria-label="Next product image"
+              aria-label={t('nextImage')}
             >
               <ChevronRight className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -247,7 +252,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div className="flex snap-x gap-2 overflow-x-auto pb-1" role="list" aria-label="Product image thumbnails">
+        <div className="flex snap-x gap-2 overflow-x-auto pb-1" role="list" aria-label={t('thumbnailList')}>
           {images.map((image, index) => {
             const selected = index === activeIndex;
 
@@ -265,7 +270,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
                   backgroundColor: 'var(--color-card)',
                   outlineColor: 'var(--color-ring)',
                 }}
-                aria-label={`View image ${index + 1} of ${images.length}: ${image.alt}`}
+                aria-label={t('viewImage', { current: index + 1, total: images.length, alt: image.alt })}
                 aria-pressed={selected}
                 data-testid="product-gallery-thumbnail"
               >
@@ -744,9 +749,9 @@ export default function ProductDetailPage() {
     return (
       <div className="container-grocery py-16 text-center">
         <Package className="w-12 h-12 mx-auto mb-3 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
-        <p className="text-sm mb-2" style={{ color: 'var(--color-muted-foreground)' }}>Product not found</p>
+        <p className="text-sm mb-2" style={{ color: 'var(--color-muted-foreground)' }}>{t('product.notFound')}</p>
         <Link href="/products" className="text-sm font-medium inline-block transition-opacity hover:opacity-80" style={{ color: 'var(--color-primary)' }}>
-          Back to products
+          {t('product.backToProducts')}
         </Link>
       </div>
     );
@@ -911,18 +916,18 @@ export default function ProductDetailPage() {
               <Truck className="h-4 w-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
               <span style={{ color: 'var(--color-foreground)' }}>
                 {(() => {
-                  if (!inStock) return t('product.outOfStock') || 'Out of stock';
+                  if (!inStock) return t('product.outOfStock');
                   const qty = variant.quantityAvailable ?? 0;
                   const lowStock = qty <= lowStockThreshold;
                   const stockText = availabilityOnlyStock
-                    ? (t('product.inStock') || 'In stock')
+                    ? t('product.inStock')
                     : lowStock
-                    ? (t('product.lowStockCount', { count: qty }) || `Only ${qty} left`)
-                    : (t('product.inStock') || 'In stock');
+                    ? t('product.lowStockCount', { count: qty })
+                    : t('product.inStock');
                   if (availabilityOnlyStock) return stockText;
                   const shipText = shipPromise === 'today'
-                    ? (t('product.shipsToday') || 'ships today')
-                    : (t('product.shipsTomorrow') || 'ships tomorrow');
+                    ? t('product.shipsToday')
+                    : t('product.shipsTomorrow');
                   return `${stockText} — ${shipText}`;
                 })()}
               </span>
@@ -958,7 +963,7 @@ export default function ProductDetailPage() {
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="flex h-11 w-11 shrink-0 items-center justify-center text-lg font-medium transition-colors duration-fast hover-surface"
                 style={{ color: 'var(--color-foreground)' }}
-                aria-label="Decrease quantity"
+                aria-label={t('product.decreaseQuantity', { name: product.name })}
               >
                 <Minus className="w-4 h-4" aria-hidden="true" />
               </button>
@@ -970,7 +975,7 @@ export default function ProductDetailPage() {
                 onClick={() => setQuantity(quantity + 1)}
                 className="flex h-11 w-11 shrink-0 items-center justify-center text-lg font-medium transition-colors duration-fast hover-surface"
                 style={{ color: 'var(--color-foreground)' }}
-                aria-label="Increase quantity"
+                aria-label={t('product.increaseQuantity', { name: product.name })}
               >
                 <Plus className="w-4 h-4" aria-hidden="true" />
               </button>

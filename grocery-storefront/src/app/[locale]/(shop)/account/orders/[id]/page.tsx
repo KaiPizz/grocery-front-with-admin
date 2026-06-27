@@ -17,9 +17,11 @@ interface OrderDetailResponse {
 
 function AddressBlock({
   title,
+  unavailableLabel,
   address,
 }: {
   title: string;
+  unavailableLabel: string;
   address?: CustomerOrderDetail['shippingAddress'];
 }) {
   return (
@@ -35,7 +37,7 @@ function AddressBlock({
         </div>
       ) : (
         <p className="mt-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          Not available
+          {unavailableLabel}
         </p>
       )}
     </div>
@@ -45,6 +47,9 @@ function AddressBlock({
 export default function OrderDetailPage() {
   const params = useParams<{ id: string }>();
   const tCommon = useTranslations('common');
+  const tCart = useTranslations('cart');
+  const tAccount = useTranslations('account');
+  const failedToLoadOrder = tAccount('failedToLoadOrder');
   const [order, setOrder] = useState<CustomerOrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,14 +70,14 @@ export default function OrderDetailPage() {
 
         setOrder(response.data?.order ?? null);
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Failed to load order.');
+        setError(loadError instanceof Error ? loadError.message : failedToLoadOrder);
       } finally {
         setLoading(false);
       }
     }
 
     void loadOrder();
-  }, [params.id]);
+  }, [params.id, failedToLoadOrder]);
 
   if (loading) {
     return (
@@ -107,7 +112,7 @@ export default function OrderDetailPage() {
       <div className="container-grocery py-16 text-center">
         <Package className="mx-auto h-10 w-10 mb-3 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
         <p className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-          Order not found.
+          {tAccount('orderNotFound')}
         </p>
       </div>
     );
@@ -121,7 +126,7 @@ export default function OrderDetailPage() {
         style={{ color: 'var(--color-muted-foreground)' }}
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        Back to orders
+        {tAccount('backToOrders')}
       </Link>
 
       <div
@@ -133,7 +138,7 @@ export default function OrderDetailPage() {
         }}
       >
         <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: 'var(--color-primary)' }}>
-          Order
+          {tAccount('order')}
         </p>
         <h1 className="heading-display text-3xl mt-2" style={{ color: 'var(--color-foreground)' }}>
           #{order.number}
@@ -141,8 +146,8 @@ export default function OrderDetailPage() {
         <div className="mt-4 flex flex-wrap gap-4 text-sm">
           <span style={{ color: 'var(--color-foreground)' }}>{order.status}</span>
           <span style={{ color: 'var(--color-muted-foreground)' }}>{new Date(order.created).toLocaleString()}</span>
-          {order.paymentStatus && <span style={{ color: 'var(--color-muted-foreground)' }}>Payment: {order.paymentStatus}</span>}
-          {order.trackingNumber && <span style={{ color: 'var(--color-muted-foreground)' }}>Tracking: {order.trackingNumber}</span>}
+          {order.paymentStatus && <span style={{ color: 'var(--color-muted-foreground)' }}>{tAccount('paymentStatus', { status: order.paymentStatus })}</span>}
+          {order.trackingNumber && <span style={{ color: 'var(--color-muted-foreground)' }}>{tAccount('trackingNumber', { number: order.trackingNumber })}</span>}
         </div>
       </div>
 
@@ -162,7 +167,7 @@ export default function OrderDetailPage() {
                     {imageUrl ? (
                       <Image
                         src={imageUrl}
-                        alt={line.productName || 'Order item'}
+                        alt={line.productName || tAccount('orderItem')}
                         fill
                         className="object-cover"
                         sizes="64px"
@@ -177,7 +182,7 @@ export default function OrderDetailPage() {
 
                   <div className="flex-1">
                     <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                      {line.productName || 'Order item'}
+                      {line.productName || tAccount('orderItem')}
                     </p>
                     {line.variantName && (
                       <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
@@ -185,10 +190,10 @@ export default function OrderDetailPage() {
                       </p>
                     )}
                     <div className="mt-3 flex flex-wrap gap-4 text-sm">
-                      <span style={{ color: 'var(--color-muted-foreground)' }}>Qty: {line.quantity}</span>
+                      <span style={{ color: 'var(--color-muted-foreground)' }}>{tAccount('quantity', { quantity: line.quantity })}</span>
                       {line.unitPrice?.gross && (
                         <span style={{ color: 'var(--color-muted-foreground)' }}>
-                          Unit: {formatPrice(line.unitPrice.gross.amount, line.unitPrice.gross.currency)}
+                          {tAccount('unitPrice', { price: formatPrice(line.unitPrice.gross.amount, line.unitPrice.gross.currency) })}
                         </span>
                       )}
                     </div>
@@ -208,17 +213,17 @@ export default function OrderDetailPage() {
         </div>
 
         <div className="space-y-4">
-          <AddressBlock title="Shipping address" address={order.shippingAddress} />
-          <AddressBlock title="Billing address" address={order.billingAddress} />
+          <AddressBlock title={tAccount('shippingAddress')} unavailableLabel={tAccount('notAvailable')} address={order.shippingAddress} />
+          <AddressBlock title={tAccount('billingAddress')} unavailableLabel={tAccount('notAvailable')} address={order.billingAddress} />
 
           <section className="rounded-2xl border p-4" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
             <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-              Summary
+              {tCart('summary')}
             </p>
             <div className="mt-3 space-y-2 text-sm">
               {order.subtotal?.gross && (
                 <div className="flex justify-between">
-                  <span style={{ color: 'var(--color-muted-foreground)' }}>Subtotal</span>
+                  <span style={{ color: 'var(--color-muted-foreground)' }}>{tCart('subtotal')}</span>
                   <span className="tabular-nums" style={{ color: 'var(--color-foreground)' }}>
                     {formatPrice(order.subtotal.gross.amount, order.subtotal.gross.currency)}
                   </span>
@@ -226,14 +231,14 @@ export default function OrderDetailPage() {
               )}
               {order.shippingPrice && (
                 <div className="flex justify-between">
-                  <span style={{ color: 'var(--color-muted-foreground)' }}>Shipping</span>
+                  <span style={{ color: 'var(--color-muted-foreground)' }}>{tCart('shipping')}</span>
                   <span className="tabular-nums" style={{ color: 'var(--color-foreground)' }}>
                     {formatPrice(order.shippingPrice.amount, order.shippingPrice.currency)}
                   </span>
                 </div>
               )}
               <div className="flex justify-between font-semibold pt-2" style={{ color: 'var(--color-foreground)' }}>
-                <span>Total</span>
+                <span>{tCart('total')}</span>
                 <span className="tabular-nums">
                   {formatPrice(order.total.gross.amount, order.total.gross.currency)}
                 </span>
@@ -242,7 +247,7 @@ export default function OrderDetailPage() {
 
             {order.shippingMethodName && (
               <p className="text-sm mt-4" style={{ color: 'var(--color-muted-foreground)' }}>
-                Shipping method: {order.shippingMethodName}
+                {tAccount('shippingMethod', { method: order.shippingMethodName })}
               </p>
             )}
           </section>

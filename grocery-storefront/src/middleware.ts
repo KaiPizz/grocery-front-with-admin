@@ -6,6 +6,7 @@ const handleI18nRouting = createMiddleware({
   locales,
   defaultLocale,
   localePrefix: 'as-needed',
+  localeDetection: false,
 });
 
 const LEGACY_LOCALES = new Set(['de', 'uk', 'vi', 'ru', 'zh', 'tr']);

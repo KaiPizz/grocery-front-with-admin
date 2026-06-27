@@ -241,7 +241,15 @@
     "storageAria": "Storage: {zone}",
     "decreaseQuantity": "Decrease {name} quantity",
     "increaseQuantity": "Increase {name} quantity",
-    "addToCartWithQuantity": "Add to cart, quantity {quantity}"
+    "addToCartWithQuantity": "Add to cart, quantity {quantity}",
+    "galleryLabel": "{name} images",
+    "noImageAvailable": "No product image available",
+    "previousImage": "Previous product image",
+    "nextImage": "Next product image",
+    "thumbnailList": "Product image thumbnails",
+    "viewImage": "View image {current} of {total}: {alt}",
+    "notFound": "Product not found",
+    "backToProducts": "Back to products"
   },
   "wishlist": {
     "title": "Wishlist",
@@ -271,10 +279,20 @@
     "ingredients": "Ingredients",
     "steps": "Steps",
     "addAllToCart": "Add all to cart",
+    "addAllToCartWithCount": "Add all to cart, {count} items",
     "inStock": "In stock",
     "unavailable": "Unavailable",
     "optional": "optional",
-    "shopIngredients": "Shop ingredients"
+    "shopIngredients": "Shop ingredients",
+    "notFound": "Recipe not found",
+    "backToRecipes": "Back to recipes",
+    "partialAdded": "Only {count} of {total} items were added.",
+    "addedItems": "Added {count} items to cart",
+    "cookingStepsAria": "Cooking steps",
+    "recipeIngredientsAria": "Recipe ingredients",
+    "stepImageAlt": "Step {number}",
+    "unknownIngredient": "Unknown ingredient",
+    "noIngredients": "No ingredients listed."
   },
   "cart": {
     "title": "Your cart",
@@ -284,6 +302,7 @@
     "subtotal": "Subtotal",
     "shipping": "Shipping",
     "total": "Total",
+    "summary": "Summary",
     "checkout": "Proceed to checkout",
     "remove": "Remove",
     "saveForLaterItem": "Save {name} for later",
@@ -495,6 +514,19 @@
     "addressSaveFailed": "Failed to save address.",
     "addressDeleteFailed": "Failed to delete address.",
     "addressDefaultSet": "Default address updated.",
-    "addressDefaultFailed": "Failed to set default address."
+    "addressDefaultFailed": "Failed to set default address.",
+    "failedToLoadOrder": "Failed to load order.",
+    "orderNotFound": "Order not found.",
+    "backToOrders": "Back to orders",
+    "order": "Order",
+    "paymentStatus": "Payment: {status}",
+    "trackingNumber": "Tracking: {number}",
+    "orderItem": "Order item",
+    "quantity": "Qty: {quantity}",
+    "unitPrice": "Unit: {price}",
+    "shippingAddress": "Shipping address",
+    "billingAddress": "Billing address",
+    "notAvailable": "Not available",
+    "shippingMethod": "Shipping method: {method}"
   }
 }
