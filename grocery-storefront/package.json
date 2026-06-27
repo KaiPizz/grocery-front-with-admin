@@ -17,6 +17,7 @@
     "dry-run:unit-price": "node scripts/unit-price-backfill-dry-run.mjs",
     "dry-run:country-origin": "node scripts/country-origin-backfill-dry-run.mjs",
     "dry-run:product-translations": "node scripts/product-translation-dry-run.mjs",
+    "apply:product-translations": "node scripts/product-translation-apply.mjs",
     "dry-run:kimchi-source-metadata": "node scripts/kimchi-source-metadata-dry-run.mjs",
     "audit:kimchi-allergen-split": "node scripts/kimchi-allergen-split-audit.mjs",
     "plan:kimchi-source-metadata": "node scripts/kimchi-source-metadata-apply.mjs",
