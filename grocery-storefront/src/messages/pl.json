@@ -180,6 +180,8 @@
   "product": {
     "nutrition": "Wartości odżywcze",
     "nutritionPer100": "Na 100g / 100ml",
+    "nutrient": "Składnik",
+    "amount": "Ilość",
     "calories": "Wartość energetyczna",
     "fat": "Tłuszcz",
     "saturatedFat": "w tym kwasy nasycone",

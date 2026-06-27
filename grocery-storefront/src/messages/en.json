@@ -180,6 +180,8 @@
   "product": {
     "nutrition": "Nutrition facts",
     "nutritionPer100": "Per 100g / 100ml",
+    "nutrient": "Nutrient",
+    "amount": "Amount",
     "calories": "Energy",
     "fat": "Fat",
     "saturatedFat": "of which saturated",
