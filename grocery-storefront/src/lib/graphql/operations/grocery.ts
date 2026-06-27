@@ -6,6 +6,12 @@ const GROCERY_PRODUCT_FIELDS = `
     name
     slug
     description
+    translation(languageCode: "en") {
+      language
+      name
+      description
+      shortDescription
+    }
     thumbnail { url alt }
     media { url alt type sortOrder }
     allergens
@@ -62,6 +68,12 @@ const GROCERY_PRODUCT_LISTING_FIELDS = `
     id
     name
     slug
+    translation(languageCode: "en") {
+      language
+      name
+      description
+      shortDescription
+    }
     thumbnail { url alt }
     media { url alt type sortOrder }
     allergens
@@ -213,6 +225,12 @@ export const SEARCH_PRODUCTS_QUERY = `
           id
           name
           slug
+          translation(languageCode: "en") {
+            language
+            name
+            description
+            shortDescription
+          }
           thumbnail { url alt }
           category { id name slug }
           pricing {
@@ -496,6 +514,12 @@ export const WISHLIST_PRODUCT_FIELDS = `
     id
     name
     slug
+    translation(languageCode: "en") {
+      language
+      name
+      description
+      shortDescription
+    }
     thumbnail { url alt }
     storageZone
     pricing {
@@ -553,6 +577,12 @@ export const CART_PRODUCT_METADATA_QUERY = `
           id
           name
           slug
+          translation(languageCode: "en") {
+            language
+            name
+            description
+            shortDescription
+          }
           thumbnail { url alt }
           storageZone
           allergens

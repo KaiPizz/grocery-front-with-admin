@@ -5,6 +5,12 @@ export interface SearchableProduct {
   id: string;
   name: string;
   slug: string;
+  translation?: {
+    language?: string | null;
+    name?: string | null;
+    description?: string | null;
+    shortDescription?: string | null;
+  } | null;
   thumbnail?: { url?: string | null; alt?: string | null } | null;
   category?: { name?: string | null; slug?: string | null } | null;
   pricing?: {

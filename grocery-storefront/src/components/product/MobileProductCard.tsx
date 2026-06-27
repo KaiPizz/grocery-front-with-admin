@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Check, Heart, Minus, Package, Plus, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from '@/i18n/navigation';
 import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import { getLocalizedProductName } from '@/lib/localization';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
 
@@ -51,6 +52,8 @@ export function MobileProductCard({
   quickActions = 'always',
 }: MobileProductCardProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const productName = getLocalizedProductName(product, locale);
   const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
   const cartItem = useCartStore((s) => {
@@ -132,7 +135,7 @@ export function MobileProductCard({
           productId: product.id,
           variantId: variant.id,
           slug: product.slug,
-          name: product.name,
+          name: productName,
           thumbnail: imageUrl || undefined,
           price,
           currency,
@@ -177,7 +180,7 @@ export function MobileProductCard({
         productId: product.id,
         variantId: variant.id,
         slug: product.slug,
-        name: product.name,
+        name: productName,
         thumbnail: imageUrl || undefined,
         price,
         currency,
@@ -198,7 +201,7 @@ export function MobileProductCard({
       href={`/products/${product.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-[1.45rem] border bg-[var(--color-card)] shadow-[0_18px_36px_-30px_rgba(66,109,72,0.35)] transition-transform duration-fast active:scale-[0.99]"
       style={{ borderColor: 'color-mix(in srgb, var(--color-border) 88%, white)' }}
-      aria-label={`${product.name}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
+      aria-label={`${productName}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
       data-testid={testId ?? 'mobile-product-card'}
     >
       <div
@@ -309,7 +312,7 @@ export function MobileProductCard({
           style={{ color: 'var(--color-foreground)' }}
           data-testid="mobile-product-card-title"
         >
-          {product.name}
+          {productName}
         </h2>
 
         <div className="mt-auto pt-2">
@@ -384,7 +387,7 @@ export function MobileProductCard({
               onClick={(e) => updateQuantity(e, -1)}
               disabled={!inStock || busy}
               className="flex items-center justify-center transition-colors duration-fast disabled:opacity-40"
-              aria-label={t('product.decreaseQuantity', { name: product.name })}
+              aria-label={t('product.decreaseQuantity', { name: productName })}
             >
               <Minus className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -401,7 +404,7 @@ export function MobileProductCard({
               onClick={(e) => updateQuantity(e, 1)}
               disabled={!inStock || busy || displayedQuantity >= maxQuantity}
               className="flex items-center justify-center transition-colors duration-fast disabled:opacity-40"
-              aria-label={t('product.increaseQuantity', { name: product.name })}
+              aria-label={t('product.increaseQuantity', { name: productName })}
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
             </button>

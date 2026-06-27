@@ -47,11 +47,19 @@ export interface ProductVariant {
   };
 }
 
+export interface ProductTranslation {
+  language?: string | null;
+  name?: string | null;
+  description?: string | null;
+  shortDescription?: string | null;
+}
+
 export interface GroceryProduct {
   id: string;
   name: string;
   slug: string;
   description?: string;
+  translation?: ProductTranslation | null;
   thumbnail?: ProductImage;
   images?: ProductImage[];
   media?: ProductMedia[];

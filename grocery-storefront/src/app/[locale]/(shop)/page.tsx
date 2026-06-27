@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
 import {
   Banknote,
@@ -31,13 +31,16 @@ import {
   usesAvailabilityOnlyStock,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
+import { getLocalizedProductName } from '@/lib/localization';
 import { getImageSrc } from '@/lib/utils';
+import type { ProductTranslation } from '@/types';
 import type { CommercialQuickLink, HomepageSectionId } from '@/types/storefront-config';
 
 interface HomeProduct {
   id: string;
   name: string;
   slug: string;
+  translation?: ProductTranslation | null;
   thumbnail?: { url?: string | null } | null;
   unitOfMeasure?: string | null;
   sellByWeight?: boolean | null;
@@ -144,10 +147,11 @@ function HomeCatalogHero({
 }) {
   const t = useTranslations('home');
   const tFulfillment = useTranslations('fulfillment');
+  const locale = useLocale();
   const visualProducts = products
     .map((product) => ({
       id: product.id,
-      name: product.name,
+      name: getLocalizedProductName(product, locale),
       imageUrl: getImageSrc(product.thumbnail?.url, { maxWidth: 480 }),
     }))
     .filter((product): product is { id: string; name: string; imageUrl: string } => Boolean(product.imageUrl))
@@ -268,11 +272,12 @@ function HomeCampaignBand({
   loading: boolean;
 }) {
   const t = useTranslations('home');
+  const locale = useLocale();
   const primaryLink = quickLinks[0];
   const visualProducts = products
     .map((product) => ({
       id: product.id,
-      name: product.name,
+      name: getLocalizedProductName(product, locale),
       href: `/products/${product.slug}`,
       imageUrl: getImageSrc(product.thumbnail?.url, { maxWidth: 480 }),
     }))

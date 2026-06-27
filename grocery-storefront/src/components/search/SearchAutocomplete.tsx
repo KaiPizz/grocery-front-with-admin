@@ -2,12 +2,13 @@
 
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
 import { ArrowRight, Clock3, CornerUpLeft, Search, X } from 'lucide-react';
 import { useRouter } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
 import { SEARCH_PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
+import { getLocalizedProductName } from '@/lib/localization';
 import { buildSearchSuggestions, normalizeSearchTerm, rankProductsForSearch, type SearchableProduct } from '@/lib/search';
 import { cn, formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import { useSearchStore } from '@/stores/search-store';
@@ -39,6 +40,7 @@ export function SearchAutocomplete({
 }: SearchAutocompleteProps) {
   const tSearch = useTranslations('search');
   const tCommon = useTranslations('common');
+  const locale = useLocale();
   const channel = useChannel();
   const router = useRouter();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -58,8 +60,12 @@ export function SearchAutocomplete({
   });
 
   const products = useMemo<SearchableProduct[]>(
-    () => result.data?.products?.edges?.map((edge: any) => edge.node) || [],
-    [result.data]
+    () => (result.data?.products?.edges?.map((edge: any) => {
+      const node = edge.node as SearchableProduct;
+      const localizedName = getLocalizedProductName(node, locale);
+      return localizedName === node.name ? node : { ...node, name: localizedName };
+    }) || []),
+    [locale, result.data]
   );
 
   const suggestions = useMemo(() => {

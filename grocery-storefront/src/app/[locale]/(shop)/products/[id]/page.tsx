@@ -17,6 +17,7 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { getLocalizedProductDescription, getLocalizedProductName } from '@/lib/localization';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import {
   getConfiguredText,
@@ -672,6 +673,7 @@ function DetailSkeleton() {
 export default function ProductDetailPage() {
   const { id: slug } = useParams<{ id: string }>();
   const t = useTranslations();
+  const locale = useLocale();
   const addItem = useCartStore((s) => s.addItem);
   const wishlistItems = useWishlistStore((state) => state.items);
   const addWishlistItem = useWishlistStore((state) => state.addItem);
@@ -762,6 +764,13 @@ export default function ProductDetailPage() {
   const productPrice = product.pricing?.priceRange?.start?.gross;
   const price = variantPrice?.amount ?? productPrice?.amount ?? 0;
   const currency = variantPrice?.currency ?? productPrice?.currency ?? 'PLN';
+  const productName = getLocalizedProductName(product, locale);
+  const productDescription = getLocalizedProductDescription(product, locale);
+  const displayProduct = {
+    ...product,
+    name: productName,
+    description: productDescription,
+  };
   const inStock = (variant?.quantityAvailable ?? 0) > 0;
   const imageUrl = getImageSrc(product?.thumbnail?.url);
   const isWishlisted = wishlistItems.some((item) => item.productId === product.id);
@@ -806,7 +815,7 @@ export default function ProductDetailPage() {
         productId: product.id,
         variantId: variant.id,
         slug: product.slug,
-        name: product.name,
+        name: productName,
         thumbnail: product.thumbnail?.url,
         price,
         currency,
@@ -844,7 +853,7 @@ export default function ProductDetailPage() {
         productId: product.id,
         variantId: variant.id,
         slug: product.slug,
-        name: product.name,
+        name: productName,
         thumbnail: imageUrl || undefined,
         price,
         currency,
@@ -867,11 +876,11 @@ export default function ProductDetailPage() {
         { label: t('nav.home'), href: '/' },
         { label: t('nav.products'), href: '/products' },
         ...(product.category ? [{ label: product.category.name, href: `/categories/${product.category.slug}` }] : []),
-        { label: product.name },
+        { label: productName },
       ]} />
 
       <div className="grid min-w-0 gap-5 md:grid-cols-2 md:gap-8 lg:gap-12">
-        <ProductGallery product={product} />
+        <ProductGallery product={displayProduct} />
 
         {/* Details */}
         <div className="min-w-0 space-y-5 md:space-y-6">
@@ -894,7 +903,7 @@ export default function ProductDetailPage() {
             className="heading-display mb-3 text-xl leading-tight sm:text-2xl md:mb-4 md:text-3xl"
             style={{ color: 'var(--color-foreground)' }}
           >
-            {product.name}
+            {productName}
           </h1>
 
           {/* Price */}
@@ -963,7 +972,7 @@ export default function ProductDetailPage() {
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="flex h-11 w-11 shrink-0 items-center justify-center text-lg font-medium transition-colors duration-fast hover-surface"
                 style={{ color: 'var(--color-foreground)' }}
-                aria-label={t('product.decreaseQuantity', { name: product.name })}
+                aria-label={t('product.decreaseQuantity', { name: productName })}
               >
                 <Minus className="w-4 h-4" aria-hidden="true" />
               </button>
@@ -975,7 +984,7 @@ export default function ProductDetailPage() {
                 onClick={() => setQuantity(quantity + 1)}
                 className="flex h-11 w-11 shrink-0 items-center justify-center text-lg font-medium transition-colors duration-fast hover-surface"
                 style={{ color: 'var(--color-foreground)' }}
-                aria-label={t('product.increaseQuantity', { name: product.name })}
+                aria-label={t('product.increaseQuantity', { name: productName })}
               >
                 <Plus className="w-4 h-4" aria-hidden="true" />
               </button>
@@ -1003,7 +1012,7 @@ export default function ProductDetailPage() {
                 backgroundColor: justAdded ? 'var(--color-fresh)' : 'var(--color-primary)',
               }}
               data-testid="product-detail-add"
-              aria-label={inStock ? `${t('common.addToCart')} — ${product.name}` : t('product.outOfStock')}
+              aria-label={inStock ? `${t('common.addToCart')} — ${productName}` : t('product.outOfStock')}
             >
               {justAdded ? (
                 <Check className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true" />
@@ -1040,7 +1049,7 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      <ProductInformationSections product={product} sku={sku} currency={currency} />
+      <ProductInformationSections product={displayProduct} sku={sku} currency={currency} />
 
       <RelatedProductsSection
         products={relatedProducts}

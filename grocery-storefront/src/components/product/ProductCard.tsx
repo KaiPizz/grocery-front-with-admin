@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ShoppingCart, Info, Package, Check, Minus, Plus, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { FreshnessBadge } from '@/components/grocery/FreshnessBadge';
@@ -11,6 +11,7 @@ import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { Link } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import { getLocalizedProductName } from '@/lib/localization';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
 
@@ -79,6 +80,9 @@ export function ProductCard({
   actionVisibility = 'always',
 }: ProductCardProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const productName = getLocalizedProductName(product, locale);
+  const displayProduct = productName === product.name ? product : { ...product, name: productName };
   const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
   const cartItem = useCartStore((s) => {
@@ -110,7 +114,7 @@ export function ProductCard({
     : product.compareAtPrice ?? null;
   const showCompareAtPrice = typeof compareAtPrice === 'number' && compareAtPrice > price;
   const showPromo = showCatalogFacts && showCompareAtPrice;
-  const cardImages = getProductCardImages(product);
+  const cardImages = getProductCardImages(displayProduct);
   const previewImages = cardImages.slice(0, PRODUCT_PREVIEW_MAX_IMAGES);
   const primaryImage = cardImages[0] ?? null;
   const hasPreviewImages = previewImages.length > 1;
@@ -235,7 +239,7 @@ export function ProductCard({
           productId: product.id,
           variantId: variant.id,
           slug: product.slug,
-          name: product.name,
+          name: productName,
           thumbnail: imageUrl || undefined,
           price,
           currency,
@@ -279,7 +283,7 @@ export function ProductCard({
         productId: product.id,
         variantId: variant.id,
         slug: product.slug,
-        name: product.name,
+        name: productName,
         thumbnail: imageUrl || undefined,
         price,
         currency,
@@ -307,7 +311,7 @@ export function ProductCard({
         href={`/products/${product.slug}`}
         className="group flex h-full flex-col overflow-hidden rounded-none border-0 card-hover sm:rounded-xl sm:border"
         style={{ borderColor: 'var(--color-border)' }}
-        aria-label={`${product.name}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
+        aria-label={`${productName}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
         onMouseEnter={handlePreviewStart}
         onMouseLeave={handlePreviewEnd}
         onFocus={handlePreviewStart}
@@ -469,7 +473,7 @@ export function ProductCard({
               onClick={handleNutritionClick}
               className="absolute bottom-2.5 right-2.5 z-20 hidden h-11 w-11 items-center justify-center rounded-lg border shadow-sm transition-[opacity,transform,box-shadow] duration-fast hover:scale-[1.03] sm:flex"
               style={{ backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)', borderColor: 'var(--color-border)' }}
-              aria-label={`${t('product.nutrition')} - ${product.name}`}
+              aria-label={`${t('product.nutrition')} - ${productName}`}
             >
               <Info className="w-4 h-4" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
             </button>
@@ -510,7 +514,7 @@ export function ProductCard({
                     backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)',
                     borderColor: 'var(--color-border)',
                   }}
-                  aria-label={`${t('product.nutrition')} - ${product.name}`}
+                  aria-label={`${t('product.nutrition')} - ${productName}`}
                 >
                   <Info className="h-4 w-4" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
                 </button>
@@ -548,7 +552,7 @@ export function ProductCard({
             style={{ color: 'var(--color-foreground)' }}
             data-testid="product-card-title"
           >
-            {product.name}
+            {productName}
           </h3>
 
           <div className="mt-auto pt-2.5">
@@ -628,7 +632,7 @@ export function ProductCard({
                     onClick={(e) => updateQuantity(e, -1)}
                     disabled={!inStock || busy || (!isInCart && quantity <= 1)}
                     className="flex items-center justify-center transition-all duration-fast hover-surface disabled:opacity-40"
-                    aria-label={t('product.decreaseQuantity', { name: product.name })}
+                    aria-label={t('product.decreaseQuantity', { name: productName })}
                   >
                     <Minus className="w-4 h-4 opacity-80 transition-opacity duration-fast group-hover/quantity:opacity-100" aria-hidden="true" />
                   </button>
@@ -645,7 +649,7 @@ export function ProductCard({
                     onClick={(e) => updateQuantity(e, 1)}
                     disabled={!inStock || busy || displayedQuantity >= maxQuantity}
                     className="flex items-center justify-center transition-all duration-fast hover-surface disabled:opacity-40"
-                    aria-label={t('product.increaseQuantity', { name: product.name })}
+                    aria-label={t('product.increaseQuantity', { name: productName })}
                   >
                     <Plus className="w-4 h-4 opacity-80 transition-opacity duration-fast group-hover/quantity:opacity-100" aria-hidden="true" />
                   </button>
@@ -678,7 +682,7 @@ export function ProductCard({
       <NutritionModal
         open={nutritionOpen}
         onOpenChange={setNutritionOpen}
-        productName={product.name}
+        productName={productName}
         nutritionFacts={product.nutritionFacts}
         ingredients={product.ingredients}
         allergens={product.allergens}
