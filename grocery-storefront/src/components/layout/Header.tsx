@@ -51,7 +51,7 @@ export function Header() {
 
   const storeName = siteConfig?.branding?.storeName || 'Grocery';
   const logoUrl = siteConfig?.branding?.logoUrl;
-  const logoText = logoUrl && storeName.trim().toLowerCase() === 'asia deli go' ? 'Go' : storeName;
+  const logoText = logoUrl && storeName.trim().toLowerCase() === 'asia deli go' ? '' : storeName;
   const headerCfg = siteConfig?.layout?.header;
 
   const hrefToI18n: Record<string, string> = {
@@ -371,12 +371,14 @@ export function Header() {
               <Leaf className="w-5 h-5 text-white" />
             </div>
           )}
-          <span
-            className="block max-w-[6.75rem] truncate font-display text-base font-bold tracking-tight sm:max-w-none sm:text-lg"
-            style={{ color: logoText === 'Go' ? 'var(--color-primary)' : 'var(--color-foreground)' }}
-          >
-            {logoText}
-          </span>
+          {logoText && (
+            <span
+              className="block max-w-[6.75rem] truncate font-display text-base font-bold tracking-tight sm:max-w-none sm:text-lg"
+              style={{ color: 'var(--color-foreground)' }}
+            >
+              {logoText}
+            </span>
+          )}
         </Link>
 
         <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">

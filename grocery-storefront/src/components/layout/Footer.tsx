@@ -35,7 +35,7 @@ export function Footer() {
 
   const storeName = siteConfig?.branding?.storeName || 'Grocery';
   const logoUrl = siteConfig?.branding?.logoUrl;
-  const logoText = logoUrl && storeName.trim().toLowerCase() === 'asia deli go' ? 'Go' : storeName;
+  const logoText = logoUrl && storeName.trim().toLowerCase() === 'asia deli go' ? '' : storeName;
   const footerCfg = siteConfig?.layout?.footer;
   const tagline = footerCfg?.tagline || t('tagline');
   const socialLinks = siteConfig?.general?.socialLinks ?? [];
@@ -133,12 +133,14 @@ export function Footer() {
                   <Leaf className="w-4 h-4 text-white" aria-hidden="true" />
                 </div>
               )}
-              <span
-                className="font-display text-lg font-bold tracking-tight"
-                style={{ color: logoText === 'Go' ? 'var(--color-primary)' : 'var(--color-foreground)' }}
-              >
-                {logoText}
-              </span>
+              {logoText && (
+                <span
+                  className="font-display text-lg font-bold tracking-tight"
+                  style={{ color: 'var(--color-foreground)' }}
+                >
+                  {logoText}
+                </span>
+              )}
             </div>
             <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-muted-foreground)' }}>
               {tagline}
