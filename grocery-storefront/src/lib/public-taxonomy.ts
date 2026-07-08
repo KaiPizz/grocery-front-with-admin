@@ -40,6 +40,7 @@ interface BuildPublicCategoriesOptions {
 
 const HIDDEN_CATEGORY_KEYWORDS = [
   'kategoria tymczasowa',
+  'unmapped',
   'pozostale produkty',
   'pozostałe produkty',
   'pozostale-produkty',
@@ -74,8 +75,8 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Sosy, pasty, oleje, octy i przyprawy azjatyckie.',
       en: 'Asian sauces, pastes, oils, vinegars, and spices.',
     },
-    rawSlugs: ['sosy-marynaty', 'sos-sojowy', 'pasty-smakowe', 'przyprawy', 'sosy-marynaty-oleje', 'octy-i-winne-przyprawy', 'oleje', 'pasta-miso', 'wasabi', 'sezam', 'mleczko-kokosowe', 'buliony', 'pasty'],
-    keywords: ['sos', 'pasta', 'pasty', 'przypraw', 'olej', 'ocet', 'miso', 'wasabi', 'sezam', 'bulion', 'marynat', 'kokos'],
+    rawSlugs: ['sosy-marynaty', 'sos-sojowy', 'pasty-smakowe', 'przyprawy', 'sosy-marynaty-oleje', 'octy-i-winne-przyprawy', 'oleje', 'pasta-miso', 'wasabi', 'sezam', 'mleczko-kokosowe', 'buliony', 'pasty', 'mąki-panierki-tapioka', 'sól'],
+    keywords: ['sos', 'pasta', 'pasty', 'przypraw', 'olej', 'ocet', 'miso', 'wasabi', 'sezam', 'bulion', 'marynat', 'kokos', 'mąk', 'maki', 'panier', 'tapioka', 'sól', 'sol'],
   },
   {
     slug: 'przekaski-i-slodycze',
@@ -114,8 +115,8 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Nori, papier ryżowy i zestawy do sushi.',
       en: 'Nori, rice paper, and sushi sets.',
     },
-    rawSlugs: ['arkusze-nori-gim', 'papier-ryżowy', 'komplety-do-sushi-i-herbaty'],
-    keywords: ['sushi', 'nori', 'gim', 'papier ryzowy', 'papier-ryzowy', 'papier-ryżowy'],
+    rawSlugs: ['arkusze-nori-gim', 'papier-ryżowy', 'komplety-do-sushi-i-herbaty', 'wakame-miyeok', 'zestawy-do-sushi'],
+    keywords: ['sushi', 'nori', 'gim', 'papier ryzowy', 'papier-ryzowy', 'papier-ryżowy', 'wakame', 'miyeok', 'algi'],
   },
   {
     slug: 'grzyby-warzywa-i-tofu',
@@ -124,8 +125,8 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Grzyby azjatyckie, tofu, kombu i produkty roślinne.',
       en: 'Asian mushrooms, tofu, kombu, and plant-based ingredients.',
     },
-    rawSlugs: ['grzyby-shiitake', 'inne-grzyby-azjatyckie', 'grzyby-mun', 'kombu-dasima', 'tofu'],
-    keywords: ['grzyb', 'shiitake', 'mun', 'kombu', 'dasima', 'tofu'],
+    rawSlugs: ['grzyby-shiitake', 'inne-grzyby-azjatyckie', 'grzyby-mun', 'kombu-dasima', 'tofu', 'świeże-produkty'],
+    keywords: ['grzyb', 'shiitake', 'mun', 'kombu', 'dasima', 'tofu', 'świeże', 'swieze'],
   },
   {
     slug: 'akcesoria-kuchenne',
@@ -134,8 +135,8 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Naczynia, pałeczki, noże, maty, miski i akcesoria do gotowania.',
       en: 'Tableware, chopsticks, knives, mats, bowls, and cooking tools.',
     },
-    rawSlugs: ['pałeczki-i-sztućce', 'noże', 'miski', 'duża-micha', 'patelnie-wok-grill', 'patelnie-tamago', 'parowary-bambusowe', 'maty-do-zwijania', 'foremki', 'moździerze', 'naczynia', 'koty-szczęścia-i-inne-gadżety'],
-    keywords: ['paleczki', 'pałeczki', 'sztucce', 'sztućce', 'noze', 'noże', 'miski', 'micha', 'patelnie', 'wok', 'tamago', 'parowary', 'maty', 'foremki', 'mozdzierze', 'moździerze', 'naczynia', 'gadzety', 'gadżety'],
+    rawSlugs: ['pałeczki-i-sztućce', 'noże', 'miski', 'duża-micha', 'patelnie-wok-grill', 'patelnie-tamago', 'parowary-bambusowe', 'maty-do-zwijania', 'foremki', 'moździerze', 'naczynia', 'koty-szczęścia-i-inne-gadżety', 'prezenty'],
+    keywords: ['paleczki', 'pałeczki', 'sztucce', 'sztućce', 'noze', 'noże', 'miski', 'micha', 'patelnie', 'wok', 'tamago', 'parowary', 'maty', 'foremki', 'mozdzierze', 'moździerze', 'naczynia', 'gadzety', 'gadżety', 'prezent'],
   },
   {
     slug: 'kosmetyki-koreanskie',
@@ -169,11 +170,16 @@ function findDefinition(category: PublicTaxonomyRawCategory) {
   const normalizedSlug = normalizeText(category.slug);
   const searchText = getSearchText(category);
 
+  const rawSlugMatch = PUBLIC_CATEGORY_DEFINITIONS.find((definition) => {
+    return definition.rawSlugs?.some((slug) => normalizeText(slug) === normalizedSlug);
+  });
+
+  if (rawSlugMatch) return rawSlugMatch;
+
   return PUBLIC_CATEGORY_DEFINITIONS.find((definition) => {
-    const hasSlugMatch = definition.rawSlugs?.some((slug) => normalizeText(slug) === normalizedSlug);
     const hasKeywordMatch = definition.keywords?.some((keyword) => searchText.includes(normalizeText(keyword)));
 
-    return Boolean(hasSlugMatch || hasKeywordMatch);
+    return Boolean(hasKeywordMatch);
   }) ?? null;
 }
 

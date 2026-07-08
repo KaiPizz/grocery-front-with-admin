@@ -13,6 +13,7 @@
     "test:cart-probe": "node --test tests/cart-endpoints-probe.test.mjs",
     "probe:cart": "node scripts/cart-endpoints-probe.mjs",
     "probe:cart:report": "node scripts/cart-endpoints-probe.mjs --output=docs/backend-cart-failure-report.md",
+    "audit:catalog-quality": "node scripts/catalog-quality-audit.mjs --all",
     "audit:product-metadata": "node scripts/product-metadata-audit.mjs",
     "dry-run:unit-price": "node scripts/unit-price-backfill-dry-run.mjs",
     "dry-run:country-origin": "node scripts/country-origin-backfill-dry-run.mjs",
