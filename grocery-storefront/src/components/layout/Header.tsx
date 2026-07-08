@@ -593,11 +593,12 @@ export function Header() {
           ) : (
             <Link
               href="/login"
-              className="ml-1 hidden h-10 items-center gap-2 whitespace-nowrap rounded-xl border px-3 text-sm font-medium hover-surface md:inline-flex"
+              className="ml-1 hidden h-10 w-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border text-sm font-medium hover-surface md:inline-flex 2xl:w-auto 2xl:px-3"
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+              aria-label={t('login')}
             >
               <LogIn className="w-4 h-4" aria-hidden="true" />
-              <span>{t('login')}</span>
+              <span className="hidden 2xl:inline">{t('login')}</span>
             </Link>
           )}
 
