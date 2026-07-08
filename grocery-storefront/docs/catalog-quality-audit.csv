@@ -137,7 +137,7 @@ ea96d761-baf6-4242-94a5-78469ec42c49,Freesia Blooming Perfumed Hand Cream 30ml -
 6d4166d4-7acf-44ce-9a15-fea7025137ef,"Fruit Juice Gummy Muscat 100%, żelki o smaku białych winogron 54g - Meiji",KIMCHI-4432,Słodycze / Przekąski,KIMCHI-4432,13.5|13.5,100,,,missing_allergens
 c7111732-73e3-4b98-9f5f-adecd9b58358,"Fukamushicha Sencha, głęboko parowana zielona herbata liściasta 50g - Maruka",KIMCHI-4528,Herbaty,KIMCHI-4528,21.9|21.9,100,,,missing_allergens|missing_nutrition
 ffeae7b9-5ac1-4803-974f-bd4f0ba6c2d9,"Furikake, posypka do ryżu i dań płatki Perilli 20g - Mishima",KIMCHI-5482,Przyprawy,KIMCHI-5482,12.5|12.5,100,,,missing_allergens
-a7afb846-034f-4204-87e6-f33846105833,Galangal w proszku 100g Cock Brand,KIMCHI-269,Przyprawy,KIMCHI-269,10.49|10.49,100,,,missing_allergens|missing_nutrition|missing_english_translation
+a7afb846-034f-4204-87e6-f33846105833,Galangal w proszku 100g Cock Brand,KIMCHI-269,Przyprawy,KIMCHI-269,10.49|10.49,100,,,missing_allergens|missing_nutrition
 4da56e11-a287-4c6b-83ea-2a7fb945c29b,"Garlic Tteokbokki, kluski ryżowe w sosie czosnkowo-paprykowym 260g - O'Food",KIMCHI-3134,Dania gotowe,KIMCHI-3134,24.99|24.99,100,,,missing_allergens|missing_storage_zone
 0455a26b-69f0-4805-af8a-465dc5a24aa2,"Garnek gliniany bao zai (Bo Chai), miska do gotowania z pokrywką śr. 18 cm - Jin Hua Li Ci",KIMCHI-4944,Miski,KIMCHI-4944,66|66,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
 ece19366-8b91-45f4-ad7c-635a0d28893b,Glony Dasima (kombu) suszone 56g - Assi Brand,KIMCHI-756,Kombu / Dasima,KIMCHI-756,13.2|13.2,100,,,missing_allergens|missing_storage_zone
@@ -245,7 +245,6 @@ c7f73a7d-8b14-4089-b216-27026d7e46a8,Kawa mielona Trung Nguyen Sang Tao 2 - 340g
 c8c9b2bc-eec9-4d2a-8c48-baebec97e3af,Kawa mielona Trung Nguyen S Blend - 3 x 500g,KIMCHI-5194,Kawy,KIMCHI-5194,95.49|95.49,100,,soybeans|milk,missing_nutrition
 7c728975-d95f-4f95-8ec4-c1f45d2120a4,Kawa mielona Trung Nguyen S Blend - 500g,KIMCHI-1178,Kawy,KIMCHI-1178,33.5|33.5,100,,soybeans|milk,missing_nutrition
 5a600637-a84e-468e-9840-4b95d7e361c9,"Kawa wietnamska mielona Creative 4 (Arabica, Robusta) 250g - Trung Nguyen",KIMCHI-1187,Kawy,KIMCHI-1187,31.9|31.9,100,,,missing_allergens|missing_nutrition
-971c0fe3-ece8-4900-9293-2500fac5f39c,Kawa w proszku Squid Game Dalgona Latte 20g - Netflix,KIMCHI-5276,Kawy,KIMCHI-5276,9.9|9.9,100,,milk,missing_english_translation
 a0e21e82-3ff3-4e33-9137-be7044da25bd,Kawa ziarnista Espresso Innovator 500g - Trung Nguyen,KIMCHI-1185,Kawy,KIMCHI-1185,69.9|69.9,100,,,missing_allergens|missing_nutrition|missing_storage_zone
 ddcee0bd-c0be-4398-a13d-faae0c193bc7,Kawa ziarnista Trung Nguyen Culi Robusta - 1kg,KIMCHI-1183,Kawy,KIMCHI-1183,111.9|111.9,100,,nuts,missing_nutrition
 9fa3d804-898f-4978-a701-65979757be74,Kawa ziarnista Trung Nguyen Espresso Specialist - 500g,KIMCHI-1184,Kawy,KIMCHI-1184,78|78,100,,,missing_allergens|missing_nutrition
@@ -323,496 +322,331 @@ f801c00c-81c7-4c3f-a5d2-b4781ebe928c,"Maesil-cha, herbata śliwkowa w konfiturze
 95330e0a-0f00-4717-8e47-007decc8fcd7,Majonez japoński 450g Kewpie,KIMCHI-5379,"Sosy, marynaty",KIMCHI-5379,30.9|30.9,100,,cereals|eggs|soybeans|mustard,missing_storage_zone
 11ca2fac-fffc-4e8b-b57a-dfb66693d322,Makaron Beijing Jjajang Ramen z sosem z czarnej fasoli 135g - Ottogi,KIMCHI-3620,Ramyun / Ramen,KIMCHI-3620,9.99|9.99,100,,cereals|soybeans|sesame,missing_storage_zone
 a7f2f330-7574-46f7-933e-4807fe889c01,"Makaron Konjac, fettuccine 20 x 270g (cały karton) - Asia Style",KIMCHI-3552,Makaron konjac,KIMCHI-3552,137.8|137.8,0,,,out_of_stock|missing_allergens
-787a491b-21d7-46c9-a8f1-946abadf7041,"Makaron Konjac, fettuccine 270g - Asia Style",KIMCHI-3549,Makaron konjac,KIMCHI-3549,4.9|4.9,100,,,missing_allergens|missing_english_translation
-d6c03035-4ec6-48b2-aca8-f09563499b77,"Makaron Konjac, mix fettuccine/spaghetti 18 x 270g - Asia Style",KIMCHI-4659,Makaron konjac,KIMCHI-4659,89.99|89.99,100,,,missing_allergens|missing_english_translation
-a5f059fe-f89c-45ca-928f-99d02d966788,"Makaron Konjac, spaghetti 20 x 270g (cały karton) - Asia Style",KIMCHI-3551,Makaron konjac,KIMCHI-3551,137.8|137.8,100,,,missing_allergens|missing_english_translation
-49ab9785-f50b-4368-9448-329183474537,"Makaron Konjac, spaghetti 270g - Asia Style",KIMCHI-3550,Makaron konjac,KIMCHI-3550,4.9|4.9,100,,,missing_allergens|missing_english_translation
-d36d66bd-b783-4a3f-8bff-d47dc5e4970c,Makaron Nama Udon świeży 200g - Golden Lion,KIMCHI-5535,Makaron pszenny,KIMCHI-5535,4.4|4.4,100,,cereals,missing_storage_zone|missing_english_translation
-a2de840d-14d0-496b-9d76-d252c42c30cd,Makaron pszenno-gryczany soba 300g - Sen Soy,KIMCHI-3604,Makaron gryczany,KIMCHI-3604,8.1|8.1,100,,cereals,missing_english_translation
-84493fe2-1719-4951-beba-3fa66b5cd678,"Makaron pszenny, błyskawiczny 500g - Long Life",KIMCHI-3532,Makaron pszenny,KIMCHI-3532,10.99|10.99,100,,cereals,missing_english_translation
-8a92943f-1acc-4757-b194-d89084745ac8,Makaron pszenny Chow Mein 227g - Rare Pearl Bridge,KIMCHI-2663,Makarony,KIMCHI-2663,7.6|7.6,100,,cereals,missing_english_translation
-1fdfd24b-9a0f-466d-9334-2efff41e094b,Makaron pszenny Chow Mien 200g Bali Kitchen,KIMCHI-41,Makaron pszenny,KIMCHI-41,8.4|8.4,100,,cereals,missing_english_translation
-749fc1ac-787d-42a2-aba9-dc7e2269f70f,Makaron pszenny Jjajangguksu 907g - Assi Brand,KIMCHI-2372,Makaron pszenny,KIMCHI-2372,19.99|19.99,100,,cereals,missing_storage_zone|missing_english_translation
-d549a907-b536-45cf-a3a6-478d4020ac5a,Makaron pszenny ramen 300g - Asia Kitchen,KIMCHI-2651,Makaron pszenny,KIMCHI-2651,7.1|7.1,100,,cereals,missing_english_translation
-53e8b219-d326-4a74-b147-28a215b3944f,Makaron pszenny ramen 300g - Sen Soy,KIMCHI-3603,Makaron pszenny,KIMCHI-3603,8.1|8.1,100,,cereals,missing_english_translation
-861f2ae9-07b9-4ddf-96cb-5310582d453e,Makaron pszenny udon 300g - Asia Kitchen,KIMCHI-2652,Makaron pszenny,KIMCHI-2652,6.99|6.99,100,,cereals,missing_english_translation
-0efcc597-19a2-4f6b-b2c3-9a9745bd03df,Makaron pszenny Udon 300g - AYUKO,KIMCHI-4073,Makaron pszenny,KIMCHI-4073,6.99|6.99,100,,cereals,missing_english_translation
-bcfa7d96-a688-4e67-ae68-0964aa870130,Makaron pszenny Udon 300g - Chunsi,KIMCHI-776,Makaron pszenny,KIMCHI-776,6.7|6.7,100,,cereals,missing_storage_zone|missing_english_translation
-6f2af50d-49ab-442b-9ec2-6dead73b51ed,Makaron pszenny udon 300g - Sen Soy,KIMCHI-3602,Makaron pszenny,KIMCHI-3602,8.1|8.1,100,,cereals,missing_english_translation
-59723eb4-8c8d-49f7-bdc9-ca67a07a3491,"Makaron pszenny z jajkiem, błyskawiczny 500g - Long Life",KIMCHI-3139,Makaron pszenny,KIMCHI-3139,9.99|9.99,100,,cereals|eggs,missing_storage_zone|missing_english_translation
-3c85d422-a53c-475f-ac5f-a815feecd816,Makaron Rabokki w słodko-ostrym sosie 145g - Paldo,KIMCHI-2330,Ramyun / Ramen,KIMCHI-2330,6.9|6.9,100,,cereals|soybeans|mustard|sesame,missing_storage_zone|missing_english_translation
-a2e268c6-7f1c-48ca-9605-004d61ef9d8e,Makaron ramen 300g - AYUKO,KIMCHI-4074,Makaron pszenny,KIMCHI-4074,6.99|6.99,100,,cereals,missing_english_translation
-ed0633c9-e674-4bab-abf6-dc3eecf34ec1,Makaron ramen 375g - Golden Turtle,KIMCHI-777,Makaron pszenny,KIMCHI-777,7.99|7.99,100,,cereals,missing_storage_zone|missing_english_translation
-cb9a5f65-1a2f-48fe-877c-18204ca7deb7,"Makaron ramen, świeży 180g - Asia Kitchen",KIMCHI-3747,Makaron pszenny,KIMCHI-3747,3.9|3.9,100,,cereals,missing_english_translation
-bbf93a54-c2c3-4f47-9b8b-4f13474e78c1,Makaron ramen świeży 180g - AYUKO,KIMCHI-5555,Makaron pszenny,KIMCHI-5555,5.5|5.5,100,,cereals|soybeans,missing_english_translation
-32f5e62f-8b42-4b52-af59-f8a765f47d9c,Makaron ramen świeży 180g - Golden Lion,KIMCHI-4665,Makaron pszenny,KIMCHI-4665,3.99|3.99,100,,cereals,missing_storage_zone|missing_english_translation
-6c8d81f0-20b2-48d4-ac88-ac7761306fba,"Makaron ramen, świeży 200g - Asia Foods",KIMCHI-3464,Makaron pszenny,KIMCHI-3464,3.8|3.8,100,,cereals|soybeans,missing_english_translation
-e6c4f030-48e8-47b3-932d-25026ac2e666,Makaron ramen świeży 400g - Wheatsun,KIMCHI-3615,Makaron pszenny,KIMCHI-3615,13.5|13.5,100,,cereals,missing_english_translation
-eb16f165-7918-41a1-8fb3-51fea87fc06b,Makaron ramen świeży  ITA-SAN 200g,KIMCHI-599,Makaron pszenny,KIMCHI-599,4.99|4.99,0,,cereals,out_of_stock|missing_storage_zone|missing_english_translation
-91e0cb63-cd1c-469c-9f48-4b9aa52c20bf,Makaron ryżowy 10mm 400g - Asia Kitchen,KIMCHI-3227,Makaron ryżowy,KIMCHI-3227,8.99|8.99,100,,,missing_allergens|missing_english_translation
-556b36b1-99c5-44b5-9458-218a02b7cce5,Makaron ryżowy 10mm 400g - Farmer,KIMCHI-387,Makaron ryżowy,KIMCHI-387,8.99|8.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-b874ea11-fbec-4434-a0ce-0e6586c44d00,Makaron ryżowy 1mm 400g - Asia Kitchen,KIMCHI-3224,Makaron ryżowy,KIMCHI-3224,8.99|8.99,100,,,missing_allergens|missing_english_translation
-8f80102c-7330-4f9f-b25f-f47f23732672,Makaron ryżowy 1mm 400g - Farmer,KIMCHI-1055,Makaron ryżowy,KIMCHI-1055,8.99|8.99,100,vegetarian,,missing_allergens|missing_storage_zone|missing_english_translation
-69589cf6-506a-493d-8795-79130f7f14ad,Makaron ryżowy 3mm 400g - Asia Kitchen,KIMCHI-3225,Makaron ryżowy,KIMCHI-3225,8.99|8.99,100,,,missing_allergens|missing_english_translation
-6a1f47f9-7b57-4832-9795-3dd3e442a21b,Makaron ryżowy 3mm 400g Farmer,KIMCHI-157,Makaron ryżowy,KIMCHI-157,8.99|8.99,100,gluten-free|vegetarian,,missing_allergens|missing_storage_zone|missing_english_translation
-294293a9-d0e8-481c-83d4-fda979fc9920,Makaron ryżowy 5mm 400g - Asia Kitchen,KIMCHI-3226,Makaron ryżowy,KIMCHI-3226,8.99|8.99,100,,,missing_allergens|missing_english_translation
-d7a3e40d-8c0b-4fa2-87b4-eda855f18c80,Makaron ryżowy 5mm 400g Farmer,KIMCHI-158,Makaron ryżowy,KIMCHI-158,8.99|8.99,100,gluten-free,,missing_allergens|missing_storage_zone|missing_english_translation
-acbbe570-b0a7-4021-9531-7beea26e4764,Makaron ryżowy czerwony Hiep Long 500g,KIMCHI-739,Makaron ryżowy,KIMCHI-739,11.99|11.99,100,vegetarian,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-546df607-902a-4a38-b5d6-d0c74d422289,Makaron ryżowy do dania Bun Cha 500g Hiep Long,KIMCHI-40,Makaron ryżowy,KIMCHI-40,9.7|9.7,100,gluten-free,,missing_allergens|missing_english_translation
-29478ed6-4bb6-4114-8d58-12b353d9ceee,Makaron ryżowy instant o smaku Pad Thai 70g - MAMA,KIMCHI-1378,Duża micha,KIMCHI-1378,4.99|4.99,100,,cereals|soybeans|milk|crustaceans,missing_storage_zone|missing_english_translation
-fcb4e219-4932-4bf0-8774-4e1e0b481849,Makaron ryżowy LaMi M do Pho 500g Hiep Long,KIMCHI-38,Makaron ryżowy,KIMCHI-38,10.2|10.2,100,gluten-free,,missing_allergens|missing_english_translation
-b0afc235-8b9d-4b73-984c-9ea9c01b29e4,Makaron ryżowy Vermicelli Bun Gao 400g - ICV,KIMCHI-4334,Makaron ryżowy,KIMCHI-4334,9.7|9.7,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-33b0bd6b-b697-4b01-ad4d-405380eda556,"Makaron ryżowy Vermicelli, nitki 454g Farmer",KIMCHI-39,Makaron ryżowy,KIMCHI-39,15.5|15.5,100,gluten-free,,missing_allergens|missing_english_translation
-183b69fd-fe4f-43c2-9152-9f3b8257414d,"Makaron Shirataki Konjac, grube kluski udon 20 x 400g (cały karton) - City Aroma",KIMCHI-3435,Makaron konjac,KIMCHI-3435,157|157,100,,,missing_allergens|missing_english_translation
-9f05a2ce-f4e8-41ab-9b88-7e1773c930d5,"Makaron Shirataki Konjac, grube kluski udon 400g - City Aroma",KIMCHI-566,Makaron konjac,KIMCHI-566,7.9|7.9,100,,,missing_allergens|missing_english_translation
-81e0069f-85ce-4fe8-9dc3-765389956c8f,"Makaron Shirataki Konjac, nitki 20 x 400g (cały karton) - City Aroma",KIMCHI-3436,Makaron konjac,KIMCHI-3436,157|157,100,,,missing_allergens|missing_english_translation
-8a77487b-0a91-4f6e-aef7-16b150ebd6ad,"Makaron Shirataki Konjac, nitki 400g - City Aroma",KIMCHI-1057,Makaron konjac,KIMCHI-1057,7.9|7.9,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-4b6aed52-e3e6-4ebd-8f40-1c3c86dc3583,Makaron soba 300g - AYUKO,KIMCHI-4072,Makaron pszenny,KIMCHI-4072,7.2|7.2,100,vegetarian,cereals,missing_english_translation
-69404314-95dd-4b37-841a-0d0db9639d7d,Makaron soba 300g Chunsi,KIMCHI-156,Makaron gryczany,KIMCHI-156,7.7|7.7,100,,cereals,missing_english_translation
-a83c22f3-b525-4726-93e1-357ba8fa657f,Makaron soba 300g - HANLA,KIMCHI-565,Makaron pszenny,KIMCHI-565,9.7|9.7,100,vegetarian,cereals,missing_english_translation
-45f89ee5-d0fc-4d94-bc3b-814ff8d9bc6f,Makaron sojowy Vermicelli 100g LongKou,KIMCHI-42,Makaron szklisty,KIMCHI-42,3.8|3.8,100,,,missing_allergens|missing_english_translation
-dc18a337-8019-4687-84e3-da6fba30adad,"Makaron sojowy Vermicelli 500g, pakowane po 5x100g - LongKou",KIMCHI-457,Makaron szklisty,KIMCHI-457,15.99|15.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-21da15e1-9601-454a-a501-5453470ec95e,"Makaron sojowy vermicelli LongKou 1kg, porcjowany 20 x 50g",KIMCHI-1153,Makarony,KIMCHI-1153,27.8|27.8,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-4962197c-566c-4497-a258-bb531687a34e,Makaron Somen 300g - Chunsi,KIMCHI-1465,Makaron pszenny,KIMCHI-1465,6.7|6.7,100,vegetarian,cereals,missing_storage_zone|missing_english_translation
-47759dd4-5580-417e-aba3-7e0efb387e3e,"Makaron Spaghetti Hayayude Naruto 1,6mm 500g - Nisshin Welna",KIMCHI-5830,Makaron pszenny,KIMCHI-5830,8.99|8.99,100,,cereals,missing_english_translation
-93f1960c-343c-42b3-9968-6f4a090a3782,Makaron stir-fry instant o smaku solonego jajka 85g - MAMA Oriental Kitchen,KIMCHI-4258,Dania gotowe,KIMCHI-4258,6.99|6.99,100,,cereals|soybeans|eggs|milk,missing_storage_zone|missing_english_translation
-9f966918-a279-42db-aac2-066d6e91f789,"Makaron stir-fry, kurczak z sosem sojowym na ostro 4 x 130g - Paldo",KIMCHI-5247,Ramyun / Ramen,KIMCHI-5247,32|32,100,,cereals|soybeans|sesame,missing_english_translation
-f75218f0-2b6e-4a67-a1ce-097b76955655,Makaron świeży Udon - 5 porcji - 5x200g - Miyakoichi,KIMCHI-5562,Makaron pszenny,KIMCHI-5562,29.99|29.99,100,,cereals,missing_english_translation
-b9767ea9-7933-4598-b101-2cd2573db17f,"Makaron udon, świeży 200g - Asia Kitchen",KIMCHI-3748,Makaron pszenny,KIMCHI-3748,3.99|3.99,100,,cereals,missing_english_translation
-8b090ffc-5e61-4a77-a3d4-f330e102486f,Makaron udon świeży 200g - AYUKO,KIMCHI-5554,Makaron pszenny,KIMCHI-5554,5.5|5.5,100,,cereals,missing_english_translation
-706f6d74-417b-42f1-a2d0-9c933cd94909,Makaron Udon świeży 200g -  Ita-San,KIMCHI-1482,Makaron pszenny,KIMCHI-1482,4.9|4.9,100,,cereals,missing_english_translation
-30245b1e-9b9b-4b5e-826e-5ded9d543420,Makaron udon świeży 200g - Samlip,KIMCHI-3465,Makaron pszenny,KIMCHI-3465,3.85|3.85,100,,cereals,missing_english_translation
-e09ed7b9-8a94-4455-913f-8c4e0c27478a,Makaron vermicelli ze słodkich ziemniaków 300g - Minh Dương,KIMCHI-2779,Makaron szklisty,KIMCHI-2779,11.99|11.99,100,gluten-free,,missing_allergens|missing_english_translation
-286b59bc-5bc3-44a1-a13f-e6adc5992496,Makaron vermicelli ze słodkich ziemniaków 500g - Hosaku,KIMCHI-5375,Makaron szklisty,KIMCHI-5375,16.9|16.9,100,gluten-free,,missing_allergens|missing_english_translation
-4b1550fd-cbac-4bd8-9a46-9a2fa0aaa7ae,Makaron vermicelli ze słodkich ziemniaków 500g - Minh Dương,KIMCHI-1151,Makaron szklisty,KIMCHI-1151,19.99|19.99,100,gluten-free,,missing_allergens|missing_english_translation
-fd26cdb9-8743-47a6-b607-4877060fe42b,Makaron w stylu chińskim 400g - Thai Dancer,KIMCHI-2325,Makaron pszenny,KIMCHI-2325,17.9|17.9,100,,cereals,missing_english_translation
-8a55515a-bece-45f7-80b7-376097b6c012,"Makaron z brązowego ryżu Vermicelli, nitki 200g - MAMA",KIMCHI-1201,Makaron ryżowy,KIMCHI-1201,9.99|9.99,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-b1e850cf-d32a-4a40-b64c-77c277191c58,Makaron z dynią bez glutenu Konjac Pumpkin 200g - Ishibashi-Ya,KIMCHI-5092,Makaron konjac,KIMCHI-5092,12.99|12.99,100,,cereals,missing_english_translation
-e5d1c540-19f4-4cb3-8cb2-9db1dad17517,Makaron ze słodkich ziemniaków 500g - DING XI BRAND,KIMCHI-4333,Makaron szklisty,KIMCHI-4333,18.5|18.5,100,gluten-free,,missing_allergens|missing_english_translation
-72e9d20b-f316-426c-8dc7-bad695a41640,Makaron ze słodkich ziemniaków i tapioki 450g - Sempio,KIMCHI-912,Makaron szklisty,KIMCHI-912,17.99|17.99,100,,crustaceans|soybeans|sesame,missing_storage_zone|missing_english_translation
-5c1edcd2-e306-42be-84bc-77939420cdf6,Makaron ze słodkich ziemniaków i tapioki 900g - Sempio,KIMCHI-1028,Makaron szklisty,KIMCHI-1028,33.9|33.9,100,,crustaceans|soybeans|sesame,missing_storage_zone|missing_english_translation
-29bb647f-ab3b-4ae3-abe7-6827c2e2a4ed,Makaron ze szpinakiem bez glutenu Konjac Spinach 200g - Ishibashi-Ya,KIMCHI-5091,Makaron konjac,KIMCHI-5091,12.99|12.99,100,,cereals,missing_english_translation
-b9154eea-0536-44a2-9deb-83fd84d9dba9,Makaron z marchwią bez glutenu Konjac Carrot 200g - Ishibashi-Ya,KIMCHI-5093,Makaron konjac,KIMCHI-5093,12.99|12.99,100,,cereals,missing_english_translation
-895634b9-1aa6-4257-b5f0-0597385c0991,"Mąka ryżowa, bezglutenowa 400g - Cock Brand",KIMCHI-426,Mąki / Panierki / Tapioka,KIMCHI-426,7.9|7.9,100,gluten-free,,missing_allergens|missing_storage_zone|missing_english_translation
-e372e7da-30a3-4548-ab2f-f9da05ffee53,Mąka ryżowa kleista 400g bezglutenowa - Cock Brand,KIMCHI-427,Mąki / Panierki / Tapioka,KIMCHI-427,8.7|8.7,100,gluten-free,,missing_allergens|missing_storage_zone|missing_english_translation
-d4b1cb16-76ce-454e-83ba-97bb97ec77e5,Mąka ryżowa kleista 400g - Wind Mill,KIMCHI-2594,Mąki / Panierki / Tapioka,KIMCHI-2594,7.5|7.5,100,,,missing_allergens|missing_english_translation
-d00f7cd2-7bb7-45ed-8c26-c0f6d0d3cc31,"Mąka ryżowa kleista, bezglutenowa 400g - Farmer",KIMCHI-3848,Mąki / Panierki / Tapioka,KIMCHI-3848,8.7|8.7,100,gluten-free,,missing_allergens|missing_english_translation
-bd58dc9b-9990-442c-adec-7571585046d9,"Mąka tempura, miks do smażenia 1kg - CJ Beksul",KIMCHI-3187,Mąki / Panierki / Tapioka,KIMCHI-3187,20.99|20.99,100,,cereals,missing_english_translation
-0c16f6c4-fc3d-47df-bd46-5fffe48e6f3f,"Mąka tempura, miks do smażenia 500g - CJ Beksul",KIMCHI-3188,Mąki / Panierki / Tapioka,KIMCHI-3188,10.9|10.9,100,,cereals,missing_description|missing_english_translation
-e8783e91-cbb5-4323-b97c-84da8761a8c8,"Mango, połówki w syropie lekko słodzonym 425g Diamond",KIMCHI-270,Owoce / Marynowane warzywa,KIMCHI-270,9.5|9.5,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-07904823-7178-459f-bd42-dd99432f1a3c,"Mango, przecier bez cukru 500g Philippine Brand",KIMCHI-761,Owoce / Marynowane warzywa,KIMCHI-761,23.99|23.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-59f57595-2d23-4804-a97b-b687428cca6e,Marynata BBQ Bulgogi do wołowiny 280g - CJO Cuisine,KIMCHI-820,"Sosy, marynaty",KIMCHI-820,12.99|12.99,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-854cfed9-d5c7-44a7-8627-f431f57aecca,Marynata BBQ Bulgogi do wołowiny 500g - CJO Cuisine,KIMCHI-724,"Sosy, marynaty",KIMCHI-724,20.99|20.99,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-05e3f241-68f4-420a-9d18-46713d5f3f9d,Marynata BBQ Bulgogi do wołowiny 840g - CJO Cuisine,KIMCHI-821,"Sosy, marynaty",KIMCHI-821,29.99|29.99,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-9c235817-e191-4361-8973-4e8e45110060,Marynata BBQ Bulgogi Gochujang do wieprzowiny 280g - CJO Cuisine,KIMCHI-725,"Sosy, marynaty",KIMCHI-725,10.99|10.99,100,,cereals|soybeans,missing_english_translation
-86669b09-a25c-4174-98b8-ad861b5c1c11,Marynata BBQ Bulgogi Gochujang do wieprzowiny 500g - CJO Cuisine,KIMCHI-723,"Sosy, marynaty",KIMCHI-723,17.9|17.9,100,,soybeans,missing_english_translation
-c0587d21-fbeb-491f-bcf8-c93849137214,Marynata BBQ Bulgogi Gochujang do wieprzowiny 840g - CJO Cuisine,KIMCHI-626,"Sosy, marynaty",KIMCHI-626,29.99|29.99,100,,soybeans,missing_english_translation
-6a7f3986-52cf-4d63-916b-25915c4c2563,"Marynata, sos, baza do kimchi 1,134kg - S&B",KIMCHI-5767,"Sosy, marynaty",KIMCHI-5767,65|65,100,,cereals|fish|soybeans,missing_english_translation
-6b087db2-9faf-4112-b95c-a6a1dbc9c38c,Marynowana rzodkiew oshinko różowa takuan 500g - Tokyo,KIMCHI-4787,Owoce / Marynowane warzywa,KIMCHI-4787,13.5|13.5,100,,,missing_allergens|missing_english_translation
-1020e3b6-7f5b-44a1-92ea-67872dea7021,Marynowana rzodkiew oshinko takuan 500g - Tokyo,KIMCHI-2668,Owoce / Marynowane warzywa,KIMCHI-2668,9.9|9.9,100,,sulphites,missing_english_translation
-650ef4fb-da71-4f07-a607-eed6be55608f,Marynowana tykwa Kanpyo do sushi 60g - Misuzu,KIMCHI-5560,Owoce / Marynowane warzywa,KIMCHI-5560,10.9|10.9,100,,cereals|soybeans,missing_english_translation
-62f72cf8-05a1-48d1-9ed5-e40b6ddb765a,Masło klarowane Ghee 500g - Khanum,KIMCHI-1510,Oleje,KIMCHI-1510,39.99|39.99,100,,milk,missing_english_translation
-e2ebc363-6b5b-4eaf-b617-e8b44b9b0b88,Mata bambusowa do sushi 24 x 24cm - House of Asia,KIMCHI-137,Maty do zwijania,KIMCHI-137,9.6|9.6,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-f86c6883-4072-4906-a5a7-12ca7e24bc48,Mata bambusowa do sushi (cienka) 24x24cm,KIMCHI-220,Maty do zwijania,KIMCHI-220,5.99|5.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-5c13bd19-a0de-49ec-8ca1-83d440d9bd2b,"Mata bambusowa do sushi, cienka 24 x 24cm Asia Kitchen",KIMCHI-2966,Maty do zwijania,KIMCHI-2966,7.6|7.6,1,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-c4409575-42bd-429f-b782-160e748e4a2b,"Mata bambusowa do sushi, gruba 27 x 27 cm Asia Kitchen",KIMCHI-2968,Maty do zwijania,KIMCHI-2968,11.99|11.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-1ccbb565-ef60-424a-a1e4-8edf74691b64,"Mata bambusowa Professional Maki-su do sushi, duża 27x27cm",KIMCHI-974,Maty do zwijania,KIMCHI-974,9.99|9.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-496982df-0fc6-47e1-b236-5d77523372dd,"Matcha Iri Genmaicha, zielona herbata z prażonym ryżem i matchą 70g - Maruka",KIMCHI-3794,Herbaty,KIMCHI-3794,25|25,100,,,missing_allergens|missing_nutrition|missing_english_translation
-84a57374-1583-4ba0-ae71-af4a6726aa23,"Matcha iri Sencha, zielona herbata liściasta z matchą 100g - Maruka",KIMCHI-4529,Herbaty,KIMCHI-4529,49.5|49.5,100,,,missing_allergens|missing_nutrition|missing_english_translation
-9e6b7c4e-12be-4ebe-b74d-fb66a909014e,"Matcha Kulinarna Premium, sproszkowana zielona herbata 100g - Maruka",KIMCHI-3693,Herbaty,KIMCHI-3693,84.99|84.99,100,,eggs|milk,missing_nutrition|missing_english_translation
-71071b93-a658-4e4b-a965-bf006e8e1541,"Matcha, sproszkowana zielona herbata 500g - Tian Hu Shan",KIMCHI-2678,Herbaty,KIMCHI-2678,62.9|62.9,100,,eggs|milk,missing_nutrition|missing_english_translation
-23e0f93e-27e1-4331-8857-fd5e81b9f9da,"Matcha, sproszkowana zielona herbata w puszce 30g Hamasa-En",KIMCHI-5475,Herbaty,KIMCHI-5475,45|45,100,,eggs|milk,missing_nutrition|missing_storage_zone|missing_english_translation
-7b815bb4-d6c3-40db-bb53-a1f64b4c6dee,"Matcha, sproszkowana zielona herbata w puszce 80g Tian Hu Shan",KIMCHI-59,Herbaty,KIMCHI-59,17.99|17.99,100,,eggs|milk,missing_nutrition|missing_english_translation
-96fa6853-7b5d-402e-afec-9412e30310fd,"Matcha, sproszkowana zielona herbata w puszce 80g x 2 - Tian Hu Shan",KIMCHI-2723,Herbaty,KIMCHI-2723,33.98|33.98,100,,eggs|milk,missing_nutrition|missing_storage_zone|missing_english_translation
-58149eff-b8aa-4e1e-aeaa-bb2c563df3fd,"Matcha Uji-cha, sproszkowana zielona herbata 50g - Maruka",KIMCHI-3692,Herbaty,KIMCHI-3692,95.9|95.9,100,,,missing_allergens|missing_nutrition|missing_english_translation
-b11d2220-baa1-479a-82a2-d05421efcd21,"Maze Gohan, posypka do ryżu z wakame i sezamem 33g - Tanaka",KIMCHI-3824,Przyprawy,KIMCHI-3824,12.5|12.5,100,,sesame,missing_english_translation
-7bbfb5f4-3212-4d8d-9bf4-bdfe01ea4445,"Maze Gohan, posypka do ryżu z warzywami i shiso 31g - Tanaka",KIMCHI-3803,Przyprawy,KIMCHI-3803,11.2|11.2,100,,cereals|sesame,missing_english_translation
-bcf4acd3-06ca-4684-a925-19abd896e262,Menma marynowane fermentowane pędy bambusa w plasterkach 1kg,KIMCHI-5382,Owoce / Marynowane warzywa,KIMCHI-5382,54|54,100,,cereals|soybeans|sesame,missing_english_translation
-2393850b-eddd-4eea-9ff7-fca084661a41,Miękkie cukierki Malang Cow o smaku mleka truskawkowego 79g - LOTTE,KIMCHI-1362,Słodycze / Przekąski,KIMCHI-1362,16.99|16.99,100,,soybeans|milk,missing_english_translation
-0d532683-6c4d-4752-986c-eade6228578d,Miękkie cukierki Malang Cow o smaku skondensowanego mleka 79g - LOTTE,KIMCHI-1361,Słodycze / Przekąski,KIMCHI-1361,15.99|15.99,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-3587f3b3-4176-4363-b804-5a9cc7cb2bdb,Miękkie cukierki Salted Caramel Pineapple o smaku słonego karmelu i ananasa 69g - Morinaga,KIMCHI-5599,Słodycze / Przekąski,KIMCHI-5599,16.99|16.99,100,,cereals|soybeans|milk,missing_storage_zone|missing_english_translation
-0af391a0-336b-49af-af76-8f4f0d6f7d6d,Miękkie cukierki z czarnego żeń-szenia GeumSan 200g - Hongsamin,KIMCHI-4310,Słodycze / Przekąski,KIMCHI-4310,21.5|21.5,100,,,missing_allergens|missing_english_translation
-1822ef89-da85-4fa5-bc38-5242c10d3a37,Mielonka wieprzowa Luncheon Meat 340g - Chung Jung One,KIMCHI-2625,Dania gotowe,KIMCHI-2625,27.2|27.2,100,,,missing_allergens|missing_country|missing_storage_zone|missing_english_translation
-c2977003-1c7e-4fb4-9763-d1f120b8dafb,Mielony czosnek 326g - Lee Kum Kee,KIMCHI-5254,"Sosy, marynaty",KIMCHI-5254,22.9|22.9,100,,soybeans|sulphites,missing_english_translation
-62e9c9c0-63ba-427f-91b1-b3eb4c6a004a,Mięso z kraba w puszce 170g - Ambition,KIMCHI-1916,Dania gotowe,KIMCHI-1916,13.5|13.5,100,,crustaceans|sulphites,missing_nutrition|missing_english_translation
-a8fc3583-f0ca-4632-a684-31ed666cd7d6,"Mieszanka, mąka na Okonomiyaki 500g - Otafuku",KIMCHI-5409,Mąki / Panierki / Tapioka,KIMCHI-5409,33.5|33.5,100,,cereals|soybeans,missing_english_translation
-35bb8ec8-87f7-4396-91d2-5dfad1c8c6c8,"Mieszanka, mąka na Okonomiyaki i Takoyaki 180g - Otafuku",KIMCHI-5076,Mąki / Panierki / Tapioka,KIMCHI-5076,12.9|12.9,100,,cereals|soybeans,missing_english_translation
-882f522c-0d40-4230-b359-729a78003312,Mieszanka przypraw do dania Palabok 57g - Mama Sita's,KIMCHI-5715,*Kategoria tymczasowa,KIMCHI-5715,4.99|4.99,100,,crustaceans,missing_english_translation
-8166c9ea-669f-4330-96f6-b00b98c8812b,"Mieszanka przypraw do zupy Pho - anyż, cynamon, kardamon 100g - Hiep Long",KIMCHI-901,Przyprawy,KIMCHI-901,14.5|14.5,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-a2fb1300-3074-4dde-b8b7-d6832eb1f1df,"Migdały prażone smak ciasteczka z kremem, torebka 120g - HBAF",KIMCHI-4607,Słodycze / Przekąski,KIMCHI-4607,18.99|18.99,100,,soybeans|milk|nuts|cereals,missing_english_translation
-23e51876-9389-4a82-ae78-4ca753686578,"Migdały prażone smak koreańskiego injeolmi, torebka 120g - HBAF",KIMCHI-4919,Słodycze / Przekąski,KIMCHI-4919,19.9|19.9,100,,soybeans|milk|nuts,missing_english_translation
-2b3bf43d-c7b8-464e-b8b5-61c01fb00659,"Migdały prażone smak miód z masłem, torebka 180g - Nuts Holic",KIMCHI-5483,Słodycze / Przekąski,KIMCHI-5483,33.21|33.21,100,,soybeans|nuts,missing_english_translation
+787a491b-21d7-46c9-a8f1-946abadf7041,"Makaron Konjac, fettuccine 270g - Asia Style",KIMCHI-3549,Makaron konjac,KIMCHI-3549,4.9|4.9,100,,,missing_allergens
+d6c03035-4ec6-48b2-aca8-f09563499b77,"Makaron Konjac, mix fettuccine/spaghetti 18 x 270g - Asia Style",KIMCHI-4659,Makaron konjac,KIMCHI-4659,89.99|89.99,100,,,missing_allergens
+a5f059fe-f89c-45ca-928f-99d02d966788,"Makaron Konjac, spaghetti 20 x 270g (cały karton) - Asia Style",KIMCHI-3551,Makaron konjac,KIMCHI-3551,137.8|137.8,100,,,missing_allergens
+49ab9785-f50b-4368-9448-329183474537,"Makaron Konjac, spaghetti 270g - Asia Style",KIMCHI-3550,Makaron konjac,KIMCHI-3550,4.9|4.9,100,,,missing_allergens
+d36d66bd-b783-4a3f-8bff-d47dc5e4970c,Makaron Nama Udon świeży 200g - Golden Lion,KIMCHI-5535,Makaron pszenny,KIMCHI-5535,4.4|4.4,100,,cereals,missing_storage_zone
+749fc1ac-787d-42a2-aba9-dc7e2269f70f,Makaron pszenny Jjajangguksu 907g - Assi Brand,KIMCHI-2372,Makaron pszenny,KIMCHI-2372,19.99|19.99,100,,cereals,missing_storage_zone
+bcfa7d96-a688-4e67-ae68-0964aa870130,Makaron pszenny Udon 300g - Chunsi,KIMCHI-776,Makaron pszenny,KIMCHI-776,6.7|6.7,100,,cereals,missing_storage_zone
+59723eb4-8c8d-49f7-bdc9-ca67a07a3491,"Makaron pszenny z jajkiem, błyskawiczny 500g - Long Life",KIMCHI-3139,Makaron pszenny,KIMCHI-3139,9.99|9.99,100,,cereals|eggs,missing_storage_zone
+3c85d422-a53c-475f-ac5f-a815feecd816,Makaron Rabokki w słodko-ostrym sosie 145g - Paldo,KIMCHI-2330,Ramyun / Ramen,KIMCHI-2330,6.9|6.9,100,,cereals|soybeans|mustard|sesame,missing_storage_zone
+ed0633c9-e674-4bab-abf6-dc3eecf34ec1,Makaron ramen 375g - Golden Turtle,KIMCHI-777,Makaron pszenny,KIMCHI-777,7.99|7.99,100,,cereals,missing_storage_zone
+32f5e62f-8b42-4b52-af59-f8a765f47d9c,Makaron ramen świeży 180g - Golden Lion,KIMCHI-4665,Makaron pszenny,KIMCHI-4665,3.99|3.99,100,,cereals,missing_storage_zone
+eb16f165-7918-41a1-8fb3-51fea87fc06b,Makaron ramen świeży  ITA-SAN 200g,KIMCHI-599,Makaron pszenny,KIMCHI-599,4.99|4.99,0,,cereals,out_of_stock|missing_storage_zone
+91e0cb63-cd1c-469c-9f48-4b9aa52c20bf,Makaron ryżowy 10mm 400g - Asia Kitchen,KIMCHI-3227,Makaron ryżowy,KIMCHI-3227,8.99|8.99,100,,,missing_allergens
+556b36b1-99c5-44b5-9458-218a02b7cce5,Makaron ryżowy 10mm 400g - Farmer,KIMCHI-387,Makaron ryżowy,KIMCHI-387,8.99|8.99,100,,,missing_allergens|missing_storage_zone
+b874ea11-fbec-4434-a0ce-0e6586c44d00,Makaron ryżowy 1mm 400g - Asia Kitchen,KIMCHI-3224,Makaron ryżowy,KIMCHI-3224,8.99|8.99,100,,,missing_allergens
+8f80102c-7330-4f9f-b25f-f47f23732672,Makaron ryżowy 1mm 400g - Farmer,KIMCHI-1055,Makaron ryżowy,KIMCHI-1055,8.99|8.99,100,vegetarian,,missing_allergens|missing_storage_zone
+69589cf6-506a-493d-8795-79130f7f14ad,Makaron ryżowy 3mm 400g - Asia Kitchen,KIMCHI-3225,Makaron ryżowy,KIMCHI-3225,8.99|8.99,100,,,missing_allergens
+6a1f47f9-7b57-4832-9795-3dd3e442a21b,Makaron ryżowy 3mm 400g Farmer,KIMCHI-157,Makaron ryżowy,KIMCHI-157,8.99|8.99,100,gluten-free|vegetarian,,missing_allergens|missing_storage_zone
+294293a9-d0e8-481c-83d4-fda979fc9920,Makaron ryżowy 5mm 400g - Asia Kitchen,KIMCHI-3226,Makaron ryżowy,KIMCHI-3226,8.99|8.99,100,,,missing_allergens
+d7a3e40d-8c0b-4fa2-87b4-eda855f18c80,Makaron ryżowy 5mm 400g Farmer,KIMCHI-158,Makaron ryżowy,KIMCHI-158,8.99|8.99,100,gluten-free,,missing_allergens|missing_storage_zone
+acbbe570-b0a7-4021-9531-7beea26e4764,Makaron ryżowy czerwony Hiep Long 500g,KIMCHI-739,Makaron ryżowy,KIMCHI-739,11.99|11.99,100,vegetarian,,missing_allergens|missing_nutrition|missing_storage_zone
+546df607-902a-4a38-b5d6-d0c74d422289,Makaron ryżowy do dania Bun Cha 500g Hiep Long,KIMCHI-40,Makaron ryżowy,KIMCHI-40,9.7|9.7,100,gluten-free,,missing_allergens
+29478ed6-4bb6-4114-8d58-12b353d9ceee,Makaron ryżowy instant o smaku Pad Thai 70g - MAMA,KIMCHI-1378,Duża micha,KIMCHI-1378,4.99|4.99,100,,cereals|soybeans|milk|crustaceans,missing_storage_zone
+fcb4e219-4932-4bf0-8774-4e1e0b481849,Makaron ryżowy LaMi M do Pho 500g Hiep Long,KIMCHI-38,Makaron ryżowy,KIMCHI-38,10.2|10.2,100,gluten-free,,missing_allergens
+b0afc235-8b9d-4b73-984c-9ea9c01b29e4,Makaron ryżowy Vermicelli Bun Gao 400g - ICV,KIMCHI-4334,Makaron ryżowy,KIMCHI-4334,9.7|9.7,100,,,missing_allergens|missing_storage_zone
+33b0bd6b-b697-4b01-ad4d-405380eda556,"Makaron ryżowy Vermicelli, nitki 454g Farmer",KIMCHI-39,Makaron ryżowy,KIMCHI-39,15.5|15.5,100,gluten-free,,missing_allergens
+183b69fd-fe4f-43c2-9152-9f3b8257414d,"Makaron Shirataki Konjac, grube kluski udon 20 x 400g (cały karton) - City Aroma",KIMCHI-3435,Makaron konjac,KIMCHI-3435,157|157,100,,,missing_allergens
+9f05a2ce-f4e8-41ab-9b88-7e1773c930d5,"Makaron Shirataki Konjac, grube kluski udon 400g - City Aroma",KIMCHI-566,Makaron konjac,KIMCHI-566,7.9|7.9,100,,,missing_allergens
+81e0069f-85ce-4fe8-9dc3-765389956c8f,"Makaron Shirataki Konjac, nitki 20 x 400g (cały karton) - City Aroma",KIMCHI-3436,Makaron konjac,KIMCHI-3436,157|157,100,,,missing_allergens
+8a77487b-0a91-4f6e-aef7-16b150ebd6ad,"Makaron Shirataki Konjac, nitki 400g - City Aroma",KIMCHI-1057,Makaron konjac,KIMCHI-1057,7.9|7.9,100,,,missing_allergens|missing_storage_zone
+45f89ee5-d0fc-4d94-bc3b-814ff8d9bc6f,Makaron sojowy Vermicelli 100g LongKou,KIMCHI-42,Makaron szklisty,KIMCHI-42,3.8|3.8,100,,,missing_allergens
+dc18a337-8019-4687-84e3-da6fba30adad,"Makaron sojowy Vermicelli 500g, pakowane po 5x100g - LongKou",KIMCHI-457,Makaron szklisty,KIMCHI-457,15.99|15.99,100,,,missing_allergens|missing_storage_zone
+21da15e1-9601-454a-a501-5453470ec95e,"Makaron sojowy vermicelli LongKou 1kg, porcjowany 20 x 50g",KIMCHI-1153,Makarony,KIMCHI-1153,27.8|27.8,100,,,missing_allergens|missing_storage_zone
+4962197c-566c-4497-a258-bb531687a34e,Makaron Somen 300g - Chunsi,KIMCHI-1465,Makaron pszenny,KIMCHI-1465,6.7|6.7,100,vegetarian,cereals,missing_storage_zone
+93f1960c-343c-42b3-9968-6f4a090a3782,Makaron stir-fry instant o smaku solonego jajka 85g - MAMA Oriental Kitchen,KIMCHI-4258,Dania gotowe,KIMCHI-4258,6.99|6.99,100,,cereals|soybeans|eggs|milk,missing_storage_zone
+e09ed7b9-8a94-4455-913f-8c4e0c27478a,Makaron vermicelli ze słodkich ziemniaków 300g - Minh Dương,KIMCHI-2779,Makaron szklisty,KIMCHI-2779,11.99|11.99,100,gluten-free,,missing_allergens
+286b59bc-5bc3-44a1-a13f-e6adc5992496,Makaron vermicelli ze słodkich ziemniaków 500g - Hosaku,KIMCHI-5375,Makaron szklisty,KIMCHI-5375,16.9|16.9,100,gluten-free,,missing_allergens
+4b1550fd-cbac-4bd8-9a46-9a2fa0aaa7ae,Makaron vermicelli ze słodkich ziemniaków 500g - Minh Dương,KIMCHI-1151,Makaron szklisty,KIMCHI-1151,19.99|19.99,100,gluten-free,,missing_allergens
+8a55515a-bece-45f7-80b7-376097b6c012,"Makaron z brązowego ryżu Vermicelli, nitki 200g - MAMA",KIMCHI-1201,Makaron ryżowy,KIMCHI-1201,9.99|9.99,100,,,missing_allergens|missing_nutrition|missing_storage_zone
+e5d1c540-19f4-4cb3-8cb2-9db1dad17517,Makaron ze słodkich ziemniaków 500g - DING XI BRAND,KIMCHI-4333,Makaron szklisty,KIMCHI-4333,18.5|18.5,100,gluten-free,,missing_allergens
+72e9d20b-f316-426c-8dc7-bad695a41640,Makaron ze słodkich ziemniaków i tapioki 450g - Sempio,KIMCHI-912,Makaron szklisty,KIMCHI-912,17.99|17.99,100,,crustaceans|soybeans|sesame,missing_storage_zone
+5c1edcd2-e306-42be-84bc-77939420cdf6,Makaron ze słodkich ziemniaków i tapioki 900g - Sempio,KIMCHI-1028,Makaron szklisty,KIMCHI-1028,33.9|33.9,100,,crustaceans|soybeans|sesame,missing_storage_zone
+895634b9-1aa6-4257-b5f0-0597385c0991,"Mąka ryżowa, bezglutenowa 400g - Cock Brand",KIMCHI-426,Mąki / Panierki / Tapioka,KIMCHI-426,7.9|7.9,100,gluten-free,,missing_allergens|missing_storage_zone
+e372e7da-30a3-4548-ab2f-f9da05ffee53,Mąka ryżowa kleista 400g bezglutenowa - Cock Brand,KIMCHI-427,Mąki / Panierki / Tapioka,KIMCHI-427,8.7|8.7,100,gluten-free,,missing_allergens|missing_storage_zone
+d4b1cb16-76ce-454e-83ba-97bb97ec77e5,Mąka ryżowa kleista 400g - Wind Mill,KIMCHI-2594,Mąki / Panierki / Tapioka,KIMCHI-2594,7.5|7.5,100,,,missing_allergens
+d00f7cd2-7bb7-45ed-8c26-c0f6d0d3cc31,"Mąka ryżowa kleista, bezglutenowa 400g - Farmer",KIMCHI-3848,Mąki / Panierki / Tapioka,KIMCHI-3848,8.7|8.7,100,gluten-free,,missing_allergens
+0c16f6c4-fc3d-47df-bd46-5fffe48e6f3f,"Mąka tempura, miks do smażenia 500g - CJ Beksul",KIMCHI-3188,Mąki / Panierki / Tapioka,KIMCHI-3188,10.9|10.9,100,,cereals,missing_description
+e8783e91-cbb5-4323-b97c-84da8761a8c8,"Mango, połówki w syropie lekko słodzonym 425g Diamond",KIMCHI-270,Owoce / Marynowane warzywa,KIMCHI-270,9.5|9.5,100,,,missing_allergens|missing_storage_zone
+07904823-7178-459f-bd42-dd99432f1a3c,"Mango, przecier bez cukru 500g Philippine Brand",KIMCHI-761,Owoce / Marynowane warzywa,KIMCHI-761,23.99|23.99,100,,,missing_allergens|missing_storage_zone
+59f57595-2d23-4804-a97b-b687428cca6e,Marynata BBQ Bulgogi do wołowiny 280g - CJO Cuisine,KIMCHI-820,"Sosy, marynaty",KIMCHI-820,12.99|12.99,100,,cereals|soybeans,missing_storage_zone
+854cfed9-d5c7-44a7-8627-f431f57aecca,Marynata BBQ Bulgogi do wołowiny 500g - CJO Cuisine,KIMCHI-724,"Sosy, marynaty",KIMCHI-724,20.99|20.99,100,,cereals|soybeans,missing_storage_zone
+05e3f241-68f4-420a-9d18-46713d5f3f9d,Marynata BBQ Bulgogi do wołowiny 840g - CJO Cuisine,KIMCHI-821,"Sosy, marynaty",KIMCHI-821,29.99|29.99,100,,cereals|soybeans,missing_storage_zone
+6b087db2-9faf-4112-b95c-a6a1dbc9c38c,Marynowana rzodkiew oshinko różowa takuan 500g - Tokyo,KIMCHI-4787,Owoce / Marynowane warzywa,KIMCHI-4787,13.5|13.5,100,,,missing_allergens
+e2ebc363-6b5b-4eaf-b617-e8b44b9b0b88,Mata bambusowa do sushi 24 x 24cm - House of Asia,KIMCHI-137,Maty do zwijania,KIMCHI-137,9.6|9.6,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+f86c6883-4072-4906-a5a7-12ca7e24bc48,Mata bambusowa do sushi (cienka) 24x24cm,KIMCHI-220,Maty do zwijania,KIMCHI-220,5.99|5.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+5c13bd19-a0de-49ec-8ca1-83d440d9bd2b,"Mata bambusowa do sushi, cienka 24 x 24cm Asia Kitchen",KIMCHI-2966,Maty do zwijania,KIMCHI-2966,7.6|7.6,1,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+c4409575-42bd-429f-b782-160e748e4a2b,"Mata bambusowa do sushi, gruba 27 x 27 cm Asia Kitchen",KIMCHI-2968,Maty do zwijania,KIMCHI-2968,11.99|11.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+1ccbb565-ef60-424a-a1e4-8edf74691b64,"Mata bambusowa Professional Maki-su do sushi, duża 27x27cm",KIMCHI-974,Maty do zwijania,KIMCHI-974,9.99|9.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+496982df-0fc6-47e1-b236-5d77523372dd,"Matcha Iri Genmaicha, zielona herbata z prażonym ryżem i matchą 70g - Maruka",KIMCHI-3794,Herbaty,KIMCHI-3794,25|25,100,,,missing_allergens|missing_nutrition
+84a57374-1583-4ba0-ae71-af4a6726aa23,"Matcha iri Sencha, zielona herbata liściasta z matchą 100g - Maruka",KIMCHI-4529,Herbaty,KIMCHI-4529,49.5|49.5,100,,,missing_allergens|missing_nutrition
+9e6b7c4e-12be-4ebe-b74d-fb66a909014e,"Matcha Kulinarna Premium, sproszkowana zielona herbata 100g - Maruka",KIMCHI-3693,Herbaty,KIMCHI-3693,84.99|84.99,100,,eggs|milk,missing_nutrition
+71071b93-a658-4e4b-a965-bf006e8e1541,"Matcha, sproszkowana zielona herbata 500g - Tian Hu Shan",KIMCHI-2678,Herbaty,KIMCHI-2678,62.9|62.9,100,,eggs|milk,missing_nutrition
+23e0f93e-27e1-4331-8857-fd5e81b9f9da,"Matcha, sproszkowana zielona herbata w puszce 30g Hamasa-En",KIMCHI-5475,Herbaty,KIMCHI-5475,45|45,100,,eggs|milk,missing_nutrition|missing_storage_zone
+7b815bb4-d6c3-40db-bb53-a1f64b4c6dee,"Matcha, sproszkowana zielona herbata w puszce 80g Tian Hu Shan",KIMCHI-59,Herbaty,KIMCHI-59,17.99|17.99,100,,eggs|milk,missing_nutrition
+96fa6853-7b5d-402e-afec-9412e30310fd,"Matcha, sproszkowana zielona herbata w puszce 80g x 2 - Tian Hu Shan",KIMCHI-2723,Herbaty,KIMCHI-2723,33.98|33.98,100,,eggs|milk,missing_nutrition|missing_storage_zone
+58149eff-b8aa-4e1e-aeaa-bb2c563df3fd,"Matcha Uji-cha, sproszkowana zielona herbata 50g - Maruka",KIMCHI-3692,Herbaty,KIMCHI-3692,95.9|95.9,100,,,missing_allergens|missing_nutrition
+0d532683-6c4d-4752-986c-eade6228578d,Miękkie cukierki Malang Cow o smaku skondensowanego mleka 79g - LOTTE,KIMCHI-1361,Słodycze / Przekąski,KIMCHI-1361,15.99|15.99,100,,soybeans|milk,missing_storage_zone
+3587f3b3-4176-4363-b804-5a9cc7cb2bdb,Miękkie cukierki Salted Caramel Pineapple o smaku słonego karmelu i ananasa 69g - Morinaga,KIMCHI-5599,Słodycze / Przekąski,KIMCHI-5599,16.99|16.99,100,,cereals|soybeans|milk,missing_storage_zone
+0af391a0-336b-49af-af76-8f4f0d6f7d6d,Miękkie cukierki z czarnego żeń-szenia GeumSan 200g - Hongsamin,KIMCHI-4310,Słodycze / Przekąski,KIMCHI-4310,21.5|21.5,100,,,missing_allergens
+1822ef89-da85-4fa5-bc38-5242c10d3a37,Mielonka wieprzowa Luncheon Meat 340g - Chung Jung One,KIMCHI-2625,Dania gotowe,KIMCHI-2625,27.2|27.2,100,,,missing_allergens|missing_country|missing_storage_zone
+62e9c9c0-63ba-427f-91b1-b3eb4c6a004a,Mięso z kraba w puszce 170g - Ambition,KIMCHI-1916,Dania gotowe,KIMCHI-1916,13.5|13.5,100,,crustaceans|sulphites,missing_nutrition
+8166c9ea-669f-4330-96f6-b00b98c8812b,"Mieszanka przypraw do zupy Pho - anyż, cynamon, kardamon 100g - Hiep Long",KIMCHI-901,Przyprawy,KIMCHI-901,14.5|14.5,100,,,missing_allergens|missing_nutrition|missing_storage_zone
 2f06101f-82ad-4be1-abcc-15dce23b919f,"Migdały prażone smak pieczywo czosnkowe, torebka 120g - HBAF",KIMCHI-4605,Słodycze / Przekąski,KIMCHI-4605,18.9|18.9,100,,soybeans|milk|nuts|cereals,missing_english_translation
-9fd6f8f7-01e7-4c30-ba84-1db56b1001c6,"Migdały prażone smak słony karmel i precle, torebka 120g - HBAF",KIMCHI-4606,Słodycze / Przekąski,KIMCHI-4606,18.9|18.9,100,,cereals|soybeans|milk|nuts,missing_english_translation
-2a4dce61-37e3-4f1e-a78a-bcc2560747b5,"Migdały prażone smak wasabi, torebka 120g - HBAF",KIMCHI-4604,Słodycze / Przekąski,KIMCHI-4604,19.9|19.9,100,,soybeans|milk|nuts|mustard,missing_english_translation
-fb39f387-d882-4053-b546-aea24f87f867,"Mihyang / mirin, koreańskie wino do gotowania 360ml - Ottogi",KIMCHI-3731,"Sosy, marynaty",KIMCHI-3731,16.2|16.2,100,,,missing_allergens|missing_english_translation
-6033214d-7e7c-472e-9e99-c06cf1185b3f,"Mihyang / mirin, koreańskie wino do gotowania 900ml - Ottogi",KIMCHI-2352,"Sosy, marynaty",KIMCHI-2352,31.88|31.88,100,,,missing_allergens|missing_english_translation
-5f44ef6b-8b35-44c2-a813-442792f4cd63,Miks przypraw do kimchi 100g - Lobo,KIMCHI-998,Przyprawy,KIMCHI-998,9.7|9.7,100,,crustaceans|sesame,missing_storage_zone|missing_english_translation
-1670a1a9-9106-4ac1-9abe-78a0f38a99ed,Mild Red Spot Patch plasterki na wypryski absorbujące płyn i ropę 12szt Holika Holika,KIMCHI-5534,Koreańskie kosmetyki,KIMCHI-5534,19.9|19.9,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-9d3c6d44-73ca-4a18-b9b8-4987ca27c05b,Mild Yellow Spot Patch plasterki na wypryski absorbujące płyn i ropę 15szt Holika Holika,KIMCHI-5533,Koreańskie kosmetyki,KIMCHI-5533,19.9|19.9,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
+fb39f387-d882-4053-b546-aea24f87f867,"Mihyang / mirin, koreańskie wino do gotowania 360ml - Ottogi",KIMCHI-3731,"Sosy, marynaty",KIMCHI-3731,16.2|16.2,100,,,missing_allergens
+6033214d-7e7c-472e-9e99-c06cf1185b3f,"Mihyang / mirin, koreańskie wino do gotowania 900ml - Ottogi",KIMCHI-2352,"Sosy, marynaty",KIMCHI-2352,31.88|31.88,100,,,missing_allergens
+5f44ef6b-8b35-44c2-a813-442792f4cd63,Miks przypraw do kimchi 100g - Lobo,KIMCHI-998,Przyprawy,KIMCHI-998,9.7|9.7,100,,crustaceans|sesame,missing_storage_zone
+1670a1a9-9106-4ac1-9abe-78a0f38a99ed,Mild Red Spot Patch plasterki na wypryski absorbujące płyn i ropę 12szt Holika Holika,KIMCHI-5534,Koreańskie kosmetyki,KIMCHI-5534,19.9|19.9,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+9d3c6d44-73ca-4a18-b9b8-4987ca27c05b,Mild Yellow Spot Patch plasterki na wypryski absorbujące płyn i ropę 15szt Holika Holika,KIMCHI-5533,Koreańskie kosmetyki,KIMCHI-5533,19.9|19.9,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
 876d9206-386e-45ff-8b9f-227765784e99,"Milkis, mleczny napój gazowany o smaku bananowym z witaminami 250ml - LOTTE",KIMCHI-4042,Napoje,KIMCHI-4042,6.99|6.99,100,,soybeans|milk,missing_english_translation
 3880c2a1-b085-41a7-9e73-5a8f2e6940a9,"Milkis, mleczny napój gazowany o smaku melona z witaminami 250ml - LOTTE",KIMCHI-1364,Napoje,KIMCHI-1364,6.99|6.99,100,,soybeans|milk,missing_english_translation
 be483b8b-93ee-4182-ad5e-bb9ca2a7389c,"Milkis, mleczny napój gazowany o smaku truskawkowym z witaminami 250ml - LOTTE",KIMCHI-1365,Napoje,KIMCHI-1365,6.99|6.99,100,,soybeans|milk,missing_english_translation
-c540c983-003d-4f71-b4c3-c60c17860e3e,"Milkis Original, mleczny napój gazowany o smaku jogurtu 250ml - LOTTE",KIMCHI-1363,Napoje,KIMCHI-1363,6.99|6.99,100,,soybeans|milk,missing_english_translation
-6d6e50d0-2d43-4c41-942e-f3f8e5adc4e7,"Milkis Original, mleczny napój gazowany o smaku jogurtu 500ml - LOTTE",KIMCHI-1443,Napoje,KIMCHI-1443,9.99|9.99,100,,milk,missing_english_translation
-89f58fea-77cb-499a-9d53-1c637686e1eb,Mini La Tiao przekąska Hot & Spicy 360g - Wei-Long,KIMCHI-5203,Słodycze / Przekąski,KIMCHI-5203,33|33,100,,cereals|soybeans|mustard,missing_english_translation
-6bd0076b-3425-48db-8e20-480bb587b75f,"Miotełka Chasen do herbaty Matcha, ⌀4,8cm",KIMCHI-2186,Komplety do sushi i herbaty,KIMCHI-2186,47.9|47.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-073ac5bf-0bb7-4907-a805-bb1ce2ebf756,"Miotełka Chasen do herbaty Matcha, ⌀6cm",KIMCHI-2906,Komplety do sushi i herbaty,KIMCHI-2906,51.9|51.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-b9351b3d-c4eb-4379-87ed-25ae07078f61,Mirin 150ml Miyata,KIMCHI-153,Octy i winne przyprawy,KIMCHI-153,13.5|13.5,100,,,missing_allergens|missing_english_translation
-ea94d663-6329-4166-89b0-a194be47216a,"Mirin, winna przyprawa do gotowania 150ml - Asia Kitchen",KIMCHI-2257,Octy i winne przyprawy,KIMCHI-2257,9.4|9.4,100,,,missing_allergens|missing_english_translation
-33fb7ed0-15e5-4409-a817-2516048c45c5,"Mirin, winna przyprawa do gotowania 500ml - Asia Kitchen",KIMCHI-2256,Octy i winne przyprawy,KIMCHI-2256,17.9|17.9,100,,,missing_allergens|missing_english_translation
-71746081-9421-411e-bc5a-3ba182c0d874,"Miska do zup Uzu niebieska 17 x 8,7 cm - Emro",KIMCHI-4946,Miski,KIMCHI-4946,46|46,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-a81d561d-7c90-4cab-98e3-28a37fc74693,Miska do zup Uzu niebieska 22 x 9 cm - Emro,KIMCHI-5136,Miski,KIMCHI-5136,66|66,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-64b6d6fe-1474-4718-9440-ccb5654d910c,"Mix przypraw do fasolki edamame z chili i czosnkiem 25,2g - S&B",KIMCHI-5593,Przyprawy,KIMCHI-5593,10.5|10.5,100,,sesame,missing_english_translation
-1698e676-022c-4e51-8360-907004bf54b2,Mleko Kokosowe  12x1L 90% kokosa - Ampawa,KIMCHI-5541,Mleczko kokosowe,KIMCHI-5541,149.9|149.9,100,,,missing_allergens|missing_english_translation
-244364a9-ba6b-4e44-a78b-bad8377846ab,Mleko Kokosowe  1L 90% kokosa - Ampawa,KIMCHI-5540,Mleczko kokosowe,KIMCHI-5540,12.5|12.5,100,,,missing_allergens|missing_english_translation
-bdd049d5-7cc9-4f3f-996c-d2a94b4da491,Mleko Kokosowe 24x250ml 90% kokosa - Ampawa,KIMCHI-5543,Mleczko kokosowe,KIMCHI-5543,99.9|99.9,100,,,missing_allergens|missing_english_translation
-27593191-30de-41ad-9ac3-4294efd13d4c,Mleko Kokosowe 250ml 90% kokosa - Ampawa,KIMCHI-5542,Mleczko kokosowe,KIMCHI-5542,5.6|5.6,100,,,missing_allergens|missing_english_translation
-3a356005-aa51-45e6-910c-68033c0efb3e,Mleko kokosowe (70% wyciągu z kokosa) 1L w kartonie AROY-D,KIMCHI-126,Mleczko kokosowe,KIMCHI-126,19.99|19.99,100,,nuts,missing_country|missing_english_translation
-45377393-b488-4a6b-867f-c7d0bc7e9aa4,Mleko kokosowe (70% wyciągu z kokosa) 1L w kartonie AROY-D,KIMCHI-5311,Mleczko kokosowe,KIMCHI-5311,11.9|11.9,100,,nuts,missing_english_translation
-ecb1ee6a-6192-40ba-aa03-48a8c31be373,Mleko kokosowe (70% wyciągu z kokosa) w kartonie 250ml - AROY-D,KIMCHI-627,Mleczko kokosowe,KIMCHI-627,9.6|9.6,100,,nuts,missing_country|missing_english_translation
-dde98b49-679c-4555-a3c9-76fa8685e152,Mleko kokosowe (70% wyciągu z kokosa) w kartonie 500ml - AROY-D,KIMCHI-682,Mleczko kokosowe,KIMCHI-682,13.99|13.99,100,,,missing_allergens|missing_country|missing_english_translation
-43d3761b-3256-4f54-843b-82817e27ab1e,Mleko kokosowe (82%) 1L x 12 sztuk - PraoHom,KIMCHI-2740,Mleczko kokosowe,KIMCHI-2740,221.88|221.88,100,,nuts,missing_english_translation
-76e52768-3b37-4ce3-836b-99b9cf89f692,Mleko kokosowe (82%) 250ml w kartonie - PraoHom,KIMCHI-2741,Mleczko kokosowe,KIMCHI-2741,7.7|7.7,100,,milk|nuts,missing_english_translation
-fee98dfd-97b5-405c-b74d-0e8000ee9a2c,Mleko kokosowe (85% wyciągu z kokosa) 12 x 1L - Real Thai,KIMCHI-2303,Mleczko kokosowe,KIMCHI-2303,226.92|226.92,100,vegan|vegetarian,nuts,missing_english_translation
-4e9f98be-b6a4-404c-bcf4-75eff54515ba,Mleko kokosowe (85% wyciągu z kokosa) w kartonie 1L - Real Thai,KIMCHI-896,Mleczko kokosowe,KIMCHI-896,18.99|18.99,100,vegan|vegetarian,nuts,missing_english_translation
-f0dc182f-9bae-4b56-8918-0a972c198515,Mleko kokosowe (86% kokosa) w puszce 400ml - Asia Kitchen,KIMCHI-3114,Mleczko kokosowe,KIMCHI-3114,8.99|8.99,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-adfef52e-fb45-4267-92f5-3fae6e413d3d,Mleko kokosowe light 5-7% tłuszczu 400ml - Asia Kitchen,KIMCHI-4221,Mleczko kokosowe,KIMCHI-4221,6.89|6.89,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-165dee58-d472-4611-bb6e-4ef543c1203f,Mleko kokosowe Lite (55% wyciągu z kokosa) 250ml - Real Thai,KIMCHI-2424,Mleczko kokosowe,KIMCHI-2424,7.6|7.6,100,,,missing_allergens|missing_english_translation
-6dfe98cb-a604-4fe7-88fd-5a5ca2460782,"Mleko kokosowe w proszku, naturalne 1kg - Renuka",KIMCHI-986,Mleczko kokosowe,KIMCHI-986,79.99|79.99,100,,milk,missing_storage_zone|missing_english_translation
-723ceb62-79e9-46c2-9ea9-81176b49a8fb,"Mleko kokosowe w proszku, naturalne 300g - Renuka",KIMCHI-758,Mleczko kokosowe,KIMCHI-758,29.9|29.9,100,,milk,missing_storage_zone|missing_english_translation
-c34944a1-8f7f-4165-8a81-0745a38866ff,Mleko w proszku Nido puszka 400g - Nestle,KIMCHI-5726,Mleczko kokosowe,KIMCHI-5726,35.9|35.9,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-deb0400d-0933-4c43-9482-ecdb27e459b0,Młody imbir marynowany różowy 190g - House of Asia,KIMCHI-132,Imbir marynowany,KIMCHI-132,12.5|12.5,100,,,missing_allergens|missing_english_translation
-723c3ab8-0539-4a56-815c-eb6c3348b313,"Mocchiri Purun! Warabi Mochi Budou, galaretka mochi o smaku winogronowym do wyciskania (7 saszetek) 105g - Imuraya",KIMCHI-5160,Słodycze / Przekąski,KIMCHI-5160,23.42|23.42,100,,,missing_allergens|missing_english_translation
-e9fed4c5-a322-4c6a-88ca-08b7aa4dc279,"Mocchiri Purun! Warabi Mochi Kokuto, galaretka mochi o smaku brązowego cukru do wyciskania (7 saszetek) 105g - Imuraya",KIMCHI-5159,Słodycze / Przekąski,KIMCHI-5159,23.42|23.42,100,,,missing_allergens|missing_english_translation
-b18aea7d-0e6a-4de9-aa64-ad43763519e9,"Mocchiri Taiyaki An, ciasteczka z pastą anko 2 szt. 78g - Tada Seika",KIMCHI-4027,Słodycze / Przekąski,KIMCHI-4027,12.9|12.9,100,,cereals|eggs|soybeans,missing_english_translation
-c37cfeee-c87f-44df-aba5-685f9c66b8d6,"Mocchiri Taiyaki Cream, ciasteczka z kremem angielskim 2 szt. 78g - Tada Seika",KIMCHI-4028,Słodycze / Przekąski,KIMCHI-4028,12.9|12.9,100,,cereals|eggs|soybeans,missing_english_translation
-177bb002-b355-4ef9-a049-d127ef930d09,"Mochi Ichigo, ryżowe ciasteczka z nadzieniem truskawkowym 200g - Kubota",KIMCHI-5566,Słodycze / Przekąski,KIMCHI-5566,29.99|29.99,100,,eggs|soybeans,missing_storage_zone|missing_english_translation
-b74c66f3-7da7-4e3f-8656-0fcd8e1caf98,Mochi kulki ryżowe Mix smaków 600 g  - Taiwan Dessert,KIMCHI-4656,Słodycze / Przekąski,KIMCHI-4656,40.9|40.9,100,,peanuts|soybeans|sesame|nuts,missing_storage_zone|missing_english_translation
-64d30cbf-d3f6-4b4c-9c74-f9b933919c2a,"Mochi Kyoto Grape, ryżowe ciasteczka winogronowe 130g - Seiki",KIMCHI-5423,Słodycze / Przekąski,KIMCHI-5423,21.9|21.9,100,,soybeans,missing_storage_zone|missing_english_translation
-1bf5f97e-3fa0-461b-af0c-c63504c7368d,"Mochi Lemon, ryżowe ciasteczka cytrynowe 130g - Seiki",KIMCHI-5042,Słodycze / Przekąski,KIMCHI-5042,21.9|21.9,100,,soybeans,missing_storage_zone|missing_english_translation
-b9a37648-09b5-431d-82a8-e3d735d4d4eb,"Mochi Lychee, ryżowe ciasteczka z nadzieniem liczi 200g - Kubota",KIMCHI-5825,Słodycze / Przekąski,KIMCHI-5825,29.99|29.99,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-b7b7d2f7-aa69-447e-a0ba-4cf2f88f2f27,"Mochi Mango, ryżowe ciasteczka o smaku mango 130g - Seiki",KIMCHI-5422,Słodycze / Przekąski,KIMCHI-5422,20.9|20.9,100,,soybeans,missing_storage_zone|missing_english_translation
-8215dea0-4e96-4c0f-a6b0-c4c710cb96b6,"Mochi Mango, ryżowe ciasteczka z nadzieniem mango 200g - Kubota",KIMCHI-5823,Słodycze / Przekąski,KIMCHI-5823,29.99|29.99,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-df636901-2a2f-431a-8df0-490558befb79,"Mochi Melon, oryginalne ryżowe ciasteczka japońskie o smaku melona z Hokkaido 130g - Seiki",KIMCHI-4373,Słodycze / Przekąski,KIMCHI-4373,21.9|21.9,100,,soybeans,missing_storage_zone|missing_english_translation
-e57564e3-61d2-4670-8853-f46cf9a753ec,"Mochi, miks ryżowych ciasteczek z nadzieniem sezamowym, orzechowym i azuki 450g - Yuki & Love",KIMCHI-735,Słodycze / Przekąski,KIMCHI-735,29.9|29.9,100,,peanuts|soybeans|sesame|nuts,missing_english_translation
-cd327656-27fd-4a16-ad80-585d3faacfaf,"Mochi Muscat, ryżowe ciasteczka winogronowe 130g - Seiki",KIMCHI-4812,Słodycze / Przekąski,KIMCHI-4812,20.9|20.9,100,,soybeans,missing_storage_zone|missing_english_translation
-82b40940-1469-48bd-ba26-9677ffd8d283,"Mochi Ramune, ryżowe ciasteczka o smaku oranżady 130g - Seiki",KIMCHI-5424,Słodycze / Przekąski,KIMCHI-5424,22|22,100,,soybeans,missing_storage_zone|missing_english_translation
-cf7db590-213b-4b6b-a555-c60128c0c146,"Mochi, ryżowe ciasteczka, durian 180g - AWON",KIMCHI-5199,Słodycze / Przekąski,KIMCHI-5199,16.9|16.9,100,,,missing_allergens|missing_english_translation
-10797928-8ada-451f-82e7-9b6b3a90b189,"Mochi, ryżowe ciasteczka, mix owocowy 180g - AWON",KIMCHI-653,Słodycze / Przekąski,KIMCHI-653,16.5|16.5,100,,,missing_allergens|missing_english_translation
-97346035-6c6c-42c6-988f-04ceab267c29,"Mochi, ryżowe ciasteczka w 3 smakach 250g - Royal Family",KIMCHI-3811,Słodycze / Przekąski,KIMCHI-3811,22.7|22.7,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-f378a494-80e2-4083-a49b-6d3165ead5c9,Mochi ryżowe ciasteczka z bananowym nadzieniem 80g - Royal Family,KIMCHI-4070,Słodycze / Przekąski,KIMCHI-4070,10.7|10.7,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-be5e74a4-173b-48ba-a52c-545b62efc791,"Mochi, ryżowe ciasteczka z kremem czekoladowym 80g - Royal Family",KIMCHI-4046,Słodycze / Przekąski,KIMCHI-4046,10.7|10.7,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-8fe7e71d-1aa2-4d2c-b3b1-6128633b2c0c,"Mochi, ryżowe ciasteczka z kremem mlecznym 120g - Royal Family",KIMCHI-3813,Słodycze / Przekąski,KIMCHI-3813,12.9|12.9,100,,milk,missing_storage_zone|missing_english_translation
-a0422ef0-dc55-4a6a-8d3c-f1f596399d18,Mochi ryżowe ciasteczka z kremem truskawkowym 80g - Royal Family,KIMCHI-4045,Słodycze / Przekąski,KIMCHI-4045,10.7|10.7,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-01ac35dc-aa31-4c59-ac0a-f751df89944e,Mochi ryżowe ciasteczka z mlecznym nadzieniem 80g - Royal Family,KIMCHI-4069,Słodycze / Przekąski,KIMCHI-4069,10.7|10.7,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-7cf4c7a7-8c48-4c13-b869-a3a8a6a9b839,"Mochi, ryżowe ciasteczka z orzeszkami ziemnymi 210g - Yuki & Love",KIMCHI-1044,Słodycze / Przekąski,KIMCHI-1044,12.2|12.2,100,,peanuts|soybeans|nuts,missing_storage_zone|missing_english_translation
-5883b68f-89fd-41c0-8cdf-aa61e1e55e6c,"Mochi, ryżowe ciasteczka z pastą z fasolki azuki 210g -  Yuki & Love",KIMCHI-737,Słodycze / Przekąski,KIMCHI-737,12.2|12.2,100,,soybeans,missing_storage_zone|missing_english_translation
-12c16d29-8d9d-44e7-9e86-bc91390a0278,"Mochi, ryżowe ciasteczka z sezamem 210g - Yuki & Love",KIMCHI-980,Słodycze / Przekąski,KIMCHI-980,12.2|12.2,100,,peanuts|soybeans|sesame,missing_storage_zone|missing_english_translation
-4c805ee6-e110-48d9-8e8a-4083188d7e62,"Mochi, ryżowe ciasteczka z taro 210g - Yuki & Love",KIMCHI-981,Słodycze / Przekąski,KIMCHI-981,12.2|12.2,100,,soybeans,missing_english_translation
-b56229a5-3814-41bd-8582-696644f62371,"Mochi, ryżowe ciasteczka z zieloną herbatą 210g - Yuki & Love",KIMCHI-738,Słodycze / Przekąski,KIMCHI-738,12.2|12.2,100,,soybeans,missing_english_translation
-073e9e00-96b5-474a-a5be-55dcc5ab5717,"Mochi Strawberry, ryżowe ciasteczka truskawkowe 130g - Seiki",KIMCHI-4372,Słodycze / Przekąski,KIMCHI-4372,21.9|21.9,100,,soybeans,missing_storage_zone|missing_english_translation
-c334f487-21c0-4118-882b-a9ce21127779,"Mochi Ume Plum, ryżowe ciasteczka o smaku śliwkowym 130g - Seiki",KIMCHI-5826,Słodycze / Przekąski,KIMCHI-5826,26.5|26.5,100,,soybeans,missing_storage_zone|missing_english_translation
-77b04e37-ecc9-4400-b02c-e0e62bdf8468,"Mochi Yuzu, ryżowe ciasteczka z nadzieniem cytrusowym 200g - Kubota",KIMCHI-5824,Słodycze / Przekąski,KIMCHI-5824,29.99|29.99,100,,soybeans|milk,missing_storage_zone|missing_english_translation
-5f6b27f1-7ec7-4fc1-a720-ea315b0b3f59,"Mock Duck, wegańska kaczka 280g - Wu Chung",KIMCHI-4407,Dania gotowe,KIMCHI-4407,21.99|21.99,100,vegan|vegetarian,cereals|soybeans,missing_english_translation
-c8b06e0a-b0cf-488a-8b10-e797d1149d03,Moisturizing Petit BB 30ml - nawilżający krem BB - Holika Holika,KIMCHI-5462,Koreańskie kosmetyki,KIMCHI-5462,38.9|38.9,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-77cea6d8-ce36-4332-86f3-e081c532c794,Mori-nu Silken Tofu do deserów puddingów kremowe 315g - Morinaga,KIMCHI-5577,Tofu,KIMCHI-5577,16.99|16.99,100,,soybeans,missing_country|missing_english_translation
-bedb9604-8936-4b6e-bb1e-9a3146241dbf,"Mori-nu Silken Tofu Extra Firm, tofu jedwabiste (ekstra zwarte) 308g - Morinaga",KIMCHI-4973,Tofu,KIMCHI-4973,19.9|19.9,100,,soybeans,missing_country|missing_english_translation
-56410050-db21-4726-b623-97d8eec1ab94,"Mori-nu Silken Tofu Firm, tofu jedwabiste (zwarte) 307g - Morinaga",KIMCHI-4920,Tofu,KIMCHI-4920,16.7|16.7,100,,soybeans,missing_country|missing_english_translation
-46ff8ddb-3cdf-4922-a28a-57e6bf022b06,"Mori-nu Silken Tofu Soft, tofu jedwabiste (bardzo miękkie) 305g - Morinaga",KIMCHI-5067,Tofu,KIMCHI-5067,16.7|16.7,100,vegetarian,soybeans,missing_country|missing_english_translation
+6bd0076b-3425-48db-8e20-480bb587b75f,"Miotełka Chasen do herbaty Matcha, ⌀4,8cm",KIMCHI-2186,Komplety do sushi i herbaty,KIMCHI-2186,47.9|47.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+073ac5bf-0bb7-4907-a805-bb1ce2ebf756,"Miotełka Chasen do herbaty Matcha, ⌀6cm",KIMCHI-2906,Komplety do sushi i herbaty,KIMCHI-2906,51.9|51.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+b9351b3d-c4eb-4379-87ed-25ae07078f61,Mirin 150ml Miyata,KIMCHI-153,Octy i winne przyprawy,KIMCHI-153,13.5|13.5,100,,,missing_allergens
+ea94d663-6329-4166-89b0-a194be47216a,"Mirin, winna przyprawa do gotowania 150ml - Asia Kitchen",KIMCHI-2257,Octy i winne przyprawy,KIMCHI-2257,9.4|9.4,100,,,missing_allergens
+33fb7ed0-15e5-4409-a817-2516048c45c5,"Mirin, winna przyprawa do gotowania 500ml - Asia Kitchen",KIMCHI-2256,Octy i winne przyprawy,KIMCHI-2256,17.9|17.9,100,,,missing_allergens
+71746081-9421-411e-bc5a-3ba182c0d874,"Miska do zup Uzu niebieska 17 x 8,7 cm - Emro",KIMCHI-4946,Miski,KIMCHI-4946,46|46,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+a81d561d-7c90-4cab-98e3-28a37fc74693,Miska do zup Uzu niebieska 22 x 9 cm - Emro,KIMCHI-5136,Miski,KIMCHI-5136,66|66,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+1698e676-022c-4e51-8360-907004bf54b2,Mleko Kokosowe  12x1L 90% kokosa - Ampawa,KIMCHI-5541,Mleczko kokosowe,KIMCHI-5541,149.9|149.9,100,,,missing_allergens
+244364a9-ba6b-4e44-a78b-bad8377846ab,Mleko Kokosowe  1L 90% kokosa - Ampawa,KIMCHI-5540,Mleczko kokosowe,KIMCHI-5540,12.5|12.5,100,,,missing_allergens
+bdd049d5-7cc9-4f3f-996c-d2a94b4da491,Mleko Kokosowe 24x250ml 90% kokosa - Ampawa,KIMCHI-5543,Mleczko kokosowe,KIMCHI-5543,99.9|99.9,100,,,missing_allergens
+27593191-30de-41ad-9ac3-4294efd13d4c,Mleko Kokosowe 250ml 90% kokosa - Ampawa,KIMCHI-5542,Mleczko kokosowe,KIMCHI-5542,5.6|5.6,100,,,missing_allergens
+3a356005-aa51-45e6-910c-68033c0efb3e,Mleko kokosowe (70% wyciągu z kokosa) 1L w kartonie AROY-D,KIMCHI-126,Mleczko kokosowe,KIMCHI-126,19.99|19.99,100,,nuts,missing_country
+ecb1ee6a-6192-40ba-aa03-48a8c31be373,Mleko kokosowe (70% wyciągu z kokosa) w kartonie 250ml - AROY-D,KIMCHI-627,Mleczko kokosowe,KIMCHI-627,9.6|9.6,100,,nuts,missing_country
+dde98b49-679c-4555-a3c9-76fa8685e152,Mleko kokosowe (70% wyciągu z kokosa) w kartonie 500ml - AROY-D,KIMCHI-682,Mleczko kokosowe,KIMCHI-682,13.99|13.99,100,,,missing_allergens|missing_country
+f0dc182f-9bae-4b56-8918-0a972c198515,Mleko kokosowe (86% kokosa) w puszce 400ml - Asia Kitchen,KIMCHI-3114,Mleczko kokosowe,KIMCHI-3114,8.99|8.99,100,gluten-free|vegan|vegetarian,,missing_allergens
+adfef52e-fb45-4267-92f5-3fae6e413d3d,Mleko kokosowe light 5-7% tłuszczu 400ml - Asia Kitchen,KIMCHI-4221,Mleczko kokosowe,KIMCHI-4221,6.89|6.89,100,gluten-free|vegan|vegetarian,,missing_allergens
+165dee58-d472-4611-bb6e-4ef543c1203f,Mleko kokosowe Lite (55% wyciągu z kokosa) 250ml - Real Thai,KIMCHI-2424,Mleczko kokosowe,KIMCHI-2424,7.6|7.6,100,,,missing_allergens
+6dfe98cb-a604-4fe7-88fd-5a5ca2460782,"Mleko kokosowe w proszku, naturalne 1kg - Renuka",KIMCHI-986,Mleczko kokosowe,KIMCHI-986,79.99|79.99,100,,milk,missing_storage_zone
+723ceb62-79e9-46c2-9ea9-81176b49a8fb,"Mleko kokosowe w proszku, naturalne 300g - Renuka",KIMCHI-758,Mleczko kokosowe,KIMCHI-758,29.9|29.9,100,,milk,missing_storage_zone
+c34944a1-8f7f-4165-8a81-0745a38866ff,Mleko w proszku Nido puszka 400g - Nestle,KIMCHI-5726,Mleczko kokosowe,KIMCHI-5726,35.9|35.9,100,,soybeans|milk,missing_storage_zone
+deb0400d-0933-4c43-9482-ecdb27e459b0,Młody imbir marynowany różowy 190g - House of Asia,KIMCHI-132,Imbir marynowany,KIMCHI-132,12.5|12.5,100,,,missing_allergens
+723c3ab8-0539-4a56-815c-eb6c3348b313,"Mocchiri Purun! Warabi Mochi Budou, galaretka mochi o smaku winogronowym do wyciskania (7 saszetek) 105g - Imuraya",KIMCHI-5160,Słodycze / Przekąski,KIMCHI-5160,23.42|23.42,100,,,missing_allergens
+e9fed4c5-a322-4c6a-88ca-08b7aa4dc279,"Mocchiri Purun! Warabi Mochi Kokuto, galaretka mochi o smaku brązowego cukru do wyciskania (7 saszetek) 105g - Imuraya",KIMCHI-5159,Słodycze / Przekąski,KIMCHI-5159,23.42|23.42,100,,,missing_allergens
+177bb002-b355-4ef9-a049-d127ef930d09,"Mochi Ichigo, ryżowe ciasteczka z nadzieniem truskawkowym 200g - Kubota",KIMCHI-5566,Słodycze / Przekąski,KIMCHI-5566,29.99|29.99,100,,eggs|soybeans,missing_storage_zone
+b74c66f3-7da7-4e3f-8656-0fcd8e1caf98,Mochi kulki ryżowe Mix smaków 600 g  - Taiwan Dessert,KIMCHI-4656,Słodycze / Przekąski,KIMCHI-4656,40.9|40.9,100,,peanuts|soybeans|sesame|nuts,missing_storage_zone
+64d30cbf-d3f6-4b4c-9c74-f9b933919c2a,"Mochi Kyoto Grape, ryżowe ciasteczka winogronowe 130g - Seiki",KIMCHI-5423,Słodycze / Przekąski,KIMCHI-5423,21.9|21.9,100,,soybeans,missing_storage_zone
+1bf5f97e-3fa0-461b-af0c-c63504c7368d,"Mochi Lemon, ryżowe ciasteczka cytrynowe 130g - Seiki",KIMCHI-5042,Słodycze / Przekąski,KIMCHI-5042,21.9|21.9,100,,soybeans,missing_storage_zone
+b9a37648-09b5-431d-82a8-e3d735d4d4eb,"Mochi Lychee, ryżowe ciasteczka z nadzieniem liczi 200g - Kubota",KIMCHI-5825,Słodycze / Przekąski,KIMCHI-5825,29.99|29.99,100,,soybeans|milk,missing_storage_zone
+b7b7d2f7-aa69-447e-a0ba-4cf2f88f2f27,"Mochi Mango, ryżowe ciasteczka o smaku mango 130g - Seiki",KIMCHI-5422,Słodycze / Przekąski,KIMCHI-5422,20.9|20.9,100,,soybeans,missing_storage_zone
+8215dea0-4e96-4c0f-a6b0-c4c710cb96b6,"Mochi Mango, ryżowe ciasteczka z nadzieniem mango 200g - Kubota",KIMCHI-5823,Słodycze / Przekąski,KIMCHI-5823,29.99|29.99,100,,soybeans|milk,missing_storage_zone
+df636901-2a2f-431a-8df0-490558befb79,"Mochi Melon, oryginalne ryżowe ciasteczka japońskie o smaku melona z Hokkaido 130g - Seiki",KIMCHI-4373,Słodycze / Przekąski,KIMCHI-4373,21.9|21.9,100,,soybeans,missing_storage_zone
+cd327656-27fd-4a16-ad80-585d3faacfaf,"Mochi Muscat, ryżowe ciasteczka winogronowe 130g - Seiki",KIMCHI-4812,Słodycze / Przekąski,KIMCHI-4812,20.9|20.9,100,,soybeans,missing_storage_zone
+82b40940-1469-48bd-ba26-9677ffd8d283,"Mochi Ramune, ryżowe ciasteczka o smaku oranżady 130g - Seiki",KIMCHI-5424,Słodycze / Przekąski,KIMCHI-5424,22|22,100,,soybeans,missing_storage_zone
+cf7db590-213b-4b6b-a555-c60128c0c146,"Mochi, ryżowe ciasteczka, durian 180g - AWON",KIMCHI-5199,Słodycze / Przekąski,KIMCHI-5199,16.9|16.9,100,,,missing_allergens
+10797928-8ada-451f-82e7-9b6b3a90b189,"Mochi, ryżowe ciasteczka, mix owocowy 180g - AWON",KIMCHI-653,Słodycze / Przekąski,KIMCHI-653,16.5|16.5,100,,,missing_allergens
+97346035-6c6c-42c6-988f-04ceab267c29,"Mochi, ryżowe ciasteczka w 3 smakach 250g - Royal Family",KIMCHI-3811,Słodycze / Przekąski,KIMCHI-3811,22.7|22.7,100,,,missing_allergens|missing_nutrition|missing_storage_zone
+f378a494-80e2-4083-a49b-6d3165ead5c9,Mochi ryżowe ciasteczka z bananowym nadzieniem 80g - Royal Family,KIMCHI-4070,Słodycze / Przekąski,KIMCHI-4070,10.7|10.7,100,,soybeans|milk,missing_storage_zone
+be5e74a4-173b-48ba-a52c-545b62efc791,"Mochi, ryżowe ciasteczka z kremem czekoladowym 80g - Royal Family",KIMCHI-4046,Słodycze / Przekąski,KIMCHI-4046,10.7|10.7,100,,soybeans|milk,missing_storage_zone
+8fe7e71d-1aa2-4d2c-b3b1-6128633b2c0c,"Mochi, ryżowe ciasteczka z kremem mlecznym 120g - Royal Family",KIMCHI-3813,Słodycze / Przekąski,KIMCHI-3813,12.9|12.9,100,,milk,missing_storage_zone
+a0422ef0-dc55-4a6a-8d3c-f1f596399d18,Mochi ryżowe ciasteczka z kremem truskawkowym 80g - Royal Family,KIMCHI-4045,Słodycze / Przekąski,KIMCHI-4045,10.7|10.7,100,,soybeans|milk,missing_storage_zone
+01ac35dc-aa31-4c59-ac0a-f751df89944e,Mochi ryżowe ciasteczka z mlecznym nadzieniem 80g - Royal Family,KIMCHI-4069,Słodycze / Przekąski,KIMCHI-4069,10.7|10.7,100,,soybeans|milk,missing_storage_zone
+7cf4c7a7-8c48-4c13-b869-a3a8a6a9b839,"Mochi, ryżowe ciasteczka z orzeszkami ziemnymi 210g - Yuki & Love",KIMCHI-1044,Słodycze / Przekąski,KIMCHI-1044,12.2|12.2,100,,peanuts|soybeans|nuts,missing_storage_zone
+5883b68f-89fd-41c0-8cdf-aa61e1e55e6c,"Mochi, ryżowe ciasteczka z pastą z fasolki azuki 210g -  Yuki & Love",KIMCHI-737,Słodycze / Przekąski,KIMCHI-737,12.2|12.2,100,,soybeans,missing_storage_zone
+12c16d29-8d9d-44e7-9e86-bc91390a0278,"Mochi, ryżowe ciasteczka z sezamem 210g - Yuki & Love",KIMCHI-980,Słodycze / Przekąski,KIMCHI-980,12.2|12.2,100,,peanuts|soybeans|sesame,missing_storage_zone
+073e9e00-96b5-474a-a5be-55dcc5ab5717,"Mochi Strawberry, ryżowe ciasteczka truskawkowe 130g - Seiki",KIMCHI-4372,Słodycze / Przekąski,KIMCHI-4372,21.9|21.9,100,,soybeans,missing_storage_zone
+c334f487-21c0-4118-882b-a9ce21127779,"Mochi Ume Plum, ryżowe ciasteczka o smaku śliwkowym 130g - Seiki",KIMCHI-5826,Słodycze / Przekąski,KIMCHI-5826,26.5|26.5,100,,soybeans,missing_storage_zone
+77b04e37-ecc9-4400-b02c-e0e62bdf8468,"Mochi Yuzu, ryżowe ciasteczka z nadzieniem cytrusowym 200g - Kubota",KIMCHI-5824,Słodycze / Przekąski,KIMCHI-5824,29.99|29.99,100,,soybeans|milk,missing_storage_zone
+c8b06e0a-b0cf-488a-8b10-e797d1149d03,Moisturizing Petit BB 30ml - nawilżający krem BB - Holika Holika,KIMCHI-5462,Koreańskie kosmetyki,KIMCHI-5462,38.9|38.9,100,,,missing_allergens|missing_nutrition|missing_storage_zone
+77cea6d8-ce36-4332-86f3-e081c532c794,Mori-nu Silken Tofu do deserów puddingów kremowe 315g - Morinaga,KIMCHI-5577,Tofu,KIMCHI-5577,16.99|16.99,100,,soybeans,missing_country
+bedb9604-8936-4b6e-bb1e-9a3146241dbf,"Mori-nu Silken Tofu Extra Firm, tofu jedwabiste (ekstra zwarte) 308g - Morinaga",KIMCHI-4973,Tofu,KIMCHI-4973,19.9|19.9,100,,soybeans,missing_country
+56410050-db21-4726-b623-97d8eec1ab94,"Mori-nu Silken Tofu Firm, tofu jedwabiste (zwarte) 307g - Morinaga",KIMCHI-4920,Tofu,KIMCHI-4920,16.7|16.7,100,,soybeans,missing_country
+46ff8ddb-3cdf-4922-a28a-57e6bf022b06,"Mori-nu Silken Tofu Soft, tofu jedwabiste (bardzo miękkie) 305g - Morinaga",KIMCHI-5067,Tofu,KIMCHI-5067,16.7|16.7,100,vegetarian,soybeans,missing_country
 68dfa501-74cb-454b-918c-2c71f4acc13b,Moździerz granitowy - śr. 14cm,KIMCHI-240,Moździerze,KIMCHI-240,74.9|74.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
 0784006d-ac65-402d-bb8f-b952e6073fa2,"Moździerz granitowy - śr. 15,5cm",KIMCHI-241,Moździerze,KIMCHI-241,92|92,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
 62aa5b36-9d31-4a7d-a941-f065f470dfd0,Moździerz granitowy - śr. 18cm,KIMCHI-229,Moździerze,KIMCHI-229,113|113,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-11f48fea-6afb-4df8-81b1-26c6978d797d,Moździerz granitowy - śr. 18cm - Jade Temple,KIMCHI-5268,Moździerze,KIMCHI-5268,113|113,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-284a9fa8-71e3-4ff6-8af8-3f9525ecb9c6,"Mutenka no Wafu Dashi, bulion z katsuobushi i kombu bez sztucznych dodatków 105g - Youki",KIMCHI-4491,Buliony,KIMCHI-4491,49.99|49.99,100,,fish|milk,missing_english_translation
-045634ce-8ff4-412e-ad0a-351d9b699a25,"My Gummy Grape, żelki o smaku winogronowym (60% soku owocowego) 66g - Orion",KIMCHI-3852,Słodycze / Przekąski,KIMCHI-3852,9.8|9.8,100,,,missing_allergens|missing_english_translation
-97d37499-de29-42d6-9899-abcb677789fb,"My Gummy Lychee, żelki o smaku liczi 67g - Orion",KIMCHI-5792,Słodycze / Przekąski,KIMCHI-5792,11.9|11.9,100,,,missing_allergens|missing_english_translation
-40f19572-3832-49d0-89d8-8f1ee4dff4a1,"My Gummy Plum, żelki o smaku śliwkowym 67g - Orion",KIMCHI-4197,Słodycze / Przekąski,KIMCHI-4197,11.9|11.9,100,,,missing_allergens|missing_english_translation
-9f5f179a-4272-4b51-8ccb-cba6d340a7f5,Nachos paprykowe z chili tortilla Tres Amigos 500g - Fanex,KIMCHI-4362,Słodycze / Przekąski,KIMCHI-4362,18.9|18.9,100,,,missing_allergens|missing_english_translation
-36012d08-efcf-44ea-9db3-dc635253a044,Nachos serowe tortilla Tres Amigos 500g - Fanex,KIMCHI-4361,Słodycze / Przekąski,KIMCHI-4361,18.9|18.9,100,,milk,missing_english_translation
-12fffdba-b0fd-4bd2-a7c6-d238d341be93,Nachos solone tortilla Tres Amigos 500g - Fanex,KIMCHI-4360,Słodycze / Przekąski,KIMCHI-4360,18.9|18.9,100,,,missing_allergens|missing_english_translation
-a8a6d28d-4e03-4b62-81fa-45e585dffca0,Napa Kimchi Classic klasyczna koreańska kiszona kapusta 350g - Jongga,KIMCHI-5601,Owoce / Marynowane warzywa,KIMCHI-5601,29.99|29.99,100,,crustaceans|fish|soybeans,missing_english_translation
-a7334e6c-7afd-4169-a5a7-7093ccd55d85,"Napa kimchi, koreańska kiszona kapustka 80g - Jongga",KIMCHI-2919,Owoce / Marynowane warzywa,KIMCHI-2919,8.99|8.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-eb1c8ce8-c3df-432e-9863-20d2b9f94d88,Napój brzoskwiniowy Peach Juice 340ml - Haitai,KIMCHI-4474,Napoje,KIMCHI-4474,9.99|9.99,100,,,missing_allergens|missing_english_translation
+11f48fea-6afb-4df8-81b1-26c6978d797d,Moździerz granitowy - śr. 18cm - Jade Temple,KIMCHI-5268,Moździerze,KIMCHI-5268,113|113,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+045634ce-8ff4-412e-ad0a-351d9b699a25,"My Gummy Grape, żelki o smaku winogronowym (60% soku owocowego) 66g - Orion",KIMCHI-3852,Słodycze / Przekąski,KIMCHI-3852,9.8|9.8,100,,,missing_allergens
+97d37499-de29-42d6-9899-abcb677789fb,"My Gummy Lychee, żelki o smaku liczi 67g - Orion",KIMCHI-5792,Słodycze / Przekąski,KIMCHI-5792,11.9|11.9,100,,,missing_allergens
+40f19572-3832-49d0-89d8-8f1ee4dff4a1,"My Gummy Plum, żelki o smaku śliwkowym 67g - Orion",KIMCHI-4197,Słodycze / Przekąski,KIMCHI-4197,11.9|11.9,100,,,missing_allergens
+9f5f179a-4272-4b51-8ccb-cba6d340a7f5,Nachos paprykowe z chili tortilla Tres Amigos 500g - Fanex,KIMCHI-4362,Słodycze / Przekąski,KIMCHI-4362,18.9|18.9,100,,,missing_allergens
+12fffdba-b0fd-4bd2-a7c6-d238d341be93,Nachos solone tortilla Tres Amigos 500g - Fanex,KIMCHI-4360,Słodycze / Przekąski,KIMCHI-4360,18.9|18.9,100,,,missing_allergens
+a7334e6c-7afd-4169-a5a7-7093ccd55d85,"Napa kimchi, koreańska kiszona kapustka 80g - Jongga",KIMCHI-2919,Owoce / Marynowane warzywa,KIMCHI-2919,8.99|8.99,100,,,missing_allergens|missing_storage_zone
+eb1c8ce8-c3df-432e-9863-20d2b9f94d88,Napój brzoskwiniowy Peach Juice 340ml - Haitai,KIMCHI-4474,Napoje,KIMCHI-4474,9.99|9.99,100,,,missing_allergens
 f7b85cd1-fb43-4a48-b996-ebaababf3d9d,Napój Dekavita C z witaminami 210ml - Suntory,KIMCHI-5033,Napoje,KIMCHI-5033,11.94|11.94,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-cec18247-37e2-4455-be72-40a18315de81,Napój gazowany Calpis melon cream soda melonowa 350ml - Asahi,KIMCHI-5030,Napoje,KIMCHI-5030,12.9|12.9,100,,soybeans|milk,missing_english_translation
-025bcd02-2244-4197-8cbf-135cc853a344,Napój gazowany mleczny Maro-Fuwa Melon Cream Soda smak melonowy 190ml - Sangaria,KIMCHI-4746,Napoje,KIMCHI-4746,6.74|6.74,100,,milk,missing_english_translation
-a2bc58ca-b606-4d10-a58f-7c80e88b36f2,Napój gazowany winogronowy aluminiowa butelka 300ml - Fanta,KIMCHI-4616,Napoje,KIMCHI-4616,11.94|11.94,100,,,missing_allergens|missing_english_translation
-857328f7-b4b4-43ce-8093-d276a9d47789,Napój gruszkowy Crushed Pear 238ml - Haitai,KIMCHI-1006,Napoje,KIMCHI-1006,8.53|8.53,100,,,missing_allergens|missing_english_translation
-b525066f-bba3-416a-8cb2-a9a80c2dd63b,Napój herbata Black Tea Lemon Ice Tea 500ml – OISHI,KIMCHI-5253,Napoje,KIMCHI-5253,9.2|9.2,100,,,missing_allergens|missing_english_translation
-25b90939-ecb5-4c7b-aee6-29a10aa78455,Napój herbata Green Tea Brown Rice 500ml – OISHI,KIMCHI-5550,Napoje,KIMCHI-5550,9.6|9.6,100,,,missing_allergens|missing_english_translation
-da4529a4-e74e-44e4-a75e-4756f4bc1d86,Napój herbata Green Tea Honey Lemon 500ml – OISHI,KIMCHI-4449,Napoje,KIMCHI-4449,9.9|9.9,100,,,missing_allergens|missing_english_translation
-59947f2e-e13d-45f2-bcd2-2d102c923b68,Napój herbata Green Tea Original 500ml – OISHI,KIMCHI-4657,Napoje,KIMCHI-4657,9.7|9.7,100,,,missing_allergens|missing_english_translation
-f3edf283-fc6a-4259-8233-7ff2fed05abc,Napój Konjac Jelly Grapes o smaku winogronowym 150ml - Thezoen,KIMCHI-4551,Napoje,KIMCHI-4551,7.95|7.95,100,,fish,missing_english_translation
-c73d3a40-0a73-4130-8eeb-97b4612ee442,Napój Konjac Jelly Lychee o smaku liczi 150ml - Thezoen,KIMCHI-5274,Napoje,KIMCHI-5274,7.95|7.95,100,,fish,missing_english_translation
-60cedf3d-6292-4855-b3f4-31167293efab,Napój Konjac Jelly White Peach o smaku brzoskwiniowym 150ml - Thezoen,KIMCHI-5275,Napoje,KIMCHI-5275,7.95|7.95,100,,fish,missing_english_translation
-86e3eaf0-4d69-4a45-8524-1efe5638f230,Napój Konjac Jelly Wild o smaku mango 150ml - Thezoen,KIMCHI-5273,Napoje,KIMCHI-5273,7.95|7.95,100,,fish,missing_english_translation
-2f6b2782-f23d-4b9d-9e0e-ef38af7400bc,Napój Konjac Jelly Yogurt o smaku jogurtowym 150ml - Thezoen,KIMCHI-4550,Napoje,KIMCHI-4550,7.95|7.95,100,,fish|milk,missing_english_translation
-616acba6-fc39-4a9d-be19-9a2dfbae04c6,Napój Lychee 350ml Foco,KIMCHI-204,Napoje,KIMCHI-204,8.5|8.5,100,,,missing_allergens|missing_english_translation
-7e73d77c-8ab9-40c2-9200-73aff03afe69,"Napój, mleko migdałowe wegańskie bez cukru Almond Drink 1l Natrue Barista",KIMCHI-5237,Napoje,KIMCHI-5237,12.9|12.9,100,vegan|vegetarian,soybeans|nuts,missing_english_translation
-7651c40f-090a-4bc6-b234-d0517d0bdb38,"Napój, mleko owsiane Chai z herbatą wegańskie bez glutenu Oat Chai Drink 6 x 1l Natrue Barista",KIMCHI-5770,Napoje,KIMCHI-5770,85|85,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-7b727789-a507-4a04-9f5d-7df457924bd0,"Napój, mleko owsiane o smaku kokosowym wegańskie bez glutenu Oat Coconut Drink 1l Natrue Barista",KIMCHI-5397,Napoje,KIMCHI-5397,14|14,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-17a92681-425b-4608-bc6a-165c1979346c,"Napój, mleko owsiane wegańskie bez glutenu Oat Chai Latte Drink 1l Natrue Barista",KIMCHI-5769,Napoje,KIMCHI-5769,15.9|15.9,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-4c24e8e3-4e0f-4c0b-93a7-ee6ae140cfe3,"Napój, mleko owsiane wegańskie bez glutenu Oat Drink 1l Natrue Barista",KIMCHI-5235,Napoje,KIMCHI-5235,12|12,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-711dc56c-9042-4668-82f5-2aae8899cd3d,"Napój, mleko owsiane wegańskie bez glutenu Oat Matcha Drink 1l Natrue Barista",KIMCHI-5238,Napoje,KIMCHI-5238,14.99|14.99,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-e7324e59-4e02-4f0c-bf7b-df3a5ee1bad0,"Napój, mleko owsiane wegańskie bez glutenu Oat Matcha Drink 6 x 1l Natrue Barista",KIMCHI-5239,Napoje,KIMCHI-5239,79.9|79.9,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-dffd9ac9-0499-4811-b9d0-da82426ac1a3,"Napój, mleko owsiane wegańskie bez glutenu Oat Pistachio Flavoured Drink 1l Natrue Barista",KIMCHI-5771,Napoje,KIMCHI-5771,15.9|15.9,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-a83ecad1-3141-448e-a995-31268e4df14a,"Napój, mleko owsiane wegańskie bez glutenu Oat Pistachio Flavoured Drink 6 x 1l Natrue Barista",KIMCHI-5772,Napoje,KIMCHI-5772,85|85,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-a69ceed5-c81a-470e-bb21-36ebf710902c,"Napój, mleko owsiane wegańskie bez glutenu Pumpkin Spice Oat Drink 1l Natrue Barista",KIMCHI-5355,Napoje,KIMCHI-5355,14.99|14.99,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-da7bb68d-857f-47eb-878c-94169c3fe926,"Napój, mleko owsiane wegańskie bez glutenu Pumpkin Spice Oat Drink 6 x 1l Natrue Barista",KIMCHI-5360,Napoje,KIMCHI-5360,74.5|74.5,100,gluten-free|vegan|vegetarian,,missing_allergens|missing_english_translation
-e146b2ec-a913-437c-b0e4-6b839c273c20,"Napój, mleko sojowe wegańskie bez cukru Natrue Barista Soy Drink 0% Sugars 1l",KIMCHI-5236,Napoje,KIMCHI-5236,12|12,100,vegan|vegetarian,soybeans,missing_english_translation
-5cfa1444-433c-4237-a388-6d4ddb118754,Napój na bazie herbaty - czarna tajska herbata  aromatyzowana 400g - ChaTraMue,KIMCHI-4509,Herbaty,KIMCHI-4509,33.9|33.9,100,,,missing_allergens|missing_english_translation
-ec6aa016-ebba-47b6-92fd-5dfa21223738,Napój na bazie herbaty - zielona tajska herbata aromatyzowana 200g - ChaTraMue,KIMCHI-4508,Herbaty,KIMCHI-4508,33.9|33.9,100,,,missing_allergens|missing_english_translation
-c12ec023-7bd8-4b56-b70f-ed051f6c2c7a,Napój o smaku limonki 300ml - Fa Thai,KIMCHI-5557,Napoje,KIMCHI-5557,7.5|7.5,100,,,missing_allergens|missing_english_translation
-97c37add-35f2-46b2-9a40-ec3af28e3424,"Napój Ramune Blueberry, japońska oranżada o smaku jagodowym 200ml - Hata Kosen",KIMCHI-3209,Napoje,KIMCHI-3209,11.99|11.99,100,,,missing_allergens|missing_english_translation
-3158a3c5-5234-4f3d-85f5-ea17081386ad,"Napój Ramune Cola, japońska oranżada o smaku coli 200ml - Hata Kosen",KIMCHI-4486,Napoje,KIMCHI-4486,11.99|11.99,100,,,missing_allergens|missing_english_translation
-14cd8ef5-1df9-46e5-a387-47b77e64b406,"Napój Ramune Japan Soda, japońska oranżada 200ml - Hata Kosen",KIMCHI-4742,Napoje,KIMCHI-4742,11.99|11.99,100,,,missing_allergens|missing_english_translation
-5d509532-aa85-4cd7-a0d8-e7abdd99a1b0,"Napój Ramune, japońska oranżada, aluminiowa butelka 500ml - Sangaria",KIMCHI-4745,Herbaty,KIMCHI-4745,12.9|12.9,100,,,missing_allergens|missing_english_translation
-bdc10026-fe1e-4d4b-81fa-cbd489fa5e35,"Napój Ramune Lychee, japońska oranżada o smaku liczi 200ml - Hata Kosen",KIMCHI-3800,Napoje,KIMCHI-3800,11.99|11.99,100,,,missing_allergens|missing_english_translation
-2aa0d435-c019-419f-ad1f-dd3e7bcb1799,"Napój Ramune Mango, japońska oranżada o smaku mango 200ml - Hata Kosen",KIMCHI-3802,Napoje,KIMCHI-3802,11.9|11.9,100,,,missing_allergens|missing_english_translation
-e5cdeada-41d3-41d5-b07b-da56bd887556,"Napój Ramune Matcha, japońska oranżada o smaku herbaty Matcha 200ml - Hata Kosen",KIMCHI-4483,Napoje,KIMCHI-4483,11.99|11.99,100,,,missing_allergens|missing_english_translation
-e209509a-36d7-4c89-bc80-5607367eadf6,"Napój Ramune Melon, japońska oranżada o smaku melonowym 200ml - Hata Kosen",KIMCHI-3208,Napoje,KIMCHI-3208,11.99|11.99,100,,,missing_allergens|missing_english_translation
-b64e4544-dc4e-4012-8547-517bd1c66253,"Napój Ramune Orange, japońska oranżada o smaku pomarańczy 200ml - Hata Kosen",KIMCHI-4687,Napoje,KIMCHI-4687,12.2|12.2,100,,,missing_allergens|missing_english_translation
-1c62190d-751c-4b00-a232-90dda758a29a,"Napój Ramune Pineapple, japońska oranżada o smaku ananasowym 200ml - Hata Kosen",KIMCHI-4688,Napoje,KIMCHI-4688,12.2|12.2,100,,,missing_allergens|missing_english_translation
-b5feae1d-c506-4724-9cca-6b42c78f3da9,"Napój Ramune Sakura, japońska oranżada 200ml - Hata Kosen",KIMCHI-4686,Napoje,KIMCHI-4686,11.99|11.99,100,,,missing_allergens|missing_english_translation
-45466798-5437-48a4-9b2f-ef282a2d720d,"Napój Ramune Strawberry, japońska oranżada o smaku truskawkowym 200ml - Hata Kosen",KIMCHI-3210,Napoje,KIMCHI-3210,11.99|11.99,100,,,missing_allergens|missing_english_translation
-0fb820af-3231-4457-8ba4-eb53ed404018,"Napój Ramune Watermelon, japońska oranżada o smaku arbuzowym 200ml - Hata Kosen",KIMCHI-3801,Napoje,KIMCHI-3801,11.99|11.99,100,,,missing_allergens|missing_english_translation
-5bd898ff-7303-42b3-a3c3-ef46c22c4850,"Napój Ramune Watermelon, japońska oranżada o smaku arbuzowym z dodatkiem soli 200ml - Hata Kosen",KIMCHI-4619,Napoje,KIMCHI-4619,10.99|10.99,100,,,missing_allergens|missing_english_translation
-d56ca48c-c818-4231-9af7-89612842d795,"Napój Ramune Yuzu, japońska oranżada o smaku cytrusowym 200ml - Hata Kosen",KIMCHI-4484,Napoje,KIMCHI-4484,12.2|12.2,100,,,missing_allergens|missing_english_translation
-8d81176e-ec41-47a4-ac3c-7806e614f279,Napój winogronowy Bong Bong z kawałkami owoców 238ml - Haitai,KIMCHI-1133,Napoje,KIMCHI-1133,8.28|8.28,100,,,missing_allergens|missing_english_translation
-9d6905cb-9844-497f-b79f-9867a0309555,"Napój w proszku matcha, zielona herbata z cukrem 120g - Gyokuroen",KIMCHI-5344,Herbaty,KIMCHI-5344,25|25,100,,,missing_allergens|missing_english_translation
-c05fbce1-f419-4b9d-a555-585bb1a00da8,Napój zielona japońska herbata OH-I OCHA 340ml - Itoen,KIMCHI-4743,Napoje,KIMCHI-4743,10.5|10.5,100,,,missing_allergens|missing_english_translation
-4d7c72a4-3103-4143-bb84-7d6dc4952c55,Naturalna rzodkiew cała Takuan japońska 350g - Kimura,KIMCHI-5095,Owoce / Marynowane warzywa,KIMCHI-5095,21|21,100,,fish,missing_english_translation
-b3134b90-311c-474a-a9ae-d2a9c186040b,"Neru Neru Nerune Grape, pianka o smaku winogronowym 23,5g - Kracie",KIMCHI-3720,Słodycze / Przekąski,KIMCHI-3720,16.5|16.5,100,,eggs,missing_english_translation
-2ef2b32c-6ddb-4f8c-aef9-fc91264512fc,"Neru Neru Nerune Soda, pianka o smaku oranżady 25,5g - Kracie",KIMCHI-3721,Słodycze / Przekąski,KIMCHI-3721,16.5|16.5,100,,eggs|soybeans,missing_english_translation
-b4212b19-1115-4e03-a3cd-92f186a650f7,"Neru Neru Nerune x Chupa Chups, pianka o smaku truskawek 22g - Kracie",KIMCHI-5338,Słodycze / Przekąski,KIMCHI-5338,21.99|21.99,100,,eggs,missing_english_translation
-c00714ce-cf2f-4f32-94c5-ef47aaefc3b5,"Nóż OSAKA Annaki, uniwersalny 20cm - CSS",KIMCHI-2884,Noże,KIMCHI-2884,35|35,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-c121f2c1-59f8-448c-b5d1-bdb68f694b1f,Nóż OSAKA Pankiri do chleba 20cm - CSS,KIMCHI-2888,Noże,KIMCHI-2888,35.5|35.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-45badaa5-1f81-43ff-ab2a-5a034cbe5a18,"Nóż OSAKA Santoku, uniwersalny 18cm - CSS",KIMCHI-2882,Noże,KIMCHI-2882,35|35,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-5cee4fa7-0e5b-4a1c-b810-2492ddc98dfe,Nóż OSAKA Yanagi-ba do ryb i sushi 23cm - CSS,KIMCHI-2881,Noże,KIMCHI-2881,39|39,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-6a6a5ea1-c364-4b29-97e5-12cedf18d985,"Nóż OSAKA Yunibasaru, uniwersalny 13cm - CSS",KIMCHI-2887,Noże,KIMCHI-2887,24.5|24.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-989ab4e1-1991-4ad8-ad50-915090d30e2b,Nóż Saku Santoku uniwersalny 17cm - Satake Cutlery,KIMCHI-5780,Noże,KIMCHI-5780,89.5|89.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-74225e8a-da00-407e-bc18-9bd61d0db1c4,Nóż Saku Sashimi Yanagiba 21cm - Satake Cutlery,KIMCHI-5778,Noże,KIMCHI-5778,89.5|89.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-0cbd6d11-8cf4-4e3a-8f61-a5c5d686448e,Nóż Saku Szefa kuchni Air Holes 18cm - Satake Cutlery,KIMCHI-5779,Noże,KIMCHI-5779,89.5|89.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-64354883-dbc6-43c3-a458-38f6db0198e3,Nóż szefa kuchni 19cm - KIWI,KIMCHI-1412,Noże,KIMCHI-1412,39.99|39.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-125ffe6f-e742-494a-9576-85b1c1371f28,"Nóż tasak do kości 20,5cm - KIWI",KIMCHI-2815,Noże,KIMCHI-2815,89.9|89.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-afabdfd4-6416-4ecf-aa23-35f1f7815404,Nóż tasak szefa kuchni 19cm - KIWI,KIMCHI-1410,Noże,KIMCHI-1410,48.9|48.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-cc942068-1bb4-4c6e-9d62-2bc8e0a417c0,"Nóż tasak szefa kuchni, mały 16,5 cm - KIWI",KIMCHI-2816,Noże,KIMCHI-2816,29.99|29.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-834e2fb8-20a8-482a-b744-b3ec34333c6c,"Nóż Tomoko Deba do filetowania ryb 15,5cm - Satake Cutlery",KIMCHI-5775,Noże,KIMCHI-5775,120|120,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-7a670038-377a-40f3-be5e-546d8b7c50f0,Nóż Tomoko Santoku uniwersalny 17cm - Satake Cutlery,KIMCHI-5773,Noże,KIMCHI-5773,99.5|99.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-c436f755-def5-49c8-b59e-b3d2fc59f4c9,Nóż Tomoko Szefa kuchni uniwersalny 18cm - Satake Cutlery,KIMCHI-5776,Noże,KIMCHI-5776,99.9|99.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-2186c4ef-8e8e-4870-a10d-3d16f6cdf079,"Nóż Tomoko Yanagi-Sashimi 20,5cm - Satake Cutlery",KIMCHI-5777,Noże,KIMCHI-5777,99.5|99.5,0,,,out_of_stock|missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-f69cc493-dbd3-457e-9433-daf8eefe62bc,Ocet jabłkowy 100% 500ml - Sempio,KIMCHI-4138,Octy i winne przyprawy,KIMCHI-4138,10.7|10.7,100,,,missing_allergens|missing_english_translation
-7d9e14fe-6622-45fa-b52b-54f390814af0,Ocet ryżowy 150ml - Asia Kitchen,KIMCHI-2682,Octy i winne przyprawy,KIMCHI-2682,6.99|6.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-799aa5db-2824-4999-a528-5621a4be75ae,Ocet ryżowy 150ml - House of Asia,KIMCHI-2823,Octy i winne przyprawy,KIMCHI-2823,11|11,100,,,missing_allergens|missing_english_translation
-53ea2d5e-70ce-4628-a83a-e30ccafff173,Ocet ryżowy 1l - Asia Kitchen,KIMCHI-2254,Octy i winne przyprawy,KIMCHI-2254,15.5|15.5,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-162d172f-2911-40e1-924e-a1f7e0298b44,Ocet ryżowy 220ml - Sen Soy,KIMCHI-3219,Octy i winne przyprawy,KIMCHI-3219,10.7|10.7,100,,,missing_allergens|missing_country|missing_english_translation
-6a042e15-78b8-42de-b164-de1ea0f300d2,Ocet ryżowy 500ml - Asia Kitchen,KIMCHI-2659,Octy i winne przyprawy,KIMCHI-2659,12.5|12.5,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-1d8fc1b5-e6aa-47e2-81b8-9bac2ecf693b,Ocet ryżowy czarny Chinkiang 550ml - Heng Shun,KIMCHI-1809,Ocet ryżowy do sushi,KIMCHI-1809,14.5|14.5,100,,cereals,missing_english_translation
-04145c86-d0ab-4d89-81bb-ac4ff7d751ec,Ocet winny ryżowy Kokumotsu 500ml - Tamanoi,KIMCHI-2662,Octy i winne przyprawy,KIMCHI-2662,14.5|14.5,100,,,missing_allergens|missing_english_translation
-fac463d0-6e72-4a76-8c2f-4f5c2b7e5e9a,Ocet z brązowego ryżu 100% 500ml - Sempio,KIMCHI-4135,Octy i winne przyprawy,KIMCHI-4135,12.99|12.99,100,,,missing_allergens|missing_english_translation
-6a24dfed-39ae-4c6d-9393-9b0eed738f5b,Ocet z brązowego ryżu 500ml Ottogi,KIMCHI-12,Octy i winne przyprawy,KIMCHI-12,10.99|10.99,100,,,missing_allergens|missing_english_translation
-1d7b9985-bc5b-4994-83e5-e4704b70f260,Ocet z brązowego ryżu 900ml - CJO Essential,KIMCHI-863,Octy i winne przyprawy,KIMCHI-863,16.99|16.99,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-2c84415e-807f-48cd-a383-26887f397cf0,Ocet z przyprawami Kantan-Su 500ml - Mizkan,KIMCHI-5340,Octy i winne przyprawy,KIMCHI-5340,24.99|24.99,100,,,missing_allergens|missing_english_translation
-25db7609-fdd4-4980-b4cc-3372fec87b8e,"Oksusu Suyeom-cha, herbata kukurydziana z jedwabiem kukurydzianym instant (20 x 1,5g) 30g - Sempio",KIMCHI-3607,Herbaty,KIMCHI-3607,14.8|14.8,100,,cereals,missing_english_translation
-ee0ec662-683b-46b3-b598-30ff29be3dff,"Old Friends KIMCHI Mild Classic, pasteryzowane 1kg",KIMCHI-5144,Kimchi,KIMCHI-5144,44.1|44.1,100,,fish,missing_english_translation
-69766471-4f0c-429c-b774-0157e49661f8,"Old Friends KIMCHI Mild Classic, pasteryzowane 280g",KIMCHI-3591,Kimchi,KIMCHI-3591,18.4|18.4,100,,fish,missing_english_translation
-a7171b3f-2f9e-4c09-8b7a-9546e259a496,"Old Friends KIMCHI Mild Vegan, pasteryzowane 280g",KIMCHI-3590,Kimchi,KIMCHI-3590,18.4|18.4,100,vegan|vegetarian,cereals|soybeans,missing_english_translation
-9cf104d2-eb9d-4dea-a15b-d706467feada,"Old Friends KIMCHI Spicy Classic, pasteryzowane 280g",KIMCHI-3588,Kimchi,KIMCHI-3588,18.5|18.5,100,,fish,missing_english_translation
-59419b27-ada7-45de-a674-0e997e7177ce,"Old Friends KIMCHI Spicy Vegan, pasteryzowane 280g",KIMCHI-3589,Kimchi,KIMCHI-3589,18.4|18.4,100,vegan|vegetarian,cereals|soybeans,missing_english_translation
+a2bc58ca-b606-4d10-a58f-7c80e88b36f2,Napój gazowany winogronowy aluminiowa butelka 300ml - Fanta,KIMCHI-4616,Napoje,KIMCHI-4616,11.94|11.94,100,,,missing_allergens
+857328f7-b4b4-43ce-8093-d276a9d47789,Napój gruszkowy Crushed Pear 238ml - Haitai,KIMCHI-1006,Napoje,KIMCHI-1006,8.53|8.53,100,,,missing_allergens
+b525066f-bba3-416a-8cb2-a9a80c2dd63b,Napój herbata Black Tea Lemon Ice Tea 500ml – OISHI,KIMCHI-5253,Napoje,KIMCHI-5253,9.2|9.2,100,,,missing_allergens
+25b90939-ecb5-4c7b-aee6-29a10aa78455,Napój herbata Green Tea Brown Rice 500ml – OISHI,KIMCHI-5550,Napoje,KIMCHI-5550,9.6|9.6,100,,,missing_allergens
+da4529a4-e74e-44e4-a75e-4756f4bc1d86,Napój herbata Green Tea Honey Lemon 500ml – OISHI,KIMCHI-4449,Napoje,KIMCHI-4449,9.9|9.9,100,,,missing_allergens
+59947f2e-e13d-45f2-bcd2-2d102c923b68,Napój herbata Green Tea Original 500ml – OISHI,KIMCHI-4657,Napoje,KIMCHI-4657,9.7|9.7,100,,,missing_allergens
+616acba6-fc39-4a9d-be19-9a2dfbae04c6,Napój Lychee 350ml Foco,KIMCHI-204,Napoje,KIMCHI-204,8.5|8.5,100,,,missing_allergens
+7651c40f-090a-4bc6-b234-d0517d0bdb38,"Napój, mleko owsiane Chai z herbatą wegańskie bez glutenu Oat Chai Drink 6 x 1l Natrue Barista",KIMCHI-5770,Napoje,KIMCHI-5770,85|85,100,gluten-free|vegan|vegetarian,,missing_allergens
+7b727789-a507-4a04-9f5d-7df457924bd0,"Napój, mleko owsiane o smaku kokosowym wegańskie bez glutenu Oat Coconut Drink 1l Natrue Barista",KIMCHI-5397,Napoje,KIMCHI-5397,14|14,100,gluten-free|vegan|vegetarian,,missing_allergens
+17a92681-425b-4608-bc6a-165c1979346c,"Napój, mleko owsiane wegańskie bez glutenu Oat Chai Latte Drink 1l Natrue Barista",KIMCHI-5769,Napoje,KIMCHI-5769,15.9|15.9,100,gluten-free|vegan|vegetarian,,missing_allergens
+4c24e8e3-4e0f-4c0b-93a7-ee6ae140cfe3,"Napój, mleko owsiane wegańskie bez glutenu Oat Drink 1l Natrue Barista",KIMCHI-5235,Napoje,KIMCHI-5235,12|12,100,gluten-free|vegan|vegetarian,,missing_allergens
+711dc56c-9042-4668-82f5-2aae8899cd3d,"Napój, mleko owsiane wegańskie bez glutenu Oat Matcha Drink 1l Natrue Barista",KIMCHI-5238,Napoje,KIMCHI-5238,14.99|14.99,100,gluten-free|vegan|vegetarian,,missing_allergens
+e7324e59-4e02-4f0c-bf7b-df3a5ee1bad0,"Napój, mleko owsiane wegańskie bez glutenu Oat Matcha Drink 6 x 1l Natrue Barista",KIMCHI-5239,Napoje,KIMCHI-5239,79.9|79.9,100,gluten-free|vegan|vegetarian,,missing_allergens
+dffd9ac9-0499-4811-b9d0-da82426ac1a3,"Napój, mleko owsiane wegańskie bez glutenu Oat Pistachio Flavoured Drink 1l Natrue Barista",KIMCHI-5771,Napoje,KIMCHI-5771,15.9|15.9,100,gluten-free|vegan|vegetarian,,missing_allergens
+a83ecad1-3141-448e-a995-31268e4df14a,"Napój, mleko owsiane wegańskie bez glutenu Oat Pistachio Flavoured Drink 6 x 1l Natrue Barista",KIMCHI-5772,Napoje,KIMCHI-5772,85|85,100,gluten-free|vegan|vegetarian,,missing_allergens
+a69ceed5-c81a-470e-bb21-36ebf710902c,"Napój, mleko owsiane wegańskie bez glutenu Pumpkin Spice Oat Drink 1l Natrue Barista",KIMCHI-5355,Napoje,KIMCHI-5355,14.99|14.99,100,gluten-free|vegan|vegetarian,,missing_allergens
+da7bb68d-857f-47eb-878c-94169c3fe926,"Napój, mleko owsiane wegańskie bez glutenu Pumpkin Spice Oat Drink 6 x 1l Natrue Barista",KIMCHI-5360,Napoje,KIMCHI-5360,74.5|74.5,100,gluten-free|vegan|vegetarian,,missing_allergens
+5cfa1444-433c-4237-a388-6d4ddb118754,Napój na bazie herbaty - czarna tajska herbata  aromatyzowana 400g - ChaTraMue,KIMCHI-4509,Herbaty,KIMCHI-4509,33.9|33.9,100,,,missing_allergens
+ec6aa016-ebba-47b6-92fd-5dfa21223738,Napój na bazie herbaty - zielona tajska herbata aromatyzowana 200g - ChaTraMue,KIMCHI-4508,Herbaty,KIMCHI-4508,33.9|33.9,100,,,missing_allergens
+c12ec023-7bd8-4b56-b70f-ed051f6c2c7a,Napój o smaku limonki 300ml - Fa Thai,KIMCHI-5557,Napoje,KIMCHI-5557,7.5|7.5,100,,,missing_allergens
+97c37add-35f2-46b2-9a40-ec3af28e3424,"Napój Ramune Blueberry, japońska oranżada o smaku jagodowym 200ml - Hata Kosen",KIMCHI-3209,Napoje,KIMCHI-3209,11.99|11.99,100,,,missing_allergens
+3158a3c5-5234-4f3d-85f5-ea17081386ad,"Napój Ramune Cola, japońska oranżada o smaku coli 200ml - Hata Kosen",KIMCHI-4486,Napoje,KIMCHI-4486,11.99|11.99,100,,,missing_allergens
+14cd8ef5-1df9-46e5-a387-47b77e64b406,"Napój Ramune Japan Soda, japońska oranżada 200ml - Hata Kosen",KIMCHI-4742,Napoje,KIMCHI-4742,11.99|11.99,100,,,missing_allergens
+5d509532-aa85-4cd7-a0d8-e7abdd99a1b0,"Napój Ramune, japońska oranżada, aluminiowa butelka 500ml - Sangaria",KIMCHI-4745,Herbaty,KIMCHI-4745,12.9|12.9,100,,,missing_allergens
+bdc10026-fe1e-4d4b-81fa-cbd489fa5e35,"Napój Ramune Lychee, japońska oranżada o smaku liczi 200ml - Hata Kosen",KIMCHI-3800,Napoje,KIMCHI-3800,11.99|11.99,100,,,missing_allergens
+2aa0d435-c019-419f-ad1f-dd3e7bcb1799,"Napój Ramune Mango, japońska oranżada o smaku mango 200ml - Hata Kosen",KIMCHI-3802,Napoje,KIMCHI-3802,11.9|11.9,100,,,missing_allergens
+e5cdeada-41d3-41d5-b07b-da56bd887556,"Napój Ramune Matcha, japońska oranżada o smaku herbaty Matcha 200ml - Hata Kosen",KIMCHI-4483,Napoje,KIMCHI-4483,11.99|11.99,100,,,missing_allergens
+e209509a-36d7-4c89-bc80-5607367eadf6,"Napój Ramune Melon, japońska oranżada o smaku melonowym 200ml - Hata Kosen",KIMCHI-3208,Napoje,KIMCHI-3208,11.99|11.99,100,,,missing_allergens
+b64e4544-dc4e-4012-8547-517bd1c66253,"Napój Ramune Orange, japońska oranżada o smaku pomarańczy 200ml - Hata Kosen",KIMCHI-4687,Napoje,KIMCHI-4687,12.2|12.2,100,,,missing_allergens
+1c62190d-751c-4b00-a232-90dda758a29a,"Napój Ramune Pineapple, japońska oranżada o smaku ananasowym 200ml - Hata Kosen",KIMCHI-4688,Napoje,KIMCHI-4688,12.2|12.2,100,,,missing_allergens
+b5feae1d-c506-4724-9cca-6b42c78f3da9,"Napój Ramune Sakura, japońska oranżada 200ml - Hata Kosen",KIMCHI-4686,Napoje,KIMCHI-4686,11.99|11.99,100,,,missing_allergens
+45466798-5437-48a4-9b2f-ef282a2d720d,"Napój Ramune Strawberry, japońska oranżada o smaku truskawkowym 200ml - Hata Kosen",KIMCHI-3210,Napoje,KIMCHI-3210,11.99|11.99,100,,,missing_allergens
+0fb820af-3231-4457-8ba4-eb53ed404018,"Napój Ramune Watermelon, japońska oranżada o smaku arbuzowym 200ml - Hata Kosen",KIMCHI-3801,Napoje,KIMCHI-3801,11.99|11.99,100,,,missing_allergens
+5bd898ff-7303-42b3-a3c3-ef46c22c4850,"Napój Ramune Watermelon, japońska oranżada o smaku arbuzowym z dodatkiem soli 200ml - Hata Kosen",KIMCHI-4619,Napoje,KIMCHI-4619,10.99|10.99,100,,,missing_allergens
+d56ca48c-c818-4231-9af7-89612842d795,"Napój Ramune Yuzu, japońska oranżada o smaku cytrusowym 200ml - Hata Kosen",KIMCHI-4484,Napoje,KIMCHI-4484,12.2|12.2,100,,,missing_allergens
+8d81176e-ec41-47a4-ac3c-7806e614f279,Napój winogronowy Bong Bong z kawałkami owoców 238ml - Haitai,KIMCHI-1133,Napoje,KIMCHI-1133,8.28|8.28,100,,,missing_allergens
+9d6905cb-9844-497f-b79f-9867a0309555,"Napój w proszku matcha, zielona herbata z cukrem 120g - Gyokuroen",KIMCHI-5344,Herbaty,KIMCHI-5344,25|25,100,,,missing_allergens
+c05fbce1-f419-4b9d-a555-585bb1a00da8,Napój zielona japońska herbata OH-I OCHA 340ml - Itoen,KIMCHI-4743,Napoje,KIMCHI-4743,10.5|10.5,100,,,missing_allergens
+c00714ce-cf2f-4f32-94c5-ef47aaefc3b5,"Nóż OSAKA Annaki, uniwersalny 20cm - CSS",KIMCHI-2884,Noże,KIMCHI-2884,35|35,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+c121f2c1-59f8-448c-b5d1-bdb68f694b1f,Nóż OSAKA Pankiri do chleba 20cm - CSS,KIMCHI-2888,Noże,KIMCHI-2888,35.5|35.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+45badaa5-1f81-43ff-ab2a-5a034cbe5a18,"Nóż OSAKA Santoku, uniwersalny 18cm - CSS",KIMCHI-2882,Noże,KIMCHI-2882,35|35,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+5cee4fa7-0e5b-4a1c-b810-2492ddc98dfe,Nóż OSAKA Yanagi-ba do ryb i sushi 23cm - CSS,KIMCHI-2881,Noże,KIMCHI-2881,39|39,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+6a6a5ea1-c364-4b29-97e5-12cedf18d985,"Nóż OSAKA Yunibasaru, uniwersalny 13cm - CSS",KIMCHI-2887,Noże,KIMCHI-2887,24.5|24.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+989ab4e1-1991-4ad8-ad50-915090d30e2b,Nóż Saku Santoku uniwersalny 17cm - Satake Cutlery,KIMCHI-5780,Noże,KIMCHI-5780,89.5|89.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+74225e8a-da00-407e-bc18-9bd61d0db1c4,Nóż Saku Sashimi Yanagiba 21cm - Satake Cutlery,KIMCHI-5778,Noże,KIMCHI-5778,89.5|89.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+0cbd6d11-8cf4-4e3a-8f61-a5c5d686448e,Nóż Saku Szefa kuchni Air Holes 18cm - Satake Cutlery,KIMCHI-5779,Noże,KIMCHI-5779,89.5|89.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+64354883-dbc6-43c3-a458-38f6db0198e3,Nóż szefa kuchni 19cm - KIWI,KIMCHI-1412,Noże,KIMCHI-1412,39.99|39.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+125ffe6f-e742-494a-9576-85b1c1371f28,"Nóż tasak do kości 20,5cm - KIWI",KIMCHI-2815,Noże,KIMCHI-2815,89.9|89.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+afabdfd4-6416-4ecf-aa23-35f1f7815404,Nóż tasak szefa kuchni 19cm - KIWI,KIMCHI-1410,Noże,KIMCHI-1410,48.9|48.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+cc942068-1bb4-4c6e-9d62-2bc8e0a417c0,"Nóż tasak szefa kuchni, mały 16,5 cm - KIWI",KIMCHI-2816,Noże,KIMCHI-2816,29.99|29.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+834e2fb8-20a8-482a-b744-b3ec34333c6c,"Nóż Tomoko Deba do filetowania ryb 15,5cm - Satake Cutlery",KIMCHI-5775,Noże,KIMCHI-5775,120|120,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+7a670038-377a-40f3-be5e-546d8b7c50f0,Nóż Tomoko Santoku uniwersalny 17cm - Satake Cutlery,KIMCHI-5773,Noże,KIMCHI-5773,99.5|99.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+c436f755-def5-49c8-b59e-b3d2fc59f4c9,Nóż Tomoko Szefa kuchni uniwersalny 18cm - Satake Cutlery,KIMCHI-5776,Noże,KIMCHI-5776,99.9|99.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+2186c4ef-8e8e-4870-a10d-3d16f6cdf079,"Nóż Tomoko Yanagi-Sashimi 20,5cm - Satake Cutlery",KIMCHI-5777,Noże,KIMCHI-5777,99.5|99.5,0,,,out_of_stock|missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+f69cc493-dbd3-457e-9433-daf8eefe62bc,Ocet jabłkowy 100% 500ml - Sempio,KIMCHI-4138,Octy i winne przyprawy,KIMCHI-4138,10.7|10.7,100,,,missing_allergens
+7d9e14fe-6622-45fa-b52b-54f390814af0,Ocet ryżowy 150ml - Asia Kitchen,KIMCHI-2682,Octy i winne przyprawy,KIMCHI-2682,6.99|6.99,100,,,missing_allergens|missing_storage_zone
+799aa5db-2824-4999-a528-5621a4be75ae,Ocet ryżowy 150ml - House of Asia,KIMCHI-2823,Octy i winne przyprawy,KIMCHI-2823,11|11,100,,,missing_allergens
+53ea2d5e-70ce-4628-a83a-e30ccafff173,Ocet ryżowy 1l - Asia Kitchen,KIMCHI-2254,Octy i winne przyprawy,KIMCHI-2254,15.5|15.5,100,,,missing_allergens|missing_nutrition|missing_storage_zone
+162d172f-2911-40e1-924e-a1f7e0298b44,Ocet ryżowy 220ml - Sen Soy,KIMCHI-3219,Octy i winne przyprawy,KIMCHI-3219,10.7|10.7,100,,,missing_allergens|missing_country
+6a042e15-78b8-42de-b164-de1ea0f300d2,Ocet ryżowy 500ml - Asia Kitchen,KIMCHI-2659,Octy i winne przyprawy,KIMCHI-2659,12.5|12.5,100,,,missing_allergens|missing_storage_zone
+04145c86-d0ab-4d89-81bb-ac4ff7d751ec,Ocet winny ryżowy Kokumotsu 500ml - Tamanoi,KIMCHI-2662,Octy i winne przyprawy,KIMCHI-2662,14.5|14.5,100,,,missing_allergens
+fac463d0-6e72-4a76-8c2f-4f5c2b7e5e9a,Ocet z brązowego ryżu 100% 500ml - Sempio,KIMCHI-4135,Octy i winne przyprawy,KIMCHI-4135,12.99|12.99,100,,,missing_allergens
+6a24dfed-39ae-4c6d-9393-9b0eed738f5b,Ocet z brązowego ryżu 500ml Ottogi,KIMCHI-12,Octy i winne przyprawy,KIMCHI-12,10.99|10.99,100,,,missing_allergens
+1d7b9985-bc5b-4994-83e5-e4704b70f260,Ocet z brązowego ryżu 900ml - CJO Essential,KIMCHI-863,Octy i winne przyprawy,KIMCHI-863,16.99|16.99,100,,,missing_allergens|missing_nutrition|missing_storage_zone
+2c84415e-807f-48cd-a383-26887f397cf0,Ocet z przyprawami Kantan-Su 500ml - Mizkan,KIMCHI-5340,Octy i winne przyprawy,KIMCHI-5340,24.99|24.99,100,,,missing_allergens
 089d3921-de89-4cee-9679-b7f134bc4b35,"Old Jamaica Ginger Beer Original, imbirowe piwo korzenne (0%) 24 x 330ml",KIMCHI-4719,Napoje,KIMCHI-4719,135|135,100,,,missing_allergens|missing_english_translation
-54cbf2d5-9747-4b42-b423-244bd30ccab9,"Old Jamaica Ginger Beer Original, imbirowe piwo korzenne (0%) 2L",KIMCHI-2465,Napoje,KIMCHI-2465,21.5|21.5,100,,,missing_allergens|missing_country|missing_english_translation
-dcd120e0-08df-4d3a-951a-bb8ede18aa95,"Old Jamaica Ginger Beer Original, imbirowe piwo korzenne (0%) 330ml",KIMCHI-1166,Napoje,KIMCHI-1166,6.1|6.1,100,,,missing_allergens|missing_english_translation
-9ada4b62-c31a-4282-9fb1-6a3bc274f818,"Old Jamaica Ginger Beer Original, imbirowe piwo korzenne (0%) 6 x 2L",KIMCHI-4740,Napoje,KIMCHI-4740,120|120,100,,,missing_allergens|missing_country|missing_english_translation
-b77cd67b-54b8-4dec-876b-5511f9d0a7d3,Olej arachidowy 1L - Heuschen & Schrouff,KIMCHI-1827,Oleje,KIMCHI-1827,30.63|30.63,100,,peanuts|nuts,missing_nutrition|missing_english_translation
-1ce85096-eb1d-4a20-8378-e280867ee052,Olej aromatyzowany sojowo-sezamowy 60ml - HAIDILAO,KIMCHI-5723,Oleje,KIMCHI-5723,9.5|9.5,100,,soybeans|sesame,missing_english_translation
-44f39104-3bcd-4d0a-9518-576f3508976f,Olejek do wcierania na bóle mięśni chłodzący 10ml - Hoe Hin,KIMCHI-5436,Syropy,KIMCHI-5436,61|61,100,,,missing_allergens|missing_nutrition|missing_english_translation
-12e80d3e-9d3a-4146-a049-88d59b0b5918,Olejek do wcierania na bóle mięśni chłodzący 24ml - Eagle Brand,KIMCHI-5437,Syropy,KIMCHI-5437,56|56,100,,,missing_allergens|missing_nutrition|missing_english_translation
-978a8661-cbec-4cbd-a1bf-eb13f9b9f464,"Olej La-Yu Mashi-Mashi z chili, sezamem i czosnkiem ostry 105g - Momoya",KIMCHI-5312,Pasty smakowe,KIMCHI-5312,29.9|29.9,100,,sesame,missing_english_translation
-25ee14f6-074e-4d17-adfd-50841e7320af,"Olej La-Yu z chili, smażonym czosnkiem i cebulą 110g - Momoya",KIMCHI-5096,Pasty smakowe,KIMCHI-5096,29.9|29.9,100,,cereals|soybeans|sesame,missing_english_translation
-483f9b62-8829-4ee9-9848-8b0c0fced29b,Olej ryżowy 500ml - Daily,KIMCHI-5209,Oleje,KIMCHI-5209,24.5|24.5,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-88620334-56af-4c89-8c5a-40e4f4e94eb0,Olej sezamowy 207ml Lee Kum Kee,KIMCHI-5734,Oleje,KIMCHI-5734,19.5|19.5,100,,sesame,missing_english_translation
-cbe759f2-6f35-4029-a9bd-95a6f76328af,Olej sezamowy 250ml Diamond,KIMCHI-155,Oleje,KIMCHI-155,22.9|22.9,100,,sesame,missing_english_translation
-aeaedcae-151c-4a2f-9a67-2a5cff6b5b2b,Olej sezamowy 500ml - Diamond,KIMCHI-831,Oleje,KIMCHI-831,40.5|40.5,100,,sesame,missing_english_translation
-0c8250ee-4f6f-465f-a8db-12bd3dae9c1e,Olej sezamowy Old Style z prażonych ziaren 350ml - Ottogi,KIMCHI-3544,Oleje,KIMCHI-3544,35.99|35.99,100,,sesame,missing_english_translation
-d87e8e5c-256b-4188-83ba-6603e0121663,Olej sezamowy Premium z prażonych ziaren 160ml - Ottogi,KIMCHI-2346,Oleje,KIMCHI-2346,30.9|30.9,100,,sesame,missing_english_translation
-b22c1f76-fe4c-48ef-8b8c-8758f6e338a5,Olej sezamowy Premium z prażonych ziaren 1L - Ottogi,KIMCHI-1062,Oleje,KIMCHI-1062,139.99|139.99,100,,sesame,missing_english_translation
-3c7d3f19-9863-4332-aa07-76517e024541,Olej sezamowy Premium z prażonych ziaren 320ml - Ottogi,KIMCHI-655,Oleje,KIMCHI-655,55.99|55.99,100,,sesame,missing_english_translation
-3048caaf-67c8-4693-9256-e4995f810fda,Olej sezamowy Premium z prażonych ziaren 55ml - Ottogi,KIMCHI-1061,Oleje,KIMCHI-1061,13.7|13.7,100,,sesame,missing_english_translation
-ace4eea7-4a2f-4ace-ae89-b2780c91d32f,Olej sezamowy z prażonych ziaren 150ml - Golden Lion,KIMCHI-5072,Oleje,KIMCHI-5072,12.99|12.99,100,,sesame,missing_english_translation
-aa1d8440-baaf-4aed-901e-67f1373c40b5,Olej sezamowy z prażonych ziaren 150ml Oh Aik Guan,KIMCHI-92,Oleje,KIMCHI-92,12.99|12.99,100,,sesame,missing_english_translation
-6422f80f-7917-4d22-b3ed-3cda7229396d,Olej sezamowy z prażonych ziaren 160ml - CJ Bibigo,KIMCHI-3596,Oleje,KIMCHI-3596,26.5|26.5,100,,sesame,missing_english_translation
-41c9168b-588a-43f3-8383-be0202b8afac,"Olej sezamowy z prażonych ziaren 1,8L - Golden Lion",KIMCHI-5372,Oleje,KIMCHI-5372,79.9|79.9,100,,soybeans|sesame,missing_english_translation
-25ce9c1d-ed57-450d-a750-ebb8ffcb6ddb,Olej sezamowy z prażonych ziaren 360ml - Oh Aik Guan,KIMCHI-1871,Sosy / Marynaty / Oleje,KIMCHI-1871,25.5|25.5,100,,sesame,missing_english_translation
-d1d2e3e7-d576-4522-9d57-5915fb31a7e8,Olej sezamowy z prażonych ziaren 650ml - Oh Aik Guan,KIMCHI-1992,Oleje sezamowe,KIMCHI-1992,39.99|39.99,100,,sesame,missing_english_translation
-250aa8b3-35a8-48b9-a613-c10f9a518cec,Olej sojowy 1L - Heuschen & Schrouff,KIMCHI-1500,Oleje,KIMCHI-1500,19.93|19.93,100,,soybeans,missing_english_translation
-e6cd1852-27b9-4e69-8b73-0275f03cae6b,Olej sojowy chili 207ml - Lee Kum Kee,KIMCHI-5255,Oleje,KIMCHI-5255,18.5|18.5,100,,soybeans,missing_english_translation
+54cbf2d5-9747-4b42-b423-244bd30ccab9,"Old Jamaica Ginger Beer Original, imbirowe piwo korzenne (0%) 2L",KIMCHI-2465,Napoje,KIMCHI-2465,21.5|21.5,100,,,missing_allergens|missing_country
+dcd120e0-08df-4d3a-951a-bb8ede18aa95,"Old Jamaica Ginger Beer Original, imbirowe piwo korzenne (0%) 330ml",KIMCHI-1166,Napoje,KIMCHI-1166,6.1|6.1,100,,,missing_allergens
+9ada4b62-c31a-4282-9fb1-6a3bc274f818,"Old Jamaica Ginger Beer Original, imbirowe piwo korzenne (0%) 6 x 2L",KIMCHI-4740,Napoje,KIMCHI-4740,120|120,100,,,missing_allergens|missing_country
+b77cd67b-54b8-4dec-876b-5511f9d0a7d3,Olej arachidowy 1L - Heuschen & Schrouff,KIMCHI-1827,Oleje,KIMCHI-1827,30.63|30.63,100,,peanuts|nuts,missing_nutrition
+44f39104-3bcd-4d0a-9518-576f3508976f,Olejek do wcierania na bóle mięśni chłodzący 10ml - Hoe Hin,KIMCHI-5436,Syropy,KIMCHI-5436,61|61,100,,,missing_allergens|missing_nutrition
+12e80d3e-9d3a-4146-a049-88d59b0b5918,Olejek do wcierania na bóle mięśni chłodzący 24ml - Eagle Brand,KIMCHI-5437,Syropy,KIMCHI-5437,56|56,100,,,missing_allergens|missing_nutrition
+483f9b62-8829-4ee9-9848-8b0c0fced29b,Olej ryżowy 500ml - Daily,KIMCHI-5209,Oleje,KIMCHI-5209,24.5|24.5,100,,,missing_allergens|missing_storage_zone
 7cc616a6-d0dc-4de2-9b8d-c34b9ba554ea,Olej sojowy z chili 250ml - Healthy Boy,KIMCHI-2328,Oleje,KIMCHI-2328,19.44|19.44,2,,crustaceans|soybeans,missing_english_translation
-a30c40ca-dec5-4950-b924-dc0895f62f6b,Olej z czarnego sezamu 650ml Chee Seng,KIMCHI-5591,Oleje,KIMCHI-5591,64|64,100,,sesame,missing_english_translation
-0ea2ee5d-0f61-4cd1-9471-9e50dbdca4e1,Olej z pieprzem syczuańskim 210ml - Chuan Lao Hui,KIMCHI-5508,Oleje,KIMCHI-5508,29.07|29.07,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-fbd007c8-5045-469d-a69d-326db18ebc60,Olej z prażonych ziaren sezamu 150ml - Asia Kitchen,KIMCHI-2705,Oleje,KIMCHI-2705,12.99|12.99,100,,sesame,missing_english_translation
-4fc970a4-7aee-4861-a6c2-08d18f84c5b5,Olej z prażonych ziaren sezamu 270ml - Asia Kitchen,KIMCHI-2971,Oleje,KIMCHI-2971,19.7|19.7,100,,sesame,missing_english_translation
-fd65b5c9-4321-462d-ac27-2126e58842ed,Olej z prażonych ziaren sezamu 500ml - Asia Kitchen,KIMCHI-4844,Oleje,KIMCHI-4844,35.5|35.5,100,,sesame,missing_english_translation
-25f06805-55cd-43c4-a0a0-988102334bc5,"Oreo Birthday Cake, kakaowe ciasteczka z nadzieniem waniliowym i posypką 97g",KIMCHI-4379,Słodycze / Przekąski,KIMCHI-4379,13.9|13.9,100,,cereals|soybeans,missing_english_translation
-6df48a2a-bb13-4dd2-98a1-81316bc011db,"Oreo Thin 0 Sugar, cienkie kakaowe ciasteczka bez cukru 97g",KIMCHI-5244,Słodycze / Przekąski,KIMCHI-5244,14.99|14.99,100,,cereals|soybeans,missing_english_translation
-15969d68-528a-47c7-821b-b4b7eca5594d,"Oreo Thin Rose 0 Sugar, cienkie kakaowe ciasteczka z nadzieniem różanym bez cukru 97g",KIMCHI-4798,Słodycze / Przekąski,KIMCHI-4798,13.99|13.99,100,,cereals|soybeans,missing_english_translation
-3ff27bca-4578-43e1-8d5e-6b5291f5da5d,"Organic Matcha, japońska zielona herbata ekologiczna halal w proszku 30g Nakayama Kichishoen",KIMCHI-5367,Herbaty,KIMCHI-5367,45.9|45.9,100,,cereals|celery|mustard|sesame,missing_english_translation
-b5b1185c-0d3e-4c76-a4af-676ff7e655fb,"Original Choco Pie, całe pudełko (12 x 39g) - Orion",KIMCHI-4001,Słodycze / Przekąski,KIMCHI-4001,33.5|33.5,100,,cereals|eggs|soybeans|milk|nuts,missing_storage_zone|missing_english_translation
-a4e3169b-f42b-4b33-ab7e-c0a3cbc43494,"Original Tteokbokki, kluski ryżowe w sosie gochujang 260g - O'Food",KIMCHI-3135,Dania gotowe,KIMCHI-3135,25.99|25.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-72051b35-72a6-4ad2-9561-57aa6dc3c4ba,"Oryginalna zupa Shin Ramyun Tom Yum Jayfai, bardzo ostra 123g - Nongshim",KIMCHI-5193,Ramyun / Ramen,KIMCHI-5193,7.99|7.99,100,,cereals|crustaceans|eggs|fish|peanuts|soybeans|milk|celery|mustard|sesame|molluscs,missing_storage_zone|missing_english_translation
-75543015-ec63-4af9-897b-8c817bd52a79,"Oryginalna zupa Shin Ramyun Tom Yum Jayfai, bardzo ostra 5 x 123g - Nongshim",KIMCHI-5364,Ramyun / Ramen,KIMCHI-5364,38.99|38.99,100,,cereals|crustaceans|eggs|fish|peanuts|soybeans|milk|celery|mustard|sesame|molluscs,missing_storage_zone|missing_english_translation
-becfa3f0-6ffd-4eff-b8dc-56f81a4f5faf,"Oryginalne danie Shin Ramyun Stir Fry, bardzo ostre 131g - Nongshim",KIMCHI-4177,Ramyun / Ramen,KIMCHI-4177,7.6|7.6,100,,cereals|eggs|fish|peanuts|soybeans|milk|nuts,missing_english_translation
-3012e313-5556-4e5d-bdc8-6607f5ef8cd9,"Oryginalne danie Shin Ramyun Toomba, spicy & cream 137g - Nongshim",KIMCHI-5227,Ramyun / Ramen,KIMCHI-5227,7.99|7.99,100,,cereals|crustaceans|eggs|peanuts|soybeans|milk|nuts|celery|mustard|sesame|molluscs,missing_storage_zone|missing_english_translation
-c8a6d1fb-6d25-49ef-b744-f40967149970,Oryginalny sos Worcestershire 290ml Lea & Perrins,KIMCHI-149,Sosy / Marynaty / Oleje,KIMCHI-149,16.9|16.9,100,,fish,missing_english_translation
-2854bbd6-2544-47c9-a175-2680caf8a2bf,Oryginalny Sos Worcestershire 4l - Lea & Perrins,KIMCHI-4842,Sosy / Marynaty / Oleje,KIMCHI-4842,175|175,100,,fish|cereals,missing_english_translation
-40915b45-5acb-42ae-9fac-a08a2b2cb332,Oryginalny Sos Worcestershire 568ml - Lea & Perrins,KIMCHI-4841,Sosy / Marynaty / Oleje,KIMCHI-4841,32.4|32.4,100,,fish|cereals,missing_english_translation
-c5ca1b68-e968-421c-a3ae-6fa8e466cf81,"Orzechy kemiri, kirimi (candlenuts) całe 100g - Lucullus",KIMCHI-4140,Słodycze / Przekąski,KIMCHI-4140,8.9|8.9,100,,nuts,missing_english_translation
-f61ce151-3690-45aa-827d-98871394699b,Orzeszki ziemne w skorupce kokosowej 185g - Khao Shong,KIMCHI-936,Słodycze / Przekąski,KIMCHI-936,15.27|15.27,100,,cereals|peanuts|milk,missing_storage_zone|missing_english_translation
-0829b83e-4ef5-4b74-a34b-47ca150eaa71,Ostry sos paprykowy carolina 1kg - Fanex,KIMCHI-3900,"Sosy, marynaty",KIMCHI-3900,29.99|29.99,100,,,missing_allergens|missing_english_translation
-7ccb6a2d-ed4f-4372-a9a6-fb27f56fb9ce,Ostrzałka kamienna (1200),KIMCHI-3636,Noże,KIMCHI-3636,78.99|78.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-3181aa12-0d26-4c0d-859d-cb62fae66002,"Owoce lychee, liczi w syropie 565g - Asia Foods",KIMCHI-3184,Owoce / Marynowane warzywa,KIMCHI-3184,12.5|12.5,100,,,missing_allergens|missing_english_translation
-e4e1e936-ba74-4c40-a06a-ce9630d9fbca,Pałeczki bambusowe 21cm w kopertach 100 par,KIMCHI-31,Pałeczki i sztućce,KIMCHI-31,19.5|19.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
+0ea2ee5d-0f61-4cd1-9471-9e50dbdca4e1,Olej z pieprzem syczuańskim 210ml - Chuan Lao Hui,KIMCHI-5508,Oleje,KIMCHI-5508,29.07|29.07,100,,,missing_allergens|missing_storage_zone
+b5b1185c-0d3e-4c76-a4af-676ff7e655fb,"Original Choco Pie, całe pudełko (12 x 39g) - Orion",KIMCHI-4001,Słodycze / Przekąski,KIMCHI-4001,33.5|33.5,100,,cereals|eggs|soybeans|milk|nuts,missing_storage_zone
+a4e3169b-f42b-4b33-ab7e-c0a3cbc43494,"Original Tteokbokki, kluski ryżowe w sosie gochujang 260g - O'Food",KIMCHI-3135,Dania gotowe,KIMCHI-3135,25.99|25.99,100,,,missing_allergens|missing_storage_zone
+72051b35-72a6-4ad2-9561-57aa6dc3c4ba,"Oryginalna zupa Shin Ramyun Tom Yum Jayfai, bardzo ostra 123g - Nongshim",KIMCHI-5193,Ramyun / Ramen,KIMCHI-5193,7.99|7.99,100,,cereals|crustaceans|eggs|fish|peanuts|soybeans|milk|celery|mustard|sesame|molluscs,missing_storage_zone
+75543015-ec63-4af9-897b-8c817bd52a79,"Oryginalna zupa Shin Ramyun Tom Yum Jayfai, bardzo ostra 5 x 123g - Nongshim",KIMCHI-5364,Ramyun / Ramen,KIMCHI-5364,38.99|38.99,100,,cereals|crustaceans|eggs|fish|peanuts|soybeans|milk|celery|mustard|sesame|molluscs,missing_storage_zone
+3012e313-5556-4e5d-bdc8-6607f5ef8cd9,"Oryginalne danie Shin Ramyun Toomba, spicy & cream 137g - Nongshim",KIMCHI-5227,Ramyun / Ramen,KIMCHI-5227,7.99|7.99,100,,cereals|crustaceans|eggs|peanuts|soybeans|milk|nuts|celery|mustard|sesame|molluscs,missing_storage_zone
+f61ce151-3690-45aa-827d-98871394699b,Orzeszki ziemne w skorupce kokosowej 185g - Khao Shong,KIMCHI-936,Słodycze / Przekąski,KIMCHI-936,15.27|15.27,100,,cereals|peanuts|milk,missing_storage_zone
+0829b83e-4ef5-4b74-a34b-47ca150eaa71,Ostry sos paprykowy carolina 1kg - Fanex,KIMCHI-3900,"Sosy, marynaty",KIMCHI-3900,29.99|29.99,100,,,missing_allergens
+7ccb6a2d-ed4f-4372-a9a6-fb27f56fb9ce,Ostrzałka kamienna (1200),KIMCHI-3636,Noże,KIMCHI-3636,78.99|78.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+3181aa12-0d26-4c0d-859d-cb62fae66002,"Owoce lychee, liczi w syropie 565g - Asia Foods",KIMCHI-3184,Owoce / Marynowane warzywa,KIMCHI-3184,12.5|12.5,100,,,missing_allergens
+e4e1e936-ba74-4c40-a06a-ce9630d9fbca,Pałeczki bambusowe 21cm w kopertach 100 par,KIMCHI-31,Pałeczki i sztućce,KIMCHI-31,19.5|19.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
 5797bd74-d97b-4432-973e-38cd1701a3be,Pałeczki bambusowe 21cm w kopertach - 50 par,KIMCHI-29,Pałeczki i sztućce,KIMCHI-29,13.5|13.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
 cbced7b6-cc8e-40a1-bd94-0d9c61a5738e,"Pałeczki bambusowe białe - wzór Maneki-neko 22,5 cm (5 par)",KIMCHI-2198,Pałeczki i sztućce,KIMCHI-2198,21.9|21.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
 da297a39-9292-42d0-9871-5716e64eb4fd,"Pałeczki bambusowe brązowe - wzór Koty 22,5 cm (5 par)",KIMCHI-2199,Pałeczki i sztućce,KIMCHI-2199,19.7|19.7,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-0d7f9535-2be2-4771-a24e-f10cdd78b5d6,Pałeczki bambusowe kwadratowe 24 cm (10 par) Jade Temple,KIMCHI-450,Pałeczki i sztućce,KIMCHI-450,7.6|7.6,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-0aec159f-7901-4dcb-8b69-e3e746a9da61,"Pałeczki bambusowe kwadratowe 26,5 cm (10 par) Emro Aziatica",KIMCHI-5573,Pałeczki i sztućce,KIMCHI-5573,9.9|9.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
+0d7f9535-2be2-4771-a24e-f10cdd78b5d6,Pałeczki bambusowe kwadratowe 24 cm (10 par) Jade Temple,KIMCHI-450,Pałeczki i sztućce,KIMCHI-450,7.6|7.6,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+0aec159f-7901-4dcb-8b69-e3e746a9da61,"Pałeczki bambusowe kwadratowe 26,5 cm (10 par) Emro Aziatica",KIMCHI-5573,Pałeczki i sztućce,KIMCHI-5573,9.9|9.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
 e043534b-3088-4a3b-97d3-c98ec437be7f,"Pałeczki bambusowe - Niebieskie Wzory 22,5 cm (5 par)",KIMCHI-2900,Pałeczki i sztućce,KIMCHI-2900,23.5|23.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-e8167cdf-5ba3-48f9-af09-193e054dcd32,Pałeczki bambusowe w kopertach 10 szt. - Asia Kitchen,KIMCHI-2969,Pałeczki i sztućce,KIMCHI-2969,4.99|4.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
+e8167cdf-5ba3-48f9-af09-193e054dcd32,Pałeczki bambusowe w kopertach 10 szt. - Asia Kitchen,KIMCHI-2969,Pałeczki i sztućce,KIMCHI-2969,4.99|4.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
 580203b9-a171-4eb7-bbfd-2a6e822f475d,Pałeczki ze stali nierdzewnej 23cm - 1 para,KIMCHI-2201,Pałeczki i sztućce,KIMCHI-2201,8.5|8.5,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_country|missing_storage_zone|missing_unit_price|missing_english_translation
-8453d358-9396-4658-adec-414d6c865ec9,Paluszki Pepero Crunky z chrupiącą czekoladą 39g - LOTTE,KIMCHI-3598,Słodycze / Przekąski,KIMCHI-3598,7.99|7.99,100,,cereals|eggs|peanuts|soybeans|milk|nuts,missing_english_translation
-db81d177-7b67-4f34-8812-8154c98d8024,Paluszki Pepero Czekoladowe Original 47g - Lotte,KIMCHI-1091,Słodycze / Przekąski,KIMCHI-1091,7.99|7.99,100,,cereals|eggs|soybeans|milk,missing_nutrition|missing_storage_zone|missing_english_translation
-c5c604f4-1b67-4d77-bbb0-e409e4f5cd0b,Paluszki Pepero Migdały i Czekolada 32g - Lotte,KIMCHI-1090,Słodycze / Przekąski,KIMCHI-1090,7.99|7.99,100,,cereals|eggs|soybeans|milk|nuts,missing_nutrition|missing_storage_zone|missing_english_translation
-f5b11b63-34b4-40b9-8c9b-1c258d152af7,Paluszki Pepero Nude - wypełnione czekoladą 45g - Lotte,KIMCHI-1092,Słodycze / Przekąski,KIMCHI-1092,7.99|7.99,100,,cereals|eggs|soybeans|milk|nuts,missing_storage_zone|missing_english_translation
-66185b97-6de5-481a-97d3-da4f4582e8e7,Paluszki Pepero Snowy Almond z migdałami 32g - LOTTE,KIMCHI-3942,Słodycze / Przekąski,KIMCHI-3942,7.9|7.9,100,,cereals|eggs|soybeans|milk|nuts,missing_english_translation
-5ad87cfa-e956-4ac2-a395-1facacea2b44,"Paluszki Pocky Almond Taste z migdałami 43,5g - Glico",KIMCHI-3177,Słodycze / Przekąski,KIMCHI-3177,8.7|8.7,100,,cereals|soybeans|milk|nuts,missing_country|missing_english_translation
-ac0c46ca-6c6a-4245-a1cd-1ac9ce56e8cb,Paluszki Pocky Cookies & Cream 40g - Glico,KIMCHI-1196,Słodycze / Przekąski,KIMCHI-1196,8.7|8.7,100,,cereals|soybeans|milk,missing_country|missing_storage_zone|missing_english_translation
-6e0a3a88-5894-4b95-9697-4dac506aa0e2,Paluszki Pocky Czekoladowe Original 47g - Glico,KIMCHI-902,Słodycze / Przekąski,KIMCHI-902,8.7|8.7,100,,cereals|soybeans|milk,missing_country|missing_english_translation
-a59ed4c8-2698-4560-a7c5-354c887b5bb7,"Paluszki Pocky Heartful Blueberry w kształcie serca 54,6g - Glico",KIMCHI-5789,Słodycze / Przekąski,KIMCHI-5789,19.5|19.5,100,,cereals|soybeans|milk,missing_english_translation
-88b97298-cef5-4fbf-9e67-40ac2c2c016e,Paluszki Pocky Matcha z zieloną herbatą 33g - Glico,KIMCHI-905,Słodycze / Przekąski,KIMCHI-905,8.7|8.7,100,,cereals|soybeans|milk,missing_english_translation
-5b1aef80-2536-4978-8231-7954549b733b,"Paluszki Pocky Original Share Pack o smaku czekoladowym 101,6g - Glico",KIMCHI-5107,Słodycze / Przekąski,KIMCHI-5107,24|24,100,,cereals|soybeans|milk,missing_english_translation
-0ae16c8e-6f95-487a-8a75-0ed1fcdca3a9,Paluszki Pocky Original Share Pack o smaku czekoladowym 88g - Glico,KIMCHI-5531,Słodycze / Przekąski,KIMCHI-5531,24|24,3,,cereals|soybeans|milk,missing_english_translation
-63046723-f157-41cf-9a0a-72360f9bfb96,Paluszki Pocky Sakura Matcha o smaku zielonej herbaty z kwiatem wiśni 102g - Glico,KIMCHI-5341,Słodycze / Przekąski,KIMCHI-5341,37|37,100,,cereals|soybeans|milk,missing_english_translation
-9924e4c8-0c60-4fbc-a39d-3fd3e0f7a473,"Paluszki Pocky Strawberry Share Pack o smaku truskawkowym 93,6g - Glico",KIMCHI-5108,Słodycze / Przekąski,KIMCHI-5108,24|24,100,,cereals|soybeans|milk,missing_english_translation
-7b732093-0dd2-43be-befa-f9b800e762c3,Paluszki Pocky Truskawkowe 45g - Glico,KIMCHI-904,Słodycze / Przekąski,KIMCHI-904,8.7|8.7,100,,cereals|soybeans|milk,missing_storage_zone|missing_english_translation
-b2c9c1ab-8bdc-43fc-a78e-4fe6e2103c69,Paluszki Pocky Zeitaku-Shiatate Almond Milk mleczne z migdałami 110g - Glico,KIMCHI-5106,Słodycze / Przekąski,KIMCHI-5106,29.99|29.99,100,,cereals|milk|nuts|soybeans,missing_english_translation
-cf23b149-38ae-4d62-b44f-93422e81735a,Paluszki Pocky Zeitaku-Shitate Milk Chocolate z mleczną czekoladą 120g - Glico,KIMCHI-5105,Słodycze / Przekąski,KIMCHI-5105,29.99|29.99,100,,cereals|soybeans|milk,missing_english_translation
-8b5ac857-d038-4ad5-ac19-7c3f95372eba,"Panierka, mąka Tempura 500g - Uncle Barns",KIMCHI-1170,Mąki / Panierki / Tapioka,KIMCHI-1170,10.99|10.99,100,,cereals,missing_nutrition|missing_storage_zone|missing_english_translation
-84a1d335-3c48-4e01-9d91-a85b4d5a2c39,Panierka panko 1kg - Asia Kitchen,KIMCHI-2963,Mąki / Panierki / Tapioka,KIMCHI-2963,22.5|22.5,100,,cereals,missing_english_translation
-92d6605a-5115-41e2-8411-0f1a28a925fc,Panierka Panko 1kg - Inaka,KIMCHI-337,Mąki / Panierki / Tapioka,KIMCHI-337,29.99|29.99,100,,cereals,missing_storage_zone|missing_english_translation
-66a931af-f803-4cd5-a7a0-ecc86cf87c7a,Panierka panko 200g - Asia Kitchen,KIMCHI-2964,Mąki / Panierki / Tapioka,KIMCHI-2964,6.9|6.9,100,,cereals,missing_english_translation
-ca9a73ba-245e-4489-8f08-dda00f8c4376,Panierka Panko 200g - Ottogi,KIMCHI-1431,Mąki / Panierki / Tapioka,KIMCHI-1431,10.99|10.99,100,,cereals|soybeans,missing_english_translation
-fc520ab3-34dd-4fdb-b71c-46ebc2f7c670,Panierka Panko 200g - Samlip,KIMCHI-363,Mąki / Panierki / Tapioka,KIMCHI-363,9.99|9.99,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-c7348bc5-e339-42bf-bf86-1059bb7b73aa,"Panierka panko, duże płatki 200g - Golden Turtle Brand",KIMCHI-2176,Mąki / Panierki / Tapioka,KIMCHI-2176,8.5|8.5,100,,cereals,missing_country|missing_english_translation
-0c1e5bc0-864f-4e45-ae83-16f13c437946,Panierka w stylu japońskim panko 1kg - Mr Nodu,KIMCHI-5497,Mąki / Panierki / Tapioka,KIMCHI-5497,15.9|15.9,100,,cereals,missing_english_translation
-93e8f4dd-c4bd-49d1-9f5d-5cd8fcb327aa,"Papier ryżowy kwadratowy 16cm, 300g - DIAMOND",KIMCHI-448,Papier ryżowy,KIMCHI-448,11.99|11.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-06cd5c97-9e46-4628-80fe-4d0e71582383,"Papier ryżowy kwadratowy 19cm, 500g - Golden Turtle",KIMCHI-5265,Papier ryżowy,KIMCHI-5265,13.99|13.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-c954b0a2-3594-4d22-b6f1-c585f9147c29,"Papier ryżowy kwadratowy 19cm, 500g - HS",KIMCHI-5261,Papier ryżowy,KIMCHI-5261,13.5|13.5,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-68d2a6ce-084e-4d36-89dc-b3f1b09b08c5,Papier ryżowy okrągły 100g - House of Asia,KIMCHI-15,Papier ryżowy,KIMCHI-15,8.5|8.5,100,,,missing_allergens|missing_english_translation
-52ee029e-9bc0-4e83-afa7-854371adf7f1,"Papier ryżowy okrągły 22cm, 200g - Asia Kitchen",KIMCHI-3221,Papier ryżowy,KIMCHI-3221,7.6|7.6,100,,,missing_allergens|missing_english_translation
-020688fc-5686-40f7-acb2-9b94f22d41ec,"Papier ryżowy okrągły 22cm, 300g - DIAMOND",KIMCHI-388,Papier ryżowy,KIMCHI-388,11.99|11.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-e04fd36e-7ae2-4290-b7dd-8081c76ebad7,"Papier ryżowy okrągły 22cm, 400g - Lucky Baby",KIMCHI-4989,Papier ryżowy,KIMCHI-4989,11.5|11.5,100,,,missing_allergens|missing_english_translation
-efa0708e-8c56-4f5a-b8eb-3e446bd03ab1,"Papier ryżowy okrągły 22cm, 500g - Golden Turtle",KIMCHI-5264,Papier ryżowy,KIMCHI-5264,13.99|13.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-1d87aa98-41fc-46a2-9c92-fa878fba5547,"Papier ryżowy okrągły 22cm, 500g - Hiep Long",KIMCHI-413,Papier ryżowy,KIMCHI-413,13.5|13.5,100,,,missing_allergens|missing_nutrition|missing_storage_zone|missing_english_translation
-37107940-09e3-47f2-aa62-8609e0f8bfb2,Papryczka chili suszona w całości 500g - Red Hill,KIMCHI-5768,Przyprawy,KIMCHI-5768,51|51,100,,,missing_allergens|missing_english_translation
-ad12d14b-91dd-4771-913b-e0b3adcd69ce,"Papryczki chili całe, suszone 57g - Cock Brand",KIMCHI-2210,Przyprawy,KIMCHI-2210,13.5|13.5,100,,,missing_allergens|missing_english_translation
-450a1bc5-b174-4bd1-bb1b-4e84dddb85c6,"Papryczki suszone w płatkach, ekstra ostre 100g - TRS",KIMCHI-1165,Przyprawy,KIMCHI-1165,11.99|11.99,100,,,missing_allergens|missing_english_translation
-79214fe1-ae64-4c53-b258-e1d685918e16,"Papryka chili suszona, cała 100g - Hiep Long",KIMCHI-4986,Przyprawy,KIMCHI-4986,12.5|12.5,100,,,missing_allergens|missing_english_translation
-8b4c0a81-f57b-401f-940e-41d113ca9c6a,"Papryka chili w nitkach, sil-gochu 100g -  Asia Foods",KIMCHI-2828,Przyprawy,KIMCHI-2828,22.9|22.9,100,,,missing_allergens|missing_english_translation
-1a939d8e-aa13-45e1-8419-5aeb2b20238b,Papryka Gochugaru do kimchi 1kg - PanAsia,KIMCHI-748,Przyprawy,KIMCHI-748,56.9|56.9,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-b0f5bfc3-5959-4f3d-b8ce-95c0c589fa9e,Papryka Gochugaru do kimchi 500g - Hainaro,KIMCHI-5024,Przyprawy,KIMCHI-5024,24.9|24.9,100,,,missing_allergens|missing_english_translation
-388b4226-7d90-441f-a0f0-95616db9a0b7,Papryka Gochugaru do kimchi 500g - Lim-Ga-Ne,KIMCHI-1324,Przyprawy,KIMCHI-1324,39.99|39.99,100,,,missing_allergens|missing_country|missing_english_translation
-34717b00-9905-410c-9334-38a545df6271,Papryka Gochugaru do kimchi 500g - PanAsia,KIMCHI-749,Przyprawy,KIMCHI-749,29.5|29.5,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-641da6a3-53a1-46c5-8a50-ebbc5944a478,Papryka Gochugaru do kimchi płatki 454g - Delief,KIMCHI-5828,Przyprawy,KIMCHI-5828,23.9|23.9,100,,,missing_allergens|missing_english_translation
-5c9eb798-b5ed-480d-b11a-acb9e8485814,Papryka Gochugaru do kimchi płatki 454g - Nongshim,KIMCHI-5378,Przyprawy,KIMCHI-5378,26.99|26.99,100,,,missing_allergens|missing_english_translation
-b64b3c82-0dce-4cc7-8544-06576ded3741,"Papryka gochugaru, grubo mielona 100g - Asia Kitchen",KIMCHI-2972,Przyprawy,KIMCHI-2972,7.5|7.5,100,,,missing_allergens|missing_english_translation
-dad1067d-35d7-4f3c-b335-434c2a0f99e0,"Papryka gochugaru, grubo mielona 500g - Asia Kitchen",KIMCHI-2973,Przyprawy,KIMCHI-2973,25.9|25.9,100,,,missing_allergens|missing_english_translation
-9d856122-e046-4663-9b48-d4793a3d6379,"Papryka Gochugaru, grubo mielone płatki chili 200g -  Asia Foods",KIMCHI-2707,Przyprawy,KIMCHI-2707,13.9|13.9,100,,,missing_allergens|missing_english_translation
-21c20478-c0b0-4d1c-bfe3-d590f9b7a843,Papryka mielona Gochugaru A+ 500g - HoSan,KIMCHI-2132,Przyprawy,KIMCHI-2132,29.99|29.99,100,,,missing_allergens|missing_country|missing_english_translation
-d8a09fa4-b746-44da-89e8-976acb2c8b88,Papryka słodka mielona 100g - TRS,KIMCHI-5329,Przyprawy jednoskładnikowe,KIMCHI-5329,9.9|9.9,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-fcfeb68f-8a88-4d6b-a709-342a6236c55c,Papryka Taeyangcho Gochugaru 100% do kimchi 1kg - Sempio,KIMCHI-2848,Przyprawy,KIMCHI-2848,64.5|64.5,100,,,missing_allergens|missing_country|missing_english_translation
-15da8d19-4e7c-4e9d-8e01-170742041158,"Parowar bambusowy okrągły 1-piętrowy, średnica 15 cm Emro Aziatica",KIMCHI-5492,Parowary bambusowe,KIMCHI-5492,39.9|39.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-9355bf69-ff15-4466-8214-c84c91c0692d,"Parowar bambusowy okrągły 1-piętrowy, średnica 20 cm Emro Aziatica",KIMCHI-5358,Parowary bambusowe,KIMCHI-5358,54.9|54.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-d8762fd5-d7f4-4d70-9afe-d863691b78dc,"Parowar bambusowy okrągły 1-piętrowy, średnica 25 cm Emro Aziatica",KIMCHI-3740,Parowary bambusowe,KIMCHI-3740,71.9|71.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-aa4e648c-79cd-409c-8d64-5c09747d38c7,"Parowar bambusowy okrągły 2-piętrowy, średnica 20 cm Emro Aziatica",KIMCHI-5357,Parowary bambusowe,KIMCHI-5357,84|84,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-97320dba-7c18-45b5-8e7f-764a748b1faf,"Parowar bambusowy okrągły 2-piętrowy, średnica 25 cm Emro Aziatica",KIMCHI-3029,Parowary bambusowe,KIMCHI-3029,103.9|103.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-358aa6a4-61e0-4aec-b3e9-95d2effe0ec7,"Parowar bambusowy okrągły 2-piętrowy, średnica 25 cm Jade Temple",KIMCHI-371,Parowary bambusowe,KIMCHI-371,69.99|69.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
+db81d177-7b67-4f34-8812-8154c98d8024,Paluszki Pepero Czekoladowe Original 47g - Lotte,KIMCHI-1091,Słodycze / Przekąski,KIMCHI-1091,7.99|7.99,100,,cereals|eggs|soybeans|milk,missing_nutrition|missing_storage_zone
+c5c604f4-1b67-4d77-bbb0-e409e4f5cd0b,Paluszki Pepero Migdały i Czekolada 32g - Lotte,KIMCHI-1090,Słodycze / Przekąski,KIMCHI-1090,7.99|7.99,100,,cereals|eggs|soybeans|milk|nuts,missing_nutrition|missing_storage_zone
+f5b11b63-34b4-40b9-8c9b-1c258d152af7,Paluszki Pepero Nude - wypełnione czekoladą 45g - Lotte,KIMCHI-1092,Słodycze / Przekąski,KIMCHI-1092,7.99|7.99,100,,cereals|eggs|soybeans|milk|nuts,missing_storage_zone
+5ad87cfa-e956-4ac2-a395-1facacea2b44,"Paluszki Pocky Almond Taste z migdałami 43,5g - Glico",KIMCHI-3177,Słodycze / Przekąski,KIMCHI-3177,8.7|8.7,100,,cereals|soybeans|milk|nuts,missing_country
+ac0c46ca-6c6a-4245-a1cd-1ac9ce56e8cb,Paluszki Pocky Cookies & Cream 40g - Glico,KIMCHI-1196,Słodycze / Przekąski,KIMCHI-1196,8.7|8.7,100,,cereals|soybeans|milk,missing_country|missing_storage_zone
+6e0a3a88-5894-4b95-9697-4dac506aa0e2,Paluszki Pocky Czekoladowe Original 47g - Glico,KIMCHI-902,Słodycze / Przekąski,KIMCHI-902,8.7|8.7,100,,cereals|soybeans|milk,missing_country
+7b732093-0dd2-43be-befa-f9b800e762c3,Paluszki Pocky Truskawkowe 45g - Glico,KIMCHI-904,Słodycze / Przekąski,KIMCHI-904,8.7|8.7,100,,cereals|soybeans|milk,missing_storage_zone
+8b5ac857-d038-4ad5-ac19-7c3f95372eba,"Panierka, mąka Tempura 500g - Uncle Barns",KIMCHI-1170,Mąki / Panierki / Tapioka,KIMCHI-1170,10.99|10.99,100,,cereals,missing_nutrition|missing_storage_zone
+92d6605a-5115-41e2-8411-0f1a28a925fc,Panierka Panko 1kg - Inaka,KIMCHI-337,Mąki / Panierki / Tapioka,KIMCHI-337,29.99|29.99,100,,cereals,missing_storage_zone
+fc520ab3-34dd-4fdb-b71c-46ebc2f7c670,Panierka Panko 200g - Samlip,KIMCHI-363,Mąki / Panierki / Tapioka,KIMCHI-363,9.99|9.99,100,,cereals|soybeans,missing_storage_zone
+c7348bc5-e339-42bf-bf86-1059bb7b73aa,"Panierka panko, duże płatki 200g - Golden Turtle Brand",KIMCHI-2176,Mąki / Panierki / Tapioka,KIMCHI-2176,8.5|8.5,100,,cereals,missing_country
+93e8f4dd-c4bd-49d1-9f5d-5cd8fcb327aa,"Papier ryżowy kwadratowy 16cm, 300g - DIAMOND",KIMCHI-448,Papier ryżowy,KIMCHI-448,11.99|11.99,100,,,missing_allergens|missing_storage_zone
+06cd5c97-9e46-4628-80fe-4d0e71582383,"Papier ryżowy kwadratowy 19cm, 500g - Golden Turtle",KIMCHI-5265,Papier ryżowy,KIMCHI-5265,13.99|13.99,100,,,missing_allergens|missing_storage_zone
+c954b0a2-3594-4d22-b6f1-c585f9147c29,"Papier ryżowy kwadratowy 19cm, 500g - HS",KIMCHI-5261,Papier ryżowy,KIMCHI-5261,13.5|13.5,100,,,missing_allergens|missing_storage_zone
+68d2a6ce-084e-4d36-89dc-b3f1b09b08c5,Papier ryżowy okrągły 100g - House of Asia,KIMCHI-15,Papier ryżowy,KIMCHI-15,8.5|8.5,100,,,missing_allergens
+52ee029e-9bc0-4e83-afa7-854371adf7f1,"Papier ryżowy okrągły 22cm, 200g - Asia Kitchen",KIMCHI-3221,Papier ryżowy,KIMCHI-3221,7.6|7.6,100,,,missing_allergens
+020688fc-5686-40f7-acb2-9b94f22d41ec,"Papier ryżowy okrągły 22cm, 300g - DIAMOND",KIMCHI-388,Papier ryżowy,KIMCHI-388,11.99|11.99,100,,,missing_allergens|missing_storage_zone
+e04fd36e-7ae2-4290-b7dd-8081c76ebad7,"Papier ryżowy okrągły 22cm, 400g - Lucky Baby",KIMCHI-4989,Papier ryżowy,KIMCHI-4989,11.5|11.5,100,,,missing_allergens
+efa0708e-8c56-4f5a-b8eb-3e446bd03ab1,"Papier ryżowy okrągły 22cm, 500g - Golden Turtle",KIMCHI-5264,Papier ryżowy,KIMCHI-5264,13.99|13.99,100,,,missing_allergens|missing_storage_zone
+1d87aa98-41fc-46a2-9c92-fa878fba5547,"Papier ryżowy okrągły 22cm, 500g - Hiep Long",KIMCHI-413,Papier ryżowy,KIMCHI-413,13.5|13.5,100,,,missing_allergens|missing_nutrition|missing_storage_zone
+37107940-09e3-47f2-aa62-8609e0f8bfb2,Papryczka chili suszona w całości 500g - Red Hill,KIMCHI-5768,Przyprawy,KIMCHI-5768,51|51,100,,,missing_allergens
+ad12d14b-91dd-4771-913b-e0b3adcd69ce,"Papryczki chili całe, suszone 57g - Cock Brand",KIMCHI-2210,Przyprawy,KIMCHI-2210,13.5|13.5,100,,,missing_allergens
+450a1bc5-b174-4bd1-bb1b-4e84dddb85c6,"Papryczki suszone w płatkach, ekstra ostre 100g - TRS",KIMCHI-1165,Przyprawy,KIMCHI-1165,11.99|11.99,100,,,missing_allergens
+79214fe1-ae64-4c53-b258-e1d685918e16,"Papryka chili suszona, cała 100g - Hiep Long",KIMCHI-4986,Przyprawy,KIMCHI-4986,12.5|12.5,100,,,missing_allergens
+8b4c0a81-f57b-401f-940e-41d113ca9c6a,"Papryka chili w nitkach, sil-gochu 100g -  Asia Foods",KIMCHI-2828,Przyprawy,KIMCHI-2828,22.9|22.9,100,,,missing_allergens
+1a939d8e-aa13-45e1-8419-5aeb2b20238b,Papryka Gochugaru do kimchi 1kg - PanAsia,KIMCHI-748,Przyprawy,KIMCHI-748,56.9|56.9,100,,,missing_allergens|missing_storage_zone
+b0f5bfc3-5959-4f3d-b8ce-95c0c589fa9e,Papryka Gochugaru do kimchi 500g - Hainaro,KIMCHI-5024,Przyprawy,KIMCHI-5024,24.9|24.9,100,,,missing_allergens
+388b4226-7d90-441f-a0f0-95616db9a0b7,Papryka Gochugaru do kimchi 500g - Lim-Ga-Ne,KIMCHI-1324,Przyprawy,KIMCHI-1324,39.99|39.99,100,,,missing_allergens|missing_country
+34717b00-9905-410c-9334-38a545df6271,Papryka Gochugaru do kimchi 500g - PanAsia,KIMCHI-749,Przyprawy,KIMCHI-749,29.5|29.5,100,,,missing_allergens|missing_storage_zone
+641da6a3-53a1-46c5-8a50-ebbc5944a478,Papryka Gochugaru do kimchi płatki 454g - Delief,KIMCHI-5828,Przyprawy,KIMCHI-5828,23.9|23.9,100,,,missing_allergens
+5c9eb798-b5ed-480d-b11a-acb9e8485814,Papryka Gochugaru do kimchi płatki 454g - Nongshim,KIMCHI-5378,Przyprawy,KIMCHI-5378,26.99|26.99,100,,,missing_allergens
+b64b3c82-0dce-4cc7-8544-06576ded3741,"Papryka gochugaru, grubo mielona 100g - Asia Kitchen",KIMCHI-2972,Przyprawy,KIMCHI-2972,7.5|7.5,100,,,missing_allergens
+dad1067d-35d7-4f3c-b335-434c2a0f99e0,"Papryka gochugaru, grubo mielona 500g - Asia Kitchen",KIMCHI-2973,Przyprawy,KIMCHI-2973,25.9|25.9,100,,,missing_allergens
+9d856122-e046-4663-9b48-d4793a3d6379,"Papryka Gochugaru, grubo mielone płatki chili 200g -  Asia Foods",KIMCHI-2707,Przyprawy,KIMCHI-2707,13.9|13.9,100,,,missing_allergens
+21c20478-c0b0-4d1c-bfe3-d590f9b7a843,Papryka mielona Gochugaru A+ 500g - HoSan,KIMCHI-2132,Przyprawy,KIMCHI-2132,29.99|29.99,100,,,missing_allergens|missing_country
+d8a09fa4-b746-44da-89e8-976acb2c8b88,Papryka słodka mielona 100g - TRS,KIMCHI-5329,Przyprawy jednoskładnikowe,KIMCHI-5329,9.9|9.9,100,,,missing_allergens|missing_storage_zone
+fcfeb68f-8a88-4d6b-a709-342a6236c55c,Papryka Taeyangcho Gochugaru 100% do kimchi 1kg - Sempio,KIMCHI-2848,Przyprawy,KIMCHI-2848,64.5|64.5,100,,,missing_allergens|missing_country
+15da8d19-4e7c-4e9d-8e01-170742041158,"Parowar bambusowy okrągły 1-piętrowy, średnica 15 cm Emro Aziatica",KIMCHI-5492,Parowary bambusowe,KIMCHI-5492,39.9|39.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+9355bf69-ff15-4466-8214-c84c91c0692d,"Parowar bambusowy okrągły 1-piętrowy, średnica 20 cm Emro Aziatica",KIMCHI-5358,Parowary bambusowe,KIMCHI-5358,54.9|54.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+d8762fd5-d7f4-4d70-9afe-d863691b78dc,"Parowar bambusowy okrągły 1-piętrowy, średnica 25 cm Emro Aziatica",KIMCHI-3740,Parowary bambusowe,KIMCHI-3740,71.9|71.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+aa4e648c-79cd-409c-8d64-5c09747d38c7,"Parowar bambusowy okrągły 2-piętrowy, średnica 20 cm Emro Aziatica",KIMCHI-5357,Parowary bambusowe,KIMCHI-5357,84|84,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+97320dba-7c18-45b5-8e7f-764a748b1faf,"Parowar bambusowy okrągły 2-piętrowy, średnica 25 cm Emro Aziatica",KIMCHI-3029,Parowary bambusowe,KIMCHI-3029,103.9|103.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+358aa6a4-61e0-4aec-b3e9-95d2effe0ec7,"Parowar bambusowy okrągły 2-piętrowy, średnica 25 cm Jade Temple",KIMCHI-371,Parowary bambusowe,KIMCHI-371,69.99|69.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
 14451512-9b65-44ad-bc39-67628888b684,"Parowar bambusowy okrągły, dwupiętrowy 20 cm - Shi Ba Ling",KIMCHI-2158,Parowary bambusowe,KIMCHI-2158,89.99|89.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-c65969a8-495c-412d-94b3-cf88683fed28,"Pasta Aged Red Miso (Aka Miso), ciemna 300g - Hikari Miso",KIMCHI-3923,Pasta miso,KIMCHI-3923,14.9|14.9,100,,soybeans,missing_english_translation
-63a2a37d-729b-4f4e-842c-73a4bc98a296,"Pasta Awase Miso, mieszana 1kg - Hikari Miso",KIMCHI-555,Pasta miso,KIMCHI-555,19.44|19.44,100,,soybeans,missing_english_translation
-93800bcb-74a3-40cb-9767-0e2fa1bb3299,Pasta chili z bobu Toban Djan Doubanjiang Sichuan 130g - Youki,KIMCHI-5044,Pasty smakowe,KIMCHI-5044,27.9|27.9,100,,,missing_allergens|missing_english_translation
-28ae0002-1b96-469f-b152-89c4155f537b,Pasta Chunjang (Jjajang) z czarnej fasoli 250g - CJO Classic,KIMCHI-1484,Pasty smakowe,KIMCHI-1484,9.99|9.99,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-8a710ffd-686e-4916-9e3c-5af2bb30ae52,Pasta Chunjang (Jjajang) z czarnej fasoli 300g - Jinmi,KIMCHI-1414,Pasty smakowe,KIMCHI-1414,13.99|13.99,100,,cereals|soybeans,missing_english_translation
-52cb3b10-813c-4427-b56f-7f0e4ba6a118,"Pasta Chunjang (Jjajang) z czarnej fasoli, ostra 300g - Jinmi",KIMCHI-2873,Pasty smakowe,KIMCHI-2873,14.5|14.5,100,,cereals|soybeans,missing_english_translation
-9c85731e-4ce5-4a68-9b30-47e5023e2e66,"Pasta Chunjang (Jjajang) z czarnej fasoli, prażona 500g - Wang",KIMCHI-2875,Pasty smakowe,KIMCHI-2875,26.99|26.99,100,,cereals|soybeans,missing_english_translation
-fde6fe8c-6d71-4e13-9189-641c0dc90a33,Pasta Chunjang z czarnej fasoli 1kg - Assi Brand,KIMCHI-686,Pasty smakowe,KIMCHI-686,33.99|33.99,100,vegetarian,cereals|soybeans,missing_english_translation
-f0ad98dc-3a74-45f7-9358-cbd9c62cbffa,Pasta Chunjang z czarnej fasoli 500g - Assi Brand,KIMCHI-853,Pasty smakowe,KIMCHI-853,19.99|19.99,100,vegetarian,cereals|soybeans,missing_english_translation
-f238ff91-b625-4762-9aca-a6fa5e91a55a,Pasta curry czerwona 400g,KIMCHI-318,Pasty smakowe,KIMCHI-318,14.99|14.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-a45d2661-9b36-4654-90a0-b4b68bacc1c5,Pasta curry czerwona 400g - Aroy-D,KIMCHI-4660,Pasty smakowe,KIMCHI-4660,17.5|17.5,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-da4e62d4-0ca7-4074-ab18-f3ce75df5d85,Pasta curry czerwona 50g,KIMCHI-191,Pasty smakowe,KIMCHI-191,4.99|4.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-02fe4e19-1af4-4171-8703-27d8e35a9ed5,Pasta Curry Massaman 50g,KIMCHI-190,Pasty smakowe,KIMCHI-190,5.5|5.5,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-712b4e97-2a8e-40fd-8ff0-b1454d1088c5,Pasta Curry Matsaman 400g - Cock Brand,KIMCHI-1474,Pasty smakowe,KIMCHI-1474,14.99|14.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-dfbd5ffe-4745-4f6e-92de-ffe2aecc2c5a,Pasta curry zielona 50g Cock Brand,KIMCHI-192,Pasty smakowe,KIMCHI-192,4.99|4.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-4e3b853f-f38e-4b13-b47d-17dfaa6211a3,Pasta Dashi Iri Ryotei No Aji Miso 750g - Marukome,KIMCHI-4365,Pasta miso,KIMCHI-4365,44.9|44.9,100,,fish|soybeans,missing_english_translation
-598840db-3160-499a-b6ba-7e97c467ac5c,Pasta Dashi Iri Ryotei No Aji Miso Halal Bio 750g - Marukome,KIMCHI-5097,Pasta miso,KIMCHI-5097,47.9|47.9,100,,soybeans,missing_english_translation
-9e56c4c2-6da8-45ae-aa25-2fa0e851ca54,Pasta do wietnamskiej zupy z wołowiną 227g Por Kwan,KIMCHI-5763,Pasty smakowe,KIMCHI-5763,18.5|18.5,100,,soybeans,missing_english_translation
-07026598-48a4-44c9-8851-47660f0ae862,Pasta Gochujang z papryczek chili 500g - O'Food,KIMCHI-1263,Pasty smakowe,KIMCHI-1263,19.7|19.7,100,,soybeans,missing_storage_zone|missing_english_translation
-a2b30fec-71ef-480d-ab87-857a66c7ba28,Pasta Harissa ostra (chili 87%) 135g - Le Phare Du Cap Bon,KIMCHI-728,Pasty smakowe,KIMCHI-728,6.99|6.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-f0d8fa02-6e6b-4b63-8a69-6dfd5bedde59,Pasta Harissa ostra (chili 87%) 70g - Le Phare Du Cap Bon,KIMCHI-850,Pasty smakowe,KIMCHI-850,6.99|6.99,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-cefdee71-32c7-4a38-8d6f-15cb95873846,"Pasta Inaka Aka Miso, ciemna 400g - Hikari Miso",KIMCHI-874,Pasta miso,KIMCHI-874,10.99|10.99,100,,,missing_ingredients|missing_allergens|missing_english_translation
-d5370134-3f8c-4e49-aecb-1a766c809b8e,Pasta krewetkowa Kapi 100g - Mae Pranom,KIMCHI-1395,Pasty smakowe,KIMCHI-1395,11.61|11.61,100,,crustaceans,missing_storage_zone|missing_english_translation
-a4bb9759-71a9-4f17-838c-54ee41fd66fe,Pasta Marukome-Kun Koshi Miso 650g - Marukome,KIMCHI-4366,Pasta miso,KIMCHI-4366,26|26,100,,fish|soybeans,missing_english_translation
-8a48b9da-1979-42b8-8662-e2bb96ffce56,"Pasta miso, 5 saszetek (75g) House of Asia",KIMCHI-135,Pasta miso,KIMCHI-135,9.2|9.2,100,,fish|soybeans,missing_english_translation
-56a5692e-fe84-46e0-ac2a-8e6243df558b,"Pasta Mutenka Enjuku Koji Miso, jasna 375g - Hikari Miso",KIMCHI-3924,Pasta miso,KIMCHI-3924,19.5|19.5,100,,soybeans,missing_english_translation
-dd3d54b6-e27f-49e5-a588-4bc73605447a,"Pasta Mutenka Enjuku Koji Miso, jasna 750g - Hikari Miso",KIMCHI-4430,Pasta miso,KIMCHI-4430,30.9|30.9,100,,soybeans,missing_english_translation
-d4b50886-98c3-4bb6-800b-fefe3b9df91a,"Pasta Nam Prik Pao, chili z krewetkami 114g - Mae Pranom",KIMCHI-809,Sól,KIMCHI-809,10.9|10.9,100,,crustaceans|soybeans,missing_english_translation
-53be2a53-534e-40d5-aec7-5a5a9caa1973,"Pasta Nam Prik Pao, chili z krewetkami 513g - Mae Pranom",KIMCHI-861,Sól,KIMCHI-861,29.99|29.99,100,,crustaceans|soybeans,missing_english_translation
-8db2c998-79b6-4b6c-bc55-e85a40104bb6,Pasta Pad Thai 280g - Lobo,KIMCHI-857,Pasty smakowe,KIMCHI-857,10.99|10.99,100,,fish|soybeans,missing_english_translation
-7a86cff5-b836-4388-8374-aada3feaca46,"Pasta paprykowa Gochujang, ostra 170g - SEMPIO",KIMCHI-848,Pasty smakowe,KIMCHI-848,8.99|8.99,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-70ab6a3c-1e90-4ec6-9b98-598e6f60c376,"Pasta paprykowa Gochujang, ostra 1kg - Sempio",KIMCHI-496,Pasty smakowe,KIMCHI-496,23.99|23.99,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-09b58b0f-32e9-418f-a36d-e406db2c6a98,"Pasta paprykowa Gochujang, ostra 250g - Sempio",KIMCHI-4915,Pasty smakowe,KIMCHI-4915,11.9|11.9,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-cf0821aa-14b3-47f0-9ccc-ba490a7c8bfb,"Pasta paprykowa Gochujang, ostra 500g - Sempio",KIMCHI-350,Pasty smakowe,KIMCHI-350,13.99|13.99,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-11dc96d9-e22f-4cce-a1e5-539ddb3c30af,"Pasta Savoury White Miso (Shinshu Shiro Miso), jasna 300g - Hikari Miso",KIMCHI-3922,Pasta miso,KIMCHI-3922,14.9|14.9,100,,soybeans,missing_english_translation
-d84e4695-7656-4546-8cdf-33d80b50e89b,Pasta sezamowa Tahini 300g - Doyal,KIMCHI-1740,Pasty,KIMCHI-1740,19.44|19.44,100,,sesame,missing_storage_zone|missing_english_translation
-deb780ee-daa8-4660-8e0e-4bd2a58d26bc,Pasta sezamowa Tahini 300g - Sesali,KIMCHI-5430,Pasty,KIMCHI-5430,23.55|23.55,100,,sesame,missing_storage_zone|missing_english_translation
-76e666c6-c8db-441f-bc7b-618b47162cf4,Pasta sezamowa Tahini słoik 300g - Sesali,KIMCHI-5431,Pasty,KIMCHI-5431,19.03|19.03,100,,sesame,missing_storage_zone|missing_english_translation
-9486e9bb-a51e-47bb-a772-d0ba5ac51fc8,Pasta Shinshu Dashi Miso 300g - Miko Brand,KIMCHI-1486,Pasta miso,KIMCHI-1486,18.5|18.5,100,,fish|soybeans,missing_english_translation
-4d2a5ff2-056c-48ca-8f30-df9e8e6c3bd5,Pasta Shinshu Shiro Miso 300g - Miko Brand,KIMCHI-875,Pasta miso,KIMCHI-875,16.5|16.5,100,,soybeans,missing_storage_zone|missing_english_translation
-8b38f107-39b8-40d5-aac6-0999d35658da,"Pasta Shinshu Shiro Miso, jasna 1kg - Hikari Miso",KIMCHI-2175,Pasta miso,KIMCHI-2175,19.99|19.99,100,,soybeans,missing_english_translation
-95c9206b-d8dc-42d6-b28c-ad31b5a7f0ea,"Pasta Shinshu Shiro Miso, jasna 400g Hikari Miso",KIMCHI-77,Pasta miso,KIMCHI-77,10.99|10.99,100,,soybeans,missing_english_translation
-b03d1294-d860-448e-852b-7a070ca2dbd5,"Pasta sojowa Aka Miso, czerwona 1kg - Marukome",KIMCHI-5381,Pasta miso,KIMCHI-5381,19.44|19.44,100,,soybeans,missing_english_translation
-a3c519da-1a34-4126-9df2-7b234db81181,Pasta sojowa Doenjang 460g - Sempio,KIMCHI-425,Pasty smakowe,KIMCHI-425,13.7|13.7,100,,cereals|soybeans,missing_storage_zone|missing_english_translation
-59863b97-c0df-43ff-b9e7-9c8ee0fb0937,Pasta sojowa miso 500g - Sempio,KIMCHI-2592,Pasta miso,KIMCHI-2592,9.98|9.98,100,vegan|vegetarian,cereals|soybeans,missing_storage_zone|missing_english_translation
-c020b906-88b5-4538-aaad-51f5d85ba398,"Pasta sojowa Shiro Miso, jasna 1kg - Marukome",KIMCHI-5380,Pasta miso,KIMCHI-5380,19.44|19.44,100,,soybeans,missing_english_translation
-a590adbe-b2c4-49ac-a9d0-bd8d4c55b234,"Pasta sojowa Ssamjang, pikantna 170g - Sempio",KIMCHI-995,Pasty smakowe,KIMCHI-995,7.5|7.5,100,,cereals|soybeans|sesame,missing_english_translation
-eee329a6-9d3a-4969-b877-f1b10871b978,"Pasta sojowa Ssamjang, pikantna 500g - Sempio",KIMCHI-424,Pasty smakowe,KIMCHI-424,14.99|14.99,100,,cereals|soybeans|sesame,missing_english_translation
-9e3919ff-1485-494c-9a51-29c705e69bbf,Pasta sojowa Sunchang Doenjang 500g - CJO Classic,KIMCHI-996,Pasty smakowe,KIMCHI-996,12.99|12.99,100,,cereals|soybeans,missing_english_translation
-aa1fcd5b-3545-4d46-aed3-88a96cee9499,Pasta sojowa z przyprawami Sunchang Ssamjang 500g - CJO Classic,KIMCHI-512,Pasty smakowe,KIMCHI-512,15.99|15.99,100,,cereals|peanuts|soybeans|nuts|sesame,missing_storage_zone|missing_english_translation
-81ff5004-b3aa-4709-b065-db13b5f35911,"Pasta, sos z tamaryndowca 270g - Thai Dancer",KIMCHI-2283,Pasty smakowe,KIMCHI-2283,12.15|12.15,100,,,missing_allergens|missing_english_translation
-9f0b58ae-7af3-4ac2-9870-a88fa3b93d48,"Pasta, sos z tamaryndowca 485g - Thai Dancer",KIMCHI-2464,Pasty smakowe,KIMCHI-2464,18.38|18.38,100,,,missing_allergens|missing_english_translation
-a9e3be39-2681-40bb-9569-b1665b50f298,"Pasta Tianmianjiang z czarnej soi, słodkie miso tenmenjan 130g - Youki",KIMCHI-5045,Pasty smakowe,KIMCHI-5045,28.99|28.99,100,,cereals|soybeans|sesame,missing_english_translation
-807b4753-dfc5-4ec6-a3f1-fc954c444cee,Pasta Tom Kha 227g Cook Brand,KIMCHI-250,Pasty smakowe,KIMCHI-250,14.5|14.5,100,,milk,missing_english_translation
-eb03f71d-5d6f-40cb-bcbb-5447b3274267,Pasta Tom Kha 50g Lobo,KIMCHI-193,Buliony,KIMCHI-193,5.83|5.83,100,,soybeans,missing_english_translation
-d83b9620-c45e-4949-a7e4-6b964a283c99,Pasta Tom Yum 30g Lobo,KIMCHI-194,Buliony,KIMCHI-194,6.99|6.99,100,,soybeans,missing_english_translation
-5a04bbec-ccc3-4428-bf07-96c9f1902b69,Pasta Tom Yum 900g - Cock Brand,KIMCHI-304,Pasty smakowe,KIMCHI-304,36.9|36.9,100,,soybeans,missing_storage_zone|missing_english_translation
+93800bcb-74a3-40cb-9767-0e2fa1bb3299,Pasta chili z bobu Toban Djan Doubanjiang Sichuan 130g - Youki,KIMCHI-5044,Pasty smakowe,KIMCHI-5044,27.9|27.9,100,,,missing_allergens
+28ae0002-1b96-469f-b152-89c4155f537b,Pasta Chunjang (Jjajang) z czarnej fasoli 250g - CJO Classic,KIMCHI-1484,Pasty smakowe,KIMCHI-1484,9.99|9.99,100,,cereals|soybeans,missing_storage_zone
+f238ff91-b625-4762-9aca-a6fa5e91a55a,Pasta curry czerwona 400g,KIMCHI-318,Pasty smakowe,KIMCHI-318,14.99|14.99,100,,,missing_allergens|missing_storage_zone
+a45d2661-9b36-4654-90a0-b4b68bacc1c5,Pasta curry czerwona 400g - Aroy-D,KIMCHI-4660,Pasty smakowe,KIMCHI-4660,17.5|17.5,100,,,missing_allergens|missing_storage_zone
+da4e62d4-0ca7-4074-ab18-f3ce75df5d85,Pasta curry czerwona 50g,KIMCHI-191,Pasty smakowe,KIMCHI-191,4.99|4.99,100,,,missing_allergens|missing_storage_zone
+02fe4e19-1af4-4171-8703-27d8e35a9ed5,Pasta Curry Massaman 50g,KIMCHI-190,Pasty smakowe,KIMCHI-190,5.5|5.5,100,,,missing_allergens|missing_storage_zone
+712b4e97-2a8e-40fd-8ff0-b1454d1088c5,Pasta Curry Matsaman 400g - Cock Brand,KIMCHI-1474,Pasty smakowe,KIMCHI-1474,14.99|14.99,100,,,missing_allergens|missing_storage_zone
+dfbd5ffe-4745-4f6e-92de-ffe2aecc2c5a,Pasta curry zielona 50g Cock Brand,KIMCHI-192,Pasty smakowe,KIMCHI-192,4.99|4.99,100,,,missing_allergens|missing_storage_zone
+07026598-48a4-44c9-8851-47660f0ae862,Pasta Gochujang z papryczek chili 500g - O'Food,KIMCHI-1263,Pasty smakowe,KIMCHI-1263,19.7|19.7,100,,soybeans,missing_storage_zone
+a2b30fec-71ef-480d-ab87-857a66c7ba28,Pasta Harissa ostra (chili 87%) 135g - Le Phare Du Cap Bon,KIMCHI-728,Pasty smakowe,KIMCHI-728,6.99|6.99,100,,,missing_allergens|missing_storage_zone
+f0d8fa02-6e6b-4b63-8a69-6dfd5bedde59,Pasta Harissa ostra (chili 87%) 70g - Le Phare Du Cap Bon,KIMCHI-850,Pasty smakowe,KIMCHI-850,6.99|6.99,100,,,missing_allergens|missing_storage_zone
+cefdee71-32c7-4a38-8d6f-15cb95873846,"Pasta Inaka Aka Miso, ciemna 400g - Hikari Miso",KIMCHI-874,Pasta miso,KIMCHI-874,10.99|10.99,100,,,missing_ingredients|missing_allergens
+d5370134-3f8c-4e49-aecb-1a766c809b8e,Pasta krewetkowa Kapi 100g - Mae Pranom,KIMCHI-1395,Pasty smakowe,KIMCHI-1395,11.61|11.61,100,,crustaceans,missing_storage_zone
+7a86cff5-b836-4388-8374-aada3feaca46,"Pasta paprykowa Gochujang, ostra 170g - SEMPIO",KIMCHI-848,Pasty smakowe,KIMCHI-848,8.99|8.99,100,,cereals|soybeans,missing_storage_zone
+70ab6a3c-1e90-4ec6-9b98-598e6f60c376,"Pasta paprykowa Gochujang, ostra 1kg - Sempio",KIMCHI-496,Pasty smakowe,KIMCHI-496,23.99|23.99,100,,cereals|soybeans,missing_storage_zone
+09b58b0f-32e9-418f-a36d-e406db2c6a98,"Pasta paprykowa Gochujang, ostra 250g - Sempio",KIMCHI-4915,Pasty smakowe,KIMCHI-4915,11.9|11.9,100,,cereals|soybeans,missing_storage_zone
+cf0821aa-14b3-47f0-9ccc-ba490a7c8bfb,"Pasta paprykowa Gochujang, ostra 500g - Sempio",KIMCHI-350,Pasty smakowe,KIMCHI-350,13.99|13.99,100,,cereals|soybeans,missing_storage_zone
+d84e4695-7656-4546-8cdf-33d80b50e89b,Pasta sezamowa Tahini 300g - Doyal,KIMCHI-1740,Pasty,KIMCHI-1740,19.44|19.44,100,,sesame,missing_storage_zone
+deb780ee-daa8-4660-8e0e-4bd2a58d26bc,Pasta sezamowa Tahini 300g - Sesali,KIMCHI-5430,Pasty,KIMCHI-5430,23.55|23.55,100,,sesame,missing_storage_zone
+76e666c6-c8db-441f-bc7b-618b47162cf4,Pasta sezamowa Tahini słoik 300g - Sesali,KIMCHI-5431,Pasty,KIMCHI-5431,19.03|19.03,100,,sesame,missing_storage_zone
+4d2a5ff2-056c-48ca-8f30-df9e8e6c3bd5,Pasta Shinshu Shiro Miso 300g - Miko Brand,KIMCHI-875,Pasta miso,KIMCHI-875,16.5|16.5,100,,soybeans,missing_storage_zone
+a3c519da-1a34-4126-9df2-7b234db81181,Pasta sojowa Doenjang 460g - Sempio,KIMCHI-425,Pasty smakowe,KIMCHI-425,13.7|13.7,100,,cereals|soybeans,missing_storage_zone
+59863b97-c0df-43ff-b9e7-9c8ee0fb0937,Pasta sojowa miso 500g - Sempio,KIMCHI-2592,Pasta miso,KIMCHI-2592,9.98|9.98,100,vegan|vegetarian,cereals|soybeans,missing_storage_zone
+aa1fcd5b-3545-4d46-aed3-88a96cee9499,Pasta sojowa z przyprawami Sunchang Ssamjang 500g - CJO Classic,KIMCHI-512,Pasty smakowe,KIMCHI-512,15.99|15.99,100,,cereals|peanuts|soybeans|nuts|sesame,missing_storage_zone
+81ff5004-b3aa-4709-b065-db13b5f35911,"Pasta, sos z tamaryndowca 270g - Thai Dancer",KIMCHI-2283,Pasty smakowe,KIMCHI-2283,12.15|12.15,100,,,missing_allergens
+9f0b58ae-7af3-4ac2-9870-a88fa3b93d48,"Pasta, sos z tamaryndowca 485g - Thai Dancer",KIMCHI-2464,Pasty smakowe,KIMCHI-2464,18.38|18.38,100,,,missing_allergens
+5a04bbec-ccc3-4428-bf07-96c9f1902b69,Pasta Tom Yum 900g - Cock Brand,KIMCHI-304,Pasty smakowe,KIMCHI-304,36.9|36.9,100,,soybeans,missing_storage_zone
 a4c28158-042e-47e4-ae18-b82f39b765ea,Pasta trawa cytrynowa mielona 100ml - Thai Hertiage,KIMCHI-4227,Pasty smakowe,KIMCHI-4227,12.9|12.9,100,,,missing_allergens|missing_english_translation
-b31dd51a-8ddb-40e5-bdf4-e7cb9971f685,Pasta wasabi 43g House of Asia,KIMCHI-133,Wasabi,KIMCHI-133,12.2|12.2,100,,soybeans|milk,missing_english_translation
-4f37b022-2d29-4f2f-ba8b-17b4eed50183,Pasta wasabi w dużej tubce 90g - S&B,KIMCHI-1164,Wasabi,KIMCHI-1164,16.9|16.9,100,,,missing_allergens|missing_english_translation
-cc977b7c-3330-4c93-8ce1-ebf960d79c73,Pasta wasabi w tubce 43g Miyata,KIMCHI-152,Pasty smakowe,KIMCHI-152,9.6|9.6,100,,soybeans|milk|mustard,missing_english_translation
-0771cceb-b817-4c21-917d-00950847e95a,Pasta wasabi w tubce 43g S&B,KIMCHI-27,Wasabi,KIMCHI-27,9.9|9.9,100,,,missing_allergens|missing_english_translation
-bf577dc5-d2ac-4ec9-9425-de710dac4c7a,Pasta z chili 120g - House of Asia,KIMCHI-3511,Pasty smakowe,KIMCHI-3511,9.99|9.99,100,,,missing_allergens|missing_english_translation
-b230298f-f772-43f6-a366-f05df203c7d8,Pasta z czosnku 120g - House of Asia,KIMCHI-3513,Pasty smakowe,KIMCHI-3513,9.99|9.99,100,,,missing_allergens|missing_english_translation
-17db96ec-7580-48e3-902c-2c2b34cb13a6,Pasta z imbiru 120g - House of Asia,KIMCHI-3512,Pasty smakowe,KIMCHI-3512,11.7|11.7,100,,,missing_allergens|missing_english_translation
-177a00e7-98f8-4aa1-b2f1-1b96b753f214,Pasta z tamaryndowca 114g - Asia Kitchen,KIMCHI-3100,Unmapped,KIMCHI-3100,9.7|9.7,100,,,missing_allergens|missing_english_translation
-51d65de3-a60c-4a6d-bc17-b810d753ae15,Pasta z tamaryndowca 227g Por Kwan,KIMCHI-5764,Pasty smakowe,KIMCHI-5764,15|15,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-157af52f-61b3-404c-8481-065a12269279,Pasta z tamaryndowca 227g - Suree,KIMCHI-279,Pasty smakowe,KIMCHI-279,10.7|10.7,100,,,missing_allergens|missing_storage_zone|missing_english_translation
-6a54a94e-329a-4bc7-a6e1-c3f415217f50,Pasta z tamaryndowca 454g - Suree,KIMCHI-2595,Pasty smakowe,KIMCHI-2595,17.5|17.5,100,,,missing_allergens|missing_english_translation
-eb1b0003-9a13-439a-9a39-95dc8ede7010,Patelnia aluminiowa do tamago - kwadratowa (25 x 25 cm) Glitter,KIMCHI-2164,Patelnie Tamago,KIMCHI-2164,179|179,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-9e2ebf00-92b3-40a7-b0f8-30e257b63bfd,"Patelnia do Tamago - duża (26,5 x 19,5 cm) Glitter",KIMCHI-645,Patelnie Tamago,KIMCHI-645,159.99|159.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-494357c3-c27d-40e6-80eb-081a5390f959,"Patelnia do Tamago - mała (23,5 x 17,5 cm) Glitter",KIMCHI-644,Patelnie Tamago,KIMCHI-644,141.9|141.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-03d5b542-ddd5-415c-b2dc-f06b9bb79dc5,"Patelnia, grill do koreańskiego BBQ o śr. 32cm - Hanaro",KIMCHI-1315,Patelnie Wok / Grill,KIMCHI-1315,215|215,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-4492737f-ce11-43de-b316-5b5f4e0aec41,Patelnia non-stick do tamagoyaki - mała (13 x 18 cm) Pearl Metal,KIMCHI-3698,Patelnie Tamago,KIMCHI-3698,77|77,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
-0ae4f9eb-62c1-403f-8caf-7bab34c3a3ce,Patelnia stalowa do tamago - mała (19 x 13 cm) Emro Aziatica,KIMCHI-2229,Patelnie Tamago,KIMCHI-2229,69.9|69.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
+4f37b022-2d29-4f2f-ba8b-17b4eed50183,Pasta wasabi w dużej tubce 90g - S&B,KIMCHI-1164,Wasabi,KIMCHI-1164,16.9|16.9,100,,,missing_allergens
+0771cceb-b817-4c21-917d-00950847e95a,Pasta wasabi w tubce 43g S&B,KIMCHI-27,Wasabi,KIMCHI-27,9.9|9.9,100,,,missing_allergens
+bf577dc5-d2ac-4ec9-9425-de710dac4c7a,Pasta z chili 120g - House of Asia,KIMCHI-3511,Pasty smakowe,KIMCHI-3511,9.99|9.99,100,,,missing_allergens
+b230298f-f772-43f6-a366-f05df203c7d8,Pasta z czosnku 120g - House of Asia,KIMCHI-3513,Pasty smakowe,KIMCHI-3513,9.99|9.99,100,,,missing_allergens
+17db96ec-7580-48e3-902c-2c2b34cb13a6,Pasta z imbiru 120g - House of Asia,KIMCHI-3512,Pasty smakowe,KIMCHI-3512,11.7|11.7,100,,,missing_allergens
+177a00e7-98f8-4aa1-b2f1-1b96b753f214,Pasta z tamaryndowca 114g - Asia Kitchen,KIMCHI-3100,Unmapped,KIMCHI-3100,9.7|9.7,100,,,missing_allergens
+51d65de3-a60c-4a6d-bc17-b810d753ae15,Pasta z tamaryndowca 227g Por Kwan,KIMCHI-5764,Pasty smakowe,KIMCHI-5764,15|15,100,,,missing_allergens|missing_storage_zone
+157af52f-61b3-404c-8481-065a12269279,Pasta z tamaryndowca 227g - Suree,KIMCHI-279,Pasty smakowe,KIMCHI-279,10.7|10.7,100,,,missing_allergens|missing_storage_zone
+6a54a94e-329a-4bc7-a6e1-c3f415217f50,Pasta z tamaryndowca 454g - Suree,KIMCHI-2595,Pasty smakowe,KIMCHI-2595,17.5|17.5,100,,,missing_allergens
+eb1b0003-9a13-439a-9a39-95dc8ede7010,Patelnia aluminiowa do tamago - kwadratowa (25 x 25 cm) Glitter,KIMCHI-2164,Patelnie Tamago,KIMCHI-2164,179|179,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+9e2ebf00-92b3-40a7-b0f8-30e257b63bfd,"Patelnia do Tamago - duża (26,5 x 19,5 cm) Glitter",KIMCHI-645,Patelnie Tamago,KIMCHI-645,159.99|159.99,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+494357c3-c27d-40e6-80eb-081a5390f959,"Patelnia do Tamago - mała (23,5 x 17,5 cm) Glitter",KIMCHI-644,Patelnie Tamago,KIMCHI-644,141.9|141.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+03d5b542-ddd5-415c-b2dc-f06b9bb79dc5,"Patelnia, grill do koreańskiego BBQ o śr. 32cm - Hanaro",KIMCHI-1315,Patelnie Wok / Grill,KIMCHI-1315,215|215,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+4492737f-ce11-43de-b316-5b5f4e0aec41,Patelnia non-stick do tamagoyaki - mała (13 x 18 cm) Pearl Metal,KIMCHI-3698,Patelnie Tamago,KIMCHI-3698,77|77,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
+0ae4f9eb-62c1-403f-8caf-7bab34c3a3ce,Patelnia stalowa do tamago - mała (19 x 13 cm) Emro Aziatica,KIMCHI-2229,Patelnie Tamago,KIMCHI-2229,69.9|69.9,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price
 c0c9f272-d21f-4dd8-a565-c2d0242b18a6,Patelnia stalowa do tamagoyaki - duża (22 x 23 cm) Emro Aziatica,KIMCHI-2230,Patelnie Tamago,KIMCHI-2230,154.9|154.9,0,,,out_of_stock|missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
 3172c0ec-0cfc-43b0-8154-45d009b89944,Patelnia stalowa do tamagoyaki - średnia (20 x 15 cm) Emro Aziatica,KIMCHI-3158,Patelnie Tamago,KIMCHI-3158,93|93,100,,,missing_ingredients|missing_allergens|missing_nutrition|missing_storage_zone|missing_unit_price|missing_english_translation
 a34fd756-f108-4564-80bd-3bcac658d6ff,Pędy bambusa nitki 227g - Royal Orient,KIMCHI-4405,Owoce / Marynowane warzywa,KIMCHI-4405,6.7|6.7,100,,,missing_allergens|missing_storage_zone|missing_english_translation
