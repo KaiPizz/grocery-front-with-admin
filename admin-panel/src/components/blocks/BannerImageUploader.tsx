@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Upload, X, Loader2, FolderOpen, AlertCircle } from 'lucide-react';
 import { uploadMedia } from '@/lib/api-client';
+import { resolvePreviewImageUrl } from '@/lib/preview-image-url';
 import { MediaLibrary } from '@/components/MediaLibrary';
 import { useLanguage } from '@/i18n';
 
@@ -82,7 +83,7 @@ function checkDimensionsFromUrl(
       }
     };
     img.onerror = () => resolve(t('homepage.blocks.dimensionLoadError'));
-    img.src = src;
+    img.src = resolvePreviewImageUrl(src) ?? src;
   });
 }
 
@@ -100,6 +101,7 @@ export function BannerImageUploader({
   const [showLibrary, setShowLibrary] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
+  const previewUrl = resolvePreviewImageUrl(value);
 
   async function handleFile(file: File) {
     setError(null);
@@ -145,7 +147,7 @@ export function BannerImageUploader({
       {value ? (
         <div className="relative inline-block">
           <img
-            src={value}
+            src={previewUrl ?? value}
             alt={t('homepage.blocks.uploadedBannerAlt')}
             className="h-20 w-auto max-w-xs rounded-lg border border-gray-200 object-contain bg-gray-50"
           />

@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Upload, X, Loader2, FolderOpen } from 'lucide-react';
 import { uploadMedia } from '@/lib/api-client';
+import { resolvePreviewImageUrl } from '@/lib/preview-image-url';
 import { MediaLibrary } from './MediaLibrary';
 import { useLanguage } from '@/i18n';
 
@@ -18,6 +19,7 @@ export function ImageUploader({ value, onChange, label }: ImageUploaderProps) {
   const [showLibrary, setShowLibrary] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
+  const previewUrl = resolvePreviewImageUrl(value);
 
   async function handleFile(file: File) {
     try {
@@ -46,7 +48,7 @@ export function ImageUploader({ value, onChange, label }: ImageUploaderProps) {
       {value ? (
         <div className="relative inline-block">
           <img
-            src={value}
+            src={previewUrl ?? value}
             alt={t('imageUploader.uploadedAlt')}
             className="h-20 w-auto rounded-lg border border-gray-200 object-contain bg-gray-50"
           />

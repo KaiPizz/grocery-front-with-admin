@@ -8,6 +8,7 @@ import { FieldLabel } from '@/components/FieldLabel';
 import { SaveBar } from '@/components/SaveBar';
 import { ImageUploader } from '@/components/ImageUploader';
 import { ColorPicker } from '@/components/ColorPicker';
+import { resolvePreviewImageUrl } from '@/lib/preview-image-url';
 import { Loader2, ChevronDown, ChevronRight } from 'lucide-react';
 import type { BrandingConfig } from '@/types/config';
 import { useLanguage } from '@/i18n';
@@ -54,6 +55,7 @@ export default function BrandingPage() {
   }
 
   const branding = config.branding;
+  const logoPreviewUrl = resolvePreviewImageUrl(branding.logoUrl);
 
   function updateBranding(partial: Partial<BrandingConfig>) {
     updateConfig(prev => ({
@@ -227,8 +229,8 @@ export default function BrandingPage() {
               }}
             >
               <div className="flex items-center gap-1.5">
-                {branding.logoUrl ? (
-                  <img src={branding.logoUrl} alt="" className="h-6 w-auto rounded-md" />
+                {logoPreviewUrl ? (
+                  <img src={logoPreviewUrl} alt="" className="h-6 w-auto rounded-md" />
                 ) : (
                   <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: branding.colors.primary }}>
                     <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75" /></svg>
@@ -348,8 +350,8 @@ export default function BrandingPage() {
             {/* Footer */}
             <div className="border-t px-3 py-3" style={{ borderColor: branding.colors.border, backgroundColor: branding.colors.card }}>
               <div className="flex items-center gap-1.5 mb-1.5">
-                {branding.logoUrl ? (
-                  <img src={branding.logoUrl} alt="" className="h-4 w-auto rounded" />
+                {logoPreviewUrl ? (
+                  <img src={logoPreviewUrl} alt="" className="h-4 w-auto rounded" />
                 ) : (
                   <div className="w-4 h-4 rounded flex items-center justify-center" style={{ backgroundColor: branding.colors.primary }}>
                     <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75" /></svg>
