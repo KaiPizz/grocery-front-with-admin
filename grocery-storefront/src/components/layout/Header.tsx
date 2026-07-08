@@ -356,12 +356,16 @@ export function Header() {
         className="container-grocery flex items-center justify-between gap-4"
         style={{ height: 'var(--header-main-height)' }}
       >
-        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2.5 group" aria-label={`${storeName} Home`}>
+        <Link
+          href="/"
+          className="flex min-w-[6.5rem] shrink-0 items-center gap-2.5 group sm:min-w-[8rem] lg:min-w-[9rem]"
+          aria-label={`${storeName} Home`}
+        >
           {logoUrl ? (
             <img
               src={logoUrl}
               alt={storeName}
-              className="h-10 max-w-[7.5rem] w-auto rounded-lg object-contain transition-transform duration-fast group-hover:scale-105 sm:max-w-[8rem]"
+              className="h-12 max-h-[3.25rem] max-w-[8rem] w-auto object-contain transition-transform duration-fast group-hover:scale-105 sm:max-w-[9.5rem] lg:h-14 lg:max-w-[10.5rem]"
             />
           ) : (
             <div

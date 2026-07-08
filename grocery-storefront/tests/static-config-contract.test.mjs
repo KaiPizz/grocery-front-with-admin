@@ -29,7 +29,7 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   const footerLinks = config.layout.footer.columns.flatMap((column) => column.links);
 
   assert.equal(config.branding.storeName, 'Asia Deli Go');
-  assert.equal(config.branding.logoUrl, '/brand/asia-deli-go-logo.jpg');
+  assert.equal(config.branding.logoUrl, '/brand/asia-deli-go-logo-header.png');
   assert.equal(config.homepage.hero.headline, 'Azjatyckie produkty spożywcze na co dzień');
   assert.equal(config.general.fulfillment.mode, 'pickup');
   assert.equal(config.general.fulfillment.paymentPromise, 'backend');

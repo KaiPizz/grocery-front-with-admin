@@ -1,3 +1,8 @@
+import { fetchServerConfig, getConfigString } from '@/lib/storefront-config';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const faviconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="18" fill="#e8f5e9"/>
@@ -7,11 +12,24 @@ const faviconSvg = `
 </svg>
 `.trim();
 
-export function GET() {
+export async function GET() {
+  const siteConfig = await fetchServerConfig();
+  const faviconUrl = getConfigString(siteConfig?.branding?.faviconUrl);
+
+  if (faviconUrl) {
+    return new Response(null, {
+      status: 307,
+      headers: {
+        Location: faviconUrl,
+        'Cache-Control': 'no-store',
+      },
+    });
+  }
+
   return new Response(faviconSvg, {
     headers: {
       'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Cache-Control': 'no-store',
     },
   });
 }
