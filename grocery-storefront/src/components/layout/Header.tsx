@@ -400,7 +400,7 @@ export function Header() {
                 >
                   <Link
                     href={href}
-                    className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium hover-surface"
+                    className="whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium hover-surface"
                     style={{ color: 'var(--color-foreground)' }}
                     aria-haspopup="true"
                     aria-expanded={categoryMenuOpen}
@@ -422,7 +422,7 @@ export function Header() {
               <Link
                 key={href}
                 href={href}
-                className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium hover-surface"
+                className="whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium hover-surface"
                 style={{ color: 'var(--color-foreground)' }}
               >
                 {label}
@@ -433,7 +433,7 @@ export function Header() {
             <Link
               key={`commercial-${id}`}
               href={href}
-            className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold hover-surface"
+            className="whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-semibold hover-surface"
               style={{ color: 'var(--color-primary)' }}
             >
               {label}
@@ -441,7 +441,7 @@ export function Header() {
           ))}
         </nav>
 
-        {showSearch && <div className="hidden max-w-md flex-1 md:flex md:min-w-[11.5rem] lg:min-w-[15rem] xl:min-w-[18rem]">
+        {showSearch && <div className="hidden max-w-md flex-1 md:flex md:min-w-[10.5rem] lg:min-w-[12rem] xl:min-w-[14rem] 2xl:min-w-[18rem]">
           <SearchAutocomplete
             inputId="desktop-search"
             value={searchValue}
