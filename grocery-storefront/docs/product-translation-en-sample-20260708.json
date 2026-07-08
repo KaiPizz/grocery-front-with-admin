@@ -1,0 +1,122 @@
+[
+  {
+    "id": "374845b2-ac39-4b57-b23e-d023e04eee64",
+    "slug": "KIMCHI-5352",
+    "sku": "KIMCHI-5352",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy Hi Tempura, algi nori w tempurze Mushroom & Black Pepper 40g - Tao Kae Noi",
+    "proposedEnglishName": "Chipsy Hi Tempura, Seaweed Nori in Tempura Mushroom & Black Pepper 40g - Tao Kae Noi",
+    "sourceDescription": "Chipsy Hi Tempura z aromatem grzybów oraz czarnego pieprzu! Chrupka przekąska z alg morskich w nowej, zaskakującej postaci! Chipsy Hi Tempura to klasyczne płatki nori zanurzone w smakowitej japońskiej panierce tempura. Przyprawione czosnkiem, pieprzem, chili oraz szczyptą soli i cukru, stanowią wyborną i nietuzinkową przekąskę, od której aż trudno się oderwać. Uwaga – Produkt naturalnie bogaty w jod. Nadmierne spożycie może zakłócić prawidłową pracę tarczycy. Zalecana porcja do spożycia to 10 g nori dziennie. Nie spożywać więcej niż 47 g na dobę. Informacje o alergenach – Produkt zawiera pszenicę. Może zawierać śladowe ilości orzeszków ziemnych, jaj, soi, musztardy oraz selera.",
+    "proposedEnglishDescription": "Crispy tempura seaweed snacks with mushroom and black pepper flavor.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "698de9aa-3de7-4660-b3a5-53a49eafb878",
+    "slug": "KIMCHI-1448",
+    "sku": "KIMCHI-1448",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy Hi Tempura, algi nori w tempurze, pikantne 40g - Tao Kae Noi",
+    "proposedEnglishName": "Chipsy Hi Tempura, Seaweed Nori in Tempura, Spicy 40g - Tao Kae Noi",
+    "sourceDescription": "Chipsy Hi Tempura z pikantną posypką. Chrupka przekąska z alg morskich w nowej, zaskakującej postaci! Chipsy Hi Tempura to klasyczne płatki nori zanurzone w smakowitej japońskiej panierce tempura. Przyprawione czosnkiem, pieprzem, chili oraz szczyptą soli i cukru, stanowią wyborną i nietuzinkową przekąskę, od której aż trudno się oderwać. Uwaga – Produkt naturalnie bogaty w jod. Nadmierne spożycie może zakłócić prawidłową pracę tarczycy. Zalecana porcja do spożycia to 10 g nori dziennie. Nie spożywać więcej niż 47 g na dobę. Informacje o alergenach – Produkt zawiera pszenicę, jaja oraz soję. Może zawierać śladowe ilości orzeszków ziemnych, musztardy oraz selera.",
+    "proposedEnglishDescription": "Crispy tempura seaweed snacks with a spicy flavor.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "041fb6bb-cde0-4865-bece-05d5f1b9210b",
+    "slug": "KIMCHI-5351",
+    "sku": "KIMCHI-5351",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy Hi Tempura, algi nori w tempurze Smoked BBQ 40g - Tao Kae Noi",
+    "proposedEnglishName": "Chips Hi Tempura, Nori Seaweed in Tempura Smoked BBQ 40g - Tao Kae Noi",
+    "sourceDescription": "Chipsy Hi Tempura, algi nori w tempurze Smoked BBQ 40g - Tao Kae Noi Uwaga – Produkt naturalnie bogaty w jod. Nadmierne spożycie może zakłócić prawidłową pracę tarczycy. Zalecana porcja do spożycia to 10 g nori dziennie. Nie spożywać więcej niż 47 g na dobę. Informacje o alergenach – Produkt zawiera pszenicę, soję oraz seler. Może zawierać śladowe ilości orzeszków ziemnych, musztardy.",
+    "proposedEnglishDescription": "Crispy tempura seaweed snacks with a smoked BBQ flavor.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "2331d444-10a0-41b9-85e6-44e545045607",
+    "slug": "KIMCHI-5503",
+    "sku": "KIMCHI-5503",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy Hotate Shio smak soli i przegrzebków 53g - Calbee",
+    "proposedEnglishName": "Chips Hotate Shio Salt and Scallop Flavor 53g - Calbee",
+    "sourceDescription": "Chipsy Hotate Shio smak soli i przegrzebków 53g - Calbee",
+    "proposedEnglishDescription": "Crispy chips with a salt and scallop flavor.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "fc20f5df-396a-496b-99fd-94a4c344024f",
+    "slug": "KIMCHI-5039",
+    "sku": "KIMCHI-5039",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy Kansai Dashi-Shoyu smak sosu sojowego i pasty dashi 53g - Calbee",
+    "proposedEnglishName": "Kansai Dashi-Shoyu Flavor Soy Sauce and Dashi Paste Chips 53g - Calbee",
+    "sourceDescription": "Uwaga! Krótka data minimalnej trwałości. Najlepiej spożyć do: 31.05.2026 Produkty z krótkim terminem ważności nie podlegają zwrotom. Chipsy Kansai Dashi-Shoyu smak sosu sojowego i pasty dashi 53g - Calbee",
+    "proposedEnglishDescription": "Kansai Dashi-Shoyu flavor chips with soy sauce and dashi paste, perfect for snacking.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "f6946fa3-78c8-492c-a1ba-bfe1ede75e60",
+    "slug": "KIMCHI-554",
+    "sku": "KIMCHI-554",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy Kimnori z alg morskich 40g - Kimnori",
+    "proposedEnglishName": "Kimnori Seaweed Chips 40g - Kimnori",
+    "sourceDescription": "Smaczna i zdrowa przekąska z alg morskich z przyprawami, bez konserwantów i sztucznych dodatków - szczególnie popularna w Korei i Japonii. Przygotowana z glonów nori bogatych w witaminy A, C oraz te z grupy B. Prażone z przyprawami, olejem rzepakowym i sezamowym są świetną alternatywą kalorycznych i tuczących chipsów. Chipsy Kimnori to nie tylko wspaniała przekąska, ale też doskonała, chrupka posypka do dań kuchni azjatyckiej. Posłuży jako dodatek do gotowanego i smażonego ryżu, orientalnych sałatek, kleików i placuszków oraz jako aromatyczne przybranie do japońskich i koreańskich zup. Uwaga – Produkt naturalnie bogaty w jod. Nadmierne spożycie może zakłócić prawidłową pracę tarczycy. Zalecana porcja do spożycia to 10 g nori dziennie. Nie spożywać więcej niż 47 g na dobę.",
+    "proposedEnglishDescription": "Seaweed chips for a crunchy snack experience.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "399a4a67-8e13-4881-bd9a-9a0542373382",
+    "slug": "KIMCHI-238",
+    "sku": "KIMCHI-238",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy krewetkowe 75g - Nongshim",
+    "proposedEnglishName": "Shrimp Chips 75g - Nongshim",
+    "sourceDescription": "Koreańskie chipsy krewetkowe Alsaeu Chip to lekka, chrupiąca przekąska z tapioki o delikatnym smaku krewetek. Inspirowane azjatyckim krupuk – idealne do dzielenia się i dla fanów lekkich, słonych przekąsek.",
+    "proposedEnglishDescription": "Korean shrimp chips made from tapioca, offering a light and crispy snack with a delicate shrimp flavor. Perfect for sharing and for fans of light, salty snacks.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "597531c0-d89f-446a-9733-e47f8e158ed9",
+    "slug": "KIMCHI-443",
+    "sku": "KIMCHI-443",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy krewetkowe, pikantne 75g - Nongshim",
+    "proposedEnglishName": "Spicy Shrimp Chips 75g - Nongshim",
+    "sourceDescription": "Chrupki krewetkowe saeukkang oprószone mieszanką aromatycznych przypraw. Ta krucha przegryzka, kształtem przypominająca grube, karbowane frytki to przysmak, który przyjechał do nas prosto z Korei Południowej. Ciekawa alternatywa dla powszechnie dostępnych chipsów ziemniaczanych, wyróżnia się idealnie chrupiąca konsystencją oraz złożonym, nieprzeciętnie wciągającym smakiem , łączącym w sobie wytrawność, pikantność oraz łagodną słodycz. Polecamy wszystkim fanom słonych przekąsek oraz wielbicielom krewetek! :) Chronić przed działaniem promieni słonecznych, wilgoci oraz wysokich temperatur.",
+    "proposedEnglishDescription": "Spicy shrimp chips made from tapioca, providing a crunchy and flavorful snack experience.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "3268426b-e6ca-4f9f-80fa-0f68eafd1899",
+    "slug": "KIMCHI-3808",
+    "sku": "KIMCHI-3808",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy krewetkowe, prażynki do smażenia 1kg - Sa Giang",
+    "proposedEnglishName": "Shrimp Chips, Frying Snacks 1kg - Sa Giang",
+    "sourceDescription": "Oryginalne, wietnamskie prażynki krewetkowe renomowanej marki Sa Giang do samodzielnego usmażenia w dużym, 1-kilogramowym opakowaniu. W składzie aż 10% krewetek! Prażynki krewetkowe bánh phồng tôm to pyszna, cudownie krucha przekąska , którą wielu kojarzy na pewno z uczęszczanych azjatyckich knajpek. Te charakterystyczne krakersy powstają z połączenia mączki tapiokowej i krewetek, przyprawianych odrobiną soli i czosnku. Po usmażeniu, prażynki stają się leciutkie, puszyste i idealnie chrupiące, a w smaku wciągająco słodko-słone - zupełnie jak smażone krewetki! :) Prażynki do usmażenia to gwarancja najlepszego smaku i konsystencji. Przygotuj je na świeżo we własnej kuchni i ciesz się bezkonkurencyjną jakością ulubionej przekąski. Podczas smażenia, chipsy kilkukrotnie zwiększają swoją objętość, dlatego warto zapewnić im sporo miejsca w naczyniu. Prażynki smażymy na głębokim oleju, wykorzystując olej roślinny o wysokim punkcie dymienia, np. rzepakowy. Prażynki wrzucamy pojedynczo na rozgrzany tłuszcz o temperaturze 180-190°C, smażymy przez ok. +/- 10 sekund do powiększenia i uzyskania chrupiącej tekstury, a następnie odkładamy na papierowy ręcznik lub bibułkę śniadaniową do odsączenia. Uwaga! Przy zbyt niskiej temperaturze oleju, chipsy nie będą się powiększać i nabiorą nieprzyjemnie twardej konsystencji. Wskazówka - Prażynki krewetkowe znakomicie komponują się ze słodkimi i pikantnymi dipami, takimi jak sos słodko-kwaśny, sambal oelek czy orzechowy sos satay.",
+    "proposedEnglishDescription": "Shrimp chips for frying, perfect as a snack or appetizer.",
+    "status": "translated",
+    "notes": ""
+  },
+  {
+    "id": "3fa8fd20-ee58-41e5-b62b-ee883157a846",
+    "slug": "KIMCHI-3949",
+    "sku": "KIMCHI-3949",
+    "category": "Słodycze / Przekąski",
+    "sourceName": "Chipsy krewetkowe Sriracha Original 80g - Flying Goose",
+    "proposedEnglishName": "Sriracha Original Shrimp Chips 80g - Flying Goose",
+    "sourceDescription": "Południowo-wschodni, azjatycki przysmak - chrupki krewetkowe kroepoek , znane też pod nazwą krupuk, w autorskim wydaniu renomowanej marki Flying Goose. Te lekkie, idealnie chrupkie chipsy o charakterystycznym, słodko-słonym smaku smażonych krewetek, wzbogacone zostały pikantną nutą kultowego sosu chili sriracha. Połączenie czerwonej papryki, słodkiej cebulki, wyrazistej gorczycy, soli i cukru nadaje chrupkom nowego poziomu smakowitości. Polecamy wszystkim fanom słonych przekąsek oraz wielbicielom krewetek. Ale uwaga! Wciągają niemiłosiernie. ;)",
+    "proposedEnglishDescription": "Sriracha flavored shrimp chips, ideal for snacking.",
+    "status": "translated",
+    "notes": ""
+  }
+]

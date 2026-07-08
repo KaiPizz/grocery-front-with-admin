@@ -243,11 +243,14 @@ async function fetchTranslationCandidates(options) {
 }
 
 function compactProductForPrompt(product) {
+  const sourceDescription = clean(product.description);
+  const descriptionIsTooLong = sourceDescription.length > 280;
   return {
     id: product.id,
     slug: product.slug,
     name: product.name,
-    description: product.description || '',
+    description: descriptionIsTooLong ? '' : sourceDescription,
+    descriptionNote: descriptionIsTooLong ? 'source description omitted because it is long or claim-heavy' : '',
     category: product.category?.name || '',
     countryOfOrigin: product.countryOfOrigin || '',
     sku: product.variants?.[0]?.sku || '',
@@ -332,6 +335,7 @@ async function translateBatchWithOpenAi(products, options) {
     'Do not shorten the name to a generic phrase. Do not drop size/count/brand.',
     'Do not invent legal, nutrition, allergen, origin, medical, discount, halal, vegan, health, or country-of-origin claims.',
     'Do not include nutrient claims such as source of protein, minerals, vitamins, healthy, or supports health.',
+    'Avoid claim-like words including healthy, rich in, natural, supports, vitamin, mineral, low calorie, diet, and better alternative.',
     'Do not write notes like "Product from ...". Do not guess country of origin.',
     'Description must be a concise neutral storefront sentence, maximum 220 characters.',
     'Do not translate full long source descriptions; summarize only the product identity and use.',
