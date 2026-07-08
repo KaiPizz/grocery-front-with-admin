@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T10:08:19.175Z",
+  "generatedAt": "2026-07-08T11:01:35.660Z",
   "endpoint": "https://zira-ai.com/graphql/storefront",
   "channel": "asiandeligo",
   "inspectedProducts": 1784,
@@ -7,7 +7,7 @@
   "inspectedCategories": 72,
   "totalCategories": 72,
   "issueCounts": {
-    "missing_english_translation": 1709,
+    "missing_english_translation": 1219,
     "missing_allergens": 792,
     "missing_storage_zone": 602,
     "missing_nutrition": 317,

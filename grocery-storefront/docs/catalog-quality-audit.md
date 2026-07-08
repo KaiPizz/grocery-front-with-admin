@@ -1,6 +1,6 @@
 # Asia Deli Go Catalog Quality Audit
 
-Generated: 2026-07-08T10:08:19.176Z
+Generated: 2026-07-08T11:01:35.663Z
 Endpoint: https://zira-ai.com/graphql/storefront
 Channel: asiandeligo
 Inspected products: 1784 / 1784
@@ -10,7 +10,7 @@ JSON summary: docs/catalog-quality-audit.json
 
 ## Executive Summary
 
-- Products with at least one issue: 1743 / 1784
+- Products with at least one issue: 1533 / 1784
 - Duplicate SKU values: 0
 - Duplicate slug values: 0
 - Legacy Kamito/Kenmito mentions: 0
@@ -20,7 +20,7 @@ JSON summary: docs/catalog-quality-audit.json
 
 ## Product Issue Counts
 
-- missing english translation: 1709
+- missing english translation: 1219
 - missing allergens: 792
 - missing storage zone: 602
 - missing nutrition: 317
@@ -199,52 +199,52 @@ JSON summary: docs/catalog-quality-audit.json
 - Chiński nóż szefa kuchni, tasak 32,5 cm – do mięsa i warzyw - Xiao Tian Zi (KIMCHI-2617, Noże) — missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price
 - Chipsy Hi Tempura, algi nori w tempurze 40g - Tao Kae Noi (KIMCHI-1416, Słodycze / Przekąski) — missing storage zone
 - Chipsy Hi Tempura, algi nori w tempurze chili & lime 40g - Tao Kae Noi (KIMCHI-5453, Słodycze / Przekąski) — missing storage zone
-- Chipsy Hi Tempura, algi nori w tempurze Mushroom & Black Pepper 40g - Tao Kae Noi (KIMCHI-5352, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Hi Tempura, algi nori w tempurze, pikantne 40g - Tao Kae Noi (KIMCHI-1448, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Hi Tempura, algi nori w tempurze Smoked BBQ 40g - Tao Kae Noi (KIMCHI-5351, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Hotate Shio smak soli i przegrzebków 53g - Calbee (KIMCHI-5503, Słodycze / Przekąski) — missing english translation
-- Chipsy Kansai Dashi-Shoyu smak sosu sojowego i pasty dashi 53g - Calbee (KIMCHI-5039, Słodycze / Przekąski) — missing english translation
-- Chipsy Kimnori z alg morskich 40g - Kimnori (KIMCHI-554, Słodycze / Przekąski) — missing english translation
-- Chipsy krewetkowe 75g - Nongshim (KIMCHI-238, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy krewetkowe, pikantne 75g - Nongshim (KIMCHI-443, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy krewetkowe, prażynki do smażenia 1kg - Sa Giang (KIMCHI-3808, Słodycze / Przekąski) — missing english translation
-- Chipsy krewetkowe Sriracha Original 80g - Flying Goose (KIMCHI-3949, Słodycze / Przekąski) — missing english translation
-- Chipsy Mexican Chicken Tomato Flavor o smaku kurczaka i pomidorów 70g - Lay's (KIMCHI-4832, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy Minecraft Spicy TNT pikantne 158g - Pringles (KIMCHI-5013, Słodycze / Przekąski) — missing english translation
-- Chipsy Nori Kimchi 18 szt x 4,5g - Sen Soy (KIMCHI-4579, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Kimchi 4,5g - Sen Soy (KIMCHI-2586, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Olive Oil 24 szt x 4,5g - Sen Soy (KIMCHI-5433, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Olive Oil 4,5g - Sen Soy (KIMCHI-5432, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Original z solą 18 szt x 4,5g - Sen Soy (KIMCHI-4581, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Original z solą 4,5g - Sen Soy (KIMCHI-2613, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Original z solą 60 szt x 2,5g - Sen Soy (KIMCHI-4582, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Teriyaki 18 szt x 4,5g - Sen Soy (KIMCHI-4580, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Teriyaki 4,5g - Sen Soy (KIMCHI-2587, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Wasabi 18 szt x 4,5g - Sen Soy (KIMCHI-4578, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Nori Wasabi 4,5g - Sen Soy (KIMCHI-2585, Słodycze / Przekąski) — missing storage zone, missing english translation
-- Chipsy Numb & Spicy Hot Pot Flavor o smaku pikantnego hot pota 70g - Lay's (KIMCHI-4828, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy Octopus and Wasabi o smaku ośmiornicy z wasabi 70g - Lay's (KIMCHI-5217, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy, prażynki czosnkowe do smażenia Krupuk Bawang Fancy 250g - Finna (KIMCHI-4523, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy, prażynki krewetkowe do smażenia 3x2cm Krupuk Udang Sidoarjo 250g - Finna (KIMCHI-4542, Słodycze / Przekąski) — missing english translation
-- Chipsy, prażynki krewetkowe do smażenia 6x4cm Krupuk Udang Sidoarjo 250g - Finna (KIMCHI-4543, Słodycze / Przekąski) — missing english translation
-- Chipsy Shiawase Honey & Butter smak miodowo-maślany 55g - Calbee (KIMCHI-5040, Słodycze / Przekąski) — missing english translation
-- Chipsy Smokey BBQ Lovers Pizza 102g - Pringles (KIMCHI-4930, Słodycze / Przekąski) — missing english translation
-- Chipsy Spicy Rose Tteokbokki 100g - Pringles (KIMCHI-5525, Słodycze / Przekąski) — missing english translation
-- Chipsy Sweet N' Spicy Korean Fried Chicken 100g - Pringles (KIMCHI-5526, Słodycze / Przekąski) — missing english translation
-- Chipsy Sweet Onion smak słodkiej cebulki 100g - Pringles (KIMCHI-5528, Słodycze / Przekąski) — missing english translation
-- Chipsy Texas Grilled BBQ Flavor o smaku teksańskiego barbecue 70g - Lay's (KIMCHI-4830, Słodycze / Przekąski) — missing english translation
-- Chipsy Wave Grilled Squid Flavor o smaku grillowanej kałamarnicy 70g - Lay's (KIMCHI-4834, Słodycze / Przekąski) — missing english translation
-- Chipsy Wave Roasted Chicken Wing Flavor o smaku pieczonego kurczaka 70g - Lay's (KIMCHI-4833, Słodycze / Przekąski) — missing english translation
-- Chipsy Wave Roasted Meat Flavor o smaku pieczonego mięsa 70g - Lay's (KIMCHI-4835, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy z alg morskich o smaku chili 50g - SEMPIO (KIMCHI-414, Słodycze / Przekąski) — missing english translation
-- Chipsy z alg morskich z sezamem 50g - SEMPIO (KIMCHI-415, Słodycze / Przekąski) — missing english translation
-- Chipsy ziemniaczane Chili Spicy Crayfish o smaku raka 104g - Lay's (KIMCHI-4531, Słodycze / Przekąski) — missing allergens, missing nutrition, missing storage zone, missing english translation
-- Chipsy ziemniaczane Hot And Sour Lemon Braised Chicken Feet 70g - Lays (KIMCHI-4454, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy ziemniaczane Hot And Spicy Braised Duck Tongue Flavor 70g - Lays (KIMCHI-4452, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy ziemniaczane karbowane o smaku kimchi 70g - Orion (KIMCHI-5732, Słodycze / Przekąski) — missing english translation
-- Chipsy ziemniaczane Korean Kimchi Flavor o smaku pikantego kimchi 70g - Lay's (KIMCHI-5478, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy ziemniaczane Lime Flavor o smaku limonki 70g - Lay's (KIMCHI-4831, Słodycze / Przekąski) — missing allergens, missing english translation
-- Chipsy ziemniaczane Potechi Teriyaki 100g - Koikeya (KIMCHI-2840, Słodycze / Przekąski) — missing country, missing english translation
+- Chipsy Hi Tempura, algi nori w tempurze Mushroom & Black Pepper 40g - Tao Kae Noi (KIMCHI-5352, Słodycze / Przekąski) — missing storage zone
+- Chipsy Hi Tempura, algi nori w tempurze, pikantne 40g - Tao Kae Noi (KIMCHI-1448, Słodycze / Przekąski) — missing storage zone
+- Chipsy Hi Tempura, algi nori w tempurze Smoked BBQ 40g - Tao Kae Noi (KIMCHI-5351, Słodycze / Przekąski) — missing storage zone
+- Chipsy krewetkowe 75g - Nongshim (KIMCHI-238, Słodycze / Przekąski) — missing storage zone
+- Chipsy krewetkowe, pikantne 75g - Nongshim (KIMCHI-443, Słodycze / Przekąski) — missing storage zone
+- Chipsy Mexican Chicken Tomato Flavor o smaku kurczaka i pomidorów 70g - Lay's (KIMCHI-4832, Słodycze / Przekąski) — missing allergens
+- Chipsy Nori Kimchi 18 szt x 4,5g - Sen Soy (KIMCHI-4579, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Kimchi 4,5g - Sen Soy (KIMCHI-2586, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Olive Oil 24 szt x 4,5g - Sen Soy (KIMCHI-5433, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Olive Oil 4,5g - Sen Soy (KIMCHI-5432, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Original z solą 18 szt x 4,5g - Sen Soy (KIMCHI-4581, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Original z solą 4,5g - Sen Soy (KIMCHI-2613, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Original z solą 60 szt x 2,5g - Sen Soy (KIMCHI-4582, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Teriyaki 18 szt x 4,5g - Sen Soy (KIMCHI-4580, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Teriyaki 4,5g - Sen Soy (KIMCHI-2587, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Wasabi 18 szt x 4,5g - Sen Soy (KIMCHI-4578, Słodycze / Przekąski) — missing storage zone
+- Chipsy Nori Wasabi 4,5g - Sen Soy (KIMCHI-2585, Słodycze / Przekąski) — missing storage zone
+- Chipsy Numb & Spicy Hot Pot Flavor o smaku pikantnego hot pota 70g - Lay's (KIMCHI-4828, Słodycze / Przekąski) — missing allergens
+- Chipsy Octopus and Wasabi o smaku ośmiornicy z wasabi 70g - Lay's (KIMCHI-5217, Słodycze / Przekąski) — missing allergens
+- Chipsy, prażynki czosnkowe do smażenia Krupuk Bawang Fancy 250g - Finna (KIMCHI-4523, Słodycze / Przekąski) — missing allergens
+- Chipsy Wave Roasted Meat Flavor o smaku pieczonego mięsa 70g - Lay's (KIMCHI-4835, Słodycze / Przekąski) — missing allergens
+- Chipsy ziemniaczane Chili Spicy Crayfish o smaku raka 104g - Lay's (KIMCHI-4531, Słodycze / Przekąski) — missing allergens, missing nutrition, missing storage zone
+- Chipsy ziemniaczane Hot And Sour Lemon Braised Chicken Feet 70g - Lays (KIMCHI-4454, Słodycze / Przekąski) — missing allergens
+- Chipsy ziemniaczane Hot And Spicy Braised Duck Tongue Flavor 70g - Lays (KIMCHI-4452, Słodycze / Przekąski) — missing allergens
+- Chipsy ziemniaczane Korean Kimchi Flavor o smaku pikantego kimchi 70g - Lay's (KIMCHI-5478, Słodycze / Przekąski) — missing allergens
+- Chipsy ziemniaczane Lime Flavor o smaku limonki 70g - Lay's (KIMCHI-4831, Słodycze / Przekąski) — missing allergens
+- Chipsy ziemniaczane Potechi Teriyaki 100g - Koikeya (KIMCHI-2840, Słodycze / Przekąski) — missing country
+- Chipsy ziemniaczane Potechi Umeboshi 100g - Koikeya (KIMCHI-2841, Słodycze / Przekąski) — missing country
+- Chipsy ziemniaczane Potechi Wasabi Nori 100g - Koikeya (KIMCHI-2839, Słodycze / Przekąski) — missing allergens, missing country
+- Chipsy ziemniaczane Sichuan Pepper Crispy Pork Flavour o smaku syczuańskiego pieprzu i wieprzowiny 70g - Lay's (KIMCHI-4799, Słodycze / Przekąski) — missing allergens
+- Chipsy z jackfruita (dżakfruta) 100g - Vinamit (KIMCHI-494, Słodycze / Przekąski) — missing allergens
+- Chipsy z wodorostów, chrupiące nori 32g - Tao Kae Noi (KIMCHI-2131, Słodycze / Przekąski) — missing allergens, missing storage zone
+- Chipsy z wodorostów, chrupiące nori na ostro 32g - Tao Kae Noi (KIMCHI-2516, Słodycze / Przekąski) — missing allergens
+- Choco Pie, ciastka biszkoptowe z pianką, pudełko (12 szt. x 28g) - Lotte (KIMCHI-1439, Słodycze / Przekąski) — missing country, missing storage zone
+- Chrupki Karamucho Hot Chilli, pikantne 65g - Koikeya (KIMCHI-4190, Słodycze / Przekąski) — missing country
+- Chrupki pszenne z batatami 55g - Nongshim (KIMCHI-3077, Słodycze / Przekąski) — missing storage zone
+- Chrupki ziemniaczane japońskie Ami-Jaga Nori-Shio smak nori 55g - Tohato (KIMCHI-5425, Słodycze / Przekąski) — missing allergens
+- Chrupki Zzaldduk o smaku ostrego kurczaka Buldak 2xSpicy, ostre 80g - Samyang (KIMCHI-4043, Słodycze / Przekąski) — out of stock
+- Chrzan wasabi w proszku 1kg - House Foods (KIMCHI-5025, Wasabi) — missing storage zone
+- Chrzan wasabi w proszku S&B puszka 30g (KIMCHI-796, Wasabi) — missing nutrition, missing storage zone
+- Ciasteczka Squid Game spicy potato biscuits Dalgona Challenge 80g Haitai - Netlfix (KIMCHI-5284, Słodycze / Przekąski) — missing english translation
+- Clearing Petit BB 30ml - lekki krem BB - Holika Holika (KIMCHI-5460, Koreańskie kosmetyki) — missing allergens, missing nutrition, missing storage zone
+- Cotton Bebe Perfumed Hand Cream 30ml - nawilżający krem do rąk o zapachu bawełny - Holika Holika (KIMCHI-5435, Koreańskie kosmetyki) — missing allergens, missing nutrition, missing storage zone
+- Cukier brązowy ciemny, nierafinowany 1kg - CJ Beksul (KIMCHI-3057, Słodycze / Przekąski) — missing allergens
+- Cukierki, draże Grape Soda 2in1 winogronowe 45g - Mentos (KIMCHI-4575, Słodycze / Przekąski) — missing allergens
+- Cukierki imbirowe Ginger Honey Lemon z cytryną i miodem 125g - Gingerbon (KIMCHI-4137, Słodycze / Przekąski) — missing allergens
 
 ## Recommended Next Batch
 

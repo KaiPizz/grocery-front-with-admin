@@ -10,6 +10,7 @@ const DEFAULT_LIMIT = 25;
 const DEFAULT_PAGE_SIZE = 80;
 const DEFAULT_BATCH_SIZE = 1;
 const DEFAULT_MODEL = process.env.OPENAI_TRANSLATION_MODEL || process.env.OPENAI_MODEL || 'gpt-4o-mini';
+const OPENAI_TIMEOUT_MS = 120_000;
 
 const PRODUCT_TRANSLATION_QUERY = `
   query ProductTranslationDryRun($channel: String!, $first: Int!, $after: String) {
@@ -353,6 +354,7 @@ async function translateBatchWithOpenAi(products, options) {
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
+    signal: AbortSignal.timeout(OPENAI_TIMEOUT_MS),
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
@@ -398,8 +400,11 @@ async function translateCandidates(candidates, options) {
 
   const results = [];
   const batchSize = options.batchSize;
+  const totalBatches = Math.ceil(candidates.length / batchSize);
   for (let index = 0; index < candidates.length; index += batchSize) {
     const batch = candidates.slice(index, index + batchSize);
+    const batchNumber = Math.floor(index / batchSize) + 1;
+    console.error(`Translating batch ${batchNumber}/${totalBatches} (${batch.length} products)...`);
     const translated = await translateBatchWithOpenAi(batch, options);
     for (const product of batch) {
       const row = translated.get(product.id) ?? {};
@@ -419,6 +424,7 @@ async function translateCandidates(candidates, options) {
           : 'missing_translation',
       });
     }
+    console.error(`Translated batch ${batchNumber}/${totalBatches}.`);
   }
 
   return results;
