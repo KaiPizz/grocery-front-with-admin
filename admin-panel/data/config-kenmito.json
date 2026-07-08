@@ -3,7 +3,7 @@
   "published": {
     "branding": {
       "logoUrl": "/brand/asia-deli-go-logo-header.png",
-      "faviconUrl": null,
+      "faviconUrl": "/brand/asia-deli-go-favicon.png",
       "storeName": "Asia Deli Go",
       "colors": {
         "primary": "#169B45",
@@ -410,7 +410,7 @@
   "draft": {
     "branding": {
       "logoUrl": "/brand/asia-deli-go-logo-header.png",
-      "faviconUrl": null,
+      "faviconUrl": "/brand/asia-deli-go-favicon.png",
       "storeName": "Asia Deli Go",
       "colors": {
         "primary": "#169B45",
