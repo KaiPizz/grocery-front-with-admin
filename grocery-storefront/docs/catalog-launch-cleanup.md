@@ -40,21 +40,21 @@ Storefront product cards already disable add-to-cart and show out-of-stock copy 
 
 ## Dietary Tag Review
 
-Current tagged products: vegetarian 58, vegan 36, gluten-free 32.
+Current tagged products: vegetarian 64, vegan 36, gluten-free 32.
 Gluten-free text candidates without tag: 0.
-Vegetarian text candidates without tag: 9.
+Vegetarian text candidates without tag: 3.
 
-Do not auto-tag food claims from product names only. Several candidates mention vegetable flavour but may contain seafood/meat derivatives.
+Manual decision received 2026-07-08: KIMCHI-3834, KIMCHI-355, KIMCHI-2553, KIMCHI-4795, KIMCHI-4850, and KIMCHI-4908 were confirmed vegetarian and updated. The remaining candidates were confirmed not vegetarian and should stay untagged unless the owner changes the decision.
 
-- REVIEW: KIMCHI-2579: Baza do zupy Tom Yum, łagodna 80g - Sen Soy — Buliony
-- REVIEW: KIMCHI-791: Sos ostrygowy Mae Krua 300ml — Sosy, marynaty
-- REVIEW: KIMCHI-2635: Sos ostrygowy Premium 255g - Lee Kum Kee — Sosy, marynaty
-- REVIEW: KIMCHI-3834: Zupa instant o smaku warzywnym z makaronem ryżowym 55g - MAMA — Ramyun / Ramen
-- REVIEW: KIMCHI-355: Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim — Ramyun / Ramen
-- REVIEW: KIMCHI-2553: Zupa instant Shin Kimchi Ramyun, ostra - 5-pak (5 x 120g) Nongshim — Ramyun / Ramen
-- REVIEW: KIMCHI-4795: Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie — Ramyun / Ramen
-- REVIEW: KIMCHI-4850: Zupa makaronowa instant o smaku warzywnym 5 x 75g - Indomie — Ramyun / Ramen
-- REVIEW: KIMCHI-4908: Zupa makaronowa Shin Kimchi Ramyun, ostra 20 x 120g (cały karton) - Nongshim — Ramyun / Ramen
+- CONFIRMED NO: KIMCHI-2579: Baza do zupy Tom Yum, łagodna 80g - Sen Soy — Buliony
+- CONFIRMED NO: KIMCHI-791: Sos ostrygowy Mae Krua 300ml — Sosy, marynaty
+- CONFIRMED NO: KIMCHI-2635: Sos ostrygowy Premium 255g - Lee Kum Kee — Sosy, marynaty
+- APPLIED YES: KIMCHI-3834: Zupa instant o smaku warzywnym z makaronem ryżowym 55g - MAMA — Ramyun / Ramen
+- APPLIED YES: KIMCHI-355: Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim — Ramyun / Ramen
+- APPLIED YES: KIMCHI-2553: Zupa instant Shin Kimchi Ramyun, ostra - 5-pak (5 x 120g) Nongshim — Ramyun / Ramen
+- APPLIED YES: KIMCHI-4795: Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie — Ramyun / Ramen
+- APPLIED YES: KIMCHI-4850: Zupa makaronowa instant o smaku warzywnym 5 x 75g - Indomie — Ramyun / Ramen
+- APPLIED YES: KIMCHI-4908: Zupa makaronowa Shin Kimchi Ramyun, ostra 20 x 120g (cały karton) - Nongshim — Ramyun / Ramen
 
 ## Metadata Batch Priority
 

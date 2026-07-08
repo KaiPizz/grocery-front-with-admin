@@ -195,14 +195,14 @@ export function SearchAutocomplete({
       {isOpen && hasDropdownContent && (
         <div
           id={`${inputId}-results`}
-          className="absolute top-full left-0 right-0 mt-2 rounded-2xl border shadow-xl overflow-hidden animate-fade-up"
+          className="absolute left-0 top-full z-[80] mt-2 w-[min(28rem,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[1rem] border shadow-xl animate-fade-up"
           style={{
             borderColor: 'var(--color-border)',
-            backgroundColor: 'var(--color-card)',
+            backgroundColor: 'color-mix(in srgb, var(--color-card) 98%, white)',
             boxShadow: '0 28px 60px -24px color-mix(in srgb, var(--color-foreground) 24%, transparent)',
           }}
         >
-          <div className="max-h-[28rem] overflow-y-auto">
+          <div className="max-h-[28rem] overflow-y-auto overflow-x-hidden">
             <div className="px-4 pt-4">
               <div className="flex items-center justify-between gap-3 pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
                 <span
@@ -237,7 +237,7 @@ export function SearchAutocomplete({
                       key={suggestion}
                       type="button"
                       onClick={() => commitSearch(suggestion)}
-                      className="w-full flex items-center justify-between gap-3 px-2.5 py-2.5 rounded-xl text-left transition-colors duration-fast hover-surface"
+                      className="flex w-full min-w-0 items-center justify-between gap-3 rounded-xl px-2.5 py-2.5 text-left transition-colors duration-fast hover-surface"
                     >
                       <span className="flex items-center gap-2.5 min-w-0">
                         {isRecent ? (
@@ -330,10 +330,10 @@ export function SearchAutocomplete({
               <button
                 type="button"
                 onClick={() => commitSearch(value)}
-                className="w-full flex items-center justify-between gap-3 px-4 py-3 border-t text-sm font-semibold transition-colors duration-fast hover-surface"
+                className="flex w-full min-w-0 items-center justify-between gap-3 border-t px-4 py-3 text-sm font-semibold transition-colors duration-fast hover-surface"
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               >
-                <span>{tSearch('seeResults', { query: value.trim() })}</span>
+                <span className="min-w-0 truncate">{tSearch('seeResults', { query: value.trim() })}</span>
                 <ArrowRight className="w-4 h-4" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
               </button>
             )}

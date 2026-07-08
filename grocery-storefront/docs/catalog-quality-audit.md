@@ -1,6 +1,6 @@
 # Asia Deli Go Catalog Quality Audit
 
-Generated: 2026-07-08T09:14:49.401Z
+Generated: 2026-07-08T10:08:19.176Z
 Endpoint: https://zira-ai.com/graphql/storefront
 Channel: asiandeligo
 Inspected products: 1784 / 1784
@@ -108,7 +108,7 @@ JSON summary: docs/catalog-quality-audit.json
 ## Filter Value Coverage
 
 ### Dietary Tags
-- vegetarian: 58
+- vegetarian: 64
 - vegan: 36
 - gluten-free: 32
 
@@ -158,16 +158,10 @@ JSON summary: docs/catalog-quality-audit.json
 ## Specific Filter Gaps
 
 - Gluten-free text candidates without dietary gluten tag: 0
-- Vegetarian text candidates without vegetarian tag: 9
+- Vegetarian text candidates without vegetarian tag: 3
 - Baza do zupy Tom Yum, łagodna 80g - Sen Soy (KIMCHI-2579, Buliony)
 - Sos ostrygowy Mae Krua 300ml (KIMCHI-791, Sosy, marynaty)
 - Sos ostrygowy Premium 255g - Lee Kum Kee (KIMCHI-2635, Sosy, marynaty)
-- Zupa instant o smaku warzywnym z makaronem ryżowym 55g - MAMA (KIMCHI-3834, Ramyun / Ramen)
-- Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim (KIMCHI-355, Ramyun / Ramen)
-- Zupa instant Shin Kimchi Ramyun, ostra - 5-pak (5 x 120g) Nongshim (KIMCHI-2553, Ramyun / Ramen)
-- Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie (KIMCHI-4795, Ramyun / Ramen)
-- Zupa makaronowa instant o smaku warzywnym 5 x 75g - Indomie (KIMCHI-4850, Ramyun / Ramen)
-- Zupa makaronowa Shin Kimchi Ramyun, ostra 20 x 120g (cały karton) - Nongshim (KIMCHI-4908, Ramyun / Ramen)
 
 ## Top Product Fix Queue
 

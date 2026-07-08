@@ -385,7 +385,7 @@ export function Header() {
           )}
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+        <nav className="hidden shrink-0 items-center gap-1 md:flex" aria-label="Main navigation">
           {navItems.map(({ href, label }) => {
             if (href === '/categories') {
               return (
@@ -400,7 +400,7 @@ export function Header() {
                 >
                   <Link
                     href={href}
-                    className="px-3 py-2 text-sm font-medium rounded-lg hover-surface"
+                    className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium hover-surface"
                     style={{ color: 'var(--color-foreground)' }}
                     aria-haspopup="true"
                     aria-expanded={categoryMenuOpen}
@@ -422,7 +422,7 @@ export function Header() {
               <Link
                 key={href}
                 href={href}
-                className="px-3 py-2 text-sm font-medium rounded-lg hover-surface"
+                className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium hover-surface"
                 style={{ color: 'var(--color-foreground)' }}
               >
                 {label}
@@ -433,7 +433,7 @@ export function Header() {
             <Link
               key={`commercial-${id}`}
               href={href}
-              className="px-3 py-2 text-sm font-semibold rounded-lg hover-surface"
+            className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold hover-surface"
               style={{ color: 'var(--color-primary)' }}
             >
               {label}
@@ -441,7 +441,7 @@ export function Header() {
           ))}
         </nav>
 
-        {showSearch && <div className="hidden md:flex flex-1 max-w-md">
+        {showSearch && <div className="hidden max-w-md flex-1 md:flex md:min-w-[11.5rem] lg:min-w-[15rem] xl:min-w-[18rem]">
           <SearchAutocomplete
             inputId="desktop-search"
             value={searchValue}
@@ -593,7 +593,7 @@ export function Header() {
           ) : (
             <Link
               href="/login"
-              className="hidden md:inline-flex h-10 px-3 rounded-xl border items-center gap-2 text-sm font-medium hover-surface ml-1"
+              className="ml-1 hidden h-10 items-center gap-2 whitespace-nowrap rounded-xl border px-3 text-sm font-medium hover-surface md:inline-flex"
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
             >
               <LogIn className="w-4 h-4" aria-hidden="true" />

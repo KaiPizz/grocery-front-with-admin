@@ -10,21 +10,21 @@ Browser path: Playwright fallback; Browser plugin was not available in this sess
 - No code patch was needed from this QA pass.
 - Product data still needs manual food-claim confirmation before adding more dietary tags.
 
-## Products Requiring Manual Confirmation
+## Dietary Decision Applied
 
-Do not auto-tag these as vegetarian from name text only. Confirm the ingredient label or supplier data first.
+Manual confirmation was received on 2026-07-08. The first three candidates were confirmed as not vegetarian and left untagged. The remaining six candidates were confirmed vegetarian and updated in production.
 
-| SKU | Product | Category | Why confirm |
+| SKU | Product | Decision | Result |
 | --- | --- | --- | --- |
-| KIMCHI-2579 | Baza do zupy Tom Yum, lagodna 80g - Sen Soy | Buliony | Soup base may contain seafood/fish extract. |
-| KIMCHI-791 | Sos ostrygowy Mae Krua 300ml | Sosy, marynaty | Oyster sauce is normally not vegetarian. |
-| KIMCHI-2635 | Sos ostrygowy Premium 255g - Lee Kum Kee | Sosy, marynaty | Oyster sauce is normally not vegetarian. |
-| KIMCHI-3834 | Zupa instant o smaku warzywnym z makaronem ryzowym 55g - MAMA | Ramyun / Ramen | Vegetable flavour can still include animal-derived seasoning. |
-| KIMCHI-355 | Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim | Ramyun / Ramen | Kimchi ramen often needs ingredient verification. |
-| KIMCHI-2553 | Zupa instant Shin Kimchi Ramyun, ostra - 5-pak (5 x 120g) Nongshim | Ramyun / Ramen | Same product family as KIMCHI-355; verify pack label. |
-| KIMCHI-4795 | Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie | Ramyun / Ramen | Vegetable flavour can still include animal-derived seasoning. |
-| KIMCHI-4850 | Zupa makaronowa instant o smaku warzywnym 5 x 75g - Indomie | Ramyun / Ramen | Same product family as KIMCHI-4795; verify pack label. |
-| KIMCHI-4908 | Zupa makaronowa Shin Kimchi Ramyun, ostra 20 x 120g (caly karton) - Nongshim | Ramyun / Ramen | Same product family as KIMCHI-355; verify carton label. |
+| KIMCHI-2579 | Baza do zupy Tom Yum, lagodna 80g - Sen Soy | No | Left untagged |
+| KIMCHI-791 | Sos ostrygowy Mae Krua 300ml | No | Left untagged |
+| KIMCHI-2635 | Sos ostrygowy Premium 255g - Lee Kum Kee | No | Left untagged |
+| KIMCHI-3834 | Zupa instant o smaku warzywnym z makaronem ryzowym 55g - MAMA | Yes | Added `vegetarian` |
+| KIMCHI-355 | Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim | Yes | Added `vegetarian` |
+| KIMCHI-2553 | Zupa instant Shin Kimchi Ramyun, ostra - 5-pak (5 x 120g) Nongshim | Yes | Added `vegetarian` |
+| KIMCHI-4795 | Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie | Yes | Added `vegetarian` |
+| KIMCHI-4850 | Zupa makaronowa instant o smaku warzywnym 5 x 75g - Indomie | Yes | Added `vegetarian` |
+| KIMCHI-4908 | Zupa makaronowa Shin Kimchi Ramyun, ostra 20 x 120g (caly karton) - Nongshim | Yes | Added `vegetarian` |
 
 ## Out Of Stock Status
 
@@ -68,7 +68,6 @@ Common checks across these flows:
 
 ## Next Work Order
 
-1. Ask the manager/store owner to confirm the 9 dietary candidates above from package labels.
-2. In admin/POS, restock or intentionally keep visible the 17 out-of-stock SKUs.
-3. After confirmation, batch-update dietary tags and rerun `npm run audit:catalog-quality`.
-4. Then do one final production smoke across home, products, categories, PDP, cart, and mobile nav.
+1. In admin/POS, restock or intentionally keep visible the 17 out-of-stock SKUs.
+2. Treat the remaining 3 vegetarian heuristic candidates as resolved "No" unless the owner later changes the decision.
+3. Do one final production smoke across home, products, categories, PDP, cart, and mobile nav after the next storefront deploy.
