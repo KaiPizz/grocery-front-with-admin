@@ -22,6 +22,8 @@
     "apply:product-translations": "node scripts/product-translation-apply.mjs",
     "plan:product-translations": "node scripts/product-translation-sql-plan.mjs",
     "dry-run:sku-slug-migration": "node scripts/sku-slug-migration-dry-run.mjs",
+    "plan:sku-slug-migration": "node scripts/sku-slug-migration-sql-plan.mjs",
+    "plan:sku-slug-variant-repair": "node scripts/sku-slug-variant-repair-sql-plan.mjs",
     "dry-run:kimchi-source-metadata": "node scripts/kimchi-source-metadata-dry-run.mjs",
     "audit:kimchi-allergen-split": "node scripts/kimchi-allergen-split-audit.mjs",
     "plan:kimchi-source-metadata": "node scripts/kimchi-source-metadata-apply.mjs",
