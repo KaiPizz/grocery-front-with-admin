@@ -1,6 +1,6 @@
 # Asia Deli Go Catalog Quality Audit
 
-Generated: 2026-07-08T11:36:04.633Z
+Generated: 2026-07-08T11:46:08.707Z
 Endpoint: https://zira-ai.com/graphql/storefront
 Channel: asiandeligo
 Inspected products: 1784 / 1784
@@ -10,7 +10,7 @@ JSON summary: docs/catalog-quality-audit.json
 
 ## Executive Summary
 
-- Products with at least one issue: 1187 / 1784
+- Products with at least one issue: 1117 / 1784
 - Duplicate SKU values: 0
 - Duplicate slug values: 0
 - Legacy Kamito/Kenmito mentions: 0
@@ -23,10 +23,10 @@ JSON summary: docs/catalog-quality-audit.json
 - missing allergens: 792
 - missing storage zone: 602
 - missing nutrition: 317
-- missing english translation: 276
 - missing unit price: 196
 - missing ingredients: 186
 - missing country: 90
+- missing english translation: 40
 - out of stock: 17
 - missing description: 5
 
