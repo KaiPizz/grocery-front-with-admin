@@ -148,13 +148,13 @@ BEGIN
   END IF;
 END $$;
 
-CREATE TABLE asiandeligo_owner_images_folder01_20260709_products_backup_20260709 AS
+CREATE TABLE adg_owner_img_f01_20260709_products_bak_20260709 AS
 SELECT p.*, now() AS backup_created_at
 FROM products p
 JOIN (SELECT DISTINCT target_product_id FROM _adg_owner_image_source) s ON s.target_product_id = p.id
 WHERE p.deleted_at IS NULL;
 
-CREATE TABLE asiandeligo_owner_images_folder01_20260709_product_images_backup_20260709 AS
+CREATE TABLE adg_owner_img_f01_20260709_images_bak_20260709 AS
 SELECT pi.*, now() AS backup_created_at
 FROM product_images pi
 JOIN products p ON p.id = pi.template_id AND p.salon_id = pi.salon_id AND p.deleted_at IS NULL

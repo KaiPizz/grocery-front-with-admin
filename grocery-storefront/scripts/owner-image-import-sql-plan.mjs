@@ -179,6 +179,12 @@ function safeIdentifier(value) {
   return value.replace(/[^a-zA-Z0-9_]/g, '_').slice(0, 50) || 'batch';
 }
 
+function backupIdentifierBase(batch) {
+  return safeIdentifier(batch)
+    .replace(/^asiandeligo_owner_images_folder01_/, 'adg_owner_img_f01_')
+    .slice(0, 32);
+}
+
 function buildSourceRows(rows, skuMapping) {
   return rows.map((row) => {
     const mapping = skuMapping.get(row.target_sku);
@@ -257,9 +263,9 @@ function sourceValuesSql(rows) {
 
 function writeSql(options, rows) {
   const dateSuffix = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  const batchIdent = safeIdentifier(options.batch);
-  const productBackup = `${batchIdent}_products_backup_${dateSuffix}`;
-  const imageBackup = `${batchIdent}_product_images_backup_${dateSuffix}`;
+  const batchIdent = backupIdentifierBase(options.batch);
+  const productBackup = `${batchIdent}_products_bak_${dateSuffix}`;
+  const imageBackup = `${batchIdent}_images_bak_${dateSuffix}`;
   const sourceValues = sourceValuesSql(rows);
 
   const sql = [
