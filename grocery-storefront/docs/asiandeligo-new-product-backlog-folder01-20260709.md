@@ -52,6 +52,6 @@ Use the review HTML to confirm each item as:
 - `Confirm`: product data is correct and ready for creation
 - `Wrong`: candidate identification is wrong
 - `Create new`: should become a new SKU after required fields are added
-- `Skip`: do not create/import
+- `Skip` on this backlog page: treated as `create_new` in the exported CSV. Use this when the product should not be mapped to an existing link/SKU and must become a new product candidate.
 
 After the export comes back, generate a creation manifest with SKU, category, price, stock, barcode, translations, and media mapping.

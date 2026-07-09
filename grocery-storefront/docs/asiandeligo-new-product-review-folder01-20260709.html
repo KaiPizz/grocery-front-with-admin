@@ -164,7 +164,10 @@ function statusLabel(status) {
   })[status] || status || 'Review';
 }
 function decisionLabel(decision) {
-  return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: 'Skip' })[decision] || 'Open';
+  return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: 'Create new (skip existing link)' })[decision] || 'Open';
+}
+function exportDecision(decision) {
+  return decision === 'skip' ? 'create_new' : (decision || '');
 }
 function updateStats() {
   const total = rows.length;
@@ -194,7 +197,7 @@ function updateStats() {
     <span class="pill">Confirmed: ${counts.confirm}</span>
     <span class="pill">Wrong: ${counts.wrong}</span>
     <span class="pill">Create: ${counts.create_new}</span>
-    <span class="pill">Skip: ${counts.skip}</span>`;
+    <span class="pill">Create via skip: ${counts.skip}</span>`;
 }
 function renderList() {
   const list = filteredRows();
@@ -252,7 +255,7 @@ function renderCard() {
       <button data-decision="confirm" class="${d === 'confirm' ? 'selected' : ''}">1 · Confirm</button>
       <button data-decision="wrong" class="${d === 'wrong' ? 'selected' : ''}">2 · Wrong</button>
       <button data-decision="create_new" class="${d === 'create_new' ? 'selected' : ''}">3 · Create new</button>
-      <button data-decision="skip" class="${d === 'skip' ? 'selected' : ''}">4 · Skip</button>
+      <button data-decision="skip" class="${d === 'skip' ? 'selected' : ''}">4 · Create new (skip existing link)</button>
     </div>`;
   el.querySelectorAll('[data-decision]').forEach(btn => btn.addEventListener('click', () => setDecision(row.id, btn.dataset.decision)));
   const notes = el.querySelector('#ownerNotes');
@@ -276,7 +279,7 @@ function exportCsv() {
   const lines = [headers.join(',')];
   for (const row of rows) {
     const state = decisions[row.id] || {};
-    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,row.target_sku,row.candidate_product,row.confidence,row.product_url,state.decision || '',state.notes || '',row.reason,row.next_action];
+    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,row.target_sku,row.candidate_product,row.confidence,row.product_url,exportDecision(state.decision),state.notes || '',row.reason,row.next_action];
     lines.push(values.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(','));
   }
   const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
