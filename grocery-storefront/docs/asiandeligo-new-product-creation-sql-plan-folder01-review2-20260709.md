@@ -1,6 +1,6 @@
 # Asia Deli Go New Product Creation SQL Plan - Folder 01 Review 2
 
-Generated: 2026-07-09T13:50:30.251Z
+Generated: 2026-07-09T13:57:03.648Z
 
 ## Summary
 
@@ -11,6 +11,7 @@ Generated: 2026-07-09T13:50:30.251Z
 - Rows with notes: 0
 - Stock policy: temporary owner default, `100` per row
 - Price policy: `retail_price=0`, `status=draft`, `is_published=false`, `is_for_sale=false`, metadata `price_pending=true`.
+- Pricing decision: deferred to the final owner/admin phase; missing real prices must not block finishing the web/catalog cleanup.
 - Dry-run CSV: `docs/asiandeligo-new-product-creation-dry-run-folder01-review2-20260709.csv`
 - SQL output: `docs/asiandeligo-new-product-creation-sql-plan-folder01-review2-20260709.sql`
 - Local staging directory: `/tmp/asiandeligo-new-product-creation-dry-run-folder01-review2-20260709`
@@ -20,6 +21,7 @@ Generated: 2026-07-09T13:50:30.251Z
 - Upload/stage each image so `target_url` returns 200.
 - Confirm this should target the current runtime catalog channel `kenmito` / Asia Deli Go storefront.
 - Confirm owner accepts draft products with price pending and not visible for sale until edited.
+- Do not source prices from internet listings; owner/admin will fill real store prices later.
 - Remaining EAN gaps stay blank: Hoang Long tea and Sen Soy Premium soy sauce.
 
 ## Schema Assumptions Verified
