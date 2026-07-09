@@ -10,6 +10,8 @@ const DEFAULT_OUTPUT = 'docs/asiandeligo-owner-review-folder02-20260709.html';
 const DEFAULT_ASSETS_DIR = 'docs/asiandeligo-owner-review-folder02-assets';
 const DEFAULT_TITLE = 'Asia Deli Go Owner Review - Folder 02';
 const DEFAULT_STORAGE_KEY = 'asiandeligo-owner-review-folder02-v1';
+const DEFAULT_SUBTITLE = 'Folder 02 · review uncertain owner-stock products before creating SKUs or assigning images';
+const DEFAULT_DOWNLOAD_NAME = 'asiandeligo-folder02-owner-decisions.csv';
 
 function parseArgs(argv) {
   const args = {
@@ -18,6 +20,8 @@ function parseArgs(argv) {
     assetsDir: DEFAULT_ASSETS_DIR,
     title: DEFAULT_TITLE,
     storageKey: DEFAULT_STORAGE_KEY,
+    subtitle: DEFAULT_SUBTITLE,
+    downloadName: DEFAULT_DOWNLOAD_NAME,
     clean: false,
   };
 
@@ -33,6 +37,8 @@ function parseArgs(argv) {
     else if (arg === '--assets-dir') args.assetsDir = next();
     else if (arg === '--title') args.title = next();
     else if (arg === '--storage-key') args.storageKey = next();
+    else if (arg === '--subtitle') args.subtitle = next();
+    else if (arg === '--download-name') args.downloadName = next();
     else if (arg === '--clean') args.clean = true;
     else if (arg === '--help' || arg === '-h') {
       console.log(`Usage: node scripts/owner-image-review-page.mjs [options]
@@ -43,6 +49,8 @@ Options:
   --assets-dir <dir>      Output asset directory
   --title <text>          Page title
   --storage-key <key>     localStorage key
+  --subtitle <text>       Header subtitle
+  --download-name <file>  Exported decisions CSV filename
   --clean                 Remove asset dir before regenerating
 `);
       process.exit(0);
@@ -145,7 +153,7 @@ function suggestedDecision(status) {
   return '';
 }
 
-function renderHtml({ rows, title, storageKey }) {
+function renderHtml({ rows, title, storageKey, subtitle, downloadName }) {
   const data = JSON.stringify({ rows, counts: countBy(rows, 'status') });
   return `<!doctype html>
 <html lang="vi">
@@ -244,7 +252,7 @@ function renderHtml({ rows, title, storageKey }) {
     <div class="topbar">
       <div>
         <h1>${escapeHtml(title)}</h1>
-        <div class="sub">Folder 02 · review uncertain owner-stock products before creating SKUs or assigning images</div>
+        <div class="sub">${escapeHtml(subtitle)}</div>
       </div>
       <div class="stats" id="stats"></div>
     </div>
@@ -253,6 +261,8 @@ function renderHtml({ rows, title, storageKey }) {
     <div class="toolbar">
       <div class="filters">
         <button data-filter="all" class="active">All rows</button>
+        <button data-filter="review_high_existing_sku">Existing SKU</button>
+        <button data-filter="review_possible_existing_sku">Possible SKU</button>
         <button data-filter="create_new_confirm">Create new / confirm</button>
         <button data-filter="hold_confirm">Hold / confirm</button>
         <button data-filter="ignore_or_supplies">Ignore / supplies</button>
@@ -275,6 +285,7 @@ function renderHtml({ rows, title, storageKey }) {
 <script>
 const REVIEW_DATA = ${data};
 const STORAGE_KEY = ${JSON.stringify(storageKey)};
+const DOWNLOAD_NAME = ${JSON.stringify(downloadName)};
 let rows = REVIEW_DATA.rows;
 let decisions = loadState();
 let filter = 'all';
@@ -293,7 +304,7 @@ function filteredRows() {
     if (filter === 'undecided' && rowDecision(row)) return false;
     if (filter !== 'all' && filter !== 'undecided' && row.status !== filter) return false;
     if (!q) return true;
-    const hay = [row.id, row.source_batch, row.status, row.files, row.visible_product, row.reason, row.next_action].join(' ').toLowerCase();
+    const hay = [row.id, row.source_batch, row.status, row.files, row.visible_product, row.target_sku, row.candidate_product, row.reason, row.next_action].join(' ').toLowerCase();
     return hay.includes(q);
   });
 }
@@ -301,7 +312,13 @@ function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
 function statusLabel(status) {
-  return ({ create_new_confirm: 'Create new / confirm', hold_confirm: 'Hold / confirm', ignore_or_supplies: 'Ignore / supplies' })[status] || status || 'Review';
+  return ({
+    create_new_confirm: 'Create new / confirm',
+    hold_confirm: 'Hold / confirm',
+    ignore_or_supplies: 'Ignore / supplies',
+    review_high_existing_sku: 'Existing SKU candidate',
+    review_possible_existing_sku: 'Possible SKU candidate',
+  })[status] || status || 'Review';
 }
 function decisionLabel(decision) {
   return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: 'Skip' })[decision] || 'Open';
@@ -309,7 +326,17 @@ function decisionLabel(decision) {
 function updateStats() {
   const total = rows.length;
   const done = rows.filter(row => rowDecision(row)).length;
-  const counts = { create_new_confirm: 0, hold_confirm: 0, ignore_or_supplies: 0, confirm: 0, wrong: 0, create_new: 0, skip: 0 };
+  const counts = {
+    review_high_existing_sku: 0,
+    review_possible_existing_sku: 0,
+    create_new_confirm: 0,
+    hold_confirm: 0,
+    ignore_or_supplies: 0,
+    confirm: 0,
+    wrong: 0,
+    create_new: 0,
+    skip: 0,
+  };
   rows.forEach(row => {
     counts[row.status] = (counts[row.status] || 0) + 1;
     const d = rowDecision(row);
@@ -317,6 +344,8 @@ function updateStats() {
   });
   document.getElementById('stats').innerHTML = \`
     <span class="pill">\${done}/\${total} reviewed</span>
+    <span class="pill">Existing: \${counts.review_high_existing_sku}</span>
+    <span class="pill">Possible: \${counts.review_possible_existing_sku}</span>
     <span class="pill">Create confirm: \${counts.create_new_confirm}</span>
     <span class="pill">Hold: \${counts.hold_confirm}</span>
     <span class="pill">Confirmed: \${counts.confirm}</span>
@@ -346,6 +375,13 @@ function renderCard() {
   const d = rowDecision(row);
   const thumbHtml = row.thumbs.length ? row.thumbs.map(t => \`<div class="thumb"><img src="\${esc(t.src)}" alt="\${esc(t.file)}"><div class="thumb-name">\${esc(t.file)}</div></div>\`).join('') : '<div class="empty">Missing thumbnail</div>';
   const tagClass = row.status === 'create_new_confirm' ? 'blue' : row.status === 'ignore_or_supplies' ? 'bad' : 'warn';
+  const skuHtml = row.target_sku || row.candidate_product || row.product_url || row.confidence ? \`
+        <div class="section"><div class="label">Candidate SKU</div><div class="value">
+          \${row.target_sku ? \`<div><strong>\${esc(row.target_sku)}</strong></div>\` : ''}
+          \${row.candidate_product ? \`<div>\${esc(row.candidate_product)}</div>\` : ''}
+          \${row.confidence ? \`<div class="notes">Confidence: \${esc(row.confidence)}</div>\` : ''}
+          \${row.product_url ? \`<div><a href="\${esc(row.product_url)}" target="_blank" rel="noreferrer">\${esc(row.product_url)}</a></div>\` : ''}
+        </div></div>\` : '';
   el.innerHTML = \`
     <div class="card-head">
       <div>
@@ -362,6 +398,7 @@ function renderCard() {
     <div class="split">
       <div class="images"><div class="image-grid">\${thumbHtml}</div></div>
       <div class="details">
+        \${skuHtml}
         <div class="section"><div class="label">Review reason</div><div class="notes">\${esc(row.reason || '')}</div></div>
         <div class="section"><div class="label">Next action</div><div class="notes">\${esc(row.next_action || '')}</div></div>
         <div class="section"><div class="label">Source files</div><div class="notes">\${esc(row.files || '')}</div></div>
@@ -392,18 +429,18 @@ function move(delta) {
 }
 function render() { updateStats(); renderList(); renderCard(); }
 function exportCsv() {
-  const headers = ['id','source_batch','status','files','visible_product','decision','owner_notes','reason','next_action'];
+  const headers = ['id','source_batch','status','files','visible_product','target_sku','candidate_product','confidence','product_url','decision','owner_notes','reason','next_action'];
   const lines = [headers.join(',')];
   for (const row of rows) {
     const state = decisions[row.id] || {};
-    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,state.decision || '',state.notes || '',row.reason,row.next_action];
+    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,row.target_sku,row.candidate_product,row.confidence,row.product_url,state.decision || '',state.notes || '',row.reason,row.next_action];
     lines.push(values.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(','));
   }
   const blob = new Blob([lines.join('\\n')], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'asiandeligo-folder02-owner-decisions.csv';
+  a.download = DOWNLOAD_NAME;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -479,6 +516,10 @@ async function main() {
       id: row.review_id,
       files: row.files,
       visible_product: row.visible_product,
+      target_sku: row.target_sku || '',
+      candidate_product: row.candidate_product || '',
+      confidence: row.confidence || '',
+      product_url: row.product_url || '',
       reason: row.reason,
       next_action: row.next_action,
       index: index + 1,
@@ -491,6 +532,8 @@ async function main() {
     rows,
     title: args.title,
     storageKey: args.storageKey,
+    subtitle: args.subtitle,
+    downloadName: args.downloadName,
   });
   await writeFile(outputPath, html, 'utf8');
 
