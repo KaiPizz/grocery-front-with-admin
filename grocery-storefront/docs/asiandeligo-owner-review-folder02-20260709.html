@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asia Deli Go Owner Review - Folder 02</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --text: #19201c;
+      --muted: #5f6c63;
+      --line: #dfe5df;
+      --brand: #169b45;
+      --brand-dark: #0f7a35;
+      --warn: #9b5f00;
+      --bad: #b42318;
+      --blue: #2563eb;
+      --shadow: 0 16px 42px rgba(19, 32, 24, .12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    header { position: sticky; top: 0; z-index: 20; background: rgba(246,247,244,.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+    .topbar { max-width: 1360px; margin: 0 auto; padding: 14px 20px; display: grid; grid-template-columns: minmax(240px, 1fr) auto; gap: 16px; align-items: center; }
+    h1 { margin: 0; font-size: 20px; line-height: 1.2; }
+    .sub { margin-top: 3px; color: var(--muted); font-size: 13px; }
+    .stats { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .pill { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 6px 10px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+    main { max-width: 1360px; margin: 0 auto; padding: 18px 20px 36px; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 14px; align-items: center; }
+    .filters, .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    button { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); padding: 9px 12px; font: inherit; font-weight: 650; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; min-height: 38px; }
+    button:hover { border-color: #a8b5aa; }
+    button.active { background: var(--text); color: white; border-color: var(--text); }
+    button.primary { background: var(--brand); color: white; border-color: var(--brand); }
+    button.primary:hover { background: var(--brand-dark); }
+    .layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 16px; align-items: start; }
+    .list { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; max-height: calc(100vh - 156px); position: sticky; top: 92px; }
+    .search { width: 100%; border: 0; border-bottom: 1px solid var(--line); padding: 13px 14px; font: inherit; outline: none; }
+    .list-scroll { overflow: auto; max-height: calc(100vh - 205px); }
+    .row-btn { width: 100%; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; justify-content: flex-start; text-align: left; padding: 12px 14px; background: white; display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; }
+    .row-btn.active { background: #eef8f1; color: var(--text); }
+    .row-index { width: 34px; height: 34px; border-radius: 50%; background: #eef1ee; display: grid; place-items: center; font-size: 12px; font-weight: 750; color: var(--muted); }
+    .row-main { min-width: 0; }
+    .row-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 750; }
+    .row-meta { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .decision-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccd4ce; }
+    .decision-dot.confirm { background: var(--brand); }
+    .decision-dot.wrong { background: var(--bad); }
+    .decision-dot.create_new { background: var(--blue); }
+    .decision-dot.skip { background: #75808a; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; }
+    .card-head { padding: 18px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; align-items: flex-start; }
+    .card-title { margin: 0; font-size: 22px; line-height: 1.25; }
+    .tagline { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; background: #eff2ef; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .tag.blue { background: #e9f0ff; color: var(--blue); }
+    .tag.warn { background: #fff4db; color: var(--warn); }
+    .tag.bad { background: #ffe8e6; color: var(--bad); }
+    .split { display: grid; grid-template-columns: minmax(320px, 55%) minmax(0, 1fr); gap: 0; }
+    .images { border-right: 1px solid var(--line); padding: 18px; background: #fbfcfb; }
+    .image-grid { display: grid; gap: 12px; }
+    .thumb { border: 1px solid var(--line); border-radius: 8px; background: white; padding: 8px; }
+    .thumb img { display: block; width: 100%; height: auto; max-height: 540px; object-fit: contain; }
+    .thumb-name { margin-top: 7px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .details { padding: 18px 20px 20px; }
+    .section { padding: 0 0 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .section:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .label { color: var(--muted); font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: .06em; margin-bottom: 6px; }
+    .value { font-size: 16px; line-height: 1.45; }
+    .notes { color: var(--muted); line-height: 1.5; white-space: pre-wrap; }
+    .textarea { width: 100%; min-height: 72px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: inherit; resize: vertical; }
+    .decision-bar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 14px 20px; background: #f3f6f3; border-top: 1px solid var(--line); }
+    .decision-bar button { justify-content: center; min-width: 0; }
+    .decision-bar button[data-decision="confirm"] { border-color: #acdaba; }
+    .decision-bar button[data-decision="wrong"] { border-color: #f0b8b4; }
+    .decision-bar button[data-decision="create_new"] { border-color: #b8cbff; }
+    .decision-bar button.selected[data-decision="confirm"] { background: var(--brand); border-color: var(--brand); color: white; }
+    .decision-bar button.selected[data-decision="wrong"] { background: var(--bad); border-color: var(--bad); color: white; }
+    .decision-bar button.selected[data-decision="create_new"] { background: var(--blue); border-color: var(--blue); color: white; }
+    .decision-bar button.selected[data-decision="skip"] { background: #4b5563; border-color: #4b5563; color: white; }
+    .empty { padding: 40px; text-align: center; color: var(--muted); }
+    @media (max-width: 980px) {
+      .topbar, .toolbar, .layout, .split { grid-template-columns: 1fr; }
+      .stats { justify-content: flex-start; }
+      .list { position: static; max-height: 320px; }
+      .list-scroll { max-height: 265px; }
+      .images { border-right: 0; border-bottom: 1px solid var(--line); }
+      .decision-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>Asia Deli Go Owner Review - Folder 02</h1>
+        <div class="sub">Folder 02 · review uncertain owner-stock products before creating SKUs or assigning images</div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </header>
+  <main>
+    <div class="toolbar">
+      <div class="filters">
+        <button data-filter="all" class="active">All rows</button>
+        <button data-filter="create_new_confirm">Create new / confirm</button>
+        <button data-filter="hold_confirm">Hold / confirm</button>
+        <button data-filter="ignore_or_supplies">Ignore / supplies</button>
+        <button data-filter="undecided">Undecided</button>
+      </div>
+      <div class="actions">
+        <button id="prevBtn">Prev</button>
+        <button id="nextBtn">Next</button>
+        <button class="primary" id="exportBtn">Export CSV</button>
+      </div>
+    </div>
+    <div class="layout">
+      <aside class="list">
+        <input id="search" class="search" placeholder="Search file, status, product..." />
+        <div class="list-scroll" id="rowList"></div>
+      </aside>
+      <section class="card" id="card"></section>
+    </div>
+  </main>
+<script>
+const REVIEW_DATA = {"rows":[{"source_batch":"batch002","status":"create_new_confirm","id":"folder02-027","files":"PETE7945.JPG; PETE7946.JPG; PETE7947.JPG; PETE7949.JPG","visible_product":"Asia Foods Vannamei Shrimp Headless Shell-On","reason":"Create only after confirming count/size, net/glazed weight, EAN and price.","next_action":"","index":1,"suggested_decision":"create_new","thumbs":[{"file":"PETE7945.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7945.jpg"},{"file":"PETE7946.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7946.jpg"},{"file":"PETE7947.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7947.jpg"},{"file":"PETE7949.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7949.jpg"}]},{"source_batch":"batch002","status":"hold_confirm","id":"folder02-030","files":"PETE7952.JPG; PETE7953.JPG; PETE7954.JPG; PETE7955.JPG; PETE7956.JPG; PETE7957.JPG; PETE7958.JPG; PETE7959.JPG; PETE7960.JPG; PETE7961.JPG; PETE7962.JPG","visible_product":"Back-label or alternate photos for frozen shrimp variants","reason":"Use as gallery images only after owner confirms exact SKU grouping.","next_action":"","index":2,"suggested_decision":"","thumbs":[{"file":"PETE7952.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7952.jpg"},{"file":"PETE7953.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7953.jpg"},{"file":"PETE7954.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7954.jpg"},{"file":"PETE7955.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7955.jpg"},{"file":"PETE7956.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7956.jpg"},{"file":"PETE7957.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7957.jpg"},{"file":"PETE7958.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7958.jpg"},{"file":"PETE7959.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7959.jpg"},{"file":"PETE7960.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7960.jpg"},{"file":"PETE7961.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7961.jpg"},{"file":"PETE7962.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7962.jpg"}]},{"source_batch":"batch002","status":"create_new_confirm","id":"folder02-031","files":"PETE7963.JPG","visible_product":"Frozen prawns / krewetki mrozone, Vietnam origin","reason":"Create after confirming brand, size/count, net weight and EAN.","next_action":"","index":3,"suggested_decision":"create_new","thumbs":[{"file":"PETE7963.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7963.jpg"}]},{"source_batch":"batch002","status":"create_new_confirm","id":"folder02-040","files":"PETE7973.JPG","visible_product":"Asia Foods Taro stem / Doc Mung frozen vegetable","reason":"Create after owner confirms final display name.","next_action":"","index":4,"suggested_decision":"create_new","thumbs":[{"file":"PETE7973.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7973.jpg"}]},{"source_batch":"batch002","status":"create_new_confirm","id":"folder02-042","files":"PETE7976.JPG","visible_product":"Asia Foods Vietnamese Style Snack / Wietnamski Przysmak","reason":"Create after owner confirms name and pack details.","next_action":"","index":5,"suggested_decision":"create_new","thumbs":[{"file":"PETE7976.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE7976.jpg"}]},{"source_batch":"batch002","status":"ignore_or_supplies","id":"folder02-046","files":"PETE8029.JPG","visible_product":"Plastic food container / packaging tray","reason":"Ignore for product catalog unless owner wants packaging/supplies category.","next_action":"","index":6,"suggested_decision":"skip","thumbs":[{"file":"PETE8029.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8029.jpg"}]},{"source_batch":"batch003","status":"create_new_confirm","id":"folder02-053","files":"PETE8909.JPG","visible_product":"BDMP Salted Dried Shrimp size M, 100g","reason":"Do not import to ADG-001686 unless owner confirms M and L are intentionally same SKU; otherwise create separate size-M product.","next_action":"","index":7,"suggested_decision":"create_new","thumbs":[{"file":"PETE8909.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8909.jpg"}]},{"source_batch":"batch003","status":"create_new_confirm","id":"folder02-054","files":"PETE8910.JPG; PETE8911.JPG","visible_product":"Super Heo Vien / Vietnamese pork balls, frozen","reason":"Create after confirming exact meat type, weight, EAN and storage.","next_action":"","index":8,"suggested_decision":"create_new","thumbs":[{"file":"PETE8910.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8910.jpg"},{"file":"PETE8911.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8911.jpg"}]},{"source_batch":"batch003","status":"create_new_confirm","id":"folder02-060","files":"PETE8919.JPG; PETE8920.JPG","visible_product":"Lakovo / Wantan sheets / Won Tong pastry","reason":"Create after owner confirms final name and pack size.","next_action":"","index":9,"suggested_decision":"create_new","thumbs":[{"file":"PETE8919.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8919.jpg"},{"file":"PETE8920.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8920.jpg"}]},{"source_batch":"batch003","status":"create_new_confirm","id":"folder02-061","files":"PETE8921.JPG; PETE8922.JPG","visible_product":"Vietnamese beef balls / bo vien style frozen pack","reason":"Create after confirming meat type, weight and EAN.","next_action":"","index":10,"suggested_decision":"create_new","thumbs":[{"file":"PETE8921.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8921.jpg"},{"file":"PETE8922.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8922.jpg"}]},{"source_batch":"batch003","status":"hold_confirm","id":"folder02-063","files":"PETE8925.JPG; PETE8926.JPG; PETE8927.JPG","visible_product":"Frozen fish slices/steaks, label partly readable","reason":"Hold for owner confirmation before product creation.","next_action":"","index":11,"suggested_decision":"","thumbs":[{"file":"PETE8925.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8925.jpg"},{"file":"PETE8926.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8926.jpg"},{"file":"PETE8927.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8927.jpg"}]},{"source_batch":"batch003","status":"create_new_confirm","id":"folder02-064","files":"PETE8928.JPG","visible_product":"Asia Foods Vietnamese Style Snack / Wietnamski Przysmak","reason":"Group with PETE7976 after owner confirms exact SKU.","next_action":"","index":12,"suggested_decision":"create_new","thumbs":[{"file":"PETE8928.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8928.jpg"}]},{"source_batch":"batch003","status":"hold_confirm","id":"folder02-069","files":"PETE8936.JPG; PETE8937.JPG","visible_product":"Black/red tray product, likely fish with red paste/sauce","reason":"Hold for owner confirmation before product creation.","next_action":"","index":13,"suggested_decision":"","thumbs":[{"file":"PETE8936.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8936.jpg"},{"file":"PETE8937.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8937.jpg"}]},{"source_batch":"batch003","status":"hold_confirm","id":"folder02-070","files":"PETE8938.JPG","visible_product":"So Mot / soybean-leaf style wrapped product","reason":"Hold for owner confirmation.","next_action":"","index":14,"suggested_decision":"","thumbs":[{"file":"PETE8938.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8938.jpg"}]},{"source_batch":"batch003","status":"create_new_confirm","id":"folder02-071","files":"PETE8939.JPG","visible_product":"Shellfish/scallop-style frozen pack","reason":"Create only after owner confirms exact species and weight.","next_action":"","index":15,"suggested_decision":"create_new","thumbs":[{"file":"PETE8939.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8939.jpg"}]},{"source_batch":"batch003","status":"hold_confirm","id":"folder02-075","files":"PETE8948.JPG","visible_product":"Shrimp tray / sushi shrimp style pack","reason":"Hold for owner confirmation.","next_action":"","index":16,"suggested_decision":"","thumbs":[{"file":"PETE8948.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8948.jpg"}]},{"source_batch":"batch003","status":"create_new_confirm","id":"folder02-076","files":"PETE8949.JPG; PETE8950.JPG","visible_product":"Unagi Kabayaki / grilled eel pack","reason":"Create frozen/chilled seafood product after confirming brand, weight and EAN.","next_action":"","index":17,"suggested_decision":"create_new","thumbs":[{"file":"PETE8949.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8949.jpg"},{"file":"PETE8950.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8950.jpg"}]},{"source_batch":"batch003","status":"create_new_confirm","id":"folder02-079","files":"PETE8953.JPG; PETE8954.JPG","visible_product":"Prepared eel/seafood slices in sauce, label not visible","reason":"Hold or create only after owner confirms exact product.","next_action":"","index":18,"suggested_decision":"create_new","thumbs":[{"file":"PETE8953.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8953.jpg"},{"file":"PETE8954.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8954.jpg"}]},{"source_batch":"batch003","status":"hold_confirm","id":"folder02-080","files":"PETE8955.JPG","visible_product":"Frozen glazed raw seafood, 40/70, exact species unclear","reason":"Hold for owner confirmation.","next_action":"","index":19,"suggested_decision":"","thumbs":[{"file":"PETE8955.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8955.jpg"}]},{"source_batch":"batch003","status":"hold_confirm","id":"folder02-081","files":"PETE8956.JPG; PETE8957.JPG; PETE8958.JPG","visible_product":"White seafood pieces, likely cuttlefish/squid-style pack","reason":"Hold for owner confirmation.","next_action":"","index":20,"suggested_decision":"","thumbs":[{"file":"PETE8956.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8956.jpg"},{"file":"PETE8957.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8957.jpg"},{"file":"PETE8958.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8958.jpg"}]},{"source_batch":"batch003","status":"hold_confirm","id":"folder02-082","files":"PETE8959.JPG; PETE8960.JPG","visible_product":"Crab/surimi sticks tray without readable label","reason":"Use only after owner confirms SKU grouping.","next_action":"","index":21,"suggested_decision":"","thumbs":[{"file":"PETE8959.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8959.jpg"},{"file":"PETE8960.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8960.jpg"}]},{"source_batch":"batch004","status":"hold_confirm","id":"folder02-084","files":"PETE8964.JPG; PETE8965.JPG","visible_product":"White carton frozen fish fillet, label not reliable","reason":"Hold for owner confirmation before product creation.","next_action":"","index":22,"suggested_decision":"","thumbs":[{"file":"PETE8964.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8964.jpg"},{"file":"PETE8965.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8965.jpg"}]},{"source_batch":"batch004","status":"create_new_confirm","id":"folder02-086","files":"PETE8968.JPG; PETE8969.JPG; PETE8970.JPG; PETE8972.JPG","visible_product":"Frozana Professional frozen vegetable mix","reason":"Create foodservice frozen vegetable product after confirming exact mix name/weight.","next_action":"","index":23,"suggested_decision":"create_new","thumbs":[{"file":"PETE8968.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8968.jpg"},{"file":"PETE8969.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8969.jpg"},{"file":"PETE8970.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8970.jpg"},{"file":"PETE8972.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8972.jpg"}]},{"source_batch":"batch004","status":"hold_confirm","id":"folder02-087","files":"PETE8973.JPG; PETE8974.JPG; PETE8975.JPG","visible_product":"Unlabeled clear bags of mixed vegetables","reason":"Use only after owner confirms SKU grouping.","next_action":"","index":24,"suggested_decision":"","thumbs":[{"file":"PETE8973.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8973.jpg"},{"file":"PETE8974.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8974.jpg"},{"file":"PETE8975.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8975.jpg"}]},{"source_batch":"batch004","status":"create_new_confirm","id":"folder02-088","files":"PETE8976.JPG","visible_product":"Frozen corn kernels, unlabeled clear bag","reason":"Create only after owner confirms product details.","next_action":"","index":25,"suggested_decision":"create_new","thumbs":[{"file":"PETE8976.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8976.jpg"}]},{"source_batch":"batch004","status":"create_new_confirm","id":"folder02-089","files":"PETE8977.JPG","visible_product":"Frozen green peas, unlabeled clear bag","reason":"Create only after owner confirms product details.","next_action":"","index":26,"suggested_decision":"create_new","thumbs":[{"file":"PETE8977.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8977.jpg"}]},{"source_batch":"batch004","status":"create_new_confirm","id":"folder02-090","files":"PETE8978.JPG; PETE8979.JPG","visible_product":"Frozen diced carrots, unlabeled clear bag","reason":"Create only after owner confirms product details.","next_action":"","index":27,"suggested_decision":"create_new","thumbs":[{"file":"PETE8978.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8978.jpg"},{"file":"PETE8979.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8979.jpg"}]},{"source_batch":"batch004","status":"hold_confirm","id":"folder02-100","files":"PETE8998.JPG; PETE8999.JPG","visible_product":"Unlabeled chopped green leaves / frozen greens","reason":"Hold for owner confirmation.","next_action":"","index":28,"suggested_decision":"","thumbs":[{"file":"PETE8998.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8998.jpg"},{"file":"PETE8999.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE8999.jpg"}]},{"source_batch":"batch004","status":"create_new_confirm","id":"folder02-103","files":"PETE9004.JPG; PETE9005.JPG","visible_product":"Frozen lime leaves","reason":"Create after confirming if these are kaffir lime leaves and pack size.","next_action":"","index":29,"suggested_decision":"create_new","thumbs":[{"file":"PETE9004.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE9004.jpg"},{"file":"PETE9005.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE9005.jpg"}]},{"source_batch":"batch004","status":"hold_confirm","id":"folder02-106","files":"PETE9009.JPG","visible_product":"Japanese miso pack, exact brand/type not fully readable","reason":"Hold for owner confirmation before product creation or mapping.","next_action":"","index":30,"suggested_decision":"","thumbs":[{"file":"PETE9009.JPG","src":"asiandeligo-owner-review-folder02-assets/thumbs/PETE9009.jpg"}]}],"counts":{"create_new_confirm":17,"hold_confirm":12,"ignore_or_supplies":1}};
+const STORAGE_KEY = "asiandeligo-owner-review-folder02-v1";
+let rows = REVIEW_DATA.rows;
+let decisions = loadState();
+let filter = 'all';
+let search = '';
+let currentId = rows[0]?.id;
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(decisions)); }
+function rowDecision(row) { return decisions[row.id]?.decision || ''; }
+function rowNotes(row) { return decisions[row.id]?.notes || ''; }
+function filteredRows() {
+  const q = search.trim().toLowerCase();
+  return rows.filter(row => {
+    if (filter === 'undecided' && rowDecision(row)) return false;
+    if (filter !== 'all' && filter !== 'undecided' && row.status !== filter) return false;
+    if (!q) return true;
+    const hay = [row.id, row.source_batch, row.status, row.files, row.visible_product, row.reason, row.next_action].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+}
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function statusLabel(status) {
+  return ({ create_new_confirm: 'Create new / confirm', hold_confirm: 'Hold / confirm', ignore_or_supplies: 'Ignore / supplies' })[status] || status || 'Review';
+}
+function decisionLabel(decision) {
+  return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: 'Skip' })[decision] || 'Open';
+}
+function updateStats() {
+  const total = rows.length;
+  const done = rows.filter(row => rowDecision(row)).length;
+  const counts = { create_new_confirm: 0, hold_confirm: 0, ignore_or_supplies: 0, confirm: 0, wrong: 0, create_new: 0, skip: 0 };
+  rows.forEach(row => {
+    counts[row.status] = (counts[row.status] || 0) + 1;
+    const d = rowDecision(row);
+    if (d) counts[d] = (counts[d] || 0) + 1;
+  });
+  document.getElementById('stats').innerHTML = `
+    <span class="pill">${done}/${total} reviewed</span>
+    <span class="pill">Create confirm: ${counts.create_new_confirm}</span>
+    <span class="pill">Hold: ${counts.hold_confirm}</span>
+    <span class="pill">Confirmed: ${counts.confirm}</span>
+    <span class="pill">Wrong: ${counts.wrong}</span>
+    <span class="pill">Create: ${counts.create_new}</span>
+    <span class="pill">Skip: ${counts.skip}</span>`;
+}
+function renderList() {
+  const list = filteredRows();
+  const el = document.getElementById('rowList');
+  if (!list.length) { el.innerHTML = '<div class="empty">No rows</div>'; return; }
+  if (!list.some(row => row.id === currentId)) currentId = list[0].id;
+  el.innerHTML = list.map(row => {
+    const d = rowDecision(row);
+    return `<button class="row-btn ${row.id === currentId ? 'active' : ''}" data-row-id="${esc(row.id)}">
+      <span class="row-index">${row.index}</span>
+      <span class="row-main"><span class="row-title">${esc(row.visible_product)}</span><span class="row-meta">${esc(statusLabel(row.status))} · ${esc(row.files)}</span></span>
+      <span class="decision-dot ${esc(d)}" title="${esc(decisionLabel(d))}"></span>
+    </button>`;
+  }).join('');
+  el.querySelectorAll('[data-row-id]').forEach(btn => btn.addEventListener('click', () => { currentId = btn.dataset.rowId; render(); }));
+}
+function renderCard() {
+  const row = rows.find(r => r.id === currentId) || filteredRows()[0];
+  const el = document.getElementById('card');
+  if (!row) { el.innerHTML = '<div class="empty">No row selected</div>'; return; }
+  const d = rowDecision(row);
+  const thumbHtml = row.thumbs.length ? row.thumbs.map(t => `<div class="thumb"><img src="${esc(t.src)}" alt="${esc(t.file)}"><div class="thumb-name">${esc(t.file)}</div></div>`).join('') : '<div class="empty">Missing thumbnail</div>';
+  const tagClass = row.status === 'create_new_confirm' ? 'blue' : row.status === 'ignore_or_supplies' ? 'bad' : 'warn';
+  el.innerHTML = `
+    <div class="card-head">
+      <div>
+        <h2 class="card-title">${row.index}. ${esc(row.visible_product)}</h2>
+        <div class="tagline">
+          <span class="tag ${tagClass}">${esc(statusLabel(row.status))}</span>
+          <span class="tag">${esc(row.source_batch)}</span>
+          <span class="tag">${esc(row.id)}</span>
+          ${row.suggested_decision ? `<span class="tag">Suggested: ${esc(decisionLabel(row.suggested_decision))}</span>` : ''}
+        </div>
+      </div>
+      <div class="pill">Decision: ${esc(decisionLabel(d))}</div>
+    </div>
+    <div class="split">
+      <div class="images"><div class="image-grid">${thumbHtml}</div></div>
+      <div class="details">
+        <div class="section"><div class="label">Review reason</div><div class="notes">${esc(row.reason || '')}</div></div>
+        <div class="section"><div class="label">Next action</div><div class="notes">${esc(row.next_action || '')}</div></div>
+        <div class="section"><div class="label">Source files</div><div class="notes">${esc(row.files || '')}</div></div>
+        <div class="section"><div class="label">Owner notes</div><textarea class="textarea" id="ownerNotes" placeholder="Ghi xác nhận, tên đúng, size, EAN, giá, hoặc lý do bỏ qua...">${esc(rowNotes(row))}</textarea></div>
+      </div>
+    </div>
+    <div class="decision-bar">
+      <button data-decision="confirm" class="${d === 'confirm' ? 'selected' : ''}">1 · Confirm</button>
+      <button data-decision="wrong" class="${d === 'wrong' ? 'selected' : ''}">2 · Wrong</button>
+      <button data-decision="create_new" class="${d === 'create_new' ? 'selected' : ''}">3 · Create new</button>
+      <button data-decision="skip" class="${d === 'skip' ? 'selected' : ''}">4 · Skip</button>
+    </div>`;
+  el.querySelectorAll('[data-decision]').forEach(btn => btn.addEventListener('click', () => setDecision(row.id, btn.dataset.decision)));
+  const notes = el.querySelector('#ownerNotes');
+  notes.addEventListener('input', () => { decisions[row.id] = { ...(decisions[row.id] || {}), notes: notes.value }; saveState(); });
+}
+function setDecision(id, decision) {
+  decisions[id] = { ...(decisions[id] || {}), decision };
+  saveState();
+  move(1);
+}
+function move(delta) {
+  const list = filteredRows();
+  const idx = Math.max(0, list.findIndex(row => row.id === currentId));
+  const next = list[Math.min(list.length - 1, Math.max(0, idx + delta))];
+  if (next) currentId = next.id;
+  render();
+}
+function render() { updateStats(); renderList(); renderCard(); }
+function exportCsv() {
+  const headers = ['id','source_batch','status','files','visible_product','decision','owner_notes','reason','next_action'];
+  const lines = [headers.join(',')];
+  for (const row of rows) {
+    const state = decisions[row.id] || {};
+    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,state.decision || '',state.notes || '',row.reason,row.next_action];
+    lines.push(values.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(','));
+  }
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'asiandeligo-folder02-owner-decisions.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+document.querySelectorAll('[data-filter]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filter = btn.dataset.filter;
+  render();
+}));
+document.getElementById('search').addEventListener('input', event => { search = event.target.value; render(); });
+document.getElementById('prevBtn').addEventListener('click', () => move(-1));
+document.getElementById('nextBtn').addEventListener('click', () => move(1));
+document.getElementById('exportBtn').addEventListener('click', exportCsv);
+document.addEventListener('keydown', event => {
+  if (event.target && ['TEXTAREA','INPUT'].includes(event.target.tagName)) return;
+  if (event.key === 'ArrowRight') move(1);
+  if (event.key === 'ArrowLeft') move(-1);
+  if (event.key === '1') setDecision(currentId, 'confirm');
+  if (event.key === '2') setDecision(currentId, 'wrong');
+  if (event.key === '3') setDecision(currentId, 'create_new');
+  if (event.key === '4') setDecision(currentId, 'skip');
+});
+render();
+</script>
+</body>
+</html>
