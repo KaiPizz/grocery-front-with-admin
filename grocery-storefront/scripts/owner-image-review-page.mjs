@@ -23,6 +23,7 @@ function parseArgs(argv) {
     subtitle: DEFAULT_SUBTITLE,
     downloadName: DEFAULT_DOWNLOAD_NAME,
     clean: false,
+    skipExportsCreateNew: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -40,6 +41,7 @@ function parseArgs(argv) {
     else if (arg === '--subtitle') args.subtitle = next();
     else if (arg === '--download-name') args.downloadName = next();
     else if (arg === '--clean') args.clean = true;
+    else if (arg === '--skip-exports-create-new') args.skipExportsCreateNew = true;
     else if (arg === '--help' || arg === '-h') {
       console.log(`Usage: node scripts/owner-image-review-page.mjs [options]
 
@@ -52,6 +54,8 @@ Options:
   --subtitle <text>       Header subtitle
   --download-name <file>  Exported decisions CSV filename
   --clean                 Remove asset dir before regenerating
+  --skip-exports-create-new
+                          Export UI decision "skip" as CSV decision "create_new"
 `);
       process.exit(0);
     } else {
@@ -153,7 +157,7 @@ function suggestedDecision(status) {
   return '';
 }
 
-function renderHtml({ rows, title, storageKey, subtitle, downloadName }) {
+function renderHtml({ rows, title, storageKey, subtitle, downloadName, skipExportsCreateNew }) {
   const data = JSON.stringify({ rows, counts: countBy(rows, 'status') });
   return `<!doctype html>
 <html lang="vi">
@@ -286,6 +290,7 @@ function renderHtml({ rows, title, storageKey, subtitle, downloadName }) {
 const REVIEW_DATA = ${data};
 const STORAGE_KEY = ${JSON.stringify(storageKey)};
 const DOWNLOAD_NAME = ${JSON.stringify(downloadName)};
+const SKIP_EXPORTS_CREATE_NEW = ${skipExportsCreateNew ? 'true' : 'false'};
 let rows = REVIEW_DATA.rows;
 let decisions = loadState();
 let filter = 'all';
@@ -321,7 +326,10 @@ function statusLabel(status) {
   })[status] || status || 'Review';
 }
 function decisionLabel(decision) {
-  return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: 'Skip' })[decision] || 'Open';
+  return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: SKIP_EXPORTS_CREATE_NEW ? 'Create new (skip existing link)' : 'Skip' })[decision] || 'Open';
+}
+function exportDecision(decision) {
+  return SKIP_EXPORTS_CREATE_NEW && decision === 'skip' ? 'create_new' : (decision || '');
 }
 function updateStats() {
   const total = rows.length;
@@ -351,7 +359,7 @@ function updateStats() {
     <span class="pill">Confirmed: \${counts.confirm}</span>
     <span class="pill">Wrong: \${counts.wrong}</span>
     <span class="pill">Create: \${counts.create_new}</span>
-    <span class="pill">Skip: \${counts.skip}</span>\`;
+    <span class="pill">${skipExportsCreateNew ? 'Create via skip' : 'Skip'}: \${counts.skip}</span>\`;
 }
 function renderList() {
   const list = filteredRows();
@@ -409,7 +417,7 @@ function renderCard() {
       <button data-decision="confirm" class="\${d === 'confirm' ? 'selected' : ''}">1 · Confirm</button>
       <button data-decision="wrong" class="\${d === 'wrong' ? 'selected' : ''}">2 · Wrong</button>
       <button data-decision="create_new" class="\${d === 'create_new' ? 'selected' : ''}">3 · Create new</button>
-      <button data-decision="skip" class="\${d === 'skip' ? 'selected' : ''}">4 · Skip</button>
+      <button data-decision="skip" class="\${d === 'skip' ? 'selected' : ''}">${skipExportsCreateNew ? '4 · Create new (skip existing link)' : '4 · Skip'}</button>
     </div>\`;
   el.querySelectorAll('[data-decision]').forEach(btn => btn.addEventListener('click', () => setDecision(row.id, btn.dataset.decision)));
   const notes = el.querySelector('#ownerNotes');
@@ -433,7 +441,7 @@ function exportCsv() {
   const lines = [headers.join(',')];
   for (const row of rows) {
     const state = decisions[row.id] || {};
-    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,row.target_sku,row.candidate_product,row.confidence,row.product_url,state.decision || '',state.notes || '',row.reason,row.next_action];
+    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,row.target_sku,row.candidate_product,row.confidence,row.product_url,exportDecision(state.decision),state.notes || '',row.reason,row.next_action];
     lines.push(values.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(','));
   }
   const blob = new Blob([lines.join('\\n')], { type: 'text/csv;charset=utf-8' });
@@ -534,6 +542,7 @@ async function main() {
     storageKey: args.storageKey,
     subtitle: args.subtitle,
     downloadName: args.downloadName,
+    skipExportsCreateNew: args.skipExportsCreateNew,
   });
   await writeFile(outputPath, html, 'utf8');
 
