@@ -17,6 +17,8 @@ Local inventory snapshot: `/tmp/asiandeligo-owner-images/winpc-folder-inventory-
 - Folder 02 batch 004 reviewed: final 45 sorted JPG files from `wetransfer-03e12c`.
 - Folder 02 is fully reviewed: 195 / 195 files.
 - Folder 03 batch 001 reviewed: first 50 sorted JPG files from `wetransfer-0dadc5`.
+- Folder 03 batch 002 reviewed: final 31 sorted JPG files from `wetransfer-0dadc5`.
+- Folder 03 is fully reviewed: 81 / 81 files.
 
 ## Folder Inventory
 
@@ -48,6 +50,10 @@ Continue folder-by-folder, keeping each report scoped to one source folder:
    - `category_lifestyle`
    - `ignore`
 3. Do not import folder 02 batches 001-004 into existing products; they produced 0 safe existing-SKU matches and should be treated as create-new/owner-confirmation inventory.
-4. Continue folder 03 `wetransfer-0dadc5` with batch 002: final 31 sorted JPG files from `PETE7382.JPG` to `PETE8843.JPG`.
+4. Build a folder 03 review page/queue from batches 001-002. Important uncertain rows:
+   - `review_high_existing_sku`: 6 total across folder 03; keep behind user review before media import.
+   - `review_possible_existing_sku`: 1 row (`PETE7630.JPG` to `ADG-000013`) because label wording differs.
+   - `create_new_confirm`: 30 total across folder 03; likely missing products to create.
+5. Continue folder 04 `wetransfer-158133` with batch 001: first 50 sorted JPG files.
 
 Conservative matching rule: exact visible brand + product name + weight/volume/pack count before proposing an existing SKU.
