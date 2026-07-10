@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asia Deli Go Owner Review - Folder 10 Batch 002</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --text: #19201c;
+      --muted: #5f6c63;
+      --line: #dfe5df;
+      --brand: #169b45;
+      --brand-dark: #0f7a35;
+      --warn: #9b5f00;
+      --bad: #b42318;
+      --blue: #2563eb;
+      --shadow: 0 16px 42px rgba(19, 32, 24, .12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    header { position: sticky; top: 0; z-index: 20; background: rgba(246,247,244,.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+    .topbar { max-width: 1360px; margin: 0 auto; padding: 14px 20px; display: grid; grid-template-columns: minmax(240px, 1fr) auto; gap: 16px; align-items: center; }
+    h1 { margin: 0; font-size: 20px; line-height: 1.2; }
+    .sub { margin-top: 3px; color: var(--muted); font-size: 13px; }
+    .stats { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .pill { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 6px 10px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+    main { max-width: 1360px; margin: 0 auto; padding: 18px 20px 36px; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 14px; align-items: center; }
+    .filters, .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    button { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); padding: 9px 12px; font: inherit; font-weight: 650; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; min-height: 38px; }
+    button:hover { border-color: #a8b5aa; }
+    button.active { background: var(--text); color: white; border-color: var(--text); }
+    button.primary { background: var(--brand); color: white; border-color: var(--brand); }
+    button.primary:hover { background: var(--brand-dark); }
+    .layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 16px; align-items: start; }
+    .list { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; max-height: calc(100vh - 156px); position: sticky; top: 92px; }
+    .search { width: 100%; border: 0; border-bottom: 1px solid var(--line); padding: 13px 14px; font: inherit; outline: none; }
+    .list-scroll { overflow: auto; max-height: calc(100vh - 205px); }
+    .row-btn { width: 100%; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; justify-content: flex-start; text-align: left; padding: 12px 14px; background: white; display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; }
+    .row-btn.active { background: #eef8f1; color: var(--text); }
+    .row-index { width: 34px; height: 34px; border-radius: 50%; background: #eef1ee; display: grid; place-items: center; font-size: 12px; font-weight: 750; color: var(--muted); }
+    .row-main { min-width: 0; }
+    .row-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 750; }
+    .row-meta { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .decision-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccd4ce; }
+    .decision-dot.confirm { background: var(--brand); }
+    .decision-dot.wrong { background: var(--bad); }
+    .decision-dot.create_new { background: var(--blue); }
+    .decision-dot.skip { background: #75808a; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; }
+    .card-head { padding: 18px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; align-items: flex-start; }
+    .card-title { margin: 0; font-size: 22px; line-height: 1.25; }
+    .tagline { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; background: #eff2ef; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .tag.blue { background: #e9f0ff; color: var(--blue); }
+    .tag.warn { background: #fff4db; color: var(--warn); }
+    .tag.bad { background: #ffe8e6; color: var(--bad); }
+    .split { display: grid; grid-template-columns: minmax(320px, 55%) minmax(0, 1fr); gap: 0; }
+    .images { border-right: 1px solid var(--line); padding: 18px; background: #fbfcfb; }
+    .image-grid { display: grid; gap: 12px; }
+    .thumb { border: 1px solid var(--line); border-radius: 8px; background: white; padding: 8px; }
+    .thumb img { display: block; width: 100%; height: auto; max-height: 540px; object-fit: contain; }
+    .thumb-name { margin-top: 7px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .details { padding: 18px 20px 20px; }
+    .section { padding: 0 0 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .section:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .label { color: var(--muted); font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: .06em; margin-bottom: 6px; }
+    .value { font-size: 16px; line-height: 1.45; }
+    .notes { color: var(--muted); line-height: 1.5; white-space: pre-wrap; }
+    .textarea { width: 100%; min-height: 72px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: inherit; resize: vertical; }
+    .decision-bar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 14px 20px; background: #f3f6f3; border-top: 1px solid var(--line); }
+    .decision-bar button { justify-content: center; min-width: 0; }
+    .decision-bar button[data-decision="confirm"] { border-color: #acdaba; }
+    .decision-bar button[data-decision="wrong"] { border-color: #f0b8b4; }
+    .decision-bar button[data-decision="create_new"] { border-color: #b8cbff; }
+    .decision-bar button.selected[data-decision="confirm"] { background: var(--brand); border-color: var(--brand); color: white; }
+    .decision-bar button.selected[data-decision="wrong"] { background: var(--bad); border-color: var(--bad); color: white; }
+    .decision-bar button.selected[data-decision="create_new"] { background: var(--blue); border-color: var(--blue); color: white; }
+    .decision-bar button.selected[data-decision="skip"] { background: #4b5563; border-color: #4b5563; color: white; }
+    .empty { padding: 40px; text-align: center; color: var(--muted); }
+    @media (max-width: 980px) {
+      .topbar, .toolbar, .layout, .split { grid-template-columns: 1fr; }
+      .stats { justify-content: flex-start; }
+      .list { position: static; max-height: 320px; }
+      .list-scroll { max-height: 265px; }
+      .images { border-right: 0; border-bottom: 1px solid var(--line); }
+      .decision-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>Asia Deli Go Owner Review - Folder 10 Batch 002</h1>
+        <div class="sub">Folder 10 batch 002 · curry pastes sauces and condiments · review before image import or product creation</div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </header>
+  <main>
+    <div class="toolbar">
+      <div class="filters">
+        <button data-filter="all" class="active">All rows</button>
+        <button data-filter="review_high_existing_sku">Existing SKU</button>
+        <button data-filter="review_possible_existing_sku">Possible SKU</button>
+        <button data-filter="create_new_confirm">Create new / confirm</button>
+        <button data-filter="hold_confirm">Hold / confirm</button>
+        <button data-filter="ignore_or_supplies">Ignore / supplies</button>
+        <button data-filter="undecided">Undecided</button>
+      </div>
+      <div class="actions">
+        <button id="prevBtn">Prev</button>
+        <button id="nextBtn">Next</button>
+        <button class="primary" id="exportBtn">Export CSV</button>
+      </div>
+    </div>
+    <div class="layout">
+      <aside class="list">
+        <input id="search" class="search" placeholder="Search file, status, product..." />
+        <div class="list-scroll" id="rowList"></div>
+      </aside>
+      <section class="card" id="card"></section>
+    </div>
+  </main>
+<script>
+const REVIEW_DATA = {"rows":[{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-036","files":"PETE7283.JPG","visible_product":"Thai Sauce Brand Nam Prik Pao Chilli Paste with Soya Bean Oil, foodservice jar 3kg","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Thai Sauce Brand 3kg Nam Prik Pao row found in the catalog export. Existing Mae Pranom Nam Prik Pao rows are different brand and smaller sizes.","next_action":"Create new SKU only after owner confirms EAN and price.","index":1,"suggested_decision":"create_new","thumbs":[{"file":"PETE7283.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7283.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-037","files":"PETE7299.JPG","visible_product":"Lee Kum Kee Char Siu Sauce 397g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No Char Siu Sauce row found in the catalog export. Other Lee Kum Kee sauces exist but not this product.","next_action":"Create new SKU after confirming EAN and price.","index":2,"suggested_decision":"create_new","thumbs":[{"file":"PETE7299.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7299.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-038","files":"PETE7300.JPG","visible_product":"Lee Kum Kee Spare Rib Sauce 397g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No Spare Rib Sauce row found in the catalog export. Other Lee Kum Kee sauces exist but not this product.","next_action":"Create new SKU after confirming EAN and price.","index":3,"suggested_decision":"create_new","thumbs":[{"file":"PETE7300.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7300.jpg"}]},{"source_batch":"folder10-batch002","status":"review_high_existing_sku","id":"folder10-039","files":"PETE7303.JPG","visible_product":"Lee Kum Kee Hoisin Sauce 397g","target_sku":"ADG-000082","candidate_product":"Sos Hoisin 397g - Lee Kum Kee","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sos-hoisin-397g-lee-kum-kee","reason":"Exact brand, product and 397g size match existing SKU ADG-000082.","next_action":"Attach this owner photo to the existing SKU if approved.","index":4,"suggested_decision":"","thumbs":[{"file":"PETE7303.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7303.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-040","files":"PETE7305.JPG","visible_product":"Lee Kum Kee Plum Sauce 397g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No Lee Kum Kee Plum Sauce row found in the catalog export. Plum search results are unrelated drinks, sweets or syrups.","next_action":"Create new SKU after confirming EAN and price.","index":5,"suggested_decision":"create_new","thumbs":[{"file":"PETE7305.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7305.jpg"}]},{"source_batch":"folder10-batch002","status":"review_high_existing_sku","id":"folder10-041","files":"PETE7306.JPG","visible_product":"Lee Kum Kee Black Bean Garlic Sauce 368g","target_sku":"ADG-000151","candidate_product":"Sos z czarnej fasoli z czosnkiem 368g - Lee Kum Kee","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sos-z-czarnej-fasoli-z-czosnkiem-368g-lee-kum-kee","reason":"Exact brand, product and 368g size match existing SKU ADG-000151.","next_action":"Attach this owner photo to the existing SKU if approved.","index":6,"suggested_decision":"","thumbs":[{"file":"PETE7306.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7306.jpg"}]},{"source_batch":"folder10-batch002","status":"review_high_existing_sku","id":"folder10-042","files":"PETE7309.JPG","visible_product":"Lee Kum Kee Chilli Garlic Sauce 368g","target_sku":"ADG-000309","candidate_product":"Sos chili z czosnkiem, pikantny 368g - Lee Kum Kee","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sos-chili-z-czosnkiem-pikantny-368g-lee-kum-kee","reason":"Exact brand, product and 368g size match existing SKU ADG-000309. Same SKU also appeared in folder10-batch001 as another owner photo.","next_action":"Attach as additional gallery photo if approved.","index":7,"suggested_decision":"","thumbs":[{"file":"PETE7309.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7309.jpg"}]},{"source_batch":"folder10-batch002","status":"hold_confirm","id":"folder10-043","files":"PETE7353.JPG","visible_product":"Mae Krua Oyster Sauce foodservice jug, exact net size not readable","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"The front photo shows Mae Krua Oyster Sauce but the exact net volume or weight is not readable. Existing Mae Krua rows are 150ml, 300ml and 600ml, so this must not be merged by guesswork.","next_action":"Owner to confirm exact size, EAN and whether it should be sold online before creating.","index":8,"suggested_decision":"","thumbs":[{"file":"PETE7353.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7353.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-044","files":"PETE7362.JPG","visible_product":"Golden Lotus Mei Wei Oyster Flavoured Sauce 2268g / 5lb","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Golden Lotus oyster flavoured sauce 2268g row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":9,"suggested_decision":"create_new","thumbs":[{"file":"PETE7362.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7362.jpg"}]},{"source_batch":"folder10-batch002","status":"hold_confirm","id":"folder10-045","files":"PETE7635.JPG","visible_product":"Vietnamese Dau Me Thom sesame oil bottle, exact brand and volume unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"The label indicates pure sesame oil but the exact brand and net volume are not readable enough. Catalog has many sesame oil rows, so unsafe matching risk is high.","next_action":"Owner to confirm brand, exact volume and EAN before creating or matching.","index":10,"suggested_decision":"","thumbs":[{"file":"PETE7635.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7635.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-046","files":"PETE7641.JPG","visible_product":"Marlibo Olej Uniwersalny refined rapeseed oil 5L","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No Marlibo 5L cooking oil row found in the catalog export. This may be a general grocery item rather than Asian-specific inventory.","next_action":"Owner to confirm if this should be sold online, then create new SKU with EAN 5906823000157 and price.","index":11,"suggested_decision":"create_new","thumbs":[{"file":"PETE7641.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7641.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-047","files":"PETE7697 - Kopia.JPG","visible_product":"Golden Lotus Sos Chilli Sambal Oeleck 10kg bucket","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Golden Lotus Sambal Oeleck 10kg row found. Existing Sambal rows are smaller packs or different brands.","next_action":"Create new foodservice-size SKU after confirming EAN and price.","index":12,"suggested_decision":"create_new","thumbs":[{"file":"PETE7697 - Kopia.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7697 - Kopia.jpg"}]},{"source_batch":"folder10-batch002","status":"hold_confirm","id":"folder10-048","files":"PETE7700 - Kopia.JPG","visible_product":"Wendjoe Verse Sambal hot pepper mash, large bucket","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"The product family is readable, but exact net weight is not readable from the front image. Existing Wendjoe Sambal row is 360g and does not match this bucket.","next_action":"Owner to confirm exact net weight, EAN and price before creating.","index":13,"suggested_decision":"","thumbs":[{"file":"PETE7700 - Kopia.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7700 - Kopia.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-049","files":"PETE7706.JPG","visible_product":"Mae Ploy Pad Thai Sauce 520g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Pad Thai sauce rows from Lobo and Sen Soy, but no exact Mae Ploy 520g row.","next_action":"Create new SKU after confirming EAN and price.","index":14,"suggested_decision":"create_new","thumbs":[{"file":"PETE7706.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7706.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-050","files":"PETE7707.JPG","visible_product":"Mae Ploy Panang Curry Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Mae Ploy Panang Curry Paste 400g row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":15,"suggested_decision":"create_new","thumbs":[{"file":"PETE7707.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7707.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-051","files":"PETE7708.JPG","visible_product":"Mae Ploy Massaman Curry Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Cock Brand Massaman 400g but not Mae Ploy Massaman 400g, so brand differs.","next_action":"Create new SKU after confirming EAN and price.","index":16,"suggested_decision":"create_new","thumbs":[{"file":"PETE7708.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7708.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-052","files":"PETE7709.JPG","visible_product":"Mae Ploy Red Curry Paste 1kg","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Mae Ploy Red Curry Paste 1kg row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":17,"suggested_decision":"create_new","thumbs":[{"file":"PETE7709.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7709.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-053","files":"PETE7710.JPG","visible_product":"Mae Ploy Yellow Curry Paste 1kg","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Mae Ploy Yellow Curry Paste 1kg row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":18,"suggested_decision":"create_new","thumbs":[{"file":"PETE7710.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7710.jpg"}]},{"source_batch":"folder10-batch002","status":"review_high_existing_sku","id":"folder10-054","files":"PETE7711.JPG","visible_product":"Marutomo Shin Katsuo Dashi no Moto powder 1kg (2 x 500g)","target_sku":"ADG-000734","candidate_product":"Shin Katsuo Dashi no Moto, bulion z tunczyka bonito w proszku (2 x 500g) 1kg - Marutomo","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/shin-katsuo-dashi-no-moto-bulion-z-tunczyka-bonito-w-proszku-2-x-500g-1kg-marutomo","reason":"Exact brand, format and 1kg (2 x 500g) pack match existing SKU ADG-000734.","next_action":"Attach this owner photo to the existing SKU if approved.","index":19,"suggested_decision":"","thumbs":[{"file":"PETE7711.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7711.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-055","files":"PETE7713.JPG","visible_product":"Cock Brand Yellow Curry Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Cock Brand Yellow Curry Paste 400g row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":20,"suggested_decision":"create_new","thumbs":[{"file":"PETE7713.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7713.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-056","files":"PETE7714.JPG","visible_product":"Cock Brand Panang Curry Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Cock Brand Panang Curry Paste 400g row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":21,"suggested_decision":"create_new","thumbs":[{"file":"PETE7714.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7714.jpg"}]},{"source_batch":"folder10-batch002","status":"review_possible_existing_sku","id":"folder10-057","files":"PETE7715.JPG","visible_product":"Mae Ploy Red Curry Paste 400g","target_sku":"ADG-000085","candidate_product":"Pasta curry czerwona 400g","confidence":"possible","product_url":"https://asiandeligo.eshoper.pro/products/pasta-curry-czerwona-400g","reason":"Flavor and size match a generic Red Curry Paste 400g row, but the catalog row has no visible brand and could be a different product.","next_action":"Owner should compare before assigning; otherwise create a separate Mae Ploy 400g SKU.","index":22,"suggested_decision":"","thumbs":[{"file":"PETE7715.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7715.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-058","files":"PETE7716.JPG","visible_product":"Mae Ploy Green Curry Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Mae Ploy Green Curry Paste 400g row found. Existing green curry row is Cock Brand 50g only.","next_action":"Create new SKU after confirming EAN and price.","index":23,"suggested_decision":"create_new","thumbs":[{"file":"PETE7716.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7716.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-059","files":"PETE7717.JPG","visible_product":"Mae Ploy Yellow Curry Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Mae Ploy Yellow Curry Paste 400g row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":24,"suggested_decision":"create_new","thumbs":[{"file":"PETE7717.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7717.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-060","files":"PETE7718.JPG","visible_product":"Aroy-D Tom Yum Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Cock Brand Tom Yum 900g and other instant soup products, but no Aroy-D Tom Yum Paste 400g row.","next_action":"Create new SKU after confirming EAN and price.","index":25,"suggested_decision":"create_new","thumbs":[{"file":"PETE7718.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7718.jpg"}]},{"source_batch":"folder10-batch002","status":"review_possible_existing_sku","id":"folder10-061","files":"PETE7719.JPG","visible_product":"Cock Brand Red Curry Paste 400g","target_sku":"ADG-000085","candidate_product":"Pasta curry czerwona 400g","confidence":"possible","product_url":"https://asiandeligo.eshoper.pro/products/pasta-curry-czerwona-400g","reason":"Flavor and size match a generic Red Curry Paste 400g row, but the catalog row has no visible brand. It cannot safely be assigned while Mae Ploy Red Curry 400g is also present in this batch.","next_action":"Owner should compare before assigning; otherwise create a separate Cock Brand 400g SKU.","index":26,"suggested_decision":"","thumbs":[{"file":"PETE7719.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7719.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-062","files":"PETE7721.JPG","visible_product":"Pantai Norasingh Chilli Paste with Soya Bean Oil 500g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Pantai Norasingh Chilli Paste 500g row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":27,"suggested_decision":"create_new","thumbs":[{"file":"PETE7721.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7721.jpg"}]},{"source_batch":"folder10-batch002","status":"review_high_existing_sku","id":"folder10-063","files":"PETE7722.JPG","visible_product":"Cock Brand Tom Yum Instant Hot and Sour Paste 900g","target_sku":"ADG-000083","candidate_product":"Pasta Tom Yum 900g - Cock Brand","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/pasta-tom-yum-900g-cock-brand","reason":"Exact brand, product and 900g size match existing SKU ADG-000083.","next_action":"Attach this owner photo to the existing SKU if approved.","index":28,"suggested_decision":"","thumbs":[{"file":"PETE7722.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7722.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-064","files":"PETE7724.JPG","visible_product":"Mae Ploy Green Curry Paste 1kg","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Mae Ploy Green Curry Paste 1kg row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":29,"suggested_decision":"create_new","thumbs":[{"file":"PETE7724.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7724.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-065","files":"PETE7725.JPG","visible_product":"Cock Brand Yellow Curry Paste 1kg","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Cock Brand Yellow Curry Paste 1kg row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":30,"suggested_decision":"create_new","thumbs":[{"file":"PETE7725.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7725.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-066","files":"PETE7726.JPG; PETE7727.JPG","visible_product":"Cock Brand Green Curry Paste 1kg","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Two photos show the same Cock Brand Green Curry Paste 1kg product. No exact 1kg Cock Brand green curry row exists in the catalog export.","next_action":"Create one new SKU and use both images as gallery photos after confirming EAN and price.","index":31,"suggested_decision":"create_new","thumbs":[{"file":"PETE7726.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7726.jpg"},{"file":"PETE7727.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7727.jpg"}]},{"source_batch":"folder10-batch002","status":"review_high_existing_sku","id":"folder10-067","files":"PETE7728.JPG","visible_product":"Mae Pranom Brand Thai Chilli Paste / Nam Prik Pao 513g","target_sku":"ADG-000210","candidate_product":"Pasta Nam Prik Pao, chili z krewetkami 513g - Mae Pranom","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/pasta-nam-prik-pao-chili-z-krewetkami-513g-mae-pranom","reason":"Exact brand, product family and 513g size match existing SKU ADG-000210.","next_action":"Attach this owner photo to the existing SKU if approved.","index":32,"suggested_decision":"","thumbs":[{"file":"PETE7728.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7728.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-068","files":"PETE7729.JPG","visible_product":"Cock Brand Panang Curry Paste 1kg","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Cock Brand Panang Curry Paste 1kg row found in the catalog export. Do not merge with the 400g Cock Brand Panang item.","next_action":"Create new SKU after confirming EAN and price.","index":33,"suggested_decision":"create_new","thumbs":[{"file":"PETE7729.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7729.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-069","files":"PETE7730.JPG","visible_product":"Cock Brand Green Curry Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Cock Brand Green Curry Paste 400g row found. Existing green curry row is Cock Brand 50g only and does not match size.","next_action":"Create new SKU after confirming EAN and price.","index":34,"suggested_decision":"create_new","thumbs":[{"file":"PETE7730.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7730.jpg"}]},{"source_batch":"folder10-batch002","status":"review_high_existing_sku","id":"folder10-070","files":"PETE7731.JPG","visible_product":"Cock Brand Tom Kha Kai Instant Sour Spicy Coconut Paste 227g","target_sku":"ADG-000070","candidate_product":"Pasta Tom Kha 227g Cook Brand","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/pasta-tom-kha-227g-cook-brand","reason":"Exact product and 227g size match existing SKU ADG-000070. Catalog brand spelling appears as Cook Brand but the logo matches Cock Brand packaging.","next_action":"Attach this owner photo to the existing SKU if approved.","index":35,"suggested_decision":"","thumbs":[{"file":"PETE7731.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7731.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-071","files":"PETE7732.JPG","visible_product":"Cock Brand Tom Yum Instant Hot and Sour Paste 227g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Cock Brand Tom Yum 900g but no 227g jar row.","next_action":"Create new SKU after confirming EAN and price.","index":36,"suggested_decision":"create_new","thumbs":[{"file":"PETE7732.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7732.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-072","files":"PETE7733.JPG","visible_product":"Aroy-D Tom Kha Paste 400g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Cock Brand Tom Kha 227g and Lobo Tom Kha 50g, but no Aroy-D Tom Kha 400g row.","next_action":"Create new SKU after confirming EAN and price.","index":37,"suggested_decision":"create_new","thumbs":[{"file":"PETE7733.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7733.jpg"}]},{"source_batch":"folder10-batch002","status":"review_high_existing_sku","id":"folder10-073","files":"PETE7734.JPG","visible_product":"Cock Brand Massaman Curry Paste 400g","target_sku":"ADG-000359","candidate_product":"Pasta Curry Matsaman 400g - Cock Brand","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/pasta-curry-matsaman-400g-cock-brand","reason":"Exact brand, flavor and 400g size match existing SKU ADG-000359 despite the catalog typo Matsaman.","next_action":"Attach this owner photo to the existing SKU if approved.","index":38,"suggested_decision":"","thumbs":[{"file":"PETE7734.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7734.jpg"}]},{"source_batch":"folder10-batch002","status":"create_new_confirm","id":"folder10-074","files":"PETE7735.JPG","visible_product":"Mae Pranom Brand Shrimp Paste Kapi, large tub likely 1kg","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Mae Pranom Kapi 100g only. This image shows a much larger tub, so it should not be merged with the 100g SKU.","next_action":"Create new SKU after owner confirms exact net weight, EAN and price.","index":39,"suggested_decision":"create_new","thumbs":[{"file":"PETE7735.JPG","src":"asiandeligo-owner-review-folder10-batch002-assets/thumbs/PETE7735.jpg"}]}],"counts":{"create_new_confirm":26,"review_high_existing_sku":8,"hold_confirm":3,"review_possible_existing_sku":2}};
+const STORAGE_KEY = "asiandeligo-owner-review-folder10-batch002-v1";
+const DOWNLOAD_NAME = "asiandeligo-folder10-batch002-owner-decisions.csv";
+const SKIP_EXPORTS_CREATE_NEW = false;
+let rows = REVIEW_DATA.rows;
+let decisions = loadState();
+let filter = 'all';
+let search = '';
+let currentId = rows[0]?.id;
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(decisions)); }
+function rowDecision(row) { return decisions[row.id]?.decision || ''; }
+function rowNotes(row) { return decisions[row.id]?.notes || ''; }
+function filteredRows() {
+  const q = search.trim().toLowerCase();
+  return rows.filter(row => {
+    if (filter === 'undecided' && rowDecision(row)) return false;
+    if (filter !== 'all' && filter !== 'undecided' && row.status !== filter) return false;
+    if (!q) return true;
+    const hay = [row.id, row.source_batch, row.status, row.files, row.visible_product, row.target_sku, row.candidate_product, row.reason, row.next_action].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+}
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function statusLabel(status) {
+  return ({
+    create_new_confirm: 'Create new / confirm',
+    hold_confirm: 'Hold / confirm',
+    ignore_or_supplies: 'Ignore / supplies',
+    review_high_existing_sku: 'Existing SKU candidate',
+    review_possible_existing_sku: 'Possible SKU candidate',
+  })[status] || status || 'Review';
+}
+function decisionLabel(decision) {
+  return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: SKIP_EXPORTS_CREATE_NEW ? 'Create new (skip existing link)' : 'Skip' })[decision] || 'Open';
+}
+function exportDecision(decision) {
+  return SKIP_EXPORTS_CREATE_NEW && decision === 'skip' ? 'create_new' : (decision || '');
+}
+function updateStats() {
+  const total = rows.length;
+  const done = rows.filter(row => rowDecision(row)).length;
+  const counts = {
+    review_high_existing_sku: 0,
+    review_possible_existing_sku: 0,
+    create_new_confirm: 0,
+    hold_confirm: 0,
+    ignore_or_supplies: 0,
+    confirm: 0,
+    wrong: 0,
+    create_new: 0,
+    skip: 0,
+  };
+  rows.forEach(row => {
+    counts[row.status] = (counts[row.status] || 0) + 1;
+    const d = rowDecision(row);
+    if (d) counts[d] = (counts[d] || 0) + 1;
+  });
+  document.getElementById('stats').innerHTML = `
+    <span class="pill">${done}/${total} reviewed</span>
+    <span class="pill">Existing: ${counts.review_high_existing_sku}</span>
+    <span class="pill">Possible: ${counts.review_possible_existing_sku}</span>
+    <span class="pill">Create confirm: ${counts.create_new_confirm}</span>
+    <span class="pill">Hold: ${counts.hold_confirm}</span>
+    <span class="pill">Confirmed: ${counts.confirm}</span>
+    <span class="pill">Wrong: ${counts.wrong}</span>
+    <span class="pill">Create: ${counts.create_new}</span>
+    <span class="pill">Skip: ${counts.skip}</span>`;
+}
+function renderList() {
+  const list = filteredRows();
+  const el = document.getElementById('rowList');
+  if (!list.length) { el.innerHTML = '<div class="empty">No rows</div>'; return; }
+  if (!list.some(row => row.id === currentId)) currentId = list[0].id;
+  el.innerHTML = list.map(row => {
+    const d = rowDecision(row);
+    return `<button class="row-btn ${row.id === currentId ? 'active' : ''}" data-row-id="${esc(row.id)}">
+      <span class="row-index">${row.index}</span>
+      <span class="row-main"><span class="row-title">${esc(row.visible_product)}</span><span class="row-meta">${esc(statusLabel(row.status))} · ${esc(row.files)}</span></span>
+      <span class="decision-dot ${esc(d)}" title="${esc(decisionLabel(d))}"></span>
+    </button>`;
+  }).join('');
+  el.querySelectorAll('[data-row-id]').forEach(btn => btn.addEventListener('click', () => { currentId = btn.dataset.rowId; render(); }));
+}
+function renderCard() {
+  const row = rows.find(r => r.id === currentId) || filteredRows()[0];
+  const el = document.getElementById('card');
+  if (!row) { el.innerHTML = '<div class="empty">No row selected</div>'; return; }
+  const d = rowDecision(row);
+  const thumbHtml = row.thumbs.length ? row.thumbs.map(t => `<div class="thumb"><img src="${esc(t.src)}" alt="${esc(t.file)}"><div class="thumb-name">${esc(t.file)}</div></div>`).join('') : '<div class="empty">Missing thumbnail</div>';
+  const tagClass = row.status === 'create_new_confirm' ? 'blue' : row.status === 'ignore_or_supplies' ? 'bad' : 'warn';
+  const skuHtml = row.target_sku || row.candidate_product || row.product_url || row.confidence ? `
+        <div class="section"><div class="label">Candidate SKU</div><div class="value">
+          ${row.target_sku ? `<div><strong>${esc(row.target_sku)}</strong></div>` : ''}
+          ${row.candidate_product ? `<div>${esc(row.candidate_product)}</div>` : ''}
+          ${row.confidence ? `<div class="notes">Confidence: ${esc(row.confidence)}</div>` : ''}
+          ${row.product_url ? `<div><a href="${esc(row.product_url)}" target="_blank" rel="noreferrer">${esc(row.product_url)}</a></div>` : ''}
+        </div></div>` : '';
+  el.innerHTML = `
+    <div class="card-head">
+      <div>
+        <h2 class="card-title">${row.index}. ${esc(row.visible_product)}</h2>
+        <div class="tagline">
+          <span class="tag ${tagClass}">${esc(statusLabel(row.status))}</span>
+          <span class="tag">${esc(row.source_batch)}</span>
+          <span class="tag">${esc(row.id)}</span>
+          ${row.suggested_decision ? `<span class="tag">Suggested: ${esc(decisionLabel(row.suggested_decision))}</span>` : ''}
+        </div>
+      </div>
+      <div class="pill">Decision: ${esc(decisionLabel(d))}</div>
+    </div>
+    <div class="split">
+      <div class="images"><div class="image-grid">${thumbHtml}</div></div>
+      <div class="details">
+        ${skuHtml}
+        <div class="section"><div class="label">Review reason</div><div class="notes">${esc(row.reason || '')}</div></div>
+        <div class="section"><div class="label">Next action</div><div class="notes">${esc(row.next_action || '')}</div></div>
+        <div class="section"><div class="label">Source files</div><div class="notes">${esc(row.files || '')}</div></div>
+        <div class="section"><div class="label">Owner notes</div><textarea class="textarea" id="ownerNotes" placeholder="Ghi xác nhận, tên đúng, size, EAN, giá, hoặc lý do bỏ qua...">${esc(rowNotes(row))}</textarea></div>
+      </div>
+    </div>
+    <div class="decision-bar">
+      <button data-decision="confirm" class="${d === 'confirm' ? 'selected' : ''}">1 · Confirm</button>
+      <button data-decision="wrong" class="${d === 'wrong' ? 'selected' : ''}">2 · Wrong</button>
+      <button data-decision="create_new" class="${d === 'create_new' ? 'selected' : ''}">3 · Create new</button>
+      <button data-decision="skip" class="${d === 'skip' ? 'selected' : ''}">4 · Skip</button>
+    </div>`;
+  el.querySelectorAll('[data-decision]').forEach(btn => btn.addEventListener('click', () => setDecision(row.id, btn.dataset.decision)));
+  const notes = el.querySelector('#ownerNotes');
+  notes.addEventListener('input', () => { decisions[row.id] = { ...(decisions[row.id] || {}), notes: notes.value }; saveState(); });
+}
+function setDecision(id, decision) {
+  decisions[id] = { ...(decisions[id] || {}), decision };
+  saveState();
+  move(1);
+}
+function move(delta) {
+  const list = filteredRows();
+  const idx = Math.max(0, list.findIndex(row => row.id === currentId));
+  const next = list[Math.min(list.length - 1, Math.max(0, idx + delta))];
+  if (next) currentId = next.id;
+  render();
+}
+function render() { updateStats(); renderList(); renderCard(); }
+function exportCsv() {
+  const headers = ['id','source_batch','status','files','visible_product','target_sku','candidate_product','confidence','product_url','decision','owner_notes','reason','next_action'];
+  const lines = [headers.join(',')];
+  for (const row of rows) {
+    const state = decisions[row.id] || {};
+    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,row.target_sku,row.candidate_product,row.confidence,row.product_url,exportDecision(state.decision),state.notes || '',row.reason,row.next_action];
+    lines.push(values.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(','));
+  }
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = DOWNLOAD_NAME;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+document.querySelectorAll('[data-filter]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filter = btn.dataset.filter;
+  render();
+}));
+document.getElementById('search').addEventListener('input', event => { search = event.target.value; render(); });
+document.getElementById('prevBtn').addEventListener('click', () => move(-1));
+document.getElementById('nextBtn').addEventListener('click', () => move(1));
+document.getElementById('exportBtn').addEventListener('click', exportCsv);
+document.addEventListener('keydown', event => {
+  if (event.target && ['TEXTAREA','INPUT'].includes(event.target.tagName)) return;
+  if (event.key === 'ArrowRight') move(1);
+  if (event.key === 'ArrowLeft') move(-1);
+  if (event.key === '1') setDecision(currentId, 'confirm');
+  if (event.key === '2') setDecision(currentId, 'wrong');
+  if (event.key === '3') setDecision(currentId, 'create_new');
+  if (event.key === '4') setDecision(currentId, 'skip');
+});
+render();
+</script>
+</body>
+</html>
