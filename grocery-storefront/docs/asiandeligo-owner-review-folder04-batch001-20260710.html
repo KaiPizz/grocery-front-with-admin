@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asia Deli Go Owner Review - Folder 04 Batch 001</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --text: #19201c;
+      --muted: #5f6c63;
+      --line: #dfe5df;
+      --brand: #169b45;
+      --brand-dark: #0f7a35;
+      --warn: #9b5f00;
+      --bad: #b42318;
+      --blue: #2563eb;
+      --shadow: 0 16px 42px rgba(19, 32, 24, .12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    header { position: sticky; top: 0; z-index: 20; background: rgba(246,247,244,.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+    .topbar { max-width: 1360px; margin: 0 auto; padding: 14px 20px; display: grid; grid-template-columns: minmax(240px, 1fr) auto; gap: 16px; align-items: center; }
+    h1 { margin: 0; font-size: 20px; line-height: 1.2; }
+    .sub { margin-top: 3px; color: var(--muted); font-size: 13px; }
+    .stats { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .pill { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 6px 10px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+    main { max-width: 1360px; margin: 0 auto; padding: 18px 20px 36px; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 14px; align-items: center; }
+    .filters, .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    button { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); padding: 9px 12px; font: inherit; font-weight: 650; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; min-height: 38px; }
+    button:hover { border-color: #a8b5aa; }
+    button.active { background: var(--text); color: white; border-color: var(--text); }
+    button.primary { background: var(--brand); color: white; border-color: var(--brand); }
+    button.primary:hover { background: var(--brand-dark); }
+    .layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 16px; align-items: start; }
+    .list { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; max-height: calc(100vh - 156px); position: sticky; top: 92px; }
+    .search { width: 100%; border: 0; border-bottom: 1px solid var(--line); padding: 13px 14px; font: inherit; outline: none; }
+    .list-scroll { overflow: auto; max-height: calc(100vh - 205px); }
+    .row-btn { width: 100%; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; justify-content: flex-start; text-align: left; padding: 12px 14px; background: white; display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; }
+    .row-btn.active { background: #eef8f1; color: var(--text); }
+    .row-index { width: 34px; height: 34px; border-radius: 50%; background: #eef1ee; display: grid; place-items: center; font-size: 12px; font-weight: 750; color: var(--muted); }
+    .row-main { min-width: 0; }
+    .row-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 750; }
+    .row-meta { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .decision-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccd4ce; }
+    .decision-dot.confirm { background: var(--brand); }
+    .decision-dot.wrong { background: var(--bad); }
+    .decision-dot.create_new { background: var(--blue); }
+    .decision-dot.skip { background: #75808a; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; }
+    .card-head { padding: 18px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; align-items: flex-start; }
+    .card-title { margin: 0; font-size: 22px; line-height: 1.25; }
+    .tagline { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; background: #eff2ef; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .tag.blue { background: #e9f0ff; color: var(--blue); }
+    .tag.warn { background: #fff4db; color: var(--warn); }
+    .tag.bad { background: #ffe8e6; color: var(--bad); }
+    .split { display: grid; grid-template-columns: minmax(320px, 55%) minmax(0, 1fr); gap: 0; }
+    .images { border-right: 1px solid var(--line); padding: 18px; background: #fbfcfb; }
+    .image-grid { display: grid; gap: 12px; }
+    .thumb { border: 1px solid var(--line); border-radius: 8px; background: white; padding: 8px; }
+    .thumb img { display: block; width: 100%; height: auto; max-height: 540px; object-fit: contain; }
+    .thumb-name { margin-top: 7px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .details { padding: 18px 20px 20px; }
+    .section { padding: 0 0 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .section:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .label { color: var(--muted); font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: .06em; margin-bottom: 6px; }
+    .value { font-size: 16px; line-height: 1.45; }
+    .notes { color: var(--muted); line-height: 1.5; white-space: pre-wrap; }
+    .textarea { width: 100%; min-height: 72px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: inherit; resize: vertical; }
+    .decision-bar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 14px 20px; background: #f3f6f3; border-top: 1px solid var(--line); }
+    .decision-bar button { justify-content: center; min-width: 0; }
+    .decision-bar button[data-decision="confirm"] { border-color: #acdaba; }
+    .decision-bar button[data-decision="wrong"] { border-color: #f0b8b4; }
+    .decision-bar button[data-decision="create_new"] { border-color: #b8cbff; }
+    .decision-bar button.selected[data-decision="confirm"] { background: var(--brand); border-color: var(--brand); color: white; }
+    .decision-bar button.selected[data-decision="wrong"] { background: var(--bad); border-color: var(--bad); color: white; }
+    .decision-bar button.selected[data-decision="create_new"] { background: var(--blue); border-color: var(--blue); color: white; }
+    .decision-bar button.selected[data-decision="skip"] { background: #4b5563; border-color: #4b5563; color: white; }
+    .empty { padding: 40px; text-align: center; color: var(--muted); }
+    @media (max-width: 980px) {
+      .topbar, .toolbar, .layout, .split { grid-template-columns: 1fr; }
+      .stats { justify-content: flex-start; }
+      .list { position: static; max-height: 320px; }
+      .list-scroll { max-height: 265px; }
+      .images { border-right: 0; border-bottom: 1px solid var(--line); }
+      .decision-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>Asia Deli Go Owner Review - Folder 04 Batch 001</h1>
+        <div class="sub">Folder 04 batch 001 · sauces and foodservice packs · review before image import or product creation</div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </header>
+  <main>
+    <div class="toolbar">
+      <div class="filters">
+        <button data-filter="all" class="active">All rows</button>
+        <button data-filter="review_high_existing_sku">Existing SKU</button>
+        <button data-filter="review_possible_existing_sku">Possible SKU</button>
+        <button data-filter="create_new_confirm">Create new / confirm</button>
+        <button data-filter="hold_confirm">Hold / confirm</button>
+        <button data-filter="ignore_or_supplies">Ignore / supplies</button>
+        <button data-filter="undecided">Undecided</button>
+      </div>
+      <div class="actions">
+        <button id="prevBtn">Prev</button>
+        <button id="nextBtn">Next</button>
+        <button class="primary" id="exportBtn">Export CSV</button>
+      </div>
+    </div>
+    <div class="layout">
+      <aside class="list">
+        <input id="search" class="search" placeholder="Search file, status, product..." />
+        <div class="list-scroll" id="rowList"></div>
+      </aside>
+      <section class="card" id="card"></section>
+    </div>
+  </main>
+<script>
+const REVIEW_DATA = {"rows":[{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-001","files":"PETE6698.JPG","visible_product":"Sweet chilli sauce bottle, exact brand/size not readable","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Front label is visible but brand/volume is not reliable enough from contact sheet/OCR.","next_action":"Owner/user should confirm brand and volume before creating or mapping.","index":1,"suggested_decision":"","thumbs":[{"file":"PETE6698.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6698.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-002","files":"PETE6701.JPG","visible_product":"Flying Goose Sweet Chilli Sauce for Chicken, bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Cock Brand sweet chilli 650ml and Flying Goose sriracha/hoisin rows, but no exact Flying Goose sweet-chilli-for-chicken bottle row found.","next_action":"Create after confirming volume/EAN/price; do not map to Cock Brand.","index":2,"suggested_decision":"create_new","thumbs":[{"file":"PETE6701.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6701.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-003","files":"PETE6705.JPG","visible_product":"Red chilli/sriracha-style sauce bottle, label partly unreadable","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Brand and exact flavour are unclear from available image.","next_action":"Hold for owner confirmation or request another label photo.","index":3,"suggested_decision":"","thumbs":[{"file":"PETE6705.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6705.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-004","files":"PETE6718.JPG; PETE6960.JPG","visible_product":"Sweet chilli sauce for chicken, foodservice pack","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Foodservice-size sweet chilli sauce; current catalog rows are different brand/retail sizes.","next_action":"Create only after confirming exact brand, volume, and whether both files are same SKU/gallery.","index":4,"suggested_decision":"create_new","thumbs":[{"file":"PETE6718.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6718.jpg"},{"file":"PETE6960.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6960.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-005","files":"PETE6888.JPG","visible_product":"Oriental Sensation Spicy Mango & Lime Sauce","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"OCR/label reads Oriental Sensation Spicy Mango & Lime Sauce; no exact catalog row found.","next_action":"Create after confirming size, EAN, ingredients/allergens, and price.","index":5,"suggested_decision":"create_new","thumbs":[{"file":"PETE6888.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6888.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-006","files":"PETE6901.JPG","visible_product":"Chin-Su chilli sauce bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Current catalog search has no Chin-Su sauce row.","next_action":"Create after confirming exact variant/volume/EAN.","index":6,"suggested_decision":"create_new","thumbs":[{"file":"PETE6901.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6901.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-007","files":"PETE6905.JPG","visible_product":"Sweet chilli/chicken sauce bottle, exact brand unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Looks like a sweet chilli sauce bottle but brand/volume are not safe from sheet.","next_action":"Owner should confirm if this is duplicate/gallery for another sweet chilli SKU.","index":7,"suggested_decision":"","thumbs":[{"file":"PETE6905.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6905.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-008","files":"PETE6907.JPG","visible_product":"Vietnamese fish sauce bottle, exact brand/variant unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Label is partly readable but not enough to distinguish brand/volume.","next_action":"Hold until label/brand is confirmed.","index":8,"suggested_decision":"","thumbs":[{"file":"PETE6907.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6907.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-009","files":"PETE6909.JPG","visible_product":"Mushroom/dark soy sauce bottle, Chinese label","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Similar sauce families exist, but no safe exact catalog match from visible label.","next_action":"Create only after confirming brand, type and volume.","index":9,"suggested_decision":"create_new","thumbs":[{"file":"PETE6909.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6909.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-010","files":"PETE6916.JPG","visible_product":"Healthy Boy mushroom soy sauce bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Healthy Boy sweet soy 700ml and fish sauce rows, not this mushroom soy bottle.","next_action":"Create after confirming volume/EAN.","index":10,"suggested_decision":"create_new","thumbs":[{"file":"PETE6916.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6916.jpg"}]},{"source_batch":"folder04-batch001","status":"review_high_existing_sku","id":"folder04-011","files":"PETE6921.JPG","visible_product":"Squid Brand Premium Fish Sauce 725ml","target_sku":"ADG-000095","candidate_product":"Sos rybny 725ml - Squid","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sos-rybny-725ml-squid","reason":"Brand, product and 725ml volume match existing catalog row.","next_action":"Candidate for existing SKU image import after review approval.","index":11,"suggested_decision":"","thumbs":[{"file":"PETE6921.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6921.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-012","files":"PETE6925.JPG; PETE6971.JPG","visible_product":"Superior Light Soy Sauce, bottle/large bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No safe exact match in current catalog export; likely separate light soy sauce SKU/size.","next_action":"Create after confirming brand, volume, and whether both files are same SKU/gallery.","index":12,"suggested_decision":"create_new","thumbs":[{"file":"PETE6925.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6925.jpg"},{"file":"PETE6971.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6971.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-013","files":"PETE6927.JPG","visible_product":"Premium Quality Salted Anchovy Sauce","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact salted anchovy sauce row found in catalog.","next_action":"Create after confirming brand/volume/EAN and fish allergen.","index":13,"suggested_decision":"create_new","thumbs":[{"file":"PETE6927.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6927.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-014","files":"PETE6936.JPG; PETE6941.JPG","visible_product":"Sempio small soy sauce bottles, exact variant/volume unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Looks like Sempio soy sauce, but exact variant and volume are not readable enough to map to 500ml/860ml catalog rows.","next_action":"Hold for closer label read.","index":14,"suggested_decision":"","thumbs":[{"file":"PETE6936.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6936.jpg"},{"file":"PETE6941.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6941.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-015","files":"PETE6949.JPG","visible_product":"White rectangular sauce container, exact product unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Side/back label not enough for product identity from current image.","next_action":"Hold for owner confirmation.","index":15,"suggested_decision":"","thumbs":[{"file":"PETE6949.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6949.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-016","files":"PETE6953.JPG","visible_product":"Premium Light Soy Sauce, large pack","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Foodservice/large light soy sauce; no exact catalog row found.","next_action":"Create after confirming brand and pack size.","index":16,"suggested_decision":"create_new","thumbs":[{"file":"PETE6953.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6953.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-017","files":"PETE6962.JPG","visible_product":"Healthy Boy Thin Soy Sauce, foodservice can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No Healthy Boy thin soy foodservice-size row found in catalog.","next_action":"Create after confirming volume/EAN.","index":17,"suggested_decision":"create_new","thumbs":[{"file":"PETE6962.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6962.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-018","files":"PETE6964.JPG","visible_product":"Lee Kum Kee Hoisin Sauce, foodservice can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Lee Kum Kee Hoisin 397g only; this appears to be a large foodservice can.","next_action":"Create after confirming exact size/EAN.","index":18,"suggested_decision":"create_new","thumbs":[{"file":"PETE6964.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6964.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-019","files":"PETE6974.JPG","visible_product":"Large dark/mushroom soy sauce pack, label unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"OCR was noisy and label is not reliable enough.","next_action":"Hold until owner confirms exact product.","index":19,"suggested_decision":"","thumbs":[{"file":"PETE6974.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6974.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-020","files":"PETE6977.JPG","visible_product":"Small sauce bottle, exact product unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Front label is too small/unclear in available image.","next_action":"Hold for owner confirmation.","index":20,"suggested_decision":"","thumbs":[{"file":"PETE6977.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6977.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-021","files":"PETE6980.JPG","visible_product":"Small jar paste/sauce, exact product unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Jar label is not readable enough for catalog mapping.","next_action":"Hold for owner confirmation.","index":21,"suggested_decision":"","thumbs":[{"file":"PETE6980.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE6980.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-022","files":"PETE7063.JPG; PETE7065.JPG","visible_product":"Dark soy/sauce bottles, Chinese labels","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Exact product and brand/volume are not reliable from current angle.","next_action":"Hold or request closer label confirmation.","index":22,"suggested_decision":"","thumbs":[{"file":"PETE7063.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7063.jpg"},{"file":"PETE7065.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7065.jpg"}]},{"source_batch":"folder04-batch001","status":"review_possible_existing_sku","id":"folder04-023","files":"PETE7070.JPG","visible_product":"Kikkoman naturally brewed soy sauce 1L","target_sku":"ADG-000275","candidate_product":"Sos sojowy klasyczny Koikuchi naturalnie warzony 1l Kikkoman","confidence":"medium","product_url":"https://asiandeligo.eshoper.pro/products/sos-sojowy-klasyczny-koikuchi-naturalnie-warzony-1l-kikkoman","reason":"Brand/product/1L match, but catalog has more than one very similar Kikkoman 1L row.","next_action":"Owner/user should confirm which Kikkoman 1L SKU should receive this image.","index":23,"suggested_decision":"","thumbs":[{"file":"PETE7070.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7070.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-024","files":"PETE7071.JPG","visible_product":"Squid Brand fish sauce bottle, volume not confirmed","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Looks like Squid fish sauce, but volume/front row needs confirmation before mapping to 300ml/700ml/725ml SKU.","next_action":"Hold unless owner confirms exact volume.","index":24,"suggested_decision":"","thumbs":[{"file":"PETE7071.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7071.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-025","files":"PETE7073.JPG; PETE7076.JPG; PETE7117.JPG","visible_product":"Mushroom soy sauce bottles, exact variant/volume unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Several similar dark/mushroom soy bottles; unsafe to group without exact label confirmation.","next_action":"Owner should confirm whether these are same SKU or separate variants.","index":25,"suggested_decision":"","thumbs":[{"file":"PETE7073.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7073.jpg"},{"file":"PETE7076.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7076.jpg"},{"file":"PETE7117.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7117.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-026","files":"PETE7084.JPG","visible_product":"Cock Brand Sweet Chilli Sauce for Chicken 350g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Existing Cock Brand catalog row is 650ml, while visible bottle is 350g/12.34oz.","next_action":"Create as separate size if owner sells it.","index":26,"suggested_decision":"create_new","thumbs":[{"file":"PETE7084.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7084.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-027","files":"PETE7085.JPG","visible_product":"Healthy Boy sweet chilli sauce bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Healthy Boy sweet chilli sauce row found in current catalog.","next_action":"Create after confirming exact volume/EAN.","index":27,"suggested_decision":"create_new","thumbs":[{"file":"PETE7085.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7085.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-028","files":"PETE7088.JPG","visible_product":"Healthy Boy Sweet Soy Sauce 300ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Healthy Boy Sweet Soy Sauce 700ml only; visible bottle is 300ml/350g.","next_action":"Create as separate size after owner confirmation.","index":28,"suggested_decision":"create_new","thumbs":[{"file":"PETE7088.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7088.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-029","files":"PETE7092.JPG","visible_product":"Healthy Boy Thin Soy Sauce bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Healthy Boy thin soy bottle row found in catalog.","next_action":"Create after confirming volume/EAN.","index":29,"suggested_decision":"create_new","thumbs":[{"file":"PETE7092.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7092.jpg"}]},{"source_batch":"folder04-batch001","status":"review_high_existing_sku","id":"folder04-030","files":"PETE7116.JPG","visible_product":"Squid Brand Fish Sauce 300ml","target_sku":"ADG-000044","candidate_product":"Sos rybny 300ml Squid","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sos-rybny-300ml-squid","reason":"Brand, product and 300ml volume match existing catalog row.","next_action":"Candidate for existing SKU image import after review approval.","index":30,"suggested_decision":"","thumbs":[{"file":"PETE7116.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7116.jpg"}]},{"source_batch":"folder04-batch001","status":"review_high_existing_sku","id":"folder04-031","files":"PETE7118.JPG","visible_product":"Kikkoman naturally brewed soy sauce 150ml","target_sku":"ADG-000272","candidate_product":"Sos sojowy Koikuchi z dyspenserem 150ml - Kikkoman","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sos-sojowy-koikuchi-z-dyspenserem-150ml-kikkoman","reason":"Brand/product/150ml match existing catalog row.","next_action":"Candidate for existing SKU image import after review approval.","index":31,"suggested_decision":"","thumbs":[{"file":"PETE7118.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7118.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-032","files":"PETE7210.JPG; PETE7213.JPG; PETE7214.JPG; PETE7695.JPG; PETE7815.JPG","visible_product":"Healthy Boy foodservice soy sauce cans, multiple variants","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Large foodservice packs are not safe matches for existing retail bottle rows; variants may differ by label color/type.","next_action":"Owner must confirm exact variant per can before creation; may need split into multiple SKUs.","index":32,"suggested_decision":"create_new","thumbs":[{"file":"PETE7210.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7210.jpg"},{"file":"PETE7213.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7213.jpg"},{"file":"PETE7214.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7214.jpg"},{"file":"PETE7695.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7695.jpg"},{"file":"PETE7815.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7815.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-033","files":"PETE7216.JPG","visible_product":"Chinese can/jar product, exact label unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Product identity is not clear from visible side label.","next_action":"Hold for owner confirmation.","index":33,"suggested_decision":"","thumbs":[{"file":"PETE7216.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7216.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-034","files":"PETE7229.JPG","visible_product":"Small jar paste/sauce, exact product unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Label is not readable enough for safe product creation.","next_action":"Hold for owner confirmation.","index":34,"suggested_decision":"","thumbs":[{"file":"PETE7229.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7229.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-035","files":"PETE7665.JPG","visible_product":"Thai Dancer fish sauce bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Thai Dancer fish sauce row found in current catalog.","next_action":"Create after confirming volume/EAN.","index":35,"suggested_decision":"create_new","thumbs":[{"file":"PETE7665.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7665.jpg"}]},{"source_batch":"folder04-batch001","status":"review_possible_existing_sku","id":"folder04-036","files":"PETE7688.JPG","visible_product":"Kikkoman soy sauce/tamari bottle, back label visible","target_sku":"","candidate_product":"","confidence":"medium","product_url":"","reason":"Kikkoman bottle is visible but front product/volume are not shown; catalog has multiple Kikkoman soy/tamari rows.","next_action":"Need front label or owner confirmation before mapping.","index":36,"suggested_decision":"","thumbs":[{"file":"PETE7688.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7688.jpg"}]},{"source_batch":"folder04-batch001","status":"review_high_existing_sku","id":"folder04-037","files":"PETE7748.JPG","visible_product":"Healthy Boy Sweet Soya Sauce 700ml","target_sku":"ADG-000064","candidate_product":"Sos sojowy słodki Healthy Boy 700ml","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sos-sojowy-slodki-healthy-boy-700ml","reason":"Brand, product and 700ml volume match existing catalog row.","next_action":"Candidate for existing SKU image import after review approval.","index":37,"suggested_decision":"","thumbs":[{"file":"PETE7748.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7748.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-038","files":"PETE7776.JPG","visible_product":"Sempio Jin S Soy Sauce 930ml/large pack","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Sempio Jin S 500ml and 860ml, while visible bottle/pack is not the same size.","next_action":"Create separate size after confirming exact volume/EAN.","index":38,"suggested_decision":"create_new","thumbs":[{"file":"PETE7776.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7776.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-039","files":"PETE7782.JPG; PETE7813.JPG","visible_product":"Wang foodservice soy/bean sauce box, exact type unclear","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact row found; box label needs confirmation for exact product name.","next_action":"Create only after owner confirms type, size and EAN.","index":39,"suggested_decision":"create_new","thumbs":[{"file":"PETE7782.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7782.jpg"},{"file":"PETE7813.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7813.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-040","files":"PETE7788.JPG","visible_product":"Sempio Jin S Soy Sauce 930ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Sempio Jin S 500ml and 860ml, but this image shows 930ml.","next_action":"Create as separate size after owner confirmation.","index":40,"suggested_decision":"create_new","thumbs":[{"file":"PETE7788.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7788.jpg"}]},{"source_batch":"folder04-batch001","status":"review_high_existing_sku","id":"folder04-041","files":"PETE7795.JPG","visible_product":"Sempio Jin S Soy Sauce 500ml","target_sku":"ADG-000204","candidate_product":"Sos sojowy Jin S 500ml - Sempio","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sos-sojowy-jin-s-500ml-sempio","reason":"Brand/product/500ml match existing catalog row.","next_action":"Candidate for existing SKU image import after review approval.","index":41,"suggested_decision":"","thumbs":[{"file":"PETE7795.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7795.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-042","files":"PETE7850.JPG","visible_product":"Mushroom/dark soy sauce small bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact safe catalog match from visible label.","next_action":"Create after confirming brand/type/volume.","index":42,"suggested_decision":"create_new","thumbs":[{"file":"PETE7850.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7850.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-043","files":"PETE7852.JPG","visible_product":"Healthy Boy sweet chilli sauce bottle","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Healthy Boy sweet chilli sauce row found.","next_action":"Create after confirming volume/EAN; compare with PETE7085.","index":43,"suggested_decision":"create_new","thumbs":[{"file":"PETE7852.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7852.jpg"}]},{"source_batch":"folder04-batch001","status":"hold_confirm","id":"folder04-044","files":"PETE7857.JPG","visible_product":"Small jar paste/sauce, exact product unclear","target_sku":"","candidate_product":"","confidence":"hold","product_url":"","reason":"Label is too small from current review image.","next_action":"Hold for owner confirmation.","index":44,"suggested_decision":"","thumbs":[{"file":"PETE7857.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7857.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-045","files":"PETE7889.JPG; PETE7890.JPG","visible_product":"Squid Brand fish sauce foodservice can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Foodservice pack differs from existing 300ml/700ml/725ml Squid rows.","next_action":"Create after confirming exact volume/EAN.","index":45,"suggested_decision":"create_new","thumbs":[{"file":"PETE7889.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7889.jpg"},{"file":"PETE7890.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7890.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-046","files":"PETE7891.JPG","visible_product":"Sweet chilli sauce for chicken foodservice can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Foodservice can; no safe existing catalog match.","next_action":"Create after confirming brand/volume.","index":46,"suggested_decision":"create_new","thumbs":[{"file":"PETE7891.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7891.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-047","files":"PETE7998.JPG","visible_product":"Yamasa Soy Sauce 18L box","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Yamasa 150ml/500ml/1L/1.1kg sauces, not 18L foodservice box.","next_action":"Create only if owner wants foodservice SKU.","index":47,"suggested_decision":"create_new","thumbs":[{"file":"PETE7998.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7998.jpg"}]},{"source_batch":"folder04-batch001","status":"create_new_confirm","id":"folder04-048","files":"PETE7999.JPG; PETE8000.JPG","visible_product":"Kikkoman Soy Sauce 20L carton","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Foodservice carton differs from existing Kikkoman retail rows.","next_action":"Create only if owner wants foodservice SKU; confirm exact volume/EAN.","index":48,"suggested_decision":"create_new","thumbs":[{"file":"PETE7999.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE7999.jpg"},{"file":"PETE8000.JPG","src":"asiandeligo-owner-review-folder04-batch001-assets/thumbs/PETE8000.jpg"}]}],"counts":{"hold_confirm":15,"create_new_confirm":26,"review_high_existing_sku":5,"review_possible_existing_sku":2}};
+const STORAGE_KEY = "asiandeligo-owner-review-folder04-batch001-v1";
+const DOWNLOAD_NAME = "asiandeligo-folder04-batch001-owner-decisions.csv";
+const SKIP_EXPORTS_CREATE_NEW = false;
+let rows = REVIEW_DATA.rows;
+let decisions = loadState();
+let filter = 'all';
+let search = '';
+let currentId = rows[0]?.id;
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(decisions)); }
+function rowDecision(row) { return decisions[row.id]?.decision || ''; }
+function rowNotes(row) { return decisions[row.id]?.notes || ''; }
+function filteredRows() {
+  const q = search.trim().toLowerCase();
+  return rows.filter(row => {
+    if (filter === 'undecided' && rowDecision(row)) return false;
+    if (filter !== 'all' && filter !== 'undecided' && row.status !== filter) return false;
+    if (!q) return true;
+    const hay = [row.id, row.source_batch, row.status, row.files, row.visible_product, row.target_sku, row.candidate_product, row.reason, row.next_action].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+}
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function statusLabel(status) {
+  return ({
+    create_new_confirm: 'Create new / confirm',
+    hold_confirm: 'Hold / confirm',
+    ignore_or_supplies: 'Ignore / supplies',
+    review_high_existing_sku: 'Existing SKU candidate',
+    review_possible_existing_sku: 'Possible SKU candidate',
+  })[status] || status || 'Review';
+}
+function decisionLabel(decision) {
+  return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: SKIP_EXPORTS_CREATE_NEW ? 'Create new (skip existing link)' : 'Skip' })[decision] || 'Open';
+}
+function exportDecision(decision) {
+  return SKIP_EXPORTS_CREATE_NEW && decision === 'skip' ? 'create_new' : (decision || '');
+}
+function updateStats() {
+  const total = rows.length;
+  const done = rows.filter(row => rowDecision(row)).length;
+  const counts = {
+    review_high_existing_sku: 0,
+    review_possible_existing_sku: 0,
+    create_new_confirm: 0,
+    hold_confirm: 0,
+    ignore_or_supplies: 0,
+    confirm: 0,
+    wrong: 0,
+    create_new: 0,
+    skip: 0,
+  };
+  rows.forEach(row => {
+    counts[row.status] = (counts[row.status] || 0) + 1;
+    const d = rowDecision(row);
+    if (d) counts[d] = (counts[d] || 0) + 1;
+  });
+  document.getElementById('stats').innerHTML = `
+    <span class="pill">${done}/${total} reviewed</span>
+    <span class="pill">Existing: ${counts.review_high_existing_sku}</span>
+    <span class="pill">Possible: ${counts.review_possible_existing_sku}</span>
+    <span class="pill">Create confirm: ${counts.create_new_confirm}</span>
+    <span class="pill">Hold: ${counts.hold_confirm}</span>
+    <span class="pill">Confirmed: ${counts.confirm}</span>
+    <span class="pill">Wrong: ${counts.wrong}</span>
+    <span class="pill">Create: ${counts.create_new}</span>
+    <span class="pill">Skip: ${counts.skip}</span>`;
+}
+function renderList() {
+  const list = filteredRows();
+  const el = document.getElementById('rowList');
+  if (!list.length) { el.innerHTML = '<div class="empty">No rows</div>'; return; }
+  if (!list.some(row => row.id === currentId)) currentId = list[0].id;
+  el.innerHTML = list.map(row => {
+    const d = rowDecision(row);
+    return `<button class="row-btn ${row.id === currentId ? 'active' : ''}" data-row-id="${esc(row.id)}">
+      <span class="row-index">${row.index}</span>
+      <span class="row-main"><span class="row-title">${esc(row.visible_product)}</span><span class="row-meta">${esc(statusLabel(row.status))} · ${esc(row.files)}</span></span>
+      <span class="decision-dot ${esc(d)}" title="${esc(decisionLabel(d))}"></span>
+    </button>`;
+  }).join('');
+  el.querySelectorAll('[data-row-id]').forEach(btn => btn.addEventListener('click', () => { currentId = btn.dataset.rowId; render(); }));
+}
+function renderCard() {
+  const row = rows.find(r => r.id === currentId) || filteredRows()[0];
+  const el = document.getElementById('card');
+  if (!row) { el.innerHTML = '<div class="empty">No row selected</div>'; return; }
+  const d = rowDecision(row);
+  const thumbHtml = row.thumbs.length ? row.thumbs.map(t => `<div class="thumb"><img src="${esc(t.src)}" alt="${esc(t.file)}"><div class="thumb-name">${esc(t.file)}</div></div>`).join('') : '<div class="empty">Missing thumbnail</div>';
+  const tagClass = row.status === 'create_new_confirm' ? 'blue' : row.status === 'ignore_or_supplies' ? 'bad' : 'warn';
+  const skuHtml = row.target_sku || row.candidate_product || row.product_url || row.confidence ? `
+        <div class="section"><div class="label">Candidate SKU</div><div class="value">
+          ${row.target_sku ? `<div><strong>${esc(row.target_sku)}</strong></div>` : ''}
+          ${row.candidate_product ? `<div>${esc(row.candidate_product)}</div>` : ''}
+          ${row.confidence ? `<div class="notes">Confidence: ${esc(row.confidence)}</div>` : ''}
+          ${row.product_url ? `<div><a href="${esc(row.product_url)}" target="_blank" rel="noreferrer">${esc(row.product_url)}</a></div>` : ''}
+        </div></div>` : '';
+  el.innerHTML = `
+    <div class="card-head">
+      <div>
+        <h2 class="card-title">${row.index}. ${esc(row.visible_product)}</h2>
+        <div class="tagline">
+          <span class="tag ${tagClass}">${esc(statusLabel(row.status))}</span>
+          <span class="tag">${esc(row.source_batch)}</span>
+          <span class="tag">${esc(row.id)}</span>
+          ${row.suggested_decision ? `<span class="tag">Suggested: ${esc(decisionLabel(row.suggested_decision))}</span>` : ''}
+        </div>
+      </div>
+      <div class="pill">Decision: ${esc(decisionLabel(d))}</div>
+    </div>
+    <div class="split">
+      <div class="images"><div class="image-grid">${thumbHtml}</div></div>
+      <div class="details">
+        ${skuHtml}
+        <div class="section"><div class="label">Review reason</div><div class="notes">${esc(row.reason || '')}</div></div>
+        <div class="section"><div class="label">Next action</div><div class="notes">${esc(row.next_action || '')}</div></div>
+        <div class="section"><div class="label">Source files</div><div class="notes">${esc(row.files || '')}</div></div>
+        <div class="section"><div class="label">Owner notes</div><textarea class="textarea" id="ownerNotes" placeholder="Ghi xác nhận, tên đúng, size, EAN, giá, hoặc lý do bỏ qua...">${esc(rowNotes(row))}</textarea></div>
+      </div>
+    </div>
+    <div class="decision-bar">
+      <button data-decision="confirm" class="${d === 'confirm' ? 'selected' : ''}">1 · Confirm</button>
+      <button data-decision="wrong" class="${d === 'wrong' ? 'selected' : ''}">2 · Wrong</button>
+      <button data-decision="create_new" class="${d === 'create_new' ? 'selected' : ''}">3 · Create new</button>
+      <button data-decision="skip" class="${d === 'skip' ? 'selected' : ''}">4 · Skip</button>
+    </div>`;
+  el.querySelectorAll('[data-decision]').forEach(btn => btn.addEventListener('click', () => setDecision(row.id, btn.dataset.decision)));
+  const notes = el.querySelector('#ownerNotes');
+  notes.addEventListener('input', () => { decisions[row.id] = { ...(decisions[row.id] || {}), notes: notes.value }; saveState(); });
+}
+function setDecision(id, decision) {
+  decisions[id] = { ...(decisions[id] || {}), decision };
+  saveState();
+  move(1);
+}
+function move(delta) {
+  const list = filteredRows();
+  const idx = Math.max(0, list.findIndex(row => row.id === currentId));
+  const next = list[Math.min(list.length - 1, Math.max(0, idx + delta))];
+  if (next) currentId = next.id;
+  render();
+}
+function render() { updateStats(); renderList(); renderCard(); }
+function exportCsv() {
+  const headers = ['id','source_batch','status','files','visible_product','target_sku','candidate_product','confidence','product_url','decision','owner_notes','reason','next_action'];
+  const lines = [headers.join(',')];
+  for (const row of rows) {
+    const state = decisions[row.id] || {};
+    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,row.target_sku,row.candidate_product,row.confidence,row.product_url,exportDecision(state.decision),state.notes || '',row.reason,row.next_action];
+    lines.push(values.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(','));
+  }
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = DOWNLOAD_NAME;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+document.querySelectorAll('[data-filter]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filter = btn.dataset.filter;
+  render();
+}));
+document.getElementById('search').addEventListener('input', event => { search = event.target.value; render(); });
+document.getElementById('prevBtn').addEventListener('click', () => move(-1));
+document.getElementById('nextBtn').addEventListener('click', () => move(1));
+document.getElementById('exportBtn').addEventListener('click', exportCsv);
+document.addEventListener('keydown', event => {
+  if (event.target && ['TEXTAREA','INPUT'].includes(event.target.tagName)) return;
+  if (event.key === 'ArrowRight') move(1);
+  if (event.key === 'ArrowLeft') move(-1);
+  if (event.key === '1') setDecision(currentId, 'confirm');
+  if (event.key === '2') setDecision(currentId, 'wrong');
+  if (event.key === '3') setDecision(currentId, 'create_new');
+  if (event.key === '4') setDecision(currentId, 'skip');
+});
+render();
+</script>
+</body>
+</html>
