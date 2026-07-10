@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asia Deli Go Owner Review - Folder 09 Batch 002</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --text: #19201c;
+      --muted: #5f6c63;
+      --line: #dfe5df;
+      --brand: #169b45;
+      --brand-dark: #0f7a35;
+      --warn: #9b5f00;
+      --bad: #b42318;
+      --blue: #2563eb;
+      --shadow: 0 16px 42px rgba(19, 32, 24, .12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    header { position: sticky; top: 0; z-index: 20; background: rgba(246,247,244,.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+    .topbar { max-width: 1360px; margin: 0 auto; padding: 14px 20px; display: grid; grid-template-columns: minmax(240px, 1fr) auto; gap: 16px; align-items: center; }
+    h1 { margin: 0; font-size: 20px; line-height: 1.2; }
+    .sub { margin-top: 3px; color: var(--muted); font-size: 13px; }
+    .stats { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .pill { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 6px 10px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+    main { max-width: 1360px; margin: 0 auto; padding: 18px 20px 36px; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 14px; align-items: center; }
+    .filters, .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    button { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); padding: 9px 12px; font: inherit; font-weight: 650; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; min-height: 38px; }
+    button:hover { border-color: #a8b5aa; }
+    button.active { background: var(--text); color: white; border-color: var(--text); }
+    button.primary { background: var(--brand); color: white; border-color: var(--brand); }
+    button.primary:hover { background: var(--brand-dark); }
+    .layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 16px; align-items: start; }
+    .list { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; max-height: calc(100vh - 156px); position: sticky; top: 92px; }
+    .search { width: 100%; border: 0; border-bottom: 1px solid var(--line); padding: 13px 14px; font: inherit; outline: none; }
+    .list-scroll { overflow: auto; max-height: calc(100vh - 205px); }
+    .row-btn { width: 100%; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; justify-content: flex-start; text-align: left; padding: 12px 14px; background: white; display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; }
+    .row-btn.active { background: #eef8f1; color: var(--text); }
+    .row-index { width: 34px; height: 34px; border-radius: 50%; background: #eef1ee; display: grid; place-items: center; font-size: 12px; font-weight: 750; color: var(--muted); }
+    .row-main { min-width: 0; }
+    .row-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 750; }
+    .row-meta { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .decision-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccd4ce; }
+    .decision-dot.confirm { background: var(--brand); }
+    .decision-dot.wrong { background: var(--bad); }
+    .decision-dot.create_new { background: var(--blue); }
+    .decision-dot.skip { background: #75808a; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; }
+    .card-head { padding: 18px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; align-items: flex-start; }
+    .card-title { margin: 0; font-size: 22px; line-height: 1.25; }
+    .tagline { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; background: #eff2ef; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .tag.blue { background: #e9f0ff; color: var(--blue); }
+    .tag.warn { background: #fff4db; color: var(--warn); }
+    .tag.bad { background: #ffe8e6; color: var(--bad); }
+    .split { display: grid; grid-template-columns: minmax(320px, 55%) minmax(0, 1fr); gap: 0; }
+    .images { border-right: 1px solid var(--line); padding: 18px; background: #fbfcfb; }
+    .image-grid { display: grid; gap: 12px; }
+    .thumb { border: 1px solid var(--line); border-radius: 8px; background: white; padding: 8px; }
+    .thumb img { display: block; width: 100%; height: auto; max-height: 540px; object-fit: contain; }
+    .thumb-name { margin-top: 7px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .details { padding: 18px 20px 20px; }
+    .section { padding: 0 0 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .section:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .label { color: var(--muted); font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: .06em; margin-bottom: 6px; }
+    .value { font-size: 16px; line-height: 1.45; }
+    .notes { color: var(--muted); line-height: 1.5; white-space: pre-wrap; }
+    .textarea { width: 100%; min-height: 72px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: inherit; resize: vertical; }
+    .decision-bar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 14px 20px; background: #f3f6f3; border-top: 1px solid var(--line); }
+    .decision-bar button { justify-content: center; min-width: 0; }
+    .decision-bar button[data-decision="confirm"] { border-color: #acdaba; }
+    .decision-bar button[data-decision="wrong"] { border-color: #f0b8b4; }
+    .decision-bar button[data-decision="create_new"] { border-color: #b8cbff; }
+    .decision-bar button.selected[data-decision="confirm"] { background: var(--brand); border-color: var(--brand); color: white; }
+    .decision-bar button.selected[data-decision="wrong"] { background: var(--bad); border-color: var(--bad); color: white; }
+    .decision-bar button.selected[data-decision="create_new"] { background: var(--blue); border-color: var(--blue); color: white; }
+    .decision-bar button.selected[data-decision="skip"] { background: #4b5563; border-color: #4b5563; color: white; }
+    .empty { padding: 40px; text-align: center; color: var(--muted); }
+    @media (max-width: 980px) {
+      .topbar, .toolbar, .layout, .split { grid-template-columns: 1fr; }
+      .stats { justify-content: flex-start; }
+      .list { position: static; max-height: 320px; }
+      .list-scroll { max-height: 265px; }
+      .images { border-right: 0; border-bottom: 1px solid var(--line); }
+      .decision-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>Asia Deli Go Owner Review - Folder 09 Batch 002</h1>
+        <div class="sub">Folder 09 batch 002 · beverage and coconut products · review before image import or product creation</div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </header>
+  <main>
+    <div class="toolbar">
+      <div class="filters">
+        <button data-filter="all" class="active">All rows</button>
+        <button data-filter="review_high_existing_sku">Existing SKU</button>
+        <button data-filter="review_possible_existing_sku">Possible SKU</button>
+        <button data-filter="create_new_confirm">Create new / confirm</button>
+        <button data-filter="hold_confirm">Hold / confirm</button>
+        <button data-filter="ignore_or_supplies">Ignore / supplies</button>
+        <button data-filter="undecided">Undecided</button>
+      </div>
+      <div class="actions">
+        <button id="prevBtn">Prev</button>
+        <button id="nextBtn">Next</button>
+        <button class="primary" id="exportBtn">Export CSV</button>
+      </div>
+    </div>
+    <div class="layout">
+      <aside class="list">
+        <input id="search" class="search" placeholder="Search file, status, product..." />
+        <div class="list-scroll" id="rowList"></div>
+      </aside>
+      <section class="card" id="card"></section>
+    </div>
+  </main>
+<script>
+const REVIEW_DATA = {"rows":[{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-015","files":"PETE6992.JPG; PETE6993.JPG","visible_product":"Trung Nguyen G7 3-in-1 Special instant coffee 336g, 21 x 16g","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Trung Nguyen G7 3-in-1 336g row found in the catalog export. Same product candidate was also seen in folder09-batch001 PETE6990/PETE6991.","next_action":"Merge these photos into the same new SKU candidate after confirming EAN and price.","index":1,"suggested_decision":"create_new","thumbs":[{"file":"PETE6992.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE6992.jpg"},{"file":"PETE6993.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE6993.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-016","files":"PETE7059.JPG; PETE7060.JPG","visible_product":"Chaokoh Coconut Water 1000ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Chaokoh Coconut Water 1L row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":2,"suggested_decision":"create_new","thumbs":[{"file":"PETE7059.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7059.jpg"},{"file":"PETE7060.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7060.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-017","files":"PETE7130.JPG; PETE7131.JPG","visible_product":"Paldo Aloe Vera Drink 1.5L","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Paldo noodles and Sikhye, but no Paldo Aloe Vera Drink row.","next_action":"Create new SKU after confirming EAN and price.","index":3,"suggested_decision":"create_new","thumbs":[{"file":"PETE7130.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7130.jpg"},{"file":"PETE7131.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7131.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-018","files":"PETE7141.JPG; PETE7142.JPG","visible_product":"Paldo Aloe Mango Drink 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Paldo Aloe Mango 500ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":4,"suggested_decision":"create_new","thumbs":[{"file":"PETE7141.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7141.jpg"},{"file":"PETE7142.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7142.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-019","files":"PETE7143.JPG; PETE7144.JPG","visible_product":"Paldo Aloe Pina / Pineapple Drink 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Paldo Aloe Pineapple 500ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":5,"suggested_decision":"create_new","thumbs":[{"file":"PETE7143.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7143.jpg"},{"file":"PETE7144.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7144.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-020","files":"PETE7145.JPG","visible_product":"OKF Aloe Vera King Natural Original 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact OKF Aloe Vera King row found in the catalog export. A similar folder01-batch006 new-product candidate exists, so this should be merged with that backlog item if approved.","next_action":"Create or merge into the same new SKU candidate after confirming EAN and price.","index":6,"suggested_decision":"create_new","thumbs":[{"file":"PETE7145.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7145.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-021","files":"PETE7146.JPG","visible_product":"OKF Coco Natural Coconut Drink 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact OKF Coco Natural 500ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":7,"suggested_decision":"create_new","thumbs":[{"file":"PETE7146.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7146.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-022","files":"PETE7147.JPG","visible_product":"OKF Aloe Vera King Mango 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact OKF Aloe Vera King Mango row found in the catalog export. A similar folder01-batch006 new-product candidate exists, so this should be merged with that backlog item if approved.","next_action":"Create or merge into the same new SKU candidate after confirming EAN and price.","index":8,"suggested_decision":"create_new","thumbs":[{"file":"PETE7147.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7147.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-023","files":"PETE7148.JPG","visible_product":"Paldo Aloe Blue Berry Drink 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Paldo Aloe Blue Berry 500ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":9,"suggested_decision":"create_new","thumbs":[{"file":"PETE7148.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7148.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-024","files":"PETE7149.JPG; PETE7150.JPG","visible_product":"Paldo Aloe Sugar Free Drink 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Paldo Aloe Sugar Free 500ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":10,"suggested_decision":"create_new","thumbs":[{"file":"PETE7149.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7149.jpg"},{"file":"PETE7150.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7150.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-025","files":"PETE7151.JPG","visible_product":"Paldo Aloe Pomegranate Drink 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Paldo Aloe Pomegranate 500ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":11,"suggested_decision":"create_new","thumbs":[{"file":"PETE7151.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7151.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-026","files":"PETE7152.JPG; PETE7153.JPG","visible_product":"Asia Foods Giam Bong Rice Vinegar 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has rice vinegar rows from Ottogi, CJO, Asia Kitchen, House of Asia, Sen Soy, and Sempio, but no exact Asia Foods Giam Bong 500ml row.","next_action":"Create new SKU after confirming EAN and price.","index":12,"suggested_decision":"create_new","thumbs":[{"file":"PETE7152.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7152.jpg"},{"file":"PETE7153.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7153.jpg"}]},{"source_batch":"folder09-batch002","status":"review_high_existing_sku","id":"folder09-027","files":"PETE7154.JPG","visible_product":"OISHI Green Tea Genmai / Brown Rice 500ml","target_sku":"ADG-001642","candidate_product":"Green Tea Brown Rice 500ml – OISHI","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/napoj-herbata-green-tea-brown-rice-500ml-oishi","reason":"Brand, flavor family, and 500ml volume match the existing OISHI Green Tea Brown Rice row.","next_action":"If accepted, import this owner image to ADG-001642.","index":13,"suggested_decision":"","thumbs":[{"file":"PETE7154.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7154.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-028","files":"PETE7155.JPG","visible_product":"Coco Roots Coconut Water with Mango 500ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Coco Roots Coconut Water with Mango 500ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":14,"suggested_decision":"create_new","thumbs":[{"file":"PETE7155.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7155.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-029","files":"PETE7156.JPG","visible_product":"Kirin Tea Break Milk Tea 345ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"Catalog has Kirin Gogo No Kocha Straight Tea 500ml, but this owner image is Tea Break Milk Tea 345ml.","next_action":"Create new SKU after confirming EAN and price.","index":15,"suggested_decision":"create_new","thumbs":[{"file":"PETE7156.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7156.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-030","files":"PETE7157.JPG","visible_product":"FOCO Pomegranate Juice 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact FOCO Pomegranate Juice 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":16,"suggested_decision":"create_new","thumbs":[{"file":"PETE7157.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7157.jpg"}]},{"source_batch":"folder09-batch002","status":"review_high_existing_sku","id":"folder09-031","files":"PETE7158.JPG","visible_product":"FOCO Lychee Nectar 350ml","target_sku":"ADG-000060","candidate_product":"Lychee Drink 350ml Foco","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/napoj-lychee-350ml-foco","reason":"Brand, lychee flavor, and 350ml volume match the existing FOCO lychee drink row; label wording says nectar.","next_action":"If accepted, import this owner image to ADG-000060.","index":17,"suggested_decision":"","thumbs":[{"file":"PETE7158.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7158.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-032","files":"PETE7159.JPG","visible_product":"Chaokoh Coconut Milk 400ml can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Chaokoh Coconut Milk 400ml can row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":18,"suggested_decision":"create_new","thumbs":[{"file":"PETE7159.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7159.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-033","files":"PETE7160.JPG","visible_product":"FOCO Tamarind Juice 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact FOCO Tamarind Juice 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":19,"suggested_decision":"create_new","thumbs":[{"file":"PETE7160.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7160.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-034","files":"PETE7161.JPG","visible_product":"Sagiko Winter Melon Drink can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Sagiko Winter Melon Drink row found in the catalog export.","next_action":"Create new SKU after confirming EAN, volume, and price.","index":20,"suggested_decision":"create_new","thumbs":[{"file":"PETE7161.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7161.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-035","files":"PETE7162.JPG","visible_product":"FOCO Guava Drink 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact FOCO Guava Drink 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":21,"suggested_decision":"create_new","thumbs":[{"file":"PETE7162.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7162.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-036","files":"PETE7163.JPG","visible_product":"FOCO Mango Juice Drink 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact FOCO Mango Juice Drink 350ml row found in the catalog export. Existing FOCO mango/passion row is a different flavor mix.","next_action":"Create new SKU after confirming EAN and price.","index":22,"suggested_decision":"create_new","thumbs":[{"file":"PETE7163.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7163.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-037","files":"PETE7164.JPG","visible_product":"Sagiko Soursop Drink can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Sagiko Soursop Drink row found in the catalog export. A similar folder01-batch006 new-product candidate exists, so this should be merged with that backlog item if approved.","next_action":"Create or merge into the same new SKU candidate after confirming EAN, volume, and price.","index":23,"suggested_decision":"create_new","thumbs":[{"file":"PETE7164.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7164.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-038","files":"PETE7165.JPG","visible_product":"FOCO Sugar Cane Juice 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact FOCO Sugar Cane Juice 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":24,"suggested_decision":"create_new","thumbs":[{"file":"PETE7165.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7165.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-039","files":"PETE7166.JPG","visible_product":"FOCO Passion Fruit Juice Drink 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact FOCO Passion Fruit Juice Drink 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":25,"suggested_decision":"create_new","thumbs":[{"file":"PETE7166.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7166.jpg"}]},{"source_batch":"folder09-batch002","status":"review_high_existing_sku","id":"folder09-040","files":"PETE7167.JPG","visible_product":"FOCO Coconut Juice 350ml","target_sku":"ADG-000145","candidate_product":"Young Coconut Juice 350ml - Foco","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sok-z-mlodego-kokosa-350ml-foco","reason":"Brand, coconut juice product, and 350ml volume match the existing FOCO young coconut juice row.","next_action":"If accepted, import this owner image to ADG-000145.","index":26,"suggested_decision":"","thumbs":[{"file":"PETE7167.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7167.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-041","files":"PETE7168.JPG","visible_product":"Sagiko Soybean Drink can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Sagiko Soybean Drink row found in the catalog export.","next_action":"Create new SKU after confirming EAN, volume, and price.","index":27,"suggested_decision":"create_new","thumbs":[{"file":"PETE7168.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7168.jpg"}]},{"source_batch":"folder09-batch002","status":"review_high_existing_sku","id":"folder09-042","files":"PETE7169.JPG","visible_product":"FOCO Roasted Coconut Juice 350ml","target_sku":"ADG-000146","candidate_product":"Roasted Coconut Juice 350ml - Foco","confidence":"high","product_url":"https://asiandeligo.eshoper.pro/products/sok-z-pieczonego-kokosa-350ml-foco","reason":"Brand, roasted coconut product, and 350ml volume match the existing FOCO roasted coconut juice row.","next_action":"If accepted, import this owner image to ADG-000146.","index":28,"suggested_decision":"","thumbs":[{"file":"PETE7169.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7169.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-043","files":"PETE7170.JPG","visible_product":"FOCO Mangosteen Juice Drink 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact FOCO Mangosteen Juice Drink 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":29,"suggested_decision":"create_new","thumbs":[{"file":"PETE7170.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7170.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-044","files":"PETE7171.JPG","visible_product":"Parrot Watermelon Juice 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Parrot Watermelon Juice 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":30,"suggested_decision":"create_new","thumbs":[{"file":"PETE7171.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7171.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-045","files":"PETE7172.JPG","visible_product":"Wonderfarm Coconut Water can","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Wonderfarm Coconut Water can row found in the catalog export.","next_action":"Create new SKU after confirming EAN, volume, and price.","index":31,"suggested_decision":"create_new","thumbs":[{"file":"PETE7172.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7172.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-046","files":"PETE7173.JPG","visible_product":"Parrot Mango Juice 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Parrot Mango Juice 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":32,"suggested_decision":"create_new","thumbs":[{"file":"PETE7173.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7173.jpg"}]},{"source_batch":"folder09-batch002","status":"create_new_confirm","id":"folder09-047","files":"PETE7174.JPG","visible_product":"Parrot Coconut Juice 350ml","target_sku":"","candidate_product":"","confidence":"create_new","product_url":"","reason":"No exact Parrot Coconut Juice 350ml row found in the catalog export.","next_action":"Create new SKU after confirming EAN and price.","index":33,"suggested_decision":"create_new","thumbs":[{"file":"PETE7174.JPG","src":"asiandeligo-owner-review-folder09-batch002-assets/thumbs/PETE7174.jpg"}]}],"counts":{"create_new_confirm":29,"review_high_existing_sku":4}};
+const STORAGE_KEY = "asiandeligo-owner-review-folder09-batch002-v1";
+const DOWNLOAD_NAME = "asiandeligo-folder09-batch002-owner-decisions.csv";
+const SKIP_EXPORTS_CREATE_NEW = false;
+let rows = REVIEW_DATA.rows;
+let decisions = loadState();
+let filter = 'all';
+let search = '';
+let currentId = rows[0]?.id;
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(decisions)); }
+function rowDecision(row) { return decisions[row.id]?.decision || ''; }
+function rowNotes(row) { return decisions[row.id]?.notes || ''; }
+function filteredRows() {
+  const q = search.trim().toLowerCase();
+  return rows.filter(row => {
+    if (filter === 'undecided' && rowDecision(row)) return false;
+    if (filter !== 'all' && filter !== 'undecided' && row.status !== filter) return false;
+    if (!q) return true;
+    const hay = [row.id, row.source_batch, row.status, row.files, row.visible_product, row.target_sku, row.candidate_product, row.reason, row.next_action].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+}
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function statusLabel(status) {
+  return ({
+    create_new_confirm: 'Create new / confirm',
+    hold_confirm: 'Hold / confirm',
+    ignore_or_supplies: 'Ignore / supplies',
+    review_high_existing_sku: 'Existing SKU candidate',
+    review_possible_existing_sku: 'Possible SKU candidate',
+  })[status] || status || 'Review';
+}
+function decisionLabel(decision) {
+  return ({ confirm: 'Confirmed', wrong: 'Wrong', create_new: 'Create new', skip: SKIP_EXPORTS_CREATE_NEW ? 'Create new (skip existing link)' : 'Skip' })[decision] || 'Open';
+}
+function exportDecision(decision) {
+  return SKIP_EXPORTS_CREATE_NEW && decision === 'skip' ? 'create_new' : (decision || '');
+}
+function updateStats() {
+  const total = rows.length;
+  const done = rows.filter(row => rowDecision(row)).length;
+  const counts = {
+    review_high_existing_sku: 0,
+    review_possible_existing_sku: 0,
+    create_new_confirm: 0,
+    hold_confirm: 0,
+    ignore_or_supplies: 0,
+    confirm: 0,
+    wrong: 0,
+    create_new: 0,
+    skip: 0,
+  };
+  rows.forEach(row => {
+    counts[row.status] = (counts[row.status] || 0) + 1;
+    const d = rowDecision(row);
+    if (d) counts[d] = (counts[d] || 0) + 1;
+  });
+  document.getElementById('stats').innerHTML = `
+    <span class="pill">${done}/${total} reviewed</span>
+    <span class="pill">Existing: ${counts.review_high_existing_sku}</span>
+    <span class="pill">Possible: ${counts.review_possible_existing_sku}</span>
+    <span class="pill">Create confirm: ${counts.create_new_confirm}</span>
+    <span class="pill">Hold: ${counts.hold_confirm}</span>
+    <span class="pill">Confirmed: ${counts.confirm}</span>
+    <span class="pill">Wrong: ${counts.wrong}</span>
+    <span class="pill">Create: ${counts.create_new}</span>
+    <span class="pill">Skip: ${counts.skip}</span>`;
+}
+function renderList() {
+  const list = filteredRows();
+  const el = document.getElementById('rowList');
+  if (!list.length) { el.innerHTML = '<div class="empty">No rows</div>'; return; }
+  if (!list.some(row => row.id === currentId)) currentId = list[0].id;
+  el.innerHTML = list.map(row => {
+    const d = rowDecision(row);
+    return `<button class="row-btn ${row.id === currentId ? 'active' : ''}" data-row-id="${esc(row.id)}">
+      <span class="row-index">${row.index}</span>
+      <span class="row-main"><span class="row-title">${esc(row.visible_product)}</span><span class="row-meta">${esc(statusLabel(row.status))} · ${esc(row.files)}</span></span>
+      <span class="decision-dot ${esc(d)}" title="${esc(decisionLabel(d))}"></span>
+    </button>`;
+  }).join('');
+  el.querySelectorAll('[data-row-id]').forEach(btn => btn.addEventListener('click', () => { currentId = btn.dataset.rowId; render(); }));
+}
+function renderCard() {
+  const row = rows.find(r => r.id === currentId) || filteredRows()[0];
+  const el = document.getElementById('card');
+  if (!row) { el.innerHTML = '<div class="empty">No row selected</div>'; return; }
+  const d = rowDecision(row);
+  const thumbHtml = row.thumbs.length ? row.thumbs.map(t => `<div class="thumb"><img src="${esc(t.src)}" alt="${esc(t.file)}"><div class="thumb-name">${esc(t.file)}</div></div>`).join('') : '<div class="empty">Missing thumbnail</div>';
+  const tagClass = row.status === 'create_new_confirm' ? 'blue' : row.status === 'ignore_or_supplies' ? 'bad' : 'warn';
+  const skuHtml = row.target_sku || row.candidate_product || row.product_url || row.confidence ? `
+        <div class="section"><div class="label">Candidate SKU</div><div class="value">
+          ${row.target_sku ? `<div><strong>${esc(row.target_sku)}</strong></div>` : ''}
+          ${row.candidate_product ? `<div>${esc(row.candidate_product)}</div>` : ''}
+          ${row.confidence ? `<div class="notes">Confidence: ${esc(row.confidence)}</div>` : ''}
+          ${row.product_url ? `<div><a href="${esc(row.product_url)}" target="_blank" rel="noreferrer">${esc(row.product_url)}</a></div>` : ''}
+        </div></div>` : '';
+  el.innerHTML = `
+    <div class="card-head">
+      <div>
+        <h2 class="card-title">${row.index}. ${esc(row.visible_product)}</h2>
+        <div class="tagline">
+          <span class="tag ${tagClass}">${esc(statusLabel(row.status))}</span>
+          <span class="tag">${esc(row.source_batch)}</span>
+          <span class="tag">${esc(row.id)}</span>
+          ${row.suggested_decision ? `<span class="tag">Suggested: ${esc(decisionLabel(row.suggested_decision))}</span>` : ''}
+        </div>
+      </div>
+      <div class="pill">Decision: ${esc(decisionLabel(d))}</div>
+    </div>
+    <div class="split">
+      <div class="images"><div class="image-grid">${thumbHtml}</div></div>
+      <div class="details">
+        ${skuHtml}
+        <div class="section"><div class="label">Review reason</div><div class="notes">${esc(row.reason || '')}</div></div>
+        <div class="section"><div class="label">Next action</div><div class="notes">${esc(row.next_action || '')}</div></div>
+        <div class="section"><div class="label">Source files</div><div class="notes">${esc(row.files || '')}</div></div>
+        <div class="section"><div class="label">Owner notes</div><textarea class="textarea" id="ownerNotes" placeholder="Ghi xác nhận, tên đúng, size, EAN, giá, hoặc lý do bỏ qua...">${esc(rowNotes(row))}</textarea></div>
+      </div>
+    </div>
+    <div class="decision-bar">
+      <button data-decision="confirm" class="${d === 'confirm' ? 'selected' : ''}">1 · Confirm</button>
+      <button data-decision="wrong" class="${d === 'wrong' ? 'selected' : ''}">2 · Wrong</button>
+      <button data-decision="create_new" class="${d === 'create_new' ? 'selected' : ''}">3 · Create new</button>
+      <button data-decision="skip" class="${d === 'skip' ? 'selected' : ''}">4 · Skip</button>
+    </div>`;
+  el.querySelectorAll('[data-decision]').forEach(btn => btn.addEventListener('click', () => setDecision(row.id, btn.dataset.decision)));
+  const notes = el.querySelector('#ownerNotes');
+  notes.addEventListener('input', () => { decisions[row.id] = { ...(decisions[row.id] || {}), notes: notes.value }; saveState(); });
+}
+function setDecision(id, decision) {
+  decisions[id] = { ...(decisions[id] || {}), decision };
+  saveState();
+  move(1);
+}
+function move(delta) {
+  const list = filteredRows();
+  const idx = Math.max(0, list.findIndex(row => row.id === currentId));
+  const next = list[Math.min(list.length - 1, Math.max(0, idx + delta))];
+  if (next) currentId = next.id;
+  render();
+}
+function render() { updateStats(); renderList(); renderCard(); }
+function exportCsv() {
+  const headers = ['id','source_batch','status','files','visible_product','target_sku','candidate_product','confidence','product_url','decision','owner_notes','reason','next_action'];
+  const lines = [headers.join(',')];
+  for (const row of rows) {
+    const state = decisions[row.id] || {};
+    const values = [row.id,row.source_batch,row.status,row.files,row.visible_product,row.target_sku,row.candidate_product,row.confidence,row.product_url,exportDecision(state.decision),state.notes || '',row.reason,row.next_action];
+    lines.push(values.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(','));
+  }
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = DOWNLOAD_NAME;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+document.querySelectorAll('[data-filter]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filter = btn.dataset.filter;
+  render();
+}));
+document.getElementById('search').addEventListener('input', event => { search = event.target.value; render(); });
+document.getElementById('prevBtn').addEventListener('click', () => move(-1));
+document.getElementById('nextBtn').addEventListener('click', () => move(1));
+document.getElementById('exportBtn').addEventListener('click', exportCsv);
+document.addEventListener('keydown', event => {
+  if (event.target && ['TEXTAREA','INPUT'].includes(event.target.tagName)) return;
+  if (event.key === 'ArrowRight') move(1);
+  if (event.key === 'ArrowLeft') move(-1);
+  if (event.key === '1') setDecision(currentId, 'confirm');
+  if (event.key === '2') setDecision(currentId, 'wrong');
+  if (event.key === '3') setDecision(currentId, 'create_new');
+  if (event.key === '4') setDecision(currentId, 'skip');
+});
+render();
+</script>
+</body>
+</html>
