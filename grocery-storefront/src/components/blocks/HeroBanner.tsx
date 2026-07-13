@@ -57,14 +57,14 @@ export function HeroBanner({ block }: HeroBannerProps) {
               {s.mobileImageUrl && (
                 <img
                   src={getImageSrc(s.mobileImageUrl, { maxWidth: 768 }) || s.mobileImageUrl}
-                  alt={s.title || 'Banner'}
+                  alt={s.title.trim() || `Store promotion banner ${i + 1}`}
                   className="w-full h-full object-cover block md:hidden"
                   loading={i === 0 ? 'eager' : 'lazy'}
                 />
               )}
               <img
                 src={getImageSrc(s.imageUrl || s.mobileImageUrl, { maxWidth: 1440 }) || s.imageUrl || s.mobileImageUrl || ''}
-                alt={s.title || 'Banner'}
+                alt={s.title.trim() || `Store promotion banner ${i + 1}`}
                 className={`w-full h-full object-cover ${s.mobileImageUrl ? 'hidden md:block' : 'block'}`}
                 loading={i === 0 ? 'eager' : 'lazy'}
               />

@@ -32,7 +32,7 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
   }
 
   function addSlide() {
-    if (block.slides.length >= 5) return;
+    if (block.slides.length >= 6) return;
     onChange({ ...block, slides: [...block.slides, defaultSlide(t('homepage.blocks.defaultCtaText'))] });
   }
 
@@ -154,7 +154,7 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
         ))}
       </div>
 
-      {block.slides.length < 5 && (
+      {block.slides.length < 6 && (
         <button
           type="button"
           onClick={addSlide}

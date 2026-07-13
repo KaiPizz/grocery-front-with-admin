@@ -84,7 +84,7 @@ const heroBannerBlockSchema = z.object({
   order: z.number().int().min(0),
   autoPlay: z.boolean(),
   autoPlayInterval: z.number().int().min(1000).max(30000),
-  slides: z.array(heroSlideSchema).min(1).max(5),
+  slides: z.array(heroSlideSchema).min(1).max(6),
 });
 
 const horizontalBannerBlockSchema = z.object({
