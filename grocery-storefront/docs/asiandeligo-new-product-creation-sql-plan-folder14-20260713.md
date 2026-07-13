@@ -1,11 +1,11 @@
 # Asia Deli Go New Product Creation SQL Plan
 
-Generated: 2026-07-13T08:18:09.424Z
+Generated: 2026-07-13T08:35:07.969Z
 
 ## Summary
 
 - Batch: asiandeligo-new-products-folder14-20260713
-- Runtime channel guard: `kenmito`
+- Runtime channel guard: `asiandeligo`
 - Input manifest: `docs/asiandeligo-new-product-creation-manifest-folder14-20260713.csv`
 - Source products planned: 53
 - Source images found: 53
@@ -20,7 +20,7 @@ Generated: 2026-07-13T08:18:09.424Z
 ## Preconditions Before Running SQL
 
 - Upload/stage each image so `target_url` returns 200.
-- Confirm this should target the current runtime catalog channel `kenmito` / Asia Deli Go storefront.
+- Confirm this should target the current runtime catalog channel `asiandeligo` / Asia Deli Go storefront.
 - Confirm owner accepts draft products with price pending and not visible for sale until edited.
 - Do not source prices from internet listings; owner/admin will fill real store prices later.
 - EAN gaps stay blank until they are confirmed from product labels, owner data, or reliable product sources.
@@ -31,7 +31,7 @@ Generated: 2026-07-13T08:18:09.424Z
 - `products.category_id -> categories.id`, `product_variants.template_id -> products.id`, `product_images.template_id -> products.id`, and `product_translations.template_id -> products.id` are declared FKs.
 - `products.retail_price` has default `0`; `products.status` has default `draft`; this plan sets both explicitly.
 - `product_variants.available_stock` is a generated column, so the plan sets only `total_stock` and `total_stock_qty`.
-- Current build DB product catalog is under channel `kenmito`; local `asiandeligo` channel is not the 1784-product catalog.
+- Current runtime channel guard is `asiandeligo`; confirm against the target database before applying.
 
 ## Planned Rows
 

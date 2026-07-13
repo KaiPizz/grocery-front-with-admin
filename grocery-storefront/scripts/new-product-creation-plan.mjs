@@ -12,7 +12,7 @@ const DEFAULT_SQL = 'docs/asiandeligo-new-product-creation-sql-plan-folder01-rev
 const DEFAULT_REPORT = 'docs/asiandeligo-new-product-creation-sql-plan-folder01-review2-20260709.md';
 const DEFAULT_STAGING_DIR = '/tmp/asiandeligo-new-product-creation-dry-run-folder01-review2-20260709';
 const DEFAULT_MEDIA_BASE_URL = 'https://img.zira.pl/asiandeligo';
-const DEFAULT_CHANNEL = 'kenmito';
+const DEFAULT_CHANNEL = 'asiandeligo';
 const DEFAULT_BATCH = 'asiandeligo-new-products-folder01-review2-20260709';
 const DEFAULT_EXPECTED_ROWS = 7;
 
@@ -723,7 +723,7 @@ function writeReport(options, summary, rows) {
     '## Preconditions Before Running SQL',
     '',
     '- Upload/stage each image so `target_url` returns 200.',
-    '- Confirm this should target the current runtime catalog channel `kenmito` / Asia Deli Go storefront.',
+    `- Confirm this should target the current runtime catalog channel \`${options.channel}\` / Asia Deli Go storefront.`,
     '- Confirm owner accepts draft products with price pending and not visible for sale until edited.',
     '- Do not source prices from internet listings; owner/admin will fill real store prices later.',
     '- EAN gaps stay blank until they are confirmed from product labels, owner data, or reliable product sources.',
@@ -734,7 +734,7 @@ function writeReport(options, summary, rows) {
     '- `products.category_id -> categories.id`, `product_variants.template_id -> products.id`, `product_images.template_id -> products.id`, and `product_translations.template_id -> products.id` are declared FKs.',
     '- `products.retail_price` has default `0`; `products.status` has default `draft`; this plan sets both explicitly.',
     '- `product_variants.available_stock` is a generated column, so the plan sets only `total_stock` and `total_stock_qty`.',
-    '- Current build DB product catalog is under channel `kenmito`; local `asiandeligo` channel is not the 1784-product catalog.',
+    `- Current runtime channel guard is \`${options.channel}\`; confirm against the target database before applying.`,
     '',
     '## Planned Rows',
     '',
