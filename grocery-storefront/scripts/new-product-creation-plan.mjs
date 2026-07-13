@@ -701,7 +701,7 @@ function writeSql(options, rows) {
 function writeReport(options, summary, rows) {
   const samples = rows.slice(0, 25);
   const lines = [
-    '# Asia Deli Go New Product Creation SQL Plan - Folder 01 Review 2',
+    '# Asia Deli Go New Product Creation SQL Plan',
     '',
     `Generated: ${summary.generatedAt}`,
     '',
@@ -709,6 +709,7 @@ function writeReport(options, summary, rows) {
     '',
     `- Batch: ${options.batch}`,
     `- Runtime channel guard: \`${options.channel}\``,
+    `- Input manifest: \`${options.input}\``,
     `- Source products planned: ${summary.rows}`,
     `- Source images found: ${summary.sourceImagesFound}`,
     `- Rows with notes: ${summary.rowsWithNotes}`,
@@ -725,7 +726,7 @@ function writeReport(options, summary, rows) {
     '- Confirm this should target the current runtime catalog channel `kenmito` / Asia Deli Go storefront.',
     '- Confirm owner accepts draft products with price pending and not visible for sale until edited.',
     '- Do not source prices from internet listings; owner/admin will fill real store prices later.',
-    '- Remaining EAN gaps stay blank: Hoang Long tea and Sen Soy Premium soy sauce.',
+    '- EAN gaps stay blank until they are confirmed from product labels, owner data, or reliable product sources.',
     '',
     '## Schema Assumptions Verified',
     '',
