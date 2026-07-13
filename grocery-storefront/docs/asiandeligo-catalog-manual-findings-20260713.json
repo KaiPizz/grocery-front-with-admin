@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-07-13",
+  "source": "Visual review of all six normalized product-name collision groups",
+  "findings": [
+    {
+      "sku": "ADG-001463",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image shows Kameda Kaki no Tane Wasabi 164g; the live row describes Original 180g."
+    },
+    {
+      "sku": "ADG-001446",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image and DB brand show COCO-D 1L; the live row describes AROY-D 1L."
+    },
+    {
+      "sku": "ADG-001782",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image and DB brand show Marukome dried rice koji 100g; the live row describes Tilda jasmine rice 1kg."
+    },
+    {
+      "sku": "ADG-001666",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image shows Hansung anchovy fish sauce 2L; the live row describes the 870ml bottle."
+    },
+    {
+      "sku": "ADG-001327",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image shows the black Edo Japan Kurobizen matcha set; the live row describes the green set."
+    },
+    {
+      "sku": "ADG-001282",
+      "issue": "possible_physical_duplicate",
+      "note": "Possible duplicate of ADG-001760; confirm physical EAN/import and owner-approved price before merging."
+    },
+    {
+      "sku": "ADG-001760",
+      "issue": "possible_physical_duplicate",
+      "note": "Possible duplicate of ADG-001282; confirm physical EAN/import and owner-approved price before merging."
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T18:49:41.856Z",
+  "generatedAt": "2026-07-13T19:44:13.944Z",
   "endpoint": "https://zira-ai.com/graphql/storefront",
   "channel": "asiandeligo",
   "inspectedProducts": 1784,
@@ -21,14 +21,15 @@
     "out_of_stock": 17,
     "slug_contains_sku": 12,
     "untranslated_english_name_candidate": 12,
-    "vegetarian_ingredient_conflict_candidate": 9,
     "missing_description": 5,
+    "verified_image_identity_mismatch": 5,
     "invalid_ean": 2,
-    "vegan_ingredient_conflict_candidate": 2
+    "possible_physical_duplicate": 2
   },
   "severityCounts": {
-    "backlog": 1756,
-    "review": 28
+    "backlog": 1758,
+    "review": 21,
+    "blocker": 5
   },
   "categoryCounts": {
     "Słodycze / Przekąski": 355,
@@ -176,6 +177,44 @@
     "img.zira.pl": 2225
   },
   "productsWithStock100": 1750,
+  "manualFindingsFile": "docs/asiandeligo-catalog-manual-findings-20260713.json",
+  "manualFindings": [
+    {
+      "sku": "ADG-001463",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image shows Kameda Kaki no Tane Wasabi 164g; the live row describes Original 180g."
+    },
+    {
+      "sku": "ADG-001446",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image and DB brand show COCO-D 1L; the live row describes AROY-D 1L."
+    },
+    {
+      "sku": "ADG-001782",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image and DB brand show Marukome dried rice koji 100g; the live row describes Tilda jasmine rice 1kg."
+    },
+    {
+      "sku": "ADG-001666",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image shows Hansung anchovy fish sauce 2L; the live row describes the 870ml bottle."
+    },
+    {
+      "sku": "ADG-001327",
+      "issue": "verified_image_identity_mismatch",
+      "note": "Image shows the black Edo Japan Kurobizen matcha set; the live row describes the green set."
+    },
+    {
+      "sku": "ADG-001282",
+      "issue": "possible_physical_duplicate",
+      "note": "Possible duplicate of ADG-001760; confirm physical EAN/import and owner-approved price before merging."
+    },
+    {
+      "sku": "ADG-001760",
+      "issue": "possible_physical_duplicate",
+      "note": "Possible duplicate of ADG-001282; confirm physical EAN/import and owner-approved price before merging."
+    }
+  ],
   "variantAudit": {
     "available": true,
     "rows": 1784,
@@ -353,6 +392,94 @@
   "brokenImageUrls": [],
   "productsWithIssues": [
     {
+      "id": "98135e9b-e0fc-452e-b055-b49ad9c2c60f",
+      "name": "Zestaw do herbaty matcha zielony, 4 elementy - Edo Japan",
+      "slug": "zestaw-do-herbaty-matcha-zielony-4-elementy-edo-japan-adg001327",
+      "category": "Komplety do sushi i herbaty",
+      "skus": [
+        "ADG-001327"
+      ],
+      "severity": "blocker",
+      "issues": [
+        "legacy_image_key",
+        "slug_contains_sku",
+        "missing_ingredients",
+        "missing_allergens",
+        "missing_nutrition",
+        "missing_storage_zone",
+        "missing_unit_price",
+        "missing_ean",
+        "verified_image_identity_mismatch"
+      ]
+    },
+    {
+      "id": "ba2d2a1a-dfb3-46b8-addd-8ce5c7263201",
+      "name": "Ryż jaśminowy Fragrant Jasmine Rice 1kg Tilda",
+      "slug": "ryz-jasminowy-fragrant-jasmine-rice-1kg-tilda-adg001782",
+      "category": "Ryż i inne ziarna",
+      "skus": [
+        "ADG-001782"
+      ],
+      "severity": "blocker",
+      "issues": [
+        "legacy_image_key",
+        "slug_contains_sku",
+        "non_ascii_category_slug",
+        "missing_allergens",
+        "missing_ean",
+        "verified_image_identity_mismatch"
+      ]
+    },
+    {
+      "id": "7fa0794c-4b10-4a95-af48-836af22467ef",
+      "name": "Kaki no Tane, przyprawione krakersy ryżowe arare z orzeszkami 180g (6 x 30g) - KAMEDA",
+      "slug": "kaki-no-tane-przyprawione-krakersy-ryzowe-arare-z-orzeszkami-180g-6-x-30g-kameda-adg001463",
+      "category": "Słodycze / Przekąski",
+      "skus": [
+        "ADG-001463"
+      ],
+      "severity": "blocker",
+      "issues": [
+        "legacy_image_key",
+        "slug_contains_sku",
+        "non_ascii_category_slug",
+        "missing_ean",
+        "verified_image_identity_mismatch"
+      ]
+    },
+    {
+      "id": "45377393-b488-4a6b-867f-c7d0bc7e9aa4",
+      "name": "Mleko kokosowe (70% wyciągu z kokosa) 1L w kartonie AROY-D",
+      "slug": "mleko-kokosowe-70-wyciagu-z-kokosa-1l-w-kartonie-aroy-d-adg001446",
+      "category": "Mleczko kokosowe",
+      "skus": [
+        "ADG-001446"
+      ],
+      "severity": "blocker",
+      "issues": [
+        "legacy_image_key",
+        "slug_contains_sku",
+        "missing_ean",
+        "verified_image_identity_mismatch"
+      ]
+    },
+    {
+      "id": "94ce31c6-45fe-45fd-8793-b2872bcb3a70",
+      "name": "Sos rybny Myeolchi Aekjeot z anchois 870ml - Hansung",
+      "slug": "sos-rybny-myeolchi-aekjeot-z-anchois-870ml-hansung-adg001666",
+      "category": "Sosy, marynaty",
+      "skus": [
+        "ADG-001666"
+      ],
+      "severity": "blocker",
+      "issues": [
+        "legacy_image_key",
+        "slug_contains_sku",
+        "missing_ean",
+        "verified_image_identity_mismatch"
+      ]
+    },
+    {
       "id": "2186c4ef-8e8e-4870-a10d-3d16f6cdf079",
       "name": "Nóż Tomoko Yanagi-Sashimi 20,5cm - Satake Cutlery",
       "slug": "noz-tomoko-yanagi-sashimi-20-5cm-satake-cutlery",
@@ -518,23 +645,6 @@
       ]
     },
     {
-      "id": "4ed0fef8-2bf9-492f-be37-d941d458f9c5",
-      "name": "Zupa makaronowa Jin Ramen Veggie, lekko pikantna 110g - Ottogi",
-      "slug": "zupa-makaronowa-jin-ramen-veggie-lekko-pikantna-110g-ottogi",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-000671"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_storage_zone",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate",
-        "vegan_ingredient_conflict_candidate"
-      ]
-    },
-    {
       "id": "ac4cff86-3e27-4e03-ae23-52ada84301f5",
       "name": "Chrupki Zzaldduk o smaku ostrego kurczaka Buldak 2xSpicy, ostre 80g - Samyang",
       "slug": "chrupki-zzaldduk-o-smaku-ostrego-kurczaka-buldak-2xspicy-ostre-80g-samyang",
@@ -548,6 +658,38 @@
         "out_of_stock",
         "non_ascii_category_slug",
         "missing_ean"
+      ]
+    },
+    {
+      "id": "84fed499-4e80-4c43-9b47-98d191024aab",
+      "name": "Danie o smaku ostrego kurczaka Quattro Cheese Buldak 145g - Samyang",
+      "slug": "danie-o-smaku-ostrego-kurczaka-quattro-cheese-buldak-145g-samyang-adg001760",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-001760"
+      ],
+      "severity": "review",
+      "issues": [
+        "legacy_image_key",
+        "slug_contains_sku",
+        "missing_ean",
+        "possible_physical_duplicate"
+      ]
+    },
+    {
+      "id": "bc98c093-2ab4-4b1d-9e9a-ebb74ad2d4f6",
+      "name": "Danie o smaku ostrego kurczaka Quattro Cheese Buldak 145g - Samyang",
+      "slug": "danie-o-smaku-ostrego-kurczaka-quattro-cheese-buldak-145g-samyang-adg001282",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-001282"
+      ],
+      "severity": "review",
+      "issues": [
+        "legacy_image_key",
+        "slug_contains_sku",
+        "missing_ean",
+        "possible_physical_duplicate"
       ]
     },
     {
@@ -599,70 +741,6 @@
       ]
     },
     {
-      "id": "e7396e3d-84d5-4c02-9201-1f3ec06ac57a",
-      "name": "Zupa instant Shin Kimchi Ramyun, ostra - 5-pak (5 x 120g) Nongshim",
-      "slug": "zupa-instant-shin-kimchi-ramyun-ostra-5-pak-5-x-120g-nongshim",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-000502"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_storage_zone",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate"
-      ]
-    },
-    {
-      "id": "fbb02e6e-7afd-456c-a95b-89191d711b7d",
-      "name": "Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim",
-      "slug": "zupa-instant-shin-kimchi-ramyun-ostra-120g-nongshim",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-000096"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_storage_zone",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate"
-      ]
-    },
-    {
-      "id": "cb64743b-0c5f-479f-a636-ec4b0e1a6fc6",
-      "name": "Zupa makaronowa Jin Ramen Veggie, lekko pikantna 4 x 110g - Ottogi",
-      "slug": "zupa-makaronowa-jin-ramen-veggie-lekko-pikantna-4-x-110g-ottogi",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-000672"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate",
-        "vegan_ingredient_conflict_candidate"
-      ]
-    },
-    {
-      "id": "56472064-5896-483b-a892-283a98df85ac",
-      "name": "Zupa makaronowa Shin Kimchi Ramyun, ostra 20 x 120g (cały karton) - Nongshim",
-      "slug": "zupa-makaronowa-shin-kimchi-ramyun-ostra-20-x-120g-caly-karton-nongshim",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-001208"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_storage_zone",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate"
-      ]
-    },
-    {
       "id": "c902f0d5-9751-4578-83ca-9b027c38c214",
       "name": "Curry Medium Hot - curry instant w proszku 1kg - Ottogi",
       "slug": "curry-medium-hot-curry-instant-w-proszku-1kg-ottogi",
@@ -690,21 +768,6 @@
         "legacy_image_key",
         "out_of_stock",
         "missing_ean"
-      ]
-    },
-    {
-      "id": "aa7f413f-46c0-4f52-ae4f-a698fafa6f37",
-      "name": "Dried Soy Stick Beef Flavor, wegetariańskie szaszłyki na ostro z suszonego tofu o smaku wołowiny shaokao 60g - Joytofu XiangXiangZui",
-      "slug": "dried-soy-stick-beef-flavor-wegetarianskie-szaszlyki-na-ostro-z-suszonego-tofu-o-smaku-wolowiny-shaokao-60g-joytofu",
-      "category": "Dania gotowe",
-      "skus": [
-        "ADG-001191"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate"
       ]
     },
     {
@@ -750,51 +813,6 @@
         "legacy_image_key",
         "out_of_stock",
         "missing_ean"
-      ]
-    },
-    {
-      "id": "c2fb9ece-5fa1-4cb6-aef0-86ffb9201452",
-      "name": "Zupa instant o smaku warzywnym z makaronem ryżowym 55g - MAMA",
-      "slug": "zupa-instant-o-smaku-warzywnym-z-makaronem-ryzowym-55g-mama",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-000820"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate"
-      ]
-    },
-    {
-      "id": "fd1bbe7b-7910-4b9e-922c-5100c3bddfd1",
-      "name": "Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie",
-      "slug": "zupa-makaronowa-instant-o-smaku-warzywnym-40-x-75g-indomie",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-001165"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate"
-      ]
-    },
-    {
-      "id": "9a09f828-d89a-4ba7-95fc-3a7270b774ec",
-      "name": "Zupa makaronowa instant o smaku warzywnym 5 x 75g - Indomie",
-      "slug": "zupa-makaronowa-instant-o-smaku-warzywnym-5-x-75g-indomie",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-001199"
-      ],
-      "severity": "review",
-      "issues": [
-        "legacy_image_key",
-        "missing_ean",
-        "vegetarian_ingredient_conflict_candidate"
       ]
     },
     {
@@ -2306,26 +2324,6 @@
       "issues": [
         "legacy_image_key",
         "non_ascii_category_slug",
-        "missing_ingredients",
-        "missing_allergens",
-        "missing_nutrition",
-        "missing_storage_zone",
-        "missing_unit_price",
-        "missing_ean"
-      ]
-    },
-    {
-      "id": "98135e9b-e0fc-452e-b055-b49ad9c2c60f",
-      "name": "Zestaw do herbaty matcha zielony, 4 elementy - Edo Japan",
-      "slug": "zestaw-do-herbaty-matcha-zielony-4-elementy-edo-japan-adg001327",
-      "category": "Komplety do sushi i herbaty",
-      "skus": [
-        "ADG-001327"
-      ],
-      "severity": "backlog",
-      "issues": [
-        "legacy_image_key",
-        "slug_contains_sku",
         "missing_ingredients",
         "missing_allergens",
         "missing_nutrition",
@@ -6282,23 +6280,6 @@
       ]
     },
     {
-      "id": "ba2d2a1a-dfb3-46b8-addd-8ce5c7263201",
-      "name": "Ryż jaśminowy Fragrant Jasmine Rice 1kg Tilda",
-      "slug": "ryz-jasminowy-fragrant-jasmine-rice-1kg-tilda-adg001782",
-      "category": "Ryż i inne ziarna",
-      "skus": [
-        "ADG-001782"
-      ],
-      "severity": "backlog",
-      "issues": [
-        "legacy_image_key",
-        "slug_contains_sku",
-        "non_ascii_category_slug",
-        "missing_allergens",
-        "missing_ean"
-      ]
-    },
-    {
       "id": "bbd40b6f-2dc1-44dd-872f-2f0e7ee9c21e",
       "name": "Ryż jaśminowy Thai Hom Mali Rice 1kg - Aroy-D",
       "slug": "ryz-jasminowy-thai-hom-mali-rice-1kg-aroy-d",
@@ -8096,22 +8077,6 @@
       "category": "Słodycze / Przekąski",
       "skus": [
         "ADG-001350"
-      ],
-      "severity": "backlog",
-      "issues": [
-        "legacy_image_key",
-        "slug_contains_sku",
-        "non_ascii_category_slug",
-        "missing_ean"
-      ]
-    },
-    {
-      "id": "7fa0794c-4b10-4a95-af48-836af22467ef",
-      "name": "Kaki no Tane, przyprawione krakersy ryżowe arare z orzeszkami 180g (6 x 30g) - KAMEDA",
-      "slug": "kaki-no-tane-przyprawione-krakersy-ryzowe-arare-z-orzeszkami-180g-6-x-30g-kameda-adg001463",
-      "category": "Słodycze / Przekąski",
-      "skus": [
-        "ADG-001463"
       ],
       "severity": "backlog",
       "issues": [
@@ -13893,36 +13858,6 @@
       ]
     },
     {
-      "id": "84fed499-4e80-4c43-9b47-98d191024aab",
-      "name": "Danie o smaku ostrego kurczaka Quattro Cheese Buldak 145g - Samyang",
-      "slug": "danie-o-smaku-ostrego-kurczaka-quattro-cheese-buldak-145g-samyang-adg001760",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-001760"
-      ],
-      "severity": "backlog",
-      "issues": [
-        "legacy_image_key",
-        "slug_contains_sku",
-        "missing_ean"
-      ]
-    },
-    {
-      "id": "bc98c093-2ab4-4b1d-9e9a-ebb74ad2d4f6",
-      "name": "Danie o smaku ostrego kurczaka Quattro Cheese Buldak 145g - Samyang",
-      "slug": "danie-o-smaku-ostrego-kurczaka-quattro-cheese-buldak-145g-samyang-adg001282",
-      "category": "Ramyun / Ramen",
-      "skus": [
-        "ADG-001282"
-      ],
-      "severity": "backlog",
-      "issues": [
-        "legacy_image_key",
-        "slug_contains_sku",
-        "missing_ean"
-      ]
-    },
-    {
       "id": "6e2a6cdb-38c7-4bab-8fea-54d57a5af014",
       "name": "Dubai Chocolate Crunchy Knafeh Pistachio, dubajska mleczna czekolada z kremem pistacjowym i ciastem kataifi 90g - Elit",
       "slug": "dubai-chocolate-crunchy-knafeh-pistachio-dubajska-mleczna-czekolada-z-kremem-pistacjowym-i-ciastem-kataifi-90g-elit",
@@ -16529,21 +16464,6 @@
       "issues": [
         "legacy_image_key",
         "missing_allergens",
-        "missing_ean"
-      ]
-    },
-    {
-      "id": "45377393-b488-4a6b-867f-c7d0bc7e9aa4",
-      "name": "Mleko kokosowe (70% wyciągu z kokosa) 1L w kartonie AROY-D",
-      "slug": "mleko-kokosowe-70-wyciagu-z-kokosa-1l-w-kartonie-aroy-d-adg001446",
-      "category": "Mleczko kokosowe",
-      "skus": [
-        "ADG-001446"
-      ],
-      "severity": "backlog",
-      "issues": [
-        "legacy_image_key",
-        "slug_contains_sku",
         "missing_ean"
       ]
     },
@@ -19653,21 +19573,6 @@
       ]
     },
     {
-      "id": "94ce31c6-45fe-45fd-8793-b2872bcb3a70",
-      "name": "Sos rybny Myeolchi Aekjeot z anchois 870ml - Hansung",
-      "slug": "sos-rybny-myeolchi-aekjeot-z-anchois-870ml-hansung-adg001666",
-      "category": "Sosy, marynaty",
-      "skus": [
-        "ADG-001666"
-      ],
-      "severity": "backlog",
-      "issues": [
-        "legacy_image_key",
-        "slug_contains_sku",
-        "missing_ean"
-      ]
-    },
-    {
       "id": "f3805ee5-aee8-4db3-9dae-cb89c3755f5f",
       "name": "Sos rybny Myeolchi Aekjeot z anchois 870ml - Hansung",
       "slug": "sos-rybny-myeolchi-aekjeot-z-anchois-870ml-hansung-adg001507",
@@ -21438,6 +21343,36 @@
       ]
     },
     {
+      "id": "e7396e3d-84d5-4c02-9201-1f3ec06ac57a",
+      "name": "Zupa instant Shin Kimchi Ramyun, ostra - 5-pak (5 x 120g) Nongshim",
+      "slug": "zupa-instant-shin-kimchi-ramyun-ostra-5-pak-5-x-120g-nongshim",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-000502"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_storage_zone",
+        "missing_ean"
+      ]
+    },
+    {
+      "id": "fbb02e6e-7afd-456c-a95b-89191d711b7d",
+      "name": "Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim",
+      "slug": "zupa-instant-shin-kimchi-ramyun-ostra-120g-nongshim",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-000096"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_storage_zone",
+        "missing_ean"
+      ]
+    },
+    {
       "id": "c610df48-b6c8-469e-8414-c6b3c2bbec3b",
       "name": "Zupa instant Shin Ramyun, duża micha 114g - Nongshim",
       "slug": "zupa-instant-shin-ramyun-duza-micha-114g-nongshim",
@@ -21738,6 +21673,21 @@
       ]
     },
     {
+      "id": "4ed0fef8-2bf9-492f-be37-d941d458f9c5",
+      "name": "Zupa makaronowa Jin Ramen Veggie, lekko pikantna 110g - Ottogi",
+      "slug": "zupa-makaronowa-jin-ramen-veggie-lekko-pikantna-110g-ottogi",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-000671"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_storage_zone",
+        "missing_ean"
+      ]
+    },
+    {
       "id": "ab2ae5d9-7474-4e7c-8efe-a5d028e2dd63",
       "name": "Zupa makaronowa Kimchi Ramen, średnio ostra 120g - Ottogi",
       "slug": "zupa-makaronowa-kimchi-ramen-srednio-ostra-120g-ottogi",
@@ -21789,6 +21739,21 @@
       "category": "Ramyun / Ramen",
       "skus": [
         "ADG-000087"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_storage_zone",
+        "missing_ean"
+      ]
+    },
+    {
+      "id": "56472064-5896-483b-a892-283a98df85ac",
+      "name": "Zupa makaronowa Shin Kimchi Ramyun, ostra 20 x 120g (cały karton) - Nongshim",
+      "slug": "zupa-makaronowa-shin-kimchi-ramyun-ostra-20-x-120g-caly-karton-nongshim",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-001208"
       ],
       "severity": "backlog",
       "issues": [
@@ -22836,6 +22801,20 @@
       "category": "Buliony",
       "skus": [
         "ADG-001069"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_ean"
+      ]
+    },
+    {
+      "id": "aa7f413f-46c0-4f52-ae4f-a698fafa6f37",
+      "name": "Dried Soy Stick Beef Flavor, wegetariańskie szaszłyki na ostro z suszonego tofu o smaku wołowiny shaokao 60g - Joytofu XiangXiangZui",
+      "slug": "dried-soy-stick-beef-flavor-wegetarianskie-szaszlyki-na-ostro-z-suszonego-tofu-o-smaku-wolowiny-shaokao-60g-joytofu",
+      "category": "Dania gotowe",
+      "skus": [
+        "ADG-001191"
       ],
       "severity": "backlog",
       "issues": [
@@ -27772,6 +27751,20 @@
       ]
     },
     {
+      "id": "c2fb9ece-5fa1-4cb6-aef0-86ffb9201452",
+      "name": "Zupa instant o smaku warzywnym z makaronem ryżowym 55g - MAMA",
+      "slug": "zupa-instant-o-smaku-warzywnym-z-makaronem-ryzowym-55g-mama",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-000820"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_ean"
+      ]
+    },
+    {
       "id": "b06efe15-a4b4-4b41-80fd-4f15628493c7",
       "name": "Zupa instant o smaku wołowym z makaronem ryżowym 55g - MAMA",
       "slug": "zupa-instant-o-smaku-wolowym-z-makaronem-ryzowym-55g-mama",
@@ -27932,6 +27925,48 @@
       "category": "Ramyun / Ramen",
       "skus": [
         "ADG-001362"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_ean"
+      ]
+    },
+    {
+      "id": "fd1bbe7b-7910-4b9e-922c-5100c3bddfd1",
+      "name": "Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie",
+      "slug": "zupa-makaronowa-instant-o-smaku-warzywnym-40-x-75g-indomie",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-001165"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_ean"
+      ]
+    },
+    {
+      "id": "9a09f828-d89a-4ba7-95fc-3a7270b774ec",
+      "name": "Zupa makaronowa instant o smaku warzywnym 5 x 75g - Indomie",
+      "slug": "zupa-makaronowa-instant-o-smaku-warzywnym-5-x-75g-indomie",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-001199"
+      ],
+      "severity": "backlog",
+      "issues": [
+        "legacy_image_key",
+        "missing_ean"
+      ]
+    },
+    {
+      "id": "cb64743b-0c5f-479f-a636-ec4b0e1a6fc6",
+      "name": "Zupa makaronowa Jin Ramen Veggie, lekko pikantna 4 x 110g - Ottogi",
+      "slug": "zupa-makaronowa-jin-ramen-veggie-lekko-pikantna-4-x-110g-ottogi",
+      "category": "Ramyun / Ramen",
+      "skus": [
+        "ADG-000672"
       ],
       "severity": "backlog",
       "issues": [

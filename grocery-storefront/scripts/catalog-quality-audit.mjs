@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { pathToFileURL } from 'node:url';
 
 const DEFAULT_ENDPOINT = 'https://zira-ai.com/graphql/storefront';
 const DEFAULT_CHANNEL = 'kenmito';
@@ -146,6 +147,7 @@ function printUsage(exitCode = 0, errorMessage = null) {
   console.log('  --review-csv <path>    Compact blocker/manual-review queue');
   console.log('  --json <path>          JSON summary path');
   console.log('  --variant-json <path>  Read-only DB variant export with EAN/barcode fields');
+  console.log('  --manual-findings <path> Reviewed SKU-level findings to merge into the audit');
   console.log('  --check-images         Verify every unique catalog image URL over HTTP');
   console.log('  --image-concurrency <n> Concurrent image checks (default: 12)');
   console.log('  --site-url <url>       Public storefront origin used for links');
@@ -168,6 +170,7 @@ function parseArgs() {
     reviewCsv: 'docs/catalog-quality-review-queue.csv',
     json: 'docs/catalog-quality-audit.json',
     variantJson: null,
+    manualFindings: null,
     checkImages: false,
     imageConcurrency: DEFAULT_IMAGE_CONCURRENCY,
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL,
@@ -226,6 +229,9 @@ function parseArgs() {
         break;
       case 'variant-json':
         options.variantJson = value;
+        break;
+      case 'manual-findings':
+        options.manualFindings = value;
         break;
       case 'image-concurrency': {
         const parsed = Number.parseInt(value, 10);
@@ -521,6 +527,66 @@ const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const UNICODE_SLUG_PATTERN = /^[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*$/u;
 const GTIN_LENGTHS = new Set([8, 12, 13, 14]);
 const LEGACY_BRAND_MARKERS = ['kamito', 'kenmito'];
+const MANUAL_FINDING_ISSUES = new Set([
+  'verified_image_identity_mismatch',
+  'possible_physical_duplicate',
+]);
+
+export function loadManualFindings(filePath) {
+  if (!filePath) return [];
+
+  const payload = JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8'));
+  const findings = Array.isArray(payload) ? payload : payload.findings;
+  if (!Array.isArray(findings)) {
+    throw new Error(`Manual findings file must contain an array: ${filePath}`);
+  }
+
+  const seen = new Set();
+  return findings.map((finding, index) => {
+    const sku = normalizeText(finding?.sku).toUpperCase();
+    const issue = normalizeText(finding?.issue);
+    const key = `${sku}:${issue}`;
+
+    if (!SKU_PATTERN.test(sku)) {
+      throw new Error(`Invalid manual finding SKU at row ${index + 1}: ${sku || '(empty)'}`);
+    }
+    if (!MANUAL_FINDING_ISSUES.has(issue)) {
+      throw new Error(`Unsupported manual finding issue at row ${index + 1}: ${issue || '(empty)'}`);
+    }
+    if (seen.has(key)) {
+      throw new Error(`Duplicate manual finding: ${key}`);
+    }
+    seen.add(key);
+
+    return {
+      sku,
+      issue,
+      note: normalizeText(finding?.note),
+    };
+  });
+}
+
+function indexManualFindings(products, findings) {
+  const productsBySku = new Map();
+  for (const product of products) {
+    for (const sku of getVariantSkus(product)) {
+      if (!productsBySku.has(sku)) productsBySku.set(sku, []);
+      productsBySku.get(sku).push(product.id);
+    }
+  }
+
+  const issuesBySku = new Map();
+  for (const finding of findings) {
+    const matches = productsBySku.get(finding.sku) ?? [];
+    if (matches.length !== 1) {
+      throw new Error(`Manual finding ${finding.sku} matched ${matches.length} catalog products; expected exactly one`);
+    }
+    if (!issuesBySku.has(finding.sku)) issuesBySku.set(finding.sku, []);
+    issuesBySku.get(finding.sku).push(finding.issue);
+  }
+
+  return issuesBySku;
+}
 
 function normalizeLookup(value) {
   return normalizeText(value).toLowerCase();
@@ -530,7 +596,7 @@ function normalizeGtin(value) {
   return normalizeText(value).replace(/[\s-]+/g, '');
 }
 
-function isValidGtin(value) {
+export function isValidGtin(value) {
   const gtin = normalizeGtin(value);
   if (!GTIN_LENGTHS.has(gtin.length) || !/^\d+$/.test(gtin)) return false;
 
@@ -591,9 +657,60 @@ function hasExplicitAllergen(product, terms) {
   return terms.some((term) => allergens.includes(term));
 }
 
-function hasIngredientCandidate(product, terms) {
+function hasIngredientCandidate(product, patterns) {
   const text = normalizeLookup(product.ingredients);
-  return terms.some((term) => text.includes(term));
+  return patterns.some((pattern) => pattern.test(text));
+}
+
+const ANIMAL_INGREDIENT_PATTERNS = [
+  /(?:^|[^\p{L}])beef(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])pork(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])chicken(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])duck(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])fish(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])shrimp(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])prawn(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])squid(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])octopus(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])tuna(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])salmon(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])meat(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])wołow\p{L}*/u,
+  /(?:^|[^\p{L}])wolow\p{L}*/u,
+  /(?:^|[^\p{L}])wieprz\p{L}*/u,
+  /(?:^|[^\p{L}])kurcz\p{L}*/u,
+  /(?:^|[^\p{L}])kacz\p{L}*/u,
+  // The previous bare `ryb` substring also matched ryboflawina and
+  // rybonukleotyd, incorrectly flagging nine vegetarian products.
+  /(?:^|[^\p{L}])ryb(?!oflaw|onukleot)\p{L}*/u,
+  /(?:^|[^\p{L}])krewet\p{L}*/u,
+  /(?:^|[^\p{L}])kalm\p{L}*/u,
+  /(?:^|[^\p{L}])tuńczy\p{L}*/u,
+  /(?:^|[^\p{L}])tunczy\p{L}*/u,
+  /(?:^|[^\p{L}])łososi\p{L}*/u,
+  /(?:^|[^\p{L}])lososi\p{L}*/u,
+];
+
+const VEGAN_INGREDIENT_PATTERNS = [
+  ...ANIMAL_INGREDIENT_PATTERNS,
+  /(?:^|[^\p{L}])eggs?(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])honey(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])jaj\p{L}*/u,
+  /(?:^|[^\p{L}])miód\p{L}*/u,
+  /(?:^|[^\p{L}])miod\p{L}*/u,
+  /(?:^|[^\p{L}])serwat\p{L}*/u,
+  /(?:^|[^\p{L}])whey(?:$|[^\p{L}])/u,
+  /(?:^|[^\p{L}])gelatin\p{L}*/u,
+  /(?:^|[^\p{L}])żelatyn\p{L}*/u,
+  /(?:^|[^\p{L}])zelatyn\p{L}*/u,
+];
+
+export function findDietaryIngredientConflicts(ingredients) {
+  const product = { ingredients };
+  return {
+    animal: hasIngredientCandidate(product, ANIMAL_INGREDIENT_PATTERNS),
+    vegan: hasIngredientCandidate(product, VEGAN_INGREDIENT_PATTERNS),
+  };
 }
 
 function getImageAudit(product, options, imageResults) {
@@ -608,7 +725,7 @@ function getImageAudit(product, options, imageResults) {
   };
 }
 
-function getIssueSeverity(issue) {
+export function getIssueSeverity(issue) {
   const blockerIssues = new Set([
     'missing_image',
     'no_loadable_image',
@@ -623,6 +740,7 @@ function getIssueSeverity(issue) {
     'negative_stock',
     'missing_category',
     'no_variants',
+    'verified_image_identity_mismatch',
   ]);
   const reviewIssues = new Set([
     'broken_image_url',
@@ -632,6 +750,7 @@ function getIssueSeverity(issue) {
     'gluten_free_allergen_conflict',
     'vegetarian_ingredient_conflict_candidate',
     'vegan_ingredient_conflict_candidate',
+    'possible_physical_duplicate',
   ]);
   const backlogIssues = new Set([
     'legacy_image_key',
@@ -718,6 +837,7 @@ function getIssues(product, context) {
     variantRowsByProduct,
     imageResults,
     options,
+    manualIssuesBySku,
   } = context;
   const skus = getVariantSkus(product);
   const variantRows = variantRowsByProduct.get(product.id) ?? [];
@@ -737,11 +857,6 @@ function getIssues(product, context) {
   const glutenFree = hasDietaryTag(product, ['gluten-free', 'gluten free', 'bezgluten']);
   const vegetarian = hasDietaryTag(product, ['vegetarian', 'wegetaria', 'vege']);
   const vegan = hasDietaryTag(product, ['vegan', 'wegan']);
-  const animalTerms = [
-    'beef', 'pork', 'chicken', 'duck', 'fish', 'shrimp', 'prawn', 'squid', 'octopus', 'tuna', 'salmon',
-    'meat', 'wołow', 'wolow', 'wieprz', 'kurcz', 'kacz', 'ryb', 'krewet', 'kalm', 'tuńczy', 'tunczy', 'łos', 'los',
-  ];
-  const veganTerms = [...animalTerms, 'egg', 'honey', 'jaj', 'miód', 'miod', 'serwat', 'whey', 'gelatin', 'żelatyn', 'zelatyn'];
   const issueChecks = {
     missing_image: !hasProductImage(product),
     missing_image_alt: hasProductImage(product) && !hasImageAlt(product),
@@ -783,17 +898,22 @@ function getIssues(product, context) {
     ean_in_fallback_field: identifiers.some(({ source }) => source !== 'ean'),
     gluten_free_allergen_conflict: glutenFree
       && hasExplicitAllergen(product, ['gluten', 'wheat', 'pszen', 'jęcz', 'jecz', 'rye', 'żyto', 'zyto']),
-    vegetarian_ingredient_conflict_candidate: vegetarian && hasIngredientCandidate(product, animalTerms),
-    vegan_ingredient_conflict_candidate: vegan && hasIngredientCandidate(product, veganTerms),
+    vegetarian_ingredient_conflict_candidate: vegetarian
+      && hasIngredientCandidate(product, ANIMAL_INGREDIENT_PATTERNS),
+    vegan_ingredient_conflict_candidate: vegan
+      && hasIngredientCandidate(product, VEGAN_INGREDIENT_PATTERNS),
     no_variants: (product.variants ?? []).length === 0,
   };
 
-  return Object.entries(issueChecks)
+  const automaticIssues = Object.entries(issueChecks)
     .filter(([, hasIssue]) => hasIssue)
     .map(([issue]) => issue);
+  const manualIssues = skus.flatMap((sku) => manualIssuesBySku.get(sku) ?? []);
+
+  return [...new Set([...automaticIssues, ...manualIssues])];
 }
 
-function summarize(products, categories, options, variantRows, imageResults) {
+function summarize(products, categories, options, variantRows, imageResults, manualFindings) {
   const duplicateSkus = getDuplicateMap(products.flatMap(getVariantSkus));
   const duplicateSlugs = getDuplicateMap(products.map((product) => normalizeLookup(product.slug)));
   const duplicateNames = getDuplicateMap(products.map((product) => normalizeLookup(product.name)));
@@ -834,6 +954,7 @@ function summarize(products, categories, options, variantRows, imageResults) {
     variantRowsByProduct,
     imageResults,
     options,
+    manualIssuesBySku: indexManualFindings(products, manualFindings),
   };
 
   for (const product of products) {
@@ -989,6 +1110,7 @@ function summarize(products, categories, options, variantRows, imageResults) {
     },
     variantRowsByProduct,
     imageResults,
+    manualFindings,
   };
 }
 
@@ -1116,6 +1238,7 @@ function writeMarkdown(filePath, options, totalCount, products, categoryTotalCou
     `CSV detail report: ${csvPath}`,
     `CSV blocker/review queue: ${reviewCsvPath}`,
     `JSON summary: ${jsonPath}`,
+    `Manual findings: ${options.manualFindings ?? 'none'}`,
     '',
     '## Executive Summary',
     '',
@@ -1126,7 +1249,9 @@ function writeMarkdown(filePath, options, totalCount, products, categoryTotalCou
     `- Polish-only products: ${summary.severityCounts.find(([severity]) => severity === 'polish')?.[1] ?? 0}`,
     `- Duplicate SKU values: ${summary.duplicateSkus.length}`,
     `- Duplicate slug values: ${summary.duplicateSlugs.length}`,
-    `- Duplicate normalized product names: ${summary.duplicateNames.length}`,
+    `- Normalized product-name collisions: ${summary.duplicateNames.length}`,
+    `- Verified image/product identity mismatches: ${summary.manualFindings.filter((finding) => finding.issue === 'verified_image_identity_mismatch').length}`,
+    `- Possible physical duplicate rows: ${summary.manualFindings.filter((finding) => finding.issue === 'possible_physical_duplicate').length}`,
     `- Legacy Kamito/Kenmito mentions: ${summary.kamitoMentions.length}`,
     `- Products whose active variants all have stock exactly 100: ${summary.productsWithStock100}`,
     `- Products with an EAN/GTIN candidate: ${summary.variantAudit.available ? `${summary.variantAudit.productsWithAnyEan} / ${inspected}` : 'not checked (no --variant-json)'}`,
@@ -1145,6 +1270,7 @@ function writeMarkdown(filePath, options, totalCount, products, categoryTotalCou
     '## Launch Gates',
     '',
     `- Product/catalog blockers: ${summary.severityCounts.find(([severity]) => severity === 'blocker')?.[1] ?? 0}`,
+    '- A verified image/product identity mismatch is a launch blocker until the row is corrected or unpublished.',
     `- Safety claim conflicts requiring human confirmation: ${(summary.issueCounts.find(([issue]) => issue === 'gluten_free_allergen_conflict')?.[1] ?? 0) + (summary.issueCounts.find(([issue]) => issue === 'vegetarian_ingredient_conflict_candidate')?.[1] ?? 0) + (summary.issueCounts.find(([issue]) => issue === 'vegan_ingredient_conflict_candidate')?.[1] ?? 0)}`,
     '- Missing EAN does not block the storefront UI, but it blocks reliable scanner/POS receiving and should remain a separate owner/supplier data project.',
     '- Stock value 100 is treated as a known temporary placeholder, not verified physical inventory.',
@@ -1190,10 +1316,11 @@ function writeMarkdown(filePath, options, totalCount, products, categoryTotalCou
     }
   }
 
-  lines.push('', '## Duplicate Product Name Review', '');
+  lines.push('', '## Product Name Collision Review', '');
   if (summary.duplicateNameGroups.length === 0) {
-    lines.push('- No duplicate normalized product names.');
+    lines.push('- No normalized product-name collisions.');
   } else {
+    lines.push('- A matching name is a review signal, not proof that two catalog rows are the same physical product.');
     for (const group of summary.duplicateNameGroups) {
       lines.push(`- ${group.products[0]?.name ?? group.normalizedName}`);
       for (const product of group.products) {
@@ -1313,6 +1440,8 @@ function writeJson(filePath, options, totalCount, products, categoryTotalCount, 
     stockValueCounts: Object.fromEntries(summary.stockValueCounts),
     imageDomainCounts: Object.fromEntries(summary.imageDomainCounts),
     productsWithStock100: summary.productsWithStock100,
+    manualFindingsFile: options.manualFindings,
+    manualFindings: summary.manualFindings,
     variantAudit: summary.variantAudit,
     imageAudit: summary.imageAudit,
     duplicateSkus: summary.duplicateSkus,
@@ -1364,8 +1493,9 @@ async function main() {
     fetchCategories(options),
   ]);
   const variantRows = loadVariantRows(options.variantJson);
+  const manualFindings = loadManualFindings(options.manualFindings);
   const imageResults = await verifyImageUrls(products, options);
-  const summary = summarize(products, categories, options, variantRows, imageResults);
+  const summary = summarize(products, categories, options, variantRows, imageResults, manualFindings);
 
   writeCsv(options.csv, options, summary);
   writeReviewCsv(options.reviewCsv, options, summary);
@@ -1389,7 +1519,12 @@ async function main() {
   console.log(`Wrote ${options.json}`);
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-});
+const isDirectExecution = process.argv[1]
+  && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+
+if (isDirectExecution) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  });
+}

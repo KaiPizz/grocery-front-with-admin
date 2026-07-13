@@ -1,6 +1,6 @@
 # Asia Deli Go Catalog Quality Audit
 
-Generated: 2026-07-13T18:49:41.873Z
+Generated: 2026-07-13T19:44:13.958Z
 Endpoint: https://zira-ai.com/graphql/storefront
 Channel: asiandeligo
 Inspected products: 1784 / 1784
@@ -8,17 +8,20 @@ Inspected categories: 72 / 72
 CSV detail report: docs/asiandeligo-catalog-audit-20260713.csv
 CSV blocker/review queue: docs/asiandeligo-catalog-review-queue-20260713.csv
 JSON summary: docs/asiandeligo-catalog-audit-20260713.json
+Manual findings: docs/asiandeligo-catalog-manual-findings-20260713.json
 
 ## Executive Summary
 
 - Products with at least one issue: 1784 / 1784
-- Blocker products: 0
-- Products requiring data review: 28
-- Products in metadata backlog: 1756
+- Blocker products: 5
+- Products requiring data review: 21
+- Products in metadata backlog: 1758
 - Polish-only products: 0
 - Duplicate SKU values: 0
 - Duplicate slug values: 0
-- Duplicate normalized product names: 6
+- Normalized product-name collisions: 6
+- Verified image/product identity mismatches: 5
+- Possible physical duplicate rows: 2
 - Legacy Kamito/Kenmito mentions: 0
 - Products whose active variants all have stock exactly 100: 1750
 - Products with an EAN/GTIN candidate: 2 / 1784
@@ -36,8 +39,9 @@ JSON summary: docs/asiandeligo-catalog-audit-20260713.json
 
 ## Launch Gates
 
-- Product/catalog blockers: 0
-- Safety claim conflicts requiring human confirmation: 11
+- Product/catalog blockers: 5
+- A verified image/product identity mismatch is a launch blocker until the row is corrected or unpublished.
+- Safety claim conflicts requiring human confirmation: 0
 - Missing EAN does not block the storefront UI, but it blocks reliable scanner/POS receiving and should remain a separate owner/supplier data project.
 - Stock value 100 is treated as a known temporary placeholder, not verified physical inventory.
 - All checked product images are served from the owned img.zira.pl domain; legacy KIMCHI-* appears only inside object paths.
@@ -59,10 +63,10 @@ JSON summary: docs/asiandeligo-catalog-audit-20260713.json
 - out of stock: 17
 - slug contains sku: 12
 - untranslated english name candidate: 12
-- vegetarian ingredient conflict candidate: 9
 - missing description: 5
+- verified image identity mismatch: 5
 - invalid ean: 2
-- vegan ingredient conflict candidate: 2
+- possible physical duplicate: 2
 
 ## Category Distribution
 
@@ -151,8 +155,9 @@ JSON summary: docs/asiandeligo-catalog-audit-20260713.json
 - Sosy i marynaty (1) ↔ Sosy, marynaty (133), similarity 1
 - Sos sojowy (37) ↔ Sosy sojowe (7), similarity 0.82
 
-## Duplicate Product Name Review
+## Product Name Collision Review
 
+- A matching name is a review signal, not proof that two catalog rows are the same physical product.
 - Danie o smaku ostrego kurczaka Quattro Cheese Buldak 145g - Samyang
   - ADG-001760: https://asiandeligo.eshoper.pro/products/danie-o-smaku-ostrego-kurczaka-quattro-cheese-buldak-145g-samyang-adg001760
   - ADG-001282: https://asiandeligo.eshoper.pro/products/danie-o-smaku-ostrego-kurczaka-quattro-cheese-buldak-145g-samyang-adg001282
@@ -261,6 +266,11 @@ JSON summary: docs/asiandeligo-catalog-audit-20260713.json
 
 ## Top Product Fix Queue
 
+- Zestaw do herbaty matcha zielony, 4 elementy - Edo Japan (ADG-001327, Komplety do sushi i herbaty) — legacy image key, slug contains sku, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean, verified image identity mismatch [blocker]
+- Ryż jaśminowy Fragrant Jasmine Rice 1kg Tilda (ADG-001782, Ryż i inne ziarna) — legacy image key, slug contains sku, non ascii category slug, missing allergens, missing ean, verified image identity mismatch [blocker]
+- Kaki no Tane, przyprawione krakersy ryżowe arare z orzeszkami 180g (6 x 30g) - KAMEDA (ADG-001463, Słodycze / Przekąski) — legacy image key, slug contains sku, non ascii category slug, missing ean, verified image identity mismatch [blocker]
+- Mleko kokosowe (70% wyciągu z kokosa) 1L w kartonie AROY-D (ADG-001446, Mleczko kokosowe) — legacy image key, slug contains sku, missing ean, verified image identity mismatch [blocker]
+- Sos rybny Myeolchi Aekjeot z anchois 870ml - Hansung (ADG-001666, Sosy, marynaty) — legacy image key, slug contains sku, missing ean, verified image identity mismatch [blocker]
 - Nóż Tomoko Yanagi-Sashimi 20,5cm - Satake Cutlery (ADG-001744, Noże) — legacy image key, out of stock, non ascii category slug, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean [review]
 - Patelnia stalowa do tamagoyaki - duża (22 x 23 cm) Emro Aziatica (ADG-000426, Patelnie Tamago) — legacy image key, out of stock, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean [review]
 - Zestaw do sushi żółto-brązowy, 6 elementów - Edo Japan (ADG-001423, Komplety do sushi i herbaty) — legacy image key, out of stock, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean [review]
@@ -270,24 +280,17 @@ JSON summary: docs/asiandeligo-catalog-audit-20260713.json
 - Syrop koncentrat Mojito Zero cukru 600ml - Teisseire (ADG-000946, Napoje) — legacy image key, out of stock, missing allergens, missing storage zone, missing ean [review]
 - Syrop kukurydziany 100% 2,45kg - CJO Essential (ADG-000201, Sosy, marynaty) — legacy image key, out of stock, missing allergens, missing storage zone, missing ean [review]
 - Żelki Puré Gummy Muscat o smaku winogronowym 56g - Kanro (ADG-001314, Słodycze / Przekąski) — legacy image key, out of stock, non ascii category slug, missing allergens, missing ean [review]
-- Zupa makaronowa Jin Ramen Veggie, lekko pikantna 110g - Ottogi (ADG-000671, Ramyun / Ramen) — legacy image key, missing storage zone, missing ean, vegetarian ingredient conflict candidate, vegan ingredient conflict candidate [review]
 - Chrupki Zzaldduk o smaku ostrego kurczaka Buldak 2xSpicy, ostre 80g - Samyang (ADG-000889, Słodycze / Przekąski) — legacy image key, out of stock, non ascii category slug, missing ean [review]
+- Danie o smaku ostrego kurczaka Quattro Cheese Buldak 145g - Samyang (ADG-001760, Ramyun / Ramen) — legacy image key, slug contains sku, missing ean, possible physical duplicate [review]
+- Danie o smaku ostrego kurczaka Quattro Cheese Buldak 145g - Samyang (ADG-001282, Ramyun / Ramen) — legacy image key, slug contains sku, missing ean, possible physical duplicate [review]
 - Makaron Konjac, fettuccine 20 x 270g (cały karton) - Asia Style (ADG-000725, Makaron konjac) — legacy image key, out of stock, missing allergens, missing ean [review]
 - Makaron ramen świeży  ITA-SAN 200g (ADG-000144, Makaron pszenny) — legacy image key, out of stock, missing storage zone, missing ean [review]
 - Zestaw DIY Popin Cookin Choco Fondue Party 31g - Kracie (ADG-000885, Słodycze / Przekąski) — legacy image key, out of stock, non ascii category slug, missing ean [review]
-- Zupa instant Shin Kimchi Ramyun, ostra - 5-pak (5 x 120g) Nongshim (ADG-000502, Ramyun / Ramen) — legacy image key, missing storage zone, missing ean, vegetarian ingredient conflict candidate [review]
-- Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim (ADG-000096, Ramyun / Ramen) — legacy image key, missing storage zone, missing ean, vegetarian ingredient conflict candidate [review]
-- Zupa makaronowa Jin Ramen Veggie, lekko pikantna 4 x 110g - Ottogi (ADG-000672, Ramyun / Ramen) — legacy image key, missing ean, vegetarian ingredient conflict candidate, vegan ingredient conflict candidate [review]
-- Zupa makaronowa Shin Kimchi Ramyun, ostra 20 x 120g (cały karton) - Nongshim (ADG-001208, Ramyun / Ramen) — legacy image key, missing storage zone, missing ean, vegetarian ingredient conflict candidate [review]
 - Curry Medium Hot - curry instant w proszku 1kg - Ottogi (ADG-000660, Dania gotowe) — legacy image key, out of stock, missing ean [review]
 - Danie Tangle makaron z kremowym sosem bulgogi 105g - Samyang (ADG-001639, Ramyun / Ramen) — legacy image key, out of stock, missing ean [review]
-- Dried Soy Stick Beef Flavor, wegetariańskie szaszłyki na ostro z suszonego tofu o smaku wołowiny shaokao 60g - Joytofu XiangXiangZui (ADG-001191, Dania gotowe) — legacy image key, missing ean, vegetarian ingredient conflict candidate [review]
 - Fermentowane tofu (hong furu) w czerwonym różanym sosie 340g - Wangzhihe (ADG-001054, Sosy, marynaty) — legacy image key, out of stock, missing ean [review]
 - Ryż basmati 5kg - Laila (ADG-000393, Unmapped) — legacy image key, missing allergens, invalid ean [review]
 - Sos Teriyaki, japońska marynata 1L - Sen Soy (ADG-000647, Sosy, marynaty) — legacy image key, out of stock, missing ean [review]
-- Zupa instant o smaku warzywnym z makaronem ryżowym 55g - MAMA (ADG-000820, Ramyun / Ramen) — legacy image key, missing ean, vegetarian ingredient conflict candidate [review]
-- Zupa makaronowa instant o smaku warzywnym 40 x 75g - Indomie (ADG-001165, Ramyun / Ramen) — legacy image key, missing ean, vegetarian ingredient conflict candidate [review]
-- Zupa makaronowa instant o smaku warzywnym 5 x 75g - Indomie (ADG-001199, Ramyun / Ramen) — legacy image key, missing ean, vegetarian ingredient conflict candidate [review]
 - Baza do zupy, pasta do Hot Pot po syczuańsku 70g - Lee Kum Kee (ADG-000392, Pasty smakowe) — legacy image key, invalid ean [review]
 - Pałeczki ze stali nierdzewnej 23cm - 1 para (ADG-000416, Pałeczki i sztućce) — legacy image key, non ascii category slug, missing ingredients, missing allergens, missing nutrition, missing country, missing storage zone, missing unit price, missing english translation, missing english description, missing ean [backlog]
 - Podstawka hashi-oki pod pałeczki Maneki Neko - 1 sztuka (ADG-000750, Pałeczki i sztućce) — legacy image key, non ascii category slug, missing ingredients, missing allergens, missing nutrition, missing country, missing storage zone, missing unit price, missing english translation, missing english description, missing ean [backlog]
@@ -361,6 +364,8 @@ JSON summary: docs/asiandeligo-catalog-audit-20260713.json
 - Zestaw 2 noży japońskich Houcho - Santoku + Nakiri - Satake Cutlery (ADG-000531, Noże) — legacy image key, non ascii category slug, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean [backlog]
 - Zestaw 2 noży NARA, Yanagi-ba do sushi (21cm) i Santoku (11cm) - CSS (ADG-000101, Noże) — legacy image key, non ascii category slug, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean [backlog]
 - Zestaw 3 noży japońskich Megumi - Sashimi + Gyuto + Nakiri - Satake Cutlery (ADG-000615, Noże) — legacy image key, non ascii category slug, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean [backlog]
+- Zestaw do herbaty matcha zielony, 4 elementy - Edo Japan (ADG-000612, Komplety do sushi i herbaty) — legacy image key, slug contains sku, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean [backlog]
+- Zestaw pałeczek ze stali nierdzewnej 23cm - 5 par - Emro Aziatica (ADG-000664, Pałeczki i sztućce) — legacy image key, non ascii category slug, missing ingredients, missing allergens, missing nutrition, missing storage zone, missing unit price, missing ean [backlog]
 
 ## Recommended Next Batch
 

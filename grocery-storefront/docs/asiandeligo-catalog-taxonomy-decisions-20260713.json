@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-taxonomy-remediation-20260713",
+  "channel": "asiandeligo",
+  "categoryMoves": [
+    { "sku": "ADG-000103", "name": "Sos Hoisin 200ml - Flying Goose", "expectedCategorySlug": "unmapped", "targetCategorySlug": "sosy-marynaty", "reason": "Hoisin sauce belongs with sauces and marinades." },
+    { "sku": "ADG-000277", "name": "Czerwona fasolka azuki 900g - Valle Del Sole", "expectedCategorySlug": "pozostałe-produkty", "targetCategorySlug": "ryż-i-inne-ziarna", "reason": "Azuki is a dried pulse; this is the closest existing dry-grain category." },
+    { "sku": "ADG-000393", "name": "Ryż basmati 5kg - Laila", "expectedCategorySlug": "unmapped", "targetCategorySlug": "ryż-i-inne-ziarna", "reason": "Basmati rice belongs with rice and grains." },
+    { "sku": "ADG-000527", "name": "Sos sojowy jasny 500ml - Asia Kitchen", "expectedCategorySlug": "sosy-sojowe", "targetCategorySlug": "sos-sojowy", "reason": "Consolidate duplicate soy-sauce categories into the larger canonical category." },
+    { "sku": "ADG-000528", "name": "Sos sojowy jasny 150ml - Asia Kitchen", "expectedCategorySlug": "sosy-sojowe", "targetCategorySlug": "sos-sojowy", "reason": "Consolidate duplicate soy-sauce categories into the larger canonical category." },
+    { "sku": "ADG-000529", "name": "Sos sojowy ciemny 500ml - Asia Kitchen", "expectedCategorySlug": "sosy-sojowe", "targetCategorySlug": "sos-sojowy", "reason": "Consolidate duplicate soy-sauce categories into the larger canonical category." },
+    { "sku": "ADG-000530", "name": "Sos sojowy ciemny 150ml - Asia Kitchen", "expectedCategorySlug": "sosy-sojowe", "targetCategorySlug": "sos-sojowy", "reason": "Consolidate duplicate soy-sauce categories into the larger canonical category." },
+    { "sku": "ADG-000607", "name": "Koszyk Wioli - Rodowity Koreańczyk", "expectedCategorySlug": "kategoria-tymczasowa", "targetCategorySlug": "prezenty", "reason": "The product is a gift basket." },
+    { "sku": "ADG-000641", "name": "Tamaryndowiec, miąższ w kostce 400g - Thai Dancer", "expectedCategorySlug": "unmapped", "targetCategorySlug": "pasty-smakowe", "reason": "Tamarind pulp belongs with flavor pastes." },
+    { "sku": "ADG-000648", "name": "Pasta z tamaryndowca 114g - Asia Kitchen", "expectedCategorySlug": "unmapped", "targetCategorySlug": "pasty-smakowe", "reason": "Tamarind paste belongs with flavor pastes." },
+    { "sku": "ADG-000668", "name": "Sos sojowy Premium 1l - Asia Kitchen", "expectedCategorySlug": "sosy-sojowe", "targetCategorySlug": "sos-sojowy", "reason": "Consolidate duplicate soy-sauce categories into the larger canonical category." },
+    { "sku": "ADG-000690", "name": "Przyprawa Pięć Smaków 50g - Mee Chun", "expectedCategorySlug": "kategoria-tymczasowa", "targetCategorySlug": "przyprawy", "reason": "Five-spice powder belongs with seasonings." },
+    { "sku": "ADG-000781", "name": "Ryż jaśminowy Premium Quality Orange 5kg - Royal Umbrella", "expectedCategorySlug": "unmapped", "targetCategorySlug": "ryż-i-inne-ziarna", "reason": "Jasmine rice belongs with rice and grains." },
+    { "sku": "ADG-000791", "name": "Kostki bulionowe PHO BO, wołowe 75g - Ong ChaVa", "expectedCategorySlug": "unmapped", "targetCategorySlug": "buliony", "reason": "Bouillon cubes belong with bouillons." },
+    { "sku": "ADG-001413", "name": "Sos sojowy ciemny 1l - Asia Kitchen", "expectedCategorySlug": "sosy-sojowe", "targetCategorySlug": "sos-sojowy", "reason": "Consolidate duplicate soy-sauce categories into the larger canonical category." },
+    { "sku": "ADG-001414", "name": "Sos sojowy jasny 1l - Asia Kitchen", "expectedCategorySlug": "sosy-sojowe", "targetCategorySlug": "sos-sojowy", "reason": "Consolidate duplicate soy-sauce categories into the larger canonical category." },
+    { "sku": "ADG-001694", "name": "Mieszanka przypraw do dania Palabok 57g - Mama Sita's", "expectedCategorySlug": "kategoria-tymczasowa", "targetCategorySlug": "przyprawy", "reason": "The product is a seasoning mix." },
+    { "sku": "ADG-001712", "name": "Sos orzechowy Satay 340g - Lee Kum Kee", "expectedCategorySlug": "sosy-i-marynaty", "targetCategorySlug": "sosy-marynaty", "reason": "Consolidate the one-product duplicate sauces category." }
+  ],
+  "categoryStateChanges": [
+    { "slug": "kategoria-tymczasowa", "expectedActive": true, "targetActive": false, "expectedProductsBeforeMove": 3 },
+    { "slug": "sosy-i-marynaty", "expectedActive": true, "targetActive": false, "expectedProductsBeforeMove": 1 },
+    { "slug": "sosy-sojowe", "expectedActive": true, "targetActive": false, "expectedProductsBeforeMove": 7 },
+    { "slug": "unmapped", "expectedActive": true, "targetActive": false, "expectedProductsBeforeMove": 6 }
+  ],
+  "notes": [
+    "Pozostałe produkty remains active because it also contains six non-live draft products outside the 1,784-product storefront audit.",
+    "Source categories are deactivated, not deleted, so rollback remains possible.",
+    "No product price, stock, content, publication state, order, or reservation is changed."
+  ]
+}

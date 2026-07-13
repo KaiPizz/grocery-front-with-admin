@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-review-20260713",
+  "channel": "asiandeligo",
+  "stockDecisions": [
+    { "sku": "ADG-000144", "name": "Makaron ramen świeży ITA-SAN 200g", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000201", "name": "Syrop kukurydziany 100% 2,45kg - CJO Essential", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000426", "name": "Patelnia stalowa do tamagoyaki - duża (22 x 23 cm) Emro Aziatica", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000637", "name": "Płatki suszonego tuńczyka bonito, Katsuobushi 40g - Wadakyu", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000647", "name": "Sos Teriyaki, japońska marynata 1L - Sen Soy", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000660", "name": "Curry Medium Hot - curry instant w proszku 1kg - Ottogi", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000725", "name": "Makaron Konjac, fettuccine 20 x 270g (cały karton) - Asia Style", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000885", "name": "Zestaw DIY Popin Cookin Choco Fondue Party 31g - Kracie", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000889", "name": "Chrupki Zzaldduk o smaku ostrego kurczaka Buldak 2xSpicy, ostre 80g - Samyang", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-000946", "name": "Syrop koncentrat Mojito Zero cukru 600ml - Teisseire", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-001054", "name": "Fermentowane tofu (hong furu) w czerwonym różanym sosie 340g - Wangzhihe", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-001314", "name": "Żelki Puré Gummy Muscat o smaku winogronowym 56g - Kanro", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-001423", "name": "Zestaw do sushi żółto-brązowy, 6 elementów - Edo Japan", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-001551", "name": "Aloe CICA Waterproof Sunscreen SPF 50+ PA++++ 100ml Holika Holika", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-001639", "name": "Danie Tangle makaron z kremowym sosem bulgogi 105g - Samyang", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-001684", "name": "Ryż kleisty tajski Glutinous Rice 1kg - Golden Phoenix", "expectedQuantity": 0, "targetQuantity": 100 },
+    { "sku": "ADG-001744", "name": "Nóż Tomoko Yanagi-Sashimi 20,5cm - Satake Cutlery", "expectedQuantity": 0, "targetQuantity": 100 }
+  ],
+  "stockEvidence": "Owner instructed that all launch stock may temporarily be set to 100 until the physical inventory is entered.",
+  "eanDecisions": [
+    {
+      "sku": "ADG-000392",
+      "name": "Baza do zupy, pasta do Hot Pot po syczuańsku 70g - Lee Kum Kee",
+      "expectedEan": "mpn:749",
+      "targetEan": "078895123395",
+      "sources": [
+        "https://hk.lkk.com/en/products/soup-base-for-sichuan-hot--spicy-hot-pot",
+        "https://heuschenschroufforder.com/hot-pot-sichuan-soup-70-gr/"
+      ]
+    },
+    {
+      "sku": "ADG-000393",
+      "name": "Ryż basmati 5kg - Laila",
+      "expectedEan": "mpn:837",
+      "targetEan": "5020580400156",
+      "sources": [
+        "https://desibasket.de/products/laila-basmati-rice-5kg",
+        "https://www.zing-asia.co.uk/rice/12596-laila-basmati-rice-5kg-naturally-gluten-free-basmati-rice-5020580400156.html"
+      ]
+    }
+  ],
+  "dietaryResolutions": [
+    { "sku": "ADG-000096", "name": "Shin Kimchi Ramyun 120g", "resolution": "keep vegetarian", "evidence": "Owner-confirmed on 2026-07-08; audit matched ryboflawina, not fish." },
+    { "sku": "ADG-000502", "name": "Shin Kimchi Ramyun 5-pack", "resolution": "keep vegetarian", "evidence": "Owner-confirmed on 2026-07-08; audit matched ryboflawina, not fish." },
+    { "sku": "ADG-000671", "name": "Jin Ramen Veggie 110g", "resolution": "keep vegan and vegetarian", "evidence": "Current ingredient list contains no animal ingredient; audit matched ryboflawina only." },
+    { "sku": "ADG-000672", "name": "Jin Ramen Veggie 4 x 110g", "resolution": "keep vegan and vegetarian", "evidence": "Current ingredient list contains no animal ingredient; audit matched ryboflawina only." },
+    { "sku": "ADG-000820", "name": "MAMA vegetable rice noodle soup 55g", "resolution": "keep vegetarian", "evidence": "Owner-confirmed on 2026-07-08; audit matched rybonukleotyd, not fish." },
+    { "sku": "ADG-001165", "name": "Indomie vegetable noodles 40 x 75g", "resolution": "keep vegetarian", "evidence": "Owner-confirmed on 2026-07-08; audit matched ryboflawina, not fish." },
+    { "sku": "ADG-001191", "name": "Dried Soy Stick Beef Flavor 60g", "resolution": "keep vegetarian", "evidence": "Soy product with flavoring and no animal ingredient listed; audit matched rybonukleotyd, not fish." },
+    { "sku": "ADG-001199", "name": "Indomie vegetable noodles 5 x 75g", "resolution": "keep vegetarian", "evidence": "Owner-confirmed on 2026-07-08; audit matched ryboflawina, not fish." },
+    { "sku": "ADG-001208", "name": "Shin Kimchi Ramyun 20 x 120g", "resolution": "keep vegetarian", "evidence": "Owner-confirmed on 2026-07-08; audit matched ryboflawina, not fish." }
+  ]
+}
