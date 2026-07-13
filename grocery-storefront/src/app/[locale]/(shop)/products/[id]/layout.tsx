@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { cache, type ReactNode } from 'react';
+import { notFound } from 'next/navigation';
 import { resolveChannel } from '@/lib/channel';
 import { PRODUCT_BY_SLUG_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
@@ -235,7 +236,7 @@ export default async function ProductLayout({
     fetchServerConfig(),
   ]);
 
-  if (!product) return children;
+  if (!product) notFound();
 
   const origin = getStoreOrigin(getConfigString(siteConfig?.seo?.canonical));
   const storeName = getConfigString(siteConfig?.branding?.storeName) ?? 'Grocery Store';

@@ -27,6 +27,7 @@ export default defineConfig({
       reuseExistingServer: false,
       timeout: 120000,
       env: {
+        NODE_ENV: 'development',
         NEXT_PUBLIC_CONFIG_API_URL: 'http://127.0.0.1:4199',
         NEXT_PUBLIC_GRAPHQL_URL: 'http://127.0.0.1:4199/graphql',
         NEXT_PUBLIC_SALON_SLUG: 'test',

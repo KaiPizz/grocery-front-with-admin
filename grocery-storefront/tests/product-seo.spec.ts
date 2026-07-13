@@ -34,4 +34,12 @@ test.describe('product SEO', () => {
       'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
     ]);
   });
+
+  test('returns a real 404 without Product JSON-LD for an unpublished product', async ({ page }) => {
+    const response = await page.goto('/en/products/unpublished-product');
+
+    expect(response?.status()).toBe(404);
+    await expect(page.locator('script#product-json-ld')).toHaveCount(0);
+    await expect(page.locator('body')).toContainText(/not found|could not be found|nie znaleziono/i);
+  });
 });
