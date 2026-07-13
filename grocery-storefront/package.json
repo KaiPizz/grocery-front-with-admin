@@ -28,6 +28,7 @@
     "dry-run:owner-image-import": "node scripts/owner-image-import-dry-run.mjs",
     "plan:owner-image-import": "node scripts/owner-image-import-sql-plan.mjs",
     "plan:new-product-creation": "node scripts/new-product-creation-plan.mjs",
+    "plan:folder14-draft-quality": "node scripts/folder14-draft-quality-plan.mjs",
     "dry-run:kimchi-source-metadata": "node scripts/kimchi-source-metadata-dry-run.mjs",
     "audit:kimchi-allergen-split": "node scripts/kimchi-allergen-split-audit.mjs",
     "plan:kimchi-source-metadata": "node scripts/kimchi-source-metadata-apply.mjs",

@@ -1,0 +1,54 @@
+review_id,draft_sku,plan_action,proposed_pl_name,proposed_en_name,proposed_brand,proposed_category_slug,quality_flags,review_note
+folder14-001,ADG-001792,update_content,Pałeczki bambusowe jednorazowe Asia Foods w czerwonych osłonkach,Asia Foods disposable bamboo chopsticks in red sleeves,Asia Foods,pałeczki-i-sztućce,pack_count_unknown,Potwierdzić liczbę sztuk przed publikacją
+folder14-002,ADG-001793,update_content,Pałeczki bambusowe jednorazowe w zielono-białych osłonkach,Disposable bamboo chopsticks in green-white sleeves,,pałeczki-i-sztućce,brand_and_pack_count_unknown,Bezpieczna nazwa ogólna do czasu odczytania etykiety
+folder14-003,ADG-001794,update_content,"Talerze owalne piankowe Huhtamaki Econo XPS 26,2 x 19,3 cm - 50 szt.","Huhtamaki Econo XPS oval foam plates 26.2 x 19.3 cm - 50 pcs",Huhtamaki,naczynia,,Dane rozmiaru i liczby sztuk są widoczne na opakowaniu
+folder14-004,ADG-001795,update_content,Pojemnik obiadowy piankowy z pokrywką i przegrodami,Foam takeaway food box with lid and compartments,,naczynia,size_and_pack_count_unknown,Potwierdzić rozmiar oraz liczbę sztuk
+folder14-005,ADG-001796,update_content,Łopatka do woka ze stalowym trzonkiem i drewnianym uchwytem,Wok spatula with steel shaft and wooden handle,,patelnie-wok-grill,size_unknown,Bezpieczna nazwa ogólna
+folder14-006,ADG-001797,update_content,Ceramiczna miska z pokrywką i podgrzewaczem IPS Ceramic,Ceramic lidded bowl with warmer by IPS Ceramic,IPS Ceramic,miski,size_unknown,Potwierdzić rozmiar
+folder14-007,ADG-001798,update_content,Druciana łyżka cedzakowa do woka z bambusowym uchwytem,Wire spider skimmer for wok with bamboo handle,,patelnie-wok-grill,diameter_unknown,To nie jest ten sam produkt co ADG-001814
+folder14-008,ADG-001799,update_content,Wok ze stali węglowej z drewnianym uchwytem,Carbon steel wok with wooden handle,,patelnie-wok-grill,diameter_unknown,Potwierdzić średnicę
+folder14-009,ADG-001800,update_content,Wok ze stali węglowej z dwoma uchwytami bocznymi,Carbon steel wok with two side handles,,patelnie-wok-grill,diameter_unknown,Potwierdzić średnicę
+folder14-010,ADG-001801,update_content,Stalowy durszlak perforowany do gotowania na parze,Stainless perforated colander for steaming,,naczynia,size_unknown,Kategoria poprawiona z patelni na naczynia
+folder14-011,ADG-001802,update_content,Chiński tasak kuchenny z drewnianą rękojeścią,Chinese kitchen cleaver with wooden handle,,noże,size_and_model_unknown,Potwierdzić długość ostrza
+folder14-012,ADG-001803,hold_for_owner,Chiński tasak ze stali nierdzewnej z metalową rękojeścią,Chinese stainless steel cleaver with metal handle,,noże,probable_duplicate_of_ADG-001811,Zdjęcia pokazują ten sam wzór ostrza etykiety i rękojeści co ADG-001811
+folder14-013,ADG-001804,update_content,Ceramiczna podstawka do gotowania na parze,Ceramic steaming rack,,naczynia,diameter_unknown,Potwierdzić średnicę
+folder14-014,ADG-001805,update_content,Chochla ze stali nierdzewnej z długim uchwytem,Stainless steel ladle with long handle,,naczynia,size_unknown,Nazwa poprawiona z liczby mnogiej na pojedynczy produkt widoczny na zdjęciu
+folder14-015,ADG-001806,update_content,Azjatycki nóż szefa kuchni z drewnianą rękojeścią,Asian chef knife with wooden handle,,noże,size_and_model_unknown,Potwierdzić długość ostrza
+folder14-016,ADG-001807,update_content,Nóż kuchenny z czarną rękojeścią,Kitchen knife with black handle,,noże,size_and_model_unknown,Potwierdzić długość ostrza
+folder14-017,ADG-001808,update_content,Wietnamski zaparzacz do kawy phin Long Cam ze stali nierdzewnej,Long Cam stainless steel Vietnamese phin coffee filter,Long Cam,zaparzacze-do-kawy,capacity_unknown,Potwierdzić pojemność
+folder14-018,ADG-001809,update_content,Bambusowa mata do zwijania sushi makisu,Bamboo sushi rolling mat makisu,,maty-do-zwijania,size_unknown,Potwierdzić rozmiar
+folder14-019,ADG-001810,update_content,Czarne pałeczki wielorazowe - zestaw,Black reusable chopsticks set,,pałeczki-i-sztućce,material_and_pack_count_unknown,Bezpieczna nazwa ogólna
+folder14-020,ADG-001811,hold_for_owner,Chiński tasak ze stali nierdzewnej z metalową rękojeścią,Chinese stainless steel cleaver with metal handle,,noże,probable_duplicate_of_ADG-001803,Scalić z ADG-001803 po potwierdzeniu właściciela
+folder14-022,ADG-001812,update_content,Koreańskie pałeczki drewniane TQ - zestaw 5 par,TQ Korean-style wooden chopsticks - set of 5 pairs,TQ,pałeczki-i-sztućce,,Liczba par jest widoczna na opakowaniu
+folder14-023,ADG-001813,update_content,Długie pałeczki do gotowania i hot potu - 1 para,Long cooking and hot-pot chopsticks - 1 pair,,pałeczki-i-sztućce,length_unknown,Potwierdzić długość
+folder14-024,ADG-001814,update_content,Sitko do makaronu z bambusowym uchwytem,Noodle strainer with bamboo handle,,patelnie-wok-grill,size_unknown,To nie jest ten sam produkt co ADG-001798
+folder14-026,ADG-001815,update_content,Karty do gry Best 888 - czerwone opakowanie,Best 888 playing cards - red pack,Best 888,pozostałe-produkty,,Produkt detaliczny widoczny na zdjęciu
+folder14-027,ADG-001816,update_content,Prostokątna osełka do ostrzenia noży,Rectangular knife sharpening stone,,noże,grit_unknown,Potwierdzić gradację
+folder14-028,ADG-001817,hold_for_owner,Potrójny zawór gazowy do palnika,Triple gas valve for burner,,pozostałe-produkty,non_retail_or_service_part,Wygląda na część instalacyjną lub wyposażenie sklepu; potwierdzić czy jest sprzedawana
+folder14-030,ADG-001818,update_content,Czerwony lampion dekoracyjny w stylu azjatyckim,Red Asian-style decorative lantern,,koty-szczęścia-i-inne-gadżety,size_unknown,Potwierdzić rozmiar
+folder14-031,ADG-001819,update_content,Bambusowy parowar z pokrywką,Bamboo steamer with lid,,parowary-bambusowe,diameter_unknown,Potwierdzić średnicę
+folder14-032,ADG-001820,update_content,Parowar bambusowy z obręczą i pokrywką,Bamboo steamer with rim and lid,,parowary-bambusowe,diameter_unknown,Potwierdzić średnicę
+folder14-033,ADG-001821,update_content,Biała miseczka ceramiczna,Plain white ceramic bowl,,miski,diameter_unknown,Potwierdzić średnicę
+folder14-034,ADG-001822,update_content,Miseczka ceramiczna biało-niebieska,Blue and white ceramic bowl,,miski,diameter_unknown,Potwierdzić średnicę
+folder14-035,ADG-001823,update_content,Łyżka ceramiczna do zupy z zielonym wzorem,Ceramic soup spoon with green pattern,,pałeczki-i-sztućce,size_unknown,Kategoria poprawiona z naczyń na sztućce
+folder14-036,ADG-001824,update_content,Owalna żeliwna płyta grillowa z drewnianą podstawką,Oval cast-iron sizzling plate with wooden base,,patelnie-wok-grill,size_unknown,Potwierdzić rozmiar
+folder14-037,ADG-001825,update_content,Dekoracyjna żeliwna płyta grillowa z drewnianą podstawką,Decorative cast-iron sizzling plate with wooden base,,patelnie-wok-grill,size_unknown,Inny kształt niż ADG-001824
+folder14-038,ADG-001826,update_content,Ceremonialny zestaw dekoracji papierowych w pudełku,Boxed ceremonial paper decoration set,,koty-szczęścia-i-inne-gadżety,exact_contents_unknown,Nazwa ogólna do czasu potwierdzenia zawartości
+folder14-039,ADG-001827,update_content,Zestaw trzech figurek chińskich bóstw,Set of three Chinese deity figurines,,koty-szczęścia-i-inne-gadżety,size_unknown,Potwierdzić rozmiar zestawu
+folder14-040,ADG-001828,update_content,Ceramiczna kadzielnica biało-niebieska,Blue and white ceramic incense burner,,koty-szczęścia-i-inne-gadżety,size_unknown,Potwierdzić rozmiar
+folder14-041,ADG-001829,update_content,Czerwone kadzidełka Hang Viet,Hang Viet red incense sticks,Hang Viet,koty-szczęścia-i-inne-gadżety,pack_count_unknown,Potwierdzić liczbę sztuk
+folder14-042,ADG-001830,update_content,Papier rytualny - symboliczne banknoty ofiarne,Joss paper - ceremonial imitation money,,koty-szczęścia-i-inne-gadżety,pack_count_unknown,Potwierdzić liczbę arkuszy
+folder14-043,ADG-001831,update_content,Złota dekoracja ołtarzowa ze smokiem,Gold dragon altar decoration,,koty-szczęścia-i-inne-gadżety,size_unknown,Potwierdzić rozmiar
+folder14-044,ADG-001832,hold_for_owner,Przezroczysta plastikowa pokrywka do pojemnika,Clear plastic container lid,,naczynia,missing_size_and_container_match,Bez rozmiaru lub dopasowanego pojemnika produkt nie jest bezpieczny do publikacji
+folder14-046,ADG-001833,update_content,Czerwone torby prezentowe Szczęśliwego Nowego Roku,Happy New Year red gift bags,,prezenty,pack_count_and_size_unknown,Potwierdzić liczbę i rozmiar
+folder14-047,ADG-001834,update_content,Mieszanka suszonych owoców Mứt Tết Hiep Long 600 g,Hiep Long Mứt Tết dried fruit mix gift box 600 g,Hiep Long,słodycze-przekąski,ingredients_allergens_expiry_pending,Żywność pozostaje draft do uzupełnienia etykiety
+folder14-048,ADG-001835,update_content,Zielona herbata Phuong Vy 100 g,Phuong Vy green tea 100 g,Phuong Vy,herbaty,ingredients_expiry_pending,Żywność pozostaje draft do uzupełnienia etykiety
+folder14-049,ADG-001836,update_content,Wietnamskie ciastka z fasoli mung Minh Ngoc 300 g,Minh Ngoc Vietnamese mung bean cakes 300 g,Minh Ngoc,słodycze-przekąski,ingredients_allergens_expiry_pending,Żywność pozostaje draft do uzupełnienia etykiety
+folder14-050,ADG-001837,hold_for_owner,Papierowa torba zakupowa Asia Foods,Asia Foods paper shopping bag,Asia Foods,pozostałe-produkty,store_packaging_or_retail_product,Potwierdzić czy torba jest sprzedawana klientom czy służy jako opakowanie sklepu
+folder14-051,ADG-001838,update_content,Elektryczny garnek do ryżu Cuckoo SR-4600,Cuckoo SR-4600 electric rice cooker,Cuckoo,pozostałe-produkty,capacity_condition_warranty_pending,Model SR-4600 jest widoczny na panelu
+folder14-052,ADG-001839,update_content,Brązowa taca do serwowania ze złotym wzorem,Brown serving tray with gold pattern,,naczynia,size_unknown,Potwierdzić rozmiar
+folder14-053,ADG-001840,update_content,Duży garnek ze stali nierdzewnej z pokrywką,Large stainless steel stock pot with lid,,naczynia,capacity_unknown,Potwierdzić pojemność
+folder14-054,ADG-001841,hold_for_owner,Kuchenka gazowa stołowa Sonarema Fondex,Sonarema Fondex tabletop gas cooker,Sonarema Fondex,pozostałe-produkty,gas_appliance_compliance_and_model_pending,Nie publikować bez potwierdzenia modelu zgodności stanu i gwarancji
+folder14-055,ADG-001842,update_content,Elektryczny garnek do ryżu Cuckoo CR-3511,Cuckoo CR-3511 electric rice cooker,Cuckoo,pozostałe-produkty,capacity_condition_warranty_pending,Model CR-3511 jest widoczny na panelu
+folder14-056,ADG-001843,update_content,Wielopoziomowy garnek do gotowania na parze Manh Hung,Manh Hung multi-tier stainless steel steamer set,Manh Hung,naczynia,diameter_and_capacity_unknown,Potwierdzić średnicę i pojemność
+folder14-057,ADG-001844,update_content,Wykałaczki bambusowe Tam Nga - 200 szt.,Tam Nga bamboo toothpicks - 200 pcs,Tam Nga,pałeczki-i-sztućce,,Liczba sztuk jest widoczna na opakowaniu
