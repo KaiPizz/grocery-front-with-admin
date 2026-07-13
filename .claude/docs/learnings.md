@@ -425,3 +425,8 @@
 - **Cause:** `DEFAULT_CONFIG` is useful as an app fallback but is not directly schema-valid for publishable banner blocks because enabled hero slides require images.
 - **Fix:** The test fixture now sets a valid hero image before checking that validation strips the legacy theme flag.
 - **Rule:** When testing one config field through the full storefront schema, first make unrelated required config branches valid so the failure proves the target behavior.
+### Removed mobile config values to fix storefront cropping but left empty admin controls
+- **Error:** The storefront stopped cropping Asia Deli Go hero artwork, but all six mobile-image fields in `/admin/homepage` became empty and the admin still advertised the obsolete 768×480 contract.
+- **Cause:** The first fix treated a missing mobile URL as the switch for full-frame rendering instead of aligning the admin media contract and mobile derivative dimensions with the 3.2:1 source artwork.
+- **Fix:** Standardized hero mobile assets at 768×240, restored all six mobile URLs, made storefront fallback decisions per slide, and added a desktop-preview fallback for genuinely missing mobile media.
+- **Rule:** When responsive behavior depends on CMS media fields, update the editor dimensions, stored config, generated assets, runtime layout, and fallback preview as one contract; do not solve rendering by making the CMS state look incomplete.

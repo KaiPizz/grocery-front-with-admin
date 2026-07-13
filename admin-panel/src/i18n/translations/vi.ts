@@ -277,7 +277,7 @@ export const vi: Translations = {
       addSlide: 'Thêm slide',
       addTile: 'Thêm ô',
       autoPlaySlides: 'Tự động chạy slide',
-      slidesSummary: '{count} / 5 slide',
+      slidesSummary: '{count} / 6 slide',
       itemsSummary: '{count} / 3 mục · 3 mỗi hàng',
       slideLabel: 'Slide {n}',
       itemLabel: 'Mục {n}',
@@ -286,6 +286,7 @@ export const vi: Translations = {
       defaultCtaText: 'Mua ngay',
       desktopImage: 'Ảnh desktop',
       mobileImage: 'Ảnh mobile',
+      desktopFallback: 'Đang dùng ảnh desktop dự phòng',
       tileImage: 'Ảnh ô',
       sidebarImage: 'Ảnh banner cạnh',
       titleOptional: 'Tiêu đề (tùy chọn)',
@@ -321,7 +322,7 @@ export const vi: Translations = {
       meta: {
         hero: {
           label: 'Banner hero',
-          description: 'Carousel toàn chiều ngang — tối đa 5 slide',
+          description: 'Carousel toàn chiều ngang — tối đa 6 slide',
         },
         horizontal: {
           label: 'Banner ngang',

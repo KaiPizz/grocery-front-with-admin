@@ -277,7 +277,7 @@ export const pl: Translations = {
       addSlide: 'Dodaj slajd',
       addTile: 'Dodaj kafelek',
       autoPlaySlides: 'Automatycznie odtwarzaj slajdy',
-      slidesSummary: '{count} / 5 slajdów',
+      slidesSummary: '{count} / 6 slajdów',
       itemsSummary: '{count} / 3 elementy · 3 w wierszu',
       slideLabel: 'Slajd {n}',
       itemLabel: 'Element {n}',
@@ -286,6 +286,7 @@ export const pl: Translations = {
       defaultCtaText: 'Kup teraz',
       desktopImage: 'Obraz desktop',
       mobileImage: 'Obraz mobile',
+      desktopFallback: 'Zastępczo używany jest obraz desktop',
       tileImage: 'Obraz kafelka',
       sidebarImage: 'Obraz boczny',
       titleOptional: 'Tytuł (opcjonalny)',
@@ -321,7 +322,7 @@ export const pl: Translations = {
       meta: {
         hero: {
           label: 'Baner hero',
-          description: 'Karuzela na pełną szerokość — do 5 slajdów',
+          description: 'Karuzela na pełną szerokość — do 6 slajdów',
         },
         horizontal: {
           label: 'Baner poziomy',

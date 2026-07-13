@@ -275,7 +275,7 @@ export const en = {
       addSlide: 'Add slide',
       addTile: 'Add tile',
       autoPlaySlides: 'Auto-play slides',
-      slidesSummary: '{count} / 5 slides',
+      slidesSummary: '{count} / 6 slides',
       itemsSummary: '{count} / 3 items · 3 per row',
       slideLabel: 'Slide {n}',
       itemLabel: 'Item {n}',
@@ -284,6 +284,7 @@ export const en = {
       defaultCtaText: 'Shop Now',
       desktopImage: 'Desktop image',
       mobileImage: 'Mobile image',
+      desktopFallback: 'Desktop image fallback',
       tileImage: 'Tile image',
       sidebarImage: 'Sidebar image',
       titleOptional: 'Title (optional)',
@@ -319,7 +320,7 @@ export const en = {
       meta: {
         hero: {
           label: 'Hero Banner',
-          description: 'Full-width carousel — up to 5 slides',
+          description: 'Full-width carousel — up to 6 slides',
         },
         horizontal: {
           label: 'Horizontal Banner',

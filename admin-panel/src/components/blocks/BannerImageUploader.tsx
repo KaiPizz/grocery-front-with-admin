@@ -9,6 +9,8 @@ import { useLanguage } from '@/i18n';
 
 interface BannerImageUploaderProps {
   value: string | null;
+  fallbackValue?: string | null;
+  fallbackLabel?: string;
   onChange: (url: string | null) => void;
   requiredWidth: number;
   requiredHeight: number;
@@ -89,6 +91,8 @@ function checkDimensionsFromUrl(
 
 export function BannerImageUploader({
   value,
+  fallbackValue,
+  fallbackLabel,
   onChange,
   requiredWidth,
   requiredHeight,
@@ -101,7 +105,9 @@ export function BannerImageUploader({
   const [showLibrary, setShowLibrary] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
-  const previewUrl = resolvePreviewImageUrl(value);
+  const hasValue = Boolean(value?.trim());
+  const usingFallback = !hasValue && Boolean(fallbackValue?.trim());
+  const previewUrl = resolvePreviewImageUrl(hasValue ? value : fallbackValue);
 
   async function handleFile(file: File) {
     setError(null);
@@ -144,21 +150,33 @@ export function BannerImageUploader({
         </div>
       )}
 
-      {value ? (
-        <div className="relative inline-block">
-          <img
-            src={previewUrl ?? value}
-            alt={t('homepage.blocks.uploadedBannerAlt')}
-            className="h-20 w-auto max-w-xs rounded-lg border border-gray-200 object-contain bg-gray-50"
-          />
-          <button
-            type="button"
-            onClick={() => onChange(null)}
-            className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600"
-            title={t('homepage.blocks.removeImage')}
+      {previewUrl ? (
+        <div className="relative w-full max-w-sm">
+          <div
+            className="relative w-full overflow-hidden rounded-md border border-gray-200 bg-gray-50"
+            style={{ aspectRatio: `${requiredWidth} / ${requiredHeight}` }}
           >
-            <X className="w-3 h-3" />
-          </button>
+            <img
+              src={previewUrl}
+              alt={t('homepage.blocks.uploadedBannerAlt')}
+              className="h-full w-full object-contain"
+            />
+            {usingFallback && fallbackLabel && (
+              <span className="absolute bottom-1.5 left-1.5 rounded bg-gray-900/80 px-2 py-1 text-[11px] font-medium text-white">
+                {fallbackLabel}
+              </span>
+            )}
+          </div>
+          {value && (
+            <button
+              type="button"
+              onClick={() => onChange(null)}
+              className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
+              title={t('homepage.blocks.removeImage')}
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
       ) : !validating && (
         <div className="flex flex-col gap-2">
@@ -192,6 +210,28 @@ export function BannerImageUploader({
           {required && (
             <p className="text-xs text-red-500">{t('homepage.blocks.imageRequired')}</p>
           )}
+        </div>
+      )}
+
+      {usingFallback && !validating && (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+            className="flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 transition-colors hover:border-indigo-400 hover:text-indigo-600 disabled:opacity-50"
+          >
+            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+            {uploading ? t('common.uploading') : t('common.uploadImage')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowLibrary(true)}
+            className="flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 transition-colors hover:border-indigo-400 hover:text-indigo-600"
+          >
+            <FolderOpen className="h-4 w-4" />
+            {t('common.library')}
+          </button>
         </div>
       )}
 

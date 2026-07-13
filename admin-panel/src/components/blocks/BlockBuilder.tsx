@@ -28,7 +28,7 @@ const BLOCK_META: Record<BannerBlock['type'], { labelKey: string; descriptionKey
   hero: {
     labelKey: 'homepage.blocks.meta.hero.label',
     descriptionKey: 'homepage.blocks.meta.hero.description',
-    hint: '1920 × 600 px',
+    hint: '1920 × 600 px desktop · 768 × 240 px mobile',
     icon: <Monitor className="w-5 h-5" />,
   },
   horizontal: {

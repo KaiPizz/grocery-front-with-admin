@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 
 const serverConfigSource = readFileSync(new URL('../src/lib/storefront-config.ts', import.meta.url), 'utf8');
 const clientProviderSource = readFileSync(new URL('../src/components/ConfigProvider.tsx', import.meta.url), 'utf8');
+const heroBannerSource = readFileSync(new URL('../src/components/blocks/HeroBanner.tsx', import.meta.url), 'utf8');
 const staticConfigUrl = new URL('../public/config/kenmito.json', import.meta.url);
 const asiaDeliGoConfigUrl = new URL('../public/config/asiandeligo.json', import.meta.url);
 const plMessages = readFileSync(new URL('../src/messages/pl.json', import.meta.url), 'utf8');
@@ -53,16 +54,26 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   for (const [index, slide] of heroBlock.slides.entries()) {
     const number = String(index + 1).padStart(2, '0');
     assert.equal(slide.imageUrl, `/brand/hero/asia-deli-go-hero-${number}.webp`);
-    assert.equal(slide.mobileImageUrl, null);
+    assert.equal(slide.mobileImageUrl, `/brand/hero/asia-deli-go-hero-${number}-mobile.webp`);
     assert.equal(slide.title, '');
     assert.equal(slide.ctaText, '');
 
     const assetUrl = new URL(`../public${slide.imageUrl}`, import.meta.url);
+    const mobileAssetUrl = new URL(`../public${slide.mobileImageUrl}`, import.meta.url);
     assert.equal(existsSync(assetUrl), true, `Missing hero asset: ${slide.imageUrl}`);
+    assert.equal(existsSync(mobileAssetUrl), true, `Missing mobile hero asset: ${slide.mobileImageUrl}`);
     const bytes = readFileSync(assetUrl);
+    const mobileBytes = readFileSync(mobileAssetUrl);
     assert.equal(bytes.subarray(0, 4).toString('ascii'), 'RIFF');
     assert.equal(bytes.subarray(8, 12).toString('ascii'), 'WEBP');
+    assert.equal(mobileBytes.subarray(0, 4).toString('ascii'), 'RIFF');
+    assert.equal(mobileBytes.subarray(8, 12).toString('ascii'), 'WEBP');
   }
+
+  assert.match(heroBannerSource, /aspect-\[3\.2\/1\]/);
+  assert.match(heroBannerSource, /<picture/);
+  assert.match(heroBannerSource, /<source/);
+  assert.doesNotMatch(heroBannerSource, /hasDedicatedMobileArtwork|aspect-\[1\.6\/1\]/);
 });
 
 test('homepage campaign copy uses Asia Deli Go branding', () => {

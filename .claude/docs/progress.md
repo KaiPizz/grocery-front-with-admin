@@ -193,7 +193,7 @@
 
 | Editor | Status | Notes |
 |--------|--------|-------|
-| HeroBannerEditor | ✅ | Slide management, images (desktop + mobile), CTA links. |
+| HeroBannerEditor | ✅ | Slide management, images (1920×600 desktop + 768×240 full-frame mobile), per-slide desktop preview fallback, CTA links. 2026-07-13: aligned admin and storefront to the same 3.2:1 hero contract and restored six managed mobile assets without crop. |
 | GridBannerEditor | ✅ | Multi-card editing with image upload. |
 | HorizontalBannerEditor | ✅ | Single banner editing. |
 | RoundGridBannerEditor | ✅ | Circular grid items with labels. |

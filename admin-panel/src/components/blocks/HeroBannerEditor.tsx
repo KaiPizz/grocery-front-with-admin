@@ -120,9 +120,11 @@ export function HeroBannerEditor({ block, onChange }: HeroBannerEditorProps) {
               />
               <BannerImageUploader
                 value={slide.mobileImageUrl}
+                fallbackValue={slide.imageUrl}
+                fallbackLabel={t('homepage.blocks.desktopFallback')}
                 onChange={(url) => updateSlide(index, { mobileImageUrl: url })}
                 requiredWidth={768}
-                requiredHeight={480}
+                requiredHeight={240}
                 label={t('homepage.blocks.mobileImage')}
               />
             </div>

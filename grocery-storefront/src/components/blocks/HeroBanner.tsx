@@ -13,7 +13,6 @@ interface HeroBannerProps {
 
 export function HeroBanner({ block }: HeroBannerProps) {
   const slides = block.slides.filter((s) => s.enabled);
-  const hasDedicatedMobileArtwork = slides.every((s) => Boolean(s.mobileImageUrl));
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -44,9 +43,7 @@ export function HeroBanner({ block }: HeroBannerProps) {
 
   const inner = (
     <div
-      className={`relative w-full overflow-hidden ${
-        hasDedicatedMobileArtwork ? 'aspect-[1.6/1]' : 'aspect-[3.2/1]'
-      } md:aspect-[3.2/1]`}
+      className="relative aspect-[3.2/1] w-full overflow-hidden"
       onMouseEnter={stopTimer}
       onMouseLeave={startTimer}
     >
@@ -56,22 +53,20 @@ export function HeroBanner({ block }: HeroBannerProps) {
           className={`absolute inset-0 transition-opacity duration-700 ${i === current ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
         >
           {s.imageUrl || s.mobileImageUrl ? (
-            <>
-              {hasDedicatedMobileArtwork && s.mobileImageUrl && (
-                <img
-                  src={getImageSrc(s.mobileImageUrl, { maxWidth: 768 }) || s.mobileImageUrl}
-                  alt={s.title.trim() || `Store promotion banner ${i + 1}`}
-                  className="w-full h-full object-cover block md:hidden"
-                  loading={i === 0 ? 'eager' : 'lazy'}
+            <picture className="block h-full w-full">
+              {s.mobileImageUrl && (
+                <source
+                  media="(max-width: 767px)"
+                  srcSet={getImageSrc(s.mobileImageUrl, { maxWidth: 768 }) || s.mobileImageUrl}
                 />
               )}
               <img
                 src={getImageSrc(s.imageUrl || s.mobileImageUrl, { maxWidth: 1440 }) || s.imageUrl || s.mobileImageUrl || ''}
                 alt={s.title.trim() || `Store promotion banner ${i + 1}`}
-                className={`w-full h-full object-cover ${hasDedicatedMobileArtwork ? 'hidden md:block' : 'block'}`}
+                className="block h-full w-full object-cover"
                 loading={i === 0 ? 'eager' : 'lazy'}
               />
-            </>
+            </picture>
           ) : (
             <div className="w-full h-full bg-gradient-to-r from-green-700 to-green-900" />
           )}
