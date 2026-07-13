@@ -13,7 +13,7 @@ test.describe('cart accessibility', () => {
     await page.goto('/en/cart');
 
     await expect(page.getByRole('heading', { name: /your cart/i })).toBeVisible();
-    await expect(page.getByTestId('mobile-bottom-nav')).toHaveCount(0);
+    await expect(page.getByTestId('mobile-bottom-nav')).toBeVisible();
 
     const cartItem = page.getByTestId('cart-item').first();
     await expect(cartItem).toBeVisible();
@@ -23,7 +23,7 @@ test.describe('cart accessibility', () => {
     await expect(cartItem.getByRole('button', { name: /save organic gala apples family value pack for later/i })).toBeVisible();
   });
 
-  test('keeps the mobile checkout CTA reachable when the bottom nav is hidden', async ({ page }) => {
+  test('keeps the mobile checkout CTA reachable above the bottom nav', async ({ page }) => {
     await seedCartStorage(page);
     await mockMobileStorefront(page, { cart: 'single-item' });
     await page.goto('/en/cart');
@@ -31,5 +31,30 @@ test.describe('cart accessibility', () => {
     const summaryBar = page.getByTestId('mobile-cart-summary-bar');
     await expect(summaryBar).toBeVisible();
     await expect(summaryBar.getByRole('link', { name: /proceed to checkout/i })).toBeVisible();
+  });
+
+  test('persists active cart metadata so reload does not scan the product catalog', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.goto('/en/products/organic-gala-apples');
+    await page.getByTestId('product-detail-add').click();
+    await expect(page.getByTestId('mobile-bottom-nav-cart-badge')).toHaveText('1');
+
+    const persistedCart = await page.evaluate(() => JSON.parse(window.localStorage.getItem('grocery-cart') ?? '{}'));
+    expect(persistedCart.state.metadataByMerchandiseId['variant-apples']).toMatchObject({
+      productId: 'prod-apples',
+      slug: 'organic-gala-apples',
+      name: 'Organic Gala Apples Family Value Pack',
+    });
+
+    let metadataQueryCount = 0;
+    page.on('request', (request) => {
+      if (request.postData()?.includes('query CartProductMetadata')) {
+        metadataQueryCount += 1;
+      }
+    });
+
+    await page.goto('/en/cart');
+    await expect(page.getByTestId('cart-item')).toContainText('Organic Gala Apples Family Value Pack');
+    expect(metadataQueryCount).toBe(0);
   });
 });

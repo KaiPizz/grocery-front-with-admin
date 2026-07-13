@@ -237,6 +237,9 @@ const EMPTY_COST: CartCost = {
   totalDutyAmount: null,
 };
 
+const CART_METADATA_PAGE_SIZE = 100;
+const CART_METADATA_MAX_PAGES = 20;
+
 function createEmptyState(): Omit<
   CartState,
   | 'hydrateCart'
@@ -376,11 +379,11 @@ async function fetchCartMetadata(
   const unresolved = new Set(pendingIds);
   let after: string | null | undefined = undefined;
 
-  for (let page = 0; page < 20 && unresolved.size > 0; page += 1) {
+  for (let page = 0; page < CART_METADATA_MAX_PAGES && unresolved.size > 0; page += 1) {
     const metadataResponse: Awaited<ReturnType<typeof graphqlRequest<ProductMetadataResponse>>> =
       await graphqlRequest<ProductMetadataResponse>(CART_PRODUCT_METADATA_QUERY, {
       channel: getCurrentChannel(),
-      first: 50,
+      first: CART_METADATA_PAGE_SIZE,
       after,
       });
     const topLevelMessage = getGraphqlErrorMessage(metadataResponse.errors);
@@ -472,10 +475,14 @@ export const useCartStore = create<CartState>()(
           cart.lines.map((line) => line.merchandiseId),
           metadataByMerchandiseId
         );
-        const nextMetadata = {
+        const resolvedMetadata = {
           ...metadataByMerchandiseId,
           ...fetchedMetadata,
         };
+        const activeMerchandiseIds = new Set(cart.lines.map((line) => line.merchandiseId));
+        const nextMetadata = Object.fromEntries(
+          Object.entries(resolvedMetadata).filter(([merchandiseId]) => activeMerchandiseIds.has(merchandiseId))
+        );
         const items = cart.lines.map((line) => mapLineToItem(line, nextMetadata[line.merchandiseId]));
         const selectedDeliveryOption = currentState.selectedDeliveryOption
           ? currentState.deliveryOptions.find((option) => option.id === currentState.selectedDeliveryOption?.id) ?? currentState.selectedDeliveryOption
@@ -1008,6 +1015,7 @@ export const useCartStore = create<CartState>()(
       version: 1,
       partialize: (state) => ({
         cartId: state.cartId,
+        metadataByMerchandiseId: state.metadataByMerchandiseId,
       }),
       merge: (persistedState, currentState) => ({
         ...currentState,

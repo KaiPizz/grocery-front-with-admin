@@ -343,6 +343,16 @@ function buildGraphqlResponse(requestBody) {
     };
   }
 
+  if (query.includes('query GroceryProduct')) {
+    const matchedProduct = products.find((product) => product.slug === variables.slug) ?? null;
+
+    return {
+      data: {
+        product: matchedProduct,
+      },
+    };
+  }
+
   return {
     data: null,
     errors: [{ message: `Unhandled mock GraphQL query: ${query.slice(0, 80)}` }],
