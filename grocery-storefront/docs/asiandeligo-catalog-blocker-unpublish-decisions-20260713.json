@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "channel": "asiandeligo",
+  "batch": "catalog-identity-blockers-20260713",
+  "siteUrl": "https://asiandeligo.eshoper.pro",
+  "products": [
+    {
+      "sku": "ADG-001327",
+      "name": "Zestaw do herbaty matcha zielony, 4 elementy - Edo Japan",
+      "slug": "zestaw-do-herbaty-matcha-zielony-4-elementy-edo-japan-adg001327",
+      "observedIdentity": "Edo Japan Kurobizen black matcha set, 4 pieces",
+      "requiredEvidence": "Front and base/origin label confirming the exact model and country of origin",
+      "expectedStatus": "active",
+      "targetStatus": "draft",
+      "expectedPublished": true,
+      "targetPublished": false
+    },
+    {
+      "sku": "ADG-001446",
+      "name": "Mleko kokosowe (70% wyciągu z kokosa) 1L w kartonie AROY-D",
+      "slug": "mleko-kokosowe-70-wyciagu-z-kokosa-1l-w-kartonie-aroy-d-adg001446",
+      "observedIdentity": "COCO-D coconut milk 1L",
+      "requiredEvidence": "Front, back ingredients/allergens, origin label, net volume and barcode photos",
+      "expectedStatus": "active",
+      "targetStatus": "draft",
+      "expectedPublished": true,
+      "targetPublished": false
+    },
+    {
+      "sku": "ADG-001463",
+      "name": "Kaki no Tane, przyprawione krakersy ryżowe arare z orzeszkami 180g (6 x 30g) - KAMEDA",
+      "slug": "kaki-no-tane-przyprawione-krakersy-ryzowe-arare-z-orzeszkami-180g-6-x-30g-kameda-adg001463",
+      "observedIdentity": "Kameda Kaki no Tane Wasabi 164g",
+      "requiredEvidence": "Front, back ingredients/allergens, net weight and barcode photos",
+      "expectedStatus": "active",
+      "targetStatus": "draft",
+      "expectedPublished": true,
+      "targetPublished": false
+    },
+    {
+      "sku": "ADG-001666",
+      "name": "Sos rybny Myeolchi Aekjeot z anchois 870ml - Hansung",
+      "slug": "sos-rybny-myeolchi-aekjeot-z-anchois-870ml-hansung-adg001666",
+      "observedIdentity": "Hansung Myeolchi Aekjeot anchovy fish sauce 2L",
+      "requiredEvidence": "Front, back ingredients/allergens, origin label, net volume and barcode photos",
+      "expectedStatus": "active",
+      "targetStatus": "draft",
+      "expectedPublished": true,
+      "targetPublished": false
+    },
+    {
+      "sku": "ADG-001782",
+      "name": "Ryż jaśminowy Fragrant Jasmine Rice 1kg Tilda",
+      "slug": "ryz-jasminowy-fragrant-jasmine-rice-1kg-tilda-adg001782",
+      "observedIdentity": "Marukome dried rice koji 100g",
+      "requiredEvidence": "Front, back ingredients/allergens, origin label, net weight and barcode photos",
+      "expectedStatus": "active",
+      "targetStatus": "draft",
+      "expectedPublished": true,
+      "targetPublished": false
+    }
+  ],
+  "notes": [
+    "The image/product mismatch is verified, but regulated food fields are not corrected without physical EU-label evidence.",
+    "Only products.status and products.is_published are changed; is_active remains true so the rows stay editable in admin.",
+    "Run the channel search reindex after apply and rollback so Meilisearch receives the publication-state change."
+  ]
+}
