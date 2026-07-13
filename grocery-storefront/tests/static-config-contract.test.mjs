@@ -53,17 +53,15 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   for (const [index, slide] of heroBlock.slides.entries()) {
     const number = String(index + 1).padStart(2, '0');
     assert.equal(slide.imageUrl, `/brand/hero/asia-deli-go-hero-${number}.webp`);
-    assert.equal(slide.mobileImageUrl, `/brand/hero/asia-deli-go-hero-${number}-mobile.webp`);
+    assert.equal(slide.mobileImageUrl, null);
     assert.equal(slide.title, '');
     assert.equal(slide.ctaText, '');
 
-    for (const imageUrl of [slide.imageUrl, slide.mobileImageUrl]) {
-      const assetUrl = new URL(`../public${imageUrl}`, import.meta.url);
-      assert.equal(existsSync(assetUrl), true, `Missing hero asset: ${imageUrl}`);
-      const bytes = readFileSync(assetUrl);
-      assert.equal(bytes.subarray(0, 4).toString('ascii'), 'RIFF');
-      assert.equal(bytes.subarray(8, 12).toString('ascii'), 'WEBP');
-    }
+    const assetUrl = new URL(`../public${slide.imageUrl}`, import.meta.url);
+    assert.equal(existsSync(assetUrl), true, `Missing hero asset: ${slide.imageUrl}`);
+    const bytes = readFileSync(assetUrl);
+    assert.equal(bytes.subarray(0, 4).toString('ascii'), 'RIFF');
+    assert.equal(bytes.subarray(8, 12).toString('ascii'), 'WEBP');
   }
 });
 

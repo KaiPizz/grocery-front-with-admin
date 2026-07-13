@@ -1,10 +1,17 @@
 # Feature Progress
 
-> **Last updated:** 2026-06-09
+> **Last updated:** 2026-07-13
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-07-13 Asia Deli Go Mobile Hero Full-Frame Fix
+
+- Asia Deli Go hero slides now reuse the complete 1920x600 campaign artwork on mobile instead of cropped 768x480 left-half derivatives.
+- Hero blocks with a complete set of dedicated mobile artwork keep the taller 1.6:1 mobile layout; blocks without it preserve the desktop artwork at 3.2:1, avoiding crop and layout distortion.
+- Removed the six obsolete cropped mobile WebP files and synchronized static plus admin draft/published config to `mobileImageUrl: null`.
+- Verified with storefront/admin production builds, storefront config tests (3/3), admin unit tests (25/25), config audit, and browser QA at 320px, 390px, and 1440px across all six slides. Production promotion remains gated behind the normal deploy approval.
 
 ## 2026-06-10 Kenmito Landing Visual Direction Polish
 

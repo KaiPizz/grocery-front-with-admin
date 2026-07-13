@@ -13,11 +13,9 @@ Source: Google Drive file `17prPd277CXlRgCljr9aZh0A_3Ep2hHAq`
 ## Storefront Assets
 
 - Desktop: `public/brand/hero/asia-deli-go-hero-01.webp` through `06.webp`
-- Mobile: `public/brand/hero/asia-deli-go-hero-01-mobile.webp` through `06-mobile.webp`
 - Desktop dimensions: 1920 x 600 px
-- Mobile dimensions: 768 x 480 px
-- Total optimized asset size: 1,603,548 bytes
+- Total optimized asset size: 1,280,586 bytes
 
-Desktop assets are full-frame WebP renders of the supplied SVG files. Mobile assets use the left 960 x 600 px of each supplied design, resized to 768 x 480 px, so the embedded brand and campaign copy remain legible without inventing new artwork.
+Desktop assets are full-frame WebP renders of the supplied SVG files. The storefront reuses those full-frame assets on mobile at their native 3.2:1 aspect ratio. This keeps the complete campaign artwork visible instead of cropping away the products on the right. Hero blocks that provide dedicated mobile artwork continue to use the taller 1.6:1 mobile layout.
 
 The supplied artwork already contains its own copy, so the hero slide title and CTA overlay fields are intentionally empty.

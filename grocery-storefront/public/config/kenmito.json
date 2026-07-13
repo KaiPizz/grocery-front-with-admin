@@ -56,7 +56,7 @@
             {
               "id": "asiandeligo-drive-hero-slide-1",
               "imageUrl": "/brand/hero/asia-deli-go-hero-01.webp",
-              "mobileImageUrl": "/brand/hero/asia-deli-go-hero-01-mobile.webp",
+              "mobileImageUrl": null,
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",
@@ -65,7 +65,7 @@
             {
               "id": "asiandeligo-drive-hero-slide-2",
               "imageUrl": "/brand/hero/asia-deli-go-hero-02.webp",
-              "mobileImageUrl": "/brand/hero/asia-deli-go-hero-02-mobile.webp",
+              "mobileImageUrl": null,
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",
@@ -74,7 +74,7 @@
             {
               "id": "asiandeligo-drive-hero-slide-3",
               "imageUrl": "/brand/hero/asia-deli-go-hero-03.webp",
-              "mobileImageUrl": "/brand/hero/asia-deli-go-hero-03-mobile.webp",
+              "mobileImageUrl": null,
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",
@@ -83,7 +83,7 @@
             {
               "id": "asiandeligo-drive-hero-slide-4",
               "imageUrl": "/brand/hero/asia-deli-go-hero-04.webp",
-              "mobileImageUrl": "/brand/hero/asia-deli-go-hero-04-mobile.webp",
+              "mobileImageUrl": null,
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",
@@ -92,7 +92,7 @@
             {
               "id": "asiandeligo-drive-hero-slide-5",
               "imageUrl": "/brand/hero/asia-deli-go-hero-05.webp",
-              "mobileImageUrl": "/brand/hero/asia-deli-go-hero-05-mobile.webp",
+              "mobileImageUrl": null,
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",
@@ -101,7 +101,7 @@
             {
               "id": "asiandeligo-drive-hero-slide-6",
               "imageUrl": "/brand/hero/asia-deli-go-hero-06.webp",
-              "mobileImageUrl": "/brand/hero/asia-deli-go-hero-06-mobile.webp",
+              "mobileImageUrl": null,
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",

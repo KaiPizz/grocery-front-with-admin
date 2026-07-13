@@ -2,11 +2,17 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-06-09
+> **Last updated:** 2026-07-13
 
 ---
 
 ## Project Documentation
+
+### Cropping wide campaign artwork into a generic mobile ratio removed product content
+- **Error:** Asia Deli Go mobile heroes used the left 960x600 half of each 1920x600 campaign image, so the brand copy remained large but the products on the right disappeared.
+- **Cause:** A 3.2:1 desktop composition was forced into the generic 1.6:1 mobile frame. Resizing alone cannot fill both aspect ratios without either cropping or letterboxing.
+- **Fix:** Removed the cropped mobile derivatives and made hero banners preserve the 3.2:1 desktop frame whenever a complete dedicated mobile artwork set is not configured.
+- **Rule:** Preserve full campaign artwork at its native aspect ratio by default. Use a taller mobile frame only when the owner supplies purpose-built mobile compositions for every enabled slide.
 
 ### New backend audit supersedes old Kamito checkout notes
 - **Error:** Older wiki/progress notes still described Kamito `PICKUP` and `bank_transfer` as active, which would lead frontend work to treat checkout as configured.
