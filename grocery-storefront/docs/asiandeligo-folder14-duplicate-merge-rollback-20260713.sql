@@ -69,7 +69,7 @@ SET template_id = r.duplicate_id,
 FROM resolved r
 WHERE pi.salon_id = r.salon_id
   AND pi.template_id = r.survivor_id
-  AND pi.image_large_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG'
+  AND pi.image_large_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713'
   AND pi.file_hash = 'e51a856a30c62a39a3f0779ccc6c74f591762b6cd4030aa75a16ca7bd75b2184';
 
 WITH target_channel AS (

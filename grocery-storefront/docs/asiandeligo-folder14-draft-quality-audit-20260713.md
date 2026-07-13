@@ -1,6 +1,6 @@
 # Asia Deli Go Folder14 Draft Quality Audit
 
-Generated: 2026-07-13T13:31:32.438Z
+Generated: 2026-07-13T13:46:19.819Z
 
 ## Result
 

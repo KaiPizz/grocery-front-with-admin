@@ -18,6 +18,7 @@ const STAGING_ROOT = '/tmp/asiandeligo-folder14-draft-quality-20260713/r2';
 const CHANNEL = 'asiandeligo';
 const BATCH = 'asiandeligo-new-products-folder14-20260713';
 const PUBLIC_MEDIA_BASE = 'https://img.zira.pl/asiandeligo';
+const PUBLIC_MEDIA_VERSION = '20260713';
 const EXPECTED_ROWS = 53;
 const EXPECTED_UPDATE_ROWS = 52;
 const EXPECTED_MERGE_ROWS = 1;
@@ -255,7 +256,7 @@ function loadPlan() {
       return {
         ...row,
         pl_name: product.proposed_pl_name,
-        public_url: `${PUBLIC_MEDIA_BASE}/${row.proposed_media_key}`,
+        public_url: `${PUBLIC_MEDIA_BASE}/${row.proposed_media_key}?v=${PUBLIC_MEDIA_VERSION}`,
         r2_object_key: r2ObjectKey,
         staging_path: stagingPath,
         sha256: sha256File(row.source_image_path),

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-13T13:31:32.763Z",
+  "generated_at": "2026-07-13T13:46:20.088Z",
   "channel": "asiandeligo",
   "batch": "asiandeligo-new-products-folder14-20260713",
   "decision": "merge_into",
@@ -17,7 +17,7 @@
     "staging_path": "/tmp/asiandeligo-folder14-draft-quality-20260713/r2/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG",
     "old_public_url": "https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001811/01-PETE8104.JPG",
     "old_media_key": "owner-images/folder14/ADG-001811/01-PETE8104.JPG",
-    "new_public_url": "https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG",
+    "new_public_url": "https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713",
     "new_media_key": "owner-images/folder14/ADG-001803/02-PETE8104.JPG",
     "new_r2_object_key": "asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG",
     "sha256": "e51a856a30c62a39a3f0779ccc6c74f591762b6cd4030aa75a16ca7bd75b2184",

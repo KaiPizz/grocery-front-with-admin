@@ -1,6 +1,6 @@
 # Asia Deli Go Folder14 Duplicate Merge Plan
 
-Generated: 2026-07-13T13:31:32.763Z
+Generated: 2026-07-13T13:46:20.088Z
 
 ## Decision
 
@@ -13,7 +13,7 @@ Generated: 2026-07-13T13:31:32.763Z
 
 - Source: `/tmp/asiandeligo-owner-images/folder14-batch002/extracted/PETE8104.JPG`
 - Staged R2 object: `asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG`
-- Public URL after upload: `https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG`
+- Public URL after upload: `https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713`
 
 ## Safety
 

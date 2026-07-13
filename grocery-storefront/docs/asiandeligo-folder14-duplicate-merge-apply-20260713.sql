@@ -82,7 +82,7 @@ BEGIN
   SELECT count(*) INTO new_url_conflict_count
   FROM product_images pi
   WHERE pi.salon_id = target_salon_id
-    AND pi.image_large_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG';
+    AND pi.image_large_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713';
   IF new_url_conflict_count <> 0 THEN
     RAISE EXCEPTION 'Merged image URL already exists';
   END IF;
@@ -108,12 +108,12 @@ UPDATE product_images pi
 SET template_id = r.survivor_id,
     priority = 1,
     is_primary = false,
-    image_large_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG',
-    image_medium_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG',
-    image_small_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG',
-    url_small = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG',
-    url_thumbnail = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG',
-    url_micro = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG',
+    image_large_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713',
+    image_medium_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713',
+    image_small_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713',
+    url_small = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713',
+    url_thumbnail = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713',
+    url_micro = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713',
     r2_keys = jsonb_build_array('owner-images/folder14/ADG-001803/02-PETE8104.JPG'),
     alt_text = (SELECT name FROM products WHERE id = r.survivor_id)
 FROM resolved r
@@ -212,7 +212,7 @@ BEGIN
   JOIN product_images pi
     ON pi.salon_id = target_salon_id
    AND pi.template_id = p.id
-   AND pi.image_large_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG'
+   AND pi.image_large_url = 'https://img.zira.pl/asiandeligo/owner-images/folder14/ADG-001803/02-PETE8104.JPG?v=20260713'
    AND pi.file_hash = 'e51a856a30c62a39a3f0779ccc6c74f591762b6cd4030aa75a16ca7bd75b2184'
    AND pi.is_primary = false
   WHERE p.salon_id = target_salon_id

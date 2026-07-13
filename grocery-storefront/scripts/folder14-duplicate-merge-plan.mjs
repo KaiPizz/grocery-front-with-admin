@@ -19,6 +19,7 @@ const DUPLICATE_SKU = 'ADG-001811';
 const TARGET_REVIEW_ID = 'folder14-012';
 const DUPLICATE_REVIEW_ID = 'folder14-020';
 const PUBLIC_MEDIA_BASE = 'https://img.zira.pl/asiandeligo';
+const PUBLIC_MEDIA_VERSION = '20260713';
 
 function parseCsv(contents) {
   const rows = [];
@@ -110,7 +111,7 @@ function loadPlan() {
 
   const newMediaKey = `owner-images/folder14/${TARGET_SKU}/02-${duplicate.source_image}`;
   const newR2ObjectKey = `${CHANNEL}/${newMediaKey}`;
-  const newPublicUrl = `${PUBLIC_MEDIA_BASE}/${newMediaKey}`;
+  const newPublicUrl = `${PUBLIC_MEDIA_BASE}/${newMediaKey}?v=${PUBLIC_MEDIA_VERSION}`;
   const stagingPath = path.join(STAGING_ROOT, newR2ObjectKey);
   fs.mkdirSync(path.dirname(stagingPath), { recursive: true });
   fs.copyFileSync(duplicate.source_image_path, stagingPath);
