@@ -1,0 +1,545 @@
+#!/usr/bin/env node
+
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const DECISIONS_PATH = 'docs/asiandeligo-folder14-draft-quality-decisions-20260713.csv';
+const ORIGINAL_PATH = 'docs/asiandeligo-new-product-creation-dry-run-folder14-20260713.json';
+const MANIFEST_PATH = 'docs/asiandeligo-folder14-duplicate-merge-media-20260713.csv';
+const JSON_PATH = 'docs/asiandeligo-folder14-duplicate-merge-plan-20260713.json';
+const REPORT_PATH = 'docs/asiandeligo-folder14-duplicate-merge-plan-20260713.md';
+const SQL_PATH = 'docs/asiandeligo-folder14-duplicate-merge-apply-20260713.sql';
+const ROLLBACK_PATH = 'docs/asiandeligo-folder14-duplicate-merge-rollback-20260713.sql';
+const STAGING_ROOT = '/tmp/asiandeligo-folder14-draft-quality-20260713/r2';
+const CHANNEL = 'asiandeligo';
+const BATCH = 'asiandeligo-new-products-folder14-20260713';
+const TARGET_SKU = 'ADG-001803';
+const DUPLICATE_SKU = 'ADG-001811';
+const TARGET_REVIEW_ID = 'folder14-012';
+const DUPLICATE_REVIEW_ID = 'folder14-020';
+const PUBLIC_MEDIA_BASE = 'https://img.zira.pl/asiandeligo';
+
+function parseCsv(contents) {
+  const rows = [];
+  let row = [];
+  let value = '';
+  let inQuotes = false;
+
+  for (let index = 0; index < contents.length; index += 1) {
+    const char = contents[index];
+    const next = contents[index + 1];
+    if (inQuotes) {
+      if (char === '"' && next === '"') {
+        value += '"';
+        index += 1;
+      } else if (char === '"') {
+        inQuotes = false;
+      } else {
+        value += char;
+      }
+      continue;
+    }
+    if (char === '"') inQuotes = true;
+    else if (char === ',') {
+      row.push(value);
+      value = '';
+    } else if (char === '\n') {
+      row.push(value);
+      rows.push(row);
+      row = [];
+      value = '';
+    } else if (char !== '\r') {
+      value += char;
+    }
+  }
+
+  if (value || row.length > 0) {
+    row.push(value);
+    rows.push(row);
+  }
+  if (rows.length === 0) return [];
+  const headers = rows[0];
+  return rows
+    .slice(1)
+    .filter((values) => values.some((item) => item !== ''))
+    .map((values) => Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ''])));
+}
+
+function csvValue(value) {
+  const text = String(value ?? '');
+  if (!/[",\n]/.test(text)) return text;
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
+function writeCsv(outputPath, row) {
+  const headers = Object.keys(row);
+  fs.writeFileSync(
+    outputPath,
+    `${headers.join(',')}\n${headers.map((header) => csvValue(row[header])).join(',')}\n`,
+  );
+}
+
+function sqlString(value) {
+  return `'${String(value ?? '').replace(/'/g, "''")}'`;
+}
+
+function sha256File(filePath) {
+  const hash = crypto.createHash('sha256');
+  hash.update(fs.readFileSync(filePath));
+  return hash.digest('hex');
+}
+
+function loadPlan() {
+  const decisions = parseCsv(fs.readFileSync(DECISIONS_PATH, 'utf8'));
+  const decision = decisions.find((row) => row.draft_sku === DUPLICATE_SKU);
+  if (!decision || decision.plan_action !== 'merge_into' || decision.merge_target_sku !== TARGET_SKU) {
+    throw new Error(`Missing confirmed ${DUPLICATE_SKU} -> ${TARGET_SKU} merge decision`);
+  }
+
+  const originalRows = JSON.parse(fs.readFileSync(ORIGINAL_PATH, 'utf8')).rows;
+  const target = originalRows.find((row) => row.draft_sku === TARGET_SKU);
+  const duplicate = originalRows.find((row) => row.draft_sku === DUPLICATE_SKU);
+  if (!target || !duplicate) throw new Error('Merge source rows are missing');
+  if (target.review_id !== TARGET_REVIEW_ID || duplicate.review_id !== DUPLICATE_REVIEW_ID) {
+    throw new Error('Merge review ID guard failed');
+  }
+  if (!fs.existsSync(duplicate.source_image_path)) {
+    throw new Error(`Duplicate image source is missing: ${duplicate.source_image_path}`);
+  }
+
+  const newMediaKey = `owner-images/folder14/${TARGET_SKU}/02-${duplicate.source_image}`;
+  const newR2ObjectKey = `${CHANNEL}/${newMediaKey}`;
+  const newPublicUrl = `${PUBLIC_MEDIA_BASE}/${newMediaKey}`;
+  const stagingPath = path.join(STAGING_ROOT, newR2ObjectKey);
+  fs.mkdirSync(path.dirname(stagingPath), { recursive: true });
+  fs.copyFileSync(duplicate.source_image_path, stagingPath);
+  const sourceHash = sha256File(duplicate.source_image_path);
+  if (sourceHash !== duplicate.sha256) throw new Error('Duplicate image SHA256 changed');
+
+  return {
+    target,
+    duplicate,
+    decision,
+    media: {
+      source_image_path: duplicate.source_image_path,
+      staging_path: stagingPath,
+      old_public_url: duplicate.target_url,
+      old_media_key: duplicate.proposed_media_key,
+      new_public_url: newPublicUrl,
+      new_media_key: newMediaKey,
+      new_r2_object_key: newR2ObjectKey,
+      sha256: sourceHash,
+      file_size: duplicate.source_size_bytes,
+      width: duplicate.width,
+      height: duplicate.height,
+      image_file: duplicate.source_image,
+    },
+  };
+}
+
+function buildApplySql(plan) {
+  const { media } = plan;
+  return `-- Generated by scripts/folder14-duplicate-merge-plan.mjs
+-- Confirmed owner decision: merge ${DUPLICATE_SKU} into ${TARGET_SKU}.
+-- The duplicate product/variant are soft-deleted; its image is moved to the survivor gallery.
+-- No product is published or enabled for sale.
+--
+-- JOIN contract (schema-introspect verified 2026-07-13):
+--   product_variants.template_id (uuid) = products.id (uuid), FK declared.
+--   product_images.template_id (uuid) = products.id (uuid), FK declared.
+--   Every business table is filtered by the active ${CHANNEL} salon_id.
+
+BEGIN;
+
+DO $$
+DECLARE
+  target_salon_id uuid;
+  channel_count integer;
+  target_count integer;
+  duplicate_count integer;
+  duplicate_image_count integer;
+  new_url_conflict_count integer;
+BEGIN
+  SELECT count(*) INTO channel_count
+  FROM channels WHERE slug = '${CHANNEL}' AND is_active = true;
+  IF channel_count <> 1 THEN
+    RAISE EXCEPTION 'Expected one active ${CHANNEL} channel, got %', channel_count;
+  END IF;
+  SELECT salon_id INTO STRICT target_salon_id
+  FROM channels WHERE slug = '${CHANNEL}' AND is_active = true;
+
+  SELECT count(*) INTO target_count
+  FROM products p
+  JOIN product_variants pv
+    ON pv.salon_id = target_salon_id
+   AND pv.template_id = p.id
+   AND pv.deleted_at IS NULL
+   AND pv.sku = '${TARGET_SKU}'
+  WHERE p.salon_id = target_salon_id
+    AND p.deleted_at IS NULL
+    AND p.external_metadata->>'batch' = '${BATCH}'
+    AND p.external_metadata->>'review_id' = '${TARGET_REVIEW_ID}'
+    AND p.status = 'draft'
+    AND p.is_published = false
+    AND pv.is_published = false
+    AND pv.is_for_sale = false;
+  IF target_count <> 1 THEN
+    RAISE EXCEPTION 'Survivor guard failed, got % rows', target_count;
+  END IF;
+
+  SELECT count(*) INTO duplicate_count
+  FROM products p
+  JOIN product_variants pv
+    ON pv.salon_id = target_salon_id
+   AND pv.template_id = p.id
+   AND pv.deleted_at IS NULL
+   AND pv.sku = '${DUPLICATE_SKU}'
+  WHERE p.salon_id = target_salon_id
+    AND p.deleted_at IS NULL
+    AND p.external_metadata->>'batch' = '${BATCH}'
+    AND p.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}'
+    AND p.status = 'draft'
+    AND p.is_published = false
+    AND pv.is_published = false
+    AND pv.is_for_sale = false;
+  IF duplicate_count <> 1 THEN
+    RAISE EXCEPTION 'Duplicate guard failed, got % rows', duplicate_count;
+  END IF;
+
+  SELECT count(*) INTO duplicate_image_count
+  FROM products p
+  JOIN product_images pi
+    ON pi.salon_id = target_salon_id
+   AND pi.template_id = p.id
+   AND pi.image_large_url = ${sqlString(media.old_public_url)}
+   AND pi.file_hash = ${sqlString(media.sha256)}
+  WHERE p.salon_id = target_salon_id
+    AND p.deleted_at IS NULL
+    AND p.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}';
+  IF duplicate_image_count <> 1 THEN
+    RAISE EXCEPTION 'Expected one duplicate image row, got %', duplicate_image_count;
+  END IF;
+
+  SELECT count(*) INTO new_url_conflict_count
+  FROM product_images pi
+  WHERE pi.salon_id = target_salon_id
+    AND pi.image_large_url = ${sqlString(media.new_public_url)};
+  IF new_url_conflict_count <> 0 THEN
+    RAISE EXCEPTION 'Merged image URL already exists';
+  END IF;
+END $$;
+
+WITH target_channel AS (
+  SELECT salon_id FROM channels WHERE slug = '${CHANNEL}' AND is_active = true
+), resolved AS (
+  SELECT survivor.id AS survivor_id, duplicate.id AS duplicate_id, tc.salon_id
+  FROM target_channel tc
+  JOIN products survivor
+    ON survivor.salon_id = tc.salon_id
+   AND survivor.deleted_at IS NULL
+   AND survivor.external_metadata->>'batch' = '${BATCH}'
+   AND survivor.external_metadata->>'review_id' = '${TARGET_REVIEW_ID}'
+  JOIN products duplicate
+    ON duplicate.salon_id = tc.salon_id
+   AND duplicate.deleted_at IS NULL
+   AND duplicate.external_metadata->>'batch' = '${BATCH}'
+   AND duplicate.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}'
+)
+UPDATE product_images pi
+SET template_id = r.survivor_id,
+    priority = 1,
+    is_primary = false,
+    image_large_url = ${sqlString(media.new_public_url)},
+    image_medium_url = ${sqlString(media.new_public_url)},
+    image_small_url = ${sqlString(media.new_public_url)},
+    url_small = ${sqlString(media.new_public_url)},
+    url_thumbnail = ${sqlString(media.new_public_url)},
+    url_micro = ${sqlString(media.new_public_url)},
+    r2_keys = jsonb_build_array(${sqlString(media.new_media_key)}),
+    alt_text = (SELECT name FROM products WHERE id = r.survivor_id)
+FROM resolved r
+WHERE pi.salon_id = r.salon_id
+  AND pi.template_id = r.duplicate_id
+  AND pi.image_large_url = ${sqlString(media.old_public_url)}
+  AND pi.file_hash = ${sqlString(media.sha256)};
+
+WITH target_channel AS (
+  SELECT salon_id FROM channels WHERE slug = '${CHANNEL}' AND is_active = true
+), duplicate_product AS (
+  SELECT p.id, tc.salon_id
+  FROM target_channel tc
+  JOIN products p
+    ON p.salon_id = tc.salon_id
+   AND p.deleted_at IS NULL
+   AND p.external_metadata->>'batch' = '${BATCH}'
+   AND p.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}'
+)
+UPDATE product_variants pv
+SET deleted_at = now(),
+    is_active = false,
+    is_published = false,
+    is_for_sale = false,
+    external_metadata = COALESCE(pv.external_metadata, '{}'::jsonb)
+      || jsonb_build_object('merged_into_sku', '${TARGET_SKU}', 'merge_confirmed_at', '2026-07-13')
+FROM duplicate_product d
+WHERE pv.salon_id = d.salon_id
+  AND pv.template_id = d.id
+  AND pv.deleted_at IS NULL
+  AND pv.sku = '${DUPLICATE_SKU}';
+
+WITH target_channel AS (
+  SELECT salon_id FROM channels WHERE slug = '${CHANNEL}' AND is_active = true
+)
+UPDATE products p
+SET deleted_at = now(),
+    is_active = false,
+    is_published = false,
+    external_metadata = COALESCE(p.external_metadata, '{}'::jsonb)
+      || jsonb_build_object('merged_into_sku', '${TARGET_SKU}', 'merge_confirmed_at', '2026-07-13')
+FROM target_channel tc
+WHERE p.salon_id = tc.salon_id
+  AND p.deleted_at IS NULL
+  AND p.external_metadata->>'batch' = '${BATCH}'
+  AND p.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}';
+
+WITH target_channel AS (
+  SELECT salon_id FROM channels WHERE slug = '${CHANNEL}' AND is_active = true
+)
+UPDATE products p
+SET external_metadata = COALESCE(p.external_metadata, '{}'::jsonb)
+  || jsonb_build_object('merged_duplicate_skus', jsonb_build_array('${DUPLICATE_SKU}'))
+FROM target_channel tc
+WHERE p.salon_id = tc.salon_id
+  AND p.deleted_at IS NULL
+  AND p.external_metadata->>'batch' = '${BATCH}'
+  AND p.external_metadata->>'review_id' = '${TARGET_REVIEW_ID}';
+
+DO $$
+DECLARE
+  target_salon_id uuid;
+  survivor_count integer;
+  duplicate_active_count integer;
+  merged_image_count integer;
+  active_batch_count integer;
+BEGIN
+  SELECT salon_id INTO STRICT target_salon_id
+  FROM channels WHERE slug = '${CHANNEL}' AND is_active = true;
+
+  SELECT count(*) INTO survivor_count
+  FROM products p
+  JOIN product_variants pv
+    ON pv.salon_id = target_salon_id
+   AND pv.template_id = p.id
+   AND pv.deleted_at IS NULL
+   AND pv.sku = '${TARGET_SKU}'
+  WHERE p.salon_id = target_salon_id
+    AND p.deleted_at IS NULL
+    AND p.external_metadata->>'review_id' = '${TARGET_REVIEW_ID}';
+  IF survivor_count <> 1 THEN
+    RAISE EXCEPTION 'Survivor post-check failed';
+  END IF;
+
+  SELECT count(*) INTO duplicate_active_count
+  FROM products p
+  WHERE p.salon_id = target_salon_id
+    AND p.deleted_at IS NULL
+    AND p.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}';
+  IF duplicate_active_count <> 0 THEN
+    RAISE EXCEPTION 'Duplicate product is still active';
+  END IF;
+
+  SELECT count(*) INTO merged_image_count
+  FROM products p
+  JOIN product_images pi
+    ON pi.salon_id = target_salon_id
+   AND pi.template_id = p.id
+   AND pi.image_large_url = ${sqlString(media.new_public_url)}
+   AND pi.file_hash = ${sqlString(media.sha256)}
+   AND pi.is_primary = false
+  WHERE p.salon_id = target_salon_id
+    AND p.deleted_at IS NULL
+    AND p.external_metadata->>'review_id' = '${TARGET_REVIEW_ID}';
+  IF merged_image_count <> 1 THEN
+    RAISE EXCEPTION 'Merged gallery image post-check failed';
+  END IF;
+
+  SELECT count(*) INTO active_batch_count
+  FROM products p
+  WHERE p.salon_id = target_salon_id
+    AND p.deleted_at IS NULL
+    AND p.external_metadata->>'batch' = '${BATCH}';
+  IF active_batch_count <> 52 THEN
+    RAISE EXCEPTION 'Expected 52 active folder14 products after merge, got %', active_batch_count;
+  END IF;
+END $$;
+
+COMMIT;
+`;
+}
+
+function buildRollbackSql(plan) {
+  const { duplicate, media } = plan;
+  return `-- Generated by scripts/folder14-duplicate-merge-plan.mjs
+-- Roll back the ${DUPLICATE_SKU} -> ${TARGET_SKU} soft merge.
+-- Run this before the duplicate or survivor receives later manual admin edits.
+
+BEGIN;
+
+WITH target_channel AS (
+  SELECT salon_id FROM channels WHERE slug = '${CHANNEL}' AND is_active = true
+)
+UPDATE products p
+SET deleted_at = NULL,
+    is_active = true,
+    is_published = false,
+    external_metadata = COALESCE(p.external_metadata, '{}'::jsonb)
+      - 'merged_into_sku' - 'merge_confirmed_at'
+FROM target_channel tc
+WHERE p.salon_id = tc.salon_id
+  AND p.external_metadata->>'batch' = '${BATCH}'
+  AND p.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}';
+
+WITH target_channel AS (
+  SELECT salon_id FROM channels WHERE slug = '${CHANNEL}' AND is_active = true
+), duplicate_product AS (
+  SELECT p.id, tc.salon_id
+  FROM target_channel tc
+  JOIN products p
+    ON p.salon_id = tc.salon_id
+   AND p.deleted_at IS NULL
+   AND p.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}'
+)
+UPDATE product_variants pv
+SET deleted_at = NULL,
+    is_active = true,
+    is_published = false,
+    is_for_sale = false,
+    external_metadata = COALESCE(pv.external_metadata, '{}'::jsonb)
+      - 'merged_into_sku' - 'merge_confirmed_at'
+FROM duplicate_product d
+WHERE pv.salon_id = d.salon_id
+  AND pv.template_id = d.id
+  AND pv.sku = '${DUPLICATE_SKU}';
+
+WITH target_channel AS (
+  SELECT salon_id FROM channels WHERE slug = '${CHANNEL}' AND is_active = true
+), resolved AS (
+  SELECT survivor.id AS survivor_id, duplicate.id AS duplicate_id, tc.salon_id
+  FROM target_channel tc
+  JOIN products survivor
+    ON survivor.salon_id = tc.salon_id
+   AND survivor.deleted_at IS NULL
+   AND survivor.external_metadata->>'review_id' = '${TARGET_REVIEW_ID}'
+  JOIN products duplicate
+    ON duplicate.salon_id = tc.salon_id
+   AND duplicate.deleted_at IS NULL
+   AND duplicate.external_metadata->>'review_id' = '${DUPLICATE_REVIEW_ID}'
+)
+UPDATE product_images pi
+SET template_id = r.duplicate_id,
+    priority = 0,
+    is_primary = true,
+    image_large_url = ${sqlString(media.old_public_url)},
+    image_medium_url = ${sqlString(media.old_public_url)},
+    image_small_url = ${sqlString(media.old_public_url)},
+    url_small = ${sqlString(media.old_public_url)},
+    url_thumbnail = ${sqlString(media.old_public_url)},
+    url_micro = ${sqlString(media.old_public_url)},
+    r2_keys = jsonb_build_array(${sqlString(media.old_media_key)}),
+    alt_text = ${sqlString(duplicate.pl_name)}
+FROM resolved r
+WHERE pi.salon_id = r.salon_id
+  AND pi.template_id = r.survivor_id
+  AND pi.image_large_url = ${sqlString(media.new_public_url)}
+  AND pi.file_hash = ${sqlString(media.sha256)};
+
+WITH target_channel AS (
+  SELECT salon_id FROM channels WHERE slug = '${CHANNEL}' AND is_active = true
+)
+UPDATE products p
+SET external_metadata = COALESCE(p.external_metadata, '{}'::jsonb) - 'merged_duplicate_skus'
+FROM target_channel tc
+WHERE p.salon_id = tc.salon_id
+  AND p.deleted_at IS NULL
+  AND p.external_metadata->>'review_id' = '${TARGET_REVIEW_ID}';
+
+COMMIT;
+`;
+}
+
+function writeOutputs(plan) {
+  const { target, duplicate, decision, media } = plan;
+  writeCsv(MANIFEST_PATH, {
+    duplicate_sku: DUPLICATE_SKU,
+    target_sku: TARGET_SKU,
+    source_image_path: media.source_image_path,
+    staging_path: media.staging_path,
+    r2_object_key: media.new_r2_object_key,
+    public_url: media.new_public_url,
+    sha256: media.sha256,
+    file_size: media.file_size,
+    width: media.width,
+    height: media.height,
+  });
+
+  const summary = {
+    generated_at: new Date().toISOString(),
+    channel: CHANNEL,
+    batch: BATCH,
+    decision: decision.plan_action,
+    duplicate_sku: DUPLICATE_SKU,
+    survivor_sku: TARGET_SKU,
+    duplicate_review_id: DUPLICATE_REVIEW_ID,
+    survivor_review_id: TARGET_REVIEW_ID,
+    image_action: 'move_to_survivor_gallery',
+    duplicate_action: 'soft_delete_product_and_variant',
+    survivor_remains_draft: true,
+    price_pending: true,
+    production_mutated: false,
+    media,
+  };
+  fs.writeFileSync(JSON_PATH, `${JSON.stringify(summary, null, 2)}\n`);
+  fs.writeFileSync(SQL_PATH, buildApplySql(plan));
+  fs.writeFileSync(ROLLBACK_PATH, buildRollbackSql(plan));
+  fs.writeFileSync(REPORT_PATH, `# Asia Deli Go Folder14 Duplicate Merge Plan
+
+Generated: ${summary.generated_at}
+
+## Decision
+
+- Keep: \`${TARGET_SKU}\` (${target.pl_name})
+- Merge and soft-delete: \`${DUPLICATE_SKU}\` (${duplicate.pl_name})
+- Move the duplicate photo into the survivor gallery at priority 1.
+- Keep the survivor draft, unpublished, and not for sale because price is pending.
+
+## Media
+
+- Source: \`${media.source_image_path}\`
+- Staged R2 object: \`${media.new_r2_object_key}\`
+- Public URL after upload: \`${media.new_public_url}\`
+
+## Safety
+
+- The duplicate is soft-deleted rather than hard-deleted.
+- Product translations remain attached to the soft-deleted duplicate for rollback/audit.
+- Rollback restores the duplicate product, variant, and original image mapping.
+- Production mutation in this planning step: none.
+
+## Apply Order
+
+1. Upload the staged media object.
+2. Apply \`${SQL_PATH}\`.
+3. Verify 52 active folder14 products and two gallery images on \`${TARGET_SKU}\`.
+
+Rollback SQL: \`${ROLLBACK_PATH}\`
+`);
+  return summary;
+}
+
+try {
+  console.log(JSON.stringify(writeOutputs(loadPlan()), null, 2));
+} catch (error) {
+  console.error(error instanceof Error ? error.message : error);
+  process.exit(1);
+}
