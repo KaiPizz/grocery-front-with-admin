@@ -50,11 +50,27 @@ interface GraphqlRequestBody {
 interface MockState {
   addresses: AddressFixture[];
   createAttempts: number;
+  protectedRequests: number;
+  authorizationFailures: string[];
+  channelFailures: string[];
   orderListVariables: Array<Record<string, unknown>>;
   orderDetailVariables: Array<Record<string, unknown>>;
 }
 
 const ORDER_CREATED = '2026-07-14T12:00:00.000Z';
+const CUSTOMER_TOKEN = 'customer-account-test-token';
+const PROTECTED_OPERATIONS = new Set([
+  'CustomerProfile',
+  'UpdateProfile',
+  'CustomerAddresses',
+  'CreateAddress',
+  'UpdateAddress',
+  'SetDefaultAddress',
+  'DeleteAddress',
+  'CustomerOrders',
+  'OrderDetail',
+]);
+const CHANNEL_SCOPED_OPERATIONS = new Set(['CustomerOrders', 'OrderDetail']);
 
 const SCENARIOS: Scenario[] = [
   {
@@ -75,7 +91,7 @@ const SCENARIOS: Scenario[] = [
       saveAddress: 'Zapisz adres',
       setDefault: 'Ustaw jako domyślny',
       deleteAddress: 'Usuń',
-      addressFailure: 'Nie udało się zapisać adresu testowego.',
+      addressFailure: 'Nie udało się zapisać adresu.',
       profileUpdated: 'Profil został zaktualizowany.',
       viewDetails: 'Zobacz szczegóły',
       orderNotFound: 'Nie znaleziono zamówienia.',
@@ -99,7 +115,7 @@ const SCENARIOS: Scenario[] = [
       saveAddress: 'Save address',
       setDefault: 'Set as default',
       deleteAddress: 'Delete',
-      addressFailure: 'Could not save the test address.',
+      addressFailure: 'Failed to save address.',
       profileUpdated: 'Profile updated successfully.',
       viewDetails: 'View details',
       orderNotFound: 'Order not found.',
@@ -123,7 +139,7 @@ const SCENARIOS: Scenario[] = [
       saveAddress: 'Zapisz adres',
       setDefault: 'Ustaw jako domyślny',
       deleteAddress: 'Usuń',
-      addressFailure: 'Nie udało się zapisać adresu testowego.',
+      addressFailure: 'Nie udało się zapisać adresu.',
       profileUpdated: 'Profil został zaktualizowany.',
       viewDetails: 'Zobacz szczegóły',
       orderNotFound: 'Nie znaleziono zamówienia.',
@@ -147,7 +163,7 @@ const SCENARIOS: Scenario[] = [
       saveAddress: 'Save address',
       setDefault: 'Set as default',
       deleteAddress: 'Delete',
-      addressFailure: 'Could not save the test address.',
+      addressFailure: 'Failed to save address.',
       profileUpdated: 'Profile updated successfully.',
       viewDetails: 'View details',
       orderNotFound: 'Order not found.',
@@ -168,6 +184,25 @@ async function fulfill(route: Route, data: Record<string, unknown>): Promise<voi
   });
 }
 
+async function fulfillGraphqlError(
+  route: Route,
+  message: string,
+  code: 'UNAUTHENTICATED' | 'BAD_USER_INPUT',
+): Promise<void> {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      data: null,
+      errors: [{ message, extensions: { code } }],
+    }),
+  });
+}
+
+function readOperationName(query: string): string | null {
+  return query.match(/\b(?:query|mutation)\s+([A-Za-z_][A-Za-z0-9_]*)/)?.[1] ?? null;
+}
+
 async function installCustomerAccountApi(
   page: Page,
   scenario: Scenario,
@@ -185,6 +220,27 @@ async function installCustomerAccountApi(
     const body = JSON.parse(rawBody) as GraphqlRequestBody;
     const query = body.query ?? '';
     const variables = body.variables ?? {};
+    const operationName = readOperationName(query);
+
+    if (operationName && PROTECTED_OPERATIONS.has(operationName)) {
+      state.protectedRequests += 1;
+      const authorization = route.request().headers().authorization;
+      if (authorization !== `Bearer ${CUSTOMER_TOKEN}`) {
+        state.authorizationFailures.push(operationName);
+        await fulfillGraphqlError(route, 'Authentication required.', 'UNAUTHENTICATED');
+        return;
+      }
+    }
+
+    if (
+      operationName &&
+      CHANNEL_SCOPED_OPERATIONS.has(operationName) &&
+      variables.channel !== 'test'
+    ) {
+      state.channelFailures.push(operationName);
+      await fulfillGraphqlError(route, 'Invalid channel.', 'BAD_USER_INPUT');
+      return;
+    }
 
     if (query.includes('mutation CustomerLogin')) {
       const input = readInput(variables);
@@ -193,7 +249,7 @@ async function installCustomerAccountApi(
       await fulfill(route, {
         customerLogin: valid
           ? {
-            accessToken: 'customer-account-test-token',
+            accessToken: CUSTOMER_TOKEN,
             refreshToken: null,
             expiresIn: 3600,
             success: true,
@@ -212,7 +268,7 @@ async function installCustomerAccountApi(
             refreshToken: null,
             expiresIn: null,
             success: false,
-            message: scenario.labels.invalidLogin,
+            message: 'Backend invalid credentials.',
             customer: null,
             errors: [],
           },
@@ -249,7 +305,7 @@ async function installCustomerAccountApi(
           customerAddressCreate: {
             success: false,
             address: null,
-            errors: [scenario.labels.addressFailure],
+            errors: ['Backend address validation failed.'],
           },
         });
         return;
@@ -418,6 +474,9 @@ for (const scenario of SCENARIOS) {
         country: 'PL',
       }],
       createAttempts: 0,
+      protectedRequests: 0,
+      authorizationFailures: [],
+      channelFailures: [],
       orderListVariables: [],
       orderDetailVariables: [],
     };
@@ -495,6 +554,9 @@ for (const scenario of SCENARIOS) {
       channel: 'test',
       id: 'order-from-another-tenant',
     });
+    expect(state.protectedRequests).toBeGreaterThan(0);
+    expect(state.authorizationFailures).toEqual([]);
+    expect(state.channelFailures).toEqual([]);
     expect(localAddressRequests).toEqual([]);
   });
 }

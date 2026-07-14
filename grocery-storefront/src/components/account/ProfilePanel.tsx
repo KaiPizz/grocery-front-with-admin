@@ -65,13 +65,12 @@ export function ProfilePanel() {
       const payload = response.data?.updateProfile;
 
       if (topError) {
-        setError(topError);
+        setError(tAccount('profileUpdateFailed'));
         return;
       }
 
       if (!payload?.success) {
-        const fieldError = payload?.errors?.[0]?.message;
-        setError(fieldError ?? tAccount('profileUpdateFailed'));
+        setError(tAccount('profileUpdateFailed'));
         return;
       }
 

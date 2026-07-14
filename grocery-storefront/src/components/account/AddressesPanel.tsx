@@ -20,7 +20,6 @@ import {
   AlertCircle,
   Check,
 } from 'lucide-react';
-import { toast as sonnerToast } from 'sonner';
 import {
   CUSTOMER_ADDRESSES_QUERY,
   CUSTOMER_ADDRESS_CREATE_MUTATION,
@@ -72,10 +71,6 @@ function createEmptyAddressForm(): AddressFormState {
   };
 }
 
-function getPayloadError(errors: string[] | null | undefined, fallback: string): string {
-  return errors?.find((message) => message.trim().length > 0) ?? fallback;
-}
-
 /* ---------- component ---------- */
 
 export function AddressesPanel() {
@@ -94,7 +89,7 @@ export function AddressesPanel() {
   const [formSaving, setFormSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  /* ---------- toast auto-hide ---------- */
+  /* ---------- inline notice auto-hide ---------- */
   useEffect(() => {
     if (!notice) return;
     const timer = setTimeout(() => setNotice(null), 3000);
@@ -110,7 +105,7 @@ export function AddressesPanel() {
       const message = getGraphqlErrorMessage(response.errors);
 
       if (message) {
-        setError(message);
+        setError(tAccount('loadAddressesFailed'));
         return;
       }
 
@@ -173,7 +168,6 @@ export function AddressesPanel() {
     if (!input.fullName || !input.phone || !input.street || !input.city || !input.postalCode || !input.country) {
       const message = tAccount('addressRequiredFields');
       setFormError(message);
-      sonnerToast.error(message);
       return;
     }
 
@@ -191,21 +185,18 @@ export function AddressesPanel() {
         : response.data?.customerAddressCreate;
 
       if (topLevelError || !payload?.success) {
-        const message = topLevelError ?? getPayloadError(payload?.errors, tAccount('addressSaveFailed'));
+        const message = tAccount('addressSaveFailed');
         setFormError(message);
-        sonnerToast.error(message);
         return;
       }
 
       const message = isEdit ? tAccount('addressUpdated') : tAccount('addressCreated');
       setNotice({ type: 'success', message });
-      sonnerToast.success(message);
       closeForm();
       await loadAddresses();
     } catch {
       const message = tAccount('addressSaveFailed');
       setFormError(message);
-      sonnerToast.error(message);
     } finally {
       setFormSaving(false);
     }
@@ -220,20 +211,17 @@ export function AddressesPanel() {
       const payload = response.data?.customerAddressDelete;
 
       if (topLevelError || !payload?.success) {
-        const message = topLevelError ?? getPayloadError(payload?.errors, tAccount('addressDeleteFailed'));
+        const message = tAccount('addressDeleteFailed');
         setNotice({ type: 'error', message });
-        sonnerToast.error(message);
         return;
       }
 
-      setAddresses((prev) => prev.filter((a) => a.id !== id));
+      await loadAddresses();
       const message = tAccount('addressDeleted');
       setNotice({ type: 'success', message });
-      sonnerToast.success(message);
     } catch {
       const message = tAccount('addressDeleteFailed');
       setNotice({ type: 'error', message });
-      sonnerToast.error(message);
     } finally {
       setActionLoading(null);
     }
@@ -248,9 +236,8 @@ export function AddressesPanel() {
       const payload = response.data?.customerAddressSetDefault;
 
       if (topLevelError || !payload?.success) {
-        const message = topLevelError ?? getPayloadError(payload?.errors, tAccount('addressDefaultFailed'));
+        const message = tAccount('addressDefaultFailed');
         setNotice({ type: 'error', message });
-        sonnerToast.error(message);
         return;
       }
 
@@ -259,11 +246,9 @@ export function AddressesPanel() {
       );
       const message = tAccount('addressDefaultSet');
       setNotice({ type: 'success', message });
-      sonnerToast.success(message);
     } catch {
       const message = tAccount('addressDefaultFailed');
       setNotice({ type: 'error', message });
-      sonnerToast.error(message);
     } finally {
       setActionLoading(null);
     }
@@ -306,7 +291,7 @@ export function AddressesPanel() {
         )}
       </div>
 
-      {/* toast */}
+      {/* persistent inline outcome */}
       {notice && (
         <div
           role={notice.type === 'error' ? 'alert' : 'status'}

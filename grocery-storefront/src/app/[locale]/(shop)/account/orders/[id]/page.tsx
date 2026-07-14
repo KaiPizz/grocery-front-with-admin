@@ -80,13 +80,13 @@ export default function OrderDetailPage() {
         const message = getGraphqlErrorMessage(response.errors);
 
         if (message) {
-          setError(message);
+          setError(failedToLoadOrder);
           return;
         }
 
         setOrder(response.data?.order ?? null);
-      } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : failedToLoadOrder);
+      } catch {
+        setError(failedToLoadOrder);
       } finally {
         setLoading(false);
       }

@@ -54,4 +54,6 @@ test('order list and detail operations require an explicit tenant channel', () =
 test('GraphQL proxy derives x-channel from server configuration', () => {
   assert.match(proxySource, /'x-channel':\s*resolveChannel\(process\.env\.NEXT_PUBLIC_SALON_SLUG\)/);
   assert.doesNotMatch(proxySource, /request\.headers\.get\(['"]x-channel['"]\)/);
+  assert.match(proxySource, /request\.headers\.get\(['"]authorization['"]\)/);
+  assert.match(proxySource, /headers\.Authorization\s*=\s*auth/);
 });

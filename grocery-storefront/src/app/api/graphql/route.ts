@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
       status: response.status,
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (error) {
-    console.error('[GraphQL Proxy] Error:', error);
+  } catch {
+    console.error('[GraphQL Proxy] Upstream POST failed');
     return NextResponse.json(
       { errors: [{ message: 'Proxy error' }] },
       { status: 502 }
@@ -63,8 +63,8 @@ export async function GET(request: NextRequest) {
       status: response.status,
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (error) {
-    console.error('[GraphQL Proxy] GET Error:', error);
+  } catch {
+    console.error('[GraphQL Proxy] Upstream GET failed');
     return NextResponse.json(
       { errors: [{ message: 'Proxy error' }] },
       { status: 502 }

@@ -62,7 +62,7 @@ export function OrdersPanel() {
       const message = getGraphqlErrorMessage(response.errors);
 
       if (message) {
-        setError(message);
+        setError(tAccount('loadOrdersFailed'));
         return;
       }
 
@@ -73,8 +73,8 @@ export function OrdersPanel() {
       setTotalCount(connection?.totalCount ?? nextOrders.length);
       setHasNextPage(Boolean(connection?.pageInfo?.hasNextPage));
       setCursor(connection?.pageInfo?.endCursor ?? null);
-    } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : tAccount('loadOrdersFailed'));
+    } catch {
+      setError(tAccount('loadOrdersFailed'));
     } finally {
       setLoading(false);
       setLoadingMore(false);

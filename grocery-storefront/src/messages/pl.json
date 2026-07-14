@@ -453,7 +453,9 @@
     "switchToLoginPrompt": "Masz już konto?",
     "switchToLoginAction": "Zaloguj się",
     "loginSuccess": "Zalogowano pomyślnie",
+    "loginFailed": "Nieprawidłowe dane logowania.",
     "registerSuccess": "Konto zostało utworzone",
+    "registerFailed": "Nie udało się utworzyć konta.",
     "logoutSuccess": "Wylogowano pomyślnie"
   },
   "account": {

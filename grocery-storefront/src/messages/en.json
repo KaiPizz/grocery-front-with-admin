@@ -453,7 +453,9 @@
     "switchToLoginPrompt": "Already have an account?",
     "switchToLoginAction": "Sign in",
     "loginSuccess": "Signed in successfully",
+    "loginFailed": "Invalid credentials.",
     "registerSuccess": "Account created successfully",
+    "registerFailed": "Could not create account.",
     "logoutSuccess": "Signed out successfully"
   },
   "account": {

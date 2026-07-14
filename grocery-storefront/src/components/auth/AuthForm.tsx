@@ -14,7 +14,6 @@ interface AuthFormProps {
 
 export function AuthForm({ mode }: AuthFormProps) {
   const t = useTranslations('auth');
-  const tCommon = useTranslations('common');
   const router = useRouter();
   const initialized = useAuthStore((state) => state.initialized);
   const session = useAuthStore((state) => state.session);
@@ -78,9 +77,8 @@ export function AuthForm({ mode }: AuthFormProps) {
         });
 
     if (!result.success) {
-      const message = result.message ?? tCommon('error');
+      const message = mode === 'login' ? t('loginFailed') : t('registerFailed');
       setError(message);
-      toast.error(message);
       return;
     }
 
