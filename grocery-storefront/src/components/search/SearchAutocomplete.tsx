@@ -9,11 +9,11 @@ import { useRouter } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
 import { SEARCH_PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
 import { getLocalizedProductName } from '@/lib/localization';
-import { buildSearchSuggestions, normalizeSearchTerm, rankProductsForSearch, type SearchableProduct } from '@/lib/search';
+import { normalizeSearchTerm, type SearchableProduct } from '@/lib/search';
 import { cn, formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import { useSearchStore } from '@/stores/search-store';
 
-const SEARCH_INDEX_LIMIT = 180;
+const SEARCH_RESULT_LIMIT = 4;
 
 interface SearchAutocompleteProps {
   inputId: string;
@@ -51,17 +51,21 @@ export function SearchAutocomplete({
   const clearRecentSearches = useSearchStore((state) => state.clearRecentSearches);
   const deferredValue = useDeferredValue(value);
   const normalizedQuery = normalizeSearchTerm(deferredValue);
-  const shouldLoadIndex = hasActivated || value.trim().length > 0;
+  const shouldSearch = normalizedQuery.length >= 2 && hasActivated;
 
   const [result] = useQuery({
     query: SEARCH_PRODUCTS_QUERY,
-    variables: { channel, first: SEARCH_INDEX_LIMIT },
-    pause: !shouldLoadIndex,
+    variables: {
+      channel,
+      query: deferredValue.trim(),
+      first: SEARCH_RESULT_LIMIT,
+    },
+    pause: !shouldSearch,
   });
 
   const products = useMemo<SearchableProduct[]>(
-    () => (result.data?.products?.edges?.map((edge: any) => {
-      const node = edge.node as SearchableProduct;
+    () => (result.data?.searchProducts?.edges?.map((edge: any) => {
+      const node = edge.node.product as SearchableProduct;
       const localizedName = getLocalizedProductName(node, locale);
       return localizedName === node.name ? node : { ...node, name: localizedName };
     }) || []),
@@ -77,12 +81,23 @@ export function SearchAutocomplete({
       return recentSearches.filter((entry) => normalizeSearchTerm(entry).includes(normalizedQuery)).slice(0, 4);
     }
 
-    return buildSearchSuggestions(products, value, recentSearches, 4);
-  }, [normalizedQuery, products, recentSearches, value]);
+    const matches = recentSearches.filter((entry) => normalizeSearchTerm(entry).includes(normalizedQuery));
+    const seen = new Set(matches.map(normalizeSearchTerm));
+
+    for (const product of products) {
+      const normalizedName = normalizeSearchTerm(product.name);
+      if (!normalizedName || seen.has(normalizedName)) continue;
+      seen.add(normalizedName);
+      matches.push(product.name);
+      if (matches.length >= 4) break;
+    }
+
+    return matches.slice(0, 4);
+  }, [normalizedQuery, products, recentSearches]);
 
   const productMatches = useMemo(
-    () => (normalizedQuery.length >= 2 ? rankProductsForSearch(products, value).slice(0, 4) : []),
-    [normalizedQuery, products, value]
+    () => (normalizedQuery.length >= 2 ? products.slice(0, SEARCH_RESULT_LIMIT) : []),
+    [normalizedQuery, products]
   );
 
   const hasDropdownContent =

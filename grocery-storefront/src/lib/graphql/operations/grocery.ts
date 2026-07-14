@@ -218,28 +218,30 @@ export const PRODUCT_COUNTRY_ORIGINS_QUERY = `
 `;
 
 export const SEARCH_PRODUCTS_QUERY = `
-  query SearchProductsIndex($channel: String!, $first: Int) {
-    products(channel: $channel, first: $first) {
+  query StorefrontProductSearch($channel: String!, $query: String!, $first: Int) {
+    searchProducts(channel: $channel, query: $query, first: $first) {
       edges {
         node {
-          id
-          name
-          slug
-          translation(languageCode: "en") {
-            language
+          product {
+            id
             name
-            description
-            shortDescription
-          }
-          thumbnail { url alt }
-          category { id name slug }
-          pricing {
-            priceRange {
-              start { gross { amount currency } }
+            slug
+            translation(languageCode: "en") {
+              language
+              name
+              description
+              shortDescription
+            }
+            thumbnail { url alt }
+            pricing {
+              priceRange {
+                start { gross { amount currency } }
+              }
             }
           }
         }
       }
+      totalCount
     }
   }
 `;

@@ -53,6 +53,23 @@ test.describe('mobile storefront smoke', () => {
     expect(searchIndexCalls).toBe(0);
   });
 
+  test('sends the entered identifier to backend storefront search', async ({ page }) => {
+    let searchVariables: Record<string, unknown> | null = null;
+
+    await mockMobileStorefront(page, {
+      onSearchProductsIndexQuery: (variables) => {
+        searchVariables = variables;
+      },
+    });
+
+    await page.goto('/en/products');
+    await page.getByRole('button', { name: /open search/i }).click();
+    await page.locator('input[type="search"]:visible').fill('ADG-001');
+
+    await expect.poll(() => searchVariables?.query).toBe('ADG-001');
+    await expect(page.getByText('Organic Gala Apples Family Value Pack').first()).toBeVisible();
+  });
+
   test('keeps the mobile header focused on primary actions and moves secondary controls into the menu', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.goto('/en/products');

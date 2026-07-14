@@ -584,6 +584,18 @@ function matchesProductsFilter(product: (typeof PRODUCTS)[number], filter: Recor
     return true;
   }
 
+  if (typeof filter.search === 'string' && filter.search.trim()) {
+    const query = filter.search.trim().toLowerCase();
+    const searchableText = [product.name, product.category.name]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    if (!searchableText.includes(query)) {
+      return false;
+    }
+  }
+
   if (Array.isArray(filter.categories) && filter.categories.length > 0) {
     const categoryKeys = filter.categories.map((value: unknown) => String(value));
 
@@ -831,7 +843,12 @@ export async function mockMobileStorefront(
     const query = body.query ?? '';
     const operationName = body.operationName ?? '';
 
-    if (operationName === 'GroceryProducts' || query.includes('query GroceryProducts')) {
+    if (
+      operationName === 'GroceryProducts'
+      || operationName === 'GroceryProductListing'
+      || query.includes('query GroceryProducts')
+      || query.includes('query GroceryProductListing')
+    ) {
       options.onProductsQuery?.(body.variables ?? {});
 
       if (options.products === 'error') {
@@ -864,24 +881,24 @@ export async function mockMobileStorefront(
       return;
     }
 
-    if (operationName === 'SearchProductsIndex' || query.includes('query SearchProductsIndex')) {
-      if (route.request().method() === 'POST') {
-        options.onSearchProductsIndexQuery?.(body.variables ?? {});
-      }
+    if (operationName === 'StorefrontProductSearch' || query.includes('query StorefrontProductSearch')) {
+      options.onSearchProductsIndexQuery?.(body.variables ?? {});
       await fulfill(route, {
-        products: {
+        searchProducts: {
           edges: products.map((product) => ({
             node: {
-              id: product.id,
-              name: product.name,
-              slug: product.slug,
-              thumbnail: product.thumbnail,
-              category: product.category,
-              pricing: {
-                priceRange: product.pricing.priceRange,
+              product: {
+                id: product.id,
+                name: product.name,
+                slug: product.slug,
+                thumbnail: product.thumbnail,
+                pricing: {
+                  priceRange: product.pricing.priceRange,
+                },
               },
             },
           })),
+          totalCount: products.length,
         },
       });
       return;
