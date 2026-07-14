@@ -31,8 +31,8 @@ import {
   CHECKOUT_PROMO_CODE_REMOVE,
   CHECKOUT_SHIPPING_ADDRESS_UPDATE,
   CHECKOUT_SHIPPING_METHOD_UPDATE,
+  CUSTOMER_ADDRESSES_QUERY,
 } from '@/lib/graphql/operations/grocery';
-import { getAuthToken } from '@/lib/auth';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
 import { formatPrice } from '@/lib/utils';
 import { useChannel } from '@/hooks/use-channel';
@@ -113,6 +113,10 @@ interface PaymentMethodsResponse {
       currency: string;
     } | null;
   }> | null;
+}
+
+interface CustomerAddressesResponse {
+  customerAddresses: CustomerAddress[] | null;
 }
 
 interface PaymentCreateResponse {
@@ -400,6 +404,10 @@ export default function CheckoutPage() {
         locale === 'pl'
           ? 'Nie ma wystarczającego stanu magazynowego, aby złożyć to zamówienie. Sprawdź koszyk i zmień ilości przed ponowną próbą.'
           : 'Not enough stock to complete this order. Review your cart and adjust quantities before trying again.',
+      failedSavedAddresses:
+        locale === 'pl'
+          ? 'Nie udało się załadować zapisanych adresów.'
+          : 'Failed to load saved addresses.',
     }),
     [locale, pickupMode]
   );
@@ -435,21 +443,38 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (!isHydrated || !isAuthenticated) return;
 
-    const token = getAuthToken();
-    if (!token) return;
+    let cancelled = false;
 
-    fetch('/api/addresses', {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: 'no-store',
-    })
-      .then((res) => res.json())
-      .then((data: { addresses?: CustomerAddress[] }) => {
-        if (data.addresses && data.addresses.length > 0) {
-          setSavedAddresses(data.addresses);
+    async function loadSavedAddresses() {
+      try {
+        const response = await graphqlRequest<CustomerAddressesResponse>(CUSTOMER_ADDRESSES_QUERY);
+        const message = getGraphqlErrorMessage(response.errors);
+
+        if (message) {
+          if (!cancelled) {
+            setErrorBanner(uiText.failedSavedAddresses);
+            toast.error(uiText.failedSavedAddresses);
+          }
+          return;
         }
-      })
-      .catch(() => { /* ignore – not critical */ });
-  }, [isHydrated, isAuthenticated]);
+
+        if (!cancelled) {
+          setSavedAddresses(response.data?.customerAddresses ?? []);
+        }
+      } catch {
+        if (!cancelled) {
+          setErrorBanner(uiText.failedSavedAddresses);
+          toast.error(uiText.failedSavedAddresses);
+        }
+      }
+    }
+
+    void loadSavedAddresses();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isHydrated, isAuthenticated, uiText.failedSavedAddresses]);
 
   useEffect(() => {
     setForm((current) => ({
@@ -780,7 +805,7 @@ export default function CheckoutPage() {
       firstName,
       lastName,
       email: isAuthenticated ? authEmail : form.email,
-      phone: addr.phone ?? form.phone,
+      phone: addr.phone,
       streetAddress1: addr.street,
       city: addr.city,
       postalCode: addr.postalCode,
@@ -1274,11 +1299,9 @@ export default function CheckoutPage() {
                           <span className="block text-xs truncate mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>
                             {addr.street}, {addr.postalCode} {addr.city}
                           </span>
-                          {addr.phone && (
-                            <span className="block text-[11px] mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>
-                              {addr.phone}
-                            </span>
-                          )}
+                          <span className="block text-[11px] mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>
+                            {addr.phone}
+                          </span>
                         </button>
                       );
                     })}

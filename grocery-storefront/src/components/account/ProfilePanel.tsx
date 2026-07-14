@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, type FormEvent } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Loader2, UserRound, Check, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { UPDATE_PROFILE_MUTATION } from '@/lib/graphql/operations/grocery';
@@ -21,6 +21,7 @@ interface UpdateProfileResponse {
 }
 
 export function ProfilePanel() {
+  const locale = useLocale();
   const tAccount = useTranslations('account');
   const session = useAuthStore((state) => state.session);
   const user = session.user;
@@ -96,7 +97,7 @@ export function ProfilePanel() {
   if (!user) return null;
 
   const memberSince = user.createdAt
-    ? new Date(user.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+    ? new Date(user.createdAt).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })
     : null;
 
   return (

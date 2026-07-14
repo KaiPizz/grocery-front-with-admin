@@ -971,8 +971,8 @@ export const CUSTOMER_ADDRESS_SET_DEFAULT_MUTATION = `
 // --- Orders ---
 
 export const CUSTOMER_ORDERS_QUERY = `
-  query CustomerOrders($first: Int!, $after: String) {
-    orders(first: $first, after: $after) {
+  query CustomerOrders($channel: String!, $first: Int!, $after: String) {
+    orders(channel: $channel, first: $first, after: $after) {
       totalCount
       pageInfo { hasNextPage endCursor }
       edges {
@@ -997,8 +997,8 @@ export const CUSTOMER_ORDERS_QUERY = `
 `;
 
 export const ORDER_DETAIL_QUERY = `
-  query OrderDetail($id: ID!) {
-    order(id: $id) {
+  query OrderDetail($channel: String!, $id: ID!) {
+    order(channel: $channel, id: $id) {
       id
       number
       status

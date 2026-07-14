@@ -60,12 +60,14 @@ export function AccountTabs() {
             <button
               key={id}
               type="button"
+              id={`tab-${id}`}
               role="tab"
               aria-selected={isActive}
               aria-controls={`panel-${id}`}
+              aria-label={tAccount(tabLabelKey[id])}
               onClick={() => switchTab(id)}
               className={
-                'flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-fast ' +
+                'flex min-h-11 min-w-11 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-semibold transition-all duration-fast sm:px-4 ' +
                 (isActive ? 'shadow-sm' : 'hover:opacity-80')
               }
               style={
@@ -75,13 +77,18 @@ export function AccountTabs() {
               }
             >
               <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
-              <span className="hidden sm:inline">{tAccount(tabLabelKey[id])}</span>
+              <span className="sr-only sm:not-sr-only">{tAccount(tabLabelKey[id])}</span>
             </button>
           );
         })}
       </nav>
 
-      <div className="mt-6" id={`panel-${activeTab}`} role="tabpanel">
+      <div
+        className="mt-6"
+        id={`panel-${activeTab}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${activeTab}`}
+      >
         {activeTab === 'profile' && <ProfilePanel />}
         {activeTab === 'orders' && <OrdersPanel />}
         {activeTab === 'addresses' && <AddressesPanel />}

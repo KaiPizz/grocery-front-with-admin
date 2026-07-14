@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ArrowLeft, Loader2, Package } from 'lucide-react';
+import { useChannel } from '@/hooks/use-channel';
 import { Link } from '@/i18n/navigation';
 import { ORDER_DETAIL_QUERY } from '@/lib/graphql/operations/grocery';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
@@ -13,6 +14,16 @@ import type { CustomerOrderDetail } from '@/types';
 
 interface OrderDetailResponse {
   order: CustomerOrderDetail | null;
+}
+
+function formatOrderDateTime(value: string, locale: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date);
 }
 
 function AddressBlock({
@@ -46,6 +57,8 @@ function AddressBlock({
 
 export default function OrderDetailPage() {
   const params = useParams<{ id: string }>();
+  const locale = useLocale();
+  const channel = useChannel();
   const tCommon = useTranslations('common');
   const tCart = useTranslations('cart');
   const tAccount = useTranslations('account');
@@ -60,7 +73,10 @@ export default function OrderDetailPage() {
       setError(null);
 
       try {
-        const response = await graphqlRequest<OrderDetailResponse>(ORDER_DETAIL_QUERY, { id: params.id });
+        const response = await graphqlRequest<OrderDetailResponse>(ORDER_DETAIL_QUERY, {
+          channel,
+          id: params.id,
+        });
         const message = getGraphqlErrorMessage(response.errors);
 
         if (message) {
@@ -77,7 +93,7 @@ export default function OrderDetailPage() {
     }
 
     void loadOrder();
-  }, [params.id, failedToLoadOrder]);
+  }, [channel, params.id, failedToLoadOrder]);
 
   if (loading) {
     return (
@@ -145,7 +161,7 @@ export default function OrderDetailPage() {
         </h1>
         <div className="mt-4 flex flex-wrap gap-4 text-sm">
           <span style={{ color: 'var(--color-foreground)' }}>{order.status}</span>
-          <span style={{ color: 'var(--color-muted-foreground)' }}>{new Date(order.created).toLocaleString()}</span>
+          <span style={{ color: 'var(--color-muted-foreground)' }}>{formatOrderDateTime(order.created, locale)}</span>
           {order.paymentStatus && <span style={{ color: 'var(--color-muted-foreground)' }}>{tAccount('paymentStatus', { status: order.paymentStatus })}</span>}
           {order.trackingNumber && <span style={{ color: 'var(--color-muted-foreground)' }}>{tAccount('trackingNumber', { number: order.trackingNumber })}</span>}
         </div>

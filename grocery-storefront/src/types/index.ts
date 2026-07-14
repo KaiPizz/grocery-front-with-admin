@@ -253,8 +253,8 @@ export interface CustomerAddress {
   id: string;
   label?: string | null;
   isDefault: boolean;
-  fullName?: string | null;
-  phone?: string | null;
+  fullName: string;
+  phone: string;
   street: string;
   city: string;
   postalCode: string;
@@ -265,7 +265,7 @@ export interface CustomerAddress {
 export interface CustomerAddressInput {
   label?: string | null;
   fullName: string;
-  phone?: string | null;
+  phone: string;
   street: string;
   city: string;
   postalCode: string;

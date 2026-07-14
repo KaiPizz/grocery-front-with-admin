@@ -1,18 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { resolveChannel } from '@/lib/channel';
+
 const GRAPHQL_URL =
   process.env.NEXT_PUBLIC_GRAPHQL_URL || 'https://zira-ai.com/graphql/storefront';
+
+function createUpstreamHeaders(request: NextRequest): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'x-channel': resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG),
+  };
+
+  const auth = request.headers.get('authorization');
+  if (auth) {
+    headers.Authorization = auth;
+  }
+
+  return headers;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text();
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    // Forward auth token if present
-    const auth = request.headers.get('authorization');
-    if (auth) headers['Authorization'] = auth;
+    const headers = createUpstreamHeaders(request);
 
     const response = await fetch(GRAPHQL_URL, {
       method: 'POST',
@@ -41,11 +51,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     searchParams.forEach((value, key) => url.searchParams.set(key, value));
 
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-    const auth = request.headers.get('authorization');
-    if (auth) headers['Authorization'] = auth;
+    const headers = createUpstreamHeaders(request);
 
     const response = await fetch(url.toString(), {
       method: 'GET',

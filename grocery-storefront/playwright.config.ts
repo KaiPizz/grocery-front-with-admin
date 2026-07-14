@@ -37,6 +37,7 @@ export default defineConfig({
   projects: [
     {
       name: 'iphone-12',
+      testIgnore: /customer-account-p0\.spec\.ts/,
       use: {
         ...devices['iPhone 12'],
       },
@@ -45,6 +46,14 @@ export default defineConfig({
       name: 'pixel-7',
       use: {
         ...devices['Pixel 7'],
+      },
+    },
+    {
+      name: 'customer-account-desktop',
+      testMatch: /customer-account-p0\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1440, height: 1000 },
       },
     },
   ],

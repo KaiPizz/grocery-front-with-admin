@@ -1,6 +1,13 @@
 'use client';
 
-import { useEffect, useState, useCallback, type FormEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type Dispatch,
+  type FormEvent,
+  type SetStateAction,
+} from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Loader2,
@@ -13,57 +20,61 @@ import {
   AlertCircle,
   Check,
 } from 'lucide-react';
-import { getAuthToken } from '@/lib/auth';
+import { toast as sonnerToast } from 'sonner';
+import {
+  CUSTOMER_ADDRESSES_QUERY,
+  CUSTOMER_ADDRESS_CREATE_MUTATION,
+  CUSTOMER_ADDRESS_DELETE_MUTATION,
+  CUSTOMER_ADDRESS_SET_DEFAULT_MUTATION,
+  CUSTOMER_ADDRESS_UPDATE_MUTATION,
+} from '@/lib/graphql/operations/grocery';
+import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
 import type { CustomerAddress, CustomerAddressInput } from '@/types';
 
-/* ---------- local address API helper ---------- */
-
-/**
- * Calls the local /api/addresses endpoint.
- * This works around a backend bug where the GraphQL mutations
- * (customerAddressCreate / customerAddressUpdate) reject all input fields.
- */
-async function addressApi<T = unknown>(
-  method: 'GET' | 'POST',
-  body?: Record<string, unknown>,
-): Promise<T> {
-  const token = getAuthToken();
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
-  const res = await fetch('/api/addresses', {
-    method,
-    headers,
-    cache: 'no-store',
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  });
-
-  return res.json();
+interface CustomerAddressesResponse {
+  customerAddresses: CustomerAddress[] | null;
 }
 
-interface AddressListResponse {
-  addresses: CustomerAddress[];
-  error?: string;
+interface AddressMutationPayload {
+  success: boolean;
+  address: CustomerAddress | null;
+  errors: string[] | null;
 }
 
 interface AddressMutationResponse {
-  success: boolean;
-  address?: CustomerAddress | null;
-  errors?: string[] | null;
-  error?: string;
+  customerAddressCreate?: AddressMutationPayload | null;
+  customerAddressUpdate?: AddressMutationPayload | null;
+  customerAddressDelete?: Omit<AddressMutationPayload, 'address'> | null;
+  customerAddressSetDefault?: AddressMutationPayload | null;
+}
+
+interface AddressFormState {
+  label: string;
+  fullName: string;
+  phone: string;
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string;
 }
 
 /* ---------- empty form state ---------- */
 
-const EMPTY_FORM: CustomerAddressInput & { label: string } = {
-  label: '',
-  fullName: '',
-  phone: '',
-  street: '',
-  city: '',
-  postalCode: '',
-  country: '',
-};
+function createEmptyAddressForm(): AddressFormState {
+  return {
+    label: '',
+    fullName: '',
+    phone: '',
+    street: '',
+    city: '',
+    postalCode: '',
+    country: 'PL',
+  };
+}
+
+function getPayloadError(errors: string[] | null | undefined, fallback: string): string {
+  return errors?.find((message) => message.trim().length > 0) ?? fallback;
+}
 
 /* ---------- component ---------- */
 
@@ -74,39 +85,42 @@ export function AddressesPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [notice, setNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // form state
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState(EMPTY_FORM);
+  const [form, setForm] = useState<AddressFormState>(createEmptyAddressForm);
   const [formSaving, setFormSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
   /* ---------- toast auto-hide ---------- */
   useEffect(() => {
-    if (!toast) return;
-    const timer = setTimeout(() => setToast(null), 3000);
+    if (!notice) return;
+    const timer = setTimeout(() => setNotice(null), 3000);
     return () => clearTimeout(timer);
-  }, [toast]);
+  }, [notice]);
 
   /* ---------- fetch addresses ---------- */
   const loadAddresses = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await addressApi<AddressListResponse>('GET');
-      if (res.error) {
-        setError(res.error);
+      const response = await graphqlRequest<CustomerAddressesResponse>(CUSTOMER_ADDRESSES_QUERY);
+      const message = getGraphqlErrorMessage(response.errors);
+
+      if (message) {
+        setError(message);
         return;
       }
-      setAddresses(res.addresses ?? []);
+
+      setAddresses(response.data?.customerAddresses ?? []);
     } catch {
-      setError('Failed to load addresses.');
+      setError(tAccount('loadAddressesFailed'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [tAccount]);
 
   useEffect(() => {
     void loadAddresses();
@@ -115,7 +129,7 @@ export function AddressesPanel() {
   /* ---------- open / close form ---------- */
   function openNew() {
     setEditingId(null);
-    setForm(EMPTY_FORM);
+    setForm(createEmptyAddressForm());
     setFormError(null);
     setShowForm(true);
   }
@@ -124,12 +138,12 @@ export function AddressesPanel() {
     setEditingId(addr.id);
     setForm({
       label: addr.label ?? '',
-      fullName: addr.fullName ?? '',
-      phone: addr.phone ?? '',
+      fullName: addr.fullName,
+      phone: addr.phone,
       street: addr.street,
       city: addr.city,
       postalCode: addr.postalCode,
-      country: addr.country,
+      country: addr.country || 'PL',
     });
     setFormError(null);
     setShowForm(true);
@@ -144,37 +158,54 @@ export function AddressesPanel() {
   /* ---------- create / update ---------- */
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault();
-    setFormSaving(true);
     setFormError(null);
 
     const input: CustomerAddressInput = {
       label: form.label.trim() || null,
       fullName: form.fullName.trim(),
-      phone: form.phone?.trim() || null,
+      phone: form.phone.trim(),
       street: form.street.trim(),
       city: form.city.trim(),
       postalCode: form.postalCode.trim(),
-      country: form.country.trim(),
+      country: form.country.trim().toUpperCase(),
     };
+
+    if (!input.fullName || !input.phone || !input.street || !input.city || !input.postalCode || !input.country) {
+      const message = tAccount('addressRequiredFields');
+      setFormError(message);
+      sonnerToast.error(message);
+      return;
+    }
+
+    setFormSaving(true);
 
     try {
       const isEdit = Boolean(editingId);
-      const res = await addressApi<AddressMutationResponse>('POST', isEdit
-        ? { action: 'update', id: editingId, input }
-        : { action: 'create', input },
+      const response = await graphqlRequest<AddressMutationResponse>(
+        isEdit ? CUSTOMER_ADDRESS_UPDATE_MUTATION : CUSTOMER_ADDRESS_CREATE_MUTATION,
+        isEdit ? { id: editingId, input } : { input },
       );
+      const topLevelError = getGraphqlErrorMessage(response.errors);
+      const payload = isEdit
+        ? response.data?.customerAddressUpdate
+        : response.data?.customerAddressCreate;
 
-      if (res.error || !res.success) {
-        const errArr = res.errors;
-        setFormError(res.error ?? (Array.isArray(errArr) && errArr.length > 0 ? errArr[0] : tAccount('addressSaveFailed')));
+      if (topLevelError || !payload?.success) {
+        const message = topLevelError ?? getPayloadError(payload?.errors, tAccount('addressSaveFailed'));
+        setFormError(message);
+        sonnerToast.error(message);
         return;
       }
 
-      setToast({ type: 'success', message: isEdit ? tAccount('addressUpdated') : tAccount('addressCreated') });
+      const message = isEdit ? tAccount('addressUpdated') : tAccount('addressCreated');
+      setNotice({ type: 'success', message });
+      sonnerToast.success(message);
       closeForm();
-      void loadAddresses();
+      await loadAddresses();
     } catch {
-      setFormError(tAccount('addressSaveFailed'));
+      const message = tAccount('addressSaveFailed');
+      setFormError(message);
+      sonnerToast.error(message);
     } finally {
       setFormSaving(false);
     }
@@ -184,17 +215,25 @@ export function AddressesPanel() {
   async function handleDelete(id: string) {
     setActionLoading(id);
     try {
-      const res = await addressApi<AddressMutationResponse>('POST', { action: 'delete', id });
+      const response = await graphqlRequest<AddressMutationResponse>(CUSTOMER_ADDRESS_DELETE_MUTATION, { id });
+      const topLevelError = getGraphqlErrorMessage(response.errors);
+      const payload = response.data?.customerAddressDelete;
 
-      if (!res.success) {
-        setToast({ type: 'error', message: res.errors?.[0] ?? tAccount('addressDeleteFailed') });
+      if (topLevelError || !payload?.success) {
+        const message = topLevelError ?? getPayloadError(payload?.errors, tAccount('addressDeleteFailed'));
+        setNotice({ type: 'error', message });
+        sonnerToast.error(message);
         return;
       }
 
       setAddresses((prev) => prev.filter((a) => a.id !== id));
-      setToast({ type: 'success', message: tAccount('addressDeleted') });
+      const message = tAccount('addressDeleted');
+      setNotice({ type: 'success', message });
+      sonnerToast.success(message);
     } catch {
-      setToast({ type: 'error', message: tAccount('addressDeleteFailed') });
+      const message = tAccount('addressDeleteFailed');
+      setNotice({ type: 'error', message });
+      sonnerToast.error(message);
     } finally {
       setActionLoading(null);
     }
@@ -204,19 +243,27 @@ export function AddressesPanel() {
   async function handleSetDefault(id: string) {
     setActionLoading(id);
     try {
-      const res = await addressApi<AddressMutationResponse>('POST', { action: 'setDefault', id });
+      const response = await graphqlRequest<AddressMutationResponse>(CUSTOMER_ADDRESS_SET_DEFAULT_MUTATION, { id });
+      const topLevelError = getGraphqlErrorMessage(response.errors);
+      const payload = response.data?.customerAddressSetDefault;
 
-      if (!res.success) {
-        setToast({ type: 'error', message: res.errors?.[0] ?? tAccount('addressDefaultFailed') });
+      if (topLevelError || !payload?.success) {
+        const message = topLevelError ?? getPayloadError(payload?.errors, tAccount('addressDefaultFailed'));
+        setNotice({ type: 'error', message });
+        sonnerToast.error(message);
         return;
       }
 
       setAddresses((prev) =>
         prev.map((a) => ({ ...a, isDefault: a.id === id })),
       );
-      setToast({ type: 'success', message: tAccount('addressDefaultSet') });
+      const message = tAccount('addressDefaultSet');
+      setNotice({ type: 'success', message });
+      sonnerToast.success(message);
     } catch {
-      setToast({ type: 'error', message: tAccount('addressDefaultFailed') });
+      const message = tAccount('addressDefaultFailed');
+      setNotice({ type: 'error', message });
+      sonnerToast.error(message);
     } finally {
       setActionLoading(null);
     }
@@ -250,7 +297,7 @@ export function AddressesPanel() {
           <button
             type="button"
             onClick={openNew}
-            className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white transition-all duration-fast active:scale-[0.98]"
+            className="inline-flex min-h-11 items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white transition-all duration-fast active:scale-[0.98]"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
@@ -260,21 +307,23 @@ export function AddressesPanel() {
       </div>
 
       {/* toast */}
-      {toast && (
+      {notice && (
         <div
+          role={notice.type === 'error' ? 'alert' : 'status'}
+          aria-live="polite"
           className="flex items-center gap-2 rounded-xl border px-4 py-3 text-sm mb-5"
           style={{
-            borderColor: toast.type === 'success'
+            borderColor: notice.type === 'success'
               ? 'color-mix(in srgb, var(--color-primary) 40%, var(--color-border))'
               : 'color-mix(in srgb, var(--color-destructive) 40%, var(--color-border))',
-            backgroundColor: toast.type === 'success'
+            backgroundColor: notice.type === 'success'
               ? 'color-mix(in srgb, var(--color-primary) 8%, transparent)'
               : 'color-mix(in srgb, var(--color-destructive) 8%, transparent)',
-            color: toast.type === 'success' ? 'var(--color-primary)' : 'var(--color-destructive)',
+            color: notice.type === 'success' ? 'var(--color-primary)' : 'var(--color-destructive)',
           }}
         >
-          {toast.type === 'success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
-          {toast.message}
+          {notice.type === 'success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
+          {notice.message}
         </div>
       )}
 
@@ -358,11 +407,11 @@ export function AddressesPanel() {
                 </p>
               )}
 
-              <div className="flex items-center gap-2 mt-4">
+              <div className="flex flex-wrap items-center gap-2 mt-4">
                 <button
                   type="button"
                   onClick={() => openEdit(addr)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-fast hover-surface"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors duration-fast hover-surface"
                   style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                 >
                   <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
@@ -374,7 +423,7 @@ export function AddressesPanel() {
                     type="button"
                     onClick={() => void handleSetDefault(addr.id)}
                     disabled={actionLoading === addr.id}
-                    className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-fast hover-surface disabled:opacity-60"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors duration-fast hover-surface disabled:opacity-60"
                     style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                   >
                     <Star className="w-3.5 h-3.5" aria-hidden="true" />
@@ -386,7 +435,7 @@ export function AddressesPanel() {
                   type="button"
                   onClick={() => void handleDelete(addr.id)}
                   disabled={actionLoading === addr.id}
-                  className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:opacity-60"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors duration-fast disabled:opacity-60"
                   style={{
                     borderColor: 'color-mix(in srgb, var(--color-destructive) 30%, var(--color-border))',
                     color: 'var(--color-destructive)',
@@ -411,8 +460,8 @@ export function AddressesPanel() {
 /* ---------- address form sub-component ---------- */
 
 interface AddressFormProps {
-  form: typeof EMPTY_FORM;
-  setForm: (fn: typeof EMPTY_FORM | ((prev: typeof EMPTY_FORM) => typeof EMPTY_FORM)) => void;
+  form: AddressFormState;
+  setForm: Dispatch<SetStateAction<AddressFormState>>;
   saving: boolean;
   error: string | null;
   isEdit: boolean;
@@ -427,14 +476,23 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  const fields: { key: keyof typeof form; label: string; required: boolean; placeholder?: string; colSpan?: number }[] = [
-    { key: 'label', label: tAccount('addressLabelField'), required: false, placeholder: 'Home, Work…', colSpan: 1 },
-    { key: 'fullName', label: tAccount('fullNameLabel'), required: true, colSpan: 1 },
-    { key: 'phone', label: tAccount('phoneLabel'), required: false, placeholder: '+48 123 456 789', colSpan: 2 },
-    { key: 'street', label: tAccount('streetLabel'), required: true, colSpan: 2 },
-    { key: 'city', label: tAccount('cityLabel'), required: true, colSpan: 1 },
-    { key: 'postalCode', label: tAccount('postalCodeLabel'), required: true, colSpan: 1 },
-    { key: 'country', label: tAccount('countryLabel'), required: true, placeholder: 'PL', colSpan: 2 },
+  const fields: Array<{
+    key: keyof AddressFormState;
+    label: string;
+    required: boolean;
+    placeholder: string;
+    colSpan?: number;
+    type?: 'text' | 'tel';
+    autoComplete?: string;
+    maxLength?: number;
+  }> = [
+    { key: 'label', label: tAccount('addressLabelField'), required: false, placeholder: tAccount('addressLabelPlaceholder'), colSpan: 1 },
+    { key: 'fullName', label: tAccount('fullNameLabel'), required: true, placeholder: tAccount('fullNamePlaceholder'), colSpan: 1, autoComplete: 'name' },
+    { key: 'phone', label: tAccount('phoneLabel'), required: true, placeholder: tAccount('phonePlaceholder'), colSpan: 2, type: 'tel', autoComplete: 'tel' },
+    { key: 'street', label: tAccount('streetLabel'), required: true, placeholder: tAccount('streetPlaceholder'), colSpan: 2, autoComplete: 'street-address' },
+    { key: 'city', label: tAccount('cityLabel'), required: true, placeholder: tAccount('cityPlaceholder'), colSpan: 1, autoComplete: 'address-level2' },
+    { key: 'postalCode', label: tAccount('postalCodeLabel'), required: true, placeholder: tAccount('postalCodePlaceholder'), colSpan: 1, autoComplete: 'postal-code' },
+    { key: 'country', label: tAccount('countryLabel'), required: true, placeholder: tAccount('countryPlaceholder'), colSpan: 2, autoComplete: 'country', maxLength: 2 },
   ];
 
   return (
@@ -450,7 +508,8 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg p-1.5 transition-colors duration-fast hover-surface"
+          aria-label={tAccount('closeAddressForm')}
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 transition-colors duration-fast hover-surface"
           style={{ color: 'var(--color-muted-foreground)' }}
         >
           <X className="w-4 h-4" aria-hidden="true" />
@@ -458,7 +517,7 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        {fields.map(({ key, label, required, placeholder, colSpan }) => (
+        {fields.map(({ key, label, required, placeholder, colSpan, type = 'text', autoComplete, maxLength }) => (
           <div key={key} className={colSpan === 2 ? 'col-span-2' : ''}>
             <label htmlFor={`addr-${key}`} className="block text-xs font-medium mb-1" style={{ color: 'var(--color-foreground)' }}>
               {label}
@@ -466,12 +525,14 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
             </label>
             <input
               id={`addr-${key}`}
-              type="text"
-              value={form[key] ?? ''}
+              type={type}
+              value={form[key]}
               onChange={(e) => update(key, e.target.value)}
               required={required}
               placeholder={placeholder}
-              className="w-full rounded-xl border px-3 py-2 text-sm outline-none transition-colors duration-fast focus:ring-2"
+              autoComplete={autoComplete}
+              maxLength={maxLength}
+              className="min-h-11 w-full rounded-xl border px-3 py-2 text-sm outline-none transition-colors duration-fast focus:ring-2"
               style={{
                 borderColor: 'var(--color-border)',
                 backgroundColor: 'var(--color-card)',
@@ -484,6 +545,7 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
 
       {error && (
         <div
+          role="alert"
           className="flex items-center gap-2 rounded-xl border px-4 py-3 text-sm mt-4"
           style={{
             borderColor: 'color-mix(in srgb, var(--color-destructive) 40%, var(--color-border))',
@@ -500,7 +562,7 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all duration-fast active:scale-[0.98] disabled:opacity-60"
+          className="inline-flex min-h-11 items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all duration-fast active:scale-[0.98] disabled:opacity-60"
           style={{ backgroundColor: 'var(--color-primary)' }}
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
@@ -509,7 +571,7 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-xl border px-5 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
+          className="min-h-11 rounded-xl border px-5 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
           style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
         >
           {tAccount('cancelAddress')}

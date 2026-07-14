@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Loader2, Package, RefreshCw } from 'lucide-react';
+import { useChannel } from '@/hooks/use-channel';
 import { Link } from '@/i18n/navigation';
 import { CUSTOMER_ORDERS_QUERY } from '@/lib/graphql/operations/grocery';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
@@ -22,9 +23,18 @@ interface OrdersResponse {
   } | null;
 }
 
+function formatOrderDate(value: string, locale: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date);
+}
+
 export function OrdersPanel() {
+  const locale = useLocale();
   const tAccount = useTranslations('account');
   const tCommon = useTranslations('common');
+  const channel = useChannel();
   const [orders, setOrders] = useState<CustomerOrderSummary[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -33,7 +43,7 @@ export function OrdersPanel() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function loadOrders(after?: string | null) {
+  const loadOrders = useCallback(async (after?: string | null) => {
     const isLoadMore = Boolean(after);
 
     if (isLoadMore) {
@@ -45,6 +55,7 @@ export function OrdersPanel() {
 
     try {
       const response = await graphqlRequest<OrdersResponse>(CUSTOMER_ORDERS_QUERY, {
+        channel,
         first: 10,
         after: after ?? null,
       });
@@ -63,16 +74,16 @@ export function OrdersPanel() {
       setHasNextPage(Boolean(connection?.pageInfo?.hasNextPage));
       setCursor(connection?.pageInfo?.endCursor ?? null);
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Failed to load orders.');
+      setError(loadError instanceof Error ? loadError.message : tAccount('loadOrdersFailed'));
     } finally {
       setLoading(false);
       setLoadingMore(false);
     }
-  }
+  }, [channel, tAccount]);
 
   useEffect(() => {
     void loadOrders();
-  }, []);
+  }, [loadOrders]);
 
   return (
     <section
@@ -86,7 +97,7 @@ export function OrdersPanel() {
             {tAccount('ordersTitle')}
           </h2>
           <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-            {totalCount > 0 ? `${totalCount} orders loaded.` : 'Track past orders and inspect the live backend status.'}
+            {totalCount > 0 ? tAccount('ordersLoaded', { count: totalCount }) : tAccount('ordersDescription')}
           </p>
         </div>
         <button
@@ -97,7 +108,7 @@ export function OrdersPanel() {
           style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
         >
           <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
-          Retry
+          {tAccount('retryOrders')}
         </button>
       </div>
 
@@ -123,10 +134,10 @@ export function OrdersPanel() {
         <div className="py-12 text-center">
           <Package className="mx-auto h-10 w-10 mb-3 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
           <p className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-            No orders yet.
+            {tAccount('noOrders')}
           </p>
           <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-            Complete checkout once and the order history should appear here.
+            {tAccount('noOrdersHint')}
           </p>
         </div>
       ) : (
@@ -140,13 +151,13 @@ export function OrdersPanel() {
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                    Order
+                    {tAccount('order')}
                   </p>
                   <p className="text-lg font-semibold mt-1" style={{ color: 'var(--color-foreground)' }}>
                     #{order.number}
                   </p>
                   <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-                    {new Date(order.created).toLocaleDateString()}
+                    {formatOrderDate(order.created, locale)}
                   </p>
                 </div>
 
@@ -164,7 +175,10 @@ export function OrdersPanel() {
                 {order.lines.slice(0, 3).map((line, index) => (
                   <li key={`${order.id}-${index}`} className="flex items-center justify-between gap-3 text-sm" role="listitem">
                     <span style={{ color: 'var(--color-foreground)' }}>
-                      {line.productName || 'Order item'} x {line.quantity}
+                      {tAccount('orderLineQuantity', {
+                        name: line.productName || tAccount('orderItem'),
+                        quantity: line.quantity,
+                      })}
                     </span>
                     {line.totalPrice?.gross && (
                       <span className="tabular-nums" style={{ color: 'var(--color-muted-foreground)' }}>
@@ -181,7 +195,7 @@ export function OrdersPanel() {
                   className="inline-flex items-center justify-center rounded-xl border px-4 py-2 text-sm font-medium transition-colors duration-fast hover-surface"
                   style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                 >
-                  View details
+                  {tAccount('viewOrderDetails')}
                 </Link>
               </div>
             </article>
@@ -197,7 +211,7 @@ export function OrdersPanel() {
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               >
                 {loadingMore && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-                Load more
+                {tAccount('loadMoreOrders')}
               </button>
             </div>
           )}
