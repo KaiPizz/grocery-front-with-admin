@@ -1,9 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import { requireApiKey } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
 
-const UPLOAD_DIR = process.env.ADMIN_UPLOAD_DIR || path.join(process.cwd(), 'public', 'uploads');
+import { requireAdminSession } from '@/lib/auth';
+import {
+  AdminStorageConfigurationError,
+  getAdminPublicOrigin,
+  getAdminUploadDir,
+} from '@/lib/admin-storage';
+import { isSafeStoredImageFilename } from '@/lib/media-validation';
 
 interface MediaItem {
   filename: string;
@@ -12,84 +17,101 @@ interface MediaItem {
   modifiedAt: string;
 }
 
-/**
- * GET /api/media — List all uploaded media files
- */
+function storageUnavailable(): NextResponse {
+  return NextResponse.json(
+    { success: false, error: 'Media storage is unavailable' },
+    { status: 503, headers: { 'Cache-Control': 'no-store' } }
+  );
+}
+
+/** Session-protected media listing. */
 export async function GET(request: NextRequest) {
-  const authError = requireApiKey(request);
+  const authError = await requireAdminSession(request);
   if (authError) return authError;
 
   try {
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
-    const files = await fs.readdir(UPLOAD_DIR);
+    const uploadDir = getAdminUploadDir();
+    const publicOrigin = getAdminPublicOrigin(request);
+    await fs.mkdir(uploadDir, { recursive: true, mode: 0o750 });
+    const files = await fs.readdir(uploadDir);
 
     const mediaItems: MediaItem[] = [];
     for (const file of files) {
-      if (file === '.gitkeep') continue;
-      const filePath = path.join(UPLOAD_DIR, file);
+      if (!isSafeStoredImageFilename(file)) continue;
+      const filePath = path.join(
+        /* turbopackIgnore: true */ uploadDir,
+        file
+      );
       let stat;
       try {
         stat = await fs.lstat(filePath);
-      } catch {
-        continue;
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue;
+        throw error;
       }
       if (!stat.isFile()) continue;
 
-      const host = request.headers.get('host') || 'localhost:4100';
-      const protocol = host.startsWith('localhost') ? 'http' : 'https';
-
       mediaItems.push({
         filename: file,
-        url: `${protocol}://${host}/uploads/${file}`,
+        url: `${publicOrigin}/uploads/${encodeURIComponent(file)}`,
         size: stat.size,
         modifiedAt: stat.mtime.toISOString(),
       });
     }
 
-    mediaItems.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
+    mediaItems.sort((a, b) => (
+      new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
+    ));
 
-    return NextResponse.json({
-      success: true,
-      data: mediaItems,
-      total: mediaItems.length,
-    });
-  } catch {
+    return NextResponse.json(
+      { success: true, data: mediaItems, total: mediaItems.length },
+      { headers: { 'Cache-Control': 'no-store' } }
+    );
+  } catch (error) {
+    if (error instanceof AdminStorageConfigurationError) return storageUnavailable();
+    console.error('[media] Failed to list media files');
     return NextResponse.json(
       { success: false, error: 'Failed to list media files' },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }
 }
 
-/**
- * DELETE /api/media?filename=xxx — Delete a media file
- */
+/** Session- and same-origin-protected media deletion. */
 export async function DELETE(request: NextRequest) {
-  const authError = requireApiKey(request);
+  const authError = await requireAdminSession(request);
   if (authError) return authError;
 
   const filename = request.nextUrl.searchParams.get('filename');
-  if (!filename) {
+  if (!filename || !isSafeStoredImageFilename(filename)) {
     return NextResponse.json(
-      { success: false, error: 'Missing filename parameter' },
-      { status: 400 }
+      { success: false, error: 'Invalid filename parameter' },
+      { status: 400, headers: { 'Cache-Control': 'no-store' } }
     );
   }
-
-  const safe = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
-  const filePath = path.join(UPLOAD_DIR, safe);
 
   try {
+    const filePath = path.join(
+      /* turbopackIgnore: true */ getAdminUploadDir(),
+      filename
+    );
     await fs.unlink(filePath);
-    return NextResponse.json({ success: true });
-  } catch {
     return NextResponse.json(
-      { success: false, error: 'File not found or could not be deleted' },
-      { status: 404 }
+      { success: true },
+      { headers: { 'Cache-Control': 'no-store' } }
+    );
+  } catch (error) {
+    if (error instanceof AdminStorageConfigurationError) return storageUnavailable();
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return NextResponse.json(
+        { success: false, error: 'File not found' },
+        { status: 404, headers: { 'Cache-Control': 'no-store' } }
+      );
+    }
+    console.error('[media] Failed to delete media file');
+    return NextResponse.json(
+      { success: false, error: 'Could not delete media file' },
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }
-}
-
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204 });
 }

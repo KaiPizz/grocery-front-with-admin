@@ -17,6 +17,10 @@ import {
   ImageIcon,
 } from 'lucide-react';
 import { useLanguage, LangSwitcher } from '@/i18n';
+import { getClientSalonSlug } from '@/lib/client-config';
+import { toast } from 'sonner';
+
+const SALON_SLUG = getClientSalonSlug();
 
 const NAV_HREFS = [
   { href: '/admin', key: 'nav.dashboard', icon: LayoutDashboard },
@@ -35,16 +39,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const { t } = useLanguage();
-  const salonSlug = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
+  const salonSlug = SALON_SLUG;
   const activeNav = NAV_HREFS.find(({ href }) => href === '/admin' ? pathname === '/admin' : pathname.startsWith(href));
 
   async function handleLogout() {
     setLoggingOut(true);
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      router.push('/login');
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'same-origin',
+      });
+      if (!response.ok) throw new Error('Logout failed');
+      router.replace('/login');
       router.refresh();
     } catch {
+      toast.error(t('common.signOutFailed'));
       setLoggingOut(false);
     }
   }

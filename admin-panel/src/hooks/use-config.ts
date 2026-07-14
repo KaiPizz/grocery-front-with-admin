@@ -7,8 +7,9 @@ import { fetchDraftConfig, saveDraft, publishConfig as publishConfigApi } from '
 import { DEFAULT_CONFIG } from '@/lib/defaults';
 import { getAdminReadiness, type ReadinessIssue } from '@/lib/admin-readiness';
 import { useLanguage } from '@/i18n';
+import { getClientSalonSlug } from '@/lib/client-config';
 
-const SLUG = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
+const SLUG = getClientSalonSlug();
 const HISTORY_LIMIT = 50;
 
 const PUBLISH_BLOCKER_TRANSLATION_KEYS: Record<string, string> = {

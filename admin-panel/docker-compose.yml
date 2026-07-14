@@ -4,15 +4,21 @@ services:
   admin-panel:
     build: .
     ports:
-      - '4100:4100'
+      - '127.0.0.1:4100:4100'
     environment:
-      - ADMIN_API_KEY=${ADMIN_API_KEY:-change-me}
-      - NEXT_PUBLIC_ADMIN_API_KEY=${NEXT_PUBLIC_ADMIN_API_KEY:-change-me}
-      - NEXT_PUBLIC_SALON_SLUG=${NEXT_PUBLIC_SALON_SLUG:-my-grocery-store}
-      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - HOSTNAME=0.0.0.0
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD_HASH=${ADMIN_PASSWORD_HASH}
+      - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET}
+      - ADMIN_ALLOWED_SLUGS=${ADMIN_ALLOWED_SLUGS}
+      - ADMIN_DATA_DIR=/app/shared/data
+      - ADMIN_UPLOAD_DIR=/app/shared/uploads
+      - ADMIN_PUBLIC_ORIGIN=${ADMIN_PUBLIC_ORIGIN}
+      - NEXT_PUBLIC_SALON_SLUG=${NEXT_PUBLIC_SALON_SLUG}
+      - STOREFRONT_ORIGINS=${STOREFRONT_ORIGINS}
     volumes:
-      - admin-data:/app/data
-      - admin-uploads:/app/public/uploads
+      - admin-data:/app/shared/data
+      - admin-uploads:/app/shared/uploads
 
 volumes:
   admin-data:

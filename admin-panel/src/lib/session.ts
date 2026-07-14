@@ -1,48 +1,53 @@
 import { cookies } from 'next/headers';
-import crypto from 'crypto';
 
-const COOKIE_NAME = 'admin-session';
-const MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
+import {
+  createSessionToken,
+  getSessionCookieName,
+  SESSION_MAX_AGE_SECONDS,
+} from './session-token';
 
-function getSecret(): string {
-  return process.env.ADMIN_SESSION_SECRET || 'fallback-dev-secret';
-}
+const LEGACY_COOKIE_NAME = 'admin-session';
 
-/**
- * Create a signed session token using Node.js crypto (for API routes).
- * Must produce the same output as the Web Crypto version in middleware.ts.
- */
-export function createSessionToken(username: string): string {
-  const hmac = crypto.createHmac('sha256', getSecret());
-  hmac.update(username);
-  return `${username}:${hmac.digest('hex')}`;
-}
-
-/**
- * Set the session cookie after successful login
- */
-export function setSessionCookie(username: string): void {
-  const token = createSessionToken(username);
-  cookies().set(COOKIE_NAME, token, {
+function cookieOptions(maxAge: number) {
+  return {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: MAX_AGE,
+    sameSite: 'lax' as const,
+    maxAge,
     path: '/',
-  });
+  };
+}
+
+/** Set a short-lived, signed admin session cookie after successful login. */
+export async function setSessionCookie(username: string): Promise<void> {
+  const token = await createSessionToken(username);
+  const cookieStore = await cookies();
+  cookieStore.set(
+    getSessionCookieName(),
+    token,
+    cookieOptions(SESSION_MAX_AGE_SECONDS)
+  );
 }
 
 /**
- * Clear the session cookie (logout)
+ * Clear both the current cookie and the pre-hardening cookie during migration.
+ * No Domain attribute is set, preserving the __Host- cookie guarantees in production.
  */
-export function clearSessionCookie(): void {
-  cookies().set(COOKIE_NAME, '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 0,
-    path: '/',
-  });
+export async function clearSessionCookie(): Promise<void> {
+  const cookieStore = await cookies();
+  const currentName = getSessionCookieName();
+
+  cookieStore.set(currentName, '', cookieOptions(0));
+
+  if (currentName !== LEGACY_COOKIE_NAME) {
+    cookieStore.set(LEGACY_COOKIE_NAME, '', cookieOptions(0));
+  }
 }
 
-export { COOKIE_NAME };
+export {
+  createSessionToken,
+  getSessionCookieName,
+  SESSION_MAX_AGE_SECONDS,
+  SessionConfigurationError,
+  verifySessionToken,
+} from './session-token';

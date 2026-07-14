@@ -14,8 +14,6 @@ interface MediaItem {
   modifiedAt: string;
 }
 
-const API_KEY = process.env.NEXT_PUBLIC_ADMIN_API_KEY || 'dev-admin-key-12345';
-
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -34,7 +32,10 @@ export default function MediaPage() {
   const fetchMedia = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/media', { headers: { 'x-api-key': API_KEY } });
+      const res = await fetch('/api/media', {
+        credentials: 'same-origin',
+        cache: 'no-store',
+      });
       const json = await res.json();
       if (json.success) setItems(json.data);
     } catch {
@@ -69,10 +70,11 @@ export default function MediaPage() {
     if (!confirm(t('media.deleteConfirm').replace('{filename}', filename))) return;
     setDeleting(filename);
     try {
-      await fetch(`/api/media?filename=${encodeURIComponent(filename)}`, {
+      const response = await fetch(`/api/media?filename=${encodeURIComponent(filename)}`, {
         method: 'DELETE',
-        headers: { 'x-api-key': API_KEY },
+        credentials: 'same-origin',
       });
+      if (!response.ok) throw new Error('Delete failed');
       setItems(prev => prev.filter(i => i.filename !== filename));
       toast.success(t('media.deleteSuccess'));
     } catch {
@@ -104,7 +106,13 @@ export default function MediaPage() {
           {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
           {uploading ? t('common.uploading') : t('media.uploadButton')}
         </button>
-        <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif,image/x-icon"
+          className="hidden"
+          onChange={handleUpload}
+        />
       </div>
 
       {/* Stats */}

@@ -1,28 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireApiKey } from '@/lib/auth';
+
 import {
-  getPublishedConfig,
+  getPublishedCorsHeaders,
+  isValidConfigSlug,
+  requireAdminTenant,
+} from '@/lib/admin-tenant';
+import { requireAdminSession } from '@/lib/auth';
+import {
+  ConfigVersionConflictError,
   getDraftConfig,
-  saveDraftConfig,
+  getPublishedConfig,
   patchDraftConfig,
-  publishConfig,
+  saveDraftConfig,
 } from '@/lib/config-repository';
-import { storefrontConfigSchema, partialStorefrontConfigSchema } from '@/lib/validation';
+import { AdminStorageConfigurationError } from '@/lib/admin-storage';
+import { partialStorefrontConfigSchema, storefrontConfigSchema } from '@/lib/validation';
 
 interface RouteParams {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-/**
- * GET /api/config/:slug
- * Public: returns published config (default).
- * With ?draft=true header + api key: returns draft config (for admin editing).
- * With ?publish=true + api key: publishes draft → published.
- */
-export async function GET(request: NextRequest, { params }: RouteParams) {
-  const { slug } = params;
+function getExpectedVersion(request: NextRequest): number | null {
+  const header = request.headers.get('if-match');
+  if (!header || !/^\d+$/.test(header)) return null;
+  const version = Number(header);
+  return Number.isSafeInteger(version) ? version : null;
+}
 
-  if (!slug || slug.length > 200) {
+function preconditionRequired(): NextResponse {
+  return NextResponse.json(
+    { success: false, error: 'Reload the draft before saving' },
+    { status: 428, headers: { 'Cache-Control': 'no-store' } }
+  );
+}
+
+function versionConflict(error: ConfigVersionConflictError): NextResponse {
+  return NextResponse.json(
+    {
+      success: false,
+      error: 'The draft changed in another session. Reload before saving.',
+      details: { currentVersion: error.actualVersion },
+    },
+    { status: 409, headers: { 'Cache-Control': 'no-store' } }
+  );
+}
+
+function storageUnavailable(): NextResponse {
+  return NextResponse.json(
+    { success: false, error: 'Config storage is unavailable' },
+    { status: 503, headers: { 'Cache-Control': 'no-store' } }
+  );
+}
+
+/** Public published config, or session-protected admin draft config. */
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  const { slug } = await params;
+  if (!isValidConfigSlug(slug)) {
     return NextResponse.json(
       { success: false, error: 'Invalid slug' },
       { status: 400 }
@@ -30,42 +63,50 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 
   const isDraft = request.nextUrl.searchParams.get('draft') === 'true';
-
   if (isDraft) {
-    const authError = requireApiKey(request);
+    const authError = await requireAdminSession(request);
     if (authError) return authError;
+    const tenantError = requireAdminTenant(slug);
+    if (tenantError) return tenantError;
 
-    const envelope = await getDraftConfig(slug);
-    return NextResponse.json({ success: true, data: envelope });
+    try {
+      const envelope = await getDraftConfig(slug);
+      return NextResponse.json(
+        { success: true, data: envelope },
+        { headers: { 'Cache-Control': 'no-store' } }
+      );
+    } catch (error) {
+      if (error instanceof AdminStorageConfigurationError) return storageUnavailable();
+      throw error;
+    }
   }
 
-  const envelope = await getPublishedConfig(slug);
-  return NextResponse.json(
-    { success: true, data: envelope },
-    {
-      headers: {
-        'Cache-Control': 'public, max-age=300, stale-while-revalidate=60',
-      },
-    }
-  );
+  try {
+    const envelope = await getPublishedConfig(slug);
+    return NextResponse.json(
+      { success: true, data: envelope },
+      {
+        headers: {
+          'Cache-Control': 'public, max-age=300, stale-while-revalidate=60',
+          ...getPublishedCorsHeaders(request),
+        },
+      }
+    );
+  } catch (error) {
+    if (error instanceof AdminStorageConfigurationError) return storageUnavailable();
+    throw error;
+  }
 }
 
-/**
- * PUT /api/config/:slug
- * Admin-only: full config replacement (saves to draft).
- */
+/** Session-protected full draft replacement. */
 export async function PUT(request: NextRequest, { params }: RouteParams) {
-  const { slug } = params;
-
-  const authError = requireApiKey(request);
+  const { slug } = await params;
+  const authError = await requireAdminSession(request);
   if (authError) return authError;
-
-  if (!slug || slug.length > 200) {
-    return NextResponse.json(
-      { success: false, error: 'Invalid slug' },
-      { status: 400 }
-    );
-  }
+  const tenantError = requireAdminTenant(slug);
+  if (tenantError) return tenantError;
+  const expectedVersion = getExpectedVersion(request);
+  if (expectedVersion === null) return preconditionRequired();
 
   let body: unknown;
   try {
@@ -85,7 +126,14 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     );
   }
 
-  const stored = await saveDraftConfig(slug, result.data);
+  let stored;
+  try {
+    stored = await saveDraftConfig(slug, result.data, expectedVersion);
+  } catch (error) {
+    if (error instanceof ConfigVersionConflictError) return versionConflict(error);
+    if (error instanceof AdminStorageConfigurationError) return storageUnavailable();
+    throw error;
+  }
 
   return NextResponse.json({
     success: true,
@@ -96,25 +144,18 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       updatedAt: stored.updatedAt,
     },
     message: 'Draft saved. Use POST /api/config/:slug/publish to make it live.',
-  });
+  }, { headers: { 'Cache-Control': 'no-store' } });
 }
 
-/**
- * PATCH /api/config/:slug
- * Admin-only: partial config update (merges into draft).
- */
+/** Session-protected partial draft update. */
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
-  const { slug } = params;
-
-  const authError = requireApiKey(request);
+  const { slug } = await params;
+  const authError = await requireAdminSession(request);
   if (authError) return authError;
-
-  if (!slug || slug.length > 200) {
-    return NextResponse.json(
-      { success: false, error: 'Invalid slug' },
-      { status: 400 }
-    );
-  }
+  const tenantError = requireAdminTenant(slug);
+  if (tenantError) return tenantError;
+  const expectedVersion = getExpectedVersion(request);
+  if (expectedVersion === null) return preconditionRequired();
 
   let body: unknown;
   try {
@@ -134,7 +175,14 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     );
   }
 
-  const stored = await patchDraftConfig(slug, result.data as never);
+  let stored;
+  try {
+    stored = await patchDraftConfig(slug, result.data as never, expectedVersion);
+  } catch (error) {
+    if (error instanceof ConfigVersionConflictError) return versionConflict(error);
+    if (error instanceof AdminStorageConfigurationError) return storageUnavailable();
+    throw error;
+  }
 
   return NextResponse.json({
     success: true,
@@ -145,12 +193,5 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       updatedAt: stored.updatedAt,
     },
     message: 'Draft updated.',
-  });
-}
-
-/**
- * Handle OPTIONS for CORS preflight.
- */
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204 });
+  }, { headers: { 'Cache-Control': 'no-store' } });
 }

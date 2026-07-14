@@ -11,8 +11,6 @@ interface MediaItem {
   modifiedAt: string;
 }
 
-const API_KEY = process.env.NEXT_PUBLIC_ADMIN_API_KEY || 'dev-admin-key-12345';
-
 interface MediaLibraryProps {
   onSelect: (url: string) => void;
   onClose: () => void;
@@ -37,7 +35,8 @@ export function MediaLibrary({ onSelect, onClose }: MediaLibraryProps) {
       setLoading(true);
       setError(null);
       const res = await fetch('/api/media', {
-        headers: { 'x-api-key': API_KEY },
+        credentials: 'same-origin',
+        cache: 'no-store',
       });
       const json = await res.json();
       if (json.success) {
@@ -60,10 +59,11 @@ export function MediaLibrary({ onSelect, onClose }: MediaLibraryProps) {
     if (!confirm(t('mediaLibrary.delete') + ` "${filename}"?`)) return;
     setDeleting(filename);
     try {
-      await fetch(`/api/media?filename=${encodeURIComponent(filename)}`, {
+      const response = await fetch(`/api/media?filename=${encodeURIComponent(filename)}`, {
         method: 'DELETE',
-        headers: { 'x-api-key': API_KEY },
+        credentials: 'same-origin',
       });
+      if (!response.ok) throw new Error('Delete failed');
       setItems(prev => prev.filter(i => i.filename !== filename));
       if (selected === items.find(i => i.filename === filename)?.url) {
         setSelected(null);

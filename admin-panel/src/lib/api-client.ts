@@ -1,7 +1,7 @@
 import type { StorefrontConfig, ConfigEnvelope } from '@/types/config';
 
-const API_KEY = process.env.NEXT_PUBLIC_ADMIN_API_KEY || 'dev-admin-key-12345';
 const BASE = '';
+const draftVersions = new Map<string, number>();
 
 interface ApiResponse<T> {
   success: boolean;
@@ -14,14 +14,19 @@ interface ApiResponse<T> {
 async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${url}`, {
     ...options,
+    credentials: 'same-origin',
     headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
+      ...(options?.body ? { 'Content-Type': 'application/json' } : {}),
       ...(options?.headers ?? {}),
     },
   });
 
-  const json: ApiResponse<T> = await res.json();
+  let json: ApiResponse<T>;
+  try {
+    json = await res.json() as ApiResponse<T>;
+  } catch {
+    throw new Error(`API error: ${res.status}`);
+  }
 
   if (!res.ok || !json.success) {
     const detail = (json as unknown as Record<string, unknown>).details;
@@ -35,7 +40,11 @@ async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
 }
 
 export async function fetchDraftConfig(slug: string): Promise<ConfigEnvelope> {
-  return apiFetch<ConfigEnvelope>(`/api/config/${slug}?draft=true`);
+  const envelope = await apiFetch<ConfigEnvelope>(`/api/config/${slug}?draft=true`, {
+    cache: 'no-store',
+  });
+  draftVersions.set(slug, envelope.version);
+  return envelope;
 }
 
 export async function fetchPublishedConfig(slug: string): Promise<ConfigEnvelope> {
@@ -43,23 +52,35 @@ export async function fetchPublishedConfig(slug: string): Promise<ConfigEnvelope
 }
 
 export async function saveDraft(slug: string, config: StorefrontConfig): Promise<ConfigEnvelope> {
-  return apiFetch<ConfigEnvelope>(`/api/config/${slug}`, {
+  const expectedVersion = requireDraftVersion(slug);
+  const envelope = await apiFetch<ConfigEnvelope>(`/api/config/${slug}`, {
     method: 'PUT',
+    headers: { 'If-Match': String(expectedVersion) },
     body: JSON.stringify(config),
   });
+  draftVersions.set(slug, envelope.version);
+  return envelope;
 }
 
 export async function patchDraft(slug: string, partial: Partial<StorefrontConfig>): Promise<ConfigEnvelope> {
-  return apiFetch<ConfigEnvelope>(`/api/config/${slug}`, {
+  const expectedVersion = requireDraftVersion(slug);
+  const envelope = await apiFetch<ConfigEnvelope>(`/api/config/${slug}`, {
     method: 'PATCH',
+    headers: { 'If-Match': String(expectedVersion) },
     body: JSON.stringify(partial),
   });
+  draftVersions.set(slug, envelope.version);
+  return envelope;
 }
 
 export async function publishConfig(slug: string): Promise<ConfigEnvelope> {
-  return apiFetch<ConfigEnvelope>(`/api/config/${slug}/publish`, {
+  const expectedVersion = requireDraftVersion(slug);
+  const envelope = await apiFetch<ConfigEnvelope>(`/api/config/${slug}/publish`, {
     method: 'POST',
+    headers: { 'If-Match': String(expectedVersion) },
   });
+  draftVersions.set(slug, envelope.version);
+  return envelope;
 }
 
 export async function uploadMedia(
@@ -73,7 +94,7 @@ export async function uploadMedia(
 
   const res = await fetch(`${BASE}/api/media/upload`, {
     method: 'POST',
-    headers: { 'x-api-key': API_KEY },
+    credentials: 'same-origin',
     body: formData,
   });
 
@@ -83,4 +104,12 @@ export async function uploadMedia(
   }
 
   return json.data;
+}
+
+function requireDraftVersion(slug: string): number {
+  const version = draftVersions.get(slug);
+  if (version === undefined) {
+    throw new Error('Draft version is unavailable. Reload the admin page and try again.');
+  }
+  return version;
 }

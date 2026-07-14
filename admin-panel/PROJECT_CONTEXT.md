@@ -155,7 +155,7 @@
 | Styling | TailwindCSS + shadcn/ui (planned) | Fast to build, consistent with storefront |
 | Config storage (MVP) | JSON files on disk (`./data/`) | Zero DB hosting, instant setup, upgrade to SQLite later |
 | Config storage (later) | SQLite via Prisma or Drizzle | Version history, query capability, still single-file DB |
-| API auth | `x-api-key` header | Simple, sufficient for MVP; upgrade to JWT/session later |
+| API auth | Signed `HttpOnly` admin session | Mutations also require exact same-origin requests |
 | API shape | REST: `GET/PUT/PATCH /api/config/[slug]` | Simple, cacheable, easy for storefront to consume |
 | Config model | Single `StorefrontConfig` JSON blob per site, keyed by `slug` | Avoids complex relational schema; entire config is one document |
 | Section whitelist | `deals`, `freshPicks`, `recipes`, `shopByZone` | Predefined, not arbitrary. Matches storefront components. |
@@ -165,14 +165,14 @@
 | Icons | Lucide React | Consistent with grocery-storefront |
 | Deployment | Single container/process; Dockerize when ready | Minimum infra |
 | Media storage (MVP) | Local `./public/uploads/` | No S3/cloud needed initially |
-| CORS | Configurable via `CORS_ORIGIN` env var | Allow storefront origin in production, `*` in dev |
+| CORS | Published GET only, via `STOREFRONT_ORIGINS` | Admin and mutation APIs do not expose CORS |
 
 ### Intentionally Postponed
 
 - SQLite / version history — after MVP JSON storage is proven
 - Per-page SEO — global defaults only for now
 - Scheduled publishing — manual publish only
-- Admin user accounts / roles — single API key for now
+- Admin user accounts / roles — single hashed-password admin account for now
 - Popup / notification / badge management
 - Live preview iframe in admin
 
@@ -223,7 +223,7 @@ All color keys are injected as `--color-{kebab-key}` CSS variables by `ConfigPro
 - Admin panel edits `draft` via PUT/PATCH
 - `POST /api/config/:slug/publish` copies `draft` → `published`
 - `GET /api/config/:slug` returns `published` config (public, cached 5 min)
-- `GET /api/config/:slug?draft=true` returns `draft` config (requires API key)
+- `GET /api/config/:slug?draft=true` returns `draft` config (requires admin session and tenant scope)
 
 ---
 
@@ -241,7 +241,7 @@ All color keys are injected as `--color-{kebab-key}` CSS variables by `ConfigPro
 - [x] Directories created: `data/`, `public/uploads/`
 - [x] Zod validation schema — `src/lib/validation.ts` (full + deep partial)
 - [x] Default config values — `src/lib/defaults.ts` (mirrors grocery-storefront hard-coded values)
-- [x] Auth middleware — `src/lib/auth.ts` (x-api-key header check)
+- [x] Auth middleware — `src/lib/auth.ts` (signed session and same-origin enforcement)
 - [x] JSON config repository — `src/lib/config-repository.ts` (read/write/patch/publish, atomic writes)
 - [x] API: `GET /api/config/[slug]` — public, returns published config (or draft with `?draft=true` + key)
 - [x] API: `PUT /api/config/[slug]` — full config replacement (saves to draft)
@@ -401,7 +401,7 @@ All color keys are injected as `--color-{kebab-key}` CSS variables by `ConfigPro
 - **Created:** Zod validation schema (`src/lib/validation.ts`)
 - **Created:** Default config matching grocery-storefront hard-coded values (`src/lib/defaults.ts`)
 - **Created:** JSON config repository with atomic writes (`src/lib/config-repository.ts`)
-- **Created:** Auth middleware with x-api-key (`src/lib/auth.ts`)
+- **Replaced:** legacy API-key middleware with signed session auth (`src/lib/auth.ts`)
 - **Created:** All API routes: config CRUD, publish, health, media upload
 - **Tested:** All endpoints working — GET, PATCH, PUT, publish, health, auth rejection
 - **Created:** `PROJECT_CONTEXT.md` (this file)

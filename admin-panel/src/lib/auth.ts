@@ -1,28 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { requireSameOrigin } from './origin';
+import {
+  getSessionCookieName,
+  sessionMatchesConfiguredAdmin,
+  SessionConfigurationError,
+  verifySessionToken,
+} from './session-token';
+
+function jsonError(status: number, error: string): NextResponse {
+  return NextResponse.json(
+    { success: false, error },
+    { status, headers: { 'Cache-Control': 'no-store' } }
+  );
+}
+
 /**
- * Validates the x-api-key header against ADMIN_API_KEY env var.
- * Returns null if authorized, or a 401 NextResponse if not.
+ * Authorize an admin API request with the signed, HttpOnly session cookie.
+ * Unsafe methods additionally require an exact same-origin request.
  */
-export function requireApiKey(request: NextRequest): NextResponse | null {
-  const apiKey = process.env.ADMIN_API_KEY;
+export async function requireAdminSession(
+  request: NextRequest
+): Promise<NextResponse | null> {
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
 
-  if (!apiKey) {
-    console.error('[auth] ADMIN_API_KEY is not set in environment');
-    return NextResponse.json(
-      { success: false, error: 'Server misconfiguration: API key not set' },
-      { status: 500 }
-    );
+  const token = request.cookies.get(getSessionCookieName())?.value;
+  if (!token) return jsonError(401, 'Unauthorized');
+
+  try {
+    const session = await verifySessionToken(token);
+    if (!session || !sessionMatchesConfiguredAdmin(session)) {
+      return jsonError(401, 'Unauthorized');
+    }
+    return null;
+  } catch (error) {
+    if (error instanceof SessionConfigurationError) {
+      console.error('[auth] Admin session signing is not configured securely');
+      return jsonError(503, 'Authentication service unavailable');
+    }
+    console.error('[auth] Session verification failed');
+    return jsonError(503, 'Authentication service unavailable');
   }
-
-  const provided = request.headers.get('x-api-key');
-
-  if (!provided || provided !== apiKey) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized: invalid or missing x-api-key' },
-      { status: 401 }
-    );
-  }
-
-  return null;
 }

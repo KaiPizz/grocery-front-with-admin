@@ -35,24 +35,56 @@ npm run dev
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `ADMIN_API_KEY` | Yes | — | API key for write operations (PUT/PATCH/publish) |
-| `NEXT_PUBLIC_ADMIN_API_KEY` | Yes | — | Same key, exposed to client for admin UI API calls |
-| `NEXT_PUBLIC_SALON_SLUG` | Yes | `my-grocery-store` | Slug identifying which storefront config to manage |
-| `CORS_ORIGIN` | No | `*` | Allowed origin for storefront CORS |
+| `ADMIN_USERNAME` | Yes | — | Non-default admin login name |
+| `ADMIN_PASSWORD_HASH` | Yes | — | Scrypt password hash; plaintext passwords are rejected in production |
+| `ADMIN_SESSION_SECRET` | Yes | — | Server-only random session-signing secret (at least 32 bytes) |
+| `ADMIN_ALLOWED_SLUGS` | Yes | — | Comma-separated server-side tenant allowlist |
+| `NEXT_PUBLIC_SALON_SLUG` | Yes | — | Slug opened by the editor; must be in `ADMIN_ALLOWED_SLUGS` |
+| `ADMIN_DATA_DIR` | Production | `./data` in development | Absolute, release-independent config directory |
+| `ADMIN_UPLOAD_DIR` | Production | `./public/uploads` in development | Absolute, release-independent media directory |
+| `ADMIN_PUBLIC_ORIGIN` | Production | Request origin in development | Canonical HTTPS origin used for uploaded-media URLs |
+| `STOREFRONT_ORIGINS` | When cross-origin | — | Comma-separated origins allowed to read published config |
+
+Generate the password hash without placing the plaintext password in shell
+history:
+
+```bash
+read -r -s -p "Admin password: " ADMIN_PASSWORD_INPUT; printf '\n'
+printf '%s' "$ADMIN_PASSWORD_INPUT" | npm run --silent hash:admin-password
+unset ADMIN_PASSWORD_INPUT
+```
+
+Capture the output directly into the protected runtime environment. Treat the
+hash as credential material: do not paste it into chat, Git, or logs. If the
+password hash changes, existing sessions are invalidated automatically.
+
+Production should point the storage variables at shared paths such as
+`/var/www/kenmito-admin/shared/data` and `/var/www/kenmito-admin/shared/uploads`,
+then include both directories in backup and rollback checks. Do not place them
+inside a timestamped release directory.
+
+Bind the production Node listener to `127.0.0.1` (or firewall it to the reverse
+proxy only). The Docker example exposes port 4100 on host loopback; standalone
+PM2 deployments should set `HOSTNAME=127.0.0.1`.
 
 ## API Endpoints
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
 | `GET` | `/api/config/:slug` | Public | Published config (cached 5min) |
-| `GET` | `/api/config/:slug?draft=true` | API key | Draft config for editing |
-| `PUT` | `/api/config/:slug` | API key | Full config replace (saves to draft) |
-| `PATCH` | `/api/config/:slug` | API key | Partial config merge (into draft) |
-| `POST` | `/api/config/:slug/publish` | API key | Copy draft → published |
+| `GET` | `/api/config/:slug?draft=true` | Admin session + tenant scope | Draft config for editing |
+| `PUT` | `/api/config/:slug` | Admin session + tenant scope | Full config replace (saves to draft) |
+| `PATCH` | `/api/config/:slug` | Admin session + tenant scope | Partial config merge (into draft) |
+| `POST` | `/api/config/:slug/publish` | Admin session + tenant scope | Copy draft → published |
 | `GET` | `/api/health` | Public | Health check |
-| `POST` | `/api/media/upload` | API key | Upload image (5MB max, images only) |
+| `GET` | `/api/media` | Admin session | List uploaded media |
+| `DELETE` | `/api/media?filename=...` | Admin session + same origin | Delete uploaded media |
+| `POST` | `/api/media/upload` | Admin session + same origin | Upload validated raster image (5MB max; no SVG) |
 
-Auth: Pass `x-api-key` header with `ADMIN_API_KEY` value.
+Admin API calls use the signed, `HttpOnly` login session cookie. Unsafe methods
+also require an exact same-origin `Origin` header. Config writes require the
+version returned by the draft read in `If-Match`; stale edits receive `409`.
+The public published-config GET is the only endpoint with storefront CORS.
 
 ## Admin Pages
 
@@ -68,10 +100,12 @@ Auth: Pass `x-api-key` header with `ADMIN_API_KEY` value.
 
 ## Config Storage
 
-- **MVP:** JSON files in `./data/config-{slug}.json`
+- JSON files live in `ADMIN_DATA_DIR` as `config-{slug}.json`
 - Each file stores both `draft` and `published` versions
 - Admin edits go to `draft`; "Publish" copies `draft` → `published`
 - Storefront reads `published` config only
+- Writes are serialized per tenant, version-checked, and atomically renamed
+- Uploaded images live in `ADMIN_UPLOAD_DIR`; SVG and MIME-spoofed files are rejected
 
 ## Storefront Integration
 
@@ -114,7 +148,7 @@ src/
 │   └── use-config.ts    # Config fetch/save/publish hook
 ├── lib/
 │   ├── api-client.ts    # Typed API fetch wrappers
-│   ├── auth.ts          # API key validation
+│   ├── auth.ts          # Signed admin-session validation
 │   ├── config-repository.ts  # JSON file read/write
 │   ├── defaults.ts      # Default config values
 │   └── validation.ts    # Zod schemas
