@@ -6,11 +6,15 @@ const GROCERY_PRODUCT_FIELDS = `
     name
     slug
     description
+    seoTitle
+    seoDescription
     translation(languageCode: "en") {
       language
       name
       description
       shortDescription
+      seoTitle
+      seoDescription
     }
     thumbnail { url alt }
     media { url alt type sortOrder }

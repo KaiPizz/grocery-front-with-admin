@@ -8,6 +8,16 @@ const products = [
     name: 'Organic Gala Apples Family Value Pack',
     slug: 'organic-gala-apples',
     description: 'Sweet and crisp apples ready for everyday delivery.',
+    seoTitle: 'Jabłka Gala 1 kg | Configured Test Grocery',
+    seoDescription: 'Świeże jabłka Gala 1 kg. Sprawdź cenę i dostępność w sklepie Configured Test Grocery.',
+    translation: {
+      language: 'en',
+      name: 'Organic Gala Apples Family Value Pack',
+      description: 'Sweet and crisp apples ready for everyday delivery.',
+      shortDescription: 'Fresh Gala apples in a family value pack.',
+      seoTitle: 'Organic Gala Apples 1 kg | Configured Test Grocery',
+      seoDescription: 'Organic Gala apples 1 kg. Check the current price and availability at Configured Test Grocery.',
+    },
     thumbnail: {
       id: 'thumb-apples',
       url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',

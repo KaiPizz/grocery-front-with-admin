@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { cache, type ReactNode } from 'react';
 import { notFound } from 'next/navigation';
+import { defaultLocale } from '@/i18n/config';
 import { resolveChannel } from '@/lib/channel';
 import { PRODUCT_BY_SLUG_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
@@ -12,6 +13,8 @@ interface ProductSeoTranslation {
   name?: string | null;
   description?: string | null;
   shortDescription?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
 }
 
 interface ProductSeoMoney {
@@ -24,6 +27,8 @@ interface ProductSeoData {
   name: string;
   slug: string;
   description?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
   translation?: ProductSeoTranslation | null;
   thumbnail?: { url?: string | null; alt?: string | null } | null;
   media?: Array<{
@@ -74,6 +79,18 @@ function getProductName(product: ProductSeoData, locale: string): string {
   return cleanText(translation.name) ?? product.name;
 }
 
+function getProductSeoTitle(product: ProductSeoData, locale: string): string {
+  const translation = product.translation;
+  if (locale.toLowerCase().startsWith('en') && translation?.language?.toLowerCase() === 'en') {
+    return cleanText(translation.seoTitle)
+      ?? cleanText(translation.name)
+      ?? cleanText(product.seoTitle)
+      ?? product.name;
+  }
+
+  return cleanText(product.seoTitle) ?? product.name;
+}
+
 function getProductDescription(product: ProductSeoData, locale: string): string | undefined {
   const translation = product.translation;
   if (!locale.toLowerCase().startsWith('en') || translation?.language?.toLowerCase() !== 'en') {
@@ -83,6 +100,19 @@ function getProductDescription(product: ProductSeoData, locale: string): string 
   return cleanText(translation.description)
     ?? cleanText(translation.shortDescription)
     ?? cleanText(product.description);
+}
+
+function getProductSeoDescription(product: ProductSeoData, locale: string): string | undefined {
+  const translation = product.translation;
+  if (locale.toLowerCase().startsWith('en') && translation?.language?.toLowerCase() === 'en') {
+    return cleanText(translation.seoDescription)
+      ?? cleanText(translation.description)
+      ?? cleanText(translation.shortDescription)
+      ?? cleanText(product.seoDescription)
+      ?? cleanText(product.description);
+  }
+
+  return cleanText(product.seoDescription) ?? cleanText(product.description);
 }
 
 function getStoreOrigin(configuredCanonical: string | undefined): string | null {
@@ -98,9 +128,12 @@ function getStoreOrigin(configuredCanonical: string | undefined): string | null 
 function getProductUrl(origin: string | null, locale: string, slug: string): string | undefined {
   if (!origin) return undefined;
 
-  const localeSegment = encodeURIComponent(locale.toLowerCase());
+  const normalizedLocale = locale.toLowerCase();
+  const localeSegment = normalizedLocale === defaultLocale
+    ? ''
+    : `/${encodeURIComponent(normalizedLocale)}`;
   const slugSegment = encodeURIComponent(slug);
-  return `${origin}/${localeSegment}/products/${slugSegment}`;
+  return `${origin}${localeSegment}/products/${slugSegment}`;
 }
 
 function getAbsoluteImageUrls(product: ProductSeoData, origin: string | null): string[] {
@@ -189,8 +222,8 @@ export async function generateMetadata({ params }: { params: ProductRouteParams 
   const configuredCanonical = getConfigString(siteConfig?.seo?.canonical);
   const origin = getStoreOrigin(configuredCanonical);
   const canonical = getProductUrl(origin, params.locale, product.slug);
-  const name = getProductName(product, params.locale);
-  const description = getProductDescription(product, params.locale)
+  const name = getProductSeoTitle(product, params.locale);
+  const description = getProductSeoDescription(product, params.locale)
     ?? getConfigString(siteConfig?.seo?.defaultDescription);
   const images = getAbsoluteImageUrls(product, origin);
 

@@ -1,0 +1,36 @@
+{
+  "channel": "asiandeligo",
+  "preparedAt": "2026-07-14T13:14:00Z",
+  "appliedAt": "2026-07-14T13:52:14Z",
+  "status": "database-applied-code-verified-awaiting-deploy",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "scope": [
+    "Polish and English product SEO title/description for ADG-000112 and ADG-000176",
+    "primary product image alt text for both products",
+    "301 redirects for each old product slug in default, pl and en routes",
+    "unprefixed canonical URL for the default Polish locale"
+  ],
+  "databaseChanges": {
+    "products": 2,
+    "product_translations": 2,
+    "product_images": 2
+  },
+  "codeChanges": [
+    "grocery-storefront/next.config.js",
+    "grocery-storefront/src/lib/graphql/operations/grocery.ts",
+    "grocery-storefront/src/app/[locale]/(shop)/products/[id]/layout.tsx",
+    "grocery-storefront/tests/config-server.mjs",
+    "grocery-storefront/tests/product-seo.spec.ts"
+  ],
+  "verification": {
+    "database": "6/6 scoped rows match the intended values",
+    "lint": "passed",
+    "typescript": "passed",
+    "staticConfigTests": "3/3 passed",
+    "playwrightChromium": "4/4 passed",
+    "productionBuild": "passed",
+    "standaloneSmoke": "6/6 redirects and 4/4 localized metadata pages passed",
+    "webkit": "not run: Playwright WebKit binary is not installed on the build server",
+    "productionCodeDeploy": "awaiting deploy approval"
+  }
+}
