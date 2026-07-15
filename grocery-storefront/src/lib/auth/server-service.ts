@@ -137,6 +137,15 @@ export const CUSTOMER_CHANGE_PASSWORD_OPERATION = `
   }
 `;
 
+export const CUSTOMER_ACCOUNT_DELETE_OPERATION = `
+  mutation CustomerAccountDelete($password: String!) {
+    customerAccountDelete(password: $password) {
+      success
+      message
+    }
+  }
+`;
+
 export const CUSTOMER_RESEND_VERIFICATION_OPERATION = `
   mutation CustomerResendVerification($locale: String) {
     resendVerification(locale: $locale) {
@@ -218,6 +227,10 @@ interface VerifyEmailResult {
 
 interface ChangePasswordResult {
   changePassword: PasswordActionPayload | null;
+}
+
+interface AccountDeleteResult {
+  customerAccountDelete: PasswordActionPayload | null;
 }
 
 interface ResendVerificationResult {
@@ -402,6 +415,24 @@ export async function changeCustomerPassword(
   );
   return {
     payload: result.payload.data?.changePassword ?? null,
+    error: firstGraphqlError(result.payload),
+    errorCode: firstGraphqlErrorCode(result.payload),
+    errorStatus: firstGraphqlErrorStatus(result.payload),
+    status: result.status,
+  };
+}
+
+export async function deleteCustomerAccount(
+  accessToken: string,
+  password: string,
+) {
+  const result = await authGraphqlRequest<AccountDeleteResult>(
+    CUSTOMER_ACCOUNT_DELETE_OPERATION,
+    { password },
+    accessToken,
+  );
+  return {
+    payload: result.payload.data?.customerAccountDelete ?? null,
     error: firstGraphqlError(result.payload),
     errorCode: firstGraphqlErrorCode(result.payload),
     errorStatus: firstGraphqlErrorStatus(result.payload),

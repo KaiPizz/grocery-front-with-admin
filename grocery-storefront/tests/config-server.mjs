@@ -440,16 +440,25 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
       variables.input && typeof variables.input === 'object'
         ? variables.input
         : {};
-    const refreshIsValid =
-      Object.keys(input).length === 1 &&
-      input.refreshToken === 'playwright-resend-refresh';
+    const inputIsMinimal = Object.keys(input).length === 1;
+    const refreshToken = input.refreshToken;
+    const renewedTokens = inputIsMinimal && refreshToken === 'playwright-resend-refresh'
+      ? {
+          accessToken: 'playwright-resend-renewed-access',
+          refreshToken: 'playwright-resend-renewed-refresh',
+        }
+      : inputIsMinimal && refreshToken === 'playwright-delete-refresh'
+        ? {
+            accessToken: 'playwright-delete-renewed-access',
+            refreshToken: 'playwright-delete-renewed-refresh',
+          }
+        : null;
     return {
       data: {
-        customerAccessTokenRenew: refreshIsValid
+        customerAccessTokenRenew: renewedTokens
           ? {
               success: true,
-              accessToken: 'playwright-resend-renewed-access',
-              refreshToken: 'playwright-resend-renewed-refresh',
+              ...renewedTokens,
               expiresIn: 900,
               errorCode: null,
               message: null,
@@ -462,6 +471,82 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
               errorCode: 'INVALID_REFRESH_TOKEN',
               message: 'Invalid refresh token.',
             },
+      },
+    };
+  }
+
+  if (query.includes('mutation CustomerAccountDelete')) {
+    const authorization = requestHeaders.authorization;
+    const channel = requestHeaders['x-channel'];
+    const inputIsMinimal = Object.keys(variables).length === 1
+      && Object.prototype.hasOwnProperty.call(variables, 'password');
+    const accessIsValid = authorization === 'Bearer playwright-delete-access'
+      || authorization === 'Bearer playwright-delete-renewed-access';
+
+    if (authorization === 'Bearer playwright-delete-expired-access') {
+      return {
+        data: null,
+        errors: [
+          {
+            message: 'Authentication required',
+            extensions: {
+              code: 'UNAUTHENTICATED',
+              originalError: {
+                statusCode: 401,
+                message: 'Authentication required',
+              },
+            },
+          },
+        ],
+      };
+    }
+
+    if (!accessIsValid || channel !== 'test' || !inputIsMinimal) {
+      return {
+        data: { customerAccountDelete: { success: false, message: 'Rejected.' } },
+      };
+    }
+
+    if (variables.password === 'rate-limited-by-status-delete-password') {
+      return {
+        data: null,
+        errors: [
+          {
+            message: 'Too many requests',
+            extensions: {
+              code: 'RATE_LIMITED',
+              originalError: {
+                statusCode: 429,
+                message: 'Too many requests',
+              },
+            },
+          },
+        ],
+      };
+    }
+
+    if (variables.password === 'rate-limited-by-code-delete-password') {
+      return {
+        data: null,
+        errors: [
+          {
+            message: 'Too many requests',
+            extensions: {
+              code: 'TOO_MANY_REQUESTS',
+              originalError: {
+                message: 'Too many requests',
+              },
+            },
+          },
+        ],
+      };
+    }
+
+    return {
+      data: {
+        customerAccountDelete: variables.password === 'correct-delete-password'
+          ? { success: true, message: 'Account deleted successfully.' }
+          : { success: false, message: 'Invalid password' },
       },
     };
   }
@@ -596,7 +681,27 @@ const server = createServer((request, response) => {
     });
     request.on('end', () => {
       try {
-        sendJson(response, 200, buildGraphqlResponse(JSON.parse(body || '{}'), request.headers));
+        const requestBody = JSON.parse(body || '{}');
+        if (
+          String(requestBody.query ?? '').includes('mutation CustomerAccountDelete')
+          && requestBody.variables?.password === 'disconnect-after-refresh-delete-password'
+          && request.headers.authorization === 'Bearer playwright-delete-renewed-access'
+        ) {
+          response.destroy();
+          return;
+        }
+        if (
+          String(requestBody.query ?? '').includes('mutation CustomerAccountDelete')
+          && requestBody.variables?.password === 'rate-limited-by-http-delete-password'
+          && request.headers.authorization === 'Bearer playwright-delete-renewed-access'
+        ) {
+          sendJson(response, 429, {
+            data: null,
+            errors: [{ message: 'Too many requests' }],
+          });
+          return;
+        }
+        sendJson(response, 200, buildGraphqlResponse(requestBody, request.headers));
       } catch (error) {
         sendJson(response, 400, {
           data: null,

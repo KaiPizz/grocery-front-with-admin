@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import type { CustomerLoginProvider } from '@/types';
+import { DeleteAccountPanel } from './DeleteAccountPanel';
 
 const LOGIN_PROVIDERS: CustomerLoginProvider[] = ['password', 'google', 'facebook'];
 
@@ -278,6 +279,8 @@ export function SecurityPanel() {
           </div>
         </div>
       )}
+
+      <DeleteAccountPanel profile={profile} />
 
       <div className="mt-6 max-w-lg border-t pt-5" style={{ borderColor: 'var(--color-border)' }}>
         <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
