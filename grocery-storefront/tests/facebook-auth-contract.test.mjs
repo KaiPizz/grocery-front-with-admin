@@ -110,7 +110,7 @@ test('private GraphQL contract forwards only the provider token plus trusted loc
   assert.match(serverServiceSource, /privateCustomerAuthGraphqlRequest<FacebookLoginResult>\([\s\S]*\{ input \},[\s\S]*locale/);
   assert.match(serverServiceSource, /'x-channel': resolveChannel\(process\.env\.NEXT_PUBLIC_SALON_SLUG\)/);
   assert.match(serverServiceSource, /'x-customer-auth-bff-secret': bffSecret/);
-  assert.match(serverServiceSource, /\.\.\.\(locale \? \{ 'x-locale': locale \} : \{\}\)/);
+  assert.match(serverServiceSource, /\.\.\.\(options\.locale \? \{ 'x-locale': options\.locale \} : \{\}\)/);
   assert.match(serverServiceSource, /normalizeCustomerAuthGraphqlUrl\(process\.env\.CUSTOMER_AUTH_GRAPHQL_URL\)/);
   assert.match(serverServiceSource, /redirect: 'error'/);
   assert.match(serverServiceSource, /signal: AbortSignal\.timeout\(10_000\)/);

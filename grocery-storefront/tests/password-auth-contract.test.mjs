@@ -22,6 +22,7 @@ const authStoreSource = read('../src/stores/auth-store.ts');
 const cookiesSource = read('../src/lib/auth/server-cookies.ts');
 const resetFormSource = read('../src/components/auth/ResetPasswordForm.tsx');
 const securityPanelSource = read('../src/components/account/SecurityPanel.tsx');
+const providerPanelSource = read('../src/components/account/ProviderConnectionsPanel.tsx');
 const trackingSource = read('../src/components/TrackingScripts.tsx');
 const trackingPolicySource = read('../src/lib/tracking-policy.ts');
 const middlewareSource = read('../src/middleware.ts');
@@ -67,10 +68,11 @@ test('social-only accounts use verified email setup without exposing credentials
   assert.match(securityPanelSource, /profile\?\.emailVerified !== true/);
   assert.match(securityPanelSource, /fetch\('\/api\/auth\/forgot-password'/);
   assert.match(securityPanelSource, /JSON\.stringify\(\{ email: profile\.email, locale \}\)/);
-  assert.match(securityPanelSource, /linkedProviders/);
+  assert.match(providerPanelSource, /linkedProviders/);
   assert.doesNotMatch(securityPanelSource, /\/api\/graphql|Authorization/);
   assert.doesNotMatch(securityPanelSource, /googleId|facebookId|passwordHash/);
   assert.doesNotMatch(securityPanelSource, /localStorage|sessionStorage/);
+  assert.doesNotMatch(providerPanelSource, /localStorage|sessionStorage|Authorization/);
   for (const messages of [plMessages, enMessages]) {
     for (const key of [
       'signInMethodsTitle',

@@ -6,6 +6,7 @@ import {
 
 export const FACEBOOK_OAUTH_STATE_COOKIE_NAME = 'grocery_facebook_oauth_state';
 export const FACEBOOK_OAUTH_STATE_MAX_AGE_SECONDS = 5 * 60;
+export const FACEBOOK_LINK_STATE_COOKIE_NAME = 'grocery_facebook_link_state';
 export const FACEBOOK_OAUTH_MAX_CONSUMED_STATES = 10_000;
 
 const FACEBOOK_APP_ID_PATTERN = /^[0-9]{5,32}$/;

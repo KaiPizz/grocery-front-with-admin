@@ -435,6 +435,40 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     };
   }
 
+  if (query.includes('mutation CustomerFacebookLink')) {
+    const expectedBffSecret = process.env.TEST_CUSTOMER_AUTH_BFF_SECRET;
+    const bffIsAuthenticated = typeof expectedBffSecret === 'string'
+      && expectedBffSecret.length >= 32
+      && requestHeaders['x-customer-auth-bff-secret'] === expectedBffSecret;
+    const bearerIsAuthenticated = requestHeaders.authorization
+      === 'Bearer opaque-account-capability-session';
+    const channelIsValid = requestHeaders['x-channel'] === 'test';
+    const variablesAreMinimal = Object.keys(variables).sort().join(',')
+      === 'currentPassword,token';
+    const inputIsValid = variables.token === 'provider-link-facebook-pl'
+      || variables.token === 'provider-link-facebook-en';
+    const passwordIsValid = variables.currentPassword === 'correct-link-password';
+
+    return {
+      data: {
+        customerFacebookLink: bffIsAuthenticated
+          && bearerIsAuthenticated
+          && channelIsValid
+          && variablesAreMinimal
+          && inputIsValid
+          && passwordIsValid
+          ? {
+              success: true,
+              message: 'Facebook linked and sessions revoked.',
+            }
+          : {
+              success: false,
+              message: 'Facebook link rejected.',
+            },
+      },
+    };
+  }
+
   if (query.includes('mutation CustomerAccessTokenRenew')) {
     const input =
       variables.input && typeof variables.input === 'object'

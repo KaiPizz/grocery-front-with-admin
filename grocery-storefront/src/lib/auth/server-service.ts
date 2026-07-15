@@ -70,6 +70,33 @@ export const CUSTOMER_FACEBOOK_LOGIN_OPERATION = `
   }
 `;
 
+export const CUSTOMER_GOOGLE_LINK_OPERATION = `
+  mutation CustomerGoogleLink($token: String!, $nonce: String!, $currentPassword: String!) {
+    customerGoogleLink(token: $token, nonce: $nonce, currentPassword: $currentPassword) {
+      success
+      message
+    }
+  }
+`;
+
+export const CUSTOMER_FACEBOOK_LINK_OPERATION = `
+  mutation CustomerFacebookLink($token: String!, $currentPassword: String!) {
+    customerFacebookLink(token: $token, currentPassword: $currentPassword) {
+      success
+      message
+    }
+  }
+`;
+
+export const CUSTOMER_LOGIN_PROVIDER_UNLINK_OPERATION = `
+  mutation CustomerLoginProviderUnlink($provider: String!, $currentPassword: String!) {
+    customerLoginProviderUnlink(provider: $provider, currentPassword: $currentPassword) {
+      success
+      message
+    }
+  }
+`;
+
 export const CUSTOMER_RENEW_OPERATION = `
   mutation CustomerAccessTokenRenew($input: TokenRefreshInput!) {
     customerAccessTokenRenew(input: $input) {
@@ -191,6 +218,23 @@ interface FacebookLoginResult {
   customerFacebookAuth: LoginPayload | null;
 }
 
+export interface CustomerProviderActionPayload {
+  success: boolean;
+  message: string | null;
+}
+
+interface GoogleLinkResult {
+  customerGoogleLink: CustomerProviderActionPayload | null;
+}
+
+interface FacebookLinkResult {
+  customerFacebookLink: CustomerProviderActionPayload | null;
+}
+
+interface LoginProviderUnlinkResult {
+  customerLoginProviderUnlink: CustomerProviderActionPayload | null;
+}
+
 interface RenewResult {
   customerAccessTokenRenew: TokenPayload | null;
 }
@@ -240,7 +284,7 @@ interface ResendVerificationResult {
 async function privateCustomerAuthGraphqlRequest<TData>(
   query: string,
   variables: Record<string, unknown>,
-  locale?: 'pl' | 'en',
+  options: { locale?: 'pl' | 'en'; accessToken?: string } = {},
 ): Promise<{ payload: UpstreamGraphqlPayload<TData>; status: number }> {
   const endpoint = normalizeCustomerAuthGraphqlUrl(process.env.CUSTOMER_AUTH_GRAPHQL_URL);
   const bffSecret = normalizeCustomerAuthBffSecret(process.env.CUSTOMER_AUTH_BFF_SECRET);
@@ -259,7 +303,8 @@ async function privateCustomerAuthGraphqlRequest<TData>(
         'Content-Type': 'application/json',
         'x-channel': resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG),
         'x-customer-auth-bff-secret': bffSecret,
-        ...(locale ? { 'x-locale': locale } : {}),
+        ...(options.locale ? { 'x-locale': options.locale } : {}),
+        ...(options.accessToken ? { Authorization: `Bearer ${options.accessToken}` } : {}),
       },
       cache: 'no-store',
       redirect: 'error',
@@ -319,13 +364,75 @@ export async function facebookLoginCustomer(
   const result = await privateCustomerAuthGraphqlRequest<FacebookLoginResult>(
     CUSTOMER_FACEBOOK_LOGIN_OPERATION,
     { input },
-    locale,
+    { locale },
   );
   return {
     payload: result.payload.data?.customerFacebookAuth ?? null,
     error: firstGraphqlError(result.payload),
     status: result.status,
   };
+}
+
+function providerActionResult<TData>(
+  result: { payload: UpstreamGraphqlPayload<TData>; status: number },
+  payload: CustomerProviderActionPayload | null,
+) {
+  return {
+    payload,
+    error: firstGraphqlError(result.payload),
+    errorCode: firstGraphqlErrorCode(result.payload),
+    errorStatus: firstGraphqlErrorStatus(result.payload),
+    status: result.status,
+  };
+}
+
+export async function linkGoogleCustomer(
+  accessToken: string,
+  token: string,
+  nonce: string,
+  currentPassword: string,
+) {
+  const result = await privateCustomerAuthGraphqlRequest<GoogleLinkResult>(
+    CUSTOMER_GOOGLE_LINK_OPERATION,
+    { token, nonce, currentPassword },
+    { accessToken },
+  );
+  return providerActionResult(
+    result,
+    result.payload.data?.customerGoogleLink ?? null,
+  );
+}
+
+export async function linkFacebookCustomer(
+  accessToken: string,
+  token: string,
+  currentPassword: string,
+) {
+  const result = await privateCustomerAuthGraphqlRequest<FacebookLinkResult>(
+    CUSTOMER_FACEBOOK_LINK_OPERATION,
+    { token, currentPassword },
+    { accessToken },
+  );
+  return providerActionResult(
+    result,
+    result.payload.data?.customerFacebookLink ?? null,
+  );
+}
+
+export async function unlinkCustomerLoginProvider(
+  accessToken: string,
+  provider: 'google' | 'facebook',
+  currentPassword: string,
+) {
+  const result = await privateCustomerAuthGraphqlRequest<LoginProviderUnlinkResult>(
+    CUSTOMER_LOGIN_PROVIDER_UNLINK_OPERATION,
+    { provider, currentPassword },
+    { accessToken },
+  );
+  return providerActionResult(
+    result,
+    result.payload.data?.customerLoginProviderUnlink ?? null,
+  );
 }
 
 export async function renewCustomerSession(refreshToken: string) {

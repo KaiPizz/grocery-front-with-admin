@@ -7,14 +7,8 @@ import { toast } from 'sonner';
 
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuthStore } from '@/stores/auth-store';
-import type { CustomerLoginProvider } from '@/types';
 import { DeleteAccountPanel } from './DeleteAccountPanel';
-
-const LOGIN_PROVIDERS: CustomerLoginProvider[] = ['password', 'google', 'facebook'];
-
-function isLoginProvider(value: string): value is CustomerLoginProvider {
-  return LOGIN_PROVIDERS.includes(value as CustomerLoginProvider);
-}
+import { ProviderConnectionsPanel } from './ProviderConnectionsPanel';
 
 export function SecurityPanel() {
   const tAccount = useTranslations('account');
@@ -30,18 +24,7 @@ export function SecurityPanel() {
   const [requestingPasswordSetup, setRequestingPasswordSetup] = useState(false);
   const [passwordSetupSent, setPasswordSetupSent] = useState(false);
   const [passwordSetupError, setPasswordSetupError] = useState<string | null>(null);
-  const hasCapabilityMetadata = typeof profile?.hasPassword === 'boolean' || Array.isArray(profile?.linkedProviders);
   const hasPassword = profile?.hasPassword !== false;
-  const linkedProviders = Array.from(new Set((profile?.linkedProviders ?? []).filter(isLoginProvider)));
-  if (profile?.hasPassword === true && !linkedProviders.includes('password')) {
-    linkedProviders.unshift('password');
-  }
-
-  function providerLabel(provider: CustomerLoginProvider): string {
-    if (provider === 'google') return tAccount('loginMethodGoogle');
-    if (provider === 'facebook') return tAccount('loginMethodFacebook');
-    return tAccount('loginMethodPassword');
-  }
 
   async function requestPasswordSetup() {
     if (requestingPasswordSetup || profile?.emailVerified !== true || !profile.email) return;
@@ -151,31 +134,7 @@ export function SecurityPanel() {
         </div>
       </div>
 
-      {hasCapabilityMetadata && linkedProviders.length > 0 && (
-        <div className="mb-6 max-w-lg">
-          <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-            {tAccount('signInMethodsTitle')}
-          </p>
-          <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {tAccount('signInMethodsDescription')}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {linkedProviders.map((provider) => (
-              <span
-                key={provider}
-                className="inline-flex min-h-9 items-center rounded-full border px-3 text-sm font-medium"
-                style={{
-                  borderColor: 'var(--color-border)',
-                  backgroundColor: 'var(--color-background)',
-                  color: 'var(--color-foreground)',
-                }}
-              >
-                {providerLabel(provider)}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+      <ProviderConnectionsPanel profile={profile} />
 
       {hasPassword ? (
         <form className="max-w-lg space-y-4" onSubmit={handleSubmit}>
