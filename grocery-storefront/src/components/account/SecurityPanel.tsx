@@ -5,7 +5,7 @@ import { AlertCircle, Loader2, Lock, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
-import { useRouter } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 
 export function SecurityPanel() {
@@ -147,6 +147,19 @@ export function SecurityPanel() {
           {saving ? tAccount('changingPassword') : tAccount('changePassword')}
         </button>
       </form>
+
+      <div className="mt-6 max-w-lg border-t pt-5" style={{ borderColor: 'var(--color-border)' }}>
+        <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+          {tAccount('dataDeletionHelp')}
+        </p>
+        <Link
+          href="/privacy#data-deletion"
+          className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4"
+          style={{ color: 'var(--color-primary)' }}
+        >
+          {tAccount('dataDeletionLink')}
+        </Link>
+      </div>
     </section>
   );
 }

@@ -127,6 +127,26 @@ export function AuthForm({ mode }: AuthFormProps) {
 
           <SocialSignIn mode={mode} returnTo={returnTo} />
 
+          <p className="mb-5 text-center text-xs leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
+            {t('legalNoticePrefix')}{' '}
+            <Link
+              href="/terms"
+              className="font-semibold underline underline-offset-4"
+              style={{ color: 'var(--color-foreground)' }}
+            >
+              {t('legalNoticeTerms')}
+            </Link>{' '}
+            {t('legalNoticeConnector')}{' '}
+            <Link
+              href="/privacy"
+              className="font-semibold underline underline-offset-4"
+              style={{ color: 'var(--color-foreground)' }}
+            >
+              {t('legalNoticePrivacy')}
+            </Link>
+            .
+          </p>
+
           <form className="space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
               <label className="block">
