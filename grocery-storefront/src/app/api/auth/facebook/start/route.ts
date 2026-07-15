@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  createFacebookOAuthState,
   FACEBOOK_OAUTH_STATE_COOKIE_NAME,
   FACEBOOK_OAUTH_STATE_MAX_AGE_SECONDS,
+  issueFacebookOAuthState,
   normalizeFacebookAppId,
   normalizeFacebookGraphVersion,
 } from '@/lib/auth/facebook-oauth';
@@ -46,7 +46,10 @@ export async function GET(request: NextRequest) {
     return setNoStoreHeaders(NextResponse.json({ enabled: false }));
   }
 
-  const state = createFacebookOAuthState();
+  const state = issueFacebookOAuthState('login');
+  if (!state) {
+    return setNoStoreHeaders(NextResponse.json({ enabled: false }, { status: 503 }));
+  }
   const response = NextResponse.json({
     enabled: true,
     appId,

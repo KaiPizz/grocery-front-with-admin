@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  createGoogleOAuthNonce,
   GOOGLE_OAUTH_NONCE_COOKIE_NAME,
   GOOGLE_OAUTH_NONCE_MAX_AGE_SECONDS,
   hasCustomerAuthBffSecret,
+  issueGoogleOAuthNonce,
   normalizeCustomerAuthGraphqlUrl,
   normalizeGoogleClientId,
 } from '@/lib/auth/google-oauth';
@@ -39,7 +39,10 @@ export async function GET(request: NextRequest) {
     return setNoStoreHeaders(NextResponse.json({ enabled: false }));
   }
 
-  const nonce = createGoogleOAuthNonce();
+  const nonce = issueGoogleOAuthNonce('login');
+  if (!nonce) {
+    return setNoStoreHeaders(NextResponse.json({ enabled: false }, { status: 503 }));
+  }
   const response = NextResponse.json({ enabled: true, clientId, nonce });
   setGoogleNonceCookie(response, nonce);
   return setNoStoreHeaders(response);

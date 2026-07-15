@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useCallback, useState, type FormEvent } from 'react';
 import { AlertCircle, CheckCircle2, KeyRound, Loader2, Lock, Shield } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -24,7 +24,21 @@ export function SecurityPanel() {
   const [requestingPasswordSetup, setRequestingPasswordSetup] = useState(false);
   const [passwordSetupSent, setPasswordSetupSent] = useState(false);
   const [passwordSetupError, setPasswordSetupError] = useState<string | null>(null);
+  // Default closed: a client-side navigation may have left a provider SDK in
+  // this document. ProviderConnectionsPanel opens password UI only after it
+  // has checked the whole document and found no provider SDK exposure.
+  const [providerPasswordIsolation, setProviderPasswordIsolation] = useState(true);
   const hasPassword = profile?.hasPassword !== false;
+
+  const handleProviderPasswordIsolationChange = useCallback((isolated: boolean) => {
+    if (isolated) {
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setError(null);
+    }
+    setProviderPasswordIsolation(isolated);
+  }, []);
 
   async function requestPasswordSetup() {
     if (requestingPasswordSetup || profile?.emailVerified !== true || !profile.email) return;
@@ -134,9 +148,12 @@ export function SecurityPanel() {
         </div>
       </div>
 
-      <ProviderConnectionsPanel profile={profile} />
+      <ProviderConnectionsPanel
+        profile={profile}
+        onPasswordIsolationChange={handleProviderPasswordIsolationChange}
+      />
 
-      {hasPassword ? (
+      {!providerPasswordIsolation && (hasPassword ? (
         <form className="max-w-lg space-y-4" onSubmit={handleSubmit}>
           <PasswordField
             id="security-current-password"
@@ -237,9 +254,9 @@ export function SecurityPanel() {
             </div>
           </div>
         </div>
-      )}
+      ))}
 
-      <DeleteAccountPanel profile={profile} />
+      {!providerPasswordIsolation && <DeleteAccountPanel profile={profile} />}
 
       <div className="mt-6 max-w-lg border-t pt-5" style={{ borderColor: 'var(--color-border)' }}>
         <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>

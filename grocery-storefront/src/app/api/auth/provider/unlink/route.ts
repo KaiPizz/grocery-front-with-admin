@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { validateJsonMutationRequest } from '@/lib/auth/request-security';
 import { setNoStoreHeaders } from '@/lib/auth/server-cookies';
+import {
+  clearProviderStepUpCookie,
+  readProviderStepUpProof,
+} from '@/lib/auth/provider-step-up';
 import { runRevokingCustomerAction } from '@/lib/auth/server-revoking-action';
 import { unlinkCustomerLoginProvider } from '@/lib/auth/server-service';
 
@@ -11,17 +15,13 @@ function isSocialLoginProvider(value: unknown): value is SocialLoginProvider {
   return value === 'google' || value === 'facebook';
 }
 
-function validPassword(value: string): boolean {
-  return value.length > 0
-    && value.length <= 72
-    && Buffer.byteLength(value, 'utf8') <= 72;
-}
-
 function invalidRequestResponse(message: string, status: number): NextResponse {
-  return setNoStoreHeaders(NextResponse.json(
+  const response = NextResponse.json(
     { success: false, message },
     { status },
-  ));
+  );
+  clearProviderStepUpCookie(response);
+  return setNoStoreHeaders(response);
 }
 
 export async function POST(request: NextRequest) {
@@ -35,24 +35,28 @@ export async function POST(request: NextRequest) {
     }
     const input = body as Record<string, unknown>;
     const keys = Object.keys(input).sort();
-    const currentPassword = typeof input.currentPassword === 'string' ? input.currentPassword : '';
     const provider = input.provider;
+    const stepUpProof = readProviderStepUpProof(request);
     if (
-      keys.length !== 2
-      || keys[0] !== 'currentPassword'
-      || keys[1] !== 'provider'
+      keys.length !== 1
+      || keys[0] !== 'provider'
       || !isSocialLoginProvider(provider)
-      || !validPassword(currentPassword)
+      || !stepUpProof
     ) {
-      return invalidRequestResponse('Invalid provider disconnection request.', 400);
+      return invalidRequestResponse(
+        stepUpProof
+          ? 'Invalid provider disconnection request.'
+          : 'Password confirmation has expired.',
+        stepUpProof ? 400 : 428,
+      );
     }
 
-    return runRevokingCustomerAction(
+    const response = await runRevokingCustomerAction(
       request,
       (accessToken) => unlinkCustomerLoginProvider(
         accessToken,
         provider,
-        currentPassword,
+        stepUpProof,
       ),
       {
         failed: 'Provider disconnection failed.',
@@ -61,6 +65,8 @@ export async function POST(request: NextRequest) {
         unavailable: 'Provider disconnection is temporarily unavailable.',
       },
     );
+    clearProviderStepUpCookie(response);
+    return response;
   } catch {
     return invalidRequestResponse('Provider disconnection is temporarily unavailable.', 502);
   }

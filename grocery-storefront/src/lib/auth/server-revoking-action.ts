@@ -41,6 +41,16 @@ const PROVIDER_CONFLICT_CODES = new Set([
   'OAUTH_ACCOUNT_ALREADY_LINKED',
   'PROVIDER_ALREADY_LINKED',
 ]);
+const CLIENT_FAILURE_CODES = new Set([
+  'BAD_REQUEST',
+  'BAD_USER_INPUT',
+  'INVALID_OAUTH_TOKEN',
+  'INVALID_STEP_UP_PROOF',
+]);
+const SERVER_FAILURE_CODES = new Set([
+  'INTERNAL_SERVER_ERROR',
+  'SERVICE_UNAVAILABLE',
+]);
 
 function setRenewedCookies(
   response: NextResponse,
@@ -71,6 +81,21 @@ function isConflict(result: CustomerProviderActionResult): boolean {
   return result.status === 409
     || result.errorStatus === 409
     || PROVIDER_CONFLICT_CODES.has(errorCode(result));
+}
+
+function isClientFailure(result: CustomerProviderActionResult): boolean {
+  return (result.status >= 400 && result.status < 500)
+    || (result.errorStatus !== null
+      && result.errorStatus >= 400
+      && result.errorStatus < 500)
+    || CLIENT_FAILURE_CODES.has(errorCode(result));
+}
+
+function isUnavailable(result: CustomerProviderActionResult): boolean {
+  return result.status >= 500
+    || (result.errorStatus !== null && result.errorStatus >= 500)
+    || SERVER_FAILURE_CODES.has(errorCode(result))
+    || (!result.payload && !result.error && !result.errorCode && result.errorStatus === null);
 }
 
 /**
@@ -132,7 +157,9 @@ export async function runRevokingCustomerAction(
       const conflict = !rateLimited && isConflict(result);
       const unavailable = !rateLimited
         && !conflict
-        && (result.status >= 500 || (!result.payload && !authFailure));
+        && !authFailure
+        && !isClientFailure(result)
+        && isUnavailable(result);
       const response = NextResponse.json({
         success: false,
         message: rateLimited

@@ -9,6 +9,10 @@ import {
 } from '@/lib/auth/google-oauth';
 import { validateJsonMutationRequest } from '@/lib/auth/request-security';
 import { setNoStoreHeaders } from '@/lib/auth/server-cookies';
+import {
+  clearProviderStepUpCookie,
+  readProviderStepUpProof,
+} from '@/lib/auth/provider-step-up';
 import { runRevokingCustomerAction } from '@/lib/auth/server-revoking-action';
 import { linkGoogleCustomer } from '@/lib/auth/server-service';
 
@@ -23,6 +27,7 @@ function consumeLinkNonce(response: NextResponse): NextResponse {
     maxAge: 0,
     expires: new Date(0),
   });
+  clearProviderStepUpCookie(response);
   return response;
 }
 
@@ -31,12 +36,6 @@ function respond(message: string, status: number): NextResponse {
     { success: false, message },
     { status },
   )));
-}
-
-function validPassword(value: string): boolean {
-  return value.length > 0
-    && value.length <= 72
-    && Buffer.byteLength(value, 'utf8') <= 72;
 }
 
 export async function POST(request: NextRequest) {
@@ -59,21 +58,25 @@ export async function POST(request: NextRequest) {
     const input = body as Record<string, unknown>;
     const keys = Object.keys(input).sort();
     const credential = typeof input.credential === 'string' ? input.credential.trim() : '';
-    const currentPassword = typeof input.currentPassword === 'string' ? input.currentPassword : '';
     const submittedNonce = typeof input.nonce === 'string' ? input.nonce : '';
     const cookieNonce = request.cookies.get(GOOGLE_LINK_NONCE_COOKIE_NAME)?.value ?? '';
+    const stepUpProof = readProviderStepUpProof(request);
     const nonceIsValid = consumeGoogleLinkNonce(cookieNonce, submittedNonce);
     if (
-      keys.length !== 3
+      keys.length !== 2
       || keys[0] !== 'credential'
-      || keys[1] !== 'currentPassword'
-      || keys[2] !== 'nonce'
+      || keys[1] !== 'nonce'
+      || !stepUpProof
       || !nonceIsValid
       || !credential
       || credential.length > MAX_GOOGLE_CREDENTIAL_LENGTH
-      || !validPassword(currentPassword)
     ) {
-      return respond('Invalid Google account connection request.', 400);
+      return respond(
+        stepUpProof
+          ? 'Invalid Google account connection request.'
+          : 'Password confirmation has expired.',
+        stepUpProof ? 400 : 428,
+      );
     }
 
     const response = await runRevokingCustomerAction(
@@ -82,7 +85,7 @@ export async function POST(request: NextRequest) {
         accessToken,
         credential,
         cookieNonce,
-        currentPassword,
+        stepUpProof,
       ),
       {
         failed: 'Google account connection failed.',

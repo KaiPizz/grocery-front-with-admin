@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  createGoogleOAuthNonce,
   GOOGLE_LINK_NONCE_COOKIE_NAME,
   GOOGLE_OAUTH_NONCE_MAX_AGE_SECONDS,
   hasCustomerAuthBffSecret,
+  issueGoogleOAuthNonce,
   normalizeCustomerAuthGraphqlUrl,
   normalizeGoogleClientId,
 } from '@/lib/auth/google-oauth';
 import { validateSameOriginRequest } from '@/lib/auth/request-security';
 import { readCustomerTokens, setNoStoreHeaders } from '@/lib/auth/server-cookies';
+import { readProviderStepUpProof } from '@/lib/auth/provider-step-up';
 
 function setLinkNonceCookie(response: NextResponse, nonce: string): void {
   response.cookies.set(GOOGLE_LINK_NONCE_COOKIE_NAME, nonce, {
@@ -31,6 +32,9 @@ export async function GET(request: NextRequest) {
   if (!tokens.accessToken && !tokens.refreshToken) {
     return setNoStoreHeaders(NextResponse.json({ enabled: false }, { status: 401 }));
   }
+  if (!readProviderStepUpProof(request)) {
+    return setNoStoreHeaders(NextResponse.json({ enabled: false }, { status: 428 }));
+  }
 
   const clientId = normalizeGoogleClientId(process.env.CUSTOMER_GOOGLE_CLIENT_ID);
   if (
@@ -41,7 +45,10 @@ export async function GET(request: NextRequest) {
     return setNoStoreHeaders(NextResponse.json({ enabled: false }));
   }
 
-  const nonce = createGoogleOAuthNonce();
+  const nonce = issueGoogleOAuthNonce('link');
+  if (!nonce) {
+    return setNoStoreHeaders(NextResponse.json({ enabled: false }, { status: 503 }));
+  }
   const response = NextResponse.json({ enabled: true, clientId, nonce });
   setLinkNonceCookie(response, nonce);
   return setNoStoreHeaders(response);

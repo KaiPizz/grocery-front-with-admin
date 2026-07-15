@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     // This same-origin, one-time challenge is the login-CSRF binding for the
     // Facebook JS SDK flow because Facebook access tokens contain no nonce.
-    if (!consumeFacebookOAuthState(cookieState, submittedState)) {
+    if (!consumeFacebookOAuthState('login', cookieState, submittedState)) {
       return respond({ success: false, message: 'Facebook sign-in expired.', customer: null, errors: [] }, 400);
     }
 

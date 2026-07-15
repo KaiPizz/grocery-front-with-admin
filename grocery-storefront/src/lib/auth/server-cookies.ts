@@ -2,6 +2,8 @@ import 'server-only';
 
 import type { NextRequest, NextResponse } from 'next/server';
 
+import { clearProviderStepUpCookie } from './provider-step-up';
+
 export const ACCESS_COOKIE_NAME = 'grocery_customer_access';
 export const REFRESH_COOKIE_NAME = 'grocery_customer_refresh';
 export const LEGACY_ACCESS_COOKIE_NAME = 'grocery_token';
@@ -113,6 +115,7 @@ export function clearCustomerCookies(response: NextResponse): void {
   expireCookie(response, ACCESS_COOKIE_NAME);
   expireCookie(response, REFRESH_COOKIE_NAME);
   clearLegacyCookies(response);
+  clearProviderStepUpCookie(response);
 }
 
 export function setNoStoreHeaders(response: NextResponse): NextResponse {

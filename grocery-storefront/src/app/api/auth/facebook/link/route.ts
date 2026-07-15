@@ -12,6 +12,10 @@ import {
 } from '@/lib/auth/google-oauth';
 import { validateJsonMutationRequest } from '@/lib/auth/request-security';
 import { setNoStoreHeaders } from '@/lib/auth/server-cookies';
+import {
+  clearProviderStepUpCookie,
+  readProviderStepUpProof,
+} from '@/lib/auth/provider-step-up';
 import { runRevokingCustomerAction } from '@/lib/auth/server-revoking-action';
 import { linkFacebookCustomer } from '@/lib/auth/server-service';
 
@@ -26,6 +30,7 @@ function consumeLinkState(response: NextResponse): NextResponse {
     maxAge: 0,
     expires: new Date(0),
   });
+  clearProviderStepUpCookie(response);
   return response;
 }
 
@@ -34,12 +39,6 @@ function respond(message: string, status: number): NextResponse {
     { success: false, message },
     { status },
   )));
-}
-
-function validPassword(value: string): boolean {
-  return value.length > 0
-    && value.length <= 72
-    && Buffer.byteLength(value, 'utf8') <= 72;
 }
 
 export async function POST(request: NextRequest) {
@@ -63,21 +62,25 @@ export async function POST(request: NextRequest) {
     const input = body as Record<string, unknown>;
     const keys = Object.keys(input).sort();
     const accessToken = typeof input.accessToken === 'string' ? input.accessToken.trim() : '';
-    const currentPassword = typeof input.currentPassword === 'string' ? input.currentPassword : '';
     const submittedState = typeof input.state === 'string' ? input.state : '';
     const cookieState = request.cookies.get(FACEBOOK_LINK_STATE_COOKIE_NAME)?.value ?? '';
-    const stateIsValid = consumeFacebookOAuthState(cookieState, submittedState);
+    const stepUpProof = readProviderStepUpProof(request);
+    const stateIsValid = consumeFacebookOAuthState('link', cookieState, submittedState);
     if (
-      keys.length !== 3
+      keys.length !== 2
       || keys[0] !== 'accessToken'
-      || keys[1] !== 'currentPassword'
-      || keys[2] !== 'state'
+      || keys[1] !== 'state'
+      || !stepUpProof
       || !stateIsValid
       || !accessToken
       || accessToken.length > MAX_FACEBOOK_ACCESS_TOKEN_LENGTH
-      || !validPassword(currentPassword)
     ) {
-      return respond('Invalid Facebook account connection request.', 400);
+      return respond(
+        stepUpProof
+          ? 'Invalid Facebook account connection request.'
+          : 'Password confirmation has expired.',
+        stepUpProof ? 400 : 428,
+      );
     }
 
     const response = await runRevokingCustomerAction(
@@ -85,7 +88,7 @@ export async function POST(request: NextRequest) {
       (customerAccessToken) => linkFacebookCustomer(
         customerAccessToken,
         accessToken,
-        currentPassword,
+        stepUpProof,
       ),
       {
         failed: 'Facebook account connection failed.',

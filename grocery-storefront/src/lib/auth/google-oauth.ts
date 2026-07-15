@@ -1,17 +1,25 @@
-import {
-  createHash,
-  randomBytes,
-  timingSafeEqual,
-} from 'node:crypto';
+import { randomBytes } from 'node:crypto';
+
+import { PendingOAuthChallengeStore } from './oauth-challenge-store.js';
 
 export const GOOGLE_OAUTH_NONCE_COOKIE_NAME = 'grocery_google_oauth_nonce';
 export const GOOGLE_OAUTH_NONCE_MAX_AGE_SECONDS = 5 * 60;
 export const GOOGLE_LINK_NONCE_COOKIE_NAME = 'grocery_google_link_nonce';
-export const GOOGLE_LINK_MAX_CONSUMED_NONCES = 10_000;
+export const GOOGLE_OAUTH_MAX_PENDING_NONCES = 10_000;
 
 const GOOGLE_CLIENT_ID_PATTERN = /^[A-Za-z0-9._-]+\.apps\.googleusercontent\.com$/;
-const GOOGLE_NONCE_PATTERN = /^[A-Za-z0-9_-]{43}$/;
-const consumedGoogleLinkNonceDigests = new Map<string, number>();
+type GoogleOAuthPurpose = 'login' | 'link';
+
+const googleLoginNonces = new PendingOAuthChallengeStore(
+  'customer-google-login',
+  GOOGLE_OAUTH_MAX_PENDING_NONCES,
+  GOOGLE_OAUTH_NONCE_MAX_AGE_SECONDS * 1000,
+);
+const googleLinkNonces = new PendingOAuthChallengeStore(
+  'customer-google-link',
+  GOOGLE_OAUTH_MAX_PENDING_NONCES,
+  GOOGLE_OAUTH_NONCE_MAX_AGE_SECONDS * 1000,
+);
 
 export function normalizeGoogleClientId(value: string | undefined): string | null {
   const clientId = value?.trim() ?? '';
@@ -59,47 +67,29 @@ export function createGoogleOAuthNonce(): string {
   return randomBytes(32).toString('base64url');
 }
 
+export function issueGoogleOAuthNonce(
+  purpose: GoogleOAuthPurpose,
+  now = Date.now(),
+): string | null {
+  const store = purpose === 'login' ? googleLoginNonces : googleLinkNonces;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const nonce = createGoogleOAuthNonce();
+    if (store.issue(nonce, now)) return nonce;
+  }
+  return null;
+}
+
+export function consumeGoogleLoginNonce(
+  cookieNonce: string | null | undefined,
+  now = Date.now(),
+): boolean {
+  return googleLoginNonces.consume(cookieNonce, cookieNonce, now);
+}
+
 export function consumeGoogleLinkNonce(
   cookieNonce: string | null | undefined,
   submittedNonce: string | null | undefined,
   now = Date.now(),
 ): boolean {
-  if (
-    !cookieNonce
-    || !submittedNonce
-    || !GOOGLE_NONCE_PATTERN.test(cookieNonce)
-    || !GOOGLE_NONCE_PATTERN.test(submittedNonce)
-  ) {
-    return false;
-  }
-
-  const cookieBuffer = Buffer.from(cookieNonce, 'ascii');
-  const submittedBuffer = Buffer.from(submittedNonce, 'ascii');
-  if (
-    cookieBuffer.length !== submittedBuffer.length
-    || !timingSafeEqual(cookieBuffer, submittedBuffer)
-  ) {
-    return false;
-  }
-
-  for (const [digest, expiresAt] of consumedGoogleLinkNonceDigests) {
-    if (expiresAt <= now) consumedGoogleLinkNonceDigests.delete(digest);
-  }
-
-  // Prefix the digest so this replay namespace can never be confused with a
-  // login nonce if the caches are consolidated later.
-  const digest = createHash('sha256')
-    .update('customer-google-link\0', 'utf8')
-    .update(cookieBuffer)
-    .digest('base64url');
-  if (consumedGoogleLinkNonceDigests.has(digest)) return false;
-  if (consumedGoogleLinkNonceDigests.size >= GOOGLE_LINK_MAX_CONSUMED_NONCES) {
-    return false;
-  }
-
-  consumedGoogleLinkNonceDigests.set(
-    digest,
-    now + GOOGLE_OAUTH_NONCE_MAX_AGE_SECONDS * 1000,
-  );
-  return true;
+  return googleLinkNonces.consume(cookieNonce, submittedNonce, now);
 }

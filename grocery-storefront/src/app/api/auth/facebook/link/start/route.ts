@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  createFacebookOAuthState,
   FACEBOOK_LINK_STATE_COOKIE_NAME,
   FACEBOOK_OAUTH_STATE_MAX_AGE_SECONDS,
+  issueFacebookOAuthState,
   normalizeFacebookAppId,
   normalizeFacebookGraphVersion,
 } from '@/lib/auth/facebook-oauth';
@@ -13,6 +13,7 @@ import {
 } from '@/lib/auth/google-oauth';
 import { validateSameOriginRequest } from '@/lib/auth/request-security';
 import { readCustomerTokens, setNoStoreHeaders } from '@/lib/auth/server-cookies';
+import { readProviderStepUpProof } from '@/lib/auth/provider-step-up';
 
 function setLinkStateCookie(response: NextResponse, state: string): void {
   response.cookies.set(FACEBOOK_LINK_STATE_COOKIE_NAME, state, {
@@ -34,6 +35,9 @@ export async function GET(request: NextRequest) {
   if (!tokens.accessToken && !tokens.refreshToken) {
     return setNoStoreHeaders(NextResponse.json({ enabled: false }, { status: 401 }));
   }
+  if (!readProviderStepUpProof(request)) {
+    return setNoStoreHeaders(NextResponse.json({ enabled: false }, { status: 428 }));
+  }
 
   const appId = normalizeFacebookAppId(process.env.CUSTOMER_FACEBOOK_APP_ID);
   const apiVersion = normalizeFacebookGraphVersion(
@@ -48,7 +52,10 @@ export async function GET(request: NextRequest) {
     return setNoStoreHeaders(NextResponse.json({ enabled: false }));
   }
 
-  const state = createFacebookOAuthState();
+  const state = issueFacebookOAuthState('link');
+  if (!state) {
+    return setNoStoreHeaders(NextResponse.json({ enabled: false }, { status: 503 }));
+  }
   const response = NextResponse.json({ enabled: true, appId, apiVersion, state });
   setLinkStateCookie(response, state);
   return setNoStoreHeaders(response);

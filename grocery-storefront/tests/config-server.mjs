@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 
 const PORT = Number(process.env.TEST_CONFIG_SERVER_PORT ?? 4199);
+const PROVIDER_STEP_UP_PROOF = 'playwright.step.up.proof.bound.to.session.auth.version.20260715';
 
 const products = [
   {
@@ -318,6 +319,133 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
   const query = String(requestBody.query ?? '');
   const variables = requestBody.variables ?? {};
 
+  if (query.includes('mutation CustomerCredentialStepUp')) {
+    const expectedBffSecret = process.env.TEST_CUSTOMER_AUTH_BFF_SECRET;
+    const bffIsAuthenticated = typeof expectedBffSecret === 'string'
+      && expectedBffSecret.length >= 32
+      && requestHeaders['x-customer-auth-bff-secret'] === expectedBffSecret;
+    const bearerIsAuthenticated = requestHeaders.authorization
+      === 'Bearer opaque-account-capability-session';
+    const channelIsValid = requestHeaders['x-channel'] === 'test';
+    const variablesAreMinimal = Object.keys(variables).join(',') === 'currentPassword';
+    const passwordIsValid = variables.currentPassword === 'correct-provider-password'
+      || variables.currentPassword === 'correct-link-password';
+
+    if (variables.currentPassword === 'stepup-graphql-bad-request') {
+      return {
+        data: null,
+        errors: [
+          {
+            message: 'Current password is incorrect.',
+            extensions: {
+              code: 'BAD_REQUEST',
+              originalError: { statusCode: 400, message: 'Current password is incorrect.' },
+            },
+          },
+        ],
+      };
+    }
+
+    if (variables.currentPassword === 'bff-unavailable-password') {
+      return {
+        data: null,
+        errors: [
+          {
+            message: 'Customer authentication unavailable.',
+            extensions: {
+              code: 'SERVICE_UNAVAILABLE',
+              originalError: {
+                statusCode: 503,
+                message: 'Customer authentication unavailable.',
+              },
+            },
+          },
+        ],
+      };
+    }
+
+    if (
+      !bffIsAuthenticated
+      || !bearerIsAuthenticated
+      || !channelIsValid
+      || !variablesAreMinimal
+      || !passwordIsValid
+    ) {
+      return {
+        data: {
+          customerCredentialStepUp: {
+            success: false,
+            message: 'Current password is incorrect.',
+            stepUpProof: null,
+            expiresIn: null,
+          },
+        },
+      };
+    }
+
+    return {
+      data: {
+        customerCredentialStepUp: {
+          success: true,
+          message: 'Credential confirmed.',
+          stepUpProof: PROVIDER_STEP_UP_PROOF,
+          expiresIn: 300,
+        },
+      },
+    };
+  }
+
+  if (query.includes('mutation CustomerGoogleLink')) {
+    const expectedBffSecret = process.env.TEST_CUSTOMER_AUTH_BFF_SECRET;
+    if (variables.token === 'playwright-google-link-bad-request') {
+      return {
+        data: null,
+        errors: [
+          {
+            message: 'Invalid OAuth credential.',
+            extensions: {
+              code: 'BAD_REQUEST',
+              originalError: { statusCode: 400, message: 'Invalid OAuth credential.' },
+            },
+          },
+        ],
+      };
+    }
+    if (variables.token === 'playwright-google-link-graphql-unavailable') {
+      return {
+        data: null,
+        errors: [
+          {
+            message: 'Provider temporarily unavailable.',
+            extensions: {
+              code: 'SERVICE_UNAVAILABLE',
+              originalError: { statusCode: 503, message: 'Provider temporarily unavailable.' },
+            },
+          },
+        ],
+      };
+    }
+
+    const accepted = typeof expectedBffSecret === 'string'
+      && expectedBffSecret.length >= 32
+      && requestHeaders['x-customer-auth-bff-secret'] === expectedBffSecret
+      && requestHeaders.authorization === 'Bearer opaque-account-capability-session'
+      && requestHeaders['x-channel'] === 'test'
+      && Object.keys(variables).sort().join(',') === 'nonce,stepUpProof,token'
+      && variables.token === 'playwright-google-link-credential'
+      && typeof variables.nonce === 'string'
+      && /^[A-Za-z0-9_-]{43}$/.test(variables.nonce)
+      && variables.stepUpProof === PROVIDER_STEP_UP_PROOF;
+
+    return {
+      data: {
+        customerGoogleLink: accepted
+          ? { success: true, message: 'Google linked and sessions revoked.' }
+          : { success: false, message: 'Google link rejected.' },
+      },
+    };
+  }
+
   if (query.includes('mutation CustomerGoogleLogin')) {
     const bffSecret = requestHeaders['x-customer-auth-bff-secret'];
     const channel = requestHeaders['x-channel'];
@@ -363,8 +491,8 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
             phone: null,
             emailVerified: true,
             createdAt: '2026-07-15T00:00:00.000Z',
-            hasPassword: false,
-            linkedProviders: ['google'],
+            hasPassword: true,
+            linkedProviders: ['password', 'google'],
           },
           errors: [],
         },
@@ -444,10 +572,10 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
       === 'Bearer opaque-account-capability-session';
     const channelIsValid = requestHeaders['x-channel'] === 'test';
     const variablesAreMinimal = Object.keys(variables).sort().join(',')
-      === 'currentPassword,token';
+      === 'stepUpProof,token';
     const inputIsValid = variables.token === 'provider-link-facebook-pl'
       || variables.token === 'provider-link-facebook-en';
-    const passwordIsValid = variables.currentPassword === 'correct-link-password';
+    const proofIsValid = variables.stepUpProof === PROVIDER_STEP_UP_PROOF;
 
     return {
       data: {
@@ -456,7 +584,7 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
           && channelIsValid
           && variablesAreMinimal
           && inputIsValid
-          && passwordIsValid
+          && proofIsValid
           ? {
               success: true,
               message: 'Facebook linked and sessions revoked.',
@@ -465,6 +593,26 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
               success: false,
               message: 'Facebook link rejected.',
             },
+      },
+    };
+  }
+
+  if (query.includes('mutation CustomerLoginProviderUnlink')) {
+    const expectedBffSecret = process.env.TEST_CUSTOMER_AUTH_BFF_SECRET;
+    const accepted = typeof expectedBffSecret === 'string'
+      && expectedBffSecret.length >= 32
+      && requestHeaders['x-customer-auth-bff-secret'] === expectedBffSecret
+      && requestHeaders.authorization === 'Bearer opaque-account-capability-session'
+      && requestHeaders['x-channel'] === 'test'
+      && Object.keys(variables).sort().join(',') === 'provider,stepUpProof'
+      && (variables.provider === 'google' || variables.provider === 'facebook')
+      && variables.stepUpProof === PROVIDER_STEP_UP_PROOF;
+
+    return {
+      data: {
+        customerLoginProviderUnlink: accepted
+          ? { success: true, message: 'Provider disconnected and sessions revoked.' }
+          : { success: false, message: 'Provider unlink rejected.' },
       },
     };
   }

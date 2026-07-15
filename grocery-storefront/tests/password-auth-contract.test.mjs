@@ -115,6 +115,7 @@ test('verification tokens stay in fragments and use a dedicated same-origin BFF 
   assert.match(verifyEmailRouteSource, /validateJsonMutationRequest\(request\)/);
   assert.match(verifyEmailRouteSource, /verifyCustomerEmail\(token\)/);
   assert.match(verifyEmailRouteSource, /requiresPasswordReset: result\.payload\.requiresPasswordReset === true/);
+  assert.match(verifyEmailRouteSource, /clearCustomerCookies\(response\)/);
   assert.match(verifyEmailPanelSource, /requiresPasswordReset \? '\/forgot-password' : '\/login'/);
   assert.match(trackingSource, /!isTrackingAllowedRoute\(pathname\)/);
   assert.doesNotMatch(trackingPolicySource, /verify-email/);

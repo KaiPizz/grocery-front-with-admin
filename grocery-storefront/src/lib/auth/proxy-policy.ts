@@ -5,6 +5,7 @@ const BLOCKED_AUTH_FIELDS = new Set([
   'customerRegister',
   'customerGoogleAuth',
   'customerFacebookAuth',
+  'customerCredentialStepUp',
   'customerGoogleLink',
   'customerFacebookLink',
   'customerLoginProviderUnlink',

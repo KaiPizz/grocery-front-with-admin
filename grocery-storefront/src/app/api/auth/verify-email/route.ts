@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { setNoStoreHeaders } from '@/lib/auth/server-cookies';
+import { clearCustomerCookies, setNoStoreHeaders } from '@/lib/auth/server-cookies';
 import { validateJsonMutationRequest } from '@/lib/auth/request-security';
 import { verifyCustomerEmail } from '@/lib/auth/server-service';
 
@@ -31,11 +31,15 @@ export async function POST(request: NextRequest) {
       ));
     }
 
-    return setNoStoreHeaders(NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: null,
       requiresPasswordReset: result.payload.requiresPasswordReset === true,
-    }));
+    });
+    // Verification can revoke sessions when untrusted social credentials are
+    // detached. Never retain stale customer or step-up cookies in that case.
+    clearCustomerCookies(response);
+    return setNoStoreHeaders(response);
   } catch {
     return setNoStoreHeaders(NextResponse.json(
       { success: false, message: 'Email verification failed.' },

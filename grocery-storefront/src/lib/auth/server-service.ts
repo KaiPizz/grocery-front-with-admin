@@ -71,8 +71,8 @@ export const CUSTOMER_FACEBOOK_LOGIN_OPERATION = `
 `;
 
 export const CUSTOMER_GOOGLE_LINK_OPERATION = `
-  mutation CustomerGoogleLink($token: String!, $nonce: String!, $currentPassword: String!) {
-    customerGoogleLink(token: $token, nonce: $nonce, currentPassword: $currentPassword) {
+  mutation CustomerGoogleLink($token: String!, $nonce: String!, $stepUpProof: String!) {
+    customerGoogleLink(token: $token, nonce: $nonce, stepUpProof: $stepUpProof) {
       success
       message
     }
@@ -80,8 +80,8 @@ export const CUSTOMER_GOOGLE_LINK_OPERATION = `
 `;
 
 export const CUSTOMER_FACEBOOK_LINK_OPERATION = `
-  mutation CustomerFacebookLink($token: String!, $currentPassword: String!) {
-    customerFacebookLink(token: $token, currentPassword: $currentPassword) {
+  mutation CustomerFacebookLink($token: String!, $stepUpProof: String!) {
+    customerFacebookLink(token: $token, stepUpProof: $stepUpProof) {
       success
       message
     }
@@ -89,10 +89,21 @@ export const CUSTOMER_FACEBOOK_LINK_OPERATION = `
 `;
 
 export const CUSTOMER_LOGIN_PROVIDER_UNLINK_OPERATION = `
-  mutation CustomerLoginProviderUnlink($provider: String!, $currentPassword: String!) {
-    customerLoginProviderUnlink(provider: $provider, currentPassword: $currentPassword) {
+  mutation CustomerLoginProviderUnlink($provider: String!, $stepUpProof: String!) {
+    customerLoginProviderUnlink(provider: $provider, stepUpProof: $stepUpProof) {
       success
       message
+    }
+  }
+`;
+
+export const CUSTOMER_CREDENTIAL_STEP_UP_OPERATION = `
+  mutation CustomerCredentialStepUp($currentPassword: String!) {
+    customerCredentialStepUp(currentPassword: $currentPassword) {
+      success
+      message
+      stepUpProof
+      expiresIn
     }
   }
 `;
@@ -223,6 +234,13 @@ export interface CustomerProviderActionPayload {
   message: string | null;
 }
 
+export interface CustomerCredentialStepUpPayload {
+  success: boolean;
+  message: string | null;
+  stepUpProof: string | null;
+  expiresIn: number | null;
+}
+
 interface GoogleLinkResult {
   customerGoogleLink: CustomerProviderActionPayload | null;
 }
@@ -233,6 +251,10 @@ interface FacebookLinkResult {
 
 interface LoginProviderUnlinkResult {
   customerLoginProviderUnlink: CustomerProviderActionPayload | null;
+}
+
+interface CredentialStepUpResult {
+  customerCredentialStepUp: CustomerCredentialStepUpPayload | null;
 }
 
 interface RenewResult {
@@ -390,11 +412,11 @@ export async function linkGoogleCustomer(
   accessToken: string,
   token: string,
   nonce: string,
-  currentPassword: string,
+  stepUpProof: string,
 ) {
   const result = await privateCustomerAuthGraphqlRequest<GoogleLinkResult>(
     CUSTOMER_GOOGLE_LINK_OPERATION,
-    { token, nonce, currentPassword },
+    { token, nonce, stepUpProof },
     { accessToken },
   );
   return providerActionResult(
@@ -406,11 +428,11 @@ export async function linkGoogleCustomer(
 export async function linkFacebookCustomer(
   accessToken: string,
   token: string,
-  currentPassword: string,
+  stepUpProof: string,
 ) {
   const result = await privateCustomerAuthGraphqlRequest<FacebookLinkResult>(
     CUSTOMER_FACEBOOK_LINK_OPERATION,
-    { token, currentPassword },
+    { token, stepUpProof },
     { accessToken },
   );
   return providerActionResult(
@@ -422,17 +444,35 @@ export async function linkFacebookCustomer(
 export async function unlinkCustomerLoginProvider(
   accessToken: string,
   provider: 'google' | 'facebook',
-  currentPassword: string,
+  stepUpProof: string,
 ) {
   const result = await privateCustomerAuthGraphqlRequest<LoginProviderUnlinkResult>(
     CUSTOMER_LOGIN_PROVIDER_UNLINK_OPERATION,
-    { provider, currentPassword },
+    { provider, stepUpProof },
     { accessToken },
   );
   return providerActionResult(
     result,
     result.payload.data?.customerLoginProviderUnlink ?? null,
   );
+}
+
+export async function stepUpCustomerCredential(
+  accessToken: string,
+  currentPassword: string,
+) {
+  const result = await privateCustomerAuthGraphqlRequest<CredentialStepUpResult>(
+    CUSTOMER_CREDENTIAL_STEP_UP_OPERATION,
+    { currentPassword },
+    { accessToken },
+  );
+  return {
+    payload: result.payload.data?.customerCredentialStepUp ?? null,
+    error: firstGraphqlError(result.payload),
+    errorCode: firstGraphqlErrorCode(result.payload),
+    errorStatus: firstGraphqlErrorStatus(result.payload),
+    status: result.status,
+  };
 }
 
 export async function renewCustomerSession(refreshToken: string) {

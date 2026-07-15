@@ -3,9 +3,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  consumeGoogleLinkNonce,
+  consumeGoogleLoginNonce,
   createGoogleOAuthNonce,
   GOOGLE_OAUTH_NONCE_MAX_AGE_SECONDS,
   hasCustomerAuthBffSecret,
+  issueGoogleOAuthNonce,
   normalizeCustomerAuthBffSecret,
   normalizeCustomerAuthGraphqlUrl,
   normalizeGoogleClientId,
@@ -39,6 +42,21 @@ test('Google OAuth nonce is strong, URL-safe and short-lived', () => {
     assert.match(nonce, /^[A-Za-z0-9_-]{43}$/);
   }
   assert.equal(GOOGLE_OAUTH_NONCE_MAX_AGE_SECONDS, 300);
+
+  const now = 2_000_000;
+  const forged = createGoogleOAuthNonce();
+  assert.equal(consumeGoogleLoginNonce(forged, now), false);
+
+  const loginNonce = issueGoogleOAuthNonce('login', now);
+  assert.equal(typeof loginNonce, 'string');
+  assert.equal(consumeGoogleLinkNonce(loginNonce, loginNonce, now), false);
+  assert.equal(consumeGoogleLoginNonce(loginNonce, now), true);
+  assert.equal(consumeGoogleLoginNonce(loginNonce, now), false);
+
+  const linkNonce = issueGoogleOAuthNonce('link', now);
+  assert.equal(typeof linkNonce, 'string');
+  assert.equal(consumeGoogleLoginNonce(linkNonce, now), false);
+  assert.equal(consumeGoogleLinkNonce(linkNonce, linkNonce, now), true);
 });
 
 test('Google client ID is feature-gated by a server-only runtime variable', () => {
@@ -74,7 +92,7 @@ test('Google client ID is feature-gated by a server-only runtime variable', () =
 
 test('Google start route issues an HttpOnly same-site nonce and never caches config', () => {
   assert.match(startRouteSource, /validateSameOriginRequest\(request\)/);
-  assert.match(startRouteSource, /createGoogleOAuthNonce\(\)/);
+  assert.match(startRouteSource, /issueGoogleOAuthNonce\('login'\)/);
   assert.match(startRouteSource, /httpOnly:\s*true/);
   assert.match(startRouteSource, /sameSite:\s*'lax'/);
   assert.match(startRouteSource, /path:\s*'\/api\/auth\/google'/);
@@ -86,6 +104,7 @@ test('Google start route issues an HttpOnly same-site nonce and never caches con
 test('Google exchange stays in the dedicated same-origin BFF and consumes its nonce', () => {
   assert.match(exchangeRouteSource, /validateJsonMutationRequest\(request\)/);
   assert.match(exchangeRouteSource, /request\.cookies\.get\(GOOGLE_OAUTH_NONCE_COOKIE_NAME\)/);
+  assert.match(exchangeRouteSource, /consumeGoogleLoginNonce\(nonce\)/);
   assert.match(exchangeRouteSource, /MAX_GOOGLE_CREDENTIAL_LENGTH\s*=\s*4096/);
   assert.match(exchangeRouteSource, /googleLoginCustomer\(\{ token: credential, nonce \}\)/);
   assert.match(exchangeRouteSource, /consumeGoogleNonce\(response\)/);

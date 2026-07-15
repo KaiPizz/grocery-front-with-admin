@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
+  consumeGoogleLoginNonce,
   GOOGLE_OAUTH_NONCE_COOKIE_NAME,
   hasCustomerAuthBffSecret,
   normalizeCustomerAuthGraphqlUrl,
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
   }
 
   const nonce = request.cookies.get(GOOGLE_OAUTH_NONCE_COOKIE_NAME)?.value ?? '';
-  if (!/^[A-Za-z0-9_-]{43}$/.test(nonce)) {
+  if (!consumeGoogleLoginNonce(nonce)) {
     return respond({ success: false, message: 'Google sign-in expired.', customer: null, errors: [] }, 400);
   }
 

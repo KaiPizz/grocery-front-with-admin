@@ -7,6 +7,7 @@ import {
   Facebook,
   Link2,
   Loader2,
+  ShieldCheck,
   Unlink,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
@@ -36,9 +37,20 @@ interface FacebookLoginResponse {
 }
 
 type FacebookSdk = NonNullable<Window['FB']>;
+type PasswordDocumentSafety = 'checking' | 'safe' | 'reload-required';
 
 const SOCIAL_PROVIDERS: SocialLoginProvider[] = ['google', 'facebook'];
 const facebookSdkLoads = new Map<string, Promise<FacebookSdk>>();
+
+function hasProviderSdkExposure(): boolean {
+  if (window.google?.accounts?.id || window.FB) return true;
+
+  return Array.from(document.scripts).some((script) => (
+    script.src.startsWith('https://accounts.google.com/gsi/client')
+    || script.dataset.facebookCustomerAuth === 'true'
+    || script.dataset.facebookCustomerLink === 'true'
+  ));
+}
 
 function isLoginProvider(value: string): value is CustomerLoginProvider {
   return value === 'password' || value === 'google' || value === 'facebook';
@@ -80,25 +92,34 @@ function loadFacebookSdk(locale: 'pl' | 'en'): Promise<FacebookSdk> {
   return load;
 }
 
-export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile | null }) {
+interface ProviderConnectionsPanelProps {
+  profile: CustomerProfile | null;
+  onPasswordIsolationChange: (isolated: boolean) => void;
+}
+
+export function ProviderConnectionsPanel({
+  profile,
+  onPasswordIsolationChange,
+}: ProviderConnectionsPanelProps) {
   const tAccount = useTranslations('account');
   const activeLocale = useLocale();
   const locale: 'pl' | 'en' = activeLocale === 'en' ? 'en' : 'pl';
   const router = useRouter();
   const clearSession = useAuthStore((state) => state.clearSession);
   const googleButtonRef = useRef<HTMLDivElement>(null);
-  const exchangeInFlightRef = useRef(false);
-  const passwordRef = useRef('');
+  const actionInFlightRef = useRef(false);
   const googleNonceRef = useRef('');
   const [currentPassword, setCurrentPassword] = useState('');
+  const [stepUpReady, setStepUpReady] = useState(false);
+  const [steppingUp, setSteppingUp] = useState(false);
   const [busyProvider, setBusyProvider] = useState<SocialLoginProvider | null>(null);
   const [pendingUnlink, setPendingUnlink] = useState<SocialLoginProvider | null>(null);
   const [googleConfig, setGoogleConfig] = useState<GoogleLinkConfig | null>(null);
   const [googleScriptReady, setGoogleScriptReady] = useState(false);
   const [googleUnavailable, setGoogleUnavailable] = useState(false);
+  const [passwordDocumentSafety, setPasswordDocumentSafety] = useState<PasswordDocumentSafety>('checking');
   const [error, setError] = useState<string | null>(null);
 
-  passwordRef.current = currentPassword;
   googleNonceRef.current = googleConfig?.nonce ?? '';
 
   const hasAuthoritativeMetadata = typeof profile?.hasPassword === 'boolean'
@@ -111,12 +132,29 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
   const googleLinked = linkedProviders.has('google');
   const passwordIsValid = isPasswordValid(currentPassword);
 
+  const resetStepUp = useCallback(() => {
+    const providerSdkExposed = hasProviderSdkExposure();
+    setCurrentPassword('');
+    setStepUpReady(false);
+    setGoogleConfig(null);
+    setPendingUnlink(null);
+    setPasswordDocumentSafety(providerSdkExposed ? 'reload-required' : 'safe');
+    onPasswordIsolationChange(providerSdkExposed);
+  }, [onPasswordIsolationChange]);
+
   const redirectToSecurityLogin = useCallback(() => {
     clearSession();
     router.replace('/login?returnTo=%2Faccount%23security');
   }, [clearSession, router]);
 
   const handleFailure = useCallback((response: Response, action: 'link' | 'unlink') => {
+    // Every provider mutation consumes the short-lived proof cookie, whether
+    // the provider operation succeeds or fails.
+    resetStepUp();
+    if (response.status === 428) {
+      setError(tAccount('providerStepUpExpired'));
+      return;
+    }
     if (response.status === 401) {
       redirectToSecurityLogin();
       return;
@@ -134,20 +172,83 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
       return;
     }
     setError(tAccount('providerActionFailed'));
-  }, [redirectToSecurityLogin, tAccount]);
+  }, [redirectToSecurityLogin, resetStepUp, tAccount]);
 
   const finishSuccessfulAction = useCallback((provider: SocialLoginProvider, action: 'link' | 'unlink') => {
     setCurrentPassword('');
+    resetStepUp();
     setPendingUnlink(null);
     clearSession();
     toast.success(tAccount(action === 'link' ? 'providerLinked' : 'providerUnlinked', {
       provider: provider === 'google' ? 'Google' : 'Facebook',
     }));
     router.replace('/login?returnTo=%2Faccount%23security');
-  }, [clearSession, router, tAccount]);
+  }, [clearSession, resetStepUp, router, tAccount]);
+
+  const confirmProviderStepUp = useCallback(async () => {
+    if (
+      !canManageProviders
+      || !passwordIsValid
+      || steppingUp
+      || actionInFlightRef.current
+    ) {
+      setError(tAccount('providerPasswordRequired'));
+      return;
+    }
+
+    actionInFlightRef.current = true;
+    setSteppingUp(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/auth/provider/step-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        cache: 'no-store',
+        body: JSON.stringify({ currentPassword }),
+      });
+      if (!response.ok) {
+        setCurrentPassword('');
+        resetStepUp();
+        if (response.status === 401) {
+          redirectToSecurityLogin();
+        } else if (response.status === 429) {
+          setError(tAccount('providerActionRateLimited'));
+        } else if (response.status >= 500) {
+          setError(tAccount('providerActionUnavailable'));
+        } else {
+          setError(tAccount('providerPasswordInvalid'));
+        }
+        return;
+      }
+
+      // Remove every account-security password field from the document before
+      // any Google or Meta SDK is allowed to execute in this document.
+      setCurrentPassword('');
+      onPasswordIsolationChange(true);
+      setStepUpReady(true);
+      setGoogleUnavailable(false);
+    } catch {
+      setCurrentPassword('');
+      resetStepUp();
+      setError(tAccount('providerActionUnavailable'));
+    } finally {
+      actionInFlightRef.current = false;
+      setSteppingUp(false);
+    }
+  }, [
+    canManageProviders,
+    currentPassword,
+    passwordIsValid,
+    onPasswordIsolationChange,
+    redirectToSecurityLogin,
+    resetStepUp,
+    steppingUp,
+    tAccount,
+  ]);
 
   const startGoogleLink = useCallback(async () => {
-    if (!canManageProviders || googleLinked || !passwordIsValid) {
+    if (!canManageProviders || googleLinked || !stepUpReady) {
       setGoogleConfig(null);
       return;
     }
@@ -161,6 +262,11 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
       });
       if (response.status === 401) {
         redirectToSecurityLogin();
+        return;
+      }
+      if (response.status === 428) {
+        resetStepUp();
+        setError(tAccount('providerStepUpExpired'));
         return;
       }
       const payload = await response.json() as {
@@ -183,24 +289,49 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
     }
     setGoogleConfig(null);
     setGoogleUnavailable(true);
-  }, [canManageProviders, googleLinked, passwordIsValid, redirectToSecurityLogin]);
+  }, [
+    canManageProviders,
+    googleLinked,
+    redirectToSecurityLogin,
+    resetStepUp,
+    stepUpReady,
+    tAccount,
+  ]);
 
   useEffect(() => {
     void startGoogleLink();
   }, [startGoogleLink]);
 
   useEffect(() => {
-    if (window.google?.accounts?.id) setGoogleScriptReady(true);
-  }, []);
+    if (!hasAuthoritativeMetadata) return;
 
-  const handleGoogleCredential = useCallback(async (credential?: string) => {
-    const password = passwordRef.current;
-    if (!credential || !isPasswordValid(password) || exchangeInFlightRef.current) {
-      setError(tAccount('providerPasswordRequired'));
+    if (!canManageProviders) {
+      setPasswordDocumentSafety('safe');
+      onPasswordIsolationChange(false);
       return;
     }
 
-    exchangeInFlightRef.current = true;
+    // Social login uses client navigation. If its SDK survived the navigation,
+    // require an explicit new document before ever mounting the password field.
+    // Do not auto-reload: an extension that reinjects a provider SDK could
+    // otherwise create a reload loop.
+    if (hasProviderSdkExposure()) {
+      setPasswordDocumentSafety('reload-required');
+      onPasswordIsolationChange(true);
+      return;
+    }
+    setPasswordDocumentSafety('safe');
+    onPasswordIsolationChange(false);
+  }, [canManageProviders, hasAuthoritativeMetadata, onPasswordIsolationChange]);
+
+  const handleGoogleCredential = useCallback(async (credential?: string) => {
+    if (actionInFlightRef.current) return;
+    if (!credential || !stepUpReady) {
+      setError(tAccount('providerStepUpExpired'));
+      return;
+    }
+
+    actionInFlightRef.current = true;
     setBusyProvider('google');
     setError(null);
     try {
@@ -211,24 +342,22 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
         cache: 'no-store',
         body: JSON.stringify({
           credential,
-          currentPassword: password,
           nonce: googleNonceRef.current,
         }),
       });
       if (!response.ok) {
         handleFailure(response, 'link');
-        await startGoogleLink();
         return;
       }
       finishSuccessfulAction('google', 'link');
     } catch {
+      resetStepUp();
       setError(tAccount('providerActionUnavailable'));
-      await startGoogleLink();
     } finally {
-      exchangeInFlightRef.current = false;
+      actionInFlightRef.current = false;
       setBusyProvider(null);
     }
-  }, [finishSuccessfulAction, handleFailure, startGoogleLink, tAccount]);
+  }, [finishSuccessfulAction, handleFailure, resetStepUp, stepUpReady, tAccount]);
 
   useEffect(() => {
     const googleIdentity = window.google?.accounts?.id;
@@ -283,6 +412,11 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
       redirectToSecurityLogin();
       return null;
     }
+    if (response.status === 428) {
+      resetStepUp();
+      setError(tAccount('providerStepUpExpired'));
+      return null;
+    }
     const payload = await response.json() as {
       enabled?: unknown;
       appId?: unknown;
@@ -295,24 +429,26 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
       || typeof payload.appId !== 'string'
       || typeof payload.apiVersion !== 'string'
       || typeof payload.state !== 'string'
-    ) return null;
+    ) {
+      setError(tAccount('providerActionUnavailable'));
+      return null;
+    }
     return { appId: payload.appId, apiVersion: payload.apiVersion, state: payload.state };
   }
 
   async function handleFacebookLink() {
-    if (!passwordIsValid || busyProvider) {
-      setError(tAccount('providerPasswordRequired'));
+    if (busyProvider || actionInFlightRef.current) return;
+    if (!stepUpReady) {
+      setError(tAccount('providerStepUpExpired'));
       return;
     }
 
+    actionInFlightRef.current = true;
     setBusyProvider('facebook');
     setError(null);
     try {
       const config = await startFacebookLink();
-      if (!config) {
-        setError(tAccount('providerActionUnavailable'));
-        return;
-      }
+      if (!config) return;
 
       // Keep the existing privacy rule: Facebook is contacted only after click.
       const facebook = await loadFacebookSdk(locale);
@@ -342,7 +478,6 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
         cache: 'no-store',
         body: JSON.stringify({
           accessToken,
-          currentPassword: passwordRef.current,
           state: config.state,
         }),
       });
@@ -352,18 +487,22 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
       }
       finishSuccessfulAction('facebook', 'link');
     } catch {
+      resetStepUp();
       setError(tAccount('providerActionUnavailable'));
     } finally {
+      actionInFlightRef.current = false;
       setBusyProvider(null);
     }
   }
 
   async function handleUnlink(provider: SocialLoginProvider) {
-    if (!passwordIsValid || busyProvider) {
-      setError(tAccount('providerPasswordRequired'));
+    if (busyProvider || actionInFlightRef.current) return;
+    if (!stepUpReady) {
+      setError(tAccount('providerStepUpExpired'));
       return;
     }
 
+    actionInFlightRef.current = true;
     setBusyProvider(provider);
     setError(null);
     try {
@@ -372,7 +511,7 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',
         cache: 'no-store',
-        body: JSON.stringify({ provider, currentPassword }),
+        body: JSON.stringify({ provider }),
       });
       if (!response.ok) {
         handleFailure(response, 'unlink');
@@ -380,8 +519,10 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
       }
       finishSuccessfulAction(provider, 'unlink');
     } catch {
+      resetStepUp();
       setError(tAccount('providerActionUnavailable'));
     } finally {
+      actionInFlightRef.current = false;
       setBusyProvider(null);
     }
   }
@@ -401,35 +542,89 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
         </p>
       ) : (
         <>
-          <label className="mt-4 block max-w-lg" htmlFor="provider-current-password">
-            <span className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-              {tAccount('providerCurrentPassword')}
-            </span>
-            <input
-              id="provider-current-password"
-              name="provider-current-password"
-              type="password"
-              autoComplete="current-password"
-              maxLength={72}
-              disabled={!canManageProviders || Boolean(busyProvider)}
-              value={currentPassword}
-              onChange={(event) => {
-                setCurrentPassword(event.target.value);
-                setError(null);
-              }}
-              className="h-11 w-full rounded-xl border bg-transparent px-4 text-sm outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60"
+          {canManageProviders && stepUpReady ? (
+            <div
+              className="mt-4 flex max-w-lg items-start gap-2 rounded-xl border px-4 py-3 text-sm font-medium"
               style={{
-                borderColor: 'var(--color-border)',
+                borderColor: 'color-mix(in srgb, var(--color-primary) 35%, var(--color-border))',
+                backgroundColor: 'color-mix(in srgb, var(--color-primary) 7%, transparent)',
                 color: 'var(--color-foreground)',
-                '--tw-ring-color': 'color-mix(in srgb, var(--color-primary) 35%, transparent)',
-              } as CSSProperties}
-            />
-          </label>
-          <p className="mt-2 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-            {canManageProviders
-              ? tAccount('providerPasswordHint')
-              : tAccount('providerPasswordSetupRequired')}
-          </p>
+              }}
+              role="status"
+              aria-live="polite"
+            >
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+              {tAccount('providerStepUpReady')}
+            </div>
+          ) : canManageProviders && passwordDocumentSafety === 'safe' ? (
+            <div className="mt-4 max-w-lg">
+              <label className="block" htmlFor="provider-current-password">
+                <span className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+                  {tAccount('providerCurrentPassword')}
+                </span>
+                <input
+                  id="provider-current-password"
+                  name="provider-current-password"
+                  type="password"
+                  autoComplete="current-password"
+                  maxLength={72}
+                  disabled={steppingUp || Boolean(busyProvider)}
+                  value={currentPassword}
+                  onChange={(event) => {
+                    setCurrentPassword(event.target.value);
+                    setError(null);
+                  }}
+                  className="h-11 w-full rounded-xl border bg-transparent px-4 text-sm outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60"
+                  style={{
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-foreground)',
+                    '--tw-ring-color': 'color-mix(in srgb, var(--color-primary) 35%, transparent)',
+                  } as CSSProperties}
+                />
+              </label>
+              <p className="mt-2 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                {tAccount('providerPasswordHint')}
+              </p>
+              <button
+                type="button"
+                onClick={() => { void confirmProviderStepUp(); }}
+                disabled={!passwordIsValid || steppingUp || Boolean(busyProvider)}
+                className="mt-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+                style={{ backgroundColor: 'var(--color-primary)' }}
+              >
+                {steppingUp
+                  ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  : <ShieldCheck className="h-4 w-4" aria-hidden="true" />}
+                {steppingUp
+                  ? tAccount('providerStepUpChecking')
+                  : tAccount('providerStepUpAction')}
+              </button>
+            </div>
+          ) : canManageProviders && passwordDocumentSafety === 'reload-required' ? (
+            <div
+              className="mt-4 max-w-lg rounded-xl border px-4 py-3 text-sm"
+              style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}
+              role="status"
+            >
+              <p>{tAccount('providerStepUpReloadRequired')}</p>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full border px-5 text-sm font-semibold"
+                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+              >
+                {tAccount('providerStepUpReloadAction')}
+              </button>
+            </div>
+          ) : canManageProviders ? (
+            <p className="mt-4 text-xs" style={{ color: 'var(--color-muted-foreground)' }} role="status">
+              {tAccount('providerStepUpDocumentCheck')}
+            </p>
+          ) : (
+            <p className="mt-4 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+              {tAccount('providerPasswordSetupRequired')}
+            </p>
+          )}
 
           <div className="mt-4 divide-y rounded-2xl border px-4" style={{ borderColor: 'var(--color-border)' }}>
             {SOCIAL_PROVIDERS.map((provider) => {
@@ -468,7 +663,7 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
                           setPendingUnlink(provider);
                           setError(null);
                         }}
-                        disabled={!canManageProviders || !canUnlink || !passwordIsValid || Boolean(busyProvider)}
+                        disabled={!canManageProviders || !canUnlink || !stepUpReady || Boolean(busyProvider)}
                         className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                         style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                       >
@@ -477,7 +672,7 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
                       </button>
                     ) : provider === 'google' ? (
                       <div className="w-full sm:w-[260px]">
-                        {canManageProviders && passwordIsValid && !googleUnavailable ? (
+                        {canManageProviders && stepUpReady && googleConfig && !googleUnavailable ? (
                           <>
                             <Script
                               id={`google-identity-link-${locale}`}
@@ -488,8 +683,8 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
                               onError={() => setGoogleUnavailable(true)}
                             />
                             <div
-                              className={`min-h-11 overflow-hidden rounded-full ${busy ? 'pointer-events-none opacity-60' : ''}`}
-                              aria-busy={busy || !googleScriptReady}
+                              className={`min-h-11 overflow-hidden rounded-full ${busyProvider ? 'pointer-events-none opacity-60' : ''}`}
+                              aria-busy={Boolean(busyProvider) || !googleScriptReady}
                             >
                               <span className="sr-only">{tAccount('providerConnectGoogle')}</span>
                               <div ref={googleButtonRef} className="flex min-h-11 w-full justify-center" />
@@ -511,7 +706,7 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
                       <button
                         type="button"
                         onClick={() => { void handleFacebookLink(); }}
-                        disabled={!canManageProviders || !passwordIsValid || Boolean(busyProvider)}
+                        disabled={!canManageProviders || !stepUpReady || Boolean(busyProvider)}
                         className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
                         style={{ backgroundColor: '#1877F2' }}
                       >
@@ -548,7 +743,7 @@ export function ProviderConnectionsPanel({ profile }: { profile: CustomerProfile
                         <button
                           type="button"
                           onClick={() => { void handleUnlink(provider); }}
-                          disabled={busy || !passwordIsValid}
+                          disabled={busy || !stepUpReady}
                           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold text-white disabled:opacity-50"
                           style={{ backgroundColor: 'var(--color-destructive)' }}
                         >
