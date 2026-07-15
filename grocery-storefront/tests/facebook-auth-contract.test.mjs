@@ -105,7 +105,7 @@ test('Facebook exchange is same-origin JSON only, consumes state before token ex
 test('private GraphQL contract forwards only the provider token plus trusted locale/channel headers', () => {
   assert.match(serverServiceSource, /mutation CustomerFacebookLogin\(\$input: OAuthLoginInput!\)/);
   assert.match(serverServiceSource, /customerFacebookAuth\(input: \$input\)/);
-  assert.match(serverServiceSource, /customer \{ id email fullName phone emailVerified createdAt \}/);
+  assert.match(serverServiceSource, /customer \{ id email fullName phone emailVerified createdAt hasPassword linkedProviders \}/);
   assert.match(serverServiceSource, /facebookLoginCustomer\([\s\S]*input: \{ token: string \},[\s\S]*locale: 'pl' \| 'en'/);
   assert.match(serverServiceSource, /privateCustomerAuthGraphqlRequest<FacebookLoginResult>\([\s\S]*\{ input \},[\s\S]*locale/);
   assert.match(serverServiceSource, /'x-channel': resolveChannel\(process\.env\.NEXT_PUBLIC_SALON_SLUG\)/);

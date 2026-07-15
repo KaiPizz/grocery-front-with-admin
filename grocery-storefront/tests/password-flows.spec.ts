@@ -194,6 +194,8 @@ async function installPasswordApi(page: Page, state: PasswordFlowState) {
               fullName: 'Password Shopper',
               phone: '+48111111111',
               createdAt: '2026-01-10T10:00:00.000Z',
+              hasPassword: true,
+              linkedProviders: ['password'],
             },
           }
         : { authenticated: false, customer: null }, state.authenticated ? 200 : 401);
@@ -213,6 +215,8 @@ async function installPasswordApi(page: Page, state: PasswordFlowState) {
           fullName: body.fullName,
           phone: null,
           createdAt: '2026-07-15T00:00:00.000Z',
+          hasPassword: true,
+          linkedProviders: ['password'],
         },
         errors: [],
       });

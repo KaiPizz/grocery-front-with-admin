@@ -32,6 +32,8 @@ const resendVerificationRouteSource = read('../src/app/api/auth/resend-verificat
 const emailVerificationBannerSource = read('../src/components/account/EmailVerificationBanner.tsx');
 const accountPageSource = read('../src/app/[locale]/(shop)/account/page.tsx');
 const proxyPolicySource = read('../src/lib/auth/proxy-policy.ts');
+const plMessages = JSON.parse(read('../src/messages/pl.json'));
+const enMessages = JSON.parse(read('../src/messages/en.json'));
 
 test('password mutations stay server-side and forgot uses only trusted channel locale input', () => {
   assert.match(serverServiceSource, /forgotPassword\(input: \$input\)/);
@@ -58,6 +60,30 @@ test('successful reset and change revoke the browser session without returning c
   assert.doesNotMatch(resetRouteSource, /refreshToken\s*:/);
   assert.doesNotMatch(changeRouteSource, /accessToken\s*:/);
   assert.doesNotMatch(securityPanelSource, /localStorage\.setItem|sessionStorage\.setItem/);
+});
+
+test('social-only accounts use verified email setup without exposing credentials to the browser', () => {
+  assert.match(securityPanelSource, /profile\?\.hasPassword !== false/);
+  assert.match(securityPanelSource, /profile\?\.emailVerified !== true/);
+  assert.match(securityPanelSource, /fetch\('\/api\/auth\/forgot-password'/);
+  assert.match(securityPanelSource, /JSON\.stringify\(\{ email: profile\.email, locale \}\)/);
+  assert.match(securityPanelSource, /linkedProviders/);
+  assert.doesNotMatch(securityPanelSource, /\/api\/graphql|Authorization/);
+  assert.doesNotMatch(securityPanelSource, /googleId|facebookId|passwordHash/);
+  assert.doesNotMatch(securityPanelSource, /localStorage|sessionStorage/);
+  for (const messages of [plMessages, enMessages]) {
+    for (const key of [
+      'signInMethodsTitle',
+      'setPasswordTitle',
+      'setPasswordVerifyFirst',
+      'setPasswordAction',
+      'setPasswordSent',
+      'setPasswordFailed',
+    ]) {
+      assert.equal(typeof messages.account[key], 'string', key);
+      assert.ok(messages.account[key].length > 0, key);
+    }
+  }
 });
 
 test('change password refreshes GraphQL HTTP 200 expired access failures', () => {
@@ -113,10 +139,15 @@ test('unverified customers can safely request a new branded verification email',
     assert.notEqual(operationEnd, -1, `${operationName} must be complete`);
     assert.match(
       serverServiceSource.slice(operationStart, operationEnd),
-      /customer \{ id email fullName phone emailVerified createdAt \}/,
-      `${operationName} must expose verification state`,
+      /customer \{ id email fullName phone emailVerified createdAt hasPassword linkedProviders \}/,
+      `${operationName} must expose verification and login capability state`,
     );
   }
+  assert.match(
+    serverServiceSource,
+    /me \{ id email fullName phone emailVerified createdAt hasPassword linkedProviders \}/,
+  );
+  assert.doesNotMatch(serverServiceSource, /googleId|facebookId|passwordHash/);
   assert.match(
     resendVerificationRouteSource,
     /validateJsonMutationRequest\(request\)/,

@@ -222,6 +222,8 @@ export interface WishlistItem {
 
 export type AuthStatus = 'loading' | 'authenticated' | 'guest' | 'unavailable';
 
+export type CustomerLoginProvider = 'password' | 'google' | 'facebook';
+
 export interface CustomerProfile {
   id: string;
   email: string;
@@ -229,6 +231,8 @@ export interface CustomerProfile {
   phone?: string | null;
   emailVerified?: boolean;
   createdAt?: string;
+  hasPassword?: boolean;
+  linkedProviders?: CustomerLoginProvider[];
 }
 
 export interface AuthError {

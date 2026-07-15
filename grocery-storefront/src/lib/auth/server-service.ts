@@ -22,7 +22,7 @@ export const CUSTOMER_LOGIN_OPERATION = `
       expiresIn
       success
       message
-      customer { id email fullName phone emailVerified createdAt }
+      customer { id email fullName phone emailVerified createdAt hasPassword linkedProviders }
       errors { field message code }
     }
   }
@@ -36,7 +36,7 @@ export const CUSTOMER_REGISTER_OPERATION = `
       expiresIn
       success
       message
-      customer { id email fullName phone emailVerified createdAt }
+      customer { id email fullName phone emailVerified createdAt hasPassword linkedProviders }
       errors { field message code }
     }
   }
@@ -50,7 +50,7 @@ export const CUSTOMER_GOOGLE_LOGIN_OPERATION = `
       expiresIn
       success
       message
-      customer { id email fullName phone emailVerified createdAt }
+      customer { id email fullName phone emailVerified createdAt hasPassword linkedProviders }
       errors { field message code }
     }
   }
@@ -64,7 +64,7 @@ export const CUSTOMER_FACEBOOK_LOGIN_OPERATION = `
       expiresIn
       success
       message
-      customer { id email fullName phone emailVerified createdAt }
+      customer { id email fullName phone emailVerified createdAt hasPassword linkedProviders }
       errors { field message code }
     }
   }
@@ -94,7 +94,7 @@ export const CUSTOMER_LOGOUT_OPERATION = `
 
 export const CUSTOMER_SESSION_OPERATION = `
   query CustomerSession {
-    me { id email fullName phone emailVerified createdAt }
+    me { id email fullName phone emailVerified createdAt hasPassword linkedProviders }
   }
 `;
 
