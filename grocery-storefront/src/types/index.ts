@@ -227,6 +227,7 @@ export interface CustomerProfile {
   email: string;
   fullName: string;
   phone?: string | null;
+  emailVerified?: boolean;
   createdAt?: string;
 }
 

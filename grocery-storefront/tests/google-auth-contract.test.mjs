@@ -23,6 +23,7 @@ const serverServiceSource = read('../src/lib/auth/server-service.ts');
 const upstreamSource = read('../src/lib/auth/upstream.ts');
 const authStoreSource = read('../src/stores/auth-store.ts');
 const componentSource = read('../src/components/auth/GoogleSignIn.tsx');
+const socialComponentSource = read('../src/components/auth/SocialSignIn.tsx');
 const authFormSource = read('../src/components/auth/AuthForm.tsx');
 const trackingSource = read('../src/components/TrackingScripts.tsx');
 const sensitiveBoundarySource = read('../src/components/SensitiveRouteBoundary.tsx');
@@ -102,7 +103,7 @@ test('server service forwards the provider credential and nonce without exposing
   assert.match(authStoreSource, /googleLogin: async \(credential\)/);
   assert.match(authStoreSource, /fetch\(path/);
   assert.doesNotMatch(authStoreSource, /localStorage\.setItem|sessionStorage\.setItem/);
-  assert.match(serverServiceSource, /googleAuthGraphqlRequest<GoogleLoginResult>/);
+  assert.match(serverServiceSource, /privateCustomerAuthGraphqlRequest<GoogleLoginResult>/);
   assert.match(serverServiceSource, /'x-customer-auth-bff-secret': bffSecret/);
   assert.match(serverServiceSource, /normalizeCustomerAuthGraphqlUrl\(process\.env\.CUSTOMER_AUTH_GRAPHQL_URL\)/);
   assert.match(serverServiceSource, /redirect: 'error'/);
@@ -113,12 +114,16 @@ test('server service forwards the provider credential and nonce without exposing
 });
 
 test('official responsive Google button appears on both auth modes with localized email fallback', () => {
-  assert.match(authFormSource, /<GoogleSignIn mode=\{mode\} returnTo=\{returnTo\} \/>/);
+  assert.match(authFormSource, /<SocialSignIn mode=\{mode\} returnTo=\{returnTo\} \/>/);
+  assert.match(socialComponentSource, /<GoogleSignIn/);
+  assert.match(socialComponentSource, /role="separator"/);
+  assert.match(socialComponentSource, /t\('emailDivider'\)/);
   assert.match(componentSource, /accounts\.google\.com\/gsi\/client\?hl=\$\{locale\}/);
   assert.match(componentSource, /googleIdentity\.renderButton/);
   assert.match(componentSource, /mode === 'login' \? 'signin_with' : 'signup_with'/);
   assert.match(componentSource, /ResizeObserver/);
   assert.match(componentSource, /if \(providerEnabled !== true \|\| !config\) return null/);
+  assert.doesNotMatch(componentSource, /role="separator"|t\('emailDivider'\)/);
   assert.doesNotMatch(componentSource, /localStorage|sessionStorage|console\.(?:log|warn|error)/);
   for (const messages of [plMessages, enMessages]) {
     assert.equal(typeof messages.auth.googleLoginLabel, 'string');

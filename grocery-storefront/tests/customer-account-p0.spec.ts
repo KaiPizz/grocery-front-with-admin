@@ -548,13 +548,19 @@ for (const scenario of SCENARIOS) {
     await installCustomerAccountApi(page, scenario, state);
 
     await page.goto(`/${scenario.locale}/login`);
-    await page.getByLabel(scenario.labels.email).fill('shopper@example.test');
+    await page
+      .getByRole('textbox', { name: scenario.labels.email, exact: true })
+      .fill('shopper@example.test');
     await page.getByLabel(scenario.labels.password).fill('wrong-password');
-    await page.getByRole('button', { name: scenario.labels.login }).click();
+    await page
+      .getByRole('button', { name: scenario.labels.login, exact: true })
+      .click();
     await expect(page.locator('#main-content').getByText(scenario.labels.invalidLogin)).toBeVisible();
 
     await page.getByLabel(scenario.labels.password).fill('correct-password');
-    await page.getByRole('button', { name: scenario.labels.login }).click();
+    await page
+      .getByRole('button', { name: scenario.labels.login, exact: true })
+      .click();
     await expect(page).toHaveURL(
       scenario.locale === 'pl' ? /\/wishlist$/ : /\/en\/wishlist$/,
     );

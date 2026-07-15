@@ -37,6 +37,8 @@ export default defineConfig({
         NODE_ENV: 'development',
         CUSTOMER_AUTH_BFF_SECRET: customerAuthBffTestSecret,
         CUSTOMER_AUTH_GRAPHQL_URL: 'http://127.0.0.1:4199/graphql',
+        CUSTOMER_FACEBOOK_APP_ID: '123456789012345',
+        CUSTOMER_FACEBOOK_GRAPH_VERSION: 'v25.0',
         CUSTOMER_GOOGLE_CLIENT_ID: '1234567890-playwright.apps.googleusercontent.com',
         NEXT_PUBLIC_CONFIG_API_URL: 'http://127.0.0.1:4199',
         NEXT_PUBLIC_GRAPHQL_URL: 'http://127.0.0.1:4199/graphql',
@@ -48,7 +50,7 @@ export default defineConfig({
   projects: [
     {
       name: 'iphone-12',
-      testIgnore: /(?:customer-account-p0|password-flows|google-auth|graphql-bff-method)\.spec\.ts/,
+      testIgnore: /(?:customer-account-p0|password-flows|google-auth|facebook-auth|graphql-bff-method)\.spec\.ts/,
       use: {
         ...devices['iPhone 12'],
       },
@@ -69,7 +71,7 @@ export default defineConfig({
     },
     {
       name: 'customer-account-desktop',
-      testMatch: /(?:customer-account-p0|password-flows|google-auth|graphql-bff-method)\.spec\.ts/,
+      testMatch: /(?:customer-account-p0|password-flows|google-auth|facebook-auth|graphql-bff-method)\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 1000 },

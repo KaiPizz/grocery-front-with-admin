@@ -200,7 +200,7 @@ for (const scenario of SCENARIOS) {
     await page.goto(authUrl(scenario, returnTo));
     const googleSection = page.getByTestId('google-auth-section');
     await expect(googleSection).toBeVisible();
-    await expect(googleSection.getByText(scenario.emailDivider)).toBeVisible();
+    await expect(page.getByTestId('social-auth-section').getByText(scenario.emailDivider)).toBeVisible();
     await expectAuthTrackersAbsent(page);
 
     const googleButton = page.getByTestId('google-gis-stub');

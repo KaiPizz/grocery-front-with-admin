@@ -56,6 +56,20 @@ export const CUSTOMER_GOOGLE_LOGIN_OPERATION = `
   }
 `;
 
+export const CUSTOMER_FACEBOOK_LOGIN_OPERATION = `
+  mutation CustomerFacebookLogin($input: OAuthLoginInput!) {
+    customerFacebookAuth(input: $input) {
+      accessToken
+      refreshToken
+      expiresIn
+      success
+      message
+      customer { id email fullName phone emailVerified createdAt }
+      errors { field message code }
+    }
+  }
+`;
+
 export const CUSTOMER_RENEW_OPERATION = `
   mutation CustomerAccessTokenRenew($input: TokenRefreshInput!) {
     customerAccessTokenRenew(input: $input) {
@@ -80,7 +94,7 @@ export const CUSTOMER_LOGOUT_OPERATION = `
 
 export const CUSTOMER_SESSION_OPERATION = `
   query CustomerSession {
-    me { id email fullName phone createdAt }
+    me { id email fullName phone emailVerified createdAt }
   }
 `;
 
@@ -155,6 +169,10 @@ interface GoogleLoginResult {
   customerGoogleAuth: LoginPayload | null;
 }
 
+interface FacebookLoginResult {
+  customerFacebookAuth: LoginPayload | null;
+}
+
 interface RenewResult {
   customerAccessTokenRenew: TokenPayload | null;
 }
@@ -193,15 +211,16 @@ interface ChangePasswordResult {
   changePassword: PasswordActionPayload | null;
 }
 
-async function googleAuthGraphqlRequest<TData>(
+async function privateCustomerAuthGraphqlRequest<TData>(
   query: string,
   variables: Record<string, unknown>,
+  locale?: 'pl' | 'en',
 ): Promise<{ payload: UpstreamGraphqlPayload<TData>; status: number }> {
   const endpoint = normalizeCustomerAuthGraphqlUrl(process.env.CUSTOMER_AUTH_GRAPHQL_URL);
   const bffSecret = normalizeCustomerAuthBffSecret(process.env.CUSTOMER_AUTH_BFF_SECRET);
   if (!endpoint || !bffSecret) {
     return {
-      payload: { errors: [{ message: 'Google sign-in service is unavailable.' }] },
+      payload: { errors: [{ message: 'Social sign-in service is unavailable.' }] },
       status: 503,
     };
   }
@@ -214,6 +233,7 @@ async function googleAuthGraphqlRequest<TData>(
         'Content-Type': 'application/json',
         'x-channel': resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG),
         'x-customer-auth-bff-secret': bffSecret,
+        ...(locale ? { 'x-locale': locale } : {}),
       },
       cache: 'no-store',
       redirect: 'error',
@@ -222,7 +242,7 @@ async function googleAuthGraphqlRequest<TData>(
     });
   } catch {
     return {
-      payload: { errors: [{ message: 'Google sign-in service is unavailable.' }] },
+      payload: { errors: [{ message: 'Social sign-in service is unavailable.' }] },
       status: 503,
     };
   }
@@ -231,7 +251,7 @@ async function googleAuthGraphqlRequest<TData>(
   try {
     payload = await response.json() as UpstreamGraphqlPayload<TData>;
   } catch {
-    payload = { errors: [{ message: 'Google sign-in service returned an invalid response.' }] };
+    payload = { errors: [{ message: 'Social sign-in service returned an invalid response.' }] };
   }
   return { payload, status: response.status };
 }
@@ -255,12 +275,28 @@ export async function registerCustomer(input: Record<string, unknown>) {
 }
 
 export async function googleLoginCustomer(input: { token: string; nonce: string }) {
-  const result = await googleAuthGraphqlRequest<GoogleLoginResult>(
+  const result = await privateCustomerAuthGraphqlRequest<GoogleLoginResult>(
     CUSTOMER_GOOGLE_LOGIN_OPERATION,
     { input },
   );
   return {
     payload: result.payload.data?.customerGoogleAuth ?? null,
+    error: firstGraphqlError(result.payload),
+    status: result.status,
+  };
+}
+
+export async function facebookLoginCustomer(
+  input: { token: string },
+  locale: 'pl' | 'en',
+) {
+  const result = await privateCustomerAuthGraphqlRequest<FacebookLoginResult>(
+    CUSTOMER_FACEBOOK_LOGIN_OPERATION,
+    { input },
+    locale,
+  );
+  return {
+    payload: result.payload.data?.customerFacebookAuth ?? null,
     error: firstGraphqlError(result.payload),
     status: result.status,
   };

@@ -56,9 +56,14 @@ declare global {
 interface GoogleSignInProps {
   mode: 'login' | 'register';
   returnTo: string;
+  onAvailabilityChange: (enabled: boolean) => void;
 }
 
-export function GoogleSignIn({ mode, returnTo }: GoogleSignInProps) {
+export function GoogleSignIn({
+  mode,
+  returnTo,
+  onAvailabilityChange,
+}: GoogleSignInProps) {
   const t = useTranslations('auth');
   const activeLocale = useLocale();
   const locale = activeLocale === 'en' ? 'en' : 'pl';
@@ -107,6 +112,10 @@ export function GoogleSignIn({ mode, returnTo }: GoogleSignInProps) {
   useEffect(() => {
     void startFlow();
   }, [startFlow]);
+
+  useEffect(() => {
+    onAvailabilityChange(providerEnabled === true);
+  }, [onAvailabilityChange, providerEnabled]);
 
   useEffect(() => {
     if (window.google?.accounts?.id) {
@@ -190,7 +199,7 @@ export function GoogleSignIn({ mode, returnTo }: GoogleSignInProps) {
   if (providerEnabled !== true || !config) return null;
 
   return (
-    <div className="mb-5" data-testid="google-auth-section">
+    <div data-testid="google-auth-section">
       <Script
         id={`google-identity-services-${locale}`}
         src={`https://accounts.google.com/gsi/client?hl=${locale}`}
@@ -211,13 +220,6 @@ export function GoogleSignIn({ mode, returnTo }: GoogleSignInProps) {
           {error}
         </p>
       )}
-      <div className="mt-5 flex items-center gap-3" role="separator" aria-label={t('emailDivider')}>
-        <span className="h-px flex-1" style={{ backgroundColor: 'var(--color-border)' }} />
-        <span className="text-xs font-medium" style={{ color: 'var(--color-muted-foreground)' }}>
-          {t('emailDivider')}
-        </span>
-        <span className="h-px flex-1" style={{ backgroundColor: 'var(--color-border)' }} />
-      </div>
     </div>
   );
 }

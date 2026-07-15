@@ -369,6 +369,67 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     };
   }
 
+  if (query.includes('mutation CustomerFacebookLogin')) {
+    const bffSecret = requestHeaders['x-customer-auth-bff-secret'];
+    const channel = requestHeaders['x-channel'];
+    const locale = requestHeaders['x-locale'];
+    const expectedBffSecret = process.env.TEST_CUSTOMER_AUTH_BFF_SECRET;
+    const input = variables.input && typeof variables.input === 'object'
+      ? variables.input
+      : {};
+    const bffIsAuthenticated = typeof expectedBffSecret === 'string'
+      && expectedBffSecret.length >= 32
+      && bffSecret === expectedBffSecret;
+    const channelIsValid = channel === 'test';
+    const localeIsValid = locale === 'pl' || locale === 'en';
+    const inputIsMinimal = Object.keys(input).length === 1
+      && Object.prototype.hasOwnProperty.call(input, 'token');
+    const credentialIsValid = input.token === `playwright-facebook-success-${locale}`;
+
+    if (
+      !bffIsAuthenticated
+      || !channelIsValid
+      || !localeIsValid
+      || !inputIsMinimal
+      || !credentialIsValid
+    ) {
+      return {
+        data: {
+          customerFacebookAuth: {
+            accessToken: null,
+            refreshToken: null,
+            expiresIn: null,
+            success: false,
+            message: 'Mock provider rejected credential.',
+            customer: null,
+            errors: [{ field: 'token', message: 'Mock provider rejected credential.', code: 'INVALID_OAUTH_TOKEN' }],
+          },
+        },
+      };
+    }
+
+    return {
+      data: {
+        customerFacebookAuth: {
+          accessToken: 'playwright-facebook-http-only-access',
+          refreshToken: 'playwright-facebook-http-only-refresh',
+          expiresIn: 900,
+          success: true,
+          message: 'Mock Facebook sign-in succeeded.',
+          customer: {
+            id: 'facebook-customer-1',
+            email: 'facebook-shopper@example.test',
+            fullName: 'Facebook Shopper',
+            phone: null,
+            emailVerified: false,
+            createdAt: '2026-07-15T00:00:00.000Z',
+          },
+          errors: [],
+        },
+      },
+    };
+  }
+
   if (query.includes('query Categories')) {
     return {
       data: {

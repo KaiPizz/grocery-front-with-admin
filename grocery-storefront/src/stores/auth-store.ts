@@ -36,6 +36,11 @@ interface AuthState {
   initialize: () => Promise<void>;
   login: (input: { email: string; password: string }) => Promise<AuthActionResult>;
   googleLogin: (credential: string) => Promise<AuthActionResult>;
+  facebookLogin: (
+    accessToken: string,
+    state: string,
+    locale: 'pl' | 'en',
+  ) => Promise<AuthActionResult>;
   register: (input: {
     fullName: string;
     email: string;
@@ -269,6 +274,34 @@ export const useAuthStore = create<AuthState>((set) => {
         return { success: true, message: payload.message, errors: [] };
       } catch {
         return { success: false, message: 'Google sign-in failed', errors: [] };
+      } finally {
+        set({ isSubmitting: false });
+      }
+    },
+
+    facebookLogin: async (accessToken, state, locale) => {
+      set({ isSubmitting: true });
+
+      try {
+        const { response, payload } = await requestJson<AuthApiResponse>('/api/auth/facebook', {
+          method: 'POST',
+          body: JSON.stringify({ accessToken, state, locale }),
+        });
+
+        if (!response.ok || !payload?.success || !payload.customer) {
+          return {
+            success: false,
+            message: payload?.message ?? 'Facebook sign-in failed',
+            errors: [],
+          };
+        }
+
+        clearLegacyAuthStorage();
+        setAuthenticatedSessionHint(true);
+        set({ session: createAuthenticatedSession(payload.customer), initialized: true });
+        return { success: true, message: payload.message, errors: [] };
+      } catch {
+        return { success: false, message: 'Facebook sign-in failed', errors: [] };
       } finally {
         set({ isSubmitting: false });
       }

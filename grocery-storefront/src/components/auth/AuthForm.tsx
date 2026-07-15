@@ -9,7 +9,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { safeReturnPath } from '@/lib/auth/safe-return-path';
 import { useAuthStore } from '@/stores/auth-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
-import { GoogleSignIn } from './GoogleSignIn';
+import { SocialSignIn } from './SocialSignIn';
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -125,7 +125,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             </p>
           </div>
 
-          <GoogleSignIn mode={mode} returnTo={returnTo} />
+          <SocialSignIn mode={mode} returnTo={returnTo} />
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
