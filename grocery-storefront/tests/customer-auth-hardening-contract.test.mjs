@@ -12,6 +12,7 @@ const refreshSource = read('../src/app/api/auth/refresh/route.ts');
 const logoutSource = read('../src/app/api/auth/logout/route.ts');
 const singleFlightSource = read('../src/lib/auth/server-refresh.ts');
 const requestSource = read('../src/lib/graphql/request.ts');
+const graphqlClientSource = read('../src/lib/graphql/client.ts');
 const authenticationPolicySource = read('../src/lib/auth/authentication-policy.ts');
 
 test('customer session cookies are HttpOnly, host-only and production-secure', () => {
@@ -42,6 +43,13 @@ test('generic GraphQL proxy ignores browser bearer and blocks token operations',
   assert.match(authenticationPolicySource, /originalError\?\.statusCode/);
   assert.doesNotMatch(proxySource, /export async function GET/);
   assert.match(proxySource, /setNoStoreHeaders/);
+});
+
+test('browser GraphQL queries stay POST-only for the same-origin BFF', () => {
+  assert.match(graphqlClientSource, /url:\s*getGraphqlUrl\(\)/);
+  assert.match(graphqlClientSource, /preferGetMethod:\s*false/);
+  assert.match(graphqlClientSource, /method:\s*'POST'/);
+  assert.doesNotMatch(proxySource, /export async function GET/);
 });
 
 test('refresh is single-flight and logout renews before revoke when access is unavailable', () => {

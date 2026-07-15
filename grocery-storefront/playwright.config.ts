@@ -30,6 +30,7 @@ export default defineConfig({
         NODE_ENV: 'development',
         NEXT_PUBLIC_CONFIG_API_URL: 'http://127.0.0.1:4199',
         NEXT_PUBLIC_GRAPHQL_URL: 'http://127.0.0.1:4199/graphql',
+        NEXT_PUBLIC_CHANNEL: 'test',
         NEXT_PUBLIC_SALON_SLUG: 'test',
       },
     },
@@ -37,7 +38,7 @@ export default defineConfig({
   projects: [
     {
       name: 'iphone-12',
-      testIgnore: /(?:customer-account-p0|password-flows)\.spec\.ts/,
+      testIgnore: /(?:customer-account-p0|password-flows|graphql-bff-method)\.spec\.ts/,
       use: {
         ...devices['iPhone 12'],
       },
@@ -50,7 +51,7 @@ export default defineConfig({
     },
     {
       name: 'customer-account-desktop',
-      testMatch: /(?:customer-account-p0|password-flows)\.spec\.ts/,
+      testMatch: /(?:customer-account-p0|password-flows|graphql-bff-method)\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 1000 },

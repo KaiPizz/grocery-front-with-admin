@@ -16,6 +16,9 @@ export function getUrqlClient() {
 
   clientInstance = createClient({
     url: getGraphqlUrl(),
+    // The same-origin BFF deliberately exposes POST only. urql v5 otherwise
+    // converts short queries to GET even when fetchOptions specifies POST.
+    preferGetMethod: false,
     exchanges: [cacheExchange, fetchExchange],
     fetchOptions: () => ({
       method: 'POST',
