@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { UserRound, ChevronRight, Loader2 } from 'lucide-react';
 import { AccountTabs } from '@/components/account/AccountTabs';
+import { EmailVerificationBanner } from '@/components/account/EmailVerificationBanner';
 import { Link } from '@/i18n/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -96,6 +97,8 @@ export default function AccountPage() {
           </div>
         </div>
       </div>
+
+      {session.user?.emailVerified === false && <EmailVerificationBanner />}
 
       <div className="mt-8">
         <AccountTabs />

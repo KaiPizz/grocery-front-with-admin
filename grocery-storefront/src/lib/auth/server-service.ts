@@ -22,7 +22,7 @@ export const CUSTOMER_LOGIN_OPERATION = `
       expiresIn
       success
       message
-      customer { id email fullName phone createdAt }
+      customer { id email fullName phone emailVerified createdAt }
       errors { field message code }
     }
   }
@@ -36,7 +36,7 @@ export const CUSTOMER_REGISTER_OPERATION = `
       expiresIn
       success
       message
-      customer { id email fullName phone createdAt }
+      customer { id email fullName phone emailVerified createdAt }
       errors { field message code }
     }
   }
@@ -50,7 +50,7 @@ export const CUSTOMER_GOOGLE_LOGIN_OPERATION = `
       expiresIn
       success
       message
-      customer { id email fullName phone createdAt }
+      customer { id email fullName phone emailVerified createdAt }
       errors { field message code }
     }
   }
@@ -137,6 +137,15 @@ export const CUSTOMER_CHANGE_PASSWORD_OPERATION = `
   }
 `;
 
+export const CUSTOMER_RESEND_VERIFICATION_OPERATION = `
+  mutation CustomerResendVerification($locale: String) {
+    resendVerification(locale: $locale) {
+      success
+      message
+    }
+  }
+`;
+
 export interface AuthErrorPayload {
   field?: string | null;
   message: string;
@@ -209,6 +218,10 @@ interface VerifyEmailResult {
 
 interface ChangePasswordResult {
   changePassword: PasswordActionPayload | null;
+}
+
+interface ResendVerificationResult {
+  resendVerification: PasswordActionPayload | null;
 }
 
 async function privateCustomerAuthGraphqlRequest<TData>(
@@ -389,6 +402,24 @@ export async function changeCustomerPassword(
   );
   return {
     payload: result.payload.data?.changePassword ?? null,
+    error: firstGraphqlError(result.payload),
+    errorCode: firstGraphqlErrorCode(result.payload),
+    errorStatus: firstGraphqlErrorStatus(result.payload),
+    status: result.status,
+  };
+}
+
+export async function resendCustomerVerification(
+  accessToken: string,
+  locale: 'pl' | 'en',
+) {
+  const result = await authGraphqlRequest<ResendVerificationResult>(
+    CUSTOMER_RESEND_VERIFICATION_OPERATION,
+    { locale },
+    accessToken,
+  );
+  return {
+    payload: result.payload.data?.resendVerification ?? null,
     error: firstGraphqlError(result.payload),
     errorCode: firstGraphqlErrorCode(result.payload),
     errorStatus: firstGraphqlErrorStatus(result.payload),

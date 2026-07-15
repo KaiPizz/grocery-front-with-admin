@@ -11,6 +11,7 @@ const BLOCKED_AUTH_FIELDS = new Set([
   'forgotPassword',
   'resetPassword',
   'verifyEmail',
+  'resendVerification',
   'customerActivate',
   'changePassword',
   'logout',

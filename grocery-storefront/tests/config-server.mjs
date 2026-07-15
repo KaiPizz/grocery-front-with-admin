@@ -361,6 +361,7 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
             email: 'google-shopper@example.test',
             fullName: 'Google Shopper',
             phone: null,
+            emailVerified: true,
             createdAt: '2026-07-15T00:00:00.000Z',
           },
           errors: [],
@@ -425,6 +426,88 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
             createdAt: '2026-07-15T00:00:00.000Z',
           },
           errors: [],
+        },
+      },
+    };
+  }
+
+  if (query.includes('mutation CustomerAccessTokenRenew')) {
+    const input =
+      variables.input && typeof variables.input === 'object'
+        ? variables.input
+        : {};
+    const refreshIsValid =
+      Object.keys(input).length === 1 &&
+      input.refreshToken === 'playwright-resend-refresh';
+    return {
+      data: {
+        customerAccessTokenRenew: refreshIsValid
+          ? {
+              success: true,
+              accessToken: 'playwright-resend-renewed-access',
+              refreshToken: 'playwright-resend-renewed-refresh',
+              expiresIn: 900,
+              errorCode: null,
+              message: null,
+            }
+          : {
+              success: false,
+              accessToken: null,
+              refreshToken: null,
+              expiresIn: null,
+              errorCode: 'INVALID_REFRESH_TOKEN',
+              message: 'Invalid refresh token.',
+            },
+      },
+    };
+  }
+
+  if (query.includes('mutation CustomerResendVerification')) {
+    const authorization = requestHeaders.authorization;
+    const channel = requestHeaders['x-channel'];
+    const localeIsValid =
+      variables.locale === 'pl' || variables.locale === 'en';
+    const inputIsMinimal =
+      Object.keys(variables).length === 1 &&
+      Object.prototype.hasOwnProperty.call(variables, 'locale');
+    const accessIsValid =
+      authorization === 'Bearer playwright-resend-access' ||
+      authorization === 'Bearer playwright-resend-renewed-access';
+
+    if (authorization === 'Bearer playwright-resend-expired-access') {
+      return {
+        data: null,
+        errors: [
+          {
+            message: 'Authentication required',
+            extensions: {
+              code: 'UNAUTHENTICATED',
+              originalError: {
+                statusCode: 401,
+                message: 'Authentication required',
+              },
+            },
+          },
+        ],
+      };
+    }
+
+    if (
+      !accessIsValid ||
+      channel !== 'test' ||
+      !localeIsValid ||
+      !inputIsMinimal
+    ) {
+      return {
+        data: { resendVerification: { success: false, message: 'Rejected.' } },
+      };
+    }
+
+    return {
+      data: {
+        resendVerification: {
+          success: true,
+          message: 'Verification email requested.',
         },
       },
     };

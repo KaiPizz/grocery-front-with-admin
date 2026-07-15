@@ -26,6 +26,7 @@ test('GraphQL proxy policy blocks direct and aliased token operations', () => {
     'mutation { forgotPassword(input: {email: "a@example.test"}) { success } }',
     'mutation { resetPassword(input: {token: "x", newPassword: "password"}) { success } }',
     'mutation { verifyEmail(token: "x") { success } }',
+    'mutation { resendVerification(locale: "en") { success } }',
     'mutation { customerActivate(activationToken: "x") { success } }',
     'mutation { changePassword(input: {currentPassword: "old", newPassword: "new-password"}) { success } }',
     'mutation { customerAccountDelete { success } }',

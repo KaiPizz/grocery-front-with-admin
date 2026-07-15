@@ -28,6 +28,10 @@ const middlewareSource = read('../src/middleware.ts');
 const restProxySource = read('../src/app/api/proxy/[...path]/route.ts');
 const verifyEmailRouteSource = read('../src/app/api/auth/verify-email/route.ts');
 const verifyEmailPanelSource = read('../src/components/auth/VerifyEmailPanel.tsx');
+const resendVerificationRouteSource = read('../src/app/api/auth/resend-verification/route.ts');
+const emailVerificationBannerSource = read('../src/components/account/EmailVerificationBanner.tsx');
+const accountPageSource = read('../src/app/[locale]/(shop)/account/page.tsx');
+const proxyPolicySource = read('../src/lib/auth/proxy-policy.ts');
 
 test('password mutations stay server-side and forgot uses only trusted channel locale input', () => {
   assert.match(serverServiceSource, /forgotPassword\(input: \$input\)/);
@@ -87,6 +91,71 @@ test('verification tokens stay in fragments and use a dedicated same-origin BFF 
   assert.match(trackingSource, /!isTrackingAllowedRoute\(pathname\)/);
   assert.doesNotMatch(trackingPolicySource, /verify-email/);
   assert.match(middlewareSource, /routePath === '\/verify-email'/);
+});
+
+test('unverified customers can safely request a new branded verification email', () => {
+  assert.match(
+    serverServiceSource,
+    /mutation CustomerResendVerification\(\$locale: String\)/,
+  );
+  assert.match(serverServiceSource, /resendVerification\(locale: \$locale\)/);
+  for (const operationName of [
+    'CUSTOMER_LOGIN_OPERATION',
+    'CUSTOMER_REGISTER_OPERATION',
+    'CUSTOMER_GOOGLE_LOGIN_OPERATION',
+    'CUSTOMER_FACEBOOK_LOGIN_OPERATION',
+  ]) {
+    const operationStart = serverServiceSource.indexOf(
+      `export const ${operationName}`,
+    );
+    const operationEnd = serverServiceSource.indexOf('`;', operationStart);
+    assert.notEqual(operationStart, -1, `${operationName} must exist`);
+    assert.notEqual(operationEnd, -1, `${operationName} must be complete`);
+    assert.match(
+      serverServiceSource.slice(operationStart, operationEnd),
+      /customer \{ id email fullName phone emailVerified createdAt \}/,
+      `${operationName} must expose verification state`,
+    );
+  }
+  assert.match(
+    resendVerificationRouteSource,
+    /validateJsonMutationRequest\(request\)/,
+  );
+  assert.match(
+    resendVerificationRouteSource,
+    /Object\.keys\(body\).*key !== 'locale'/s,
+  );
+  assert.match(resendVerificationRouteSource, /readCustomerTokens\(request\)/);
+  assert.match(
+    resendVerificationRouteSource,
+    /renewCustomerSessionSingleFlight\(\s*tokens\.refreshToken/,
+  );
+  assert.match(
+    resendVerificationRouteSource,
+    /resendCustomerVerification\([\s\S]*locale/,
+  );
+  assert.match(
+    resendVerificationRouteSource,
+    /attachSessionCookies\(response, tokens, renewed\)/,
+  );
+  assert.match(
+    resendVerificationRouteSource,
+    /canRetireLegacyCookies &&\s*\(tokens\.hasLegacyAccess \|\| tokens\.hasLegacyRefresh\)/,
+  );
+  assert.match(proxyPolicySource, /'resendVerification'/);
+  assert.match(
+    emailVerificationBannerSource,
+    /fetch\('\/api\/auth\/resend-verification'/,
+  );
+  assert.match(
+    emailVerificationBannerSource,
+    /JSON\.stringify\(\{ locale \}\)/,
+  );
+  assert.doesNotMatch(
+    emailVerificationBannerSource,
+    /localStorage|sessionStorage|Authorization/,
+  );
+  assert.match(accountPageSource, /session\.user\?\.emailVerified === false/);
 });
 
 test('refresh failures clear cookies only for definitive invalid or reuse codes', () => {
