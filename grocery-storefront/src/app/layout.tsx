@@ -7,6 +7,7 @@ import { SessionBootstrap } from '@/components/SessionBootstrap';
 import { AppToaster } from '@/components/layout/AppToaster';
 import { ConfigProvider } from '@/components/ConfigProvider';
 import { TrackingScripts } from '@/components/TrackingScripts';
+import { SensitiveRouteBoundary } from '@/components/SensitiveRouteBoundary';
 import { fetchServerConfig, getConfigString } from '@/lib/storefront-config';
 import './globals.css';
 
@@ -61,14 +62,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={locale} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ConfigProvider initialConfig={initialConfig}>
-          <GraphQLProvider>
-            {!process.env.NEXT_PUBLIC_CHANNEL && <SalonLoader />}
-            <SessionBootstrap />
-            <CartBootstrap />
-            {children}
-          </GraphQLProvider>
-          <TrackingScripts />
-          <AppToaster />
+          <SensitiveRouteBoundary>
+            <GraphQLProvider>
+              {!process.env.NEXT_PUBLIC_CHANNEL && <SalonLoader />}
+              <SessionBootstrap />
+              <CartBootstrap />
+              {children}
+            </GraphQLProvider>
+            <TrackingScripts />
+            <AppToaster />
+          </SensitiveRouteBoundary>
         </ConfigProvider>
       </body>
     </html>

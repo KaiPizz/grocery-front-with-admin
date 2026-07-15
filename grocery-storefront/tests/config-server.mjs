@@ -314,9 +314,60 @@ function buildCategoryNode(category) {
   };
 }
 
-function buildGraphqlResponse(requestBody) {
+function buildGraphqlResponse(requestBody, requestHeaders = {}) {
   const query = String(requestBody.query ?? '');
   const variables = requestBody.variables ?? {};
+
+  if (query.includes('mutation CustomerGoogleLogin')) {
+    const bffSecret = requestHeaders['x-customer-auth-bff-secret'];
+    const channel = requestHeaders['x-channel'];
+    const expectedBffSecret = process.env.TEST_CUSTOMER_AUTH_BFF_SECRET;
+    const input = variables.input && typeof variables.input === 'object'
+      ? variables.input
+      : {};
+    const bffIsAuthenticated = typeof expectedBffSecret === 'string'
+      && expectedBffSecret.length >= 32
+      && bffSecret === expectedBffSecret;
+    const channelIsValid = channel === 'test';
+    const nonceIsValid = typeof input.nonce === 'string' && /^[A-Za-z0-9_-]{43}$/.test(input.nonce);
+    const credentialIsValid = input.token === 'playwright-google-success-credential';
+
+    if (!bffIsAuthenticated || !channelIsValid || !nonceIsValid || !credentialIsValid) {
+      return {
+        data: {
+          customerGoogleAuth: {
+            accessToken: null,
+            refreshToken: null,
+            expiresIn: null,
+            success: false,
+            message: 'Mock provider rejected credential.',
+            customer: null,
+            errors: [{ field: 'token', message: 'Mock provider rejected credential.', code: 'INVALID_OAUTH_TOKEN' }],
+          },
+        },
+      };
+    }
+
+    return {
+      data: {
+        customerGoogleAuth: {
+          accessToken: 'playwright-http-only-access',
+          refreshToken: 'playwright-http-only-refresh',
+          expiresIn: 900,
+          success: true,
+          message: 'Mock Google sign-in succeeded.',
+          customer: {
+            id: 'google-customer-1',
+            email: 'google-shopper@example.test',
+            fullName: 'Google Shopper',
+            phone: null,
+            createdAt: '2026-07-15T00:00:00.000Z',
+          },
+          errors: [],
+        },
+      },
+    };
+  }
 
   if (query.includes('query Categories')) {
     return {
@@ -397,7 +448,7 @@ const server = createServer((request, response) => {
     });
     request.on('end', () => {
       try {
-        sendJson(response, 200, buildGraphqlResponse(JSON.parse(body || '{}')));
+        sendJson(response, 200, buildGraphqlResponse(JSON.parse(body || '{}'), request.headers));
       } catch (error) {
         sendJson(response, 400, {
           data: null,

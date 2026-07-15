@@ -3,6 +3,7 @@
 import Script from 'next/script';
 import { usePathname } from 'next/navigation';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { isTrackingAllowedRoute } from '@/lib/tracking-policy';
 
 /**
  * Conditionally injects tracking scripts (FB Pixel, GA4, GTM, Hotjar)
@@ -13,9 +14,8 @@ export function TrackingScripts() {
   const siteConfig = useStorefrontConfig();
   const pathname = usePathname();
   const tracking = siteConfig?.tracking;
-  const routePath = pathname.replace(/^\/(?:pl|en)(?=\/|$)/, '') || '/';
 
-  if (!tracking || routePath === '/reset-password' || routePath === '/verify-email') return null;
+  if (!tracking || !isTrackingAllowedRoute(pathname)) return null;
 
   return (
     <>

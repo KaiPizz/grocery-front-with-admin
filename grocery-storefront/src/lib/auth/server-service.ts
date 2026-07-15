@@ -1,11 +1,17 @@
 import 'server-only';
 
 import type { CustomerProfile } from '@/types';
+import { resolveChannel } from '@/lib/channel';
+import {
+  normalizeCustomerAuthBffSecret,
+  normalizeCustomerAuthGraphqlUrl,
+} from './google-oauth';
 import {
   authGraphqlRequest,
   firstGraphqlError,
   firstGraphqlErrorCode,
   firstGraphqlErrorStatus,
+  type UpstreamGraphqlPayload,
 } from './upstream';
 
 export const CUSTOMER_LOGIN_OPERATION = `
@@ -25,6 +31,20 @@ export const CUSTOMER_LOGIN_OPERATION = `
 export const CUSTOMER_REGISTER_OPERATION = `
   mutation CustomerRegister($input: RegisterInput!) {
     customerRegister(input: $input) {
+      accessToken
+      refreshToken
+      expiresIn
+      success
+      message
+      customer { id email fullName phone createdAt }
+      errors { field message code }
+    }
+  }
+`;
+
+export const CUSTOMER_GOOGLE_LOGIN_OPERATION = `
+  mutation CustomerGoogleLogin($input: OAuthLoginInput!) {
+    customerGoogleAuth(input: $input) {
       accessToken
       refreshToken
       expiresIn
@@ -131,6 +151,10 @@ interface RegisterResult {
   customerRegister: LoginPayload | null;
 }
 
+interface GoogleLoginResult {
+  customerGoogleAuth: LoginPayload | null;
+}
+
 interface RenewResult {
   customerAccessTokenRenew: TokenPayload | null;
 }
@@ -169,6 +193,49 @@ interface ChangePasswordResult {
   changePassword: PasswordActionPayload | null;
 }
 
+async function googleAuthGraphqlRequest<TData>(
+  query: string,
+  variables: Record<string, unknown>,
+): Promise<{ payload: UpstreamGraphqlPayload<TData>; status: number }> {
+  const endpoint = normalizeCustomerAuthGraphqlUrl(process.env.CUSTOMER_AUTH_GRAPHQL_URL);
+  const bffSecret = normalizeCustomerAuthBffSecret(process.env.CUSTOMER_AUTH_BFF_SECRET);
+  if (!endpoint || !bffSecret) {
+    return {
+      payload: { errors: [{ message: 'Google sign-in service is unavailable.' }] },
+      status: 503,
+    };
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-channel': resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG),
+        'x-customer-auth-bff-secret': bffSecret,
+      },
+      cache: 'no-store',
+      redirect: 'error',
+      signal: AbortSignal.timeout(10_000),
+      body: JSON.stringify({ query, variables }),
+    });
+  } catch {
+    return {
+      payload: { errors: [{ message: 'Google sign-in service is unavailable.' }] },
+      status: 503,
+    };
+  }
+
+  let payload: UpstreamGraphqlPayload<TData> = {};
+  try {
+    payload = await response.json() as UpstreamGraphqlPayload<TData>;
+  } catch {
+    payload = { errors: [{ message: 'Google sign-in service returned an invalid response.' }] };
+  }
+  return { payload, status: response.status };
+}
+
 export async function loginCustomer(input: Record<string, unknown>) {
   const result = await authGraphqlRequest<LoginResult>(CUSTOMER_LOGIN_OPERATION, { input });
   return {
@@ -182,6 +249,18 @@ export async function registerCustomer(input: Record<string, unknown>) {
   const result = await authGraphqlRequest<RegisterResult>(CUSTOMER_REGISTER_OPERATION, { input });
   return {
     payload: result.payload.data?.customerRegister ?? null,
+    error: firstGraphqlError(result.payload),
+    status: result.status,
+  };
+}
+
+export async function googleLoginCustomer(input: { token: string; nonce: string }) {
+  const result = await googleAuthGraphqlRequest<GoogleLoginResult>(
+    CUSTOMER_GOOGLE_LOGIN_OPERATION,
+    { input },
+  );
+  return {
+    payload: result.payload.data?.customerGoogleAuth ?? null,
     error: firstGraphqlError(result.payload),
     status: result.status,
   };

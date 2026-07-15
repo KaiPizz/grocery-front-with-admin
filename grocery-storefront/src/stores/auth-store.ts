@@ -35,6 +35,7 @@ interface AuthState {
   isSubmitting: boolean;
   initialize: () => Promise<void>;
   login: (input: { email: string; password: string }) => Promise<AuthActionResult>;
+  googleLogin: (credential: string) => Promise<AuthActionResult>;
   register: (input: {
     fullName: string;
     email: string;
@@ -240,6 +241,34 @@ export const useAuthStore = create<AuthState>((set) => {
         return { success: true, message: payload.message, errors: [] };
       } catch {
         return { success: false, message: 'Login failed', errors: [] };
+      } finally {
+        set({ isSubmitting: false });
+      }
+    },
+
+    googleLogin: async (credential) => {
+      set({ isSubmitting: true });
+
+      try {
+        const { response, payload } = await requestJson<AuthApiResponse>('/api/auth/google', {
+          method: 'POST',
+          body: JSON.stringify({ credential }),
+        });
+
+        if (!response.ok || !payload?.success || !payload.customer) {
+          return {
+            success: false,
+            message: payload?.message ?? 'Google sign-in failed',
+            errors: [],
+          };
+        }
+
+        clearLegacyAuthStorage();
+        setAuthenticatedSessionHint(true);
+        set({ session: createAuthenticatedSession(payload.customer), initialized: true });
+        return { success: true, message: payload.message, errors: [] };
+      } catch {
+        return { success: false, message: 'Google sign-in failed', errors: [] };
       } finally {
         set({ isSubmitting: false });
       }

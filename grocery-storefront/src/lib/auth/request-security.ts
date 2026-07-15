@@ -16,17 +16,7 @@ function expectedRequestOrigin(request: NextRequest): string {
   return `${protocol}://${host}`;
 }
 
-export function validateJsonMutationRequest(request: NextRequest): string | null {
-  const contentType = request.headers.get('content-type')?.toLowerCase() ?? '';
-  if (!contentType.startsWith('application/json')) {
-    return 'Content-Type must be application/json.';
-  }
-
-  const contentLength = Number(request.headers.get('content-length') ?? 0);
-  if (Number.isFinite(contentLength) && contentLength > MAX_JSON_BODY_BYTES) {
-    return 'Request body is too large.';
-  }
-
+export function validateSameOriginRequest(request: NextRequest): string | null {
   if (request.headers.get('sec-fetch-site') === 'cross-site') {
     return 'Cross-site request rejected.';
   }
@@ -43,4 +33,18 @@ export function validateJsonMutationRequest(request: NextRequest): string | null
   }
 
   return null;
+}
+
+export function validateJsonMutationRequest(request: NextRequest): string | null {
+  const contentType = request.headers.get('content-type')?.toLowerCase() ?? '';
+  if (!contentType.startsWith('application/json')) {
+    return 'Content-Type must be application/json.';
+  }
+
+  const contentLength = Number(request.headers.get('content-length') ?? 0);
+  if (Number.isFinite(contentLength) && contentLength > MAX_JSON_BODY_BYTES) {
+    return 'Request body is too large.';
+  }
+
+  return validateSameOriginRequest(request);
 }

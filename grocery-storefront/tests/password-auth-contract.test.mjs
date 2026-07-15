@@ -23,6 +23,7 @@ const cookiesSource = read('../src/lib/auth/server-cookies.ts');
 const resetFormSource = read('../src/components/auth/ResetPasswordForm.tsx');
 const securityPanelSource = read('../src/components/account/SecurityPanel.tsx');
 const trackingSource = read('../src/components/TrackingScripts.tsx');
+const trackingPolicySource = read('../src/lib/tracking-policy.ts');
 const middlewareSource = read('../src/middleware.ts');
 const restProxySource = read('../src/app/api/proxy/[...path]/route.ts');
 const verifyEmailRouteSource = read('../src/app/api/auth/verify-email/route.ts');
@@ -70,7 +71,8 @@ test('reset tokens use fragments, are scrubbed, and reset pages never load track
   assert.doesNotMatch(resetFormSource, /console\.(?:log|warn|error)/);
   assert.match(middlewareSource, /isSecretFragmentRoute && request\.nextUrl\.searchParams\.has\('token'\)/);
   assert.match(middlewareSource, /new URLSearchParams\(\{ token: legacyToken \}\)/);
-  assert.match(trackingSource, /routePath === '\/reset-password'/);
+  assert.match(trackingSource, /!isTrackingAllowedRoute\(pathname\)/);
+  assert.doesNotMatch(trackingPolicySource, /reset-password/);
 });
 
 test('verification tokens stay in fragments and use a dedicated same-origin BFF route', () => {
@@ -82,7 +84,8 @@ test('verification tokens stay in fragments and use a dedicated same-origin BFF 
   assert.match(verifyEmailRouteSource, /verifyCustomerEmail\(token\)/);
   assert.match(verifyEmailRouteSource, /requiresPasswordReset: result\.payload\.requiresPasswordReset === true/);
   assert.match(verifyEmailPanelSource, /requiresPasswordReset \? '\/forgot-password' : '\/login'/);
-  assert.match(trackingSource, /routePath === '\/verify-email'/);
+  assert.match(trackingSource, /!isTrackingAllowedRoute\(pathname\)/);
+  assert.doesNotMatch(trackingPolicySource, /verify-email/);
   assert.match(middlewareSource, /routePath === '\/verify-email'/);
 });
 
