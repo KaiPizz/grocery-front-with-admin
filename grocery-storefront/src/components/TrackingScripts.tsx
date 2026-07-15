@@ -1,6 +1,7 @@
 'use client';
 
 import Script from 'next/script';
+import { usePathname } from 'next/navigation';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 
 /**
@@ -10,9 +11,11 @@ import { useStorefrontConfig } from '@/components/ConfigProvider';
  */
 export function TrackingScripts() {
   const siteConfig = useStorefrontConfig();
+  const pathname = usePathname();
   const tracking = siteConfig?.tracking;
+  const routePath = pathname.replace(/^\/(?:pl|en)(?=\/|$)/, '') || '/';
 
-  if (!tracking) return null;
+  if (!tracking || routePath === '/reset-password' || routePath === '/verify-email') return null;
 
   return (
     <>

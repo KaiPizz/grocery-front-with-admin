@@ -1,6 +1,7 @@
 'use client';
 
-import { getAuthToken } from '@/lib/auth';
+import { emitSessionExpired } from '@/lib/auth';
+import { isGraphqlAuthenticationFailure } from '@/lib/auth/authentication-policy';
 
 interface GraphQLErrorPayload {
   message: string;
@@ -24,20 +25,29 @@ interface GraphQLResponse<T> {
 export async function graphqlRequest<T>(
   query: string,
   variables?: Record<string, unknown>,
-  options?: { token?: string | null }
 ): Promise<GraphQLResponse<T>> {
-  const token = options?.token ?? getAuthToken();
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
+  const firstResponse = await sendGraphqlRequest<T>(query, variables);
+  if (!isUnauthenticated(firstResponse)) return firstResponse;
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  const refreshResult = await refreshCustomerSession();
+  if (refreshResult === 'renewed') {
+    return sendGraphqlRequest<T>(query, variables);
   }
 
+  if (refreshResult === 'invalid') {
+    emitSessionExpired();
+  }
+  return firstResponse;
+}
+
+async function sendGraphqlRequest<T>(
+  query: string,
+  variables?: Record<string, unknown>,
+): Promise<GraphQLResponse<T>> {
   const response = await fetch('/api/graphql', {
     method: 'POST',
-    headers,
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
     cache: 'no-store',
     body: JSON.stringify({ query, variables }),
   });
@@ -55,6 +65,45 @@ export async function graphqlRequest<T>(
     errors: payload?.errors ?? [],
     status: response.status,
   };
+}
+
+function isUnauthenticated(response: GraphQLResponse<unknown>): boolean {
+  return isGraphqlAuthenticationFailure(response.status, response.errors);
+}
+
+type RefreshResult = 'renewed' | 'missing' | 'invalid' | 'transient';
+
+let refreshPromise: Promise<RefreshResult> | null = null;
+
+async function refreshCustomerSession(): Promise<RefreshResult> {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    try {
+      const response = await fetch('/api/auth/refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        cache: 'no-store',
+        body: '{}',
+      });
+      const payload = await response.json() as { success?: boolean; code?: string };
+      if (!response.ok) {
+        if (response.status === 401 && payload.code === 'NO_REFRESH_COOKIE') return 'missing';
+        return response.status === 401 ? 'invalid' : 'transient';
+      }
+
+      return payload.success === true ? 'renewed' : 'invalid';
+    } catch {
+      return 'transient';
+    }
+  })();
+
+  try {
+    return await refreshPromise;
+  } finally {
+    refreshPromise = null;
+  }
 }
 
 export function getGraphqlErrorMessage(errors: GraphQLErrorPayload[]): string | null {

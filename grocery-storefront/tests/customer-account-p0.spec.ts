@@ -48,17 +48,17 @@ interface GraphqlRequestBody {
 }
 
 interface MockState {
+  authenticated: boolean;
   addresses: AddressFixture[];
   createAttempts: number;
   protectedRequests: number;
-  authorizationFailures: string[];
+  browserAuthorizationLeaks: string[];
   channelFailures: string[];
   orderListVariables: Array<Record<string, unknown>>;
   orderDetailVariables: Array<Record<string, unknown>>;
 }
 
 const ORDER_CREATED = '2026-07-14T12:00:00.000Z';
-const CUSTOMER_TOKEN = 'customer-account-test-token';
 const PROTECTED_OPERATIONS = new Set([
   'CustomerProfile',
   'UpdateProfile',
@@ -184,6 +184,14 @@ async function fulfill(route: Route, data: Record<string, unknown>): Promise<voi
   });
 }
 
+async function fulfillJson(route: Route, body: Record<string, unknown>, status = 200): Promise<void> {
+  await route.fulfill({
+    status,
+    contentType: 'application/json',
+    body: JSON.stringify(body),
+  });
+}
+
 async function fulfillGraphqlError(
   route: Route,
   message: string,
@@ -210,6 +218,91 @@ async function installCustomerAccountApi(
 ): Promise<void> {
   await mockMobileStorefront(page, { wishlist: 'empty' });
 
+  await page.route('**/api/auth/**', async (route) => {
+    const request = route.request();
+    const pathname = new URL(request.url()).pathname;
+
+    if (pathname === '/api/auth/session') {
+      await fulfillJson(
+        route,
+        state.authenticated
+          ? {
+              authenticated: true,
+              customer: {
+                id: 'customer-account-1',
+                email: 'shopper@example.test',
+                fullName: 'Test Shopper',
+                phone: '+48111111111',
+                createdAt: '2026-01-10T10:00:00.000Z',
+              },
+            }
+          : { authenticated: false, customer: null },
+        state.authenticated ? 200 : 401,
+      );
+      return;
+    }
+
+    if (pathname === '/api/auth/refresh') {
+      await fulfillJson(
+        route,
+        state.authenticated
+          ? { success: true }
+          : { success: false, code: 'NO_REFRESH_COOKIE' },
+        state.authenticated ? 200 : 401,
+      );
+      return;
+    }
+
+    if (pathname === '/api/auth/legacy-migrate') {
+      await fulfillJson(route, { success: false }, 401);
+      return;
+    }
+
+    if (pathname === '/api/auth/login') {
+      const input = JSON.parse(request.postData() ?? '{}') as Record<string, unknown>;
+      const valid = input.password === 'correct-password';
+      state.authenticated = valid;
+
+      if (valid) {
+        await page.context().addCookies([{
+          name: 'grocery_customer_access',
+          value: 'opaque-test-session',
+          domain: '127.0.0.1',
+          path: '/',
+          httpOnly: true,
+          secure: false,
+          sameSite: 'Lax',
+        }]);
+      }
+
+      await fulfillJson(route, valid
+        ? {
+            success: true,
+            message: null,
+            customer: {
+              id: 'customer-account-1',
+              email: 'shopper@example.test',
+              fullName: 'Test Shopper',
+              phone: '+48111111111',
+              createdAt: '2026-01-10T10:00:00.000Z',
+            },
+            errors: [],
+          }
+        : { success: false, message: 'Backend invalid credentials.', customer: null, errors: [] },
+      valid ? 200 : 401);
+      return;
+    }
+
+    if (pathname === '/api/auth/logout') {
+      state.authenticated = false;
+      await page.context().clearCookies({ name: 'grocery_customer_access' });
+      await fulfillJson(route, { success: true, message: null });
+      return;
+    }
+
+    await route.fallback();
+  });
+
   await page.route('**/api/graphql*', async (route) => {
     const rawBody = route.request().postData();
     if (!rawBody) {
@@ -225,10 +318,8 @@ async function installCustomerAccountApi(
     if (operationName && PROTECTED_OPERATIONS.has(operationName)) {
       state.protectedRequests += 1;
       const authorization = route.request().headers().authorization;
-      if (authorization !== `Bearer ${CUSTOMER_TOKEN}`) {
-        state.authorizationFailures.push(operationName);
-        await fulfillGraphqlError(route, 'Authentication required.', 'UNAUTHENTICATED');
-        return;
+      if (authorization) {
+        state.browserAuthorizationLeaks.push(operationName);
       }
     }
 
@@ -239,40 +330,6 @@ async function installCustomerAccountApi(
     ) {
       state.channelFailures.push(operationName);
       await fulfillGraphqlError(route, 'Invalid channel.', 'BAD_USER_INPUT');
-      return;
-    }
-
-    if (query.includes('mutation CustomerLogin')) {
-      const input = readInput(variables);
-      const valid = input.password === 'correct-password';
-
-      await fulfill(route, {
-        customerLogin: valid
-          ? {
-            accessToken: CUSTOMER_TOKEN,
-            refreshToken: null,
-            expiresIn: 3600,
-            success: true,
-            message: null,
-            customer: {
-              id: 'customer-account-1',
-              email: 'shopper@example.test',
-              fullName: 'Test Shopper',
-              phone: '+48111111111',
-              createdAt: '2026-01-10T10:00:00.000Z',
-            },
-            errors: [],
-          }
-          : {
-            accessToken: null,
-            refreshToken: null,
-            expiresIn: null,
-            success: false,
-            message: 'Backend invalid credentials.',
-            customer: null,
-            errors: [],
-          },
-      });
       return;
     }
 
@@ -462,6 +519,7 @@ for (const scenario of SCENARIOS) {
 
     const localAddressRequests: string[] = [];
     const state: MockState = {
+      authenticated: false,
       addresses: [{
         id: 'address-home',
         label: scenario.locale === 'pl' ? 'Dom' : 'Home',
@@ -475,7 +533,7 @@ for (const scenario of SCENARIOS) {
       }],
       createAttempts: 0,
       protectedRequests: 0,
-      authorizationFailures: [],
+      browserAuthorizationLeaks: [],
       channelFailures: [],
       orderListVariables: [],
       orderDetailVariables: [],
@@ -500,6 +558,19 @@ for (const scenario of SCENARIOS) {
     await expect(page).toHaveURL(
       scenario.locale === 'pl' ? /\/wishlist$/ : /\/en\/wishlist$/,
     );
+    const browserAuthState = await page.evaluate(() => ({
+      access: window.localStorage.getItem('grocery_auth_token'),
+      refresh: window.localStorage.getItem('grocery_refresh_token'),
+      profile: window.localStorage.getItem('grocery_auth_session'),
+      cookie: document.cookie,
+    }));
+    expect(browserAuthState.access).toBeNull();
+    expect(browserAuthState.refresh).toBeNull();
+    expect(browserAuthState.profile).toBeNull();
+    expect(browserAuthState.cookie).not.toContain('grocery_customer_access');
+    expect(browserAuthState.cookie).not.toContain('grocery_customer_refresh');
+    const authCookie = (await page.context().cookies()).find((cookie) => cookie.name === 'grocery_customer_access');
+    expect(authCookie?.httpOnly).toBe(true);
 
     await page.goto(`/${scenario.locale}/account`);
     await expect(page.getByRole('heading', { name: scenario.labels.accountTitle })).toBeVisible();
@@ -555,7 +626,7 @@ for (const scenario of SCENARIOS) {
       id: 'order-from-another-tenant',
     });
     expect(state.protectedRequests).toBeGreaterThan(0);
-    expect(state.authorizationFailures).toEqual([]);
+    expect(state.browserAuthorizationLeaks).toEqual([]);
     expect(state.channelFailures).toEqual([]);
     expect(localAddressRequests).toEqual([]);
   });

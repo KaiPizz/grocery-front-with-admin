@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState, type FormEvent } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { UserRound, Mail, Phone, Lock, ArrowRight } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Link, useRouter } from '@/i18n/navigation';
+import { safeReturnPath } from '@/lib/auth/safe-return-path';
 import { useAuthStore } from '@/stores/auth-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 
@@ -14,7 +16,11 @@ interface AuthFormProps {
 
 export function AuthForm({ mode }: AuthFormProps) {
   const t = useTranslations('auth');
+  const activeLocale = useLocale();
+  const locale: 'pl' | 'en' = activeLocale === 'en' ? 'en' : 'pl';
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = safeReturnPath(searchParams.get('returnTo'));
   const initialized = useAuthStore((state) => state.initialized);
   const session = useAuthStore((state) => state.session);
   const isSubmitting = useAuthStore((state) => state.isSubmitting);
@@ -29,9 +35,9 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   useEffect(() => {
     if (initialized && session.status === 'authenticated') {
-      router.replace('/wishlist');
+      router.replace(returnTo);
     }
-  }, [initialized, router, session.status]);
+  }, [initialized, returnTo, router, session.status]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -74,6 +80,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           email: trimmedEmail,
           password,
           phone: trimmedPhone || undefined,
+          locale,
         });
 
     if (!result.success) {
@@ -86,7 +93,7 @@ export function AuthForm({ mode }: AuthFormProps) {
     await useWishlistStore.getState().loadWishlist();
 
     toast.success(mode === 'login' ? t('loginSuccess') : t('registerSuccess'));
-    router.replace('/wishlist');
+    router.replace(returnTo);
   }
 
   const isLogin = mode === 'login';
@@ -138,6 +145,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                     className="w-full bg-transparent outline-none text-sm"
                     style={{ color: 'var(--color-foreground)' }}
                     placeholder={t('fullNamePlaceholder')}
+                    maxLength={100}
                   />
                 </div>
               </label>
@@ -162,6 +170,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                   className="w-full bg-transparent outline-none text-sm"
                   style={{ color: 'var(--color-foreground)' }}
                   placeholder={t('emailPlaceholder')}
+                  maxLength={254}
                 />
               </div>
             </label>
@@ -190,6 +199,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                     className="w-full bg-transparent outline-none text-sm"
                     style={{ color: 'var(--color-foreground)' }}
                     placeholder={t('phonePlaceholder')}
+                    maxLength={20}
                   />
                 </div>
               </label>
@@ -214,9 +224,22 @@ export function AuthForm({ mode }: AuthFormProps) {
                   className="w-full bg-transparent outline-none text-sm"
                   style={{ color: 'var(--color-foreground)' }}
                   placeholder={t('passwordPlaceholder')}
+                  maxLength={72}
                 />
               </div>
             </label>
+
+            {isLogin && (
+              <div className="flex justify-end">
+                <Link
+                  href={`/forgot-password?returnTo=${encodeURIComponent(returnTo)}`}
+                  className="text-sm font-semibold transition-opacity hover:opacity-80"
+                  style={{ color: 'var(--color-primary)' }}
+                >
+                  {t('forgotPasswordLink')}
+                </Link>
+              </div>
+            )}
 
             {!isLogin && (
               <label className="block">
@@ -238,6 +261,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                     className="w-full bg-transparent outline-none text-sm"
                     style={{ color: 'var(--color-foreground)' }}
                     placeholder={t('confirmPasswordPlaceholder')}
+                    maxLength={72}
                   />
                 </div>
               </label>
@@ -263,7 +287,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               {isLogin ? t('switchToRegisterPrompt') : t('switchToLoginPrompt')}
             </span>{' '}
             <Link
-              href={isLogin ? '/register' : '/login'}
+              href={`${isLogin ? '/register' : '/login'}?returnTo=${encodeURIComponent(returnTo)}`}
               className="font-semibold transition-opacity hover:opacity-80"
               style={{ color: 'var(--color-primary)' }}
             >

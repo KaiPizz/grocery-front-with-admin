@@ -764,16 +764,28 @@ export async function seedCartStorage(page: Page, cartId = 'cart-1') {
 }
 
 export async function seedAuthSession(page: Page) {
-  await page.addInitScript(() => {
-    window.localStorage.setItem('grocery_auth_token', 'test-auth-token');
-    window.localStorage.setItem(
-      'grocery_auth_session',
-      JSON.stringify({
-        id: 'customer-1',
-        email: 'mobile@example.com',
-        fullName: 'Mobile Shopper',
-      })
-    );
+  await page.context().addCookies([{
+    name: 'grocery_customer_access',
+    value: 'opaque-mobile-test-session',
+    domain: '127.0.0.1',
+    path: '/',
+    httpOnly: true,
+    secure: false,
+    sameSite: 'Lax',
+  }]);
+  await page.route('**/api/auth/session', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        authenticated: true,
+        customer: {
+          id: 'customer-1',
+          email: 'mobile@example.com',
+          fullName: 'Mobile Shopper',
+        },
+      }),
+    });
   });
 }
 

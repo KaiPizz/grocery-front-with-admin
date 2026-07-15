@@ -10,6 +10,12 @@ const handleI18nRouting = createMiddleware({
 });
 
 const LEGACY_LOCALES = new Set(['de', 'uk', 'vi', 'ru', 'zh', 'tr']);
+const CUSTOMER_COOKIE_NAMES = [
+  'grocery_customer_access',
+  'grocery_customer_refresh',
+  'grocery_token',
+  'grocery_refresh_token',
+] as const;
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -18,6 +24,33 @@ export default function middleware(request: NextRequest) {
   if (maybeLocale && LEGACY_LOCALES.has(maybeLocale)) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = `/en${segments.length ? `/${segments.join('/')}` : ''}`;
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  const hasLocalePrefix = locales.includes(maybeLocale as (typeof locales)[number]);
+  const routePath = hasLocalePrefix
+    ? `/${segments.join('/')}`
+    : pathname;
+  const isSecretFragmentRoute = routePath === '/reset-password' || routePath === '/verify-email';
+
+  if (isSecretFragmentRoute && request.nextUrl.searchParams.has('token')) {
+    const redirectUrl = request.nextUrl.clone();
+    const legacyToken = redirectUrl.searchParams.get('token') ?? '';
+    redirectUrl.searchParams.delete('token');
+    redirectUrl.hash = legacyToken
+      ? new URLSearchParams({ token: legacyToken }).toString()
+      : '';
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  const isAccountRoute = routePath === '/account' || routePath.startsWith('/account/');
+  const hasCustomerCookie = CUSTOMER_COOKIE_NAMES.some((name) => request.cookies.has(name));
+
+  if (isAccountRoute && !hasCustomerCookie) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = `${hasLocalePrefix ? `/${maybeLocale}` : ''}/login`;
+    redirectUrl.search = '';
+    redirectUrl.searchParams.set('returnTo', `${pathname}${request.nextUrl.search}`);
     return NextResponse.redirect(redirectUrl);
   }
 

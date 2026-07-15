@@ -220,7 +220,7 @@ export interface WishlistItem {
   addedAt: string;
 }
 
-export type AuthStatus = 'loading' | 'authenticated' | 'guest';
+export type AuthStatus = 'loading' | 'authenticated' | 'guest' | 'unavailable';
 
 export interface CustomerProfile {
   id: string;
@@ -237,7 +237,6 @@ export interface AuthError {
 }
 
 export interface AuthSession {
-  token: string | null;
   user: CustomerProfile | null;
   status: AuthStatus;
 }

@@ -16,7 +16,14 @@ import { useHydrated } from '@/hooks/use-hydrated';
  * above it when needed.
  */
 
-const HIDE_PREFIXES = ['/checkout', '/login', '/register', '/account'] as const;
+const HIDE_PREFIXES = [
+  '/checkout',
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/reset-password',
+  '/account',
+] as const;
 
 interface NavItem {
   href: string;

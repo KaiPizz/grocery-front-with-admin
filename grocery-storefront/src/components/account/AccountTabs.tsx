@@ -6,6 +6,7 @@ import { UserRound, Package, MapPin, Shield } from 'lucide-react';
 import { ProfilePanel } from '@/components/account/ProfilePanel';
 import { OrdersPanel } from '@/components/account/OrdersPanel';
 import { AddressesPanel } from '@/components/account/AddressesPanel';
+import { SecurityPanel } from '@/components/account/SecurityPanel';
 
 export type AccountTab = 'profile' | 'orders' | 'addresses' | 'security';
 
@@ -92,41 +93,8 @@ export function AccountTabs() {
         {activeTab === 'profile' && <ProfilePanel />}
         {activeTab === 'orders' && <OrdersPanel />}
         {activeTab === 'addresses' && <AddressesPanel />}
-        {activeTab === 'security' && <SecurityPlaceholder />}
+        {activeTab === 'security' && <SecurityPanel />}
       </div>
     </div>
-  );
-}
-
-function SecurityPlaceholder() {
-  const tAccount = useTranslations('account');
-  return (
-    <section
-      className="rounded-2xl border p-5"
-      style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
-    >
-      <div className="flex items-start gap-3">
-        <div
-          className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
-          style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)' }}
-        >
-          <Shield className="w-5 h-5" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold" style={{ color: 'var(--color-foreground)' }}>
-            {tAccount('securityTitle')}
-          </h2>
-          <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-            {tAccount('securityDescription')}
-          </p>
-          <span
-            className="inline-flex mt-3 px-2.5 py-1 rounded-full text-xs font-semibold"
-            style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-accent-foreground)' }}
-          >
-            {tAccount('status')}
-          </span>
-        </div>
-      </div>
-    </section>
   );
 }

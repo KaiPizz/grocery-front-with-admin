@@ -6,7 +6,6 @@ import { Loader2, UserRound, Check, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { UPDATE_PROFILE_MUTATION } from '@/lib/graphql/operations/grocery';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
-import { setStoredCustomerProfile } from '@/lib/auth';
 
 interface UpdateProfileResponse {
   updateProfile: {
@@ -80,7 +79,6 @@ export function ProfilePanel() {
         phone: (payload.customer?.phone ?? phone.trim()) || null,
       };
 
-      setStoredCustomerProfile(updatedUser);
       useAuthStore.setState((state) => ({
         session: { ...state.session, user: updatedUser },
       }));

@@ -1,5 +1,4 @@
 import { createClient, cacheExchange, fetchExchange } from 'urql';
-import { getAuthToken } from '@/lib/auth';
 
 function getGraphqlUrl(): string {
   if (typeof window !== 'undefined') {
@@ -18,12 +17,11 @@ export function getUrqlClient() {
   clientInstance = createClient({
     url: getGraphqlUrl(),
     exchanges: [cacheExchange, fetchExchange],
-    fetchOptions: () => {
-      const token = getAuthToken();
-      const headers: Record<string, string> = {};
-      if (token) headers.Authorization = `Bearer ${token}`;
-      return { headers, method: 'POST' };
-    },
+    fetchOptions: () => ({
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+    }),
   });
 
   return clientInstance;

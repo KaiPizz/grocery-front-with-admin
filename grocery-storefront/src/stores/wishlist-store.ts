@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { getAuthToken } from '@/lib/auth';
+import { hasAuthenticatedSession } from '@/lib/auth';
 import {
   WISHLIST_PRODUCT_FIELDS,
   WISHLIST_QUERY,
@@ -301,9 +301,9 @@ export const useWishlistStore = create<WishlistState>()(
       initialized: false,
 
       loadWishlist: async () => {
-        const token = getAuthToken();
+        const authenticated = hasAuthenticatedSession();
 
-        if (!token) {
+        if (!authenticated) {
           setGuestWishlistState(set, get().guestItems);
           return;
         }
@@ -316,7 +316,7 @@ export const useWishlistStore = create<WishlistState>()(
         set({ isLoading: true, initialized: true });
 
         try {
-          const response = await graphqlRequest<WishlistQueryResponse>(WISHLIST_QUERY, undefined, { token });
+          const response = await graphqlRequest<WishlistQueryResponse>(WISHLIST_QUERY);
           const message = getGraphqlErrorMessage(response.errors);
 
           if (isWishlistAuthUnavailable(message)) {
@@ -389,9 +389,9 @@ export const useWishlistStore = create<WishlistState>()(
 
       syncGuestWishlist: async (items) => {
         const nextGuestItems = items ?? get().guestItems;
-        const token = getAuthToken();
+        const authenticated = hasAuthenticatedSession();
 
-        if (!token) {
+        if (!authenticated) {
           setGuestWishlistState(set, nextGuestItems);
           return true;
         }
@@ -421,8 +421,7 @@ export const useWishlistStore = create<WishlistState>()(
       addItem: async (item) => {
         const nextGuestItems = upsertWishlistItem(get().guestItems, item);
         const nextProductIds = getWishlistProductIds(nextGuestItems);
-        const hasToken = Boolean(getAuthToken());
-        const canUseServer = hasToken && get().serverStatus !== 'unavailable';
+        const canUseServer = hasAuthenticatedSession() && get().serverStatus !== 'unavailable';
 
         set({
           items: nextGuestItems,
@@ -447,8 +446,7 @@ export const useWishlistStore = create<WishlistState>()(
       removeItem: async (productId) => {
         const nextGuestItems = removeWishlistItem(get().guestItems, productId);
         const nextProductIds = getWishlistProductIds(nextGuestItems);
-        const hasToken = Boolean(getAuthToken());
-        const canUseServer = hasToken && get().serverStatus !== 'unavailable';
+        const canUseServer = hasAuthenticatedSession() && get().serverStatus !== 'unavailable';
 
         set({
           items: removeWishlistItem(get().items, productId),
@@ -481,8 +479,7 @@ export const useWishlistStore = create<WishlistState>()(
       hasItem: (productId) => get().items.some((item) => item.productId === productId),
 
       clear: async () => {
-        const hasToken = Boolean(getAuthToken());
-        const canUseServer = hasToken && get().serverStatus !== 'unavailable';
+        const canUseServer = hasAuthenticatedSession() && get().serverStatus !== 'unavailable';
         const emptyItems: WishlistItem[] = [];
 
         set({

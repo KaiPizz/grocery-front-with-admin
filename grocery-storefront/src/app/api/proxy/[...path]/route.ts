@@ -4,62 +4,37 @@ const API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'https://zira-ai.com/api/v1';
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { path: string[] } }
 ) {
-  try {
-    const pathStr = params.path.join('/');
-    const url = new URL(`${API_URL}/${pathStr}`);
+  const configuredSlug = process.env.NEXT_PUBLIC_SALON_SLUG?.trim();
+  const allowed = Boolean(configuredSlug)
+    && params.path.length === 3
+    && params.path[0] === 'public'
+    && params.path[1] === 'salon'
+    && params.path[2] === configuredSlug;
 
-    // Forward query parameters
-    request.nextUrl.searchParams.forEach((value, key) =>
-      url.searchParams.set(key, value)
-    );
-
-    const headers: Record<string, string> = {};
-    const auth = request.headers.get('authorization');
-    if (auth) headers['Authorization'] = auth;
-
-    const response = await fetch(url.toString(), { method: 'GET', headers });
-    const data = await response.text();
-
-    return new NextResponse(data, {
-      status: response.status,
-      headers: { 'Content-Type': response.headers.get('content-type') || 'application/json' },
-    });
-  } catch (error) {
-    console.error('[API Proxy] Error:', error);
-    return NextResponse.json({ error: 'Proxy error' }, { status: 502 });
+  if (!allowed || !configuredSlug) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
-}
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { path: string[] } }
-) {
   try {
-    const pathStr = params.path.join('/');
-    const body = await request.text();
+    const baseUrl = API_URL.replace(/\/$/, '');
+    const url = `${baseUrl}/public/salon/${encodeURIComponent(configuredSlug)}`;
 
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-    const auth = request.headers.get('authorization');
-    if (auth) headers['Authorization'] = auth;
-
-    const response = await fetch(`${API_URL}/${pathStr}`, {
-      method: 'POST',
-      headers,
-      body,
-    });
-
+    const response = await fetch(url, { method: 'GET', cache: 'no-store' });
     const data = await response.text();
+
     return new NextResponse(data, {
       status: response.status,
-      headers: { 'Content-Type': response.headers.get('content-type') || 'application/json' },
+      headers: {
+        'Content-Type': response.headers.get('content-type') || 'application/json',
+        'Cache-Control': 'no-store, max-age=0',
+        'X-Content-Type-Options': 'nosniff',
+      },
     });
-  } catch (error) {
-    console.error('[API Proxy] POST Error:', error);
+  } catch {
+    console.error('[API Proxy] Allowed salon lookup failed');
     return NextResponse.json({ error: 'Proxy error' }, { status: 502 });
   }
 }

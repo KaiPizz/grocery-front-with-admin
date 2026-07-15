@@ -2,24 +2,10 @@
 
 import { create } from 'zustand';
 import {
-  clearAuthToken,
-  clearRefreshToken,
-  clearStoredCustomerProfile,
-  getAuthToken,
-  getRefreshToken,
-  getStoredCustomerProfile,
-  setAuthToken,
-  setRefreshToken,
-  setStoredCustomerProfile,
+  clearLegacyAuthStorage,
+  readLegacyAuthTokens,
+  setAuthenticatedSessionHint,
 } from '@/lib/auth';
-import {
-  CUSTOMER_LOGIN_MUTATION,
-  CUSTOMER_REGISTER_MUTATION,
-  LOGOUT_MUTATION,
-  ME_QUERY,
-  REFRESH_TOKEN_MUTATION,
-} from '@/lib/graphql/operations/grocery';
-import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import type { AuthError, AuthSession, CustomerProfile } from '@/types';
@@ -30,49 +16,17 @@ interface AuthActionResult {
   errors: AuthError[];
 }
 
-interface LoginResponse {
-  customerLogin: {
-    accessToken: string | null;
-    refreshToken: string | null;
-    expiresIn: number | null;
-    success: boolean;
-    message: string | null;
-    customer: CustomerProfile | null;
-    errors: AuthError[] | null;
-  } | null;
+interface AuthApiResponse {
+  success: boolean;
+  message: string | null;
+  customer: CustomerProfile | null;
+  errors: AuthError[] | null;
 }
 
-interface RegisterResponse {
-  customerRegister: {
-    accessToken: string | null;
-    refreshToken: string | null;
-    expiresIn: number | null;
-    success: boolean;
-    message: string | null;
-    customer: CustomerProfile | null;
-    errors: AuthError[] | null;
-  } | null;
-}
-
-interface MeResponse {
-  me: CustomerProfile | null;
-}
-
-interface LogoutResponse {
-  logout: {
-    success: boolean;
-    message: string | null;
-  } | null;
-}
-
-interface RefreshTokenResponse {
-  refreshToken: {
-    success: boolean;
-    accessToken: string | null;
-    refreshToken: string | null;
-    expiresIn: number | null;
-    message: string | null;
-  } | null;
+interface SessionApiResponse {
+  authenticated: boolean;
+  customer: CustomerProfile | null;
+  code?: string;
 }
 
 interface AuthState {
@@ -81,301 +35,262 @@ interface AuthState {
   isSubmitting: boolean;
   initialize: () => Promise<void>;
   login: (input: { email: string; password: string }) => Promise<AuthActionResult>;
-  register: (input: { fullName: string; email: string; password: string; phone?: string }) => Promise<AuthActionResult>;
+  register: (input: {
+    fullName: string;
+    email: string;
+    password: string;
+    phone?: string;
+    locale: 'pl' | 'en';
+  }) => Promise<AuthActionResult>;
   logout: () => Promise<void>;
   clearSession: () => void;
 }
 
-interface TokenPayload {
-  sub?: string;
-  email?: string;
-  fullName?: string;
-  name?: string;
-}
-
 function createGuestSession(): AuthSession {
-  return {
-    token: null,
-    user: null,
-    status: 'guest',
-  };
+  return { user: null, status: 'guest' };
 }
 
-function createLoadingSession(token: string | null, user: CustomerProfile | null = null): AuthSession {
-  return {
-    token,
-    user,
-    status: 'loading',
-  };
+function createLoadingSession(): AuthSession {
+  return { user: null, status: 'loading' };
 }
 
-function createAuthenticatedSession(token: string, user: CustomerProfile): AuthSession {
-  return {
-    token,
-    user,
-    status: 'authenticated',
-  };
+function createUnavailableSession(): AuthSession {
+  return { user: null, status: 'unavailable' };
 }
 
-function persistSession(token: string, refreshToken: string | null, user: CustomerProfile): AuthSession {
-  setAuthToken(token);
-  if (refreshToken) {
-    setRefreshToken(refreshToken);
-  } else {
-    clearRefreshToken();
-  }
-  setStoredCustomerProfile(user);
-  return createAuthenticatedSession(token, user);
+function createAuthenticatedSession(user: CustomerProfile): AuthSession {
+  return { user, status: 'authenticated' };
 }
 
-function clearSessionStorage() {
-  clearAuthToken();
-  clearRefreshToken();
-  clearStoredCustomerProfile();
+function clearCustomerScopedState(): void {
+  useCartStore.getState().clear();
+  useWishlistStore.getState().resetLocal();
 }
 
-function decodeTokenPayload(token: string): TokenPayload | null {
+async function requestJson<T>(path: string, init?: RequestInit): Promise<{ response: Response; payload: T | null }> {
+  const response = await fetch(path, {
+    ...init,
+    credentials: 'same-origin',
+    cache: 'no-store',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(init?.headers ?? {}),
+    },
+  });
+
+  let payload: T | null = null;
   try {
-    const payload = token.split('.')[1];
-    if (!payload) return null;
-
-    const normalized = payload
-      .replace(/-/g, '+')
-      .replace(/_/g, '/')
-      .padEnd(Math.ceil(payload.length / 4) * 4, '=');
-    const decoded = window.atob(normalized);
-
-    return JSON.parse(decoded) as TokenPayload;
+    payload = await response.json() as T;
   } catch {
-    return null;
+    payload = null;
+  }
+  return { response, payload };
+}
+
+type SessionLoadResult =
+  | { state: 'authenticated'; customer: CustomerProfile }
+  | { state: 'invalid' | 'missing' | 'transient'; customer: null };
+
+async function loadSession(): Promise<SessionLoadResult> {
+  try {
+    const { response, payload } = await requestJson<SessionApiResponse>('/api/auth/session', { method: 'GET' });
+    if (response.ok && payload?.authenticated && payload.customer) {
+      return { state: 'authenticated', customer: payload.customer };
+    }
+    return {
+      state: response.status === 401 && payload?.code === 'NO_ACCESS_COOKIE'
+        ? 'missing'
+        : response.status === 401
+          ? 'invalid'
+          : 'transient',
+      customer: null,
+    };
+  } catch {
+    return { state: 'transient', customer: null };
   }
 }
 
-function buildProfileFromToken(token: string): CustomerProfile | null {
-  const payload = decodeTokenPayload(token);
-  const email = payload?.email?.trim();
-
-  if (!email) return null;
-
-  return {
-    id: payload?.sub ?? email,
-    email,
-    fullName: payload?.fullName?.trim() || payload?.name?.trim() || email.split('@')[0] || 'Account',
-  };
+async function renewSession(): Promise<'renewed' | 'missing' | 'invalid' | 'transient'> {
+  try {
+    const { response, payload } = await requestJson<{ success?: boolean; code?: string }>('/api/auth/refresh', {
+      method: 'POST',
+      body: '{}',
+    });
+    if (response.ok && payload?.success === true) return 'renewed';
+    if (response.status === 401 && payload?.code === 'NO_REFRESH_COOKIE') return 'missing';
+    return response.status === 401 ? 'invalid' : 'transient';
+  } catch {
+    return 'transient';
+  }
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  session: (() => {
-    const token = typeof window !== 'undefined' ? getAuthToken() : null;
-    const user = typeof window !== 'undefined' ? getStoredCustomerProfile() : null;
+async function migrateLegacySession(): Promise<'migrated' | 'missing' | 'invalid' | 'transient'> {
+  const legacy = readLegacyAuthTokens();
+  if (!legacy.accessToken && !legacy.refreshToken) return 'missing';
 
-    if (token && user) {
-      return createAuthenticatedSession(token, user);
-    }
+  try {
+    const { response, payload } = await requestJson<{ success?: boolean }>('/api/auth/legacy-migrate', {
+      method: 'POST',
+      body: JSON.stringify(legacy),
+    });
+    if (response.ok && payload?.success === true) return 'migrated';
+    return response.status === 401 ? 'invalid' : 'transient';
+  } catch {
+    return 'transient';
+  }
+}
 
-    if (token) {
-      return createLoadingSession(token, user);
-    }
+export const useAuthStore = create<AuthState>((set) => {
+  let initializePromise: Promise<void> | null = null;
 
-    return createGuestSession();
-  })(),
-  initialized: false,
-  isSubmitting: false,
+  return {
+    session: createLoadingSession(),
+    initialized: false,
+    isSubmitting: false,
 
-  initialize: async () => {
-    const token = getAuthToken();
-    const refreshToken = getRefreshToken();
-    const storedUser = getStoredCustomerProfile();
+    initialize: async () => {
+      if (initializePromise) return initializePromise;
 
-    if (token && storedUser) {
-      set({
-        session: createAuthenticatedSession(token, storedUser),
-        initialized: true,
-      });
-      return;
-    }
+      initializePromise = (async () => {
+        set({ session: createLoadingSession(), initialized: false });
 
-    if (!token && refreshToken) {
-      set({ session: createLoadingSession(null, storedUser) });
+        let sessionResult = await loadSession();
+        let hadRejectedCredentials = sessionResult.state === 'invalid';
+        let allowLegacyMigration = false;
+        if (sessionResult.state === 'invalid' || sessionResult.state === 'missing') {
+          const renewal = await renewSession();
+          if (renewal === 'renewed') {
+            sessionResult = await loadSession();
+            if (sessionResult.state === 'authenticated') hadRejectedCredentials = false;
+            if (sessionResult.state === 'invalid') hadRejectedCredentials = true;
+          } else if (renewal === 'transient') {
+            sessionResult = { state: 'transient', customer: null };
+          } else if (renewal === 'invalid') {
+            hadRejectedCredentials = true;
+            clearLegacyAuthStorage();
+          } else if (renewal === 'missing') {
+            allowLegacyMigration = true;
+          }
+        }
 
-      try {
-        const refreshResponse = await graphqlRequest<RefreshTokenResponse>(REFRESH_TOKEN_MUTATION, {
-          input: { refreshToken },
-        });
-        const refreshPayload = refreshResponse.data?.refreshToken;
-        const fallbackUser = storedUser ?? (refreshPayload?.accessToken ? buildProfileFromToken(refreshPayload.accessToken) : null);
+        if (
+          (sessionResult.state === 'invalid' || sessionResult.state === 'missing')
+          && allowLegacyMigration
+        ) {
+          const migration = await migrateLegacySession();
+          if (migration === 'migrated') {
+            sessionResult = await loadSession();
+            if (sessionResult.state === 'authenticated') hadRejectedCredentials = false;
+            if (sessionResult.state === 'invalid') hadRejectedCredentials = true;
+          } else if (migration === 'transient') {
+            sessionResult = { state: 'transient', customer: null };
+          } else if (migration === 'invalid') {
+            hadRejectedCredentials = true;
+            sessionResult = { state: 'invalid', customer: null };
+          } else {
+            sessionResult = { state: 'missing', customer: null };
+          }
+        }
 
-        if (refreshPayload?.success && refreshPayload.accessToken && fallbackUser) {
-          const nextRefreshToken = refreshPayload.refreshToken ?? refreshToken;
-          set({
-            session: persistSession(refreshPayload.accessToken, nextRefreshToken, fallbackUser),
-            initialized: true,
-          });
+        if (sessionResult.state === 'transient') {
+          setAuthenticatedSessionHint(false);
+          set({ session: createUnavailableSession(), initialized: true });
           return;
         }
-      } catch {
-        // Fall through to guest cleanup.
-      }
-    }
 
-    if (token && !storedUser) {
-      const fallbackUser = buildProfileFromToken(token);
-
-      if (fallbackUser) {
-        setStoredCustomerProfile(fallbackUser);
+        clearLegacyAuthStorage();
+        const customer = sessionResult.customer;
+        if (hadRejectedCredentials) {
+          clearCustomerScopedState();
+        }
+        setAuthenticatedSessionHint(sessionResult.state === 'authenticated');
         set({
-          session: createAuthenticatedSession(token, fallbackUser),
+          session: customer ? createAuthenticatedSession(customer) : createGuestSession(),
           initialized: true,
         });
-        return;
-      }
-
-      set({ session: createLoadingSession(token) });
+      })();
 
       try {
-        const response = await graphqlRequest<MeResponse>(ME_QUERY, undefined, { token });
-        const user = response.data?.me ?? null;
+        await initializePromise;
+      } finally {
+        initializePromise = null;
+      }
+    },
 
-        if (user) {
-          setStoredCustomerProfile(user);
-          set({
-            session: createAuthenticatedSession(token, user),
-            initialized: true,
-          });
-          return;
+    login: async ({ email, password }) => {
+      set({ isSubmitting: true });
+
+      try {
+        const { response, payload } = await requestJson<AuthApiResponse>('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok || !payload?.success || !payload.customer) {
+          return {
+            success: false,
+            message: payload?.message ?? 'Login failed',
+            errors: payload?.errors ?? [],
+          };
         }
+
+        clearLegacyAuthStorage();
+        setAuthenticatedSessionHint(true);
+        set({ session: createAuthenticatedSession(payload.customer), initialized: true });
+        return { success: true, message: payload.message, errors: [] };
       } catch {
-        // Ignore and fall through to cleanup.
+        return { success: false, message: 'Login failed', errors: [] };
+      } finally {
+        set({ isSubmitting: false });
       }
-    }
+    },
 
-    if (token && storedUser) {
-      set({
-        session: createAuthenticatedSession(token, storedUser),
-        initialized: true,
-      });
-      return;
-    }
+    register: async ({ fullName, email, password, phone, locale }) => {
+      set({ isSubmitting: true });
 
-    clearSessionStorage();
-    set({ session: createGuestSession(), initialized: true });
-  },
+      try {
+        const { response, payload } = await requestJson<AuthApiResponse>('/api/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ fullName, email, password, locale, ...(phone ? { phone } : {}) }),
+        });
 
-  login: async ({ email, password }) => {
-    set({ isSubmitting: true });
+        if (!response.ok || !payload?.success || !payload.customer) {
+          return {
+            success: false,
+            message: payload?.message ?? 'Registration failed',
+            errors: payload?.errors ?? [],
+          };
+        }
 
-    try {
-      const response = await graphqlRequest<LoginResponse>(CUSTOMER_LOGIN_MUTATION, {
-        input: { email, password },
-      });
-
-      const topLevelMessage = getGraphqlErrorMessage(response.errors);
-      const payload = response.data?.customerLogin;
-
-      if (topLevelMessage || !payload) {
-        return {
-          success: false,
-          message: topLevelMessage ?? 'Login failed',
-          errors: [],
-        };
+        clearLegacyAuthStorage();
+        setAuthenticatedSessionHint(true);
+        set({ session: createAuthenticatedSession(payload.customer), initialized: true });
+        return { success: true, message: payload.message, errors: [] };
+      } catch {
+        return { success: false, message: 'Registration failed', errors: [] };
+      } finally {
+        set({ isSubmitting: false });
       }
+    },
 
-      if (!payload.success || !payload.accessToken || !payload.customer) {
-        return {
-          success: false,
-          message: payload.message ?? payload.errors?.[0]?.message ?? 'Login failed',
-          errors: payload.errors ?? [],
-        };
+    logout: async () => {
+      try {
+        await requestJson('/api/auth/logout', { method: 'POST', body: '{}' });
+      } catch {
+        // The BFF clears cookies even if upstream revocation fails; local state must also clear.
+      } finally {
+        clearLegacyAuthStorage();
+        setAuthenticatedSessionHint(false);
+        clearCustomerScopedState();
+        set({ session: createGuestSession(), initialized: true });
       }
+    },
 
-      const session = persistSession(payload.accessToken, payload.refreshToken, payload.customer);
-      set({ session, initialized: true });
-
-      return {
-        success: true,
-        message: payload.message ?? null,
-        errors: [],
-      };
-    } catch {
-      return {
-        success: false,
-        message: 'Login failed',
-        errors: [],
-      };
-    } finally {
-      set({ isSubmitting: false });
-    }
-  },
-
-  register: async ({ fullName, email, password, phone }) => {
-    set({ isSubmitting: true });
-
-    try {
-      const input = phone
-        ? { fullName, email, password, phone }
-        : { fullName, email, password };
-
-      const response = await graphqlRequest<RegisterResponse>(CUSTOMER_REGISTER_MUTATION, {
-        input,
-      });
-
-      const topLevelMessage = getGraphqlErrorMessage(response.errors);
-      const payload = response.data?.customerRegister;
-
-      if (topLevelMessage || !payload) {
-        return {
-          success: false,
-          message: topLevelMessage ?? 'Registration failed',
-          errors: [],
-        };
-      }
-
-      if (!payload.success || !payload.accessToken || !payload.customer) {
-        return {
-          success: false,
-          message: payload.message ?? payload.errors?.[0]?.message ?? 'Registration failed',
-          errors: payload.errors ?? [],
-        };
-      }
-
-      const session = persistSession(payload.accessToken, payload.refreshToken, payload.customer);
-      set({ session, initialized: true });
-
-      return {
-        success: true,
-        message: payload.message ?? null,
-        errors: [],
-      };
-    } catch {
-      return {
-        success: false,
-        message: 'Registration failed',
-        errors: [],
-      };
-    } finally {
-      set({ isSubmitting: false });
-    }
-  },
-
-  logout: async () => {
-    const token = getAuthToken();
-
-    try {
-      if (token) {
-        await graphqlRequest<LogoutResponse>(LOGOUT_MUTATION, undefined, { token });
-      }
-    } catch {
-      // Ignore logout transport errors and clear the local session regardless.
-    } finally {
-      clearSessionStorage();
-      useCartStore.getState().clear();
-      useWishlistStore.getState().resetLocal();
+    clearSession: () => {
+      clearLegacyAuthStorage();
+      setAuthenticatedSessionHint(false);
+      clearCustomerScopedState();
       set({ session: createGuestSession(), initialized: true });
-    }
-  },
-
-  clearSession: () => {
-    clearSessionStorage();
-    set({ session: createGuestSession(), initialized: true });
-  },
-}));
+    },
+  };
+});
