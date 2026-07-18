@@ -925,6 +925,31 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     };
   }
 
+  if (query.includes('query ProductDietaryAvailability')) {
+    const availabilityFields = [
+      ['vegan', 'veganFilter'],
+      ['vegetarian', 'vegetarianFilter'],
+      ['glutenFree', 'glutenFreeFilter'],
+      ['lactoseFree', 'lactoseFreeFilter'],
+      ['sugarFree', 'sugarFreeFilter'],
+    ];
+    const availability = Object.fromEntries(availabilityFields.map(([field, filterVariable]) => {
+      const filter = variables[filterVariable] ?? {};
+      const categoryKeys = Array.isArray(filter.categories) ? filter.categories.map(String) : [];
+      const sourceProducts = categoryKeys.length > 0 ? [...products, ...publicTaxonomyProducts] : products;
+      const dietaryTags = Array.isArray(filter.dietaryTags) ? filter.dietaryTags.map(String) : [];
+      const totalCount = sourceProducts.filter((product) => (
+        (categoryKeys.length === 0
+          || categoryKeys.includes(product.category.id)
+          || categoryKeys.includes(product.category.slug))
+        && dietaryTags.every((tag) => product.dietaryTags.includes(tag))
+      )).length;
+      return [field, { totalCount }];
+    }));
+
+    return { data: availability };
+  }
+
   if (
     query.includes('query GroceryProductListing')
     || query.includes('query GroceryProductFilterCatalog')

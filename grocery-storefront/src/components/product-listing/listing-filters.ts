@@ -1,7 +1,7 @@
 import type { GroceryProduct, StorageZone } from '@/types';
 
 export const ALLERGEN_OPTIONS = ['cereals', 'crustaceans', 'eggs', 'fish', 'peanuts', 'soybeans', 'milk', 'nuts', 'celery', 'mustard', 'sesame', 'sulphites', 'lupin', 'molluscs'] as const;
-export const DIETARY_OPTIONS = ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'sugar-free'];
+export const DIETARY_OPTIONS = ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'sugar-free'] as const;
 export const CERT_OPTIONS = ['organic', 'halal', 'kosher'];
 export const ZONE_OPTIONS: StorageZone[] = ['FROZEN', 'CHILLED', 'AMBIENT'];
 

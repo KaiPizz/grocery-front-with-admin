@@ -2,6 +2,12 @@ import type { Locator, Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import { mockMobileStorefront } from './mobile-fixtures';
 
+const PRODUCT_FILTER_METADATA_OPERATIONS = [
+  'GroceryProductFilterCatalog',
+  'ProductCountryOrigins',
+  'ProductDietaryAvailability',
+];
+
 async function openFilters(page: Page, panel: Locator) {
   const trigger = page.getByRole('button', { name: /^filters(?:,.*)?$/i });
 
@@ -42,7 +48,7 @@ test.describe('mobile products page', () => {
         operationQueries.set(operationName, query);
         if (
           !listingResponseReleased
-          && ['GroceryProductFilterCatalog', 'ProductCountryOrigins'].includes(operationName)
+          && PRODUCT_FILTER_METADATA_OPERATIONS.includes(operationName)
         ) {
           metadataStartedBeforeListingResponse = true;
         }
@@ -56,6 +62,7 @@ test.describe('mobile products page', () => {
     expect(operationQueries.get('PublicCategoryNavigation')).not.toMatch(/\bproducts\s*\(/);
     expect(operations).not.toContain('GroceryProductFilterCatalog');
     expect(operations).not.toContain('ProductCountryOrigins');
+    expect(operations).not.toContain('ProductDietaryAvailability');
     await expect(page.getByTestId('product-card')).toHaveCount(0);
 
     releaseListing();
@@ -63,6 +70,7 @@ test.describe('mobile products page', () => {
     await expect(page.getByTestId('product-card')).toHaveCount(4);
     await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
     await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
+    await expect.poll(() => operations.includes('ProductDietaryAvailability')).toBe(true);
     expect(metadataStartedBeforeListingResponse).toBe(false);
   });
 
@@ -77,7 +85,7 @@ test.describe('mobile products page', () => {
         operations.push(operationName);
         if (
           !userOpenedFilters
-          && ['GroceryProductFilterCatalog', 'ProductCountryOrigins'].includes(operationName)
+          && PRODUCT_FILTER_METADATA_OPERATIONS.includes(operationName)
         ) {
           metadataStartedBeforeUserIntent = true;
         }
@@ -92,12 +100,14 @@ test.describe('mobile products page', () => {
     }));
     expect(operations).not.toContain('GroceryProductFilterCatalog');
     expect(operations).not.toContain('ProductCountryOrigins');
+    expect(operations).not.toContain('ProductDietaryAvailability');
     expect(metadataStartedBeforeUserIntent).toBe(false);
 
     userOpenedFilters = true;
     await page.getByRole('button', { name: /filters/i }).click();
     await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
     await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
+    await expect.poll(() => operations.includes('ProductDietaryAvailability')).toBe(true);
   });
 
   test('excludes both legacy and canonical tree-nut allergen codes', async ({ page }) => {
@@ -289,6 +299,56 @@ test.describe('mobile products page', () => {
     await expect(filterPanel.getByRole('button', { name: /vegan/i })).toBeDisabled();
     await expect(filterPanel.getByRole('button', { name: /ambient/i })).toBeDisabled();
     await expect(filterPanel.getByRole('button', { name: /organic/i })).toBeDisabled();
+  });
+
+  test('keeps dietary filters usable when the metadata page is not exhaustive', async ({ page }) => {
+    let releaseDietaryAvailability!: () => void;
+    const dietaryAvailabilityGate = new Promise<void>((resolve) => {
+      releaseDietaryAvailability = resolve;
+    });
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      filterCatalogProductLimit: 1,
+      beforeProductDietaryAvailabilityResponse: async () => {
+        await dietaryAvailabilityGate;
+      },
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    await expect(filterPanel).toBeVisible();
+
+    // The one-item metadata page contains only the vegan tag. Waiting until
+    // Bakery disappears proves the partial metadata response has settled.
+    await expect(filterPanel.getByRole('button', { name: /bakery/i })).toHaveCount(0);
+
+    const glutenFreeButton = filterPanel.getByRole('button', { name: /bez glutenu/i });
+    const vegetarianButton = filterPanel.getByRole('button', { name: /wegetariańskie/i });
+    await expect(glutenFreeButton).toBeDisabled();
+    await expect(vegetarianButton).toBeDisabled();
+
+    releaseDietaryAvailability();
+
+    await expect(glutenFreeButton).toBeEnabled();
+    await expect(vegetarianButton).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /bez laktozy/i })).toHaveCount(0);
+    await expect(filterPanel.getByRole('button', { name: /bez cukru/i })).toHaveCount(0);
+
+    await glutenFreeButton.click();
+    await expect.poll(() => productQueries.some((variables) => {
+      const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
+      return Array.isArray(dietaryTags) && dietaryTags.includes('gluten-free');
+    })).toBe(true);
+
+    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
+    await glutenFreeButton.click();
+    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.getByTestId('product-card')).toHaveCount(4);
   });
 
   test('lets desktop shoppers narrow all products by category', async ({ page }) => {

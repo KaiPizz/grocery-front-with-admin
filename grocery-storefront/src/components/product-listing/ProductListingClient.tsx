@@ -12,7 +12,12 @@ import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useHydrated } from '@/hooks/use-hydrated';
 import { Link, useRouter } from '@/i18n/navigation';
-import { PRODUCT_COUNTRY_ORIGINS_QUERY, PRODUCT_FILTER_CATALOG_QUERY, PRODUCT_LISTING_QUERY } from '@/lib/graphql/operations/grocery';
+import {
+  PRODUCT_COUNTRY_ORIGINS_QUERY,
+  PRODUCT_DIETARY_AVAILABILITY_QUERY,
+  PRODUCT_FILTER_CATALOG_QUERY,
+  PRODUCT_LISTING_QUERY,
+} from '@/lib/graphql/operations/grocery';
 import type { GroceryProduct, StorageZone } from '@/types';
 import {
   ALLERGEN_OPTIONS,
@@ -96,6 +101,14 @@ interface ProductCountryOriginsQueryResponse {
   productCountryOrigins: CountryOriginFilterOption[] | null;
 }
 
+interface ProductDietaryAvailabilityQueryResponse {
+  vegan: { totalCount: number } | null;
+  vegetarian: { totalCount: number } | null;
+  glutenFree: { totalCount: number } | null;
+  lactoseFree: { totalCount: number } | null;
+  sugarFree: { totalCount: number } | null;
+}
+
 interface CategoryNavigationItem {
   id: string;
   slug: string;
@@ -110,6 +123,14 @@ interface ActiveFilterChip {
 }
 
 const EMPTY_CATEGORY_IDS: string[] = [];
+type DietaryOption = (typeof DIETARY_OPTIONS)[number];
+const DIETARY_AVAILABILITY_KEYS = {
+  vegan: 'vegan',
+  vegetarian: 'vegetarian',
+  'gluten-free': 'glutenFree',
+  'lactose-free': 'lactoseFree',
+  'sugar-free': 'sugarFree',
+} satisfies Record<DietaryOption, keyof ProductDietaryAvailabilityQueryResponse>;
 
 function getProductsErrorMessage(error: CombinedError | undefined | null, fallbackMessage: string) {
   if (!error) return null;
@@ -254,6 +275,21 @@ export function ProductListingClient({
     activeCategoryIds.length > 0 ? { categories: activeCategoryIds } : undefined
   ), [activeCategoryIds]);
   const countryOriginCategoryIds = activeCategoryIds.length > 0 ? activeCategoryIds : null;
+  const dietaryAvailabilityVariables = useMemo(() => {
+    const buildFilter = (dietaryTag: string) => ({
+      ...(activeCategoryIds.length > 0 ? { categories: activeCategoryIds } : {}),
+      dietaryTags: [dietaryTag],
+    });
+
+    return {
+      channel,
+      veganFilter: buildFilter('vegan'),
+      vegetarianFilter: buildFilter('vegetarian'),
+      glutenFreeFilter: buildFilter('gluten-free'),
+      lactoseFreeFilter: buildFilter('lactose-free'),
+      sugarFreeFilter: buildFilter('sugar-free'),
+    };
+  }, [activeCategoryIds, channel]);
   const [catalogResult] = useQuery<ProductsQueryResponse>({
     query: PRODUCT_FILTER_CATALOG_QUERY,
     pause: !filterMetadataRequested,
@@ -271,6 +307,11 @@ export function ProductListingClient({
       first: 100,
       categoryIds: countryOriginCategoryIds,
     },
+  });
+  const [dietaryAvailabilityResult] = useQuery<ProductDietaryAvailabilityQueryResponse>({
+    query: PRODUCT_DIETARY_AVAILABILITY_QUERY,
+    pause: !filterMetadataRequested,
+    variables: dietaryAvailabilityVariables,
   });
 
   const catalogProducts = useMemo(() => (
@@ -319,9 +360,19 @@ export function ProductListingClient({
     return ALLERGEN_OPTIONS.filter((allergen) => allergenCodes.has(allergen));
   }, [filterSourceProducts]);
 
-  const availableDietaryTags = useMemo(() => (
-    DIETARY_OPTIONS.filter((tag) => filterSourceProducts.some((product) => Array.isArray(product?.dietaryTags) && product.dietaryTags.includes(tag)))
-  ), [filterSourceProducts]);
+  const dietaryAvailabilityKnown = !dietaryAvailabilityResult.fetching
+    && !dietaryAvailabilityResult.error
+    && dietaryAvailabilityResult.data != null;
+  const availableDietaryTags = useMemo(() => {
+    if (!dietaryAvailabilityKnown) {
+      return [];
+    }
+
+    return DIETARY_OPTIONS.filter((tag) => {
+      const responseKey = DIETARY_AVAILABILITY_KEYS[tag];
+      return Number(dietaryAvailabilityResult.data?.[responseKey]?.totalCount ?? 0) > 0;
+    });
+  }, [dietaryAvailabilityKnown, dietaryAvailabilityResult.data]);
 
   const availableStorageZones = useMemo(() => (
     ZONE_OPTIONS.filter((zone) => filterSourceProducts.some((product) => product?.storageZone === zone))
@@ -476,7 +527,7 @@ export function ProductListingClient({
     onClear: () => void,
   ) {
     const allergenFilterUnavailable = availableAllergens.length === 0;
-    const dietaryFilterUnavailable = availableDietaryTags.length === 0;
+    const dietaryFilterUnavailable = !dietaryAvailabilityKnown || availableDietaryTags.length === 0;
     const zoneFilterUnavailable = availableStorageZones.length === 0;
     const certificationFilterUnavailable = availableCertifications.length === 0;
     const categoryFilterUnavailable = availableCategories.length === 0;
@@ -484,7 +535,11 @@ export function ProductListingClient({
     const localActiveFilterCount = countActiveFilters(normalizedFilters);
     const unavailableMessage = t('filterUnavailable');
     const visibleAllergens = allergenFilterUnavailable ? ALLERGEN_OPTIONS : availableAllergens;
-    const visibleDietaryTags = dietaryFilterUnavailable ? DIETARY_OPTIONS : availableDietaryTags;
+    const visibleDietaryTags = dietaryFilterUnavailable
+      ? DIETARY_OPTIONS
+      : DIETARY_OPTIONS.filter((tag) => (
+        availableDietaryTags.includes(tag) || normalizedFilters.dietaryTags.includes(tag)
+      ));
     const visibleStorageZones = zoneFilterUnavailable ? ZONE_OPTIONS : availableStorageZones;
     const visibleCertifications = certificationFilterUnavailable ? CERT_OPTIONS : availableCertifications;
 
@@ -620,7 +675,7 @@ export function ProductListingClient({
                   ...prev,
                   dietaryTags: toggleMultiValue(prev.dietaryTags, tag),
                 }))}
-                disabled={dietaryFilterUnavailable}
+                disabled={dietaryFilterUnavailable && !normalizedFilters.dietaryTags.includes(tag)}
                 className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
                   borderColor: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-primary)' : 'var(--color-border)',

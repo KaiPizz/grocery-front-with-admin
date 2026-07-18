@@ -212,6 +212,27 @@ export const PRODUCT_FILTER_CATALOG_QUERY = `
   }
 `;
 
+// A bounded product page cannot prove that a dietary tag is absent from the
+// catalog. Resolve each known option by totalCount instead, in one lightweight
+// request, so availability remains accurate for large and category-scoped
+// catalogs.
+export const PRODUCT_DIETARY_AVAILABILITY_QUERY = `
+  query ProductDietaryAvailability(
+    $channel: String!
+    $veganFilter: ProductFilterInput!
+    $vegetarianFilter: ProductFilterInput!
+    $glutenFreeFilter: ProductFilterInput!
+    $lactoseFreeFilter: ProductFilterInput!
+    $sugarFreeFilter: ProductFilterInput!
+  ) {
+    vegan: products(channel: $channel, first: 1, filter: $veganFilter) { totalCount }
+    vegetarian: products(channel: $channel, first: 1, filter: $vegetarianFilter) { totalCount }
+    glutenFree: products(channel: $channel, first: 1, filter: $glutenFreeFilter) { totalCount }
+    lactoseFree: products(channel: $channel, first: 1, filter: $lactoseFreeFilter) { totalCount }
+    sugarFree: products(channel: $channel, first: 1, filter: $sugarFreeFilter) { totalCount }
+  }
+`;
+
 export const PRODUCT_COUNTRY_ORIGINS_QUERY = `
   query ProductCountryOrigins($channel: String!, $first: Int, $categoryIds: [ID!]) {
     productCountryOrigins(channel: $channel, first: $first, categoryIds: $categoryIds) {

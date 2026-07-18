@@ -897,9 +897,11 @@ interface MockMobileStorefrontOptions {
   productDetailCategory?: ProductDetailCategoryMode;
   facets?: 'populated' | 'empty';
   listingProductLimit?: number;
+  filterCatalogProductLimit?: number;
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   beforeProductListingResponse?: () => Promise<void>;
   beforeProductFilterCatalogResponse?: () => Promise<void>;
+  beforeProductDietaryAvailabilityResponse?: () => Promise<void>;
   onGraphqlOperation?: (operationName: string, query: string) => void;
   onProductsQuery?: (variables: Record<string, unknown>) => void;
   onProductDetailQuery?: (query: string, variables: Record<string, unknown>) => void;
@@ -964,6 +966,30 @@ export async function mockMobileStorefront(
       || query.includes('query GroceryProductListing');
     const isProductFilterCatalogQuery = operationName === 'GroceryProductFilterCatalog'
       || query.includes('query GroceryProductFilterCatalog');
+    const isProductDietaryAvailabilityQuery = operationName === 'ProductDietaryAvailability'
+      || query.includes('query ProductDietaryAvailability');
+
+    if (isProductDietaryAvailabilityQuery) {
+      await options.beforeProductDietaryAvailabilityResponse?.();
+
+      const availabilityFields = [
+        ['vegan', 'veganFilter'],
+        ['vegetarian', 'vegetarianFilter'],
+        ['glutenFree', 'glutenFreeFilter'],
+        ['lactoseFree', 'lactoseFreeFilter'],
+        ['sugarFree', 'sugarFreeFilter'],
+      ] as const;
+      const availability = Object.fromEntries(availabilityFields.map(([field, filterVariable]) => {
+        const filter = body.variables?.[filterVariable] as Record<string, any> | undefined;
+        const categoryKeys = Array.isArray(filter?.categories) ? filter.categories : [];
+        const sourceProducts = categoryKeys.length > 0 ? categoryProducts : products;
+        const totalCount = sourceProducts.filter((product) => matchesProductsFilter(product, filter)).length;
+        return [field, { totalCount }];
+      }));
+
+      await fulfill(route, availability);
+      return;
+    }
 
     if (isProductListingQuery || isProductFilterCatalogQuery) {
       if (isProductListingQuery) {
@@ -1003,13 +1029,16 @@ export async function mockMobileStorefront(
       const listingProducts = isProductListingQuery && options.listingProductLimit !== undefined
         ? unpaginatedProducts.slice(0, options.listingProductLimit)
         : unpaginatedProducts;
-      const filteredProducts = listingProducts.filter((product) => matchesProductsFilter(product, body.variables?.filter));
+      const matchingProducts = listingProducts.filter((product) => matchesProductsFilter(product, body.variables?.filter));
+      const filteredProducts = isProductFilterCatalogQuery && options.filterCatalogProductLimit !== undefined
+        ? matchingProducts.slice(0, options.filterCatalogProductLimit)
+        : matchingProducts;
 
       await fulfill(route, {
         products: {
           edges: filteredProducts.map(buildProductEdge),
           pageInfo: { hasNextPage: false, endCursor: null },
-          totalCount: filteredProducts.length,
+          totalCount: matchingProducts.length,
         },
       });
       return;
