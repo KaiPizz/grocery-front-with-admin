@@ -163,7 +163,7 @@ done
 
 assert_clean_source() {
   local mode="$1"
-  local local_head remote_main dirty containing_remote
+  local local_head remote_main dirty
 
   git -C "$ROOT_DIR" fetch --quiet origin
   git -C "$ROOT_DIR" cat-file -e "$EXPECTED_COMMIT^{commit}" 2>/dev/null \
@@ -184,9 +184,11 @@ assert_clean_source() {
     [[ "$remote_main" == "$EXPECTED_COMMIT" ]] \
       || die "origin/main $remote_main does not equal approved commit $EXPECTED_COMMIT"
   else
-    containing_remote="$(git -C "$ROOT_DIR" branch -r --contains "$EXPECTED_COMMIT" | sed -n '1p')"
-    [[ -n "$containing_remote" ]] \
-      || die "check-only commit has not been pushed to any origin branch"
+    if ! git -C "$ROOT_DIR" ls-remote --heads origin \
+      | awk -v expected="$EXPECTED_COMMIT" \
+        '$1 == expected { found = 1 } END { exit found ? 0 : 1 }'; then
+      die "check-only commit has not been pushed to any origin branch"
+    fi
   fi
 }
 
