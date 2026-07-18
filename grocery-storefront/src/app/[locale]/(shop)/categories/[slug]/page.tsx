@@ -78,9 +78,9 @@ interface CategoriesResponse {
 }
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 function formatProductCount(locale: string, count: number) {
@@ -102,13 +102,14 @@ function decodeRouteSlug(slug: string) {
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { slug } = await params;
   const [locale, t, tCommon] = await Promise.all([
     getLocale(),
     getTranslations('categories'),
     getTranslations('common'),
   ]);
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
-  const categorySlug = decodeRouteSlug(params.slug);
+  const categorySlug = decodeRouteSlug(slug);
   const categoriesResult = await serverGraphqlRequest<CategoriesResponse>(
     PUBLIC_CATEGORIES_QUERY,
     { channel },
@@ -217,7 +218,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 {result.errorMessage}
               </p>
               <Link
-                href={`/categories/${params.slug}`}
+                href={`/categories/${slug}`}
                 className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               >
@@ -276,7 +277,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {result.errorMessage}
           </p>
           <Link
-            href={`/categories/${params.slug}`}
+            href={`/categories/${slug}`}
             className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
             style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
           >

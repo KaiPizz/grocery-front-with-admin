@@ -2,12 +2,16 @@
   "name": "enail-grocery-storefront",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
   "scripts": {
     "dev": "next dev -p 3008",
     "build": "next build",
     "start": "next start -p 3008",
-    "lint": "next lint",
+    "lint": "eslint src",
     "test:e2e": "playwright test",
+    "test:production-smoke": "node tests/production-standalone-smoke.mjs",
     "test:customer-account-contract": "node --test tests/customer-account-p0-contract.test.mjs tests/customer-auth-hardening-contract.test.mjs tests/password-auth-contract.test.mjs tests/account-deletion-contract.test.mjs tests/account-provider-linking-contract.test.mjs tests/google-auth-contract.test.mjs tests/facebook-auth-contract.test.mjs tests/privacy-social-auth-contract.test.mjs tests/auth-policy.test.mjs tests/safe-return-path.test.mjs",
     "test:security-headers": "node --test tests/security-headers-contract.test.mjs",
     "test:static-config": "node --test tests/static-config-contract.test.mjs",
@@ -45,12 +49,11 @@
     "@radix-ui/react-dialog": "^1.1.1",
     "clsx": "^2.1.1",
     "graphql": "^16.12.0",
-    "js-cookie": "^3.0.5",
     "lucide-react": "^0.408.0",
-    "next": "14.2.5",
-    "next-intl": "^4.7.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "next": "16.2.10",
+    "next-intl": "^4.13.2",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.4.0",
     "urql": "^5.0.1",
@@ -58,15 +61,17 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.14.10",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
     "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.5",
-    "postcss": "^8.4.39",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.2.10",
+    "postcss": "8.5.19",
     "tailwindcss": "^3.4.4",
-    "typescript": "^5.5.3"
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "postcss": "8.5.19"
   }
 }

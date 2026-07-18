@@ -128,15 +128,13 @@ test.describe('mobile storefront smoke', () => {
     const wishlistButton = card.getByTestId('mobile-product-card-wishlist');
     const title = card.getByTestId('mobile-product-card-title');
     const mediaBox = await media.boundingBox();
-    const quantityBox = await quantity.boundingBox();
     const addButtonBox = await addButton.boundingBox();
     const wishlistButtonBox = await wishlistButton.boundingBox();
 
     expect(mediaBox).not.toBeNull();
-    expect(quantityBox).not.toBeNull();
     expect(addButtonBox).not.toBeNull();
     expect(wishlistButtonBox).not.toBeNull();
-    expect(addButtonBox!.y + addButtonBox!.height).toBeLessThan(quantityBox!.y + 4);
+    await expect(quantity).toHaveCount(0);
     expect(wishlistButtonBox!.x).toBeLessThan(addButtonBox!.x + 1);
     expect(addButtonBox!.y - mediaBox!.y).toBeLessThanOrEqual(12);
     expect(mediaBox!.y + mediaBox!.height - (wishlistButtonBox!.y + wishlistButtonBox!.height)).toBeLessThanOrEqual(12);
@@ -149,35 +147,45 @@ test.describe('mobile storefront smoke', () => {
 
       return {
         overflow: styles.overflow,
-        textOverflow: styles.textOverflow,
-        whiteSpace: styles.whiteSpace,
+        webkitLineClamp: styles.webkitLineClamp,
       };
     });
 
     expect(titleStyles.overflow).toBe('hidden');
-    expect(titleStyles.textOverflow).toBe('ellipsis');
-    expect(titleStyles.whiteSpace).toBe('nowrap');
+    expect(titleStyles.webkitLineClamp).toBe('2');
 
     await addButton.click();
     await expect(page.getByTestId('mobile-bottom-nav-cart-badge')).toHaveText('1');
+    await expect(quantity).toBeVisible();
+
+    const quantityBox = await quantity.boundingBox();
+    expect(quantityBox).not.toBeNull();
+    expect(quantityBox!.y).toBeGreaterThan(mediaBox!.y + mediaBox!.height);
   });
 
-  test('keeps product detail actions accessible and compact with wishlist left of add to cart', async ({ page }) => {
+  test('keeps product detail actions accessible with a full-width add-to-cart row', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');
     await expect(page.getByRole('heading', { name: /organic gala apples family value pack/i })).toBeVisible();
 
     const wishlistButton = page.getByTestId('product-detail-wishlist');
     const addButton = page.getByTestId('product-detail-add');
+    const quantity = page.getByTestId('product-detail-stepper');
     await expect(wishlistButton).toBeVisible();
     await expect(addButton).toBeVisible();
+    await expect(quantity).toBeVisible();
 
     const wishlistBox = await wishlistButton.boundingBox();
     const addButtonBox = await addButton.boundingBox();
+    const quantityBox = await quantity.boundingBox();
 
     expect(wishlistBox).not.toBeNull();
     expect(addButtonBox).not.toBeNull();
-    expect(wishlistBox!.x).toBeLessThan(addButtonBox!.x);
+    expect(quantityBox).not.toBeNull();
+    expect(quantityBox!.x).toBeLessThan(wishlistBox!.x);
+    expect(addButtonBox!.y).toBeGreaterThan(wishlistBox!.y);
+    expect(addButtonBox!.x).toBeLessThanOrEqual(quantityBox!.x);
+    expect(addButtonBox!.width).toBeGreaterThan(quantityBox!.width);
     expect(Math.round(wishlistBox!.width)).toBeGreaterThanOrEqual(44);
     expect(Math.round(wishlistBox!.height)).toBeGreaterThanOrEqual(44);
     expect(Math.round(addButtonBox!.height)).toBeGreaterThanOrEqual(44);

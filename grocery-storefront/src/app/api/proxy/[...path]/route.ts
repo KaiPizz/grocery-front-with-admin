@@ -5,14 +5,15 @@ const API_URL =
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
+  const { path } = await params;
   const configuredSlug = process.env.NEXT_PUBLIC_SALON_SLUG?.trim();
   const allowed = Boolean(configuredSlug)
-    && params.path.length === 3
-    && params.path[0] === 'public'
-    && params.path[1] === 'salon'
-    && params.path[2] === configuredSlug;
+    && path.length === 3
+    && path[0] === 'public'
+    && path[1] === 'salon'
+    && path[2] === configuredSlug;
 
   if (!allowed || !configuredSlug) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });

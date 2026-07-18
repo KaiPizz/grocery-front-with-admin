@@ -14,13 +14,14 @@ test.describe('MobileBottomNav (Tier 3)', () => {
     await expect(page.getByTestId('mobile-bottom-nav-cart')).toBeVisible();
   });
 
-  test('hides on /cart (own bottom CTA owns the slot)', async ({ page }) => {
+  test('keeps cart navigation visible while stacking the cart CTA above it', async ({ page }) => {
     await seedCartStorage(page);
     await mockMobileStorefront(page, { cart: 'single-item' });
     await page.goto('/en/cart');
 
     await expect(page.getByRole('heading', { name: /your cart/i })).toBeVisible();
-    await expect(page.getByTestId('mobile-bottom-nav')).toHaveCount(0);
+    await expect(page.getByTestId('mobile-bottom-nav')).toBeVisible();
+    await expect(page.getByTestId('mobile-bottom-nav-cart')).toHaveAttribute('aria-current', 'page');
     await expect(page.getByTestId('mobile-cart-summary-bar')).toBeVisible();
   });
 
@@ -55,7 +56,7 @@ test.describe('MobileBottomNav (Tier 3)', () => {
 
   test('marks the categories item aria-current="page" on category routes', async ({ page }) => {
     await mockMobileStorefront(page);
-    await page.goto('/en/categories/fruit');
+    await page.goto('/en/categories/kimchi-i-kiszonki');
 
     await expect(page.getByTestId('mobile-bottom-nav-categories')).toHaveAttribute('aria-current', 'page');
     await expect(page.getByTestId('mobile-bottom-nav-home')).not.toHaveAttribute('aria-current', 'page');
@@ -102,7 +103,7 @@ test.describe('MobileBottomNav (Tier 3)', () => {
     expect(paddingBottom).toContain('safe-area-inset-bottom');
   });
 
-  test('shop layout drops the bottom padding on /cart (nav hidden)', async ({ page }) => {
+  test('shop layout reserves bottom padding for the navigation on /cart', async ({ page }) => {
     await seedCartStorage(page);
     await mockMobileStorefront(page, { cart: 'single-item' });
     await page.goto('/en/cart');
@@ -112,7 +113,8 @@ test.describe('MobileBottomNav (Tier 3)', () => {
       return wrapper?.style.paddingBottom ?? '';
     });
 
-    expect(paddingBottom).toBe('');
+    expect(paddingBottom).toContain('3.5rem');
+    expect(paddingBottom).toContain('safe-area-inset-bottom');
   });
 
   test('PD sticky add-to-cart stacks above the bottom nav (computed CSS contract)', async ({ page }) => {

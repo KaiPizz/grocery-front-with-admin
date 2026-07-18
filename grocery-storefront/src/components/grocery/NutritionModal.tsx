@@ -44,6 +44,7 @@ export function NutritionModal({
 }: NutritionModalProps) {
   const t = useTranslations('product');
   const tAllergens = useTranslations('allergens');
+  const tProducts = useTranslations('products');
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -60,6 +61,9 @@ export function NutritionModal({
               </button>
             </Dialog.Close>
           </div>
+          <Dialog.Description className="sr-only">
+            {t('nutritionDialogDescription', { name: productName })}
+          </Dialog.Description>
 
           {/* Nutrition facts table */}
           {nutritionFacts && (
@@ -138,7 +142,7 @@ export function NutritionModal({
                     className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
                     style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-accent-foreground)' }}
                   >
-                    {tag}
+                    {tProducts.has(tag as any) ? tProducts(tag as any) : tag}
                   </span>
                 ))}
               </div>

@@ -267,9 +267,13 @@ const FOURTH_PRODUCT = {
   id: 'prod-ravioli',
   name: 'Spinach Ravioli Family Pack',
   slug: 'spinach-ravioli-family-pack',
+  description: 'Family-size spinach ravioli for quick freezer meals.',
   allergens: ['gluten', 'eggs'],
   dietaryTags: ['vegetarian'],
   storageZone: 'FROZEN',
+  ingredients: 'Wheat flour, spinach, eggs',
+  nutritionFacts: null,
+  certifications: [],
   category: {
     id: 'cat-frozen',
     name: 'Frozen',
@@ -337,6 +341,92 @@ type ProductDetailImageMode = 'default' | 'multi-media' | 'unordered-media' | 'c
 type ProductDetailLabelMode = 'complete' | 'missing';
 type ProductDetailCategoryMode = 'present' | 'missing';
 type ProductFixture = (typeof PRODUCTS)[number];
+
+// Public taxonomy browsing needs realistic raw categories without changing the
+// four-product catalog used by the broader mobile suite. These three products
+// are returned only when a public category scopes the product query.
+const PUBLIC_TAXONOMY_PRODUCTS: ProductFixture[] = [
+  {
+    ...PRIMARY_PRODUCT,
+    id: 'prod-napa-kimchi',
+    name: 'Napa Cabbage Kimchi',
+    slug: 'napa-cabbage-kimchi',
+    description: 'Fermented napa cabbage with Korean chili and garlic.',
+    thumbnail: {
+      ...PRIMARY_PRODUCT.thumbnail,
+      alt: 'Napa cabbage kimchi in a bowl',
+    },
+    media: [],
+    allergens: ['soybeans'],
+    ingredients: 'Napa cabbage, radish, chili, garlic, ginger',
+    category: {
+      id: 'cat-kimchi',
+      name: 'Kimchi',
+      slug: 'kimchi',
+    },
+    variants: [
+      {
+        ...PRIMARY_PRODUCT.variants[0],
+        id: 'variant-napa-kimchi',
+        name: '500 g',
+        sku: 'KIMCHI-500',
+      },
+    ],
+  },
+  {
+    ...SECONDARY_PRODUCT,
+    id: 'prod-pickled-daikon',
+    name: 'Pickled Daikon Radish',
+    slug: 'pickled-daikon-radish',
+    description: 'Crisp daikon radish in a sweet and tangy pickle brine.',
+    thumbnail: {
+      ...SECONDARY_PRODUCT.thumbnail,
+      alt: 'Pickled daikon radish',
+    },
+    media: [],
+    ingredients: 'Daikon radish, vinegar, sugar, salt',
+    category: {
+      id: 'cat-pickled-vegetables',
+      name: 'Pickled vegetables',
+      slug: 'owoce-marynowane-warzywa',
+    },
+    variants: [
+      {
+        ...SECONDARY_PRODUCT.variants[0],
+        id: 'variant-pickled-daikon',
+        name: '250 g',
+        sku: 'DAIKON-250',
+      },
+    ],
+  },
+  {
+    ...THIRD_PRODUCT,
+    id: 'prod-spicy-ramyun',
+    name: 'Spicy Ramyun Noodles',
+    slug: 'spicy-ramyun-noodles',
+    description: 'Korean instant noodles with a spicy soup base.',
+    thumbnail: {
+      ...THIRD_PRODUCT.thumbnail,
+      alt: 'Bowl of spicy ramyun noodles',
+    },
+    media: [],
+    allergens: ['gluten', 'soybeans'],
+    ingredients: 'Wheat noodles, chili, soy sauce, garlic',
+    category: {
+      id: 'cat-ramen',
+      name: 'Ramen',
+      slug: 'ramyun-ramen',
+    },
+    variants: [
+      {
+        ...THIRD_PRODUCT.variants[0],
+        id: 'variant-spicy-ramyun',
+        name: '1 pack',
+        sku: 'RAMYUN-1',
+      },
+    ],
+  },
+];
 
 const PRODUCT_DETAIL_MEDIA = [
   {
@@ -529,13 +619,13 @@ function getProductsForCategory(products: Array<(typeof PRODUCTS)[number]>, cate
 }
 
 function getCategoryBackgroundImage(category: (typeof PRODUCTS)[number]['category']) {
-  if (category.id !== 'cat-fruit') {
+  if (category.id !== 'cat-kimchi') {
     return null;
   }
 
   return {
     url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
-    alt: 'Fruit category',
+    alt: 'Kimchi category',
   };
 }
 
@@ -816,8 +906,9 @@ export async function mockMobileStorefront(
     : options.facets === 'empty'
       ? PRODUCTS_WITH_EMPTY_FACETS
       : PRODUCTS;
+  const categoryProducts = [...products, ...PUBLIC_TAXONOMY_PRODUCTS];
   const productsById = new Map(products.map((product) => [product.id, product]));
-  const categoryFixtures = buildCategoryFixtures(products);
+  const categoryFixtures = buildCategoryFixtures(categoryProducts);
   const featuredProduct = products[0] ?? PRIMARY_PRODUCT;
   const cartCostMode = options.cartCosts ?? 'priced';
   const deliveryOptions = options.checkoutProfile === 'unconfigured'
@@ -855,13 +946,17 @@ export async function mockMobileStorefront(
     const query = body.query ?? '';
     const operationName = body.operationName ?? '';
 
-    if (
-      operationName === 'GroceryProducts'
+    const isProductListingQuery = operationName === 'GroceryProducts'
       || operationName === 'GroceryProductListing'
       || query.includes('query GroceryProducts')
-      || query.includes('query GroceryProductListing')
-    ) {
-      options.onProductsQuery?.(body.variables ?? {});
+      || query.includes('query GroceryProductListing');
+    const isProductFilterCatalogQuery = operationName === 'GroceryProductFilterCatalog'
+      || query.includes('query GroceryProductFilterCatalog');
+
+    if (isProductListingQuery || isProductFilterCatalogQuery) {
+      if (isProductListingQuery) {
+        options.onProductsQuery?.(body.variables ?? {});
+      }
 
       if (options.products === 'error') {
         await route.fulfill({
@@ -881,7 +976,16 @@ export async function mockMobileStorefront(
         return;
       }
 
-      const filteredProducts = products.filter((product) => matchesProductsFilter(product, body.variables?.filter));
+      const categoryKeys = Array.isArray(body.variables?.filter?.categories)
+        ? body.variables.filter.categories.map(String)
+        : [];
+      const usesPublicTaxonomy = categoryKeys.some((categoryKey) => (
+        PUBLIC_TAXONOMY_PRODUCTS.some((product) => (
+          product.category.id === categoryKey || product.category.slug === categoryKey
+        ))
+      ));
+      const listingProducts = usesPublicTaxonomy ? PUBLIC_TAXONOMY_PRODUCTS : products;
+      const filteredProducts = listingProducts.filter((product) => matchesProductsFilter(product, body.variables?.filter));
 
       await fulfill(route, {
         products: {
@@ -916,10 +1020,15 @@ export async function mockMobileStorefront(
       return;
     }
 
-    if (operationName === 'Categories' || query.includes('query Categories')) {
+    if (
+      operationName === 'Categories'
+      || operationName === 'PublicCategories'
+      || query.includes('query Categories')
+      || query.includes('query PublicCategories')
+    ) {
       await fulfill(route, {
         categories: {
-          edges: categoryFixtures.map((category, index) => buildCategoryEdge(category, products, index)),
+          edges: categoryFixtures.map((category, index) => buildCategoryEdge(category, categoryProducts, index)),
           pageInfo: { hasNextPage: false, endCursor: null },
           totalCount: categoryFixtures.length,
         },
@@ -932,16 +1041,18 @@ export async function mockMobileStorefront(
       const matchedCategory = typeof requestedSlug === 'string'
         ? categoryFixtures.find((category) => category.slug === requestedSlug) ?? null
         : null;
-      const categoryProducts = matchedCategory ? getProductsForCategory(products, matchedCategory.id) : [];
+      const matchedCategoryProducts = matchedCategory
+        ? getProductsForCategory(categoryProducts, matchedCategory.id)
+        : [];
 
       await fulfill(route, {
         category: matchedCategory
           ? {
-            ...buildCategoryNode(matchedCategory, products),
+            ...buildCategoryNode(matchedCategory, categoryProducts),
             products: {
-              edges: categoryProducts.map(buildProductEdge),
+              edges: matchedCategoryProducts.map(buildProductEdge),
               pageInfo: { hasNextPage: false, endCursor: null },
-              totalCount: categoryProducts.length,
+              totalCount: matchedCategoryProducts.length,
             },
           }
           : null,

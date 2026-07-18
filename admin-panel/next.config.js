@@ -32,6 +32,7 @@ const securityHeaders = [
 
 const nextConfig = {
   output: 'standalone',
+  poweredByHeader: false,
   outputFileTracingRoot: __dirname,
   outputFileTracingExcludes: {
     '/*': ['./data/**/*', './public/uploads/**/*'],

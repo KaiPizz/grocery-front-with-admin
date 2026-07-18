@@ -1,6 +1,18 @@
 import { expect, test } from '@playwright/test';
 import { mockMobileStorefront } from './mobile-fixtures';
 
+const KIMCHI_RAW_CATEGORY_IDS = ['cat-kimchi', 'cat-pickled-vegetables'];
+
+function hasCompleteKimchiScope(variables: Record<string, any>) {
+  const filter = variables.filter as Record<string, any> | undefined;
+  const categoryIds = Array.isArray(filter?.categories)
+    ? filter.categories.map(String)
+    : [];
+
+  return categoryIds.length === KIMCHI_RAW_CATEGORY_IDS.length
+    && KIMCHI_RAW_CATEGORY_IDS.every((categoryId) => categoryIds.includes(categoryId));
+}
+
 test.describe('B1 category browsing', () => {
   test('server-renders the category index without requiring JavaScript', async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -11,8 +23,8 @@ test.describe('B1 category browsing', () => {
       await page.goto('/en/categories');
 
       await expect(page.getByRole('heading', { name: /categories/i })).toBeVisible();
-      await expect(page.getByRole('link', { name: /fruit.*2 products/i })).toBeVisible();
-      await expect(page.getByRole('link', { name: /household.*coming soon/i })).toBeVisible();
+      await expect(page.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
+      await expect(page.getByRole('link', { name: /noodles and rice.*1 product/i })).toBeVisible();
     } finally {
       await context.close();
     }
@@ -24,37 +36,37 @@ test.describe('B1 category browsing', () => {
 
     try {
       // PRD Phase 2 / backlog B1: slug category pages are public browse surfaces, not JS-only widgets.
-      await page.goto('/en/categories/fruit');
+      await page.goto('/en/categories/kimchi-i-kiszonki');
 
-      await expect(page.getByRole('heading', { name: /^fruit$/i })).toBeVisible();
-      await expect(page.getByRole('heading', { name: /organic gala apples/i })).toBeVisible();
+      await expect(page.getByRole('heading', { name: /^kimchi and pickles$/i })).toBeVisible();
+      await expect(page.getByRole('heading', { name: /napa cabbage kimchi/i })).toBeVisible();
+      await expect(page.getByRole('heading', { name: /pickled daikon radish/i })).toBeVisible();
       await expect(page.getByText(/sourdough sandwich bread/i)).toHaveCount(0);
     } finally {
       await context.close();
     }
   });
 
-  test('lists flat storefront categories with product counts and coming-soon badges', async ({ page }) => {
+  test('lists the public storefront taxonomy with product counts', async ({ page }) => {
     await mockMobileStorefront(page);
 
     await page.goto('/en/categories');
 
     await expect(page.getByRole('heading', { name: /categories/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /fruit.*2 products/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /bakery.*1 product/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /household.*coming soon/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /noodles and rice.*1 product/i })).toBeVisible();
   });
 
   test('opens a category slug page with only storefront-visible products from that category', async ({ page }) => {
     await mockMobileStorefront(page);
 
-    await page.goto('/en/categories/fruit');
+    await page.goto('/en/categories/kimchi-i-kiszonki');
 
-    await expect(page.getByRole('heading', { name: /^fruit$/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /^kimchi and pickles$/i })).toBeVisible();
     await expect(page.getByText(/2 products/i)).toBeVisible();
     await expect(page.getByRole('main').getByRole('link', { name: /categories/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /organic gala apples/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /blueberries snack box/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /napa cabbage kimchi/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /pickled daikon radish/i })).toBeVisible();
     await expect(page.getByText(/sourdough sandwich bread/i)).toHaveCount(0);
   });
 
@@ -77,30 +89,29 @@ test.describe('B1 category browsing', () => {
       },
     });
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/categories/fruit');
+    await page.goto('/en/categories/kimchi-i-kiszonki');
 
-    await expect(page.getByRole('heading', { name: /^fruit$/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /organic gala apples/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /blueberries snack box/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /^kimchi and pickles$/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /napa cabbage kimchi/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /pickled daikon radish/i })).toBeVisible();
 
-    await expect.poll(() => productQueries.some((variables) => {
-      const filter = variables.filter as Record<string, any> | undefined;
-      return Array.isArray(filter?.categories) && filter.categories.includes('cat-fruit');
-    })).toBe(true);
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    await expect(filterPanel).toBeVisible({ timeout: 15_000 });
+    const minimumPrice = filterPanel.getByLabel(/minimum price/i);
 
-    await page.getByRole('button', { name: /filters/i }).click();
-    const filterPanel = page.locator('#filter-panel');
-    await expect(filterPanel).toBeVisible();
-    await filterPanel.getByLabel(/minimum price/i).fill('10');
-
-    await expect.poll(() => productQueries.some((variables) => {
-      const filter = variables.filter as Record<string, any> | undefined;
-      return Array.isArray(filter?.categories)
-        && filter.categories.includes('cat-fruit')
-        && filter.price?.gte === 10;
-    })).toBe(true);
-    await expect(page.getByRole('heading', { name: /organic gala apples/i })).toBeVisible();
-    await expect(page.getByText(/blueberries snack box/i)).toHaveCount(0);
+    await expect.poll(async () => {
+      // Re-emit a changed value until the cold server-rendered control has
+      // hydrated and its React change handler can execute the listing query.
+      await minimumPrice.fill('');
+      await minimumPrice.fill('10');
+      return productQueries.some((variables) => {
+        const filter = variables.filter as Record<string, any> | undefined;
+        return hasCompleteKimchiScope(variables)
+          && filter?.price?.gte === 10;
+      });
+    }, { timeout: 15_000 }).toBe(true);
+    await expect(page.getByRole('heading', { name: /napa cabbage kimchi/i })).toBeVisible();
+    await expect(page.getByText(/pickled daikon radish/i)).toHaveCount(0);
   });
 
   test('applies mobile category filters only after tapping apply', async ({ page }) => {
@@ -112,7 +123,7 @@ test.describe('B1 category browsing', () => {
       },
     });
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/en/categories/fruit');
+    await page.goto('/en/categories/kimchi-i-kiszonki');
 
     const cards = page.getByTestId('mobile-product-card');
     await expect(cards).toHaveCount(2);
@@ -124,9 +135,8 @@ test.describe('B1 category browsing', () => {
 
     expect(productQueries.some((variables) => {
       const filter = variables.filter as Record<string, any> | undefined;
-      return Array.isArray(filter?.categories)
-        && filter.categories.includes('cat-fruit')
-        && filter.price?.gte === 10;
+      return hasCompleteKimchiScope(variables)
+        && filter?.price?.gte === 10;
     })).toBe(false);
     await expect(cards).toHaveCount(2);
 
@@ -135,9 +145,8 @@ test.describe('B1 category browsing', () => {
     await expect(cards).toHaveCount(1);
     await expect.poll(() => productQueries.some((variables) => {
       const filter = variables.filter as Record<string, any> | undefined;
-      return Array.isArray(filter?.categories)
-        && filter.categories.includes('cat-fruit')
-        && filter.price?.gte === 10;
+      return hasCompleteKimchiScope(variables)
+        && filter?.price?.gte === 10;
     })).toBe(true);
   });
 });
@@ -164,12 +173,12 @@ test.describe('desktop category navigation', () => {
     const megaMenu = page.getByRole('navigation', { name: /category mega menu/i });
     await expect(megaMenu).toBeVisible();
     await expect(megaMenu.getByRole('link', { name: /browse all categories/i })).toBeVisible();
-    await expect(megaMenu.getByRole('link', { name: /fruit.*2 products/i })).toBeVisible();
-    await expect(megaMenu.getByRole('link', { name: /household.*coming soon/i })).toBeVisible();
-    await expect(megaMenu.getByRole('img', { name: /fruit category/i })).toBeVisible();
+    await expect(megaMenu.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
+    await expect(megaMenu.getByRole('link', { name: /noodles and rice.*1 product/i })).toBeVisible();
+    await expect(megaMenu.getByTestId('category-mega-menu-promo')).toBeVisible();
 
-    await megaMenu.getByRole('link', { name: /fruit.*2 products/i }).click();
-    await expect(page).toHaveURL(/\/en\/categories\/fruit$/);
+    await megaMenu.getByRole('link', { name: /kimchi and pickles.*2 products/i }).click();
+    await expect(page).toHaveURL(/\/en\/categories\/kimchi-i-kiszonki$/);
   });
 
   test('keeps the category mega menu reachable from keyboard focus', async ({ page }) => {

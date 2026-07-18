@@ -39,7 +39,10 @@ release="${commit}-env-${stamp}"
 remote_release="$REMOTE_BASE/releases/$release"
 
 echo "Building Asia Deli Go storefront at commit $commit"
+npm --prefix "$APP_DIR" ci --include=dev --no-audit --no-fund
+npm --prefix "$APP_DIR" run lint
 npm --prefix "$APP_DIR" run build
+npm --prefix "$APP_DIR" run test:production-smoke
 
 echo "Creating remote release $release"
 ssh "$REMOTE" "mkdir -p '$remote_release'"
@@ -56,7 +59,12 @@ const fs = require("fs");
 const { spawnSync } = require("child_process");
 
 const envFile = "/var/www/kenmito-storefront/shared/.env.runtime";
-const env = { ...process.env, PORT: "3022", NODE_ENV: "production" };
+const env = {
+  ...process.env,
+  HOSTNAME: "127.0.0.1",
+  PORT: "3022",
+  NODE_ENV: "production",
+};
 
 for (const rawLine of fs.readFileSync(envFile, "utf8").split(/\r?\n/)) {
   const line = rawLine.trim();

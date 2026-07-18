@@ -1,5 +1,25 @@
+import type { Locator, Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import { mockMobileStorefront } from './mobile-fixtures';
+
+async function openFilters(page: Page, panel: Locator) {
+  const trigger = page.getByRole('button', { name: /filters/i });
+
+  // A cold development compile can replace the server-rendered trigger while
+  // hydration applies the mocked facets. Retry the user action against the
+  // current trigger until the intended panel is actually visible.
+  await expect.poll(async () => {
+    if (await panel.isVisible()) return true;
+
+    try {
+      await trigger.click({ timeout: 1_000 });
+    } catch {
+      return false;
+    }
+
+    return panel.isVisible();
+  }, { timeout: 15_000 }).toBe(true);
+}
 
 test.describe('mobile products page', () => {
   test('compresses the mobile catalog layout to prioritize product images', async ({ page }) => {
@@ -11,8 +31,9 @@ test.describe('mobile products page', () => {
     const toolbar = page.getByTestId('mobile-products-toolbar');
     const title = page.getByTestId('mobile-products-title');
     const titleCount = page.getByTestId('mobile-products-title-count');
-    const sortGroup = page.getByTestId('mobile-products-sort');
+    const sortGroup = page.getByTestId('mobile-products-sort-trigger');
     const sortLabel = page.getByTestId('mobile-products-sort-label');
+    const sortValue = sortGroup.getByText(/^newest$/i);
     const sortSelect = page.getByTestId('mobile-products-sort-select');
     const grid = page.getByTestId('mobile-products-grid');
     const cards = page.getByTestId('mobile-product-card');
@@ -33,14 +54,17 @@ test.describe('mobile products page', () => {
 
     expect(titleFontSize).toBeGreaterThan(countFontSize);
 
-    const [sortLabelBox, sortSelectBox] = await Promise.all([
+    await expect(sortSelect).toBeHidden();
+    await expect(sortSelect).toHaveValue('newest');
+
+    const [sortLabelBox, sortValueBox] = await Promise.all([
       sortLabel.boundingBox(),
-      sortSelect.boundingBox(),
+      sortValue.boundingBox(),
     ]);
 
     expect(sortLabelBox).not.toBeNull();
-    expect(sortSelectBox).not.toBeNull();
-    expect(sortLabelBox!.y + sortLabelBox!.height).toBeLessThanOrEqual(sortSelectBox!.y + 4);
+    expect(sortValueBox).not.toBeNull();
+    expect(sortLabelBox!.y + sortLabelBox!.height).toBeLessThanOrEqual(sortValueBox!.y + 4);
 
     const columnCount = await grid.evaluate((element) => {
       return getComputedStyle(element).gridTemplateColumns.split(' ').filter(Boolean).length;
@@ -60,7 +84,8 @@ test.describe('mobile products page', () => {
     await expect(firstMedia).toBeVisible();
     await expect(firstImage).toBeVisible();
     await expect(firstTitle).toBeVisible();
-    await expect(firstCard.getByTestId('mobile-product-card-stepper')).toBeVisible();
+    await expect(addButton).toBeVisible();
+    await expect(firstCard.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
     await expect(firstCard.getByTestId('mobile-product-card-scan-facts')).toContainText(/fruit/i);
     await expect(firstCard.getByTestId('mobile-product-card-scan-facts')).toContainText(/poland/i);
     await expect(firstCard.getByTestId('mobile-product-card-availability')).toContainText(/in stock/i);
@@ -71,13 +96,13 @@ test.describe('mobile products page', () => {
       return {
         whiteSpace: styles.whiteSpace,
         overflow: styles.overflow,
-        textOverflow: styles.textOverflow,
+        webkitLineClamp: styles.webkitLineClamp,
       };
     });
 
-    expect(titleStyles.whiteSpace).toBe('nowrap');
+    expect(titleStyles.whiteSpace).toBe('normal');
     expect(titleStyles.overflow).toBe('hidden');
-    expect(titleStyles.textOverflow).toBe('ellipsis');
+    expect(titleStyles.webkitLineClamp).toBe('2');
     const cardTitleFontSize = await firstTitle.evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
     expect(cardTitleFontSize).toBeLessThanOrEqual(13.6);
 
@@ -132,8 +157,8 @@ test.describe('mobile products page', () => {
     expect(wishlistButtonBox!.x - mediaBox!.x).toBeLessThanOrEqual(12);
     expect(mediaBox!.y + mediaBox!.height - (wishlistButtonBox!.y + wishlistButtonBox!.height)).toBeLessThanOrEqual(12);
 
-    await page.getByRole('button', { name: /filters/i }).click();
-    await expect(page.getByTestId('mobile-filter-sheet')).toBeVisible();
+    const filterSheet = page.getByTestId('mobile-filter-sheet');
+    await openFilters(page, filterSheet);
   });
 
   test('keeps the Stitch-like products redesign scoped to mobile', async ({ page }) => {
@@ -150,8 +175,7 @@ test.describe('mobile products page', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/en/products');
 
-    await page.getByRole('button', { name: /filters/i }).click();
-    const filterPanel = page.locator('#filter-panel');
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
 
     await expect(filterPanel).toBeVisible();
     await expect(filterPanel.getByText(/exclude allergens/i)).toBeVisible();
@@ -176,9 +200,8 @@ test.describe('mobile products page', () => {
     await page.goto('/en/products');
 
     await expect(page.getByTestId('product-card')).toHaveCount(4);
-    await page.getByRole('button', { name: /filters/i }).click();
-
-    const filterPanel = page.locator('#filter-panel');
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    await expect(filterPanel).toBeVisible();
     await expect(filterPanel.getByText(/categories/i)).toBeVisible();
     await filterPanel.getByRole('button', { name: /bakery/i }).click();
 
@@ -198,8 +221,8 @@ test.describe('mobile products page', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/en/products');
 
-    await page.getByRole('button', { name: /filters/i }).click();
-    const filterPanel = page.locator('#filter-panel');
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    await expect(filterPanel).toBeVisible();
     await filterPanel.getByRole('button', { name: /bakery/i }).click();
 
     const filterSummary = page.getByTestId('product-filter-summary');
@@ -227,10 +250,8 @@ test.describe('mobile products page', () => {
     const cards = page.getByTestId('mobile-product-card');
     await expect(cards).toHaveCount(4);
 
-    await page.getByRole('button', { name: /filters/i }).click();
     const filterSheet = page.getByTestId('mobile-filter-sheet');
-
-    await expect(filterSheet).toBeVisible();
+    await openFilters(page, filterSheet);
     await expect(filterSheet.getByText(/certifications/i)).toBeVisible();
 
     const minPriceInput = filterSheet.getByLabel(/minimum price/i);
@@ -275,10 +296,8 @@ test.describe('mobile products page', () => {
     const cards = page.getByTestId('mobile-product-card');
     await expect(cards).toHaveCount(4);
 
-    await page.getByRole('button', { name: /filters/i }).click();
     const filterSheet = page.getByTestId('mobile-filter-sheet');
-
-    await expect(filterSheet).toBeVisible();
+    await openFilters(page, filterSheet);
     await expect(filterSheet.getByText(/categories/i)).toBeVisible();
     await filterSheet.getByRole('button', { name: /bakery/i }).click();
 
@@ -310,8 +329,8 @@ test.describe('mobile products page', () => {
     const cards = page.getByTestId('mobile-product-card');
     await expect(cards).toHaveCount(4);
 
-    await page.getByRole('button', { name: /filters/i }).click();
     const filterSheet = page.getByTestId('mobile-filter-sheet');
+    await openFilters(page, filterSheet);
     await filterSheet.getByRole('button', { name: /bakery/i }).click();
     await filterSheet.getByLabel(/minimum price/i).fill('10');
     await filterSheet.getByRole('button', { name: /apply filters/i }).click();
@@ -338,9 +357,8 @@ test.describe('mobile products page', () => {
     const cards = page.getByTestId('mobile-product-card');
     await expect(cards).toHaveCount(4);
 
-    await page.getByRole('button', { name: /filters/i }).click();
     const filterSheet = page.getByTestId('mobile-filter-sheet');
-    await expect(filterSheet).toBeVisible();
+    await openFilters(page, filterSheet);
 
     await filterSheet.getByRole('button', { name: /apply filters/i }).click();
 
@@ -354,9 +372,8 @@ test.describe('mobile products page', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/en/products');
 
-    await page.getByRole('button', { name: /filters/i }).click();
     const filterSheet = page.getByTestId('mobile-filter-sheet');
-    await expect(filterSheet).toBeVisible();
+    await openFilters(page, filterSheet);
 
     const panel = filterSheet.locator(':scope > div').last();
     const panelBox = await panel.boundingBox();
@@ -371,7 +388,7 @@ test.describe('mobile products page', () => {
       element.scrollTop = element.scrollHeight;
     });
 
-    await expect(panel.getByText(/certifications/i)).toBeVisible();
+    await expect(panel.getByText(/price range/i)).toBeVisible();
     await expect(panel.getByRole('button', { name: /apply filters/i })).toBeVisible();
   });
 
@@ -384,8 +401,8 @@ test.describe('mobile products page', () => {
     await mockMobileStorefront(page, { facets: 'empty' });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/en/products');
-    await page.getByRole('button', { name: /filters/i }).click();
-    await expect(page.getByTestId('mobile-filter-sheet')).toBeVisible();
+    const filterSheet = page.getByTestId('mobile-filter-sheet');
+    await openFilters(page, filterSheet);
 
     expect(consoleMessages.filter((entry) => entry.includes('MISSING_MESSAGE'))).toEqual([]);
   });

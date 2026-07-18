@@ -9,9 +9,17 @@ async function scrollInlineAddIntoView(inlineAdd: Locator) {
 }
 
 async function scrollInlineAddOutOfView(page: Page) {
-  await page.evaluate(() => {
-    window.scrollTo(0, document.documentElement.scrollHeight);
-  });
+  const sticky = page.getByTestId('mobile-pd-sticky-bar');
+
+  // On a cold Next.js compile the server-rendered CTA can be visible before
+  // the client IntersectionObserver attaches. Retry the real scroll action
+  // until hydration has installed the observer and the sticky state updates.
+  await expect.poll(async () => {
+    await page.evaluate(() => {
+      window.scrollTo(0, document.documentElement.scrollHeight);
+    });
+    return sticky.getAttribute('aria-hidden');
+  }, { timeout: 15_000 }).toBe('false');
 }
 
 async function useShortMobileViewport(page: Page) {
@@ -102,8 +110,9 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     await expect(sticky).toHaveAttribute('aria-hidden', 'false');
 
     const addBox = await sticky.getByTestId('mobile-pd-sticky-add').boundingBox();
-    const decBox = await page.getByTestId('product-detail-actions').getByRole('button', { name: /decrease quantity/i }).boundingBox();
-    const incBox = await page.getByTestId('product-detail-actions').getByRole('button', { name: /increase quantity/i }).boundingBox();
+    const stepper = page.getByTestId('product-detail-stepper');
+    const decBox = await stepper.getByRole('button', { name: /decrease .* quantity/i }).boundingBox();
+    const incBox = await stepper.getByRole('button', { name: /increase .* quantity/i }).boundingBox();
 
     expect(addBox).not.toBeNull();
     expect(decBox).not.toBeNull();
@@ -202,6 +211,22 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
 
     const breadcrumb = page.getByRole('navigation', { name: /breadcrumb/i });
     await expect(breadcrumb.getByRole('link', { name: /^fruit$/i })).toHaveAttribute('href', '/en/categories/fruit');
+  });
+
+  test('localizes gluten-free and vegetarian dietary tags in the Polish purchase panel', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.goto('/pl/products/blueberries-snack-box');
+
+    const glutenFreePanel = page.getByTestId('pdp-purchase-panel');
+    await expect(glutenFreePanel).toContainText(/wegańskie/i);
+    await expect(glutenFreePanel).toContainText(/bez glutenu/i);
+    await expect(glutenFreePanel).not.toContainText(/gluten-free/i);
+
+    await page.goto('/pl/products/sourdough-sandwich-bread');
+
+    const vegetarianPanel = page.getByTestId('pdp-purchase-panel');
+    await expect(vegetarianPanel).toContainText(/wegetariańskie/i);
+    await expect(vegetarianPanel).not.toContainText(/vegetarian/i);
   });
 
   test('in-stock badge shows the high-stock variant for qty > 10', async ({ page }) => {
@@ -349,7 +374,7 @@ test.describe('PDP food-label sections', () => {
     await expect(sections.getByTestId('pdp-food-compliance-notice')).toContainText(/information for shoppers/i);
     await expect(sections.getByTestId('pdp-food-compliance-notice')).toContainText(/product catalog/i);
     await expect(sections.getByRole('heading', { name: /description/i })).toBeVisible();
-    await expect(sections.getByRole('heading', { name: /ingredients/i })).toBeVisible();
+    await expect(sections.getByText(/^ingredients$/i).first()).toBeVisible();
     await expect(sections).toContainText(/Apples/i);
     await expect(sections.getByRole('heading', { name: /allergens/i })).toBeVisible();
     await expect(sections.getByRole('listitem').filter({ hasText: /nuts/i })).toBeVisible();
@@ -368,7 +393,7 @@ test.describe('PDP food-label sections', () => {
     const sections = page.getByTestId('pdp-food-label-sections');
     await expect(sections).toBeVisible();
     await expect(sections.getByRole('heading', { name: /description/i })).toBeVisible();
-    await expect(sections.getByRole('heading', { name: /ingredients/i })).toBeVisible();
+    await expect(sections.getByText(/^ingredients$/i).first()).toBeVisible();
     await expect(sections.getByRole('heading', { name: /nutrition facts/i })).toBeVisible();
     await expect(sections.getByRole('heading', { name: /allergens/i })).toBeVisible();
     await expect(sections.getByTestId('pdp-missing-catalog-data')).toContainText(/needs catalog completion/i);

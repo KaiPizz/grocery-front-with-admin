@@ -7,14 +7,14 @@ import {
   Youtube,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import type { SVGProps } from 'react';
+import type { ReactElement, SVGProps } from 'react';
 import type { SocialLink } from '@/types/storefront-config';
 
 interface SocialBarProps {
   links: SocialLink[];
 }
 
-type SvgIcon = (props: SVGProps<SVGSVGElement>) => JSX.Element;
+type SvgIcon = (props: SVGProps<SVGSVGElement>) => ReactElement;
 type SocialIcon = LucideIcon | SvgIcon;
 
 function TikTokIcon(props: SVGProps<SVGSVGElement>) {

@@ -465,6 +465,10 @@ export function ProductListingClient({
     const countryFilterUnavailable = availableCountryOrigins.length === 0;
     const localActiveFilterCount = countActiveFilters(normalizedFilters);
     const unavailableMessage = t('filterUnavailable');
+    const visibleAllergens = allergenFilterUnavailable ? ALLERGEN_OPTIONS : availableAllergens;
+    const visibleDietaryTags = dietaryFilterUnavailable ? DIETARY_OPTIONS : availableDietaryTags;
+    const visibleStorageZones = zoneFilterUnavailable ? ZONE_OPTIONS : availableStorageZones;
+    const visibleCertifications = certificationFilterUnavailable ? CERT_OPTIONS : availableCertifications;
 
     return (
       <>
@@ -573,101 +577,97 @@ export function ProductListingClient({
           )}
         </fieldset>
 
-        {!allergenFilterUnavailable && (
-          <div className="space-y-3">
-            <AllergenFilter
-              selected={filters.excludeAllergens}
-              onChange={(nextAllergens) => setFilters((prev) => ({
-                ...prev,
-                excludeAllergens: nextAllergens.map(normalizeAllergenCode),
-              }))}
-              options={availableAllergens}
-            />
+        <div className="space-y-3">
+          <AllergenFilter
+            selected={filters.excludeAllergens}
+            onChange={(nextAllergens) => setFilters((prev) => ({
+              ...prev,
+              excludeAllergens: nextAllergens.map(normalizeAllergenCode),
+            }))}
+            options={visibleAllergens}
+            disabled={allergenFilterUnavailable}
+          />
+        </div>
+
+        <fieldset className="space-y-3">
+          <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+            {t('dietaryFilter')}
+          </legend>
+          <div className="flex flex-wrap gap-2" role="group">
+            {visibleDietaryTags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => setFilters((prev) => ({
+                  ...prev,
+                  dietaryTags: toggleMultiValue(prev.dietaryTags, tag),
+                }))}
+                disabled={dietaryFilterUnavailable}
+                className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
+                style={{
+                  borderColor: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-primary)' : 'var(--color-border)',
+                  backgroundColor: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-accent)' : 'transparent',
+                  color: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                }}
+                aria-pressed={normalizedFilters.dietaryTags.includes(tag)}
+              >
+                {t(tag as any)}
+              </button>
+            ))}
           </div>
-        )}
+        </fieldset>
 
-        {!dietaryFilterUnavailable && (
-          <fieldset className="space-y-3">
-            <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-              {t('dietaryFilter')}
-            </legend>
-            <div className="flex flex-wrap gap-2" role="group">
-              {availableDietaryTags.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => setFilters((prev) => ({
-                    ...prev,
-                    dietaryTags: toggleMultiValue(prev.dietaryTags, tag),
-                  }))}
-                  className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast"
-                  style={{
-                    borderColor: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-primary)' : 'var(--color-border)',
-                    backgroundColor: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-accent)' : 'transparent',
-                    color: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                  }}
-                  aria-pressed={normalizedFilters.dietaryTags.includes(tag)}
-                >
-                  {t(tag as any)}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-        )}
+        <fieldset className="space-y-3">
+          <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+            {t('zoneFilter')}
+          </legend>
+          <div className="flex flex-wrap gap-2" role="group">
+            {visibleStorageZones.map((zone) => (
+              <button
+                key={zone}
+                type="button"
+                onClick={() => setFilters((prev) => ({
+                  ...prev,
+                  storageZone: prev.storageZone === zone ? '' : zone,
+                }))}
+                disabled={zoneFilterUnavailable}
+                className={`rounded-full px-3 py-1.5 text-xs font-medium text-white transition-opacity duration-fast disabled:cursor-not-allowed disabled:opacity-35 ${normalizedFilters.storageZone === zone ? 'opacity-100' : 'opacity-55 hover:opacity-80'}`}
+                style={{ backgroundColor: `var(--color-${zone.toLowerCase()})` }}
+                aria-pressed={normalizedFilters.storageZone === zone}
+              >
+                {tHome(zone.toLowerCase() as any)}
+              </button>
+            ))}
+          </div>
+        </fieldset>
 
-        {!zoneFilterUnavailable && (
-          <fieldset className="space-y-3">
-            <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-              {t('zoneFilter')}
-            </legend>
-            <div className="flex flex-wrap gap-2" role="group">
-              {availableStorageZones.map((zone) => (
-                <button
-                  key={zone}
-                  type="button"
-                  onClick={() => setFilters((prev) => ({
-                    ...prev,
-                    storageZone: prev.storageZone === zone ? '' : zone,
-                  }))}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium text-white transition-opacity duration-fast ${normalizedFilters.storageZone === zone ? 'opacity-100' : 'opacity-55 hover:opacity-80'}`}
-                  style={{ backgroundColor: `var(--color-${zone.toLowerCase()})` }}
-                  aria-pressed={normalizedFilters.storageZone === zone}
-                >
-                  {tHome(zone.toLowerCase() as any)}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-        )}
-
-        {!certificationFilterUnavailable && (
-          <fieldset className="space-y-3">
-            <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-              {t('certFilter')}
-            </legend>
-            <div className="flex flex-wrap gap-2" role="group">
-              {availableCertifications.map((certification) => (
-                <button
-                  key={certification}
-                  type="button"
-                  onClick={() => setFilters((prev) => ({
-                    ...prev,
-                    certifications: toggleMultiValue(prev.certifications, certification),
-                  }))}
-                  className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast"
-                  style={{
-                    borderColor: normalizedFilters.certifications.includes(certification) ? 'var(--color-primary)' : 'var(--color-border)',
-                    backgroundColor: normalizedFilters.certifications.includes(certification) ? 'var(--color-accent)' : 'transparent',
-                    color: normalizedFilters.certifications.includes(certification) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                  }}
-                  aria-pressed={normalizedFilters.certifications.includes(certification)}
-                >
-                  {t(certification as any)}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-        )}
+        <fieldset className="space-y-3">
+          <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
+            {t('certFilter')}
+          </legend>
+          <div className="flex flex-wrap gap-2" role="group">
+            {visibleCertifications.map((certification) => (
+              <button
+                key={certification}
+                type="button"
+                onClick={() => setFilters((prev) => ({
+                  ...prev,
+                  certifications: toggleMultiValue(prev.certifications, certification),
+                }))}
+                disabled={certificationFilterUnavailable}
+                className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
+                style={{
+                  borderColor: normalizedFilters.certifications.includes(certification) ? 'var(--color-primary)' : 'var(--color-border)',
+                  backgroundColor: normalizedFilters.certifications.includes(certification) ? 'var(--color-accent)' : 'transparent',
+                  color: normalizedFilters.certifications.includes(certification) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                }}
+                aria-pressed={normalizedFilters.certifications.includes(certification)}
+              >
+                {t(certification as any)}
+              </button>
+            ))}
+          </div>
+        </fieldset>
 
         {categoryFilterUnavailable
           && allergenFilterUnavailable

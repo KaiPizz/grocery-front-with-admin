@@ -25,7 +25,7 @@ const securityPanelSource = read('../src/components/account/SecurityPanel.tsx');
 const providerPanelSource = read('../src/components/account/ProviderConnectionsPanel.tsx');
 const trackingSource = read('../src/components/TrackingScripts.tsx');
 const trackingPolicySource = read('../src/lib/tracking-policy.ts');
-const middlewareSource = read('../src/middleware.ts');
+const proxySource = read('../src/proxy.ts');
 const restProxySource = read('../src/app/api/proxy/[...path]/route.ts');
 const verifyEmailRouteSource = read('../src/app/api/auth/verify-email/route.ts');
 const verifyEmailPanelSource = read('../src/components/auth/VerifyEmailPanel.tsx');
@@ -101,8 +101,8 @@ test('reset tokens use fragments, are scrubbed, and reset pages never load track
   assert.match(resetFormSource, /url\.searchParams\.delete\('token'\)/);
   assert.match(resetFormSource, /url\.hash = ''/);
   assert.doesNotMatch(resetFormSource, /console\.(?:log|warn|error)/);
-  assert.match(middlewareSource, /isSecretFragmentRoute && request\.nextUrl\.searchParams\.has\('token'\)/);
-  assert.match(middlewareSource, /new URLSearchParams\(\{ token: legacyToken \}\)/);
+  assert.match(proxySource, /isSecretFragmentRoute && request\.nextUrl\.searchParams\.has\('token'\)/);
+  assert.match(proxySource, /new URLSearchParams\(\{ token: legacyToken \}\)/);
   assert.match(trackingSource, /!isTrackingAllowedRoute\(pathname\)/);
   assert.doesNotMatch(trackingPolicySource, /reset-password/);
 });
@@ -119,7 +119,7 @@ test('verification tokens stay in fragments and use a dedicated same-origin BFF 
   assert.match(verifyEmailPanelSource, /requiresPasswordReset \? '\/forgot-password' : '\/login'/);
   assert.match(trackingSource, /!isTrackingAllowedRoute\(pathname\)/);
   assert.doesNotMatch(trackingPolicySource, /verify-email/);
-  assert.match(middlewareSource, /routePath === '\/verify-email'/);
+  assert.match(proxySource, /routePath === '\/verify-email'/);
 });
 
 test('unverified customers can safely request a new branded verification email', () => {
@@ -243,10 +243,11 @@ test('ordinary guests are distinct from rejected credentials during bootstrap', 
 
 test('generic REST proxy cannot reach token-producing customer endpoints', () => {
   assert.doesNotMatch(restProxySource, /export async function POST/);
-  assert.match(restProxySource, /params\.path\.length === 3/);
-  assert.match(restProxySource, /params\.path\[0\] === 'public'/);
-  assert.match(restProxySource, /params\.path\[1\] === 'salon'/);
-  assert.match(restProxySource, /params\.path\[2\] === configuredSlug/);
+  assert.match(restProxySource, /const \{ path \} = await params/);
+  assert.match(restProxySource, /path\.length === 3/);
+  assert.match(restProxySource, /path\[0\] === 'public'/);
+  assert.match(restProxySource, /path\[1\] === 'salon'/);
+  assert.match(restProxySource, /path\[2\] === configuredSlug/);
   assert.doesNotMatch(restProxySource, /request\.text\(\)|headers\.Authorization/);
   assert.doesNotMatch(restProxySource, /customers\/login|customers\/register/);
 });

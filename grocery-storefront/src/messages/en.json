@@ -179,6 +179,7 @@
   },
   "product": {
     "nutrition": "Nutrition facts",
+    "nutritionDialogDescription": "Nutrition, ingredients, allergens, and product details for {name}.",
     "nutritionPer100": "Per 100g / 100ml",
     "nutrient": "Nutrient",
     "amount": "Amount",
@@ -373,6 +374,7 @@
   },
   "allergens": {
     "cereals": "Cereals (gluten)",
+    "gluten": "Cereals (gluten)",
     "crustaceans": "Crustaceans",
     "eggs": "Eggs",
     "fish": "Fish",

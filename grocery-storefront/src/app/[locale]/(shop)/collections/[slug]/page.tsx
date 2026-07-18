@@ -5,14 +5,15 @@ import { findCommercialCollection } from '@/lib/commercial-config';
 import { fetchServerConfig } from '@/lib/storefront-config';
 
 interface CollectionPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function CollectionPage({ params }: CollectionPageProps) {
+  const { slug } = await params;
   const siteConfig = await fetchServerConfig();
-  const collection = findCommercialCollection(siteConfig, params.slug);
+  const collection = findCommercialCollection(siteConfig, slug);
 
   if (!collection) {
     notFound();

@@ -309,13 +309,22 @@ test.describe('Kenmito category discovery', () => {
     await mockMobileStorefront(page);
     await page.goto('/en/categories');
 
-    await expect(page.getByRole('heading', { name: /pantry essentials/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /fruit.*2 products/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /^categories$/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
 
-    await page.getByLabel(/search categories/i).fill('fruit');
+    const search = page.getByLabel(/search categories/i);
+    const noodlesCategory = page.getByRole('link', { name: /noodles and rice/i });
+    await expect.poll(async () => {
+      // A cold Next.js compile can briefly expose the server-rendered input
+      // before React attaches its change handler. Toggle the value so a retry
+      // after hydration always emits a fresh input event.
+      await search.fill('');
+      await search.fill('kimchi');
+      return noodlesCategory.count();
+    }, { timeout: 15_000 }).toBe(0);
 
-    await expect(page.getByRole('link', { name: /fruit.*2 products/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /bakery/i })).toHaveCount(0);
+    await expect(search).toHaveValue('kimchi');
+    await expect(page.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
   });
 
   test('homepage exposes real category shortcuts and commercial links in the first mobile flow', async ({ page }) => {
@@ -326,11 +335,11 @@ test.describe('Kenmito category discovery', () => {
 
     await expect(page.getByTestId('mobile-home-hero')).toBeVisible();
     await expect(page.getByRole('heading', { name: /browse categories/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /fruit/i })).toBeVisible();
+    await expect(page.locator('[data-testid="home-category-chip"]:visible').filter({ hasText: /Kimchi/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /outlet/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /korean pantry/i })).toBeVisible();
     await expect(page.getByRole('heading', { name: /shop by storage zone/i })).toHaveCount(0);
-    await expect(page.locator('[data-testid="home-category-card-image"]:visible')).toHaveCount(1);
+    await expect(page.locator('[data-testid="home-category-card-image"]:visible')).toHaveCount(0);
     await expect(page.getByRole('heading', { name: /new arrivals/i })).toHaveCount(0);
 
     const trust = page.locator('[data-testid="home-fulfillment-trust"]:visible');

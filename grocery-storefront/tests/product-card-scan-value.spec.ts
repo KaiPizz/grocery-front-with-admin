@@ -232,4 +232,27 @@ test.describe('listing product card scan value', () => {
     await expect(card.getByTestId('mobile-product-card-fulfillment')).toHaveCount(0);
     await expect(card).not.toContainText(/only 20 left|ships today|ships tomorrow|same-day shipping|pickup|bank transfer|manual confirmation/i);
   });
+
+  test('localizes dietary tags on Polish product cards and in the nutrition dialog', async ({ page }) => {
+    await mockPickupConfig(page);
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products');
+
+    const berriesCard = page.getByTestId('product-card').filter({ hasText: /Blueberries Snack Box/i });
+    await expect(berriesCard).toContainText(/wegańskie/i);
+    await expect(berriesCard).toContainText(/bez glutenu/i);
+    await expect(berriesCard).not.toContainText(/gluten-free/i);
+
+    await berriesCard.getByRole('button', { name: /wartości odżywcze.*blueberries/i }).click();
+    const nutritionDialog = page.getByRole('dialog', { name: /Blueberries Snack Box/i });
+    await expect(nutritionDialog).toContainText(/wegańskie/i);
+    await expect(nutritionDialog).toContainText(/bez glutenu/i);
+    await expect(nutritionDialog).not.toContainText(/gluten-free/i);
+    await nutritionDialog.getByRole('button', { name: /close/i }).click();
+
+    const breadCard = page.getByTestId('product-card').filter({ hasText: /Sourdough Sandwich Bread/i });
+    await expect(breadCard).toContainText(/wegetariańskie/i);
+    await expect(breadCard).not.toContainText(/vegetarian/i);
+  });
 });

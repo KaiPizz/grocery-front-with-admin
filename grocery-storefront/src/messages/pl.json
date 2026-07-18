@@ -179,6 +179,7 @@
   },
   "product": {
     "nutrition": "Wartości odżywcze",
+    "nutritionDialogDescription": "Wartości odżywcze, skład, alergeny i informacje o produkcie {name}.",
     "nutritionPer100": "Na 100g / 100ml",
     "nutrient": "Składnik",
     "amount": "Ilość",
@@ -373,6 +374,7 @@
   },
   "allergens": {
     "cereals": "Zboża (gluten)",
+    "gluten": "Zboża (gluten)",
     "crustaceans": "Skorupiaki",
     "eggs": "Jaja",
     "fish": "Ryby",

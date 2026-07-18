@@ -215,7 +215,7 @@ export function MobileProductCard({
               alt=""
               fill
               priority={imagePriority}
-              className="object-contain p-2 transition-transform duration-slow group-hover:scale-[1.02]"
+              className="object-contain p-1 transition-transform duration-slow group-hover:scale-[1.02]"
               sizes="(max-width: 767px) 50vw, 25vw"
               unoptimized={isImageProxySrc(imageUrl)}
               data-testid="mobile-product-card-image"

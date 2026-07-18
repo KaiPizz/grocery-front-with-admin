@@ -17,6 +17,12 @@ const productSlugRedirects = [
 const nextConfig = {
   output: 'standalone',
   poweredByHeader: false,
+  // Preserve next-intl's as-needed locale rewrites in standalone production.
+  skipProxyUrlNormalize: true,
+  allowedDevOrigins: ['127.0.0.1'],
+  turbopack: {
+    root: __dirname,
+  },
   async redirects() {
     return productSlugRedirects.flatMap(({ oldSlug, newSlug }) => [
       {

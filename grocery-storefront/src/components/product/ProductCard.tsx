@@ -541,7 +541,7 @@ export function ProductCard({
                   className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium"
                   style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-accent-foreground)' }}
                 >
-                  {tag}
+                  {t.has(`products.${tag}` as any) ? t(`products.${tag}` as any) : tag}
                 </span>
               ))}
             </div>

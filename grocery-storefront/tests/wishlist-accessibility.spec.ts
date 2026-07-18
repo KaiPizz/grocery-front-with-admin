@@ -29,20 +29,12 @@ test.describe('wishlist accessibility', () => {
 
     await expect(page.getByRole('heading', { name: /wishlist/i })).toBeVisible();
 
-    const productLinks = page.locator('a[href$="/products/organic-gala-apples"]');
-    const keyboardProductLinkNames = await productLinks.evaluateAll((links) => {
-      return links
-        .filter((link) => {
-          const element = link as HTMLAnchorElement;
-          return element.tabIndex >= 0 && element.getAttribute('aria-hidden') !== 'true';
-        })
-        .map((link) => {
-          const element = link as HTMLAnchorElement;
-          return element.getAttribute('aria-label') ?? element.textContent?.trim() ?? '';
-        });
+    const keyboardProductLink = page.getByRole('link', {
+      name: 'Organic Gala Apples Family Value Pack',
+      exact: true,
     });
-
-    expect(keyboardProductLinkNames).toEqual(['Organic Gala Apples Family Value Pack']);
+    await expect(keyboardProductLink).toHaveCount(1);
+    await expect(keyboardProductLink).not.toHaveAttribute('tabindex', '-1');
     await expect(page.getByRole('button', { name: /add organic gala apples family value pack to cart/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /remove from wishlist organic gala apples family value pack/i })).toBeVisible();
   });

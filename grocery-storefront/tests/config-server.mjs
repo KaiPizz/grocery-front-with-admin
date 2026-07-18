@@ -140,16 +140,125 @@ const products = [
   },
 ];
 
+// Category pages use a realistic Asian-grocery taxonomy while the general
+// catalog keeps its long-standing fruit/bakery fixtures and stable counts.
+const publicTaxonomyProducts = [
+  {
+    ...products[0],
+    id: 'prod-napa-kimchi',
+    name: 'Napa Cabbage Kimchi',
+    slug: 'napa-cabbage-kimchi',
+    description: 'Fermented napa cabbage with Korean chili and garlic.',
+    translation: null,
+    thumbnail: null,
+    allergens: ['soybeans'],
+    ingredients: 'Napa cabbage, radish, chili, garlic, ginger',
+    category: { id: 'cat-kimchi', name: 'Kimchi', slug: 'kimchi' },
+    variants: [
+      {
+        ...products[0].variants[0],
+        id: 'variant-napa-kimchi',
+        name: '500 g',
+        sku: 'KIMCHI-500',
+      },
+    ],
+  },
+  {
+    ...products[1],
+    id: 'prod-pickled-daikon',
+    name: 'Pickled Daikon Radish',
+    slug: 'pickled-daikon-radish',
+    description: 'Crisp daikon radish in a sweet and tangy pickle brine.',
+    thumbnail: null,
+    ingredients: 'Daikon radish, vinegar, sugar, salt',
+    category: {
+      id: 'cat-pickled-vegetables',
+      name: 'Pickled vegetables',
+      slug: 'owoce-marynowane-warzywa',
+    },
+    variants: [
+      {
+        ...products[1].variants[0],
+        id: 'variant-pickled-daikon',
+        name: '250 g',
+        sku: 'DAIKON-250',
+      },
+    ],
+  },
+  {
+    ...products[2],
+    id: 'prod-spicy-ramyun',
+    name: 'Spicy Ramyun Noodles',
+    slug: 'spicy-ramyun-noodles',
+    description: 'Korean instant noodles with a spicy soup base.',
+    thumbnail: null,
+    allergens: ['gluten', 'soybeans'],
+    ingredients: 'Wheat noodles, chili, soy sauce, garlic',
+    category: { id: 'cat-ramen', name: 'Ramen', slug: 'ramyun-ramen' },
+    variants: [
+      {
+        ...products[2].variants[0],
+        id: 'variant-spicy-ramyun',
+        name: '1 pack',
+        sku: 'RAMYUN-1',
+      },
+    ],
+  },
+];
+
+// Product detail routes render on the Next.js server before Playwright's
+// browser-side GraphQL interception is active. Keep detail-only fixtures here
+// without changing catalog/category listing counts used by other tests.
+const detailProducts = [
+  ...products,
+  {
+    ...products[0],
+    id: 'prod-ravioli',
+    name: 'Spinach Ravioli Family Pack',
+    slug: 'spinach-ravioli-family-pack',
+    description: 'Family-size spinach ravioli for quick freezer meals.',
+    seoTitle: 'Spinach Ravioli Family Pack | Configured Test Grocery',
+    seoDescription: 'Spinach ravioli family pack. Check the current price and availability.',
+    translation: null,
+    allergens: ['gluten', 'eggs'],
+    dietaryTags: ['vegetarian'],
+    storageZone: 'FROZEN',
+    ingredients: 'Wheat flour, spinach, eggs',
+    certifications: [],
+    category: { id: 'cat-frozen', name: 'Frozen', slug: 'frozen' },
+    pricing: {
+      priceRange: { start: { gross: { amount: 18.49, currency: 'PLN' } } },
+      priceRangeUndiscounted: { start: { gross: { amount: 18.49, currency: 'PLN' } } },
+      onSale: false,
+    },
+    variants: [
+      {
+        id: 'variant-ravioli',
+        name: '750 g',
+        sku: 'RAVIOLI-750',
+        pricing: { price: { gross: { amount: 18.49, currency: 'PLN' } } },
+        quantityAvailable: 9,
+        expiryTracking: true,
+        shelfLifeDays: 120,
+        preOrder: null,
+      },
+    ],
+  },
+];
+
 const categories = [
   { id: 'cat-fruit', name: 'Fruit', slug: 'fruit' },
   { id: 'cat-bakery', name: 'Bakery', slug: 'bakery' },
+  { id: 'cat-kimchi', name: 'Kimchi', slug: 'kimchi' },
+  { id: 'cat-pickled-vegetables', name: 'Pickled vegetables', slug: 'owoce-marynowane-warzywa' },
+  { id: 'cat-ramen', name: 'Ramen', slug: 'ramyun-ramen' },
   { id: 'cat-household', name: 'Household', slug: 'household' },
 ];
 
 const config = {
   branding: {
     logoUrl: null,
-    faviconUrl: 'https://cdn.example.test/favicon.ico',
+    faviconUrl: '/brand/asia-deli-go-favicon.png',
     storeName: 'Configured Test Grocery',
     colors: {
       primary: '#16a34a',
@@ -256,7 +365,7 @@ const config = {
           {
             id: 'tile-kimchi',
             title: 'Kimchi',
-            href: '/categories/fruit',
+            href: '/categories/kimchi',
             description: 'Fermented essentials and chilled sides',
             imageUrl: null,
             enabled: true,
@@ -298,7 +407,8 @@ function buildProductEdge(product, index) {
 }
 
 function getProductsForCategory(categoryId) {
-  return products.filter((product) => product.category.id === categoryId);
+  return [...products, ...publicTaxonomyProducts]
+    .filter((product) => product.category.id === categoryId);
 }
 
 function buildCategoryNode(category) {
@@ -784,7 +894,7 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     };
   }
 
-  if (query.includes('query Categories')) {
+  if (query.includes('query Categories') || query.includes('query PublicCategories')) {
     return {
       data: {
         categories: {
@@ -794,6 +904,42 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
           })),
           pageInfo: { hasNextPage: false, endCursor: null },
           totalCount: categories.length,
+        },
+      },
+    };
+  }
+
+  if (
+    query.includes('query GroceryProductListing')
+    || query.includes('query GroceryProductFilterCatalog')
+  ) {
+    const categoryKeys = Array.isArray(variables.filter?.categories)
+      ? variables.filter.categories.map(String)
+      : [];
+    const usesPublicTaxonomy = categoryKeys.some((categoryKey) => (
+      publicTaxonomyProducts.some((product) => (
+        product.category.id === categoryKey || product.category.slug === categoryKey
+      ))
+    ));
+    const listingProducts = usesPublicTaxonomy ? publicTaxonomyProducts : products;
+    const matchingProducts = categoryKeys.length === 0
+      ? listingProducts
+      : listingProducts.filter((product) => (
+        categoryKeys.includes(product.category.id)
+        || categoryKeys.includes(product.category.slug)
+      ));
+
+    return {
+      data: {
+        products: {
+          edges: matchingProducts.map(buildProductEdge),
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: matchingProducts.length > 0 ? 'cursor-1' : null,
+            endCursor: matchingProducts.length > 0 ? `cursor-${matchingProducts.length}` : null,
+          },
+          totalCount: matchingProducts.length,
         },
       },
     };
@@ -819,8 +965,8 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     };
   }
 
-  if (query.includes('query GroceryProduct')) {
-    const matchedProduct = products.find((product) => product.slug === variables.slug) ?? null;
+  if (/query\s+GroceryProduct\b/.test(query)) {
+    const matchedProduct = detailProducts.find((product) => product.slug === variables.slug) ?? null;
 
     return {
       data: {
@@ -856,7 +1002,16 @@ const server = createServer((request, response) => {
     return;
   }
 
-  if (request.method === 'POST' && request.url === '/graphql') {
+  if (request.method === 'GET' && request.url === '/api/v1/public/salon/test') {
+    sendJson(response, 200, {
+      source: 'playwright-config-server',
+      slug: 'test',
+      path: request.url,
+    });
+    return;
+  }
+
+  if (request.method === 'POST' && request.url?.startsWith('/graphql')) {
     let body = '';
     request.on('data', (chunk) => {
       body += chunk;

@@ -18,6 +18,7 @@ import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { getLocalizedProductDescription, getLocalizedProductName } from '@/lib/localization';
+import { buildPublicCategories } from '@/lib/public-taxonomy';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import {
   getConfiguredText,
@@ -326,6 +327,9 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
   const allergens = Array.isArray(product.allergens) ? product.allergens : [];
   const mayContainAllergens = Array.isArray(product.mayContainAllergens) ? product.mayContainAllergens : [];
   const dietaryTags = Array.isArray(product.dietaryTags) ? product.dietaryTags : [];
+  const localizedDietaryTags = dietaryTags.map((tag) => (
+    t.has(`products.${tag}` as any) ? t(`products.${tag}` as any) : tag
+  ));
   const certifications = Array.isArray(product.certifications) ? product.certifications : [];
   const nutritionRows: NutritionRow[] = [];
   const detailFacts: DetailFact[] = [];
@@ -390,9 +394,9 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
     value: formatProductDate(product.nearestExpiry, locale) ?? t('product.bestBeforeOnPackage'),
   });
 
-  if (dietaryTags.length > 0) {
-    detailFacts.push({ label: t('product.dietary'), value: dietaryTags.join(', ') });
-    attributeChips.push(...dietaryTags);
+  if (localizedDietaryTags.length > 0) {
+    detailFacts.push({ label: t('product.dietary'), value: localizedDietaryTags.join(', ') });
+    attributeChips.push(...localizedDietaryTags);
   }
 
   if (product.spiceLevel != null) {
@@ -707,15 +711,25 @@ export default function ProductDetailPage() {
   // not triggering a useEffect keyed on a stable param like `slug`.
   useEffect(() => {
     if (!inlineActionsNode) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const inlineActionsAreAboveViewport = entry.boundingClientRect.top < 0;
-        setShowStickyAdd(!entry.isIntersecting && inlineActionsAreAboveViewport);
-      },
-      { rootMargin: '-80px 0px 0px 0px' },
-    );
+
+    const updateStickyAdd = () => {
+      const actionsRect = inlineActionsNode.getBoundingClientRect();
+      setShowStickyAdd(actionsRect.bottom <= 80);
+    };
+    const observer = new IntersectionObserver(updateStickyAdd, {
+      rootMargin: '-80px 0px 0px 0px',
+    });
+
     observer.observe(inlineActionsNode);
-    return () => observer.disconnect();
+    window.addEventListener('scroll', updateStickyAdd, { passive: true });
+    window.addEventListener('resize', updateStickyAdd);
+    updateStickyAdd();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', updateStickyAdd);
+      window.removeEventListener('resize', updateStickyAdd);
+    };
   }, [inlineActionsNode]);
 
   const [productResult] = useQuery({
@@ -771,6 +785,10 @@ export default function ProductDetailPage() {
     name: productName,
     description: productDescription,
   };
+  const publicProductCategory = product.category
+    ? buildPublicCategories([product.category], locale, { requireProductCount: false })[0] ?? null
+    : null;
+  const displayCategory = publicProductCategory ?? product.category ?? null;
   const inStock = (variant?.quantityAvailable ?? 0) > 0;
   const imageUrl = getImageSrc(product?.thumbnail?.url);
   const isWishlisted = wishlistItems.some((item) => item.productId === product.id);
@@ -781,8 +799,8 @@ export default function ProductDetailPage() {
     .filter((relatedProduct: GroceryProduct) => relatedProduct.id !== product.id)
     .slice(0, 8);
 
-  if (product.category?.name) {
-    purchaseFacts.push({ label: t('product.category'), value: product.category.name });
+  if (displayCategory?.name) {
+    purchaseFacts.push({ label: t('product.category'), value: displayCategory.name });
   }
 
   if (product.countryOfOrigin) {
@@ -794,7 +812,10 @@ export default function ProductDetailPage() {
   }
 
   if (Array.isArray(product.dietaryTags) && product.dietaryTags.length > 0) {
-    purchaseFacts.push({ label: t('product.dietary'), value: product.dietaryTags.join(', ') });
+    const localizedDietaryTags = product.dietaryTags.map((tag: string) => (
+      t.has(`products.${tag}` as any) ? t(`products.${tag}` as any) : tag
+    ));
+    purchaseFacts.push({ label: t('product.dietary'), value: localizedDietaryTags.join(', ') });
   }
 
   if (Array.isArray(product.allergens) && product.allergens.length > 0) {
@@ -875,7 +896,7 @@ export default function ProductDetailPage() {
       <Breadcrumb items={[
         { label: t('nav.home'), href: '/' },
         { label: t('nav.products'), href: '/products' },
-        ...(product.category ? [{ label: product.category.name, href: `/categories/${product.category.slug}` }] : []),
+        ...(displayCategory ? [{ label: displayCategory.name, href: `/categories/${displayCategory.slug}` }] : []),
         { label: productName },
       ]} />
 
@@ -893,9 +914,9 @@ export default function ProductDetailPage() {
             }}
             data-testid="pdp-purchase-panel"
           >
-          {product.category && (
+          {displayCategory && (
             <p className="mb-2 text-xs font-medium sm:text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-              {product.category.name}
+              {displayCategory.name}
             </p>
           )}
 
@@ -966,7 +987,11 @@ export default function ProductDetailPage() {
             className="grid min-w-0 grid-cols-[minmax(0,1fr)_44px] items-center gap-2 sm:flex sm:gap-3"
             data-testid="product-detail-actions"
           >
-            <div className="flex h-11 min-w-0 items-center justify-between rounded-lg border sm:justify-start" style={{ borderColor: 'var(--color-border)' }}>
+            <div
+              className="flex h-11 min-w-0 items-center justify-between rounded-lg border sm:justify-start"
+              style={{ borderColor: 'var(--color-border)' }}
+              data-testid="product-detail-stepper"
+            >
               <button
                 type="button"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -1053,7 +1078,7 @@ export default function ProductDetailPage() {
 
       <RelatedProductsSection
         products={relatedProducts}
-        categoryName={product.category?.name ?? null}
+        categoryName={displayCategory?.name ?? null}
       />
 
       {/* Related recipes */}

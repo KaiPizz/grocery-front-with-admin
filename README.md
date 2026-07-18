@@ -11,7 +11,7 @@ Monorepo chứa 2 project Next.js:
 
 ## Yêu cầu
 
-- **Node.js** >= 18 (khuyến nghị v20+)
+- **Node.js** 20.19+, 22.13+ hoặc 24+ (khuyến nghị bản LTS hiện hành)
 - **npm** (đi kèm Node.js)
 
 Tải Node.js tại: https://nodejs.org
@@ -80,12 +80,12 @@ khẩu qua stdin, không đặt plaintext trong command line, tài liệu hoặc
 
 ```
 store_front/
-├── admin-panel/          # Next.js 14 — Admin UI + Config API
+├── admin-panel/          # Next.js 16 — Admin UI + Config API
 │   ├── src/
 │   ├── data/             # JSON config files (runtime)
 │   ├── public/uploads/   # Uploaded images
 │   └── .env.local
-├── grocery-storefront/   # Next.js 14 — Customer-facing store
+├── grocery-storefront/   # Next.js 16 — Customer-facing store
 │   ├── src/
 │   └── .env.local
 └── README.md

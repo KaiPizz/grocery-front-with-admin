@@ -207,9 +207,14 @@ function serializeJsonLd(value: unknown): string {
   return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
-export async function generateMetadata({ params }: { params: ProductRouteParams }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<ProductRouteParams>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
   const [product, siteConfig] = await Promise.all([
-    getProductForSeo(params.id),
+    getProductForSeo(resolvedParams.id),
     fetchServerConfig(),
   ]);
 
@@ -221,9 +226,9 @@ export async function generateMetadata({ params }: { params: ProductRouteParams 
 
   const configuredCanonical = getConfigString(siteConfig?.seo?.canonical);
   const origin = getStoreOrigin(configuredCanonical);
-  const canonical = getProductUrl(origin, params.locale, product.slug);
-  const name = getProductSeoTitle(product, params.locale);
-  const description = getProductSeoDescription(product, params.locale)
+  const canonical = getProductUrl(origin, resolvedParams.locale, product.slug);
+  const name = getProductSeoTitle(product, resolvedParams.locale);
+  const description = getProductSeoDescription(product, resolvedParams.locale)
     ?? getConfigString(siteConfig?.seo?.defaultDescription);
   const images = getAbsoluteImageUrls(product, origin);
 
@@ -262,10 +267,11 @@ export default async function ProductLayout({
   params,
 }: {
   children: ReactNode;
-  params: ProductRouteParams;
+  params: Promise<ProductRouteParams>;
 }) {
+  const resolvedParams = await params;
   const [product, siteConfig] = await Promise.all([
-    getProductForSeo(params.id),
+    getProductForSeo(resolvedParams.id),
     fetchServerConfig(),
   ]);
 
@@ -273,7 +279,7 @@ export default async function ProductLayout({
 
   const origin = getStoreOrigin(getConfigString(siteConfig?.seo?.canonical));
   const storeName = getConfigString(siteConfig?.branding?.storeName) ?? 'Grocery Store';
-  const productJsonLd = buildProductJsonLd(product, params.locale, origin, storeName);
+  const productJsonLd = buildProductJsonLd(product, resolvedParams.locale, origin, storeName);
 
   return (
     <>
