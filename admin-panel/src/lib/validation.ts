@@ -3,10 +3,91 @@ import { z } from 'zod';
 // --- Primitives ---
 
 const hexColor = z.string().regex(/^#[0-9a-fA-F]{6,8}$/, 'Must be a valid hex color');
-const optionalUrl = z.string().max(2000).nullable();
-const linkHref = z.string().min(1).max(500).refine(
-  (href) => href.startsWith('/') || /^https?:\/\//i.test(href),
+const unsafeUrlCharacterPattern = /[\u0000-\u001f\u007f\\]/;
+
+function isSafeInternalPath(value: string): boolean {
+  if (unsafeUrlCharacterPattern.test(value)) return false;
+
+  if (value.startsWith('/')) {
+    // A leading double slash (including a slash followed by a backslash) is
+    // interpreted as a protocol-relative URL by browsers.
+    return value.length === 1 || (value[1] !== '/' && value[1] !== '\\');
+  }
+
+  return value.startsWith('#') || value.startsWith('?');
+}
+
+function isSafeHttpUrl(value: string): boolean {
+  if (unsafeUrlCharacterPattern.test(value) || !/^https?:\/\//i.test(value)) {
+    return false;
+  }
+
+  try {
+    const url = new URL(value);
+    return (url.protocol === 'http:' || url.protocol === 'https:') && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+function isSafeContactUrl(value: string): boolean {
+  return /^mailto:[^\s@]+@[^\s@]+$/i.test(value)
+    || /^tel:\+?[0-9(). -]{3,30}$/i.test(value);
+}
+
+function isSafeNavigationUrl(value: string): boolean {
+  return isSafeInternalPath(value) || isSafeHttpUrl(value) || isSafeContactUrl(value);
+}
+
+const optionalUrl = z.string().trim().max(2000).refine(
+  (value) => value === '' || isSafeInternalPath(value) || isSafeHttpUrl(value),
   'Must be an internal path or http(s) URL'
+).nullable();
+
+const optionalNavigationUrl = z.string().trim().max(500).refine(
+  (value) => value === '' || isSafeNavigationUrl(value),
+  'Must be an internal path, fragment, query, http(s), mailto, or tel URL'
+);
+
+const requiredNavigationUrl = z.string().trim().min(1).max(500).refine(
+  isSafeNavigationUrl,
+  'Must be an internal path, fragment, query, http(s), mailto, or tel URL'
+);
+
+const optionalExternalUrl = z.string().trim().max(500).refine(
+  (value) => value === '' || isSafeHttpUrl(value),
+  'Must be an http(s) URL'
+);
+
+const optionalCanonicalUrl = z.string().trim().max(500).refine(
+  (value) => value === '' || isSafeHttpUrl(value),
+  'Must be an absolute http(s) URL'
+);
+
+function normalizedTrackingId(pattern: RegExp, message: string, uppercase = false) {
+  let schema = z.string().trim().max(100);
+  if (uppercase) schema = schema.toUpperCase();
+
+  return schema.refine((value) => value === '' || pattern.test(value), message);
+}
+
+const facebookPixelId = normalizedTrackingId(
+  /^[1-9]\d{4,19}$/,
+  'Must be a numeric Facebook Pixel ID'
+);
+const googleMeasurementId = normalizedTrackingId(
+  /^G-[A-Z0-9]{4,20}$/,
+  'Must be a GA4 Measurement ID such as G-XXXXXXXXXX',
+  true
+);
+const googleTagManagerId = normalizedTrackingId(
+  /^GTM-[A-Z0-9]{4,20}$/,
+  'Must be a Google Tag Manager container ID such as GTM-XXXXXXX',
+  true
+);
+const hotjarSiteId = normalizedTrackingId(
+  /^[1-9]\d{0,19}$/,
+  'Must be a numeric Hotjar Site ID'
 );
 
 // --- Branding ---
@@ -43,7 +124,7 @@ const heroBannerSchema = z.object({
   headline: z.string().max(500),
   subtitle: z.string().max(1000),
   ctaText: z.string().max(100),
-  ctaLink: z.string().max(500),
+  ctaLink: optionalNavigationUrl,
   backgroundImageUrl: optionalUrl,
 });
 
@@ -52,7 +133,7 @@ const promoBannerItemSchema = z.object({
   headline: z.string().max(500),
   subtext: z.string().max(1000),
   ctaText: z.string().max(100),
-  ctaLink: z.string().max(500),
+  ctaLink: optionalNavigationUrl,
   gradient: z.string().max(500),
   imageUrl: optionalUrl,
   enabled: z.boolean(),
@@ -73,7 +154,7 @@ const heroSlideSchema = z.object({
   mobileImageUrl: optionalUrl.optional().default(null),
   title: z.string().max(200),
   ctaText: z.string().max(100),
-  ctaLink: z.string().max(500),
+  ctaLink: optionalNavigationUrl,
   enabled: z.boolean(),
 });
 
@@ -96,14 +177,14 @@ const horizontalBannerBlockSchema = z.object({
   mobileImageUrl: optionalUrl.optional().default(null),
   title: z.string().max(200),
   ctaText: z.string().max(100),
-  ctaLink: z.string().max(500),
+  ctaLink: optionalNavigationUrl,
 });
 
 const gridItemSchema = z.object({
   id: z.string().min(1),
   imageUrl: optionalUrl,
   title: z.string().max(100),
-  href: z.string().max(500),
+  href: optionalNavigationUrl,
   enabled: z.boolean(),
 });
 
@@ -133,7 +214,7 @@ const sidebarBannerBlockSchema = z.object({
   imageUrl: optionalUrl,
   title: z.string().max(200),
   ctaText: z.string().max(100),
-  ctaLink: z.string().max(500),
+  ctaLink: optionalNavigationUrl,
 });
 
 const smallStickyBannerBlockSchema = z.object({
@@ -145,7 +226,7 @@ const smallStickyBannerBlockSchema = z.object({
   mobileImageUrl: optionalUrl,
   title: z.string().max(200),
   ctaText: z.string().max(100),
-  ctaLink: z.string().max(500),
+  ctaLink: optionalNavigationUrl,
   position: z.enum(['top', 'bottom']),
   dismissible: z.boolean(),
 });
@@ -181,14 +262,14 @@ const homepageSchema = z.object({
 
 const navItemSchema = z.object({
   label: z.string().min(1).max(100),
-  href: z.string().min(1).max(500),
+  href: requiredNavigationUrl,
   enabled: z.boolean(),
   order: z.number().int().min(0),
 });
 
 const footerLinkSchema = z.object({
   label: z.string().min(1).max(100),
-  href: z.string().max(500),
+  href: optionalNavigationUrl,
 });
 
 const footerColumnSchema = z.object({
@@ -198,7 +279,7 @@ const footerColumnSchema = z.object({
 
 const headerCtaSchema = z.object({
   text: z.string().max(100),
-  link: z.string().max(500),
+  link: optionalNavigationUrl,
   enabled: z.boolean(),
 });
 
@@ -234,22 +315,22 @@ const layoutSchema = z.object({
 
 const facebookPixelSchema = z.object({
   enabled: z.boolean(),
-  pixelId: z.string().max(100),
+  pixelId: facebookPixelId,
 });
 
 const googleAnalyticsSchema = z.object({
   enabled: z.boolean(),
-  measurementId: z.string().max(100),
+  measurementId: googleMeasurementId,
 });
 
 const googleTagManagerSchema = z.object({
   enabled: z.boolean(),
-  containerId: z.string().max(100),
+  containerId: googleTagManagerId,
 });
 
 const hotjarSchema = z.object({
   enabled: z.boolean(),
-  siteId: z.string().max(100),
+  siteId: hotjarSiteId,
 });
 
 const trackingSchema = z.object({
@@ -265,14 +346,14 @@ const seoSchema = z.object({
   defaultTitle: z.string().max(200),
   defaultDescription: z.string().max(500),
   ogImageUrl: optionalUrl,
-  canonical: z.string().max(500),
+  canonical: optionalCanonicalUrl,
 });
 
 // --- General ---
 
 const socialLinkSchema = z.object({
   platform: z.string().min(1).max(50),
-  url: z.string().max(500),
+  url: optionalExternalUrl,
 });
 
 const fulfillmentSchema = z.object({
@@ -289,9 +370,9 @@ const generalSchema = z.object({
   address: z.string().max(500),
   socialLinks: z.array(socialLinkSchema),
   policyLinks: z.object({
-    privacy: z.string().max(500),
-    terms: z.string().max(500),
-    about: z.string().max(500),
+    privacy: optionalNavigationUrl,
+    terms: optionalNavigationUrl,
+    about: optionalNavigationUrl,
   }),
   freeShippingThreshold: z.number().min(0).max(100000),
   sameDayShippingCutoff: z.string().regex(/^([01]?\d|2[0-3]):[0-5]\d$/, 'Must be HH:MM'),
@@ -316,7 +397,7 @@ const collectionSlugSchema = z.string().regex(
 const commercialQuickLinkSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1).max(100),
-  href: linkHref,
+  href: requiredNavigationUrl,
   kind: commercialSurfaceKindSchema,
   description: z.string().max(300).nullable(),
   imageUrl: optionalUrl,
@@ -327,7 +408,7 @@ const commercialQuickLinkSchema = z.object({
 const commercialCollectionTileSchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1).max(120),
-  href: linkHref,
+  href: requiredNavigationUrl,
   description: z.string().max(300).nullable(),
   imageUrl: optionalUrl,
   enabled: z.boolean(),
