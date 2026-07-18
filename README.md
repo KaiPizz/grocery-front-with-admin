@@ -36,8 +36,8 @@ cd grocery-storefront && npm install && cd ..
 
 ### 3. Cấu hình env
 
-Cả 2 project đã có file `.env.local` sẵn trong repo (private backup).
-Nếu cần tạo lại, copy từ `.env.example`:
+Không lưu `.env.local` hay credential thật trong repository. Tạo file local từ
+`.env.example`, sau đó điền secret qua secret manager của môi trường:
 
 ```bash
 # Admin Panel
@@ -69,9 +69,10 @@ Mở trình duyệt:
 
 ## Đăng nhập Admin Panel
 
-Thông tin mặc định (xem `admin-panel/.env.local`):
-- **Username:** `admin`
-- **Password:** `admin123`
+Admin production không có mật khẩu mặc định. Tài khoản và scrypt password hash
+được nạp từ runtime secret (`ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`). Sinh hash
+bằng `npm --prefix admin-panel run --silent hash:admin-password` và truyền mật
+khẩu qua stdin, không đặt plaintext trong command line, tài liệu hoặc Git.
 
 ---
 
