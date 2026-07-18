@@ -909,7 +909,7 @@ if [[ -e "$incoming_root" || -L "$incoming_root" ]]; then
   [[ -d "$incoming_root" && ! -L "$incoming_root" ]]
   [[ "$(stat -c '%u:%g' "$incoming_root")" == "0:0" ]]
   incoming_mode="$(stat -c '%a' "$incoming_root")"
-  (( (8#$incoming_mode & 0022) == 0 ))
+  [[ "$incoming_mode" == "700" ]]
 else
   mkdir -m 700 "$incoming_root"
 fi
