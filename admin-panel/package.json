@@ -11,6 +11,7 @@
     "start": "next start -p 4100",
     "lint": "eslint .",
     "test:unit": "tsx --test",
+    "test:production-smoke": "node scripts/production-standalone-smoke.mjs",
     "hash:admin-password": "tsx scripts/hash-admin-password.ts",
     "audit:kenmito-config": "tsx scripts/audit-kenmito-config.ts"
   },

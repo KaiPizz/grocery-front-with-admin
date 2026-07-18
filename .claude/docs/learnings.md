@@ -2,11 +2,37 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-07-13
+> **Last updated:** 2026-07-18
 
 ---
 
 ## Project Documentation
+
+### Treated a dotenv file as a shell script during release design
+- **Error:** The first guarded release draft sourced the storefront production
+  `.env.runtime` with Bash and attempted to copy the full file to the build
+  host.
+- **Cause:** Dotenv permits unquoted spaces and is a data format, not a trusted
+  shell program; the production file is therefore not guaranteed to be
+  shell-sourceable. Copying it also expanded secret exposure unnecessarily.
+- **Fix:** Parse and validate the file with a strict Node dotenv reader on
+  Contabo, retain only SHA-256 fingerprints locally, and stream an explicit
+  whitelist of secret-free build variables.
+- **Rule:** Never source a dotenv file as shell code. Parse it as data and move
+  only the minimum whitelisted values across trust boundaries.
+
+### Mixed a PM2 topology migration into a code-only release transaction
+- **Error:** An early activator draft replaced the storefront PM2 definition
+  and installed a persistent shared launcher before recording rollback state.
+- **Cause:** Code promotion and process-definition hardening were treated as one
+  reversible operation even though the latter changes persistent daemon state
+  and needs its own rollback/approval model.
+- **Fix:** Removed the launcher and every `pm2 delete/start/save` or
+  `--update-env` operation. The release now restarts only existing services and
+  verifies PM2 definition/runtime fingerprints remain unchanged.
+- **Rule:** Keep code-pointer releases and persistent process-manager migrations
+  in separate reviewed transactions unless both have explicit, independently
+  tested rollback state.
 
 ### Cropping wide campaign artwork into a generic mobile ratio removed product content
 - **Error:** Asia Deli Go mobile heroes used the left 960x600 half of each 1920x600 campaign image, so the brand copy remained large but the products on the right disappeared.
