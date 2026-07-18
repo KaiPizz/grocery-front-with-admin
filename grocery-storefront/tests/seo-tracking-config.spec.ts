@@ -118,10 +118,10 @@ test.describe('admin-configured SEO and tracking', () => {
     const googleTagManager = page.locator('script#gtm-init');
 
     await expect(facebookPixel).toHaveCount(1);
-    await expect.poll(async () => facebookPixel.evaluate((script) => script.textContent ?? '')).toContain("fbq('init', '1234567890')");
+    await expect.poll(async () => facebookPixel.evaluate((script) => script.textContent ?? '')).toContain('fbq(\'init\', "1234567890")');
     await expect(page.locator('script[src*="googletagmanager.com/gtag/js?id=G-ADMINSEO1"]')).toHaveCount(1);
-    await expect.poll(async () => googleAnalyticsInit.evaluate((script) => script.textContent ?? '')).toContain("gtag('config', 'G-ADMINSEO1')");
-    await expect.poll(async () => googleTagManager.evaluate((script) => script.textContent ?? '')).toContain("'GTM-ADMINSEO'");
+    await expect.poll(async () => googleAnalyticsInit.evaluate((script) => script.textContent ?? '')).toContain('gtag(\'config\', "G-ADMINSEO1")');
+    await expect.poll(async () => googleTagManager.evaluate((script) => script.textContent ?? '')).toContain('"GTM-ADMINSEO"');
     await expect(page.locator('script#hotjar-init')).toHaveCount(0);
   });
 });
