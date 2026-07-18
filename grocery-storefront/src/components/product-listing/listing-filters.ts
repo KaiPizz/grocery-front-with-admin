@@ -7,6 +7,7 @@ export const ZONE_OPTIONS: StorageZone[] = ['FROZEN', 'CHILLED', 'AMBIENT'];
 
 const ALLERGEN_ALIASES: Record<string, string> = {
   gluten: 'cereals',
+  tree_nuts: 'nuts',
 };
 
 export interface ProductFiltersState {

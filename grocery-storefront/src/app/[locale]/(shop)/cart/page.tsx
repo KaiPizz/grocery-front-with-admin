@@ -4,10 +4,9 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { ShoppingCart, Trash2, Minus, Plus, Package, ArrowRight, Truck, Heart } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCartStore } from '@/stores/cart-store';
-import { useWishlistStore } from '@/stores/wishlist-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { StorageZoneGroup } from '@/components/grocery/StorageZoneGroup';
+import { normalizeAllergenCode } from '@/components/product-listing/listing-filters';
 import { Link } from '@/i18n/navigation';
 import { useHydrated } from '@/hooks/use-hydrated';
 import {
@@ -17,6 +16,8 @@ import {
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
+import { useCartStore } from '@/stores/cart-store';
+import { useWishlistStore } from '@/stores/wishlist-store';
 import type { CartItem } from '@/types';
 
 export default function CartPage() {
@@ -24,6 +25,7 @@ export default function CartPage() {
   const tFulfillment = useTranslations('fulfillment');
   const tCommon = useTranslations('common');
   const tWishlist = useTranslations('wishlist');
+  const tAllergens = useTranslations('allergens');
   const isHydrated = useHydrated();
   const initialized = useCartStore((state) => state.initialized);
   const itemCount = useCartStore((state) => state.getItemCount());
@@ -92,9 +94,16 @@ export default function CartPage() {
             </p>
             {item.allergens && item.allergens.length > 0 && (
               <div className="mt-0.5 flex flex-wrap gap-1">
-                {item.allergens.slice(0, 2).map((allergen) => (
-                  <span key={allergen} className="allergen-chip text-[10px]">{allergen}</span>
-                ))}
+                {item.allergens.slice(0, 2).map((allergen) => {
+                  const normalizedAllergen = normalizeAllergenCode(allergen);
+                  return (
+                    <span key={allergen} className="allergen-chip text-[10px]">
+                      {tAllergens.has(normalizedAllergen as any)
+                        ? tAllergens(normalizedAllergen as any)
+                        : allergen}
+                    </span>
+                  );
+                })}
               </div>
             )}
             <p className="mt-0.5 text-sm tabular-nums" style={{ color: 'var(--color-muted-foreground)' }}>

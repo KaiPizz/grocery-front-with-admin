@@ -33,6 +33,17 @@ test.describe('cart accessibility', () => {
     await expect(summaryBar.getByRole('link', { name: /proceed to checkout/i })).toBeVisible();
   });
 
+  test('localizes allergen codes in the Polish cart', async ({ page }) => {
+    await seedCartStorage(page);
+    await mockMobileStorefront(page, { cart: 'single-item' });
+    await page.goto('/pl/cart');
+
+    const cartItem = page.getByTestId('cart-item').first();
+    await expect(cartItem).toContainText(/orzechy/i);
+    await expect(cartItem).toContainText(/mleko/i);
+    await expect(cartItem).not.toContainText(/tree_nuts|\bnuts\b|\bmilk\b/i);
+  });
+
   test('persists active cart metadata so reload does not scan the product catalog', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');

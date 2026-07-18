@@ -222,6 +222,7 @@ export function ProductListingClient({
     },
   }));
   const [loadingPage, setLoadingPage] = useState(false);
+  const [filterMetadataRequested, setFilterMetadataRequested] = useState(initialProducts.length > 0);
   const [isMobileLayout, setIsMobileLayout] = useState<boolean | null>(layoutMode === 'adaptive' ? null : false);
   const listingQueryResetMountedRef = useRef(false);
 
@@ -255,6 +256,7 @@ export function ProductListingClient({
   const countryOriginCategoryIds = activeCategoryIds.length > 0 ? activeCategoryIds : null;
   const [catalogResult] = useQuery<ProductsQueryResponse>({
     query: PRODUCT_FILTER_CATALOG_QUERY,
+    pause: !filterMetadataRequested,
     variables: {
       channel,
       first: 100,
@@ -263,6 +265,7 @@ export function ProductListingClient({
   });
   const [countryOriginsResult] = useQuery<ProductCountryOriginsQueryResponse>({
     query: PRODUCT_COUNTRY_ORIGINS_QUERY,
+    pause: !filterMetadataRequested,
     variables: {
       channel,
       first: 100,
@@ -399,6 +402,15 @@ export function ProductListingClient({
       sortBy: { field: sortOption.field, direction: sortOption.direction },
     },
   });
+
+  useEffect(() => {
+    const initialListingSettled = !result.fetching
+      && (result.data !== undefined || Boolean(result.error));
+
+    if (!filterMetadataRequested && (filtersOpen || initialListingSettled)) {
+      setFilterMetadataRequested(true);
+    }
+  }, [filterMetadataRequested, filtersOpen, result.data, result.error, result.fetching]);
 
   useEffect(() => {
     if (!listingQueryResetMountedRef.current) {

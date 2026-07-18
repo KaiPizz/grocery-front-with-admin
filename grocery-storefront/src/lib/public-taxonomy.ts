@@ -36,6 +36,7 @@ interface PublicCategoryDefinition {
 
 interface BuildPublicCategoriesOptions {
   requireProductCount?: boolean;
+  includeEmpty?: boolean;
 }
 
 const HIDDEN_CATEGORY_KEYWORDS = [
@@ -194,14 +195,15 @@ export function buildPublicCategories(
   options: BuildPublicCategoriesOptions = {},
 ): PublicCategory[] {
   const requireProductCount = options.requireProductCount ?? true;
+  const includeEmpty = options.includeEmpty ?? false;
   const groups = new Map<string, PublicCategory>();
 
   for (const category of categories) {
     const count = category.products?.totalCount;
     const hasKnownCount = typeof count === 'number';
     if (isHiddenCategory(category)) continue;
-    if (requireProductCount && (!hasKnownCount || count <= 0)) continue;
-    if (hasKnownCount && count <= 0) continue;
+    if (requireProductCount && !hasKnownCount) continue;
+    if (!includeEmpty && hasKnownCount && count <= 0) continue;
 
     const definition = findDefinition(category);
     if (!definition) continue;

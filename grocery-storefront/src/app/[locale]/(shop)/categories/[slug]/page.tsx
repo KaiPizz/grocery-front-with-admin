@@ -122,7 +122,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   );
   const rawCategories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
   const publicCategories = buildPublicCategories(rawCategories, locale);
-  const publicCategory = findPublicCategory(rawCategories, categorySlug, locale);
+  const publicCategory = findPublicCategory(rawCategories, categorySlug, locale, { includeEmpty: true });
   const publicProductsResult = publicCategory
     ? await serverGraphqlRequest<ProductsResponse>(PRODUCT_LISTING_QUERY, {
       channel,

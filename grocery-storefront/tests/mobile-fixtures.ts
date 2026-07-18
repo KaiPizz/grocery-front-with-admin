@@ -91,7 +91,7 @@ const PRIMARY_PRODUCT = {
     alt: 'Fresh produce arranged on a market table',
   },
   media: LISTING_PRODUCT_MEDIA,
-  allergens: ['nuts', 'milk', 'soybeans'],
+  allergens: ['tree_nuts', 'milk', 'soybeans'],
   dietaryTags: ['vegan'],
   calories: 52,
   spiceLevel: null,
@@ -611,6 +611,12 @@ function buildCategoryFixtures(products: Array<(typeof PRODUCTS)[number]>) {
     slug: 'household',
   });
 
+  categories.set('cat-tofu-empty', {
+    id: 'cat-tofu-empty',
+    name: 'Tofu',
+    slug: 'tofu',
+  });
+
   return Array.from(categories.values());
 }
 
@@ -891,6 +897,8 @@ interface MockMobileStorefrontOptions {
   productDetailCategory?: ProductDetailCategoryMode;
   facets?: 'populated' | 'empty';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
+  beforeProductListingResponse?: () => Promise<void>;
+  onGraphqlOperation?: (operationName: string, query: string) => void;
   onProductsQuery?: (variables: Record<string, unknown>) => void;
   onProductDetailQuery?: (query: string, variables: Record<string, unknown>) => void;
   onSearchProductsIndexQuery?: (variables: Record<string, unknown>) => void;
@@ -946,6 +954,8 @@ export async function mockMobileStorefront(
     const query = body.query ?? '';
     const operationName = body.operationName ?? '';
 
+    options.onGraphqlOperation?.(operationName, query);
+
     const isProductListingQuery = operationName === 'GroceryProducts'
       || operationName === 'GroceryProductListing'
       || query.includes('query GroceryProducts')
@@ -956,6 +966,7 @@ export async function mockMobileStorefront(
     if (isProductListingQuery || isProductFilterCatalogQuery) {
       if (isProductListingQuery) {
         options.onProductsQuery?.(body.variables ?? {});
+        await options.beforeProductListingResponse?.();
       }
 
       if (options.products === 'error') {
@@ -997,6 +1008,27 @@ export async function mockMobileStorefront(
       return;
     }
 
+    if (operationName === 'ProductCountryOrigins' || query.includes('query ProductCountryOrigins')) {
+      const categoryIds = Array.isArray(body.variables?.categoryIds)
+        ? body.variables.categoryIds.map(String)
+        : [];
+      const originProducts = categoryIds.length > 0
+        ? categoryProducts.filter((product) => categoryIds.includes(product.category.id))
+        : products;
+      const originCounts = new Map<string, number>();
+
+      for (const product of originProducts) {
+        const origin = product.countryOfOrigin?.trim();
+        if (!origin) continue;
+        originCounts.set(origin, (originCounts.get(origin) ?? 0) + 1);
+      }
+
+      await fulfill(route, {
+        productCountryOrigins: Array.from(originCounts, ([value, count]) => ({ value, count })),
+      });
+      return;
+    }
+
     if (operationName === 'StorefrontProductSearch' || query.includes('query StorefrontProductSearch')) {
       options.onSearchProductsIndexQuery?.(body.variables ?? {});
       await fulfill(route, {
@@ -1023,8 +1055,10 @@ export async function mockMobileStorefront(
     if (
       operationName === 'Categories'
       || operationName === 'PublicCategories'
+      || operationName === 'PublicCategoryNavigation'
       || query.includes('query Categories')
       || query.includes('query PublicCategories')
+      || query.includes('query PublicCategoryNavigation')
     ) {
       await fulfill(route, {
         categories: {

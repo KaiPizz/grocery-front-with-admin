@@ -22,6 +22,50 @@ async function openFilters(page: Page, panel: Locator) {
 }
 
 test.describe('mobile products page', () => {
+  test('prioritizes visible products before requesting secondary filter metadata', async ({ page }) => {
+    let releaseListing!: () => void;
+    const listingGate = new Promise<void>((resolve) => {
+      releaseListing = resolve;
+    });
+    const operations: string[] = [];
+    const operationQueries = new Map<string, string>();
+    let listingResponseReleased = false;
+    let metadataStartedBeforeListingResponse = false;
+
+    await mockMobileStorefront(page, {
+      beforeProductListingResponse: async () => {
+        await listingGate;
+        listingResponseReleased = true;
+      },
+      onGraphqlOperation: (operationName, query) => {
+        operations.push(operationName);
+        operationQueries.set(operationName, query);
+        if (
+          !listingResponseReleased
+          && ['GroceryProductFilterCatalog', 'ProductCountryOrigins'].includes(operationName)
+        ) {
+          metadataStartedBeforeListingResponse = true;
+        }
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products');
+
+    await expect.poll(() => operations.includes('GroceryProductListing')).toBe(true);
+    await expect.poll(() => operations.includes('PublicCategoryNavigation')).toBe(true);
+    expect(operationQueries.get('PublicCategoryNavigation')).not.toMatch(/\bproducts\s*\(/);
+    expect(operations).not.toContain('GroceryProductFilterCatalog');
+    expect(operations).not.toContain('ProductCountryOrigins');
+    await expect(page.getByTestId('product-card')).toHaveCount(0);
+
+    releaseListing();
+
+    await expect(page.getByTestId('product-card')).toHaveCount(4);
+    await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
+    await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
+    expect(metadataStartedBeforeListingResponse).toBe(false);
+  });
+
   test('compresses the mobile catalog layout to prioritize product images', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 390, height: 844 });

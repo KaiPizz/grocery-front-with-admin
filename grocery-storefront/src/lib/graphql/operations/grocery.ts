@@ -301,6 +301,25 @@ export const PUBLIC_CATEGORIES_QUERY = `
   }
 `;
 
+// Product-listing navigation deliberately omits per-category product counts.
+// Requesting `products { totalCount }` here makes the current backend resolve
+// every category separately, delaying the first visible product grid.
+export const PUBLIC_CATEGORY_NAVIGATION_QUERY = `
+  query PublicCategoryNavigation($channel: String!) {
+    categories(channel: $channel, first: 200) {
+      edges {
+        node {
+          id
+          slug
+          name
+          description
+        }
+      }
+      totalCount
+    }
+  }
+`;
+
 export const CATEGORY_BY_SLUG_QUERY = `
   ${GROCERY_PRODUCT_FIELDS}
   query CategoryBySlug($channel: String!, $slug: String!, $first: Int!, $after: String) {

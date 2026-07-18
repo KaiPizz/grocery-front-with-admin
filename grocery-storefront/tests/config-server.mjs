@@ -253,6 +253,7 @@ const categories = [
   { id: 'cat-pickled-vegetables', name: 'Pickled vegetables', slug: 'owoce-marynowane-warzywa' },
   { id: 'cat-ramen', name: 'Ramen', slug: 'ramyun-ramen' },
   { id: 'cat-household', name: 'Household', slug: 'household' },
+  { id: 'cat-tofu-empty', name: 'Tofu', slug: 'tofu' },
 ];
 
 const config = {
@@ -894,7 +895,11 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     };
   }
 
-  if (query.includes('query Categories') || query.includes('query PublicCategories')) {
+  if (
+    query.includes('query Categories')
+    || query.includes('query PublicCategories')
+    || query.includes('query PublicCategoryNavigation')
+  ) {
     return {
       data: {
         categories: {
