@@ -1,4 +1,5 @@
 const createNextIntlPlugin = require('next-intl/plugin');
+const { getStorefrontSecurityHeaders } = require('./security-headers');
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const productSlugRedirects = [
@@ -15,6 +16,7 @@ const productSlugRedirects = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  poweredByHeader: false,
   async redirects() {
     return productSlugRedirects.flatMap(({ oldSlug, newSlug }) => [
       {
@@ -49,11 +51,7 @@ const nextConfig = {
     return [
       {
         source: '/:path*',
-        headers: [
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-        ],
+        headers: getStorefrontSecurityHeaders(),
       },
     ];
   },
