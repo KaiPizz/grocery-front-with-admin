@@ -893,13 +893,27 @@ stage_remote_component() {
   note "Stage and verify $component release $release_id"
   ssh "$REMOTE" bash -s -- "$base" "$release_id" <<'REMOTE_MKDIR'
 set -Eeuo pipefail
+umask 077
 base="$1"
 release_id="$2"
 [[ "$release_id" =~ ^(admin|storefront)-[0-9a-f]{12}-[0-9]{8}T[0-9]{6}Z$ ]]
+case "$release_id" in
+  admin-*) [[ "$base" == "/var/www/kenmito-admin" ]] ;;
+  storefront-*) [[ "$base" == "/var/www/kenmito-storefront" ]] ;;
+  *) exit 1 ;;
+esac
 [[ -d "$base" && -d "$base/releases" ]]
 [[ ! -e "$base/releases/$release_id" ]]
-mkdir -p "$base/.incoming"
-mkdir "$base/.incoming/$release_id"
+incoming_root="$base/.incoming"
+if [[ -e "$incoming_root" || -L "$incoming_root" ]]; then
+  [[ -d "$incoming_root" && ! -L "$incoming_root" ]]
+  [[ "$(stat -c '%u:%g' "$incoming_root")" == "0:0" ]]
+  incoming_mode="$(stat -c '%a' "$incoming_root")"
+  (( (8#$incoming_mode & 0022) == 0 ))
+else
+  mkdir -m 700 "$incoming_root"
+fi
+mkdir -m 700 "$incoming_root/$release_id"
 REMOTE_MKDIR
 
   scp -q "$archive" "$checksum" "$REMOTE:$incoming/"
@@ -908,6 +922,7 @@ REMOTE_MKDIR
     "$base" "$release_id" "$(basename "$archive")" "$(basename "$checksum")" \
     "$build_id" "$component" "$EXPECTED_COMMIT" <<'REMOTE_STAGE'
 set -Eeuo pipefail
+umask 077
 base="$1"
 release_id="$2"
 archive_name="$3"
@@ -919,10 +934,31 @@ incoming="$base/.incoming/$release_id"
 release="$base/releases/$release_id"
 
 [[ "$component" == "admin" || "$component" == "storefront" ]]
+if [[ "$component" == "admin" ]]; then
+  [[ "$base" == "/var/www/kenmito-admin" ]]
+else
+  [[ "$base" == "/var/www/kenmito-storefront" ]]
+fi
+[[ "$release_id" =~ ^(admin|storefront)-[0-9a-f]{12}-[0-9]{8}T[0-9]{6}Z$ ]]
+[[ "$release_id" == "$component-"* ]]
 [[ "$expected_build_id" =~ ^[A-Za-z0-9_-]{1,128}$ ]]
 [[ "$expected_commit" =~ ^[0-9a-f]{40}$ ]]
+[[ "$archive_name" == "$component-$release_id.tar.gz" ]]
+[[ "$checksum_name" == "$archive_name.sha256" ]]
 [[ "$incoming/$archive_name" == "$base/.incoming/$release_id/"* ]]
+[[ -d "$incoming" && ! -L "$incoming" ]]
 [[ -f "$incoming/$archive_name" && -f "$incoming/$checksum_name" ]]
+
+cleanup_failed_stage() {
+  local rc=$?
+  trap - EXIT
+  if [[ "$rc" -ne 0 && -d "$incoming" ]]; then
+    rm -rf -- "$incoming"
+  fi
+  exit "$rc"
+}
+trap cleanup_failed_stage EXIT
+
 (
   cd "$incoming"
   sha256sum -c "$checksum_name"
@@ -1046,6 +1082,7 @@ fi
 mv -T "$candidate" "$release"
 rm -- "$incoming/$archive_name" "$incoming/$checksum_name"
 rmdir "$incoming"
+trap - EXIT
 REMOTE_STAGE
 }
 
