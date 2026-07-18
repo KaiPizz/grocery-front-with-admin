@@ -83,7 +83,12 @@ test.describe('B1 category browsing', () => {
   test('keeps a slim-navigation public category route valid after its products reach zero', async ({ page }) => {
     await mockMobileStorefront(page);
 
-    await page.goto('/en/categories/grzyby-warzywa-i-tofu');
+    await page.goto('/en/products');
+    const emptyPublicCategoryLink = page.getByRole('link', {
+      name: /mushrooms, vegetables, and tofu/i,
+    }).first();
+    await expect(emptyPublicCategoryLink).toBeVisible();
+    await emptyPublicCategoryLink.click();
 
     await expect(page.getByRole('heading', { name: /^mushrooms, vegetables, and tofu$/i })).toBeVisible();
     await expect(page.getByText(/coming soon/i).first()).toBeVisible();

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { mockMobileStorefront } from './mobile-fixtures';
 
 async function openFilters(page: Page, panel: Locator) {
-  const trigger = page.getByRole('button', { name: /filters/i });
+  const trigger = page.getByRole('button', { name: /^filters(?:,.*)?$/i });
 
   // A cold development compile can replace the server-rendered trigger while
   // hydration applies the mocked facets. Retry the user action against the
@@ -64,6 +64,65 @@ test.describe('mobile products page', () => {
     await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
     await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
     expect(metadataStartedBeforeListingResponse).toBe(false);
+  });
+
+  test('does not amplify a failed listing request with automatic metadata requests', async ({ page }) => {
+    const operations: string[] = [];
+    let userOpenedFilters = false;
+    let metadataStartedBeforeUserIntent = false;
+
+    await mockMobileStorefront(page, {
+      products: 'error',
+      onGraphqlOperation: (operationName) => {
+        operations.push(operationName);
+        if (
+          !userOpenedFilters
+          && ['GroceryProductFilterCatalog', 'ProductCountryOrigins'].includes(operationName)
+        ) {
+          metadataStartedBeforeUserIntent = true;
+        }
+      },
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/products');
+
+    await expect(page.getByText(/channel 'default' not found or inactive/i)).toBeVisible();
+    await page.evaluate(() => new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    }));
+    expect(operations).not.toContain('GroceryProductFilterCatalog');
+    expect(operations).not.toContain('ProductCountryOrigins');
+    expect(metadataStartedBeforeUserIntent).toBe(false);
+
+    userOpenedFilters = true;
+    await page.getByRole('button', { name: /filters/i }).click();
+    await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
+    await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
+  });
+
+  test('excludes both legacy and canonical tree-nut allergen codes', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    const treeNutsButton = filterPanel.getByRole('button', { name: /tree nuts/i });
+    await expect(treeNutsButton).toBeEnabled();
+    await treeNutsButton.click();
+
+    await expect.poll(() => productQueries.some((variables) => {
+      const allergens = (variables.filter as Record<string, any> | undefined)?.excludeAllergens;
+      return Array.isArray(allergens)
+        && allergens.includes('nuts')
+        && allergens.includes('tree_nuts');
+    })).toBe(true);
+    await expect(page.getByRole('link', { name: /organic gala apples/i })).toHaveCount(0);
   });
 
   test('compresses the mobile catalog layout to prioritize product images', async ({ page }) => {
@@ -324,6 +383,50 @@ test.describe('mobile products page', () => {
         return filter?.price?.gte === 10;
       })
     ).toBe(true);
+  });
+
+  test('preserves a mobile price filter while full catalog metadata is still loading', async ({ page }) => {
+    let releaseCatalogMetadata!: () => void;
+    const catalogMetadataGate = new Promise<void>((resolve) => {
+      releaseCatalogMetadata = resolve;
+    });
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      listingProductLimit: 3,
+      beforeProductFilterCatalogResponse: async () => {
+        await catalogMetadataGate;
+      },
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/products');
+
+    const cards = page.getByTestId('mobile-product-card');
+    await expect(cards).toHaveCount(3);
+
+    const filterSheet = page.getByTestId('mobile-filter-sheet');
+    await openFilters(page, filterSheet);
+    const minPriceInput = filterSheet.getByLabel(/minimum price/i);
+    await minPriceInput.fill('17');
+    await filterSheet.getByRole('button', { name: /apply filters/i }).click();
+
+    await expect.poll(() => productQueries.some((variables) => {
+      const filter = variables.filter as Record<string, any> | undefined;
+      return filter?.price?.gte === 17;
+    })).toBe(true);
+
+    releaseCatalogMetadata();
+
+    await openFilters(page, filterSheet);
+    await expect(filterSheet).toContainText('Available range: 6.79-18.49 PLN');
+    await expect(filterSheet.getByLabel(/minimum price/i)).toHaveValue('17');
+    expect(productQueries.some((variables) => {
+      const filter = variables.filter as Record<string, any> | undefined;
+      return filter?.price?.gte === 12.99;
+    })).toBe(false);
   });
 
   test('applies mobile category filters only after save', async ({ page }) => {

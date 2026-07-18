@@ -896,8 +896,10 @@ interface MockMobileStorefrontOptions {
   productDetailLabels?: ProductDetailLabelMode;
   productDetailCategory?: ProductDetailCategoryMode;
   facets?: 'populated' | 'empty';
+  listingProductLimit?: number;
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   beforeProductListingResponse?: () => Promise<void>;
+  beforeProductFilterCatalogResponse?: () => Promise<void>;
   onGraphqlOperation?: (operationName: string, query: string) => void;
   onProductsQuery?: (variables: Record<string, unknown>) => void;
   onProductDetailQuery?: (query: string, variables: Record<string, unknown>) => void;
@@ -967,6 +969,8 @@ export async function mockMobileStorefront(
       if (isProductListingQuery) {
         options.onProductsQuery?.(body.variables ?? {});
         await options.beforeProductListingResponse?.();
+      } else {
+        await options.beforeProductFilterCatalogResponse?.();
       }
 
       if (options.products === 'error') {
@@ -995,7 +999,10 @@ export async function mockMobileStorefront(
           product.category.id === categoryKey || product.category.slug === categoryKey
         ))
       ));
-      const listingProducts = usesPublicTaxonomy ? PUBLIC_TAXONOMY_PRODUCTS : products;
+      const unpaginatedProducts = usesPublicTaxonomy ? PUBLIC_TAXONOMY_PRODUCTS : products;
+      const listingProducts = isProductListingQuery && options.listingProductLimit !== undefined
+        ? unpaginatedProducts.slice(0, options.listingProductLimit)
+        : unpaginatedProducts;
       const filteredProducts = listingProducts.filter((product) => matchesProductsFilter(product, body.variables?.filter));
 
       await fulfill(route, {
@@ -1060,9 +1067,24 @@ export async function mockMobileStorefront(
       || query.includes('query PublicCategories')
       || query.includes('query PublicCategoryNavigation')
     ) {
+      const isSlimNavigationQuery = operationName === 'PublicCategoryNavigation'
+        || query.includes('query PublicCategoryNavigation');
       await fulfill(route, {
         categories: {
-          edges: categoryFixtures.map((category, index) => buildCategoryEdge(category, categoryProducts, index)),
+          edges: categoryFixtures.map((category, index) => {
+            const edge = buildCategoryEdge(category, categoryProducts, index);
+            return isSlimNavigationQuery
+              ? {
+                ...edge,
+                node: {
+                  id: edge.node.id,
+                  slug: edge.node.slug,
+                  name: edge.node.name,
+                  description: edge.node.description,
+                },
+              }
+              : edge;
+          }),
           pageInfo: { hasNextPage: false, endCursor: null },
           totalCount: categoryFixtures.length,
         },

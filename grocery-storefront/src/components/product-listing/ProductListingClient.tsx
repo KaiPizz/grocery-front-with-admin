@@ -277,9 +277,16 @@ export function ProductListingClient({
     catalogResult.data?.products?.edges?.map((edge) => edge.node) ?? []
   ), [catalogResult.data]);
   const filterSourceProducts = catalogProducts.length > 0 ? catalogProducts : loadedProducts;
+  const catalogPriceBoundsReady = !catalogResult.fetching
+    && !catalogResult.error
+    && catalogResult.data?.products != null;
 
   const priceBounds = useMemo(() => {
-    const prices = filterSourceProducts
+    if (!catalogPriceBoundsReady) {
+      return null;
+    }
+
+    const prices = catalogProducts
       .map((product) => getProductPrice(product as GroceryProduct & Record<string, any>))
       .filter((amount: number | null): amount is number => typeof amount === 'number' && Number.isFinite(amount));
 
@@ -291,7 +298,7 @@ export function ProductListingClient({
       min: Math.min(...prices),
       max: Math.max(...prices),
     };
-  }, [filterSourceProducts]);
+  }, [catalogPriceBoundsReady, catalogProducts]);
 
   const availableAllergens = useMemo(() => {
     const allergenCodes = new Set<string>();
@@ -404,13 +411,12 @@ export function ProductListingClient({
   });
 
   useEffect(() => {
-    const initialListingSettled = !result.fetching
-      && (result.data !== undefined || Boolean(result.error));
+    const initialListingLoaded = !result.fetching && result.data?.products != null;
 
-    if (!filterMetadataRequested && (filtersOpen || initialListingSettled)) {
+    if (!filterMetadataRequested && (filtersOpen || initialListingLoaded)) {
       setFilterMetadataRequested(true);
     }
-  }, [filterMetadataRequested, filtersOpen, result.data, result.error, result.fetching]);
+  }, [filterMetadataRequested, filtersOpen, result.data, result.fetching]);
 
   useEffect(() => {
     if (!listingQueryResetMountedRef.current) {

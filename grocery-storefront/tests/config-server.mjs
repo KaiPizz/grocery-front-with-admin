@@ -900,13 +900,24 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     || query.includes('query PublicCategories')
     || query.includes('query PublicCategoryNavigation')
   ) {
+    const isSlimNavigationQuery = query.includes('query PublicCategoryNavigation');
     return {
       data: {
         categories: {
-          edges: categories.map((category, index) => ({
-            cursor: `category-${index + 1}`,
-            node: buildCategoryNode(category),
-          })),
+          edges: categories.map((category, index) => {
+            const node = buildCategoryNode(category);
+            return {
+              cursor: `category-${index + 1}`,
+              node: isSlimNavigationQuery
+                ? {
+                  id: node.id,
+                  slug: node.slug,
+                  name: node.name,
+                  description: node.description,
+                }
+                : node,
+            };
+          }),
           pageInfo: { hasNextPage: false, endCursor: null },
           totalCount: categories.length,
         },

@@ -10,6 +10,11 @@ const ALLERGEN_ALIASES: Record<string, string> = {
   tree_nuts: 'nuts',
 };
 
+const ALLERGEN_QUERY_EQUIVALENTS: Record<string, string[]> = {
+  cereals: ['cereals', 'gluten'],
+  nuts: ['nuts', 'tree_nuts'],
+};
+
 export interface ProductFiltersState {
   categoryIds: string[];
   excludeAllergens: string[];
@@ -34,6 +39,13 @@ export const DEFAULT_FILTERS: ProductFiltersState = {
 
 export function normalizeAllergenCode(code: string) {
   return ALLERGEN_ALIASES[code] ?? code;
+}
+
+export function expandAllergenFilterCodes(codes: string[]) {
+  return Array.from(new Set(codes.flatMap((code) => {
+    const normalizedCode = normalizeAllergenCode(code);
+    return ALLERGEN_QUERY_EQUIVALENTS[normalizedCode] ?? [normalizedCode];
+  })));
 }
 
 export function parsePriceInput(value: string) {
@@ -135,7 +147,9 @@ export function buildProductFilter(
   } else if (filters.categoryIds.length > 0) {
     nextFilter.categories = filters.categoryIds;
   }
-  if (filters.excludeAllergens.length > 0) nextFilter.excludeAllergens = filters.excludeAllergens;
+  if (filters.excludeAllergens.length > 0) {
+    nextFilter.excludeAllergens = expandAllergenFilterCodes(filters.excludeAllergens);
+  }
   if (filters.dietaryTags.length > 0) nextFilter.dietaryTags = filters.dietaryTags;
   if (filters.certifications.length > 0) nextFilter.certifications = filters.certifications;
   if (filters.countryOfOrigin.length > 0) nextFilter.countryOfOrigin = filters.countryOfOrigin;
