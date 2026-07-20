@@ -27,8 +27,6 @@ interface FooterContactItem {
   icon: LucideIcon;
 }
 
-const POLISH_ASIA_DELI_GO_TAGLINE = 'Azjatyckie produkty spożywcze do codziennych zakupów. Zamów online i odbierz osobiście w sklepie.';
-
 export function Footer() {
   const locale = useLocale();
   const tNav = useTranslations('nav');
@@ -41,7 +39,9 @@ export function Footer() {
   const logoText = logoUrl && storeName.trim().toLowerCase() === 'asia deli go' ? '' : storeName;
   const footerCfg = siteConfig?.layout?.footer;
   const configuredTagline = footerCfg?.tagline?.trim();
-  const tagline = locale === 'en' && configuredTagline === POLISH_ASIA_DELI_GO_TAGLINE
+  const normalizedStoreName = storeName.replace(/[^a-z0-9]/gi, '').toLowerCase();
+  const isAsiaDeliGo = normalizedStoreName === 'asiadeligo' || normalizedStoreName === 'asiandeligo';
+  const tagline = locale === 'en' && isAsiaDeliGo
     ? t('asiaDeliGoTagline')
     : configuredTagline || t('tagline');
   const socialLinks = siteConfig?.general?.socialLinks ?? [];
