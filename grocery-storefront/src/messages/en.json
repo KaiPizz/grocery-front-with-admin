@@ -106,6 +106,15 @@
     "productsEmpty": "No products available yet.",
     "shopZoneAria": "Shop {zone} products"
   },
+  "notFoundPage": {
+    "eyebrow": "Error 404",
+    "title": "We couldn't find that page",
+    "description": "The address may be outdated or the page may have moved. Return to the store or continue browsing our products.",
+    "home": "Back to home",
+    "products": "Browse products",
+    "actionsLabel": "Page recovery options",
+    "brandHomeLabel": "{storeName} home"
+  },
   "products": {
     "title": "All products",
     "filters": "Filters",

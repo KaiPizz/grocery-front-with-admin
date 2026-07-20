@@ -106,6 +106,15 @@
     "productsEmpty": "Brak dostępnych produktów.",
     "shopZoneAria": "Kup produkty ze strefy {zone}"
   },
+  "notFoundPage": {
+    "eyebrow": "Błąd 404",
+    "title": "Nie znaleźliśmy tej strony",
+    "description": "Adres może być nieaktualny lub strona została przeniesiona. Wróć do sklepu albo przejdź do katalogu produktów.",
+    "home": "Wróć na stronę główną",
+    "products": "Przejdź do produktów",
+    "actionsLabel": "Opcje powrotu do sklepu",
+    "brandHomeLabel": "Strona główna {storeName}"
+  },
   "products": {
     "title": "Wszystkie produkty",
     "filters": "Filtry",
