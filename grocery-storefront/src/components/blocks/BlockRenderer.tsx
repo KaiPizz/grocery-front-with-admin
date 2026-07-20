@@ -10,14 +10,15 @@ import type { BannerBlock } from '@/types/storefront-config';
 
 interface BlockRendererProps {
   block: BannerBlock;
+  heroHeading?: string;
 }
 
-export function BlockRenderer({ block }: BlockRendererProps) {
+export function BlockRenderer({ block, heroHeading }: BlockRendererProps) {
   if (!block.enabled) return null;
 
   switch (block.type) {
     case 'hero':
-      return <HeroBanner block={block} />;
+      return <HeroBanner block={block} heading={heroHeading} />;
     case 'horizontal':
       return <HorizontalBanner block={block} />;
     case 'grid':

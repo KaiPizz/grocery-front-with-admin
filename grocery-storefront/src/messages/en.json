@@ -71,6 +71,7 @@
   "home": {
     "hero": "Fresh groceries, delivered to your door",
     "heroSub": "Quality products with full nutritional transparency",
+    "heroBannerSlideAlt": "{title} — slide {number}",
     "quickCategories": "Popular categories",
     "categoryShortcuts": "Browse categories",
     "seeAllCategories": "View all",

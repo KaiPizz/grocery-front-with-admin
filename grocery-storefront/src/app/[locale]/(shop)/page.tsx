@@ -719,10 +719,12 @@ export default function HomePage() {
   const productsForFreshPicks = freshPicks.length > 0 ? freshPicks : products.slice(0, 4);
   return (
     <div className="pb-24 md:pb-12">
+      {heroBlock ? <h1 className="sr-only">{heroHeadline}</h1> : null}
+
       <div className="md:hidden">
         {heroBlock ? (
           <section className="container-grocery pb-3 pt-5 sm:pt-7" data-testid="mobile-home-hero">
-            <BlockRenderer block={heroBlock} />
+            <BlockRenderer block={heroBlock} heroHeading={heroHeadline} />
           </section>
         ) : null}
 
@@ -936,7 +938,7 @@ export default function HomePage() {
       <div className="hidden md:block">
         {heroBlock ? (
           <section className="container-grocery pb-6 pt-8 md:pt-10" data-testid="desktop-home-hero">
-            <BlockRenderer block={heroBlock} />
+            <BlockRenderer block={heroBlock} heroHeading={heroHeadline} />
           </section>
         ) : null}
 

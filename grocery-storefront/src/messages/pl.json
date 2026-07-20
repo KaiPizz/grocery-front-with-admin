@@ -71,6 +71,7 @@
   "home": {
     "hero": "Świeże produkty, prosto do Twoich drzwi",
     "heroSub": "Produkty najwyższej jakości z pełną przejrzystością wartości odżywczych",
+    "heroBannerSlideAlt": "{title} — slajd {number}",
     "quickCategories": "Popularne kategorie",
     "categoryShortcuts": "Przeglądaj kategorie",
     "seeAllCategories": "Zobacz wszystkie",

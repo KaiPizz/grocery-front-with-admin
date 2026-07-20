@@ -2,14 +2,17 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { getImageSrc } from '@/lib/utils';
 import type { HeroBannerBlock } from '@/types/storefront-config';
 
 interface HeroBannerProps {
   block: HeroBannerBlock;
+  heading?: string;
 }
 
-export function HeroBanner({ block }: HeroBannerProps) {
+export function HeroBanner({ block, heading }: HeroBannerProps) {
+  const t = useTranslations('home');
   const slides = block.slides.filter((s) => s.enabled);
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -38,6 +41,7 @@ export function HeroBanner({ block }: HeroBannerProps) {
   if (slides.length === 0) return null;
 
   const slide = slides[current];
+  const fallbackHeading = heading?.trim() || t('hero');
 
   const inner = (
     <div
@@ -60,7 +64,7 @@ export function HeroBanner({ block }: HeroBannerProps) {
               )}
               <img
                 src={getImageSrc(s.imageUrl || s.mobileImageUrl, { maxWidth: 1440 }) || s.imageUrl || s.mobileImageUrl || ''}
-                alt={s.title.trim() || `Store promotion banner ${i + 1}`}
+                alt={s.title.trim() || t('heroBannerSlideAlt', { title: fallbackHeading, number: i + 1 })}
                 className="block h-full w-full object-cover"
                 loading={i === 0 ? 'eager' : 'lazy'}
               />
