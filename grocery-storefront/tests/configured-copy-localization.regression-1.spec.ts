@@ -12,8 +12,9 @@ test('English header and footer localize known links from the Polish production 
   await page.route('http://127.0.0.1:4199/api/config/**', async (route) => {
     const upstream = await route.fetch();
     const payload = await upstream.json() as Record<string, any>;
+    payload.config.branding.storeName = 'Asia Deli Go';
     payload.config.layout.footer = {
-      tagline: 'Azjatyckie produkty spożywcze do codziennych zakupów. Zamów online i odbierz osobiście w sklepie.',
+      tagline: 'Azjatyckie produkty spożywcze na co dzień — zamów online!',
       columns: [
         {
           title: 'Sklep',
