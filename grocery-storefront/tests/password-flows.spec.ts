@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { BrowserContext, Page, Route } from '@playwright/test';
 
+import { isValidOptionalPhoneNumber } from '../src/lib/phone-validation';
 import { mockMobileStorefront } from './mobile-fixtures';
 
 interface Labels {
@@ -371,6 +372,7 @@ test('English registration forwards the page locale through the browser BFF requ
   await page.goto('/en/register');
   await page.locator('#auth-full-name').fill('English Shopper');
   await page.locator('#auth-email').fill('english-shopper@example.test');
+  await page.locator('#auth-phone').fill('+48 123 456 789');
   await page.locator('#auth-register-password').fill('strong-password-123');
   await page.locator('#auth-confirm-password').fill('strong-password-123');
   await page.locator('form button[type="submit"]').click();
@@ -379,8 +381,79 @@ test('English registration forwards the page locale through the browser BFF requ
     fullName: 'English Shopper',
     email: 'english-shopper@example.test',
     password: 'strong-password-123',
+    phone: '+48 123 456 789',
     locale: 'en',
   }]);
+});
+
+test('registration blocks an invalid optional phone before invoking the browser BFF', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'customer-account-desktop', 'One browser project covers client validation');
+
+  const state: PasswordFlowState = {
+    authenticated: false,
+    forgotBodies: [],
+    resetBodies: [],
+    changeBodies: [],
+    verifyBodies: [],
+    registerBodies: [],
+    authorizationLeaks: [],
+  };
+  await installPasswordApi(page, state);
+
+  const scenarios = [
+    {
+      locale: 'en',
+      error: 'Enter a valid Polish or international phone number',
+    },
+    {
+      locale: 'pl',
+      error: 'Podaj prawidłowy polski lub międzynarodowy numer telefonu',
+    },
+  ] as const;
+
+  for (const scenario of scenarios) {
+    await page.goto(`/${scenario.locale}/register`);
+    await page.locator('#auth-full-name').fill('Phone Validation Shopper');
+    await page.locator('#auth-email').fill('phone-validation@example.test');
+    await page.locator('#auth-phone').fill('abc');
+    await page.locator('#auth-register-password').fill('strong-password-123');
+    await page.locator('#auth-confirm-password').fill('strong-password-123');
+    await page.locator('form button[type="submit"]').click();
+
+    await expect(page.getByText(scenario.error, { exact: true })).toBeVisible();
+    expect(state.registerBodies).toEqual([]);
+  }
+});
+
+test('phone rule supports optional, Polish and international formats', async ({}, testInfo) => {
+  test.skip(testInfo.project.name !== 'customer-account-desktop', 'One project covers the reusable rule');
+
+  for (const phone of [
+    '',
+    '123 456 789',
+    '48 123 456 789',
+    '+48 123 456 789',
+    '0048 123-456-789',
+    '+290 1234',
+    '+44 20 7946 0958',
+    '+1 (415) 555-2671',
+  ]) {
+    expect(isValidOptionalPhoneNumber(phone), phone).toBe(true);
+  }
+
+  for (const phone of [
+    'abc',
+    '12345',
+    '+48 123 456 789-',
+    '+48 123 456',
+    '012 345 678',
+    '+48 012 345 678',
+    '48+123456789',
+    '+0123456789',
+    '+1234567890123456',
+  ]) {
+    expect(isValidOptionalPhoneNumber(phone), phone).toBe(false);
+  }
 });
 
 test('guest and transient startup preserve persisted state while rejected credentials clear it', async ({ page }, testInfo) => {

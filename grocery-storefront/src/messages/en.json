@@ -456,6 +456,7 @@
     "emailRequired": "Please enter your email",
     "phone": "Phone",
     "phonePlaceholder": "+48 123 456 789",
+    "phoneInvalid": "Enter a valid Polish or international phone number",
     "optional": "optional",
     "password": "Password",
     "passwordPlaceholder": "At least 8 characters",

@@ -456,6 +456,7 @@
     "emailRequired": "Podaj adres e-mail",
     "phone": "Telefon",
     "phonePlaceholder": "+48 123 456 789",
+    "phoneInvalid": "Podaj prawidłowy polski lub międzynarodowy numer telefonu",
     "optional": "opcjonalnie",
     "password": "Hasło",
     "passwordPlaceholder": "Minimum 8 znaków",

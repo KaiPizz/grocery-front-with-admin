@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Link, useRouter } from '@/i18n/navigation';
 import { safeReturnPath } from '@/lib/auth/safe-return-path';
+import { isValidOptionalPhoneNumber } from '@/lib/phone-validation';
 import { useAuthStore } from '@/stores/auth-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { SocialSignIn } from './SocialSignIn';
@@ -55,6 +56,11 @@ export function AuthForm({ mode }: AuthFormProps) {
 
     if (!trimmedEmail) {
       setError(t('emailRequired'));
+      return;
+    }
+
+    if (mode === 'register' && !isValidOptionalPhoneNumber(trimmedPhone)) {
+      setError(t('phoneInvalid'));
       return;
     }
 
