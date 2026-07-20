@@ -351,32 +351,25 @@ test.describe('mobile products page', () => {
     await expect(page.getByTestId('product-card')).toHaveCount(4);
   });
 
-  test('lets desktop shoppers narrow all products by category', async ({ page }) => {
-    const productQueries: Array<Record<string, any>> = [];
-
-    await mockMobileStorefront(page, {
-      onProductsQuery: (variables) => {
-        productQueries.push(JSON.parse(JSON.stringify(variables)));
-      },
-    });
+  test('uses curated desktop category navigation instead of duplicate raw category filters', async ({ page }) => {
+    await mockMobileStorefront(page);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/en/products');
 
     await expect(page.getByTestId('product-card')).toHaveCount(4);
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
     await expect(filterPanel).toBeVisible();
-    await expect(filterPanel.getByText(/categories/i)).toBeVisible();
-    await filterPanel.getByRole('button', { name: /bakery/i }).click();
+    await expect(filterPanel.getByRole('button', { name: /bakery/i })).toHaveCount(0);
 
-    await expect(page.getByTestId('product-card')).toHaveCount(1);
-    await expect(page.getByRole('link', { name: /sourdough sandwich bread/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /organic gala apples/i })).toHaveCount(0);
-    expect(
-      productQueries.some((variables) => {
-        const filter = variables.filter as Record<string, any> | undefined;
-        return Array.isArray(filter?.categories) && filter.categories.includes('cat-bakery');
-      })
-    ).toBe(true);
+    const categorySidebar = page.getByTestId('desktop-category-sidebar');
+    const kimchiLink = categorySidebar.getByRole('link', { name: /kimchi and pickles/i });
+    await expect(kimchiLink).toHaveAttribute('href', '/en/categories/kimchi-i-kiszonki');
+    await kimchiLink.click();
+
+    await expect(page).toHaveURL(/\/en\/categories\/kimchi-i-kiszonki$/);
+    await expect(page.getByTestId('product-card')).toHaveCount(2);
+    await expect(page.getByRole('link', { name: /napa cabbage kimchi/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /pickled daikon radish/i })).toBeVisible();
   });
 
   test('surfaces active desktop filters and lets shoppers remove them from the catalog toolbar', async ({ page }) => {
@@ -386,17 +379,17 @@ test.describe('mobile products page', () => {
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
     await expect(filterPanel).toBeVisible();
-    await filterPanel.getByRole('button', { name: /bakery/i }).click();
+    await filterPanel.getByRole('button', { name: /^frozen/i }).click();
 
     const filterSummary = page.getByTestId('product-filter-summary');
     await expect(filterSummary).toBeVisible();
     await expect(filterSummary).toContainText(/showing 1 of 1/i);
-    await expect(filterSummary.getByRole('button', { name: /remove bakery filter/i })).toBeVisible();
+    await expect(filterSummary.getByRole('button', { name: /remove frozen filter/i })).toBeVisible();
 
-    await filterSummary.getByRole('button', { name: /remove bakery filter/i }).click();
+    await filterSummary.getByRole('button', { name: /remove frozen filter/i }).click();
 
     await expect(page.getByTestId('product-card')).toHaveCount(4);
-    await expect(filterSummary.getByRole('button', { name: /remove bakery filter/i })).toHaveCount(0);
+    await expect(filterSummary.getByRole('button', { name: /remove frozen filter/i })).toHaveCount(0);
   });
 
   test('applies mobile filters only after save', async ({ page }) => {
@@ -489,43 +482,27 @@ test.describe('mobile products page', () => {
     })).toBe(false);
   });
 
-  test('applies mobile category filters only after save', async ({ page }) => {
-    const productQueries: Array<Record<string, any>> = [];
-
-    await mockMobileStorefront(page, {
-      onProductsQuery: (variables) => {
-        productQueries.push(JSON.parse(JSON.stringify(variables)));
-      },
-    });
+  test('uses the curated mobile category rail instead of duplicate raw category filters', async ({ page }) => {
+    await mockMobileStorefront(page);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/en/products');
 
     const cards = page.getByTestId('mobile-product-card');
     await expect(cards).toHaveCount(4);
 
+    const categoryRail = page.getByTestId('mobile-category-rail');
+    const kimchiLink = categoryRail.getByRole('link', { name: /kimchi and pickles/i });
+    await expect(kimchiLink).toHaveAttribute('href', '/en/categories/kimchi-i-kiszonki');
+
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await openFilters(page, filterSheet);
-    await expect(filterSheet.getByText(/categories/i)).toBeVisible();
-    await filterSheet.getByRole('button', { name: /bakery/i }).click();
+    await expect(filterSheet.getByRole('button', { name: /bakery/i })).toHaveCount(0);
+    await filterSheet.getByRole('button', { name: /close filters/i }).last().click();
 
-    expect(
-      productQueries.some((variables) => {
-        const filter = variables.filter as Record<string, any> | undefined;
-        return Array.isArray(filter?.categories) && filter.categories.includes('cat-bakery');
-      })
-    ).toBe(false);
-    await expect(cards).toHaveCount(4);
-
-    await filterSheet.getByRole('button', { name: /apply filters/i }).click();
-
-    await expect(cards).toHaveCount(1);
-    await expect(page.getByRole('link', { name: /sourdough sandwich bread/i })).toBeVisible();
-    expect(
-      productQueries.some((variables) => {
-        const filter = variables.filter as Record<string, any> | undefined;
-        return Array.isArray(filter?.categories) && filter.categories.includes('cat-bakery');
-      })
-    ).toBe(true);
+    await kimchiLink.click();
+    await expect(page).toHaveURL(/\/en\/categories\/kimchi-i-kiszonki$/);
+    await expect(page.getByTestId('mobile-product-card')).toHaveCount(2);
+    await expect(page.getByRole('link', { name: /napa cabbage kimchi/i })).toBeVisible();
   });
 
   test('gives mobile shoppers an active-filter trail and clear path when filters remove every product', async ({ page }) => {
@@ -538,15 +515,15 @@ test.describe('mobile products page', () => {
 
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await openFilters(page, filterSheet);
-    await filterSheet.getByRole('button', { name: /bakery/i }).click();
-    await filterSheet.getByLabel(/minimum price/i).fill('10');
+    await filterSheet.getByRole('button', { name: /^frozen/i }).click();
+    await filterSheet.getByLabel(/maximum price/i).fill('10');
     await filterSheet.getByRole('button', { name: /apply filters/i }).click();
 
     const filterSummary = page.getByTestId('product-filter-summary');
     await expect(filterSummary).toBeVisible();
     await expect(filterSummary).toContainText(/showing 0 of 0/i);
-    await expect(filterSummary.getByRole('button', { name: /remove bakery filter/i })).toBeVisible();
-    await expect(filterSummary.getByRole('button', { name: /remove from 10 PLN filter/i })).toBeVisible();
+    await expect(filterSummary.getByRole('button', { name: /remove frozen filter/i })).toBeVisible();
+    await expect(filterSummary.getByRole('button', { name: /remove up to 10 PLN filter/i })).toBeVisible();
     await expect(page.getByText(/no matching products/i)).toBeVisible();
     await expect(page.getByText(/try clearing filters or widening your price range/i)).toBeVisible();
 

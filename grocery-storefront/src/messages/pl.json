@@ -218,6 +218,7 @@
     "productInformation": "Informacje o produkcie",
     "legalFoodInfo": "Informacje dla kupującego",
     "packageLabelNotice": "Dane pochodzą z katalogu produktu. W przypadku pól nieuzupełnionych sprawdź etykietę opakowania przed zakupem lub przy odbiorze.",
+    "originalPolishLabelNotice": "Tekstowe informacje z etykiety są pokazane w oryginalnym języku polskiego katalogu i nie zostały przetłumaczone maszynowo.",
     "foodAttributes": "Cechy produktu",
     "missingCatalogFields": "Do uzupełnienia w katalogu: {fields}.",
     "catalogMissing": "Brak danych w katalogu",

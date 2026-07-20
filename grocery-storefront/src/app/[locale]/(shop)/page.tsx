@@ -25,13 +25,17 @@ import { Link } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { getEnabledCommercialQuickLinks } from '@/lib/commercial-config';
-import { groupCategories, type GroupableCategory } from '@/lib/category-groups';
 import {
   isPickupFulfillment,
   usesAvailabilityOnlyStock,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
 import { getLocalizedProductName } from '@/lib/localization';
+import {
+  buildPublicCategories,
+  type PublicCategory,
+  type PublicTaxonomyRawCategory,
+} from '@/lib/public-taxonomy';
 import { getImageSrc } from '@/lib/utils';
 import type { ProductTranslation } from '@/types';
 import type { CommercialQuickLink, HomepageSectionId } from '@/types/storefront-config';
@@ -90,7 +94,7 @@ interface HomeRecipe {
   difficulty?: string | null;
 }
 
-interface HomeCategory extends GroupableCategory {
+interface HomeCategory extends PublicTaxonomyRawCategory {
   backgroundImage?: {
     url?: string | null;
     alt?: string | null;
@@ -375,9 +379,8 @@ function HomeCategoryShortcuts({
   quickLinks: CommercialQuickLink[];
 }) {
   const t = useTranslations('home');
-  const groupedCategories = groupCategories(categories);
-  const visibleCategories = groupedCategories
-    .flatMap((group) => group.categories)
+  const locale = useLocale();
+  const visibleCategories = buildPublicCategories(categories, locale)
     .sort((left, right) => (right.products?.totalCount ?? 0) - (left.products?.totalCount ?? 0))
     .slice(0, 6);
   const visibleQuickLinks = quickLinks.slice(0, 3);
@@ -398,9 +401,16 @@ function HomeCategoryShortcuts({
   const richCategoryCards = visibleCategories
     .map((category) => ({
       category,
-      imageUrl: getImageSrc(category.backgroundImage?.url, { maxWidth: 720 }),
+      sourceCategory: categories.find((candidate) => (
+        category.rawCategoryIds.includes(candidate.id) && candidate.backgroundImage?.url
+      )) ?? null,
     }))
-    .filter((item): item is { category: HomeCategory; imageUrl: string } => Boolean(item.imageUrl))
+    .map(({ category, sourceCategory }) => ({
+      category,
+      imageUrl: getImageSrc(sourceCategory?.backgroundImage?.url, { maxWidth: 720 }),
+      imageAlt: sourceCategory?.backgroundImage?.alt ?? category.name,
+    }))
+    .filter((item): item is { category: PublicCategory; imageUrl: string; imageAlt: string } => Boolean(item.imageUrl))
     .slice(0, 4);
   const richQuickLinks = visibleQuickLinks
     .map((link) => ({
@@ -469,7 +479,7 @@ function HomeCategoryShortcuts({
 
       {hasRichCards && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" data-testid="home-category-card-grid">
-          {richCategoryCards.map(({ category, imageUrl }, index) => {
+          {richCategoryCards.map(({ category, imageUrl, imageAlt }, index) => {
           const count = category.products?.totalCount ?? 0;
           const countLabel = t('productCount', { count });
           const featured = index === 0 && richCategoryCards.length > 3;
@@ -498,7 +508,7 @@ function HomeCategoryShortcuts({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imageUrl}
-                  alt={category.backgroundImage?.alt || category.name}
+                  alt={imageAlt}
                   className="h-full w-full object-cover transition-transform duration-normal group-hover:scale-[1.03]"
                   loading="lazy"
                   data-testid="home-category-card-image"

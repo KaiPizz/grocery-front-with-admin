@@ -17,8 +17,13 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import {
+  getCatalogCategoryDisplay,
+  getLocalizedCountryOrigin,
+  getLocalizedUnitLabel,
+  isEnglishLocale,
+} from '@/lib/catalog-display-localization';
 import { getLocalizedProductDescription, getLocalizedProductName } from '@/lib/localization';
-import { buildPublicCategories } from '@/lib/public-taxonomy';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import {
   getConfiguredText,
@@ -298,21 +303,6 @@ function formatNutritionAmount(value: number | null | undefined, unit: string): 
   return `${value} ${unit}`;
 }
 
-function formatDisplayUnit(unit: string): string {
-  const labels: Record<string, string> = {
-    KG: 'kg',
-    GRAM: 'g',
-    G: 'g',
-    LITER: 'l',
-    L: 'l',
-    ML: 'ml',
-    PIECE: 'szt.',
-    PCS: 'szt.',
-  };
-  const key = unit.trim().toUpperCase();
-  return labels[key] ?? unit.toLowerCase();
-}
-
 function formatProductDate(value: string | null | undefined, locale: string): string | null {
   if (!value) return null;
   const date = new Date(value);
@@ -338,6 +328,9 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
   const unitPrice = product.pricePerUnit ?? null;
   const unitOfMeasure = product.unitOfMeasure?.trim() || null;
   const hasUnitPrice = unitPrice != null && Boolean(unitOfMeasure);
+  const displayCountryOfOrigin = getLocalizedCountryOrigin(product.countryOfOrigin, locale);
+  const showOriginalPolishLabelNotice = isEnglishLocale(locale)
+    && (hasIngredients || Boolean(nutrition?.servingSize?.trim()));
   const missingCatalogLabels: string[] = [];
   const attributeChips: string[] = [];
 
@@ -375,13 +368,13 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
     label: t('product.unitPrice'),
     value:
       hasUnitPrice
-        ? `${formatPrice(unitPrice, currency)} / ${formatDisplayUnit(unitOfMeasure ?? '')}`
+        ? `${formatPrice(unitPrice, currency)} / ${getLocalizedUnitLabel(unitOfMeasure ?? '', locale)}`
         : t('product.catalogMissing'),
     isMissing: !hasUnitPrice,
   });
 
   detailFacts.push({ label: t('product.netWeight'), value: t('product.checkPackageLabel') });
-  detailFacts.push({ label: t('product.origin'), value: product.countryOfOrigin ?? t('product.catalogMissing'), isMissing: !product.countryOfOrigin });
+  detailFacts.push({ label: t('product.origin'), value: displayCountryOfOrigin ?? t('product.catalogMissing'), isMissing: !displayCountryOfOrigin });
 
   detailFacts.push({
     label: t('product.storage'),
@@ -438,6 +431,15 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
             <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--color-foreground)' }}>
               {t('product.packageLabelNotice')}
             </p>
+            {showOriginalPolishLabelNotice && (
+              <p
+                className="mt-2 text-xs leading-relaxed"
+                style={{ color: 'var(--color-muted-foreground)' }}
+                data-testid="pdp-original-label-language"
+              >
+                {t('product.originalPolishLabelNotice')}
+              </p>
+            )}
           </div>
 
           {attributeChips.length > 0 && (
@@ -785,10 +787,8 @@ export default function ProductDetailPage() {
     name: productName,
     description: productDescription,
   };
-  const publicProductCategory = product.category
-    ? buildPublicCategories([product.category], locale, { requireProductCount: false })[0] ?? null
-    : null;
-  const displayCategory = publicProductCategory ?? product.category ?? null;
+  const displayCategory = getCatalogCategoryDisplay(product.category, locale);
+  const displayCountryOfOrigin = getLocalizedCountryOrigin(product.countryOfOrigin, locale);
   const inStock = (variant?.quantityAvailable ?? 0) > 0;
   const imageUrl = getImageSrc(product?.thumbnail?.url);
   const isWishlisted = wishlistItems.some((item) => item.productId === product.id);
@@ -803,8 +803,8 @@ export default function ProductDetailPage() {
     purchaseFacts.push({ label: t('product.category'), value: displayCategory.name });
   }
 
-  if (product.countryOfOrigin) {
-    purchaseFacts.push({ label: t('product.origin'), value: product.countryOfOrigin });
+  if (displayCountryOfOrigin) {
+    purchaseFacts.push({ label: t('product.origin'), value: displayCountryOfOrigin });
   }
 
   if (product.storageZone) {
@@ -936,6 +936,7 @@ export default function ProductDetailPage() {
               pricePerUnit={product.pricePerUnit}
               unitOfMeasure={product.unitOfMeasure}
               currency={currency}
+              locale={locale}
               className="block text-sm mt-1"
             />
           </div>
@@ -1121,6 +1122,7 @@ export default function ProductDetailPage() {
                 pricePerUnit={product.pricePerUnit}
                 unitOfMeasure={product.unitOfMeasure}
                 currency={currency}
+                locale={locale}
                 className="block truncate text-[10px] tabular-nums"
               />
             </div>

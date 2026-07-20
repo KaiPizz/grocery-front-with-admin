@@ -1,9 +1,11 @@
 import { formatPrice } from '@/lib/utils';
+import { getLocalizedUnitLabel } from '@/lib/catalog-display-localization';
 
 interface UnitPriceProps {
   pricePerUnit: number | null | undefined;
   unitOfMeasure: string | null | undefined;
   currency: string;
+  locale: string;
   className?: string;
 }
 
@@ -19,23 +21,7 @@ interface UnitPriceProps {
  * Caller controls sizing via `className` (e.g. `text-[10px]` on cards,
  * `text-sm` on the product detail page).
  */
-const UNIT_LABELS: Record<string, string> = {
-  KG: 'kg',
-  GRAM: 'g',
-  G: 'g',
-  LITER: 'l',
-  L: 'l',
-  ML: 'ml',
-  PIECE: 'szt.',
-  PCS: 'szt.',
-};
-
-function formatUnitLabel(unit: string): string {
-  const key = unit.trim().toUpperCase();
-  return UNIT_LABELS[key] ?? unit.toLowerCase();
-}
-
-export function UnitPrice({ pricePerUnit, unitOfMeasure, currency, className }: UnitPriceProps) {
+export function UnitPrice({ pricePerUnit, unitOfMeasure, currency, locale, className }: UnitPriceProps) {
   if (pricePerUnit == null || !unitOfMeasure) return null;
   return (
     <span
@@ -43,7 +29,7 @@ export function UnitPrice({ pricePerUnit, unitOfMeasure, currency, className }: 
       style={{ color: 'var(--color-muted-foreground)' }}
       data-testid="unit-price"
     >
-      {formatPrice(pricePerUnit, currency)} / {formatUnitLabel(unitOfMeasure)}
+      {formatPrice(pricePerUnit, currency)} / {getLocalizedUnitLabel(unitOfMeasure, locale)}
     </span>
   );
 }

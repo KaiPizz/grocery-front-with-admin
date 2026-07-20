@@ -342,6 +342,25 @@ type ProductDetailLabelMode = 'complete' | 'missing';
 type ProductDetailCategoryMode = 'present' | 'missing';
 type ProductFixture = (typeof PRODUCTS)[number];
 
+function withPolishSourceLabels<TProduct extends ProductFixture>(products: TProduct[]): TProduct[] {
+  const countryOrigins = ['Polska', 'Japonia', 'Korea Południowa', 'Nieznany region'];
+
+  return products.map((product, index) => ({
+    ...product,
+    countryOfOrigin: countryOrigins[index] ?? 'Polska',
+    unitOfMeasure: index === 2 ? 'PIECE' : product.unitOfMeasure,
+    ingredients: 'Mąka pszenna, woda, sól',
+    nutritionFacts: product.nutritionFacts
+      ? { ...product.nutritionFacts, servingSize: '1 szt.' }
+      : product.nutritionFacts,
+    category: {
+      id: 'cat-ready-meals',
+      name: 'Dania gotowe',
+      slug: 'dania-gotowe',
+    },
+  })) as TProduct[];
+}
+
 // Public taxonomy browsing needs realistic raw categories without changing the
 // four-product catalog used by the broader mobile suite. These three products
 // are returned only when a public category scopes the product query.
@@ -895,6 +914,7 @@ interface MockMobileStorefrontOptions {
   productDetailImages?: ProductDetailImageMode;
   productDetailLabels?: ProductDetailLabelMode;
   productDetailCategory?: ProductDetailCategoryMode;
+  catalogLabels?: 'default' | 'polish-source';
   facets?: 'populated' | 'empty';
   listingProductLimit?: number;
   filterCatalogProductLimit?: number;
@@ -913,11 +933,14 @@ export async function mockMobileStorefront(
   page: Page,
   options: MockMobileStorefrontOptions = {}
 ) {
-  const products = options.productPromotions === 'none'
+  const baseProducts = options.productPromotions === 'none'
     ? PRODUCTS_WITHOUT_SALES
     : options.facets === 'empty'
       ? PRODUCTS_WITH_EMPTY_FACETS
       : PRODUCTS;
+  const products = options.catalogLabels === 'polish-source'
+    ? withPolishSourceLabels(baseProducts)
+    : baseProducts;
   const categoryProducts = [...products, ...PUBLIC_TAXONOMY_PRODUCTS];
   const productsById = new Map(products.map((product) => [product.id, product]));
   const categoryFixtures = buildCategoryFixtures(categoryProducts);

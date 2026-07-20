@@ -1,8 +1,12 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { X, Info } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
+import {
+  getLocalizedCountryOrigin,
+  isEnglishLocale,
+} from '@/lib/catalog-display-localization';
 import type { NutritionFacts } from '@/types';
 
 interface NutritionModalProps {
@@ -45,6 +49,10 @@ export function NutritionModal({
   const t = useTranslations('product');
   const tAllergens = useTranslations('allergens');
   const tProducts = useTranslations('products');
+  const locale = useLocale();
+  const displayCountryOfOrigin = getLocalizedCountryOrigin(countryOfOrigin, locale);
+  const showOriginalPolishLabelNotice = isEnglishLocale(locale)
+    && Boolean(ingredients?.trim() || nutritionFacts?.servingSize?.trim());
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -64,6 +72,16 @@ export function NutritionModal({
           <Dialog.Description className="sr-only">
             {t('nutritionDialogDescription', { name: productName })}
           </Dialog.Description>
+
+          {showOriginalPolishLabelNotice && (
+            <p
+              className="mb-4 rounded-lg border px-3 py-2 text-xs leading-relaxed"
+              style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}
+              data-testid="nutrition-original-label-language"
+            >
+              {t('originalPolishLabelNotice')}
+            </p>
+          )}
 
           {/* Nutrition facts table */}
           {nutritionFacts && (
@@ -170,13 +188,13 @@ export function NutritionModal({
           )}
 
           {/* Country of origin */}
-          {countryOfOrigin && (
+          {displayCountryOfOrigin && (
             <div>
               <h3 className="text-sm font-semibold mb-1" style={{ color: 'var(--color-foreground)' }}>
                 {t('origin')}
               </h3>
               <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                {countryOfOrigin}
+                {displayCountryOfOrigin}
               </p>
             </div>
           )}

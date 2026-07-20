@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { ArrowDownUp, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { useClient, useQuery, type CombinedError } from 'urql';
@@ -12,6 +12,10 @@ import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useHydrated } from '@/hooks/use-hydrated';
 import { Link, useRouter } from '@/i18n/navigation';
+import {
+  getCatalogCategoryDisplay,
+  getLocalizedCountryOrigin,
+} from '@/lib/catalog-display-localization';
 import {
   PRODUCT_COUNTRY_ORIGINS_QUERY,
   PRODUCT_DIETARY_AVAILABILITY_QUERY,
@@ -94,11 +98,17 @@ interface CategoryFilterOption {
 
 interface CountryOriginFilterOption {
   value: string;
+  label: string;
+  count: number;
+}
+
+interface ProductCountryOriginNode {
+  value: string;
   count: number;
 }
 
 interface ProductCountryOriginsQueryResponse {
-  productCountryOrigins: CountryOriginFilterOption[] | null;
+  productCountryOrigins: ProductCountryOriginNode[] | null;
 }
 
 interface ProductDietaryAvailabilityQueryResponse {
@@ -205,6 +215,7 @@ export function ProductListingClient({
   const tCommon = useTranslations('common');
   const tHome = useTranslations('home');
   const tAllergens = useTranslations('allergens');
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const router = useRouter();
   const isHydrated = useHydrated();
@@ -388,15 +399,16 @@ export function ProductListingClient({
       .filter((origin) => origin?.value?.trim())
       .map((origin) => ({
         value: origin.value.trim(),
+        label: getLocalizedCountryOrigin(origin.value, locale) ?? origin.value.trim(),
         count: Number(origin.count) || 0,
       }))
       .sort((left, right) => {
         if (left.value === 'Wietnam') return -1;
         if (right.value === 'Wietnam') return 1;
         if (right.count !== left.count) return right.count - left.count;
-        return left.value.localeCompare(right.value, 'pl');
+        return left.label.localeCompare(right.label, locale);
       });
-  }, [countryOriginsResult.data]);
+  }, [countryOriginsResult.data, locale]);
   const availableCategories = useMemo(() => {
     const categories = new Map<string, CategoryFilterOption>();
 
@@ -404,21 +416,24 @@ export function ProductListingClient({
       const category = (product as GroceryProduct & Record<string, any>)?.category;
       const id = typeof category?.id === 'string' ? category.id : null;
       const name = typeof category?.name === 'string' ? category.name : null;
+      const slug = typeof category?.slug === 'string' ? category.slug : null;
 
-      if (!id || !name) continue;
+      if (!id || !name || !slug) continue;
+
+      const displayCategory = getCatalogCategoryDisplay({ id, name, slug }, locale);
 
       const existing = categories.get(id);
       categories.set(id, {
         id,
-        name,
+        name: displayCategory?.name ?? name,
         count: (existing?.count ?? 0) + 1,
       });
     }
 
-    return Array.from(categories.values()).sort((left, right) => left.name.localeCompare(right.name));
-  }, [filterSourceProducts]);
+    return Array.from(categories.values()).sort((left, right) => left.name.localeCompare(right.name, locale));
+  }, [filterSourceProducts, locale]);
   const categoryNameById = useMemo(() => new Map(availableCategories.map((category) => [category.id, category.name])), [availableCategories]);
-  const countryOriginByValue = useMemo(() => new Map(availableCountryOrigins.map((origin) => [origin.value, origin.value])), [availableCountryOrigins]);
+  const countryOriginByValue = useMemo(() => new Map(availableCountryOrigins.map((origin) => [origin.value, origin.label])), [availableCountryOrigins]);
 
   const normalizedCommittedFilters = useMemo(
     () => normalizeFiltersState(committedFilters, priceBounds),
@@ -545,7 +560,7 @@ export function ProductListingClient({
 
     return (
       <>
-        {activeCategoryIds.length === 0 && !categoryFilterUnavailable && (
+        {!hasCategoryNavigation && activeCategoryIds.length === 0 && !categoryFilterUnavailable && (
           <fieldset className="space-y-3">
             <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
               {t('categoryFilter')}
@@ -600,7 +615,7 @@ export function ProductListingClient({
                   }}
                   aria-pressed={normalizedFilters.countryOfOrigin.includes(origin.value)}
                 >
-                  {origin.value}
+                  {origin.label}
                   <span className="ml-1 tabular-nums" aria-hidden="true">
                     {origin.count}
                   </span>

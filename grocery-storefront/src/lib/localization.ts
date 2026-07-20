@@ -1,10 +1,7 @@
 import type { GroceryProduct } from '@/types';
+import { isEnglishLocale } from '@/lib/catalog-display-localization';
 
 type ProductTranslation = NonNullable<GroceryProduct['translation']>;
-
-function isEnglishLocale(locale: string | null | undefined): boolean {
-  return locale?.toLowerCase().startsWith('en') ?? false;
-}
 
 function clean(value: string | null | undefined): string | null {
   const trimmed = value?.trim();

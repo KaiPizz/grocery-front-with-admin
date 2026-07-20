@@ -1,0 +1,141 @@
+{
+  "version": 2,
+  "batch": "asiandeligo-public-taxonomy-backup-20260720-v1",
+  "preparedAt": "2026-07-20T18:03:25.000Z",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "categoryMoves": [
+    {
+      "sku": "ADG-000103",
+      "name": "Sos Hoisin 200ml - Flying Goose",
+      "expectedCategorySlug": "unmapped",
+      "targetCategorySlug": "sosy-marynaty",
+      "mappingType": "business",
+      "confidence": "high",
+      "reason": "Hoisin sauce belongs with sauces and marinades."
+    },
+    {
+      "sku": "ADG-000277",
+      "name": "Czerwona fasolka azuki 900g - Valle Del Sole",
+      "expectedCategorySlug": "pozostałe-produkty",
+      "targetCategorySlug": "ryż-i-inne-ziarna",
+      "mappingType": "business",
+      "confidence": "medium",
+      "reason": "Azuki is a dried pulse; rice and other grains is the closest existing dry-pantry category."
+    },
+    {
+      "sku": "ADG-000393",
+      "name": "Ryż basmati 5kg - Laila",
+      "expectedCategorySlug": "unmapped",
+      "targetCategorySlug": "ryż-i-inne-ziarna",
+      "mappingType": "business",
+      "confidence": "high",
+      "reason": "Basmati rice belongs with rice and grains."
+    },
+    {
+      "sku": "ADG-000607",
+      "name": "Koszyk Wioli - Rodowity Koreańczyk",
+      "expectedCategorySlug": "kategoria-tymczasowa",
+      "targetCategorySlug": "prezenty",
+      "mappingType": "business",
+      "confidence": "high",
+      "reason": "The product is a gift basket."
+    },
+    {
+      "sku": "ADG-000641",
+      "name": "Tamaryndowiec, miąższ w kostce 400g - Thai Dancer",
+      "expectedCategorySlug": "unmapped",
+      "targetCategorySlug": "pasty-smakowe",
+      "mappingType": "business",
+      "confidence": "medium",
+      "reason": "Tamarind pulp blocks are closest to the existing flavor-pastes category, though the format is not a prepared paste."
+    },
+    {
+      "sku": "ADG-000648",
+      "name": "Pasta z tamaryndowca 114g - Asia Kitchen",
+      "expectedCategorySlug": "unmapped",
+      "targetCategorySlug": "pasty-smakowe",
+      "mappingType": "business",
+      "confidence": "high",
+      "reason": "Tamarind paste belongs with flavor pastes."
+    },
+    {
+      "sku": "ADG-000690",
+      "name": "Przyprawa Pięć Smaków 50g - Mee Chun",
+      "expectedCategorySlug": "kategoria-tymczasowa",
+      "targetCategorySlug": "przyprawy",
+      "mappingType": "business",
+      "confidence": "high",
+      "reason": "Five-spice powder belongs with seasonings."
+    },
+    {
+      "sku": "ADG-000781",
+      "name": "Ryż jaśminowy Premium Quality Orange 5kg - Royal Umbrella",
+      "expectedCategorySlug": "unmapped",
+      "targetCategorySlug": "ryż-i-inne-ziarna",
+      "mappingType": "business",
+      "confidence": "high",
+      "reason": "Jasmine rice belongs with rice and grains."
+    },
+    {
+      "sku": "ADG-000791",
+      "name": "Kostki bulionowe PHO BO, wołowe 75g - Ong ChaVa",
+      "expectedCategorySlug": "unmapped",
+      "targetCategorySlug": "buliony",
+      "mappingType": "business",
+      "confidence": "high",
+      "reason": "Bouillon cubes belong with bouillons."
+    },
+    {
+      "sku": "ADG-001694",
+      "name": "Mieszanka przypraw do dania Palabok 57g - Mama Sita's",
+      "expectedCategorySlug": "kategoria-tymczasowa",
+      "targetCategorySlug": "przyprawy",
+      "mappingType": "business",
+      "confidence": "high",
+      "reason": "The product is a seasoning mix."
+    }
+  ],
+  "categoryStateChanges": [
+    {
+      "slug": "kategoria-tymczasowa",
+      "expectedActive": true,
+      "targetActive": false,
+      "expectedProductsBeforeMove": 3
+    },
+    {
+      "slug": "unmapped",
+      "expectedActive": true,
+      "targetActive": false,
+      "expectedProductsBeforeMove": 6
+    }
+  ],
+  "retainedCategoryChecks": [
+    {
+      "slug": "pozostałe-produkty",
+      "expectedActive": true,
+      "expectedProductsBeforeMove": 7,
+      "expectedProductsAfterMove": 6
+    }
+  ],
+  "retainedCategories": [
+    {
+      "slug": "pozostałe-produkty",
+      "reason": "The one live product moves out, but six non-live draft products remain; category state is not changed."
+    },
+    {
+      "slug": "sosy-sojowe",
+      "reason": "Duplicate-category consolidation is outside the exact-ten public-coverage scope."
+    },
+    {
+      "slug": "sosy-i-marynaty",
+      "reason": "Duplicate-category consolidation is outside the exact-ten public-coverage scope."
+    }
+  ],
+  "notes": [
+    "The historical 18-move taxonomy plan remains unchanged and is not the execution artifact for this batch.",
+    "ADG-000277 and ADG-000641 are explicitly recorded as medium-confidence business mappings.",
+    "Source categories are deactivated, not deleted, and persistent backup/audit rows are retained.",
+    "No product price, stock, content, publication state, order, reservation, or translation is changed."
+  ]
+}

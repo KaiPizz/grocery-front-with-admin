@@ -1113,8 +1113,10 @@ build_and_package() {
   run_sanitized npm --prefix "$store_app" run test:customer-account-contract
   run_sanitized npm --prefix "$store_app" run test:security-headers
   run_sanitized npm --prefix "$store_app" run test:static-config
+  run_sanitized npm --prefix "$store_app" run test:catalog-audit
   (cd "$store_app" && run_sanitized node --test tests/tracking-script-security.test.mjs)
   (cd "$store_app" && run_sanitized npx playwright test \
+    tests/catalog-display-localization.regression-1.spec.ts \
     tests/mobile-products-page.spec.ts \
     tests/mobile-pd-extras.spec.ts \
     tests/product-card-scan-value.spec.ts \
@@ -1184,7 +1186,7 @@ build_and_package() {
     "npm-audit-high,lint,unit,tsc,production-build,standalone-smoke"
   write_manifest_and_archive \
     "storefront" "$store_app" "$store_stage" "$store_app/.env.local" "$STORE_RELEASE_ID" \
-    "npm-audit-high,lint,tsc,auth-contracts,security-contracts,dietary-playwright,production-build,standalone-smoke"
+    "npm-audit-high,lint,tsc,auth-contracts,security-contracts,catalog-audit,dietary-localization-playwright,production-build,standalone-smoke"
 
   note "Artifact gate passed (admin BUILD_ID $ADMIN_BUILD_ID; storefront BUILD_ID $STORE_BUILD_ID)"
 }

@@ -218,6 +218,7 @@
     "productInformation": "Product information",
     "legalFoodInfo": "Information for shoppers",
     "packageLabelNotice": "Data comes from the product catalog. Where a field is not filled in, check the package label before purchase or at pickup.",
+    "originalPolishLabelNotice": "Free-text label information below is shown in the original Polish catalog language and has not been machine translated.",
     "foodAttributes": "Product attributes",
     "missingCatalogFields": "Needs catalog completion: {fields}.",
     "catalogMissing": "Missing from catalog",

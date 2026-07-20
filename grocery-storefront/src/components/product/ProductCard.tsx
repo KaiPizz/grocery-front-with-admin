@@ -11,6 +11,10 @@ import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { Link } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import {
+  getCatalogCategoryDisplay,
+  getLocalizedCountryOrigin,
+} from '@/lib/catalog-display-localization';
 import { getLocalizedProductName } from '@/lib/localization';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
@@ -124,6 +128,8 @@ export function ProductCard({
   const isInCart = cartQuantity > 0;
   const displayedQuantity = isInCart ? cartQuantity : quantity;
   const addToCartLabel = t('common.addToCart');
+  const displayCategory = getCatalogCategoryDisplay(product.category, locale);
+  const displayCountryOfOrigin = getLocalizedCountryOrigin(product.countryOfOrigin, locale);
   const storageZoneSymbol = product.storageZone
     ? product.storageZone === 'FROZEN'
       ? '\u2744'
@@ -132,7 +138,7 @@ export function ProductCard({
         : '\u2600'
     : null;
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
-  const scanFacts = [product.category?.name, product.countryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
+  const scanFacts = [displayCategory?.name, displayCountryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
   const revealIdleActions = actionVisibility === 'reveal';
   const hiddenActionClass = 'invisible pointer-events-none translate-y-1 opacity-0 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100';
   const wishlistActionClass = revealIdleActions && !isWishlisted ? hiddenActionClass : 'translate-y-0 opacity-100';
@@ -575,6 +581,7 @@ export function ProductCard({
                 pricePerUnit={product.pricePerUnit}
                 unitOfMeasure={product.unitOfMeasure}
                 currency={currency}
+                locale={locale}
                 className="block text-[10px] mt-0.5"
               />
               {showCompareAtPrice && (
