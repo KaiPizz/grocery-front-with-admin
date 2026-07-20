@@ -10,6 +10,7 @@ import { safeReturnPath } from '@/lib/auth/safe-return-path';
 import { isValidOptionalPhoneNumber } from '@/lib/phone-validation';
 import { useAuthStore } from '@/stores/auth-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import type { AuthError } from '@/types';
 import { SocialSignIn } from './SocialSignIn';
 
 interface AuthFormProps {
@@ -21,6 +22,27 @@ type AuthField = 'fullName' | 'email' | 'phone' | 'password' | 'confirmPassword'
 interface AuthFormError {
   message: string;
   fields: AuthField[];
+}
+
+const AUTH_FIELD_ALIASES: Record<string, AuthField> = {
+  fullname: 'fullName',
+  name: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  password: 'password',
+  confirmpassword: 'confirmPassword',
+};
+
+function getAuthErrorFields(errors: AuthError[]): AuthField[] {
+  return [...new Set(errors.flatMap((error) => {
+    const normalizedField = error.field
+      ?.trim()
+      .replace(/^input\./i, '')
+      .replace(/[^a-z]/gi, '')
+      .toLowerCase();
+    const field = normalizedField ? AUTH_FIELD_ALIASES[normalizedField] : undefined;
+    return field ? [field] : [];
+  }))];
 }
 
 export function AuthForm({ mode }: AuthFormProps) {
@@ -137,7 +159,8 @@ export function AuthForm({ mode }: AuthFormProps) {
 
     if (!result.success) {
       const message = mode === 'login' ? t('loginFailed') : t('registerFailed');
-      showError(message, mode === 'login' ? ['email', 'password'] : []);
+      const apiFields = getAuthErrorFields(result.errors);
+      showError(message, apiFields.length > 0 ? apiFields : mode === 'login' ? ['email', 'password'] : []);
       return;
     }
 
