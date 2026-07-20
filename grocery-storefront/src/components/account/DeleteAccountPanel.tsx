@@ -129,6 +129,7 @@ export function DeleteAccountPanel({ profile }: DeleteAccountPanelProps) {
         confirming ? (
           <form
             id="delete-account-confirmation"
+            method="post"
             className="mt-5 space-y-4 border-t pt-5"
             style={{ borderColor: 'var(--color-border)' }}
             onSubmit={handleDelete}

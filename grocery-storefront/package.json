@@ -12,7 +12,7 @@
     "lint": "eslint src",
     "test:e2e": "playwright test",
     "test:production-smoke": "node tests/production-standalone-smoke.mjs",
-    "test:customer-account-contract": "node --test tests/customer-account-p0-contract.test.mjs tests/customer-auth-hardening-contract.test.mjs tests/password-auth-contract.test.mjs tests/account-deletion-contract.test.mjs tests/account-provider-linking-contract.test.mjs tests/google-auth-contract.test.mjs tests/facebook-auth-contract.test.mjs tests/privacy-social-auth-contract.test.mjs tests/auth-policy.test.mjs tests/safe-return-path.test.mjs",
+    "test:customer-account-contract": "node --test tests/customer-account-p0-contract.test.mjs tests/customer-auth-hardening-contract.test.mjs tests/password-auth-contract.test.mjs tests/account-deletion-contract.test.mjs tests/account-provider-linking-contract.test.mjs tests/google-auth-contract.test.mjs tests/facebook-auth-contract.test.mjs tests/privacy-social-auth-contract.test.mjs tests/form-post-fallback-contract.test.mjs tests/auth-policy.test.mjs tests/safe-return-path.test.mjs",
     "test:security-headers": "node --test tests/security-headers-contract.test.mjs",
     "test:static-config": "node --test tests/static-config-contract.test.mjs",
     "test:checkout-contract": "node --test tests/checkout-backend-contract.test.mjs",

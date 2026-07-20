@@ -482,6 +482,7 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
 
   return (
     <form
+      method="post"
       onSubmit={onSubmit}
       className="rounded-2xl border p-4 mb-5"
       style={{ borderColor: 'var(--color-border)' }}

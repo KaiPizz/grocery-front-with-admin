@@ -147,7 +147,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             .
           </p>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form method="post" className="space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
               <label className="block">
                 <span className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-foreground)' }}>

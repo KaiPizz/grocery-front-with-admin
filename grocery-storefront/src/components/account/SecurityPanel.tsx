@@ -154,7 +154,7 @@ export function SecurityPanel() {
       />
 
       {!providerPasswordIsolation && (hasPassword ? (
-        <form className="max-w-lg space-y-4" onSubmit={handleSubmit}>
+        <form method="post" className="max-w-lg space-y-4" onSubmit={handleSubmit}>
           <PasswordField
             id="security-current-password"
             label={tAccount('currentPassword')}

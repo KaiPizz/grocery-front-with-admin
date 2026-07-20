@@ -197,6 +197,7 @@ function LoginContent() {
                 </p>
 
                 <form
+                  method="post"
                   onSubmit={handleSubmit}
                   noValidate
                   aria-busy={loading}

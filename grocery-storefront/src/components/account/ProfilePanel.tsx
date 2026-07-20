@@ -119,7 +119,7 @@ export function ProfilePanel() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5 max-w-lg">
+      <form method="post" onSubmit={handleSubmit} className="space-y-5 max-w-lg">
         <div>
           <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-foreground)' }}>
             {tAccount('emailLabel')}

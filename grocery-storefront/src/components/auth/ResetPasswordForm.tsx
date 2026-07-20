@@ -124,7 +124,7 @@ export function ResetPasswordForm() {
               </Link>
             </div>
           ) : (
-            <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+            <form method="post" className="mt-6 space-y-4" onSubmit={handleSubmit}>
               {tokenReady && !token && (
                 <p className="rounded-xl border p-3 text-sm" style={{ color: 'var(--color-destructive)', borderColor: 'var(--color-border)' }} role="alert">
                   {t('resetPasswordInvalidLink')}

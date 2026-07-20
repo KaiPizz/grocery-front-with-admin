@@ -97,7 +97,7 @@ export function ForgotPasswordForm() {
               </button>
             </div>
           ) : (
-            <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+            <form method="post" className="mt-6 space-y-4" onSubmit={handleSubmit}>
               <label className="block" htmlFor="forgot-password-email">
                 <span className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
                   {t('email')}
