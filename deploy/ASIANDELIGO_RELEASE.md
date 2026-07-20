@@ -111,9 +111,10 @@ remote-build, skipped-test, partial-component and manual-rollback flags.
   in this code-only release; the coordinator independently proves ports 3022
   and 4100 are blocked from the Internet, so public access remains HTTPS-only
   through Nginx. A future PM2 topology hardening is a separate reviewed change.
-- Public/loopback routes, build identity, PM2 cwd, security headers, unauthenticated
-  admin protection, customer guest-session behavior, fresh startup logs and
-  shared-state fingerprints are verified before commit.
+- Public/loopback routes, build identity, PM2 cwd, security headers,
+  unauthenticated admin protection, the clean-guest `200` session payload
+  (`authenticated: false`, `customer: null`, `NO_SESSION_COOKIE`), fresh startup
+  logs and shared-state fingerprints are verified before commit.
 - Any failure after the first symlink swap restores both exact old targets,
   restarts both services and verifies baseline health. Routine manual rollback
   is deliberately unsupported; later recovery needs a separately reviewed

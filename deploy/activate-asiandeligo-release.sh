@@ -537,14 +537,33 @@ verify_admin() {
 }
 
 verify_storefront() {
-  local path status
+  local path status session_body
   for path in / /login /register /products /categories; do
     wait_for_status "http://127.0.0.1:$STORE_PORT$path" 200
     wait_for_status "$STORE_PUBLIC_ORIGIN$path" 200
   done
 
-  status="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 "$STORE_PUBLIC_ORIGIN/api/auth/session")"
-  [[ "$status" == "401" ]] || fail "guest customer session endpoint returned $status"
+  session_body="$(mktemp /tmp/asiandeligo-store-session.XXXXXXXX)"
+  status="$(curl -sS -o "$session_body" -w '%{http_code}' --max-time 10 "$STORE_PUBLIC_ORIGIN/api/auth/session" || true)"
+  if [[ "$status" != "200" ]]; then
+    rm -f -- "$session_body"
+    fail "guest customer session endpoint returned $status"
+    return 1
+  fi
+  if ! node - "$session_body" <<'NODE'
+const fs = require('node:fs');
+const payload = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+if (payload.authenticated !== false || payload.customer !== null ||
+    payload.code !== 'NO_SESSION_COOKIE') {
+  throw new Error('Guest customer session payload is invalid');
+}
+NODE
+  then
+    rm -f -- "$session_body"
+    fail "guest customer session payload is invalid"
+    return 1
+  fi
+  rm -f -- "$session_body"
 
   local headers
   headers="$(mktemp /tmp/asiandeligo-store-headers.XXXXXXXX)"

@@ -33,6 +33,7 @@ const resendVerificationRouteSource = read('../src/app/api/auth/resend-verificat
 const emailVerificationBannerSource = read('../src/components/account/EmailVerificationBanner.tsx');
 const accountPageSource = read('../src/app/[locale]/(shop)/account/page.tsx');
 const proxyPolicySource = read('../src/lib/auth/proxy-policy.ts');
+const releaseActivatorSource = read('../../deploy/activate-asiandeligo-release.sh');
 const plMessages = JSON.parse(read('../src/messages/pl.json'));
 const enMessages = JSON.parse(read('../src/messages/en.json'));
 
@@ -237,8 +238,18 @@ test('definitive local session clearing removes shared-device customer state', (
 
 test('ordinary guests are distinct from rejected credentials during bootstrap', () => {
   assert.match(sessionRouteSource, /code: 'NO_ACCESS_COOKIE'/);
-  assert.match(authStoreSource, /'invalid' \| 'missing' \| 'transient'/);
+  assert.match(sessionRouteSource, /code: 'NO_SESSION_COOKIE'/);
+  assert.match(authStoreSource, /'invalid' \| 'missing' \| 'transient' \| 'guest'/);
+  assert.match(authStoreSource, /payload\.code === 'NO_SESSION_COOKIE'/);
   assert.match(authStoreSource, /if \(hadRejectedCredentials\)/);
+  assert.match(
+    releaseActivatorSource,
+    /if \[\[ "\$status" != "200" \]\]; then[\s\S]*guest customer session endpoint returned \$status[\s\S]*payload\.authenticated !== false[\s\S]*payload\.code !== 'NO_SESSION_COOKIE'/,
+  );
+  assert.doesNotMatch(
+    releaseActivatorSource,
+    /\[\[ "\$status" == "401" \]\] \|\| fail "guest customer session endpoint returned \$status"/,
+  );
 });
 
 test('generic REST proxy cannot reach token-producing customer endpoints', () => {

@@ -2,11 +2,24 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-07-18
+> **Last updated:** 2026-07-20
 
 ---
 
 ## Project Documentation
+
+### Auth behavior changed but the production health gate kept the old status
+- **Error:** The clean-guest session route changed from `401` to `200`, while
+  the guarded production activator still required `401`; activation would have
+  rejected the correct release and automatically rolled both components back.
+- **Cause:** Browser regression coverage was updated, but the same behavior was
+  duplicated as an operational assertion outside the storefront test tree.
+- **Fix:** Changed the activator to require HTTP `200` plus the exact guest
+  payload and added a customer-auth contract test that reads the committed
+  activator.
+- **Rule:** When an externally observed route contract changes, search deploy,
+  smoke, monitoring, and rollback scripts for duplicated status/body checks and
+  update them in the same candidate before requesting production approval.
 
 ### Treated a dotenv file as a shell script during release design
 - **Error:** The first guarded release draft sourced the storefront production

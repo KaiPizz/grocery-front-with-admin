@@ -1,10 +1,23 @@
 # Feature Progress
 
-> **Last updated:** 2026-07-18
+> **Last updated:** 2026-07-20
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-07-20 Asia Deli Go Auth Polish And Release Gate
+
+- Customer login and registration now announce validation/API errors, connect
+  them to the affected fields, and move focus to the first invalid input.
+- Clean guests receive a normal `200` session response without unnecessary
+  refresh `401` noise, while refresh-cookie recovery and legacy-token migration
+  remain covered.
+- Known Polish admin-config navigation/footer copy is localized on English
+  storefront routes, including stable Asia Deli Go brand tagline handling.
+- The guarded production activator now verifies the new clean-guest `200`
+  payload instead of the obsolete `401` contract. Production remains unchanged
+  until the revised exact commit passes check-only and receives owner approval.
 
 ## 2026-07-18 Asia Deli Go Guarded Release Preparation
 
@@ -203,6 +216,7 @@
 | SEO (`/admin/seo`) | ✅ | Meta title, description, OG tags. |
 | Tracking (`/admin/tracking`) | ✅ | Analytics script injection (GA, custom). |
 | Media Library (`/admin/media`) | ✅ | Image upload, gallery browser. |
+| Account security (`/admin/security`) | ✅ | 2026-07-18: authenticated self-service password change backed by persistent atomic auth state; success revokes prior sessions and returns to login. |
 | Login (`/login`) | ✅ | Admin auth with session cookie. |
 
 ### Banner Block Editors
@@ -229,6 +243,7 @@
 |-------|--------|-------|
 | `/api/config/[slug]` | ✅ | GET published config, PUT draft/publish with `x-api-key` auth. |
 | `/api/auth` | ✅ | Session login/logout. |
+| `/api/auth/password` | ✅ | 2026-07-18: verifies the current password, rate-limits changes, atomically rotates the scrypt hash, and revokes prior sessions. |
 | `/api/media` | ✅ | Upload handling. |
 | `/api/health` | ✅ | Health check endpoint. |
 
@@ -277,7 +292,6 @@
 | Kamito checkout backend methods are not wired in production | High | 2026-06-06 backend audit: `availablePaymentMethods(channel:"kamito")=[]` and `availableShippingMethods(channel:"kamito")=[]`, so checkout cannot complete. Frontend must not fake `bank_transfer` or `PICKUP`; backend must link/create the channel methods and prove guest/auth test orders. |
 | Kamito backend ops notifications are not wired | High | 2026-05-24: backend confirmed `ORDER_CREATED` webhook/subscription is not configured and checkout completion emits no event. Storefront must not promise automated email/SMS; launch needs backend webhook/event wiring or manual ops order monitoring. |
 | Kamito product media contains duplicate CDN assets | Medium | 2026-05-25: live CDN bytes confirm duplicate image files under different URLs on multi-image products, e.g. `KIMCHI-5216` sort orders 2/4 and 3/5 are exact SHA-256 matches, and `KIMCHI-5215` sort orders 2/4 match. Frontend URL de-dupe cannot catch this because URLs differ; backend importer/data cleanup needs to remove duplicate assets. |
-| Asia Deli Go admin has no self-service password change | Medium | 2026-07-18: the production admin credential is rotated, protected with scrypt, stored in the operator vault, and login is rate-limited, but `/admin` has no authenticated password-change UI/API. Rotation currently requires the guarded operational env/vault procedure and invalidates existing sessions. |
 | Asia Deli Go storefront PM2 topology is legacy | Low | 2026-07-18: port 3022 is bound to `0.0.0.0` and storefront runtime values remain in root-only PM2 metadata/dump. UFW blocks direct Internet access and `/root` is mode 0700. Purging the metadata and moving the listener to loopback must be a separate reviewed PM2-definition migration, not bundled into a code release. |
 
 ---
