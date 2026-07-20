@@ -9,10 +9,12 @@ RUN npm ci --only=production
 # Build the application
 FROM base AS builder
 WORKDIR /app
+ARG NEXT_PUBLIC_SALON_SLUG
+ENV NEXT_PUBLIC_SALON_SLUG=$NEXT_PUBLIC_SALON_SLUG
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-RUN npm run build
+RUN test -n "$NEXT_PUBLIC_SALON_SLUG" && npm run build
 
 # Production image
 FROM base AS runner
@@ -27,12 +29,12 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/scripts/container-entrypoint.mjs /usr/local/lib/admin-container-entrypoint.mjs
 
-# Create data and uploads directories
-RUN mkdir -p ./data ./public/uploads && chown -R nextjs:nodejs ./data ./public/uploads
-
-USER nextjs
+# The entrypoint starts as root only to validate/bootstrap the persistent
+# volume, then irreversibly drops to nextjs before loading the application.
+RUN mkdir -p /app/shared && chown root:root /app/shared && chmod 755 /app/shared
 
 EXPOSE 4100
 
-CMD ["node", "server.js"]
+ENTRYPOINT ["node", "/usr/local/lib/admin-container-entrypoint.mjs"]

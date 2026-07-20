@@ -13,6 +13,8 @@
     "test:unit": "tsx --test",
     "test:production-smoke": "node scripts/production-standalone-smoke.mjs",
     "hash:admin-password": "tsx scripts/hash-admin-password.ts",
+    "bootstrap:admin-auth-state": "tsx scripts/bootstrap-admin-auth-state.ts",
+    "reset:admin-password": "tsx scripts/reset-admin-password.ts",
     "audit:kenmito-config": "tsx scripts/audit-kenmito-config.ts"
   },
   "dependencies": {

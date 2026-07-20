@@ -15,6 +15,7 @@ import {
   Home,
   LogOut,
   ImageIcon,
+  ShieldCheck,
 } from 'lucide-react';
 import { useLanguage, LangSwitcher } from '@/i18n';
 import { getClientSalonSlug } from '@/lib/client-config';
@@ -33,6 +34,12 @@ const NAV_HREFS = [
   { href: '/admin/media', key: 'nav.media', icon: ImageIcon },
 ];
 
+const SECURITY_NAV = {
+  href: '/admin/security',
+  key: 'nav.security',
+  icon: ShieldCheck,
+};
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -40,7 +47,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [loggingOut, setLoggingOut] = useState(false);
   const { t } = useLanguage();
   const salonSlug = SALON_SLUG;
-  const activeNav = NAV_HREFS.find(({ href }) => href === '/admin' ? pathname === '/admin' : pathname.startsWith(href));
+  const activeNav = [...NAV_HREFS, SECURITY_NAV].find(({ href }) =>
+    href === '/admin' ? pathname === '/admin' : pathname.startsWith(href)
+  );
 
   async function handleLogout() {
     setLoggingOut(true);
@@ -70,6 +79,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Sidebar */}
       <aside
+        id="admin-sidebar"
         className={`
           fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-slate-950 text-slate-100
           transform transition-transform duration-200 ease-out
@@ -93,7 +103,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </span>
           </Link>
           <button
+            type="button"
             onClick={() => setSidebarOpen(false)}
+            aria-label={t('common.closeNavigation')}
             className="rounded-md p-1.5 text-slate-300 hover:bg-white/10 hover:text-white lg:hidden"
           >
             <X className="h-5 w-5" />
@@ -112,6 +124,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={href}
                 href={href}
                 onClick={() => setSidebarOpen(false)}
+                aria-current={isActive ? 'page' : undefined}
                 className={`
                   flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium
                   transition-[background-color,color,box-shadow] duration-150
@@ -129,7 +142,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Footer with logout */}
         <div className="border-t border-white/10 px-3 py-3">
+          <Link
+            href={SECURITY_NAV.href}
+            onClick={() => setSidebarOpen(false)}
+            aria-current={pathname.startsWith(SECURITY_NAV.href) ? 'page' : undefined}
+            className={`mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-[background-color,color,box-shadow] duration-150 ${
+              pathname.startsWith(SECURITY_NAV.href)
+                ? 'bg-white/10 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <ShieldCheck className="h-4 w-4 shrink-0" />
+            <span>{t(SECURITY_NAV.key)}</span>
+          </Link>
           <button
+            type="button"
             onClick={handleLogout}
             disabled={loggingOut}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 transition-colors hover:bg-white/5 hover:text-white disabled:opacity-50"
@@ -145,7 +172,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Top bar */}
         <header className="flex h-16 items-center gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur lg:px-6">
           <button
+            type="button"
             onClick={() => setSidebarOpen(true)}
+            aria-label={t('common.openNavigation')}
+            aria-controls="admin-sidebar"
+            aria-expanded={sidebarOpen}
             className="rounded-md p-2 hover:bg-slate-100 lg:hidden"
           >
             <Menu className="h-5 w-5 text-slate-600" />

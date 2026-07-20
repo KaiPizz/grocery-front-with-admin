@@ -9,7 +9,7 @@ import { requireSameOrigin } from '@/lib/origin';
 import {
   constantTimeStringEqual,
   PasswordConfigurationError,
-  verifyConfiguredAdminPassword,
+  verifyConfiguredAdminPasswordWithState,
 } from '@/lib/password';
 import { setSessionCookie } from '@/lib/session';
 
@@ -71,9 +71,9 @@ export async function POST(request: NextRequest) {
     return response(503, 'Authentication service unavailable');
   }
 
-  let passwordMatches: boolean;
+  let passwordVerification;
   try {
-    passwordMatches = await verifyConfiguredAdminPassword(password);
+    passwordVerification = await verifyConfiguredAdminPasswordWithState(password);
   } catch (error) {
     if (error instanceof PasswordConfigurationError) {
       console.error('[auth] Admin credentials are not configured securely');
@@ -84,14 +84,14 @@ export async function POST(request: NextRequest) {
   }
 
   const usernameMatches = constantTimeStringEqual(username, configuredUsername);
-  if (!usernameMatches || !passwordMatches) {
+  if (!usernameMatches || !passwordVerification.matches) {
     return response(401, 'Invalid credentials');
   }
 
   clearLoginRateLimit(clientIp, username);
 
   try {
-    await setSessionCookie(configuredUsername);
+    await setSessionCookie(configuredUsername, passwordVerification.authState);
   } catch {
     console.error('[auth] Session creation failed');
     return response(503, 'Authentication service unavailable');

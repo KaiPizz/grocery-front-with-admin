@@ -69,10 +69,13 @@ Mở trình duyệt:
 
 ## Đăng nhập Admin Panel
 
-Admin production không có mật khẩu mặc định. Tài khoản và scrypt password hash
-được nạp từ runtime secret (`ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`). Sinh hash
-bằng `npm --prefix admin-panel run --silent hash:admin-password` và truyền mật
-khẩu qua stdin, không đặt plaintext trong command line, tài liệu hoặc Git.
+Admin production không có mật khẩu mặc định. Tên tài khoản được nạp từ runtime
+secret; scrypt hash ban đầu dùng để bootstrap file auth riêng tư trong
+thư mục `auth/` nằm cạnh `ADMIN_DATA_DIR`. Sinh hash bằng
+`npm --prefix admin-panel run --silent hash:admin-password` và truyền mật khẩu
+qua stdin, không đặt plaintext trong command line, tài liệu hoặc Git. Sau khi
+khởi tạo, admin có thể tự đổi mật khẩu tại `/admin/security`; đổi mật khẩu hoặc
+đăng xuất đều thu hồi mọi phiên cũ.
 
 ---
 

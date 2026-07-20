@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { getAdminAuthState, type AdminAuthState } from './admin-auth-state';
 import { requireSameOrigin } from './origin';
 import {
+  type AdminSession,
   getSessionCookieName,
   sessionMatchesConfiguredAdmin,
   SessionConfigurationError,
@@ -19,27 +21,52 @@ function jsonError(status: number, error: string): NextResponse {
  * Authorize an admin API request with the signed, HttpOnly session cookie.
  * Unsafe methods additionally require an exact same-origin request.
  */
-export async function requireAdminSession(
+export type AdminAuthenticationResult =
+  | {
+      authenticated: true;
+      session: AdminSession;
+      token: string;
+      authState: AdminAuthState;
+    }
+  | { authenticated: false; response: NextResponse };
+
+export async function authenticateAdminSession(
   request: NextRequest
-): Promise<NextResponse | null> {
+): Promise<AdminAuthenticationResult> {
   const originError = requireSameOrigin(request);
-  if (originError) return originError;
+  if (originError) return { authenticated: false, response: originError };
 
   const token = request.cookies.get(getSessionCookieName())?.value;
-  if (!token) return jsonError(401, 'Unauthorized');
+  if (!token) {
+    return { authenticated: false, response: jsonError(401, 'Unauthorized') };
+  }
 
   try {
-    const session = await verifySessionToken(token);
+    const authState = await getAdminAuthState();
+    const session = await verifySessionToken(token, { authState });
     if (!session || !sessionMatchesConfiguredAdmin(session)) {
-      return jsonError(401, 'Unauthorized');
+      return { authenticated: false, response: jsonError(401, 'Unauthorized') };
     }
-    return null;
+    return { authenticated: true, session, token, authState };
   } catch (error) {
     if (error instanceof SessionConfigurationError) {
       console.error('[auth] Admin session signing is not configured securely');
-      return jsonError(503, 'Authentication service unavailable');
+      return {
+        authenticated: false,
+        response: jsonError(503, 'Authentication service unavailable'),
+      };
     }
     console.error('[auth] Session verification failed');
-    return jsonError(503, 'Authentication service unavailable');
+    return {
+      authenticated: false,
+      response: jsonError(503, 'Authentication service unavailable'),
+    };
   }
+}
+
+export async function requireAdminSession(
+  request: NextRequest
+): Promise<NextResponse | null> {
+  const result = await authenticateAdminSession(request);
+  return result.authenticated ? null : result.response;
 }

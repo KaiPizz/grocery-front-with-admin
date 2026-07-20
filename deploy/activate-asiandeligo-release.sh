@@ -27,6 +27,9 @@ EXPECTED_STORE_ENV_OWNER="${15}"
 
 ADMIN_ENV="$ADMIN_BASE/shared/.env.runtime"
 STORE_ENV="$STORE_BASE/shared/.env.runtime"
+ADMIN_AUTH_DIR="$ADMIN_BASE/shared/auth"
+ADMIN_AUTH_STATE="$ADMIN_AUTH_DIR/admin-auth-state.json"
+ADMIN_AUTH_MARKER="$ADMIN_BASE/shared/.admin-auth-state-initialized"
 ADMIN_RELEASE="$ADMIN_BASE/releases/$ADMIN_RELEASE_ID"
 STORE_RELEASE="$STORE_BASE/releases/$STORE_RELEASE_ID"
 ADMIN_PORT=4100
@@ -41,6 +44,8 @@ OLD_ADMIN_PREVIOUS=""
 OLD_STORE_PREVIOUS=""
 ADMIN_PREVIOUS_PRESENT=""
 STORE_PREVIOUS_PRESENT=""
+ADMIN_AUTH_DEPLOY_LOCK_TOKEN=""
+ADMIN_AUTH_DEPLOY_LOCK_HELD=""
 
 fail() {
   printf 'ACTIVATION FAILED: %s\n' "$*" >&2
@@ -63,6 +68,156 @@ verify_env_file() {
     return 1
   fi
   [[ -s "$env_file" ]] || fail "runtime env is empty: $env_file"
+}
+
+verify_admin_auth_state() {
+  node - "$ADMIN_AUTH_DIR" "$ADMIN_AUTH_STATE" "$ADMIN_AUTH_MARKER" \
+    "$ADMIN_AUTH_DEPLOY_LOCK_TOKEN" <<'NODE'
+const fs = require('node:fs');
+const path = require('node:path');
+const [authDir, statePath, markerPath, expectedLockToken] = process.argv.slice(2);
+const sharedDir = path.dirname(markerPath);
+const lockPath = `${authDir}/admin-auth-state.lock`;
+const sharedMetadata = fs.lstatSync(sharedDir);
+if (!sharedMetadata.isDirectory() || sharedMetadata.isSymbolicLink() ||
+    sharedMetadata.uid !== 0 || sharedMetadata.gid !== 0 ||
+    (sharedMetadata.mode & 0o022) !== 0) {
+  throw new Error('Admin shared parent directory is unsafe');
+}
+const markerMetadata = fs.lstatSync(markerPath);
+if (!markerMetadata.isFile() || markerMetadata.isSymbolicLink() ||
+    (markerMetadata.mode & 0o777) !== 0o600 || markerMetadata.uid !== 0 ||
+    markerMetadata.gid !== 0 || fs.readFileSync(markerPath, 'utf8') !== 'admin-auth-state-v1\n') {
+  throw new Error('Admin auth-state migration marker is invalid');
+}
+const directoryMetadata = fs.lstatSync(authDir);
+if (!directoryMetadata.isDirectory() || directoryMetadata.isSymbolicLink() ||
+    (directoryMetadata.mode & 0o777) !== 0o700 || directoryMetadata.uid !== 0 ||
+    directoryMetadata.gid !== 0) {
+  throw new Error('Admin private auth directory is invalid');
+}
+if (fs.existsSync(lockPath)) {
+  const lockMetadata = fs.lstatSync(lockPath);
+  if (!expectedLockToken || !lockMetadata.isFile() || lockMetadata.isSymbolicLink() ||
+      (lockMetadata.mode & 0o777) !== 0o600 || lockMetadata.uid !== 0 ||
+      lockMetadata.gid !== 0 || lockMetadata.size < 1 || lockMetadata.size > 1024) {
+    throw new Error('Unexpected admin auth-state write lock is present');
+  }
+  const lock = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+  const lockKeys = Object.keys(lock).sort();
+  if (JSON.stringify(lockKeys) !== JSON.stringify(['createdAt', 'pid', 'purpose', 'token']) ||
+      lock.purpose !== 'deployment' || lock.token !== expectedLockToken ||
+      !Number.isSafeInteger(lock.pid) || lock.pid < 1 ||
+      typeof lock.createdAt !== 'string' || Number.isNaN(Date.parse(lock.createdAt))) {
+    throw new Error('Admin auth-state deployment lock is invalid');
+  }
+} else if (expectedLockToken) {
+  throw new Error('Admin auth-state deployment lock disappeared');
+}
+const metadata = fs.lstatSync(statePath);
+if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size < 1 ||
+    metadata.size > 8192 || (metadata.mode & 0o777) !== 0o600 ||
+    metadata.uid !== 0 || metadata.gid !== 0) {
+  throw new Error('Admin auth state metadata is invalid');
+}
+const value = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+const keys = Object.keys(value).sort();
+const expected = ['passwordHash', 'schemaVersion', 'sessionGeneration', 'updatedAt'];
+const hash = /^scrypt:N=(\d+),r=(\d+),p=(\d+):([A-Za-z0-9_-]+):([A-Za-z0-9_-]+)$/.exec(value.passwordHash || '');
+if (!hash) throw new Error('Admin auth state hash is invalid');
+const N = Number(hash[1]);
+const r = Number(hash[2]);
+const p = Number(hash[3]);
+const hashValid = N >= 16384 && N <= 131072 && (N & (N - 1)) === 0 &&
+  r >= 1 && r <= 16 && p >= 1 && p <= 4 &&
+  Buffer.from(hash[4], 'base64url').byteLength >= 16 &&
+  Buffer.from(hash[4], 'base64url').byteLength <= 64 &&
+  Buffer.from(hash[5], 'base64url').byteLength === 64;
+if (JSON.stringify(keys) !== JSON.stringify(expected) || value.schemaVersion !== 1 ||
+    !hashValid || !Number.isSafeInteger(value.sessionGeneration) ||
+    value.sessionGeneration < 1 || value.sessionGeneration >= Number.MAX_SAFE_INTEGER ||
+    typeof value.updatedAt !== 'string' || value.updatedAt.length > 64 ||
+    Number.isNaN(Date.parse(value.updatedAt))) {
+  throw new Error('Admin auth state content is invalid');
+}
+NODE
+}
+
+acquire_admin_auth_deploy_lock() {
+  [[ -z "$ADMIN_AUTH_DEPLOY_LOCK_HELD" ]] \
+    || { fail "admin auth-state deployment lock is already held"; return 1; }
+
+  ADMIN_AUTH_DEPLOY_LOCK_TOKEN="$(node -e "process.stdout.write(require('node:crypto').randomBytes(32).toString('base64url'))")"
+  if ! node - "$ADMIN_AUTH_DIR" "$ADMIN_AUTH_DEPLOY_LOCK_TOKEN" "$$" <<'NODE'
+const fs = require('node:fs');
+const path = require('node:path');
+const [authDir, token, ownerPidRaw] = process.argv.slice(2);
+const lockPath = path.join(authDir, 'admin-auth-state.lock');
+const payload = `${JSON.stringify({
+  pid: Number(ownerPidRaw),
+  createdAt: new Date().toISOString(),
+  purpose: 'deployment',
+  token,
+})}\n`;
+let descriptor;
+let lockCreated = false;
+try {
+  descriptor = fs.openSync(lockPath, 'wx', 0o600);
+  lockCreated = true;
+  fs.fchmodSync(descriptor, 0o600);
+  fs.fchownSync(descriptor, 0, 0);
+  fs.writeFileSync(descriptor, payload, 'utf8');
+  fs.fsyncSync(descriptor);
+  fs.closeSync(descriptor);
+  descriptor = undefined;
+  const directory = fs.openSync(authDir, 'r');
+  try { fs.fsyncSync(directory); } finally { fs.closeSync(directory); }
+} catch (error) {
+  if (descriptor !== undefined) {
+    try { fs.closeSync(descriptor); } catch {}
+  }
+  if (lockCreated) {
+    try { fs.unlinkSync(lockPath); } catch (cleanupError) {
+      if (cleanupError.code !== 'ENOENT') throw cleanupError;
+    }
+  }
+  throw error;
+}
+NODE
+  then
+    ADMIN_AUTH_DEPLOY_LOCK_TOKEN=""
+    fail "could not acquire the admin auth-state deployment lock"
+    return 1
+  fi
+
+  ADMIN_AUTH_DEPLOY_LOCK_HELD=1
+  verify_admin_auth_state
+}
+
+release_admin_auth_deploy_lock() {
+  [[ -n "$ADMIN_AUTH_DEPLOY_LOCK_HELD" ]] || return 0
+
+  node - "$ADMIN_AUTH_DIR" "$ADMIN_AUTH_DEPLOY_LOCK_TOKEN" <<'NODE'
+const fs = require('node:fs');
+const path = require('node:path');
+const [authDir, expectedToken] = process.argv.slice(2);
+const lockPath = path.join(authDir, 'admin-auth-state.lock');
+const metadata = fs.lstatSync(lockPath);
+if (!metadata.isFile() || metadata.isSymbolicLink() ||
+    (metadata.mode & 0o777) !== 0o600 || metadata.uid !== 0 || metadata.gid !== 0) {
+  throw new Error('Refusing to remove an unsafe admin auth-state deployment lock');
+}
+const lock = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+if (lock.purpose !== 'deployment' || lock.token !== expectedToken) {
+  throw new Error('Refusing to remove an admin auth-state lock owned by another writer');
+}
+fs.unlinkSync(lockPath);
+const directory = fs.openSync(authDir, 'r');
+try { fs.fsyncSync(directory); } finally { fs.closeSync(directory); }
+NODE
+
+  ADMIN_AUTH_DEPLOY_LOCK_HELD=""
+  ADMIN_AUTH_DEPLOY_LOCK_TOKEN=""
 }
 
 atomic_link() {
@@ -272,6 +427,17 @@ verify_pm2_release() {
   fi
 }
 
+verify_admin_runtime_identity() {
+  local pid uid_set gid_set
+  pid="$(pm2 pid "$ADMIN_SERVICE")"
+  [[ "$pid" =~ ^[1-9][0-9]*$ ]] \
+    || { fail "$ADMIN_SERVICE has no live PID"; return 1; }
+  uid_set="$(awk '/^Uid:/ { print $2 ":" $3 ":" $4 ":" $5 }' "/proc/$pid/status")"
+  gid_set="$(awk '/^Gid:/ { print $2 ":" $3 ":" $4 ":" $5 }' "/proc/$pid/status")"
+  [[ "$uid_set" == "0:0:0:0" && "$gid_set" == "0:0:0:0" ]] \
+    || fail "$ADMIN_SERVICE must run with the pinned root runtime identity"
+}
+
 shared_tree_fingerprint() {
   local path="$1"
   if [[ -f "$path" ]]; then
@@ -335,6 +501,8 @@ check_fresh_logs() {
 }
 
 verify_admin() {
+  verify_admin_auth_state
+  verify_admin_runtime_identity
   wait_for_status "http://127.0.0.1:$ADMIN_PORT/api/health" 200
   wait_for_status "$ADMIN_PUBLIC_ORIGIN/api/health" 200
 
@@ -435,6 +603,7 @@ rollback_transaction() {
   [[ "$(readlink -f "$STORE_BASE/current")" == "$OLD_STORE" ]] || rollback_failed=1
   verify_pm2_release "$ADMIN_SERVICE" "$OLD_ADMIN" "$ADMIN_PORT" || rollback_failed=1
   verify_pm2_release "$STORE_SERVICE" "$OLD_STORE" "$STORE_PORT" || rollback_failed=1
+  verify_admin_runtime_identity || rollback_failed=1
   verify_pm2_metadata || rollback_failed=1
   [[ "$(pm2_definition_fingerprint "$ADMIN_SERVICE")" == "$ADMIN_PM2_BEFORE" ]] || rollback_failed=1
   [[ "$(pm2_definition_fingerprint "$STORE_SERVICE")" == "$STORE_PM2_BEFORE" ]] || rollback_failed=1
@@ -451,6 +620,12 @@ on_exit() {
   local rc=$?
   if [[ "$rc" -ne 0 && -z "$COMMITTED" && ( -n "$ADMIN_SWAPPED" || -n "$STORE_SWAPPED" ) ]]; then
     rollback_transaction
+  fi
+  if [[ -n "$ADMIN_AUTH_DEPLOY_LOCK_HELD" ]]; then
+    if ! release_admin_auth_deploy_lock; then
+      printf 'EMERGENCY: could not release the admin auth-state deployment lock.\n' >&2
+      rc=1
+    fi
   fi
   rmdir /tmp/asiandeligo-release.lock.d /tmp/enail-fe-deploy.lock.d /tmp/enail-be-deploy.lock.d 2>/dev/null || true
   trap - EXIT
@@ -487,6 +662,7 @@ verify_env_file "$STORE_ENV" "$EXPECTED_STORE_ENV_OWNER"
   || fail "admin runtime env changed before activation"
 [[ "$(sha256sum "$STORE_ENV" | awk '{print $1}')" == "$EXPECTED_STORE_ENV_SHA256" ]] \
   || fail "storefront runtime env changed before activation"
+verify_admin_auth_state
 
 for release in "$ADMIN_RELEASE" "$STORE_RELEASE"; do
   [[ -d "$release" && -f "$release/server.js" && -f "$release/RELEASE_MANIFEST.txt" ]] \
@@ -524,9 +700,13 @@ fi
 verify_pm2_metadata
 verify_pm2_release "$ADMIN_SERVICE" "$OLD_ADMIN" "$ADMIN_PORT"
 verify_pm2_release "$STORE_SERVICE" "$OLD_STORE" "$STORE_PORT"
+verify_admin_runtime_identity
+acquire_admin_auth_deploy_lock
 
 ADMIN_ENV_BEFORE="$(shared_tree_fingerprint "$ADMIN_ENV")"
 STORE_ENV_BEFORE="$(shared_tree_fingerprint "$STORE_ENV")"
+ADMIN_AUTH_MARKER_BEFORE="$(shared_tree_fingerprint "$ADMIN_AUTH_MARKER")"
+ADMIN_AUTH_BEFORE="$(shared_tree_fingerprint "$ADMIN_AUTH_STATE")"
 ADMIN_DATA_BEFORE="$(shared_tree_fingerprint "$ADMIN_BASE/shared/data")"
 ADMIN_UPLOADS_BEFORE="$(shared_tree_fingerprint "$ADMIN_BASE/shared/public/uploads")"
 ADMIN_PM2_BEFORE="$(pm2_definition_fingerprint "$ADMIN_SERVICE")"
@@ -550,6 +730,7 @@ verify_storefront
 check_fresh_logs "$ADMIN_SERVICE" "$ADMIN_OUT" "$ADMIN_OUT_SIZE" "$ADMIN_ERR" "$ADMIN_ERR_SIZE"
 check_fresh_logs "$STORE_SERVICE" "$STORE_OUT" "$STORE_OUT_SIZE" "$STORE_ERR" "$STORE_ERR_SIZE"
 verify_pm2_metadata
+verify_admin_runtime_identity
 [[ "$(pm2_definition_fingerprint "$ADMIN_SERVICE")" == "$ADMIN_PM2_BEFORE" ]] \
   || fail "admin PM2 definition changed during release"
 [[ "$(pm2_definition_fingerprint "$STORE_SERVICE")" == "$STORE_PM2_BEFORE" ]] \
@@ -557,10 +738,15 @@ verify_pm2_metadata
 
 verify_env_file "$ADMIN_ENV" "$EXPECTED_ADMIN_ENV_OWNER"
 verify_env_file "$STORE_ENV" "$EXPECTED_STORE_ENV_OWNER"
+verify_admin_auth_state
 [[ "$(shared_tree_fingerprint "$ADMIN_ENV")" == "$ADMIN_ENV_BEFORE" ]] \
   || fail "admin runtime env changed during release"
 [[ "$(shared_tree_fingerprint "$STORE_ENV")" == "$STORE_ENV_BEFORE" ]] \
   || fail "storefront runtime env changed during release"
+[[ "$(shared_tree_fingerprint "$ADMIN_AUTH_MARKER")" == "$ADMIN_AUTH_MARKER_BEFORE" ]] \
+  || fail "admin auth-state migration marker changed during release"
+[[ "$(shared_tree_fingerprint "$ADMIN_AUTH_STATE")" == "$ADMIN_AUTH_BEFORE" ]] \
+  || fail "admin auth state changed during release; code rollback will not overwrite it"
 [[ "$(sha256sum "$ADMIN_ENV" | awk '{print $1}')" == "$EXPECTED_ADMIN_ENV_SHA256" ]] \
   || fail "admin runtime env fingerprint changed during release"
 [[ "$(sha256sum "$STORE_ENV" | awk '{print $1}')" == "$EXPECTED_STORE_ENV_SHA256" ]] \
@@ -573,5 +759,6 @@ verify_env_file "$STORE_ENV" "$EXPECTED_STORE_ENV_OWNER"
 atomic_link "$ADMIN_BASE" previous "$OLD_ADMIN"
 atomic_link "$STORE_BASE" previous "$OLD_STORE"
 COMMITTED=1
+release_admin_auth_deploy_lock
 
 printf 'Remote activation transaction committed.\n'

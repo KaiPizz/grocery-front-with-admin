@@ -1,4 +1,6 @@
-const TOKEN_VERSION = 'v1';
+import { getAdminAuthState, type AdminAuthState } from './admin-auth-state';
+
+const TOKEN_VERSION = 'v2';
 const MIN_SECRET_BYTES = 32;
 const CLOCK_SKEW_SECONDS = 60;
 
@@ -53,19 +55,24 @@ function getSessionSecret(): string {
   return secret;
 }
 
-function getCredentialBinding(): string {
-  const passwordHash = process.env.ADMIN_PASSWORD_HASH?.trim();
-  if (passwordHash) return passwordHash;
-
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    process.env.ALLOW_INSECURE_DEV_PASSWORD === 'true' &&
-    process.env.ADMIN_PASSWORD
-  ) {
-    return `dev:${process.env.ADMIN_PASSWORD}`;
+async function getCredentialBinding(authState?: AdminAuthState): Promise<string> {
+  if (authState) {
+    return `${authState.passwordHash}\u0000${authState.sessionGeneration}`;
   }
 
-  throw new SessionConfigurationError();
+  try {
+    const state = await getAdminAuthState();
+    return `${state.passwordHash}\u0000${state.sessionGeneration}`;
+  } catch {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      process.env.ALLOW_INSECURE_DEV_PASSWORD === 'true' &&
+      process.env.ADMIN_PASSWORD
+    ) {
+      return `dev:${process.env.ADMIN_PASSWORD}\u00001`;
+    }
+    throw new SessionConfigurationError();
+  }
 }
 
 function bytesToBase64Url(bytes: Uint8Array): string {
@@ -109,9 +116,9 @@ function base64UrlToText(value: string): string | null {
   }
 }
 
-async function importSigningKey(): Promise<CryptoKey> {
+async function importSigningKey(authState?: AdminAuthState): Promise<CryptoKey> {
   const secret = getSessionSecret();
-  const credentialBinding = getCredentialBinding();
+  const credentialBinding = await getCredentialBinding(authState);
   return crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(`${secret}\u0000${credentialBinding}`),
@@ -129,7 +136,11 @@ function createNonce(): string {
 
 export async function createSessionToken(
   username: string,
-  options: { nowMs?: number; maxAgeSeconds?: number } = {}
+  options: {
+    nowMs?: number;
+    maxAgeSeconds?: number;
+    authState?: AdminAuthState;
+  } = {}
 ): Promise<string> {
   if (!username || username.length > 128) {
     throw new TypeError('Invalid session subject');
@@ -149,7 +160,7 @@ export async function createSessionToken(
   };
   const encodedPayload = textToBase64Url(JSON.stringify(payload));
   const signedValue = `${TOKEN_VERSION}.${encodedPayload}`;
-  const key = await importSigningKey();
+  const key = await importSigningKey(options.authState);
   const signature = await crypto.subtle.sign(
     'HMAC',
     key,
@@ -192,7 +203,7 @@ function parsePayload(encodedPayload: string): SessionPayload | null {
  */
 export async function verifySessionToken(
   token: string,
-  options: { nowMs?: number } = {}
+  options: { nowMs?: number; authState?: AdminAuthState } = {}
 ): Promise<AdminSession | null> {
   if (!token || token.length > 4096) return null;
 
@@ -203,7 +214,7 @@ export async function verifySessionToken(
   if (!signature || signature.byteLength !== 32) return null;
 
   const signedValue = `${parts[0]}.${parts[1]}`;
-  const key = await importSigningKey();
+  const key = await importSigningKey(options.authState);
   const normalizedSignature = new Uint8Array(signature.byteLength);
   normalizedSignature.set(signature);
   const signatureIsValid = await crypto.subtle.verify(

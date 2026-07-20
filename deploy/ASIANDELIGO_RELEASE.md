@@ -14,7 +14,11 @@ The lane releases these two code artifacts as one transaction:
 | Storefront | `/var/www/kenmito-storefront` | `enail-grocery-kenmito` | 3022 |
 
 It does not change PostgreSQL, backend source, Nginx, runtime environment
-values, admin data/uploads, payment, or shipping configuration.
+values, storefront admin config/uploads, payment, or shipping configuration.
+The first compatible release creates one private
+`shared/auth/admin-auth-state.json` file from the already protected runtime
+hash; later releases preserve it. A separate root-owned marker under `shared/`
+prevents any later missing state from silently resurrecting the bootstrap hash.
 
 ## Required approval and order
 
@@ -63,13 +67,40 @@ remote-build, skipped-test, partial-component and manual-rollback flags.
 - Local locks and atomic Contabo locks serialize this transaction with the
   guarded eNail backend/frontend lanes. Stale remote locks are never removed
   automatically at startup.
-- Admin shared state remains outside releases and is linked exactly as follows:
+- Admin shared state remains outside releases. Release-local config/media paths
+  are linked exactly as follows, while auth state is read directly from its
+  fixed absolute runtime path:
 
   ```text
   .env.local     -> /var/www/kenmito-admin/shared/.env.runtime
   data           -> /var/www/kenmito-admin/shared/data
+  auth state     -> /var/www/kenmito-admin/shared/auth/admin-auth-state.json
+  auth marker    -> /var/www/kenmito-admin/shared/.admin-auth-state-initialized
   public/uploads -> /var/www/kenmito-admin/shared/public/uploads
   ```
+
+  The one-time auth-state bootstrap runs only after both artifacts are staged
+  and the production locks are held. It creates a root-owned `0700` auth
+  directory, atomically links the `0600` state file, and writes a separate
+  root-owned initialization marker without printing the password hash.
+  Preflight and activation also pin the current admin PM2 process to the
+  reviewed root UID/GID topology so runtime ownership cannot silently drift
+  away from those protected files.
+  Production preflight and activation validate the exact schema, owner, mode,
+  marker, and absence of a stale write lock. If a later state file or directory
+  is missing or corrupt, the marker makes deploy fail closed instead of
+  resurrecting `ADMIN_PASSWORD_HASH` from the runtime environment. The previous
+  release ignores the new state if activation rolls back before compatible code
+  is live. During activation, the coordinator holds the same auth write lock
+  used by password changes and logout across both PM2 restarts and automatic
+  rollback; those writes fail briefly instead of being killed mid-update.
+
+  Auth write locks fail closed and are never deleted merely because they look
+  old. Recovery requires first proving that no application writer, bootstrap,
+  or deployment process is still alive, then following a separately reviewed
+  server recovery plan.
+  Backups must include both the auth directory and the dotfile marker; a plain
+  `shared/*` glob is insufficient because it normally omits dotfiles.
 
 - The activator records both old `current` targets, activates admin first and
   storefront second, and restarts only the two existing PM2 services. It never
@@ -95,6 +126,8 @@ After the script succeeds, independently verify:
 - storefront `/`, `/products`, `/categories`, `/login`, and `/register`;
 - “Bez glutenu” and “Wegetariańskie” filter behavior on desktop and mobile;
 - admin `/api/health`, login, one authenticated read, and one logout;
+- admin `/admin/security`; after the owner changes the password, confirm the old
+  password and a copied pre-change cookie are rejected;
 - production admin login using the vault credential without printing it;
 - PM2 status, unchanged definitions, firewall containment and only fresh log
   output;

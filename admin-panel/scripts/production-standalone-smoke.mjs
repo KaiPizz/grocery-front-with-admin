@@ -1,12 +1,16 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { randomBytes, scrypt as nodeScrypt } from 'node:crypto';
 import { once } from 'node:events';
 import {
   access,
   copyFile,
   mkdir,
   mkdtemp,
+  readFile,
   rm,
+  unlink,
+  writeFile,
 } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
@@ -16,6 +20,10 @@ import { fileURLToPath } from 'node:url';
 const appDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const serverEntry = resolve(appDir, '.next/standalone/server.js');
 const fixtureConfig = resolve(appDir, 'data/config-asiandeligo.json');
+const adminUsername = 'smoke-admin';
+const currentPassword = 'Smoke current password 2026!';
+const newPassword = 'Smoke replacement password 2026!';
+const configuredOrigin = 'https://admin.smoke.example';
 
 await access(serverEntry);
 await access(fixtureConfig);
@@ -36,12 +44,51 @@ async function reservePort() {
   return address.port;
 }
 
+async function createPasswordHash(password) {
+  const parameters = { N: 32768, r: 8, p: 1 };
+  const salt = randomBytes(24);
+  const derived = await new Promise((resolveScrypt, rejectScrypt) => {
+    nodeScrypt(password, salt, 64, { ...parameters, maxmem: 64 * 1024 * 1024 }, (error, key) => {
+      if (error) rejectScrypt(error);
+      else resolveScrypt(key);
+    });
+  });
+  return `scrypt:N=${parameters.N},r=${parameters.r},p=${parameters.p}:${salt.toString('base64url')}:${derived.toString('base64url')}`;
+}
+
+function sessionCookie(response) {
+  const setCookie = response.headers.get('set-cookie');
+  assert(setCookie, 'authentication response must set a session cookie');
+  return setCookie.split(';', 1)[0];
+}
+
+async function login(baseUrl, password) {
+  return fetch(`${baseUrl}/api/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Origin: configuredOrigin,
+    },
+    body: JSON.stringify({ username: adminUsername, password }),
+    redirect: 'manual',
+  });
+}
+
 const runtimeRoot = await mkdtemp(join(tmpdir(), 'asiandeligo-admin-smoke-'));
 const dataDir = join(runtimeRoot, 'data');
+const authDir = join(runtimeRoot, 'auth');
 const uploadDir = join(runtimeRoot, 'uploads');
 await mkdir(dataDir);
+await mkdir(authDir, { mode: 0o700 });
 await mkdir(uploadDir);
 await copyFile(fixtureConfig, join(dataDir, 'config-asiandeligo.json'));
+const initialPasswordHash = await createPasswordHash(currentPassword);
+await writeFile(join(authDir, 'admin-auth-state.json'), `${JSON.stringify({
+  schemaVersion: 1,
+  passwordHash: initialPasswordHash,
+  sessionGeneration: 1,
+  updatedAt: new Date().toISOString(),
+}, null, 2)}\n`, { mode: 0o600 });
 
 const port = await reservePort();
 const baseUrl = `http://127.0.0.1:${port}`;
@@ -49,9 +96,15 @@ const server = spawn(process.execPath, [serverEntry], {
   cwd: appDir,
   env: {
     ...process.env,
+    ADMIN_ALLOWED_SLUGS: 'asiandeligo',
+    ADMIN_AUTH_DIR: authDir,
     ADMIN_DATA_DIR: dataDir,
+    ADMIN_PUBLIC_ORIGIN: configuredOrigin,
+    ADMIN_SESSION_SECRET: 'smoke-only-session-secret-with-more-than-32-bytes',
+    ADMIN_USERNAME: adminUsername,
     ADMIN_UPLOAD_DIR: uploadDir,
     HOSTNAME: '127.0.0.1',
+    NEXT_PUBLIC_SALON_SLUG: 'asiandeligo',
     NODE_ENV: 'production',
     PORT: String(port),
   },
@@ -93,10 +146,10 @@ try {
     { status: 'ok', service: 'storefront-admin-panel' },
   );
 
-  const login = await fetch(`${baseUrl}/login`, { redirect: 'manual' });
-  assert.equal(login.status, 200);
-  assert.match(login.headers.get('cache-control') ?? '', /no-store/i);
-  assert.equal(login.headers.get('x-powered-by'), null);
+  const loginPageResponse = await fetch(`${baseUrl}/login`, { redirect: 'manual' });
+  assert.equal(loginPageResponse.status, 200);
+  assert.match(loginPageResponse.headers.get('cache-control') ?? '', /no-store/i);
+  assert.equal(loginPageResponse.headers.get('x-powered-by'), null);
 
   const admin = await fetch(`${baseUrl}/admin`, { redirect: 'manual' });
   assert.equal(admin.status, 307);
@@ -111,7 +164,96 @@ try {
   assert.equal(published.status, 200);
   assert.equal(typeof await published.json(), 'object');
 
-  console.log('Admin production standalone smoke passed');
+  const authenticated = await login(baseUrl, currentPassword);
+  assert.equal(authenticated.status, 200);
+  assert.deepEqual(await authenticated.json(), { success: true });
+  const firstCookie = sessionCookie(authenticated);
+
+  const protectedDraft = await fetch(`${baseUrl}/api/config/asiandeligo?draft=true`, {
+    headers: { Cookie: firstCookie },
+  });
+  assert.equal(protectedDraft.status, 200);
+
+  const securityPage = await fetch(`${baseUrl}/admin/security`, {
+    headers: { Cookie: firstCookie },
+    redirect: 'manual',
+  });
+  assert.equal(securityPage.status, 200);
+
+  const passwordChange = await fetch(`${baseUrl}/api/auth/password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: firstCookie,
+      Origin: configuredOrigin,
+    },
+    body: JSON.stringify({
+      currentPassword,
+      newPassword,
+      confirmation: newPassword,
+    }),
+  });
+  assert.equal(passwordChange.status, 200);
+  assert.deepEqual(await passwordChange.json(), { success: true });
+
+  const staleAfterChange = await fetch(`${baseUrl}/api/config/asiandeligo?draft=true`, {
+    headers: { Cookie: firstCookie },
+  });
+  assert.equal(staleAfterChange.status, 401);
+
+  const oldPasswordLogin = await login(baseUrl, currentPassword);
+  assert.equal(oldPasswordLogin.status, 401);
+  const newPasswordLogin = await login(baseUrl, newPassword);
+  assert.equal(newPasswordLogin.status, 200);
+  const secondCookie = sessionCookie(newPasswordLogin);
+
+  const hostileLogout = await fetch(`${baseUrl}/api/auth/logout`, {
+    method: 'POST',
+    headers: { Cookie: secondCookie, Origin: 'https://attacker.example' },
+  });
+  assert.equal(hostileLogout.status, 403);
+
+  const externalLockPath = join(authDir, 'admin-auth-state.lock');
+  await writeFile(
+    externalLockPath,
+    `${JSON.stringify({ pid: 99999, createdAt: new Date().toISOString() })}\n`,
+    { mode: 0o600 }
+  );
+  try {
+    const busyLogout = await fetch(`${baseUrl}/api/auth/logout`, {
+      method: 'POST',
+      headers: { Cookie: secondCookie, Origin: configuredOrigin },
+    });
+    assert.equal(busyLogout.status, 503);
+    assert.equal(busyLogout.headers.get('set-cookie'), null);
+  } finally {
+    await unlink(externalLockPath);
+  }
+
+  const copiedCookieAfterBusyLogout = await fetch(
+    `${baseUrl}/api/config/asiandeligo?draft=true`,
+    { headers: { Cookie: secondCookie } }
+  );
+  assert.equal(copiedCookieAfterBusyLogout.status, 200);
+
+  const logout = await fetch(`${baseUrl}/api/auth/logout`, {
+    method: 'POST',
+    headers: { Cookie: secondCookie, Origin: configuredOrigin },
+  });
+  assert.equal(logout.status, 200);
+
+  const copiedCookieAfterLogout = await fetch(`${baseUrl}/api/config/asiandeligo?draft=true`, {
+    headers: { Cookie: secondCookie },
+  });
+  assert.equal(copiedCookieAfterLogout.status, 401);
+
+  const storedAuthState = await readFile(join(authDir, 'admin-auth-state.json'), 'utf8');
+  const parsedAuthState = JSON.parse(storedAuthState);
+  assert.equal(parsedAuthState.sessionGeneration, 3);
+  assert.doesNotMatch(storedAuthState, new RegExp(currentPassword, 'u'));
+  assert.doesNotMatch(storedAuthState, new RegExp(newPassword, 'u'));
+
+  console.log('Admin production standalone auth and revocation smoke passed');
 } finally {
   if (server.exitCode == null) {
     server.kill('SIGTERM');

@@ -29,6 +29,26 @@ export function getAdminDataDir(): string {
   return resolveStorageDir('ADMIN_DATA_DIR', 'data');
 }
 
+export function getAdminAuthDir(): string {
+  const configured = process.env.ADMIN_AUTH_DIR?.trim();
+  if (configured) {
+    if (process.env.NODE_ENV === 'production' && !path.isAbsolute(configured)) {
+      throw new AdminStorageConfigurationError('ADMIN_AUTH_DIR');
+    }
+    return path.resolve(/* turbopackIgnore: true */ configured);
+  }
+
+  const dataDir = getAdminDataDir();
+  if (process.env.NODE_ENV === 'production') {
+    if (path.basename(dataDir) !== 'data') {
+      throw new AdminStorageConfigurationError('ADMIN_AUTH_DIR');
+    }
+    return path.join(path.dirname(dataDir), 'auth');
+  }
+
+  return path.join(dataDir, '.auth');
+}
+
 export function getAdminUploadDir(): string {
   return resolveStorageDir('ADMIN_UPLOAD_DIR', path.join('public', 'uploads'));
 }

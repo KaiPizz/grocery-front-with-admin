@@ -19,6 +19,7 @@ STORE_BASE="/var/www/kenmito-storefront"
 ADMIN_BASE="/var/www/kenmito-admin"
 STORE_ENV="$STORE_BASE/shared/.env.runtime"
 ADMIN_ENV="$ADMIN_BASE/shared/.env.runtime"
+ADMIN_AUTH_MARKER="$ADMIN_BASE/shared/.admin-auth-state-initialized"
 STORE_SERVICE="enail-grocery-kenmito"
 ADMIN_SERVICE="enail-asiandeligo-admin"
 STORE_PUBLIC_ORIGIN="https://asiandeligo.eshoper.pro"
@@ -47,6 +48,7 @@ STORE_BUILD_ID=""
 ADMIN_BUILD_ID=""
 STORE_ENV_SHA256=""
 ADMIN_ENV_SHA256=""
+ADMIN_AUTH_STATE_CREATED=""
 STORE_ENV_OWNER="0:0"
 ADMIN_ENV_OWNER="1001:1001"
 ACTIVATOR_SNAPSHOT=""
@@ -286,6 +288,79 @@ function parseDotenv(path) {
   return parsed;
 }
 
+function validPasswordHash(value) {
+  const match = /^scrypt:N=(\d+),r=(\d+),p=(\d+):([A-Za-z0-9_-]+):([A-Za-z0-9_-]+)$/.exec(value || '');
+  if (!match) return false;
+  const N = Number(match[1]);
+  const r = Number(match[2]);
+  const p = Number(match[3]);
+  return N >= 16384 && N <= 131072 && (N & (N - 1)) === 0 &&
+    r >= 1 && r <= 16 && p >= 1 && p <= 4 &&
+    Buffer.from(match[4], 'base64url').byteLength >= 16 &&
+    Buffer.from(match[4], 'base64url').byteLength <= 64 &&
+    Buffer.from(match[5], 'base64url').byteLength === 64;
+}
+
+function validateAuthStateInstallation(adminBase, bootstrapHash) {
+  const sharedDir = `${adminBase}/shared`;
+  const authDir = `${adminBase}/shared/auth`;
+  const authStatePath = `${authDir}/admin-auth-state.json`;
+  const authLockPath = `${authDir}/admin-auth-state.lock`;
+  const markerPath = `${adminBase}/shared/.admin-auth-state-initialized`;
+  const sharedMetadata = fs.lstatSync(sharedDir);
+  if (!sharedMetadata.isDirectory() || sharedMetadata.isSymbolicLink() ||
+      sharedMetadata.uid !== 0 || sharedMetadata.gid !== 0 ||
+      (sharedMetadata.mode & 0o022) !== 0) {
+    throw new Error('Admin shared parent directory is unsafe');
+  }
+  const markerPresent = fs.existsSync(markerPath);
+  const authDirPresent = fs.existsSync(authDir);
+  if (!markerPresent && !authDirPresent) return;
+  if (markerPresent && !authDirPresent) {
+    throw new Error('Admin auth-state migration marker and private directory disagree');
+  }
+  if (markerPresent) {
+    const markerMetadata = fs.lstatSync(markerPath);
+    if (!markerMetadata.isFile() || markerMetadata.isSymbolicLink() ||
+        (markerMetadata.mode & 0o777) !== 0o600 || markerMetadata.uid !== 0 ||
+        markerMetadata.gid !== 0 || fs.readFileSync(markerPath, 'utf8') !== 'admin-auth-state-v1\n') {
+      throw new Error('Admin auth-state migration marker is invalid');
+    }
+  }
+  const directoryMetadata = fs.lstatSync(authDir);
+  if (!directoryMetadata.isDirectory() || directoryMetadata.isSymbolicLink() ||
+      (directoryMetadata.mode & 0o777) !== 0o700 ||
+      directoryMetadata.uid !== 0 || directoryMetadata.gid !== 0 ||
+      fs.existsSync(authLockPath)) {
+    throw new Error('Admin private auth directory is incomplete or unsafe');
+  }
+  if (!fs.existsSync(authStatePath)) {
+    if (!markerPresent) return;
+    throw new Error('Admin auth state is missing after initialization');
+  }
+  const metadata = fs.lstatSync(authStatePath);
+  if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size < 1 ||
+      metadata.size > 8192 || (metadata.mode & 0o777) !== 0o600 ||
+      metadata.uid !== 0 || metadata.gid !== 0) {
+    throw new Error('Admin auth state file metadata is invalid');
+  }
+  const value = JSON.parse(fs.readFileSync(authStatePath, 'utf8'));
+  const keys = Object.keys(value).sort();
+  const expected = ['passwordHash', 'schemaVersion', 'sessionGeneration', 'updatedAt'];
+  if (JSON.stringify(keys) !== JSON.stringify(expected) || value.schemaVersion !== 1 ||
+      !validPasswordHash(value.passwordHash) ||
+      !Number.isSafeInteger(value.sessionGeneration) || value.sessionGeneration < 1 ||
+      value.sessionGeneration >= Number.MAX_SAFE_INTEGER ||
+      typeof value.updatedAt !== 'string' || value.updatedAt.length > 64 ||
+      Number.isNaN(Date.parse(value.updatedAt))) {
+    throw new Error('Admin auth state content is invalid');
+  }
+  if (!markerPresent &&
+      (value.sessionGeneration !== 1 || value.passwordHash !== bootstrapHash)) {
+    throw new Error('Partial admin auth-state migration cannot be resumed safely');
+  }
+}
+
 const [storePath, adminPath, expectedChannel, expectedSlug, adminBase, adminOrigin] = process.argv.slice(2);
 const store = parseDotenv(storePath);
 const admin = parseDotenv(adminPath);
@@ -326,16 +401,18 @@ if (store.NEXT_PUBLIC_CHANNEL !== expectedChannel ||
 }
 if (!admin.ADMIN_USERNAME || admin.ADMIN_USERNAME.length > 128 ||
     admin.ADMIN_USERNAME.trim() !== admin.ADMIN_USERNAME ||
-    !admin.ADMIN_PASSWORD_HASH?.startsWith('scrypt:') ||
+    !validPasswordHash(admin.ADMIN_PASSWORD_HASH) ||
     admin.ADMIN_PASSWORD ||
     Buffer.byteLength(admin.ADMIN_SESSION_SECRET || '', 'utf8') < 32 ||
     !allowedSlugs.includes(expectedSlug) ||
     admin.NEXT_PUBLIC_SALON_SLUG !== expectedSlug ||
     admin.ADMIN_DATA_DIR !== `${adminBase}/shared/data` ||
+    (admin.ADMIN_AUTH_DIR && admin.ADMIN_AUTH_DIR !== `${adminBase}/shared/auth`) ||
     admin.ADMIN_UPLOAD_DIR !== `${adminBase}/shared/public/uploads` ||
     admin.ADMIN_PUBLIC_ORIGIN !== adminOrigin) {
   throw new Error('Admin runtime identity/security configuration is invalid');
 }
+validateAuthStateInstallation(adminBase, admin.ADMIN_PASSWORD_HASH);
 NODE
 
 [[ -d "$admin_base/shared/data" ]] || fail "admin shared data directory is missing"
@@ -358,6 +435,12 @@ for pair in "$store_base:$store_service" "$admin_base:$admin_service"; do
   live_cwd="$(readlink -f "/proc/$pid/cwd")"
   [[ "$live_cwd" == "$target" ]] \
     || fail "$service live cwd differs from its current release pointer"
+  if [[ "$service" == "$admin_service" ]]; then
+    uid_set="$(awk '/^Uid:/ { print $2 ":" $3 ":" $4 ":" $5 }' "/proc/$pid/status")"
+    gid_set="$(awk '/^Gid:/ { print $2 ":" $3 ":" $4 ":" $5 }' "/proc/$pid/status")"
+    [[ "$uid_set" == "0:0:0:0" && "$gid_set" == "0:0:0:0" ]] \
+      || fail "$service must run with the pinned root runtime identity"
+  fi
 done
 
 node - \
@@ -530,7 +613,7 @@ if (store.NEXT_PUBLIC_CHANNEL !== expectedChannel ||
 if (admin.NEXT_PUBLIC_SALON_SLUG !== expectedSlug || admin.ADMIN_PUBLIC_ORIGIN !== adminOrigin) {
   throw new Error('Copied admin env failed identity/security validation');
 }
-const forbidden = /(?:PASSWORD|SECRET|TOKEN|PRIVATE|CUSTOMER_AUTH|ADMIN_SESSION|ADMIN_USERNAME|ADMIN_ALLOWED_SLUGS|ADMIN_DATA_DIR|ADMIN_UPLOAD_DIR)/i;
+const forbidden = /(?:PASSWORD|SECRET|TOKEN|PRIVATE|CUSTOMER_AUTH|ADMIN_SESSION|ADMIN_USERNAME|ADMIN_ALLOWED_SLUGS|ADMIN_DATA_DIR|ADMIN_AUTH_DIR|ADMIN_UPLOAD_DIR)/i;
 if ([...Object.keys(store), ...Object.keys(admin)].some((key) => forbidden.test(key))) {
   throw new Error('Secret/runtime-only key leaked into a local build env file');
 }
@@ -573,6 +656,273 @@ assert_remote_env_hashes() {
     || die "runtime env ownership changed during build/release; rerun from preflight"
   [[ "$store_mode" == "600" && "$admin_mode" == "600" ]] \
     || die "runtime env mode changed during build/release; rerun from preflight"
+}
+
+bootstrap_admin_auth_state() {
+  local result
+  note "Initialize persistent admin auth state if this is the first compatible release"
+  result="$(ssh "$REMOTE" node - "$ADMIN_ENV" "$ADMIN_BASE/shared/auth" "$ADMIN_AUTH_MARKER" <<'NODE'
+const crypto = require('node:crypto');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const [envPath, authDir, markerPath] = process.argv.slice(2);
+const statePath = path.join(authDir, 'admin-auth-state.json');
+const lockPath = path.join(authDir, 'admin-auth-state.lock');
+
+function parseDotenv(filePath) {
+  const parsed = Object.create(null);
+  for (const rawLine of fs.readFileSync(filePath, 'utf8').split(/\r?\n/)) {
+    let line = rawLine.trim();
+    if (!line || line.startsWith('#')) continue;
+    if (line.startsWith('export ')) line = line.slice(7).trimStart();
+    const match = /^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/.exec(line);
+    if (!match) throw new Error('Invalid dotenv syntax');
+    let value = match[2];
+    const quote = value[0];
+    if ((quote === '"' || quote === "'") && value.endsWith(quote)) {
+      value = value.slice(1, -1);
+      if (quote === '"') value = value.replace(/\\n/g, '\n').replace(/\\r/g, '\r');
+    } else {
+      const comment = value.indexOf('#');
+      if (comment >= 0) value = value.slice(0, comment);
+      value = value.trim();
+    }
+    parsed[match[1]] = value;
+  }
+  return parsed;
+}
+
+function validPasswordHash(value) {
+  const match = /^scrypt:N=(\d+),r=(\d+),p=(\d+):([A-Za-z0-9_-]+):([A-Za-z0-9_-]+)$/.exec(value || '');
+  if (!match) return false;
+  const N = Number(match[1]);
+  const r = Number(match[2]);
+  const p = Number(match[3]);
+  return N >= 16384 && N <= 131072 && (N & (N - 1)) === 0 &&
+    r >= 1 && r <= 16 && p >= 1 && p <= 4 &&
+    Buffer.from(match[4], 'base64url').byteLength >= 16 &&
+    Buffer.from(match[4], 'base64url').byteLength <= 64 &&
+    Buffer.from(match[5], 'base64url').byteLength === 64;
+}
+
+const passwordHash = parseDotenv(envPath).ADMIN_PASSWORD_HASH;
+if (!validPasswordHash(passwordHash)) throw new Error('Admin bootstrap hash is invalid');
+
+const sharedDir = path.dirname(markerPath);
+const sharedMetadata = fs.lstatSync(sharedDir);
+if (!sharedMetadata.isDirectory() || sharedMetadata.isSymbolicLink() ||
+    sharedMetadata.uid !== 0 || sharedMetadata.gid !== 0 ||
+    (sharedMetadata.mode & 0o022) !== 0) {
+  throw new Error('Admin shared parent directory is unsafe');
+}
+
+function syncDirectory(directory) {
+  const descriptor = fs.openSync(directory, 'r');
+  try { fs.fsyncSync(descriptor); } finally { fs.closeSync(descriptor); }
+}
+
+function validatePrivateDirectory() {
+  const metadata = fs.lstatSync(authDir);
+  if (!metadata.isDirectory() || metadata.isSymbolicLink() ||
+      (metadata.mode & 0o777) !== 0o700 || metadata.uid !== 0 || metadata.gid !== 0) {
+    throw new Error('Admin private auth directory is unsafe');
+  }
+  if (fs.existsSync(lockPath)) {
+    throw new Error('Admin auth-state write lock is present; verify the writer before retrying');
+  }
+}
+
+function readValidatedState(requireBootstrapState) {
+  const metadata = fs.lstatSync(statePath);
+  if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size < 1 ||
+      metadata.size > 8192 || (metadata.mode & 0o777) !== 0o600 ||
+      metadata.uid !== 0 || metadata.gid !== 0) {
+    throw new Error('Admin auth state file metadata is invalid');
+  }
+  const value = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+  const keys = Object.keys(value).sort();
+  const expected = ['passwordHash', 'schemaVersion', 'sessionGeneration', 'updatedAt'];
+  if (JSON.stringify(keys) !== JSON.stringify(expected) || value.schemaVersion !== 1 ||
+      !validPasswordHash(value.passwordHash) ||
+      !Number.isSafeInteger(value.sessionGeneration) || value.sessionGeneration < 1 ||
+      value.sessionGeneration >= Number.MAX_SAFE_INTEGER ||
+      typeof value.updatedAt !== 'string' || value.updatedAt.length > 64 ||
+      Number.isNaN(Date.parse(value.updatedAt)) ||
+      (requireBootstrapState &&
+        (value.sessionGeneration !== 1 || value.passwordHash !== passwordHash))) {
+    throw new Error('Admin auth state content is invalid');
+  }
+  return value;
+}
+
+function validateMarker() {
+  const metadata = fs.lstatSync(markerPath);
+  if (!metadata.isFile() || metadata.isSymbolicLink() ||
+      (metadata.mode & 0o777) !== 0o600 || metadata.uid !== 0 ||
+      metadata.gid !== 0 || fs.readFileSync(markerPath, 'utf8') !== 'admin-auth-state-v1\n') {
+    throw new Error('Admin auth-state migration marker is invalid');
+  }
+}
+
+function linkPrivateFile(targetPath, payload, parentDirectory) {
+  const tempPath = `${targetPath}.bootstrap-${process.pid}-${crypto.randomUUID()}`;
+  let descriptor;
+  try {
+    descriptor = fs.openSync(tempPath, 'wx', 0o600);
+    fs.writeFileSync(descriptor, payload, 'utf8');
+    fs.fchmodSync(descriptor, 0o600);
+    fs.fchownSync(descriptor, 0, 0);
+    fs.fsyncSync(descriptor);
+    fs.closeSync(descriptor);
+    descriptor = undefined;
+    fs.linkSync(tempPath, targetPath);
+    syncDirectory(parentDirectory);
+  } finally {
+    if (descriptor !== undefined) fs.closeSync(descriptor);
+    try { fs.unlinkSync(tempPath); } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+}
+
+function acquireBootstrapLock() {
+  let descriptor;
+  try {
+    descriptor = fs.openSync(lockPath, 'wx', 0o600);
+    fs.fchmodSync(descriptor, 0o600);
+    fs.fchownSync(descriptor, 0, 0);
+    fs.writeFileSync(descriptor, `${JSON.stringify({
+      pid: process.pid,
+      createdAt: new Date().toISOString(),
+      purpose: 'bootstrap',
+    })}\n`, 'utf8');
+    fs.fsyncSync(descriptor);
+    syncDirectory(authDir);
+    return descriptor;
+  } catch (error) {
+    if (descriptor !== undefined) {
+      try { fs.closeSync(descriptor); } catch {}
+      try { fs.unlinkSync(lockPath); } catch (cleanupError) {
+        if (cleanupError.code !== 'ENOENT') throw cleanupError;
+      }
+      try { syncDirectory(authDir); } catch {}
+    }
+    if (error.code === 'EEXIST') {
+      throw new Error('Admin auth-state write lock is present; verify the writer before retrying');
+    }
+    throw error;
+  }
+}
+
+function releaseBootstrapLock(descriptor) {
+  fs.closeSync(descriptor);
+  fs.unlinkSync(lockPath);
+  syncDirectory(authDir);
+}
+
+if (fs.existsSync(markerPath)) {
+  validateMarker();
+  if (!fs.existsSync(authDir) || !fs.existsSync(statePath)) {
+    throw new Error('Admin auth state is missing after its one-time initialization');
+  }
+  validatePrivateDirectory();
+  readValidatedState(false);
+  process.stdout.write('existing');
+} else {
+  let createdDirectory = false;
+  let stateCreatedByThisRun = false;
+  let bootstrapLock;
+  let result;
+  let operationError;
+  try {
+    if (!fs.existsSync(authDir)) {
+      try {
+        fs.mkdirSync(authDir, { mode: 0o700 });
+        fs.chmodSync(authDir, 0o700);
+        fs.chownSync(authDir, 0, 0);
+        syncDirectory(sharedDir);
+        createdDirectory = true;
+      } catch (error) {
+        if (error.code !== 'EEXIST') throw error;
+      }
+    }
+    validatePrivateDirectory();
+    bootstrapLock = acquireBootstrapLock();
+
+    // A cooperating bootstrap may have completed between the first marker
+    // check and our lock acquisition. Re-read every installation sentinel
+    // while holding the same lock used by the application writers.
+    if (fs.existsSync(markerPath)) {
+      validateMarker();
+      if (!fs.existsSync(statePath)) {
+        throw new Error('Admin auth state is missing after its one-time initialization');
+      }
+      readValidatedState(false);
+      result = 'existing';
+    } else {
+      if (fs.existsSync(statePath)) {
+        readValidatedState(true);
+      } else {
+        const state = {
+          schemaVersion: 1,
+          passwordHash,
+          sessionGeneration: 1,
+          updatedAt: new Date().toISOString(),
+        };
+        linkPrivateFile(statePath, `${JSON.stringify(state, null, 2)}\n`, authDir);
+        stateCreatedByThisRun = true;
+      }
+
+      linkPrivateFile(markerPath, 'admin-auth-state-v1\n', sharedDir);
+      result = 'created';
+    }
+  } catch (error) {
+    operationError = error;
+    if (!fs.existsSync(markerPath)) {
+      if (stateCreatedByThisRun) {
+        try { fs.unlinkSync(statePath); } catch (cleanupError) {
+          if (cleanupError.code !== 'ENOENT') throw cleanupError;
+        }
+      }
+    }
+  } finally {
+    if (bootstrapLock !== undefined) {
+      try {
+        releaseBootstrapLock(bootstrapLock);
+      } catch (cleanupError) {
+        operationError ??= cleanupError;
+      }
+    }
+    if (operationError && createdDirectory && !fs.existsSync(markerPath)) {
+      try { fs.rmdirSync(authDir); } catch (cleanupError) {
+        if (!['ENOENT', 'ENOTEMPTY', 'EEXIST'].includes(cleanupError.code)) {
+          operationError = cleanupError;
+        }
+      }
+      try { syncDirectory(sharedDir); } catch (cleanupError) {
+        operationError ??= cleanupError;
+      }
+    }
+  }
+  if (operationError) throw operationError;
+  process.stdout.write(result);
+}
+NODE
+)"
+
+  case "$result" in
+    created)
+      ADMIN_AUTH_STATE_CREATED=1
+      note "Persistent admin auth state initialized without exposing the hash"
+      ;;
+    existing)
+      note "Existing persistent admin auth state preserved"
+      ;;
+    *)
+      die "unexpected admin auth-state bootstrap result"
+      ;;
+  esac
 }
 
 copy_safe_build_env() {
@@ -1133,6 +1483,9 @@ assert_remote_env_hashes
 stage_remote_component "admin" "$ADMIN_BASE" "$ADMIN_RELEASE_ID" "$ADMIN_BUILD_ID"
 stage_remote_component "storefront" "$STORE_BASE" "$STORE_RELEASE_ID" "$STORE_BUILD_ID"
 assert_remote_env_hashes
+bootstrap_admin_auth_state
+remote_preflight owned
+assert_remote_env_hashes
 activate_remote_transaction
 assert_direct_ports_blocked
 
@@ -1140,4 +1493,9 @@ note "PRODUCTION RELEASE PASSED"
 printf 'source_commit=%s\n' "$EXPECTED_COMMIT"
 printf 'admin_release=%s build_id=%s\n' "$ADMIN_RELEASE_ID" "$ADMIN_BUILD_ID"
 printf 'storefront_release=%s build_id=%s\n' "$STORE_RELEASE_ID" "$STORE_BUILD_ID"
-printf 'Payment, shipping, database, Nginx, and shared admin data were not changed.\n'
+if [[ -n "$ADMIN_AUTH_STATE_CREATED" ]]; then
+  printf 'admin_auth_state=initialized (one-time migration)\n'
+else
+  printf 'admin_auth_state=preserved\n'
+fi
+printf 'Payment, shipping, database, Nginx, admin config, and uploads were not changed.\n'

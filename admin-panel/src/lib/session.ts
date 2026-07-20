@@ -5,6 +5,7 @@ import {
   getSessionCookieName,
   SESSION_MAX_AGE_SECONDS,
 } from './session-token';
+import type { AdminAuthState } from './admin-auth-state';
 
 const LEGACY_COOKIE_NAME = 'admin-session';
 
@@ -19,8 +20,11 @@ function cookieOptions(maxAge: number) {
 }
 
 /** Set a short-lived, signed admin session cookie after successful login. */
-export async function setSessionCookie(username: string): Promise<void> {
-  const token = await createSessionToken(username);
+export async function setSessionCookie(
+  username: string,
+  authState?: AdminAuthState
+): Promise<void> {
+  const token = await createSessionToken(username, { authState });
   const cookieStore = await cookies();
   cookieStore.set(
     getSessionCookieName(),

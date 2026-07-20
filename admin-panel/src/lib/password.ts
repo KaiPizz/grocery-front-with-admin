@@ -5,6 +5,8 @@ import {
   timingSafeEqual,
 } from 'node:crypto';
 
+import { getAdminAuthState, type AdminAuthState } from './admin-auth-state';
+
 const DEFAULT_SCRYPT_N = 32768;
 const DEFAULT_SCRYPT_R = 8;
 const DEFAULT_SCRYPT_P = 1;
@@ -101,6 +103,10 @@ function parsePasswordHash(encodedHash: string): {
   return { parameters, salt, expected };
 }
 
+export function isSupportedPasswordHash(encodedHash: string): boolean {
+  return parsePasswordHash(encodedHash) !== null;
+}
+
 export function constantTimeStringEqual(left: string, right: string): boolean {
   const leftDigest = createHash('sha256').update(left, 'utf8').digest();
   const rightDigest = createHash('sha256').update(right, 'utf8').digest();
@@ -136,18 +142,37 @@ export async function verifyPassword(
   return timingSafeEqual(derivedKey, parsed.expected);
 }
 
-export async function verifyConfiguredAdminPassword(password: string): Promise<boolean> {
-  const encodedHash = process.env.ADMIN_PASSWORD_HASH?.trim();
-  if (encodedHash) return verifyPassword(password, encodedHash);
+export interface ConfiguredAdminPasswordVerification {
+  matches: boolean;
+  authState?: AdminAuthState;
+}
+
+export async function verifyConfiguredAdminPasswordWithState(
+  password: string
+): Promise<ConfiguredAdminPasswordVerification> {
+  try {
+    const state = await getAdminAuthState();
+    return {
+      matches: await verifyPassword(password, state.passwordHash),
+      authState: state,
+    };
+  } catch {
+    if (process.env.NODE_ENV === 'production') {
+      throw new PasswordConfigurationError();
+    }
+  }
 
   const insecureDevFallbackEnabled =
-    process.env.NODE_ENV !== 'production' &&
     process.env.ALLOW_INSECURE_DEV_PASSWORD === 'true';
   const developmentPassword = process.env.ADMIN_PASSWORD;
 
   if (insecureDevFallbackEnabled && developmentPassword) {
-    return constantTimeStringEqual(password, developmentPassword);
+    return { matches: constantTimeStringEqual(password, developmentPassword) };
   }
 
   throw new PasswordConfigurationError();
+}
+
+export async function verifyConfiguredAdminPassword(password: string): Promise<boolean> {
+  return (await verifyConfiguredAdminPasswordWithState(password)).matches;
 }

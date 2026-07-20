@@ -1,8 +1,9 @@
-version: '3.8'
-
 services:
   admin-panel:
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SALON_SLUG: ${NEXT_PUBLIC_SALON_SLUG}
     ports:
       - '127.0.0.1:4100:4100'
     environment:
@@ -12,14 +13,13 @@ services:
       - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET}
       - ADMIN_ALLOWED_SLUGS=${ADMIN_ALLOWED_SLUGS}
       - ADMIN_DATA_DIR=/app/shared/data
-      - ADMIN_UPLOAD_DIR=/app/shared/uploads
+      - ADMIN_AUTH_DIR=/app/shared/auth
+      - ADMIN_UPLOAD_DIR=/app/shared/public/uploads
       - ADMIN_PUBLIC_ORIGIN=${ADMIN_PUBLIC_ORIGIN}
       - NEXT_PUBLIC_SALON_SLUG=${NEXT_PUBLIC_SALON_SLUG}
       - STOREFRONT_ORIGINS=${STOREFRONT_ORIGINS}
     volumes:
-      - admin-data:/app/shared/data
-      - admin-uploads:/app/shared/uploads
+      - admin-shared:/app/shared
 
 volumes:
-  admin-data:
-  admin-uploads:
+  admin-shared:

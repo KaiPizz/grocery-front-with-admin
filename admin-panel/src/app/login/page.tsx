@@ -25,6 +25,7 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnPath = getSafeAdminReturnPath(searchParams.get('from'));
+  const passwordChanged = searchParams.get('passwordChanged') === '1';
   const { t } = useLanguage();
 
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -195,6 +196,16 @@ function LoginContent() {
                 <p className="mt-2 text-sm leading-6 text-slate-600">
                   {t('login.description')}
                 </p>
+
+                {passwordChanged && (
+                  <div
+                    role="status"
+                    className="mt-5 flex gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm leading-5 text-green-900"
+                  >
+                    <Check aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-green-700" />
+                    <span>{t('login.passwordChanged')}</span>
+                  </div>
+                )}
 
                 <form
                   method="post"
