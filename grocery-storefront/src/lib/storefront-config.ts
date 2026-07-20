@@ -57,12 +57,29 @@ export function getStorefrontConfigUrls(): string[] {
   return urls;
 }
 
-export async function fetchServerConfig(): Promise<StorefrontConfig | null> {
+interface FetchServerConfigOptions {
+  cache?: RequestCache;
+  next?: {
+    revalidate?: number;
+    tags?: string[];
+  };
+}
+
+export async function fetchServerConfig(
+  options: FetchServerConfigOptions = {},
+): Promise<StorefrontConfig | null> {
   for (const url of getStorefrontConfigUrls()) {
     try {
-      const res = await fetch(url, {
-        cache: 'no-store',
-      });
+      const requestInit: RequestInit & { next?: FetchServerConfigOptions['next'] } = {};
+
+      if (options.next) {
+        requestInit.next = options.next;
+        if (options.cache) requestInit.cache = options.cache;
+      } else {
+        requestInit.cache = options.cache ?? 'no-store';
+      }
+
+      const res = await fetch(url, requestInit);
       if (!res.ok) continue;
       const json = await res.json();
       const config = extractStorefrontConfig(json);
