@@ -34,7 +34,8 @@
     "searchPlaceholder": "Search products, recipes...",
     "login": "Login",
     "register": "Register",
-    "logout": "Logout"
+    "logout": "Logout",
+    "koreanPantry": "Korean pantry"
   },
   "shippingCountdown": {
     "static": "Order before {time} for same-day shipping",
@@ -405,6 +406,7 @@
     "info": "Info",
     "legal": "Legal",
     "tagline": "Fresh groceries with full nutritional transparency.",
+    "asiaDeliGoTagline": "Asian groceries for everyday shopping. Order online and collect in store.",
     "about": "About us",
     "contact": "Contact",
     "privacy": "Privacy policy",

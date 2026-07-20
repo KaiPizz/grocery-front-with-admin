@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Runtime-configured storefront logos can use arbitrary URLs until the production media loader policy is defined. */
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Banknote, CheckCircle2, Leaf, Mail, MapPin, Phone } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { SocialBar } from '@/components/layout/SocialBar';
@@ -27,7 +27,10 @@ interface FooterContactItem {
   icon: LucideIcon;
 }
 
+const POLISH_ASIA_DELI_GO_TAGLINE = 'Azjatyckie produkty spożywcze do codziennych zakupów. Zamów online i odbierz osobiście w sklepie.';
+
 export function Footer() {
+  const locale = useLocale();
   const tNav = useTranslations('nav');
   const t = useTranslations('footer');
   const tFulfillment = useTranslations('fulfillment');
@@ -37,7 +40,10 @@ export function Footer() {
   const logoUrl = siteConfig?.branding?.logoUrl;
   const logoText = logoUrl && storeName.trim().toLowerCase() === 'asia deli go' ? '' : storeName;
   const footerCfg = siteConfig?.layout?.footer;
-  const tagline = footerCfg?.tagline || t('tagline');
+  const configuredTagline = footerCfg?.tagline?.trim();
+  const tagline = locale === 'en' && configuredTagline === POLISH_ASIA_DELI_GO_TAGLINE
+    ? t('asiaDeliGoTagline')
+    : configuredTagline || t('tagline');
   const socialLinks = siteConfig?.general?.socialLinks ?? [];
   const fulfillment = getFulfillmentConfig(siteConfig);
   const pickupMode = isPickupFulfillment(siteConfig);
@@ -48,17 +54,35 @@ export function Footer() {
 
   // Map known footer labels to i18n translations so config doesn't force English
   const footerI18n: Record<string, string> = {
-    'Shop': t('shop'), 'Info': t('info'), 'Legal': t('legal'),
-    'Products': tNav('products'), 'Recipes': tNav('recipes'),
-    'About': t('about'), 'Contact': t('contact'), 'Delivery': t('delivery'),
-    'Privacy': t('privacy'), 'Terms': t('terms'),
+    'Shop': t('shop'), 'Sklep': t('shop'),
+    'Info': t('info'), 'Informacje': t('info'),
+    'Legal': t('legal'), 'Prawne': t('legal'),
+    'Products': tNav('products'), 'Produkty': tNav('products'),
+    'Recipes': tNav('recipes'), 'Przepisy': tNav('recipes'),
+    'About': t('about'), 'O nas': t('about'),
+    'Contact': t('contact'), 'Kontakt': t('contact'),
+    'Delivery': t('delivery'), 'Dostawa': t('delivery'),
+    'Privacy': t('privacy'), 'Polityka prywatności': t('privacy'),
+    'Terms': t('terms'), 'Regulamin': t('terms'),
+    'Korean pantry': tNav('koreanPantry'), 'Koreańska spiżarnia': tNav('koreanPantry'),
   };
-  const tr = (label: string) => footerI18n[label] || label;
+  const tr = (label: string) => footerI18n[label.trim()] || label;
+  const footerLinkI18n: Record<string, string> = {
+    '/categories': tNav('categories'),
+    '/products': tNav('products'),
+    '/recipes': tNav('recipes'),
+    '/collections/korean-pantry': tNav('koreanPantry'),
+    '/privacy': t('privacy'),
+    '/terms': t('terms'),
+  };
 
   const columns = footerCfg?.columns?.length ? footerCfg.columns.map(col => ({
     ...col,
     title: tr(col.title),
-    links: col.links.map(link => ({ ...link, label: tr(link.label) })),
+    links: col.links.map(link => ({
+      ...link,
+      label: footerLinkI18n[link.href] || tr(link.label),
+    })),
   })) : null;
   const serviceNotes: FooterServiceNote[] = [
     pickupMode

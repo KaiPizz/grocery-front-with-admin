@@ -74,7 +74,10 @@ export function Header() {
   const navItems = configuredNavItems && configuredNavItems.length > 0
     ? configuredNavItems
     : fallbackNavItems;
-  const commercialQuickLinks = getEnabledCommercialQuickLinks(siteConfig);
+  const commercialQuickLinks = getEnabledCommercialQuickLinks(siteConfig).map((link) => ({
+    ...link,
+    label: link.href === '/collections/korean-pantry' ? t('koreanPantry') : link.label,
+  }));
   const showSearch = headerCfg?.showSearch ?? true;
   const showWishlist = headerCfg?.showWishlist ?? true;
   const showLanguageSwitcher = headerCfg?.showLanguageSwitcher ?? true;

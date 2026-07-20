@@ -34,7 +34,8 @@
     "searchPlaceholder": "Szukaj produktów, przepisów...",
     "login": "Zaloguj się",
     "register": "Zarejestruj się",
-    "logout": "Wyloguj"
+    "logout": "Wyloguj",
+    "koreanPantry": "Koreańska spiżarnia"
   },
   "shippingCountdown": {
     "static": "Zamów przed {time}, a wyślemy dziś",
@@ -405,6 +406,7 @@
     "info": "Informacje",
     "legal": "Prawne",
     "tagline": "Świeże zakupy z pełną przejrzystością odżywczą.",
+    "asiaDeliGoTagline": "Azjatyckie produkty spożywcze do codziennych zakupów. Zamów online i odbierz osobiście w sklepie.",
     "about": "O nas",
     "contact": "Kontakt",
     "privacy": "Polityka prywatności",
