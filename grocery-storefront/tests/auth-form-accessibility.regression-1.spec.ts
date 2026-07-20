@@ -43,7 +43,11 @@ async function installGuestAuth(page: Page, registerRequests: string[]) {
 
     if (pathname === '/api/auth/register') {
       registerRequests.push(request.postData() ?? '');
-      await fulfillJson(route, { success: false, message: null, errors: [] }, 400);
+      await fulfillJson(route, {
+        success: false,
+        message: null,
+        errors: [{ field: 'input.email', message: 'Email already exists.', code: 'EMAIL_IN_USE' }],
+      }, 400);
       return;
     }
 
@@ -101,4 +105,14 @@ test('auth errors are announced, linked to invalid fields and move focus', async
   await expect(confirmPassword).toHaveAttribute('aria-invalid', 'true');
   await expect(confirmPassword).toHaveAttribute('aria-describedby', 'auth-form-error');
   expect(registerRequests).toEqual([]);
+
+  await confirmPassword.fill('strong-password-123');
+  await page.getByRole('button', { name: 'Create account', exact: true }).click();
+
+  const registerEmail = page.locator('#auth-email');
+  await expect(page.locator('#auth-form-error')).toHaveText('Could not create account.');
+  await expect(registerEmail).toBeFocused();
+  await expect(registerEmail).toHaveAttribute('aria-invalid', 'true');
+  await expect(registerEmail).toHaveAttribute('aria-describedby', 'auth-form-error');
+  expect(registerRequests).toHaveLength(1);
 });
