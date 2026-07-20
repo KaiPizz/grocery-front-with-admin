@@ -95,13 +95,16 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<{ respo
 
 type SessionLoadResult =
   | { state: 'authenticated'; customer: CustomerProfile }
-  | { state: 'invalid' | 'missing' | 'transient'; customer: null };
+  | { state: 'invalid' | 'missing' | 'transient' | 'guest'; customer: null };
 
 async function loadSession(): Promise<SessionLoadResult> {
   try {
     const { response, payload } = await requestJson<SessionApiResponse>('/api/auth/session', { method: 'GET' });
     if (response.ok && payload?.authenticated && payload.customer) {
       return { state: 'authenticated', customer: payload.customer };
+    }
+    if (response.ok && payload?.authenticated === false && payload.code === 'NO_SESSION_COOKIE') {
+      return { state: 'guest', customer: null };
     }
     return {
       state: response.status === 401 && payload?.code === 'NO_ACCESS_COOKIE'
@@ -163,6 +166,10 @@ export const useAuthStore = create<AuthState>((set) => {
         let sessionResult = await loadSession();
         let hadRejectedCredentials = sessionResult.state === 'invalid';
         let allowLegacyMigration = false;
+        if (sessionResult.state === 'guest') {
+          const legacyTokens = readLegacyAuthTokens();
+          allowLegacyMigration = Boolean(legacyTokens.accessToken || legacyTokens.refreshToken);
+        }
         if (sessionResult.state === 'invalid' || sessionResult.state === 'missing') {
           const renewal = await renewSession();
           if (renewal === 'renewed') {
@@ -180,7 +187,7 @@ export const useAuthStore = create<AuthState>((set) => {
         }
 
         if (
-          (sessionResult.state === 'invalid' || sessionResult.state === 'missing')
+          (sessionResult.state === 'invalid' || sessionResult.state === 'missing' || sessionResult.state === 'guest')
           && allowLegacyMigration
         ) {
           const migration = await migrateLegacySession();
@@ -194,7 +201,7 @@ export const useAuthStore = create<AuthState>((set) => {
             hadRejectedCredentials = true;
             sessionResult = { state: 'invalid', customer: null };
           } else {
-            sessionResult = { state: 'missing', customer: null };
+            sessionResult = { state: 'guest', customer: null };
           }
         }
 

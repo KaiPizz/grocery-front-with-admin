@@ -12,6 +12,14 @@ import { loadCustomerSession } from '@/lib/auth/server-service';
 export async function GET(request: NextRequest) {
   const tokens = readCustomerTokens(request);
   if (!tokens.accessToken) {
+    if (!tokens.refreshToken) {
+      return setNoStoreHeaders(NextResponse.json({
+        authenticated: false,
+        customer: null,
+        code: 'NO_SESSION_COOKIE',
+      }));
+    }
+
     return setNoStoreHeaders(NextResponse.json(
       { authenticated: false, customer: null, code: 'NO_ACCESS_COOKIE' },
       { status: 401 },
