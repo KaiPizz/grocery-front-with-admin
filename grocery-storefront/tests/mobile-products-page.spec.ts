@@ -351,6 +351,100 @@ test.describe('mobile products page', () => {
     await expect(page.getByTestId('product-card')).toHaveCount(4);
   });
 
+  test('restores dietary deep links and keeps the URL in sync with desktop filters', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products?ref=campaign&dietary=vegetarian');
+
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    const vegetarianButton = filterPanel.getByRole('button', { name: /^vegetarian$/i });
+    const glutenFreeButton = filterPanel.getByRole('button', { name: /^gluten free$/i });
+
+    await expect(vegetarianButton).toBeEnabled();
+    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => productQueries.some((variables) => {
+      const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
+      return Array.isArray(dietaryTags)
+        && dietaryTags.length === 1
+        && dietaryTags[0] === 'vegetarian';
+    })).toBe(true);
+
+    await glutenFreeButton.click();
+    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => {
+      const url = new URL(page.url());
+      return {
+        pathname: url.pathname,
+        ref: url.searchParams.get('ref'),
+        dietary: url.searchParams.getAll('dietary'),
+      };
+    }).toEqual({
+      pathname: '/en/products',
+      ref: 'campaign',
+      dietary: ['vegetarian', 'gluten-free'],
+    });
+
+    await vegetarianButton.click();
+    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'false');
+    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual(['gluten-free']);
+
+    const filterSummary = page.getByTestId('product-filter-summary');
+    await filterSummary.getByRole('button', { name: /remove gluten free filter/i }).click();
+    await expect.poll(() => {
+      const url = new URL(page.url());
+      return {
+        ref: url.searchParams.get('ref'),
+        dietary: url.searchParams.get('dietary'),
+      };
+    }).toEqual({ ref: 'campaign', dietary: null });
+
+    await page.goBack();
+    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'false');
+    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual(['gluten-free']);
+
+    await page.goBack();
+    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual([
+      'vegetarian',
+      'gluten-free',
+    ]);
+
+    await page.goForward();
+    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'false');
+    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('restores the initial category listing when Back removes a dietary filter', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/categories/kimchi-i-kiszonki');
+
+    await expect(page.getByTestId('product-card')).toHaveCount(2);
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    const glutenFreeButton = filterPanel.getByRole('button', { name: /^gluten free$/i });
+    await expect(glutenFreeButton).toBeEnabled();
+
+    await glutenFreeButton.click();
+    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual(['gluten-free']);
+    await expect(page.getByTestId('product-card')).toHaveCount(1);
+    await expect(page.getByRole('link', { name: /pickled daikon radish/i })).toBeVisible();
+
+    await page.goBack();
+    await expect.poll(() => new URL(page.url()).searchParams.get('dietary')).toBeNull();
+    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.getByTestId('product-card')).toHaveCount(2);
+    await expect(page.getByRole('link', { name: /napa cabbage kimchi/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /pickled daikon radish/i })).toBeVisible();
+  });
+
   test('uses curated desktop category navigation instead of duplicate raw category filters', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -436,6 +530,43 @@ test.describe('mobile products page', () => {
         return filter?.price?.gte === 10;
       })
     ).toBe(true);
+  });
+
+  test('publishes a mobile dietary filter only after apply and restores it with Back', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/products?ref=mobile');
+
+    const filterSheet = page.getByTestId('mobile-filter-sheet');
+    await openFilters(page, filterSheet);
+    const vegetarianButton = filterSheet.getByRole('button', { name: /^vegetarian$/i });
+    await expect(vegetarianButton).toBeEnabled();
+
+    await vegetarianButton.click();
+    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'true');
+    expect(new URL(page.url()).searchParams.get('dietary')).toBeNull();
+    expect(productQueries.some((variables) => {
+      const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
+      return Array.isArray(dietaryTags) && dietaryTags.includes('vegetarian');
+    })).toBe(false);
+
+    await filterSheet.getByRole('button', { name: /apply filters/i }).click();
+    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual(['vegetarian']);
+    await expect.poll(() => productQueries.some((variables) => {
+      const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
+      return Array.isArray(dietaryTags) && dietaryTags.includes('vegetarian');
+    })).toBe(true);
+
+    await page.goBack();
+    await expect.poll(() => new URL(page.url()).searchParams.get('dietary')).toBeNull();
+    await expect(page.getByTestId('product-filter-summary')).toHaveCount(0);
+    await expect(page.getByTestId('mobile-product-card')).toHaveCount(4);
   });
 
   test('preserves a mobile price filter while full catalog metadata is still loading', async ({ page }) => {
