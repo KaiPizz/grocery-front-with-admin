@@ -60,12 +60,27 @@ test.describe('homepage accessibility', () => {
 
     await expect(main.locator('h1')).toHaveCount(1);
     await expect(main.locator('h1')).toHaveText('Azjatyckie produkty spożywcze na co dzień');
-    await expect(heroImages).toHaveCount(6);
+    await expect(heroImages).toHaveCount(2);
     await expect(heroImages.nth(0)).toHaveAttribute('alt', 'Smaki Korei');
     await expect(heroImages.nth(1)).toHaveAttribute(
       'alt',
       'Azjatyckie produkty spożywcze na co dzień — slajd 2'
     );
+    await expect(
+      page.getByTestId('mobile-home-hero').getByRole('link', {
+        name: /przeglądaj azjatyckie produkty spożywcze na co dzień/i,
+      })
+    ).toHaveAttribute('href', '/products');
+    const carouselDots = page.getByTestId('mobile-home-hero').getByRole('button', {
+      name: /przejdź do slajdu/i,
+    });
+    await expect(carouselDots).toHaveCount(2);
+    for (let index = 0; index < 2; index += 1) {
+      const box = await carouselDots.nth(index).boundingBox();
+      expect(box).not.toBeNull();
+      expect(Math.round(box!.width)).toBeGreaterThanOrEqual(44);
+      expect(Math.round(box!.height)).toBeGreaterThanOrEqual(44);
+    }
     await expect(main.locator('img[alt^="Store promotion banner"]')).toHaveCount(0);
   });
 

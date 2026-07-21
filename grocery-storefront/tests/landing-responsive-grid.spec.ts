@@ -182,4 +182,41 @@ test.describe('landing responsive contracts', () => {
       await expect(tile).toHaveAttribute('href', '/categories/sosy-pasty-i-przyprawy');
     });
   }
+
+  test('orders the Asia Deli Go homepage for shopping before promotion repetition', async ({ page }) => {
+    await mockAsiaDeliGoConfig(page);
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 1000 });
+    await page.goto('/pl');
+
+    const hero = page.getByTestId('desktop-home-hero');
+    const pickupGuide = page.locator('[data-testid="home-pickup-guide"]:visible');
+    const categories = page.locator('[data-testid="home-configured-category-grid"]:visible');
+    const products = page.getByTestId('desktop-home-fresh-picks');
+    const promotion = page.locator('[data-testid="home-configured-promo"]:visible');
+
+    await expect(hero).toBeVisible();
+    await expect(pickupGuide).toContainText('Jak odebrać zamówienie');
+    await expect(categories.getByTestId('home-configured-category-link')).toHaveCount(9);
+    await expect(products).toBeVisible();
+    await expect(promotion).toHaveCount(1);
+    await expect(page.locator('[data-testid="home-category-shortcuts"]:visible')).toHaveCount(0);
+    await expect(page.locator('[data-testid="home-campaign-band"]:visible')).toHaveCount(0);
+    const desktopNavigation = page.getByRole('navigation', { name: 'Main navigation' });
+    await expect(desktopNavigation.getByRole('link', { name: 'Strona główna' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    await expect(desktopNavigation.getByRole('link', { name: 'Koreańska spiżarnia' })).not.toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+
+    const positions = await Promise.all(
+      [hero, pickupGuide, categories, products, promotion].map((locator) =>
+        locator.evaluate((element) => element.getBoundingClientRect().top + window.scrollY)
+      )
+    );
+    expect(positions).toEqual([...positions].sort((left, right) => left - right));
+  });
 });

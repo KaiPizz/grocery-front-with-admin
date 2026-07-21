@@ -104,22 +104,50 @@ export function Footer() {
         }
       : null,
   ].filter((item): item is FooterServiceNote => item !== null);
+  const configuredEmail = siteConfig?.general?.email?.trim();
+  const configuredPhone = siteConfig?.general?.phone?.trim();
+  const configuredAddress = siteConfig?.general?.address?.trim();
+  const email = configuredEmail && !(
+    isAsiaDeliGo && configuredEmail.toLowerCase() === 'kontakt@asiandeligo.pl'
+  ) ? configuredEmail : null;
+  const phone = configuredPhone && !(
+    isAsiaDeliGo && configuredPhone.replace(/\D/g, '') === '48000000000'
+  ) ? configuredPhone : null;
+  const address = configuredAddress && !(
+    isAsiaDeliGo && configuredAddress.toLowerCase() === 'warszawa, polska'
+  ) ? configuredAddress : null;
   const contactItems: FooterContactItem[] = [
-    siteConfig?.general?.email
-      ? { label: siteConfig.general.email, href: `mailto:${siteConfig.general.email}`, icon: Mail }
+    email
+      ? { label: email, href: `mailto:${email}`, icon: Mail }
       : null,
-    siteConfig?.general?.phone
-      ? { label: siteConfig.general.phone, href: `tel:${siteConfig.general.phone}`, icon: Phone }
+    phone
+      ? { label: phone, href: `tel:${phone}`, icon: Phone }
       : null,
-    siteConfig?.general?.address
-      ? { label: siteConfig.general.address, icon: MapPin }
+    address
+      ? { label: address, icon: MapPin }
       : null,
   ].filter((item): item is FooterContactItem => item !== null);
   const fallbackInfoLinks = [
-    policyLinks?.about && policyLinks.about !== '#'
+    policyLinks?.about
+      && policyLinks.about !== '#'
+      && policyLinks.about !== policyLinks.privacy
+      && policyLinks.about !== policyLinks.terms
       ? { href: policyLinks.about, label: t('about') }
       : null,
   ].filter((link): link is { href: string; label: string } => link !== null);
+  const footerColumnCount = columns
+    ? 1 + columns.length + (contactItems.length > 0 ? 1 : 0)
+    : 4;
+  const footerGridColumns = footerColumnCount <= 2
+    ? 'md:grid-cols-2'
+    : footerColumnCount === 3
+      ? 'md:grid-cols-3'
+      : 'md:grid-cols-4';
+  const serviceGridColumns = serviceNotes.length === 2
+    ? 'sm:grid-cols-2'
+    : serviceNotes.length >= 3
+      ? 'sm:grid-cols-2 lg:grid-cols-3'
+      : '';
 
   function renderFooterLink(href: string, label: string) {
     if (!href || href === '#') {
@@ -144,7 +172,7 @@ export function Footer() {
       role="contentinfo"
     >
       <div className="container-grocery py-12 md:py-16">
-        <div className={`grid grid-cols-2 gap-8 md:gap-12 ${columns ? `md:grid-cols-${Math.min(columns.length + 1, 4)}` : 'md:grid-cols-4'}`}>
+        <div className={`grid grid-cols-2 gap-8 md:gap-12 ${footerGridColumns}`}>
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               {logoUrl ? (
@@ -173,18 +201,39 @@ export function Footer() {
           </div>
 
           {columns ? (
-            columns.map((col) => (
-              <nav key={col.title} aria-label={col.title}>
-                <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{col.title}</h3>
-                <ul className="space-y-2.5" role="list">
-                  {col.links.map((link) => (
-                    <li key={`${link.label}-${link.href}`}>
-                      {renderFooterLink(link.href, link.label)}
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            ))
+            <>
+              {columns.map((col) => (
+                <nav key={col.title} aria-label={col.title}>
+                  <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{col.title}</h3>
+                  <ul className="space-y-2.5" role="list">
+                    {col.links.map((link) => (
+                      <li key={`${link.label}-${link.href}`}>
+                        {renderFooterLink(link.href, link.label)}
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              ))}
+              {contactItems.length > 0 && (
+                <nav aria-label={t('contact')}>
+                  <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{t('contact')}</h3>
+                  <ul className="space-y-2.5" role="list">
+                    {contactItems.map(({ label, href, icon: Icon }) => (
+                      <li key={label} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                        <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                        {href ? (
+                          <a href={href} className="break-words transition-colors duration-fast hover:text-primary">
+                            {label}
+                          </a>
+                        ) : (
+                          <span className="break-words">{label}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
+            </>
           ) : (
             <>
               <nav aria-label={t('shop')}>
@@ -232,7 +281,7 @@ export function Footer() {
 
         {serviceNotes.length > 0 && (
           <div
-            className="mt-10 grid gap-px overflow-hidden rounded-[20px] border sm:grid-cols-2 lg:grid-cols-3"
+            className={`mt-10 grid gap-px overflow-hidden rounded-[20px] border ${serviceGridColumns}`}
             style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-border)' }}
             data-testid="footer-service-notes"
           >

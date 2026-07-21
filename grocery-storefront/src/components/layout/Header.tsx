@@ -82,6 +82,14 @@ export function Header() {
   const showWishlist = headerCfg?.showWishlist ?? true;
   const showLanguageSwitcher = headerCfg?.showLanguageSwitcher ?? true;
 
+  function isCurrentNavigationHref(href: string): boolean {
+    if (!href.startsWith('/')) return false;
+    const targetPath = href.split(/[?#]/, 1)[0] || '/';
+    return targetPath === '/'
+      ? pathname === '/'
+      : pathname === targetPath || pathname.startsWith(`${targetPath}/`);
+  }
+
   useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
@@ -431,9 +439,10 @@ export function Header() {
                   <Link
                     href={href}
                     className="whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium hover-surface"
-                    style={{ color: 'var(--color-foreground)' }}
+                    style={{ color: isCurrentNavigationHref(href) ? 'var(--color-primary)' : 'var(--color-foreground)' }}
                     aria-haspopup="true"
                     aria-expanded={categoryMenuOpen}
+                    aria-current={isCurrentNavigationHref(href) ? 'page' : undefined}
                     onClick={closeCategoryMenuImmediately}
                   >
                     {label}
@@ -453,7 +462,8 @@ export function Header() {
                 key={href}
                 href={href}
                 className="whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium hover-surface"
-                style={{ color: 'var(--color-foreground)' }}
+                style={{ color: isCurrentNavigationHref(href) ? 'var(--color-primary)' : 'var(--color-foreground)' }}
+                aria-current={isCurrentNavigationHref(href) ? 'page' : undefined}
               >
                 {label}
               </Link>
@@ -463,8 +473,9 @@ export function Header() {
             <Link
               key={`commercial-${id}`}
               href={href}
-            className="whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-semibold hover-surface"
-              style={{ color: 'var(--color-primary)' }}
+              className="whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-semibold hover-surface"
+              style={{ color: isCurrentNavigationHref(href) ? 'var(--color-primary)' : 'var(--color-foreground)' }}
+              aria-current={isCurrentNavigationHref(href) ? 'page' : undefined}
             >
               {label}
             </Link>
@@ -740,7 +751,11 @@ export function Header() {
                     key={`${href}-${index}`}
                     href={href}
                     className="flex min-h-[48px] items-center justify-between gap-3 border-b px-3 py-3 text-sm font-medium last:border-b-0 hover-surface"
-                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                    style={{
+                      borderColor: 'var(--color-border)',
+                      color: isCurrentNavigationHref(href) ? 'var(--color-primary)' : 'var(--color-foreground)',
+                    }}
+                    aria-current={isCurrentNavigationHref(href) ? 'page' : undefined}
                     onClick={() => setMenuOpen(false)}
                   >
                     <span className="truncate">{label}</span>

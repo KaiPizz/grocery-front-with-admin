@@ -344,14 +344,14 @@
       "canonical": "https://asiandeligo.eshoper.pro"
     },
     "general": {
-      "phone": "+48 000 000 000",
-      "email": "kontakt@asiandeligo.pl",
-      "address": "Warszawa, Polska",
+      "phone": "",
+      "email": "",
+      "address": "",
       "socialLinks": [],
       "policyLinks": {
         "privacy": "/privacy",
         "terms": "/terms",
-        "about": "/privacy"
+        "about": "#"
       },
       "freeShippingThreshold": 150,
       "sameDayShippingCutoff": "12:00",

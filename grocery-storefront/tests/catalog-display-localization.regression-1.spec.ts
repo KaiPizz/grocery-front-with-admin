@@ -155,7 +155,9 @@ test.describe('catalog display localization', () => {
     const source = cloneAsiaDeliGoConfig();
     const sourceSnapshot = JSON.stringify(source);
 
-    expect(localizeConfiguredStorefront(source, 'pl')).toBe(source);
+    const polish = localizeConfiguredStorefront(source, 'pl');
+    expect(polish).not.toBe(source);
+    expect(polish).not.toBeNull();
 
     const english = localizeConfiguredStorefront(source, 'en-GB');
     expect(english).not.toBe(source);
@@ -230,8 +232,13 @@ test.describe('catalog display localization', () => {
       order: block.order,
     })));
     const sourceHero = source.homepage.blocks.find((block) => block.type === 'hero');
+    const polishHero = polish?.homepage.blocks.find((block) => block.type === 'hero');
     const englishHero = english?.homepage.blocks.find((block) => block.type === 'hero');
     expect(sourceHero?.type === 'hero' ? sourceHero.slides : []).toHaveLength(6);
+    expect(polishHero?.type === 'hero' ? polishHero.slides.map((slide) => slide.id) : []).toEqual([
+      'asiandeligo-drive-hero-slide-1',
+      'asiandeligo-drive-hero-slide-6',
+    ]);
     const expectedEnglishHeroSlides = sourceHero?.type === 'hero'
       ? sourceHero.slides.filter((slide) => [
         'asiandeligo-drive-hero-slide-4',
@@ -314,13 +321,10 @@ test.describe('catalog display localization', () => {
       'Snacks and sweets',
       'Ramen and ready meals for a quick lunch',
       'Browse ready meals',
-      'Snacks and drinks for your basket',
-      'Browse snacks',
       'Sushi and seaweed',
       'Mushrooms and tofu',
       'Kitchen accessories',
       'Korean pantry',
-      'Korean cooking essentials',
     ];
     const visibleText = await body.innerText();
     for (const copy of englishCopy) {
@@ -388,7 +392,8 @@ test.describe('catalog display localization', () => {
     }).first();
     await expect(readyMealsLink).toBeVisible();
 
-    await page.locator('button[aria-label="Go to slide 6"]:visible').click();
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(2);
+    await page.getByRole('button', { name: /przejdź do slajdu 2/i }).click();
     await page.locator('button[aria-haspopup="listbox"]:visible').click();
     await page.getByRole('option', { name: /English/ }).click();
     await expect(page).toHaveURL(/\/en$/);
@@ -401,7 +406,7 @@ test.describe('catalog display localization', () => {
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'pl');
     await expect(page.locator('h1.sr-only')).toHaveText('Azjatyckie produkty spożywcze na co dzień');
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(2);
   });
 
   test('shows English catalog labels while keeping the raw Polish country filter value', async ({ page }) => {

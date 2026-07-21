@@ -20,6 +20,7 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { PromoBanner } from '@/components/grocery/PromoBanner';
 import { BlockRenderer } from '@/components/blocks/BlockRenderer';
+import { ConfiguredCategoryGrid } from '@/components/blocks/ConfiguredCategoryGrid';
 import { RecipeCard } from '@/components/grocery/RecipeCard';
 import { Link } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
@@ -38,7 +39,12 @@ import {
 } from '@/lib/public-taxonomy';
 import { getImageSrc } from '@/lib/utils';
 import type { ProductTranslation } from '@/types';
-import type { CommercialQuickLink, HomepageSectionId } from '@/types/storefront-config';
+import type {
+  CommercialQuickLink,
+  GridBannerBlock,
+  HomepageSectionId,
+  RoundGridBannerBlock,
+} from '@/types/storefront-config';
 
 interface HomeProduct {
   id: string;
@@ -606,12 +612,88 @@ function HomeFulfillmentTrust({
   pickup,
   bankTransfer,
   manualConfirmation,
+  guidedPickup = false,
 }: {
   pickup: boolean;
   bankTransfer: boolean;
   manualConfirmation: boolean;
+  guidedPickup?: boolean;
 }) {
   const t = useTranslations('fulfillment');
+
+  if (pickup && guidedPickup) {
+    const steps = [
+      {
+        title: t('pickupGuideStep1Title'),
+        description: t('pickupGuideStep1Description'),
+        icon: ShoppingCart,
+      },
+      {
+        title: t('pickupGuideStep2Title'),
+        description: t('pickupGuideStep2Description'),
+        icon: CheckCircle2,
+      },
+      {
+        title: t('pickupGuideStep3Title'),
+        description: t('pickupGuideStep3Description'),
+        icon: MapPin,
+      },
+    ];
+
+    return (
+      <section
+        className="container-grocery py-4 md:py-6"
+        data-testid="home-fulfillment-trust"
+      >
+        <div data-testid="home-pickup-guide">
+          <h2
+            className="heading-section mb-3 text-lg md:mb-4 md:text-xl"
+            style={{ color: 'var(--color-foreground)' }}
+          >
+            {t('pickupGuideTitle')}
+          </h2>
+          <ol className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-3 md:px-0 [&::-webkit-scrollbar]:hidden">
+            {steps.map(({ title, description, icon: Icon }, index) => (
+              <li
+                key={title}
+                className="flex min-w-[250px] snap-start items-start gap-3 rounded-[18px] border p-4 md:min-w-0"
+                style={{
+                  borderColor: 'color-mix(in srgb, var(--color-primary) 14%, var(--color-border))',
+                  backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, var(--color-accent))',
+                }}
+              >
+                <span
+                  className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                  style={{
+                    backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)',
+                    color: 'var(--color-primary)',
+                  }}
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                  <span
+                    className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                    style={{ backgroundColor: 'var(--color-primary)' }}
+                    aria-hidden="true"
+                  >
+                    {index + 1}
+                  </span>
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                    {title}
+                  </span>
+                  <span className="mt-1 block text-xs leading-5" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {description}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    );
+  }
+
   const items: Array<{ label: string; icon: typeof MapPin }> = [
     pickup ? { label: t('pickupService'), icon: MapPin } : null,
     bankTransfer ? { label: t('bankTransferService'), icon: Banknote } : null,
@@ -673,6 +755,7 @@ export default function HomePage() {
   const pickupFulfillment = isPickupFulfillment(siteConfig);
   const bankTransferPromise = usesBankTransferPromise(siteConfig);
   const commercialQuickLinks = getEnabledCommercialQuickLinks(siteConfig);
+  const isAsiaDeliGo = siteConfig?.branding?.storeName.trim().toLowerCase() === 'asia deli go';
 
   const homepageHero = siteConfig?.homepage?.hero;
   const homepageBlocks = siteConfig?.homepage?.blocks ?? [];
@@ -681,6 +764,13 @@ export default function HomePage() {
   const secondaryBlocks = heroBlock
     ? enabledBlocks.filter((block) => block.id !== heroBlock.id)
     : enabledBlocks;
+  const configuredCategoryBlocks = secondaryBlocks.filter((block): block is GridBannerBlock | RoundGridBannerBlock => (
+    isAsiaDeliGo && (block.type === 'grid' || block.type === 'round_grid')
+  ));
+  const hasConfiguredCategoryNavigation = configuredCategoryBlocks.length > 0;
+  const configuredPromotionBlocks = secondaryBlocks
+    .filter((block) => block.type !== 'grid' && block.type !== 'round_grid')
+    .slice(0, 1);
   const showLegacyHero = !heroBlock && homepageHero?.enabled !== false;
   const heroHeadline = homepageHero?.headline?.trim() || t('hero');
   const heroSubtitle = homepageHero?.subtitle?.trim() || t('heroSub');
@@ -753,7 +843,7 @@ export default function HomePage() {
         )}
 
         {(() => {
-          if (secondaryBlocks.length > 0) {
+          if (!hasConfiguredCategoryNavigation && secondaryBlocks.length > 0) {
             return (
               <div className="container-grocery space-y-4 py-4">
                 {secondaryBlocks.map((block) => (
@@ -769,18 +859,25 @@ export default function HomePage() {
           pickup={pickupFulfillment}
           bankTransfer={bankTransferPromise}
           manualConfirmation={availabilityOnlyStock}
+          guidedPickup={hasConfiguredCategoryNavigation}
         />
 
-        <HomeCampaignBand
-          products={products}
-          quickLinks={commercialQuickLinks}
-          loading={productsResult.fetching}
-        />
+        {hasConfiguredCategoryNavigation ? (
+          <ConfiguredCategoryGrid blocks={configuredCategoryBlocks} />
+        ) : (
+          <HomeCampaignBand
+            products={products}
+            quickLinks={commercialQuickLinks}
+            loading={productsResult.fetching}
+          />
+        )}
 
         {orderedSections.map((sectionId) => {
           switch (sectionId) {
             case 'shopByZone':
               if (availabilityOnlyStock) {
+                if (hasConfiguredCategoryNavigation) return null;
+
                 return (
                   <HomeCategoryShortcuts
                     key="categoryShortcuts"
@@ -943,6 +1040,14 @@ export default function HomePage() {
               return null;
           }
         })}
+
+        {hasConfiguredCategoryNavigation && configuredPromotionBlocks.length > 0 && (
+          <div className="container-grocery space-y-4 py-5" data-testid="home-configured-promo">
+            {configuredPromotionBlocks.map((block) => (
+              <BlockRenderer key={block.id} block={block} />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="hidden md:block">
@@ -967,7 +1072,7 @@ export default function HomePage() {
         )}
 
         {(() => {
-          if (secondaryBlocks.length > 0) {
+          if (!hasConfiguredCategoryNavigation && secondaryBlocks.length > 0) {
             return (
               <div className="container-grocery space-y-8 py-8 md:py-12">
                 {secondaryBlocks.map((block) => (
@@ -976,29 +1081,37 @@ export default function HomePage() {
               </div>
             );
           }
-          return (
+          if (!hasConfiguredCategoryNavigation) return (
             <section className="container-grocery py-6 md:py-8">
               <PromoBanner />
             </section>
           );
+          return null;
         })()}
 
         <HomeFulfillmentTrust
           pickup={pickupFulfillment}
           bankTransfer={bankTransferPromise}
           manualConfirmation={availabilityOnlyStock}
+          guidedPickup={hasConfiguredCategoryNavigation}
         />
 
-        <HomeCampaignBand
-          products={products}
-          quickLinks={commercialQuickLinks}
-          loading={productsResult.fetching}
-        />
+        {hasConfiguredCategoryNavigation ? (
+          <ConfiguredCategoryGrid blocks={configuredCategoryBlocks} />
+        ) : (
+          <HomeCampaignBand
+            products={products}
+            quickLinks={commercialQuickLinks}
+            loading={productsResult.fetching}
+          />
+        )}
 
         {orderedSections.map((sectionId) => {
           switch (sectionId) {
             case 'shopByZone':
               if (availabilityOnlyStock) {
+                if (hasConfiguredCategoryNavigation) return null;
+
                 return (
                   <HomeCategoryShortcuts
                     key="categoryShortcuts"
@@ -1091,7 +1204,11 @@ export default function HomePage() {
 
             case 'freshPicks':
               return (
-                <section key="freshPicks" className="container-grocery py-16 md:py-20">
+                <section
+                  key="freshPicks"
+                  className="container-grocery py-12 md:py-16"
+                  data-testid="desktop-home-fresh-picks"
+                >
                   <div className="mb-8 flex items-center justify-between">
                     <h2 className="heading-section text-xl md:text-2xl" style={{ color: 'var(--color-foreground)' }}>
                       {t('newArrivals')}
@@ -1180,6 +1297,14 @@ export default function HomePage() {
               return null;
           }
         })}
+
+        {hasConfiguredCategoryNavigation && configuredPromotionBlocks.length > 0 && (
+          <div className="container-grocery space-y-8 py-10 md:py-14" data-testid="home-configured-promo">
+            {configuredPromotionBlocks.map((block) => (
+              <BlockRenderer key={block.id} block={block} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

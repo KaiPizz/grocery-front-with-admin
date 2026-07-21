@@ -93,6 +93,11 @@ const ENGLISH_HERO_SLIDE_IDS = new Set([
   'asiandeligo-drive-hero-slide-5',
 ]);
 
+const POLISH_HERO_SLIDE_IDS = new Set([
+  'asiandeligo-drive-hero-slide-1',
+  'asiandeligo-drive-hero-slide-6',
+]);
+
 const QUICK_LINK_COPY: Record<string, {
   label: ExactTranslation;
   description: ExactTranslation;
@@ -181,7 +186,7 @@ function localizeGridItem(item: GridItem): GridItem {
   return title ? { ...item, title: translateExact(item.title, title) } : item;
 }
 
-function localizeBlock(block: BannerBlock): BannerBlock {
+function filterVerifiedHeroSlides(block: BannerBlock, locale: string): BannerBlock {
   if (block.type === 'hero' && block.id === 'asiandeligo-drive-hero-20260713') {
     const matchesVerifiedMedia = block.slides.length === Object.keys(VERIFIED_HERO_MEDIA).length
       && block.slides.every((slide) => {
@@ -192,15 +197,25 @@ function localizeBlock(block: BannerBlock): BannerBlock {
           && slide.mobileImageUrl === media.mobileImageUrl,
         );
       });
-    const englishSlides = block.slides.filter((slide) => ENGLISH_HERO_SLIDE_IDS.has(slide.id));
+    const localeSlideIds = isEnglishLocale(locale)
+      ? ENGLISH_HERO_SLIDE_IDS
+      : POLISH_HERO_SLIDE_IDS;
+    const localeSlides = block.slides.filter((slide) => localeSlideIds.has(slide.id));
 
-    // Four current artworks contain baked-in Polish copy. Keep the two verified
-    // English artworks on /en without changing the six-slide Polish source.
-    if (matchesVerifiedMedia && englishSlides.some((slide) => slide.enabled)) {
-      return { ...block, slides: englishSlides };
+    // The verified six-image set contains language-specific baked-in copy and
+    // one obsolete shipping promise. Keep only the safe pair for each locale.
+    // Any owner media edit disables this safeguard instead of hiding new work.
+    if (matchesVerifiedMedia && localeSlides.some((slide) => slide.enabled)) {
+      return { ...block, slides: localeSlides };
     }
+  }
 
-    return block;
+  return block;
+}
+
+function localizeBlock(block: BannerBlock): BannerBlock {
+  if (block.type === 'hero') {
+    return filterVerifiedHeroSlides(block, 'en');
   }
 
   if (block.type === 'grid' || block.type === 'round_grid') {
@@ -261,10 +276,25 @@ export function localizeConfiguredStorefront(
 ): StorefrontConfig | null {
   if (
     !config
-    || !isEnglishLocale(locale)
     || config.branding.storeName.trim() !== ASIA_DELI_GO_STORE_NAME
   ) {
     return config;
+  }
+
+  if (!isEnglishLocale(locale)) {
+    const blocks = config.homepage.blocks.map((block) => filterVerifiedHeroSlides(block, locale));
+
+    if (blocks.every((block, index) => block === config.homepage.blocks[index])) {
+      return config;
+    }
+
+    return {
+      ...config,
+      homepage: {
+        ...config.homepage,
+        blocks,
+      },
+    };
   }
 
   return {

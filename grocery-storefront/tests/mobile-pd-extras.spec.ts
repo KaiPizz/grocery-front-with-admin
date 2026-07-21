@@ -155,7 +155,7 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     expect(await getVisibleTextLineCount(stickyAdd)).toBe(1);
   });
 
-  test('scroll-to-top control stays clear of mobile bottom purchase chrome', async ({ page }) => {
+  test('hides the scroll-to-top control on mobile product pages', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 640 });
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');
@@ -171,26 +171,7 @@ test.describe('Mobile PD — Tier 1 sticky add-to-cart + Tier 2 unit price + in-
     await scrollInlineAddOutOfView(page);
     await expect.poll(async () => page.evaluate(() => window.scrollY)).toBeGreaterThan(360);
     await expect(stickyBar).toHaveAttribute('aria-hidden', 'false');
-    await expect
-      .poll(async () => scrollButton.evaluate((element) => getComputedStyle(element).opacity))
-      .toBe('1');
-
-    const overlap = await page.evaluate(() => {
-      const scrollBox = document.querySelector('button[aria-label="Scroll to top"]')?.getBoundingClientRect();
-      const navBox = document.querySelector('[data-testid="mobile-bottom-nav"]')?.getBoundingClientRect();
-      const stickyBox = document.querySelector('[data-testid="mobile-pd-sticky-bar"]')?.getBoundingClientRect();
-
-      if (!scrollBox || !navBox) return true;
-
-      const overlapsNav = scrollBox.bottom > navBox.top && scrollBox.top < navBox.bottom;
-      const overlapsSticky = stickyBox
-        ? scrollBox.bottom > stickyBox.top && scrollBox.top < stickyBox.bottom
-        : false;
-
-      return overlapsNav || overlapsSticky;
-    });
-
-    expect(overlap).toBe(false);
+    await expect(scrollButton).toBeHidden();
   });
 
   test('unit price renders on PD when product has pricePerUnit + unitOfMeasure (Tier 2)', async ({ page }) => {

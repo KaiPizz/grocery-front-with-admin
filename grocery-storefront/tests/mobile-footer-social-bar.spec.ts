@@ -24,6 +24,17 @@ interface SocialLink {
   url: string;
 }
 
+interface FooterConfigOptions {
+  storeName?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  columns?: Array<{
+    title: string;
+    links: Array<{ label: string; href: string }>;
+  }>;
+}
+
 const SUPPORTED_PLATFORMS = [
   'Facebook',
   'Instagram',
@@ -37,14 +48,14 @@ const SUPPORTED_PLATFORMS = [
   'Pinterest',
 ] as const;
 
-function configEnvelope(socialLinks: SocialLink[]) {
+function configEnvelope(socialLinks: SocialLink[], options: FooterConfigOptions = {}) {
   return {
     slug: 'test',
     config: {
       branding: {
         logoUrl: null,
         faviconUrl: null,
-        storeName: 'Test Store',
+        storeName: options.storeName ?? 'Test Store',
         colors: {
           primary: '#16a34a',
           primaryHover: '#15803d',
@@ -83,7 +94,7 @@ function configEnvelope(socialLinks: SocialLink[]) {
         },
         footer: {
           tagline: 'Fresh groceries configured for this store.',
-          columns: [],
+          columns: options.columns ?? [],
           copyrightText: '',
         },
         bannerPosition: 'below-hero',
@@ -101,9 +112,9 @@ function configEnvelope(socialLinks: SocialLink[]) {
         canonical: '',
       },
       general: {
-        phone: '',
-        email: '',
-        address: '',
+        phone: options.phone ?? '',
+        email: options.email ?? '',
+        address: options.address ?? '',
         socialLinks,
         policyLinks: { privacy: '/privacy', terms: '/terms', about: '#' },
         freeShippingThreshold: 150,
@@ -116,18 +127,26 @@ function configEnvelope(socialLinks: SocialLink[]) {
   };
 }
 
-async function mockStorefrontConfig(page: Page, socialLinks: SocialLink[]) {
+async function mockStorefrontConfig(
+  page: Page,
+  socialLinks: SocialLink[],
+  options: FooterConfigOptions = {},
+) {
   await page.route('**/api/config/**', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(configEnvelope(socialLinks)),
+      body: JSON.stringify(configEnvelope(socialLinks, options)),
     });
   });
 }
 
-async function openProductsWithFooterConfig(page: Page, socialLinks: SocialLink[]) {
-  await mockStorefrontConfig(page, socialLinks);
+async function openProductsWithFooterConfig(
+  page: Page,
+  socialLinks: SocialLink[],
+  options: FooterConfigOptions = {},
+) {
+  await mockStorefrontConfig(page, socialLinks, options);
   await mockMobileStorefront(page);
   await page.goto('/en/products');
   await page.getByRole('contentinfo').scrollIntoViewIfNeeded();
@@ -142,6 +161,41 @@ async function socialLabels(page: Page) {
 }
 
 test.describe('B19 storefront footer SocialBar', () => {
+  test('keeps real contact details visible when configured navigation columns exist', async ({ page }) => {
+    await openProductsWithFooterConfig(page, [], {
+      phone: '+48 123 456 789',
+      email: 'hello@example.com',
+      address: 'Marszałkowska 1, Warszawa',
+      columns: [{ title: 'Shop', links: [{ label: 'Products', href: '/products' }] }],
+    });
+
+    const contact = page.getByRole('navigation', { name: /contact/i });
+    await expect(contact.getByRole('link', { name: 'hello@example.com' })).toHaveAttribute(
+      'href',
+      'mailto:hello@example.com',
+    );
+    await expect(contact.getByRole('link', { name: '+48 123 456 789' })).toHaveAttribute(
+      'href',
+      'tel:+48 123 456 789',
+    );
+    await expect(contact).toContainText('Marszałkowska 1, Warszawa');
+  });
+
+  test('does not publish known Asia Deli Go placeholder contact details', async ({ page }) => {
+    await openProductsWithFooterConfig(page, [], {
+      storeName: 'Asia Deli Go',
+      phone: '+48 000 000 000',
+      email: 'kontakt@asiandeligo.pl',
+      address: 'Warszawa, Polska',
+      columns: [{ title: 'Shop', links: [{ label: 'Products', href: '/products' }] }],
+    });
+
+    const footer = page.getByRole('contentinfo');
+    await expect(footer.locator('a[href^="mailto:"]')).toHaveCount(0);
+    await expect(footer.locator('a[href^="tel:"]')).toHaveCount(0);
+    await expect(footer).not.toContainText('Warszawa, Polska');
+  });
+
   test('renders nothing when the admin socialLinks array is empty', async ({ page }) => {
     // Protects: backlog B19 empty-array contract; no configured links means
     // no social-icon bar, no empty wrapper, and no footer gap.
