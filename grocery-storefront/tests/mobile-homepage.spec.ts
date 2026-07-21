@@ -150,6 +150,34 @@ async function mockHomepageHeroConfig(page: Page) {
 }
 
 test.describe('mobile homepage', () => {
+  test('labels the homepage shelf as new arrivals and requests newest products first', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockHomepageConfig(page);
+    await mockMobileStorefront(page, {
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en');
+
+    const englishShelf = page.getByTestId('desktop-home-fresh-picks');
+    await expect(englishShelf.getByRole('heading', { name: 'New arrivals' })).toBeVisible();
+    await expect.poll(() => productQueries.some((variables) => (
+      variables.first === 8
+      && variables.sortBy?.field === 'DATE'
+      && variables.sortBy?.direction === 'DESC'
+    ))).toBe(true);
+    await expect.poll(() => productQueries.some((variables) => (
+      variables.first === 8 && variables.sortBy == null
+    ))).toBe(true);
+
+    await page.goto('/pl');
+    const polishShelf = page.getByTestId('desktop-home-fresh-picks');
+    await expect(polishShelf.getByRole('heading', { name: 'Nowości' })).toBeVisible();
+  });
+
   test('renders admin-configured homepage hero copy and CTA', async ({ page }) => {
     // Protects the admin homepage contract: published hero copy should affect
     // the first storefront viewport, not only lower banner blocks or metadata.
