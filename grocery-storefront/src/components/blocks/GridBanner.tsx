@@ -14,6 +14,7 @@ interface GridBannerProps {
 export function GridBanner({ block }: GridBannerProps) {
   const items = block.items.filter((i) => i.enabled);
   if (items.length === 0) return null;
+  const imageFillsFrame = block.imageFit === 'cover';
 
   return (
     <div className="grid grid-cols-3 gap-3 md:gap-8">
@@ -28,7 +29,9 @@ export function GridBanner({ block }: GridBannerProps) {
               <img
                 src={getImageSrc(item.imageUrl, { maxWidth: 640 }) || item.imageUrl}
                 alt={item.title || 'Category'}
-                className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105 md:p-3"
+                className={imageFillsFrame
+                  ? 'h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]'
+                  : 'h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105 md:p-3'}
                 loading="lazy"
               />
             ) : (

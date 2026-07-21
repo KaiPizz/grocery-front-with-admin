@@ -6,6 +6,31 @@
 
 ---
 
+## 2026-07-21 Asia Deli Go Landing Responsive And Category Image Foundation
+
+- The complete desktop header now starts at the measured safe `xl` breakpoint
+  instead of `md`. Tablet and small-laptop widths keep the direct search/cart/
+  account controls plus a compact navigation drawer without horizontal page
+  overflow.
+- Grid banner blocks now support a backwards-compatible `contain` / `cover`
+  image-fit setting. Existing configs default to the unchanged `contain`
+  package-image treatment; full-frame category artwork can opt into `cover`.
+- New rectangular grid-banner uploads require 800x800 source images for near
+  DPR-2 desktop sharpness, while round-grid uploads remain on their existing
+  contract. Admin previews use the same fit mode as the storefront.
+- Focused regressions cover guest and authenticated behavior from 375 through
+  1600px (including a deliberately long account name), both directions across
+  the 1279/1280 breakpoint while menus are open,
+  schema preservation/rejection, and both storefront image-fit modes.
+- Validation is green: 84 admin unit tests, 42 landing/mobile/category E2E
+  tests, TypeScript and lint for both apps, both production builds, both
+  standalone production smokes, static-config contracts, and security headers.
+- This foundation does not replace the live category artwork yet. New category
+  assets should be exported as 800x800 WebP at no more than 120 KB each before
+  rollout because the current image proxy does not resize originals.
+- Production remains unchanged until the complete candidate passes the guarded
+  check-only lane and receives owner deploy approval.
+
 ## 2026-07-20 Asia Deli Go Auth Polish And Release Gate
 
 - Customer login and registration now announce validation/API errors, connect

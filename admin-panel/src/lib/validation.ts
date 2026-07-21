@@ -194,6 +194,7 @@ const gridBannerBlockSchema = z.object({
   enabled: z.boolean(),
   order: z.number().int().min(0),
   columns: z.preprocess((v) => (typeof v === 'number' ? 3 : v), z.literal(3)),
+  imageFit: z.enum(['contain', 'cover']).optional(),
   items: z.array(gridItemSchema).max(3),
 });
 

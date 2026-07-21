@@ -8,6 +8,22 @@
 
 ## Project Documentation
 
+### Header breakpoints must reflect measured content width, not device labels
+- **Error:** The full desktop header activated at Tailwind `md` (768px), making
+  the document 1066px wide on a 768px viewport and still overflowing at 1200px.
+- **Cause:** The breakpoint was chosen as a generic tablet/desktop boundary,
+  but the configured logo, navigation, search, language, wishlist, cart, and
+  guest controls require roughly 1234px before they fit together, while the
+  full authenticated account label still overflows at exactly 1280px.
+- **Fix:** Measured the complete configured header at boundary widths, kept the
+  useful desktop action controls on tablets, and delayed only the full nav/
+  mega-menu to `xl` (1280px) with a drawer below that point. The authenticated
+  account control stays compact at every width, with an accessible label and
+  the same full account menu for the user's name, email, and actions.
+- **Rule:** Choose responsive breakpoints from the worst supported localized
+  content and authenticated state. Test the pixels immediately below and at the
+  breakpoint, and assert that document width never exceeds viewport width.
+
 ### Auth behavior changed but the production health gate kept the old status
 - **Error:** The clean-guest session route changed from `401` to `200`, while
   the guarded production activator still required `401`; activation would have

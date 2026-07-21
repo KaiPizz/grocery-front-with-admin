@@ -40,7 +40,7 @@ const BLOCK_META: Record<BannerBlock['type'], { labelKey: string; descriptionKey
   grid: {
     labelKey: 'homepage.blocks.meta.grid.label',
     descriptionKey: 'homepage.blocks.meta.grid.description',
-    hint: '400 × 400 px per tile',
+    hint: '800 × 800 px per tile',
     icon: <Grid2x2 className="w-5 h-5" />,
   },
   round_grid: {
@@ -75,7 +75,7 @@ function createBlock(type: BannerBlock['type'], order: number, defaultCtaText: s
     return { id, type: 'horizontal', enabled: true, order, imageUrl: null, mobileImageUrl: null, title: '', ctaText: '', ctaLink: '' } satisfies HorizontalBannerBlock;
   }
   if (type === 'grid') {
-    return { id, type: 'grid', enabled: true, order, columns: 3, items: [] } satisfies GridBannerBlock;
+    return { id, type: 'grid', enabled: true, order, columns: 3, imageFit: 'contain', items: [] } satisfies GridBannerBlock;
   }
   if (type === 'round_grid') {
     return { id, type: 'round_grid', enabled: true, order, columns: 3, items: [] } satisfies RoundGridBannerBlock;

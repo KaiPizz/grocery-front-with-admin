@@ -87,12 +87,15 @@ export interface GridItem {
   enabled: boolean;
 }
 
+export type GridImageFit = 'contain' | 'cover';
+
 export interface GridBannerBlock {
   id: string;
   type: 'grid';
   enabled: boolean;
   order: number;
   columns: 3;
+  imageFit?: GridImageFit;
   items: GridItem[];
 }
 

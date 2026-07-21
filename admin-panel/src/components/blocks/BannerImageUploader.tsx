@@ -16,6 +16,7 @@ interface BannerImageUploaderProps {
   requiredHeight: number;
   label?: string;
   required?: boolean;
+  previewFit?: 'contain' | 'cover';
 }
 
 type Translate = (key: string) => string;
@@ -98,6 +99,7 @@ export function BannerImageUploader({
   requiredHeight,
   label,
   required,
+  previewFit = 'contain',
 }: BannerImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [validating, setValidating] = useState(false);
@@ -159,7 +161,9 @@ export function BannerImageUploader({
             <img
               src={previewUrl}
               alt={t('homepage.blocks.uploadedBannerAlt')}
-              className="h-full w-full object-contain"
+              className={previewFit === 'cover'
+                ? 'h-full w-full object-cover'
+                : 'h-full w-full object-contain'}
             />
             {usingFallback && fallbackLabel && (
               <span className="absolute bottom-1.5 left-1.5 rounded bg-gray-900/80 px-2 py-1 text-[11px] font-medium text-white">

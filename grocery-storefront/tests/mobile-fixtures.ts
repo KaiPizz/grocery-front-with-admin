@@ -878,7 +878,7 @@ export async function seedCartStorage(page: Page, cartId = 'cart-1') {
   }, cartId);
 }
 
-export async function seedAuthSession(page: Page) {
+export async function seedAuthSession(page: Page, fullName = 'Mobile Shopper') {
   await page.context().addCookies([{
     name: 'grocery_customer_access',
     value: 'opaque-mobile-test-session',
@@ -897,7 +897,7 @@ export async function seedAuthSession(page: Page) {
         customer: {
           id: 'customer-1',
           email: 'mobile@example.com',
-          fullName: 'Mobile Shopper',
+          fullName,
         },
       }),
     });

@@ -103,7 +103,7 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
     <nav
       aria-label={t('megaMenuLabel')}
       data-testid="category-mega-menu"
-      className="fixed left-1/2 z-[60] hidden w-[min(76rem,calc(100vw-2rem))] -translate-x-1/2 md:block"
+      className="fixed left-1/2 z-[60] hidden w-[min(76rem,calc(100vw-2rem))] -translate-x-1/2 xl:block"
       style={{ top: 'calc(var(--header-height) - 1px)' }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}

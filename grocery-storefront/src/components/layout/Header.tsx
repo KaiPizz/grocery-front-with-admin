@@ -186,8 +186,36 @@ export function Header() {
   }, [menuOpen, searchOpen, setMobileHeaderVisible]);
 
   useEffect(() => {
+    if (!isMounted || typeof window === 'undefined') return;
+
+    const desktopNavigation = window.matchMedia('(min-width: 1280px)');
+
+    function reconcileNavigationMode(event: MediaQueryListEvent | MediaQueryList) {
+      if (event.matches) {
+        setMenuOpen(false);
+        setSearchOpen(false);
+        return;
+      }
+
+      if (categoryMenuCloseTimeoutRef.current) {
+        clearTimeout(categoryMenuCloseTimeoutRef.current);
+        categoryMenuCloseTimeoutRef.current = null;
+      }
+
+      setCategoryMenuOpen(false);
+    }
+
+    reconcileNavigationMode(desktopNavigation);
+    desktopNavigation.addEventListener('change', reconcileNavigationMode);
+
+    return () => {
+      desktopNavigation.removeEventListener('change', reconcileNavigationMode);
+    };
+  }, [isMounted]);
+
+  useEffect(() => {
     if (!menuOpen || !isMounted) return;
-    if (typeof window === 'undefined' || window.innerWidth >= 768) return;
+    if (typeof window === 'undefined' || window.innerWidth >= 1280) return;
 
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -216,7 +244,7 @@ export function Header() {
 
   useEffect(() => {
     if (!categoryMenuOpen || !isMounted) return;
-    if (typeof window === 'undefined' || window.innerWidth < 768) return;
+    if (typeof window === 'undefined' || window.innerWidth < 1280) return;
 
     const originalOverflow = document.body.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
@@ -319,7 +347,6 @@ export function Header() {
   }
 
   const isAuthenticated = isMounted && session.status === 'authenticated';
-  const accountName = session.user?.fullName?.split(' ')[0] || t('account');
   const accountMenuItems = [
     { href: '/account#profile', label: tAccount('menuAccount'), icon: UserRound },
     { href: '/account#orders', label: tAccount('menuOrders'), icon: Package },
@@ -388,7 +415,7 @@ export function Header() {
           )}
         </Link>
 
-        <nav className="hidden shrink-0 items-center gap-1 md:flex" aria-label="Main navigation">
+        <nav className="hidden shrink-0 items-center gap-1 xl:flex" aria-label="Main navigation">
           {navItems.map(({ href, label }) => {
             if (href === '/categories') {
               return (
@@ -535,14 +562,13 @@ export function Header() {
             <div className="relative hidden md:block ml-1 group/account">
               <button
                 type="button"
-                className="h-10 max-w-[160px] rounded-xl px-3 flex items-center gap-2 border transition-colors duration-fast hover-surface"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border transition-colors duration-fast hover-surface"
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                 title={session.user?.fullName || t('account')}
+                aria-label={session.user?.fullName || t('account')}
                 aria-haspopup="menu"
               >
                 <UserRound className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span className="text-sm font-medium truncate">{accountName}</span>
-                <ChevronDown className="w-4 h-4 shrink-0 opacity-70 transition-transform duration-fast group-hover/account:rotate-180 group-focus-within/account:rotate-180" aria-hidden="true" />
               </button>
 
               <div className="absolute right-0 top-full pt-2 w-[280px] opacity-0 invisible translate-y-2 transition-all duration-fast group-hover/account:opacity-100 group-hover/account:visible group-hover/account:translate-y-0 group-focus-within/account:opacity-100 group-focus-within/account:visible group-focus-within/account:translate-y-0">
@@ -596,18 +622,17 @@ export function Header() {
           ) : (
             <Link
               href="/login"
-              className="ml-1 hidden h-10 w-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border text-sm font-medium hover-surface md:inline-flex 2xl:w-auto 2xl:px-3"
+              className="ml-1 hidden h-10 w-10 items-center justify-center rounded-xl border text-sm font-medium hover-surface md:inline-flex"
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               aria-label={t('login')}
             >
               <LogIn className="w-4 h-4" aria-hidden="true" />
-              <span className="hidden 2xl:inline">{t('login')}</span>
             </Link>
           )}
 
           <button
             type="button"
-            className="md:hidden p-2.5 rounded-xl hover-surface"
+            className="xl:hidden p-2.5 rounded-xl hover-surface"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? tCommon('closeMenu') : tCommon('openMenu')}
             aria-expanded={menuOpen}
@@ -641,7 +666,7 @@ export function Header() {
       )}
 
       {menuOpen && (
-        <div className="fixed inset-0 z-[70] md:hidden" role="presentation">
+        <div className="fixed inset-0 z-[70] xl:hidden" role="presentation">
           <button
             type="button"
             className="absolute inset-0 bg-black/35 backdrop-blur-[1px]"

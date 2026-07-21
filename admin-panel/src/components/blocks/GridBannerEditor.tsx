@@ -55,6 +55,27 @@ export function GridBannerEditor({ block, onChange }: GridBannerEditorProps) {
         </span>
       </div>
 
+      <div className="rounded-lg border border-gray-200 bg-white p-3">
+        <label htmlFor={`grid-image-fit-${block.id}`} className="text-sm font-medium text-gray-700">
+          {t('homepage.blocks.imageFitLabel')}
+        </label>
+        <select
+          id={`grid-image-fit-${block.id}`}
+          value={block.imageFit ?? 'contain'}
+          onChange={(event) => onChange({
+            ...block,
+            imageFit: event.target.value === 'cover' ? 'cover' : 'contain',
+          })}
+          className="mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+        >
+          <option value="contain">{t('homepage.blocks.imageFitContain')}</option>
+          <option value="cover">{t('homepage.blocks.imageFitCover')}</option>
+        </select>
+        <p className="mt-1.5 text-xs leading-5 text-gray-500">
+          {t('homepage.blocks.imageFitHint')}
+        </p>
+      </div>
+
       <div className="space-y-3">
         {block.items.map((item, index) => (
           <div key={item.id} className="rounded-lg border border-gray-200 bg-gray-50 p-4">
@@ -89,10 +110,11 @@ export function GridBannerEditor({ block, onChange }: GridBannerEditorProps) {
             <BannerImageUploader
               value={item.imageUrl}
               onChange={(url) => updateItem(index, { imageUrl: url })}
-              requiredWidth={400}
-              requiredHeight={400}
+              requiredWidth={800}
+              requiredHeight={800}
               label={t('homepage.blocks.tileImage')}
               required
+              previewFit={block.imageFit ?? 'contain'}
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
