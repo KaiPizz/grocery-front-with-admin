@@ -174,14 +174,7 @@ test.describe('listing product card scan value', () => {
     const wishlistButton = card.getByRole('button', { name: /add to wishlist/i });
     const wishlistBox = await wishlistButton.boundingBox();
     expect(wishlistBox).not.toBeNull();
-    const wishlistHitTarget = await page.evaluate(({ x, y }) => {
-      const element = document.elementFromPoint(x, y);
-      return element?.closest('button')?.getAttribute('aria-label') ?? null;
-    }, {
-      x: wishlistBox!.x + wishlistBox!.width / 2,
-      y: wishlistBox!.y + wishlistBox!.height / 2,
-    });
-    expect(wishlistHitTarget ?? '').toMatch(/add to wishlist/i);
+    await wishlistButton.click({ trial: true });
 
     await page.mouse.move(20, 20);
     await expect(imageCounter).toContainText('1/3');
