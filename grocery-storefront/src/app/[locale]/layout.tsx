@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { LocalizedConfigProvider } from '@/components/ConfigProvider';
 import { locales } from '@/i18n/config';
 
 export default async function LocaleLayout({
@@ -21,7 +22,9 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
+      <LocalizedConfigProvider key={locale} locale={locale}>
+        {children}
+      </LocalizedConfigProvider>
     </NextIntlClientProvider>
   );
 }

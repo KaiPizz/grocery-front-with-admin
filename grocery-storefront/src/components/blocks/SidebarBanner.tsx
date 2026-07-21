@@ -2,7 +2,8 @@
 
 /* eslint-disable @next/next/no-img-element -- Runtime-configured admin media can use arbitrary URLs until the production media loader policy is defined. */
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { getLocaleNeutralConfiguredHref } from '@/lib/configured-content-localization';
 import { getImageSrc } from '@/lib/utils';
 import type { SidebarBannerBlock } from '@/types/storefront-config';
 
@@ -42,7 +43,7 @@ export function SidebarBanner({ block }: SidebarBannerProps) {
   return (
     <div className="hidden md:block">
       {block.ctaLink ? (
-        <Link href={block.ctaLink} className="block">{content}</Link>
+        <Link href={getLocaleNeutralConfiguredHref(block.ctaLink, block.id)} className="block">{content}</Link>
       ) : (
         content
       )}

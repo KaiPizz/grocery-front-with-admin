@@ -1,11 +1,12 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import {
   extractStorefrontConfig,
   getStorefrontConfigUrls,
   withStorefrontConfigDefaults,
 } from '@/lib/storefront-config';
+import { localizeConfiguredStorefront } from '@/lib/configured-content-localization';
 import type { StorefrontConfig } from '@/types/storefront-config';
 
 const CONFIG_URLS = getStorefrontConfigUrls();
@@ -26,6 +27,11 @@ function camelToKebab(str: string): string {
 
 interface ConfigProviderProps {
   initialConfig: StorefrontConfig | null;
+  children: React.ReactNode;
+}
+
+interface LocalizedConfigProviderProps {
+  locale: string;
   children: React.ReactNode;
 }
 
@@ -78,6 +84,29 @@ export function ConfigProvider({ initialConfig, children }: ConfigProviderProps)
 
   return (
     <ConfigContext.Provider value={config}>
+      {children}
+    </ConfigContext.Provider>
+  );
+}
+
+/**
+ * Overrides the raw root config with locale-aware presentation data. This must
+ * live below NextIntlClientProvider so client-side language changes update the
+ * configured homepage without refetching or mutating owner-managed config.
+ */
+export function LocalizedConfigProvider({ locale, children }: LocalizedConfigProviderProps) {
+  const config = useContext(ConfigContext);
+  const localizedConfig = useMemo(
+    () => localizeConfiguredStorefront(config, locale),
+    [config, locale],
+  );
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  return (
+    <ConfigContext.Provider value={localizedConfig}>
       {children}
     </ConfigContext.Provider>
   );

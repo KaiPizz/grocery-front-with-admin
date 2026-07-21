@@ -2,7 +2,8 @@
 
 /* eslint-disable @next/next/no-img-element -- Runtime-configured admin media can use arbitrary URLs until the production media loader policy is defined. */
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { getLocaleNeutralConfiguredHref } from '@/lib/configured-content-localization';
 import { getImageSrc } from '@/lib/utils';
 import type { GridBannerBlock } from '@/types/storefront-config';
 
@@ -19,7 +20,7 @@ export function GridBanner({ block }: GridBannerProps) {
       {items.map((item) => (
         <Link
           key={item.id}
-          href={item.href}
+          href={getLocaleNeutralConfiguredHref(item.href, item.id)}
           className="group flex flex-col items-center gap-2"
         >
           <div className="relative w-full overflow-hidden rounded-lg md:rounded-xl border border-gray-100 bg-white aspect-square">

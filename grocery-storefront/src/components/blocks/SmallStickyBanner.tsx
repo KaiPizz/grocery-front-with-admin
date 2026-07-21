@@ -4,7 +4,8 @@
 
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { getLocaleNeutralConfiguredHref } from '@/lib/configured-content-localization';
 import { getImageSrc } from '@/lib/utils';
 import type { SmallStickyBannerBlock } from '@/types/storefront-config';
 
@@ -65,7 +66,7 @@ export function SmallStickyBanner({ block }: SmallStickyBannerProps) {
       </div>
       {block.ctaText && block.ctaLink && (
         <Link
-          href={block.ctaLink}
+          href={getLocaleNeutralConfiguredHref(block.ctaLink, block.id)}
           className="hidden md:inline-flex items-center mr-6 rounded-full bg-indigo-600 text-white px-4 py-1.5 text-xs font-semibold hover:bg-indigo-700 transition-colors shrink-0"
         >
           {block.ctaText}
@@ -85,7 +86,7 @@ export function SmallStickyBanner({ block }: SmallStickyBannerProps) {
   );
 
   if (block.ctaLink && !block.ctaText) {
-    return <Link href={block.ctaLink} className="contents">{inner}</Link>;
+    return <Link href={getLocaleNeutralConfiguredHref(block.ctaLink, block.id)} className="contents">{inner}</Link>;
   }
 
   return inner;

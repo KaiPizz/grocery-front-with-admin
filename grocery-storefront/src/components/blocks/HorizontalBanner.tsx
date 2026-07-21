@@ -2,8 +2,9 @@
 
 /* eslint-disable @next/next/no-img-element -- Runtime-configured admin media can use arbitrary URLs until the production media loader policy is defined. */
 
-import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
+import { getLocaleNeutralConfiguredHref } from '@/lib/configured-content-localization';
 import { getImageSrc } from '@/lib/utils';
 import type { HorizontalBannerBlock } from '@/types/storefront-config';
 
@@ -61,7 +62,7 @@ export function HorizontalBanner({ block }: HorizontalBannerProps) {
   );
 
   if (block.ctaLink) {
-    return <Link href={block.ctaLink} className="block w-full">{content}</Link>;
+    return <Link href={getLocaleNeutralConfiguredHref(block.ctaLink, block.id)} className="block w-full">{content}</Link>;
   }
 
   return content;

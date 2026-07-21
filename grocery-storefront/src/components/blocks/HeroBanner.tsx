@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
+import { getLocaleNeutralConfiguredHref } from '@/lib/configured-content-localization';
 import { getImageSrc } from '@/lib/utils';
 import type { HeroBannerBlock } from '@/types/storefront-config';
 
@@ -40,7 +41,8 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
 
   if (slides.length === 0) return null;
 
-  const slide = slides[current];
+  const activeIndex = current % slides.length;
+  const slide = slides[activeIndex];
   const fallbackHeading = heading?.trim() || t('hero');
 
   const inner = (
@@ -52,7 +54,7 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
       {slides.map((s, i) => (
         <div
           key={s.id}
-          className={`absolute inset-0 transition-opacity duration-700 ${i === current ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+          className={`absolute inset-0 transition-opacity duration-700 ${i === activeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
         >
           {s.imageUrl || s.mobileImageUrl ? (
             <picture className="block h-full w-full">
@@ -82,7 +84,7 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
               )}
               {s.ctaText && s.ctaLink && (
                 <Link
-                  href={s.ctaLink}
+                  href={getLocaleNeutralConfiguredHref(s.ctaLink, s.id)}
                   className="inline-flex items-center gap-2 rounded-full bg-white text-gray-900 px-5 py-2.5 text-sm font-semibold hover:bg-gray-100 transition-colors shadow"
                 >
                   {s.ctaText}
@@ -101,7 +103,7 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
                 key={i}
                 type="button"
                 onClick={() => goTo(i)}
-                className={`w-2 h-2 rounded-full transition-all ${i === current ? 'bg-white w-4' : 'bg-white/50 hover:bg-white/75'}`}
+                className={`w-2 h-2 rounded-full transition-all ${i === activeIndex ? 'bg-white w-4' : 'bg-white/50 hover:bg-white/75'}`}
                 aria-label={`Go to slide ${i + 1}`}
               />
             ))}
@@ -112,7 +114,7 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
   );
 
   if (slide.ctaLink && slides.length === 1 && !slide.title && !slide.ctaText) {
-    return <Link href={slide.ctaLink} className="block w-full">{inner}</Link>;
+    return <Link href={getLocaleNeutralConfiguredHref(slide.ctaLink, slide.id)} className="block w-full">{inner}</Link>;
   }
 
   return inner;

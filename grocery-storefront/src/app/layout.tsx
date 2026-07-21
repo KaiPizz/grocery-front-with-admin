@@ -8,6 +8,7 @@ import { AppToaster } from '@/components/layout/AppToaster';
 import { ConfigProvider } from '@/components/ConfigProvider';
 import { TrackingScripts } from '@/components/TrackingScripts';
 import { SensitiveRouteBoundary } from '@/components/SensitiveRouteBoundary';
+import { localizeConfiguredStorefront } from '@/lib/configured-content-localization';
 import { fetchServerConfig, getConfigString } from '@/lib/storefront-config';
 import './globals.css';
 
@@ -24,7 +25,11 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const siteConfig = await fetchServerConfig();
+  const [locale, rawConfig] = await Promise.all([
+    getLocale(),
+    fetchServerConfig(),
+  ]);
+  const siteConfig = localizeConfiguredStorefront(rawConfig, locale);
   const title = getConfigString(siteConfig?.seo?.defaultTitle) ?? FALLBACK_TITLE;
   const description = getConfigString(siteConfig?.seo?.defaultDescription) ?? FALLBACK_DESCRIPTION;
   const faviconUrl = getConfigString(siteConfig?.branding?.faviconUrl);
