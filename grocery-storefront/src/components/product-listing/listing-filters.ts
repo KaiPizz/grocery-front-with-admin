@@ -5,6 +5,8 @@ export const DIETARY_OPTIONS = ['vegan', 'vegetarian', 'gluten-free', 'lactose-f
 export const CERT_OPTIONS = ['organic', 'halal', 'kosher'];
 export const ZONE_OPTIONS: StorageZone[] = ['FROZEN', 'CHILLED', 'AMBIENT'];
 
+type SearchParamsReader = Pick<URLSearchParams, 'getAll'>;
+
 const ALLERGEN_ALIASES: Record<string, string> = {
   gluten: 'cereals',
   tree_nuts: 'nuts',
@@ -36,6 +38,32 @@ export const DEFAULT_FILTERS: ProductFiltersState = {
   priceMin: '',
   priceMax: '',
 };
+
+export function parseDietaryQueryParams(searchParams: SearchParamsReader) {
+  const requestedTags = new Set(
+    searchParams
+      .getAll('dietary')
+      .flatMap((value) => value.split(','))
+      .map((value) => value.trim().toLowerCase())
+      .filter(Boolean),
+  );
+
+  return DIETARY_OPTIONS.filter((tag) => requestedTags.has(tag));
+}
+
+export function setDietaryQueryParams(searchParams: URLSearchParams, dietaryTags: string[]) {
+  const requestedTags = new Set(
+    dietaryTags
+      .map((value) => value.trim().toLowerCase())
+      .filter(Boolean),
+  );
+  const normalizedTags = DIETARY_OPTIONS.filter((tag) => requestedTags.has(tag));
+
+  searchParams.delete('dietary');
+  for (const tag of normalizedTags) {
+    searchParams.append('dietary', tag);
+  }
+}
 
 export function normalizeAllergenCode(code: string) {
   return ALLERGEN_ALIASES[code] ?? code;

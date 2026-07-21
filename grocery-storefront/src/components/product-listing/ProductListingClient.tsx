@@ -37,6 +37,8 @@ import {
   getProductPrice,
   normalizeAllergenCode,
   normalizeFiltersState,
+  parseDietaryQueryParams,
+  setDietaryQueryParams,
   toggleMultiValue,
   type ProductFiltersState,
 } from './listing-filters';
@@ -220,13 +222,20 @@ export function ProductListingClient({
   const router = useRouter();
   const isHydrated = useHydrated();
   const client = useClient();
+  const dietaryTagsFromUrl = useMemo(
+    () => parseDietaryQueryParams(searchParams),
+    [searchParams],
+  );
+  const dietaryQueryKey = dietaryTagsFromUrl.join(',');
 
   const [committedFilters, setCommittedFilters] = useState<ProductFiltersState>(() => ({
     ...DEFAULT_FILTERS,
+    dietaryTags: dietaryTagsFromUrl,
     storageZone: initialZone || '',
   }));
   const [draftFilters, setDraftFilters] = useState<ProductFiltersState>(() => ({
     ...DEFAULT_FILTERS,
+    dietaryTags: dietaryTagsFromUrl,
     storageZone: initialZone || '',
   }));
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -256,6 +265,7 @@ export function ProductListingClient({
   const [loadingPage, setLoadingPage] = useState(false);
   const [filterMetadataRequested, setFilterMetadataRequested] = useState(initialProducts.length > 0);
   const [isMobileLayout, setIsMobileLayout] = useState<boolean | null>(layoutMode === 'adaptive' ? null : false);
+  const [initialListingReusable, setInitialListingReusable] = useState(initialProducts.length > 0);
   const listingQueryResetMountedRef = useRef(false);
 
   useEffect(() => {
@@ -270,6 +280,19 @@ export function ProductListingClient({
     setSort((currentSort) => currentSort === supportedSort ? currentSort : supportedSort);
     setDraftSort((currentSort) => currentSort === supportedSort ? currentSort : supportedSort);
   }, [searchParams]);
+
+  useEffect(() => {
+    const nextDietaryTags = dietaryQueryKey ? dietaryQueryKey.split(',') : [];
+    const syncDietaryTags = (previous: ProductFiltersState) => (
+      previous.dietaryTags.length === nextDietaryTags.length
+      && previous.dietaryTags.every((tag, index) => tag === nextDietaryTags[index])
+        ? previous
+        : { ...previous, dietaryTags: nextDietaryTags }
+    );
+
+    setCommittedFilters(syncDietaryTags);
+    setDraftFilters(syncDietaryTags);
+  }, [dietaryQueryKey]);
 
   useEffect(() => {
     if (layoutMode !== 'adaptive' || !isHydrated) return;
@@ -467,10 +490,17 @@ export function ProductListingClient({
     [activeCategoryIds, normalizedCommittedFilters, search],
   );
   const queryFilter = Object.keys(filter).length > 0 ? filter : undefined;
-  const canUseInitialListingResult = initialProducts.length > 0
+  const initialListingMatchesCurrentState = initialProducts.length > 0
     && search === initialSearch
     && sort === initialSort
     && areFiltersEqual(normalizedCommittedFilters, normalizedInitialFilters);
+  const canUseInitialListingResult = initialListingReusable && initialListingMatchesCurrentState;
+
+  useEffect(() => {
+    if (initialListingReusable && !initialListingMatchesCurrentState) {
+      setInitialListingReusable(false);
+    }
+  }, [initialListingMatchesCurrentState, initialListingReusable]);
 
   const [result, reexecuteProductsQuery] = useQuery<ProductsQueryResponse>({
     query: PRODUCT_LISTING_QUERY,
@@ -550,6 +580,7 @@ export function ProductListingClient({
     normalizedFilters: ProductFiltersState,
     setFilters: Dispatch<SetStateAction<ProductFiltersState>>,
     onClear: () => void,
+    syncDietaryUrl = false,
   ) {
     const allergenFilterUnavailable = availableAllergens.length === 0;
     const dietaryFilterUnavailable = !dietaryAvailabilityKnown || availableDietaryTags.length === 0;
@@ -696,10 +727,14 @@ export function ProductListingClient({
               <button
                 key={tag}
                 type="button"
-                onClick={() => setFilters((prev) => ({
-                  ...prev,
-                  dietaryTags: toggleMultiValue(prev.dietaryTags, tag),
-                }))}
+                onClick={() => {
+                  const nextDietaryTags = toggleMultiValue(normalizedFilters.dietaryTags, tag);
+                  setFilters((prev) => ({
+                    ...prev,
+                    dietaryTags: nextDietaryTags,
+                  }));
+                  if (syncDietaryUrl) pushDietaryQuery(nextDietaryTags);
+                }}
                 disabled={dietaryFilterUnavailable && !normalizedFilters.dietaryTags.includes(tag)}
                 className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
@@ -812,6 +847,19 @@ export function ProductListingClient({
 
     const nextParams = params.toString();
     return `${basePath}${nextParams ? `?${nextParams}` : ''}`;
+  }
+
+  function pushDietaryQuery(nextDietaryTags: string[]) {
+    const params = new URLSearchParams(searchParams.toString());
+    setDietaryQueryParams(params, nextDietaryTags);
+    const currentParams = searchParams.toString();
+    const nextParams = params.toString();
+    const nextUrl = `${basePath}${nextParams ? `?${nextParams}` : ''}`;
+    const currentUrl = `${basePath}${currentParams ? `?${currentParams}` : ''}`;
+
+    if (nextUrl !== currentUrl) {
+      router.push(nextUrl, { scroll: false });
+    }
   }
 
   function handleSortChange(newSort: string) {
@@ -1018,6 +1066,7 @@ export function ProductListingClient({
 
   function clearCommittedFilters() {
     setCommittedFilters(DEFAULT_FILTERS);
+    pushDietaryQuery([]);
   }
 
   function clearAllDiscovery() {
@@ -1038,6 +1087,7 @@ export function ProductListingClient({
     }
 
     setCommittedFilters(normalizedDraftFilters);
+    pushDietaryQuery(normalizedDraftFilters.dietaryTags);
     setFiltersOpen(false);
   }
 
@@ -1100,13 +1150,17 @@ export function ProductListingClient({
     }
 
     for (const tag of normalizedCommittedFilters.dietaryTags) {
+      const nextDietaryTags = normalizedCommittedFilters.dietaryTags.filter((tagValue) => tagValue !== tag);
       chips.push({
         key: `dietary-${tag}`,
         label: t(tag as any),
-        onRemove: () => setCommittedFilters((prev) => ({
-          ...prev,
-          dietaryTags: prev.dietaryTags.filter((tagValue) => tagValue !== tag),
-        })),
+        onRemove: () => {
+          setCommittedFilters((prev) => ({
+            ...prev,
+            dietaryTags: nextDietaryTags,
+          }));
+          pushDietaryQuery(nextDietaryTags);
+        },
       });
     }
 
@@ -1496,7 +1550,7 @@ export function ProductListingClient({
             )}
           </div>
           <div className="space-y-5">
-            {renderFilterContent(committedFilters, normalizedCommittedFilters, setCommittedFilters, clearCommittedFilters)}
+            {renderFilterContent(committedFilters, normalizedCommittedFilters, setCommittedFilters, clearCommittedFilters, true)}
           </div>
         </section>
       </aside>
@@ -1865,7 +1919,7 @@ export function ProductListingClient({
             role="region"
             aria-label="Product filters"
           >
-            {renderFilterContent(committedFilters, normalizedCommittedFilters, setCommittedFilters, clearCommittedFilters)}
+            {renderFilterContent(committedFilters, normalizedCommittedFilters, setCommittedFilters, clearCommittedFilters, true)}
           </div>
         )}
 
