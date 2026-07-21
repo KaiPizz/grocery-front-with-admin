@@ -348,6 +348,7 @@ test.describe('mobile products page', () => {
     await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
     await glutenFreeButton.click();
     await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'false');
+    await expect.poll(() => new URL(page.url()).pathname).toBe('/products');
     await expect(page.getByTestId('product-card')).toHaveCount(4);
   });
 

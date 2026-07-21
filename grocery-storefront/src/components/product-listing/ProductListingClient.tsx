@@ -858,15 +858,15 @@ export function ProductListingClient({
   }
 
   function pushDietaryQuery(nextDietaryTags: string[]) {
-    const params = new URLSearchParams(searchParams.toString());
+    setInitialListingReusable(false);
+    const currentParams = window.location.search.replace(/^\?/, '');
+    const params = new URLSearchParams(currentParams);
     setDietaryQueryParams(params, nextDietaryTags);
-    const currentParams = searchParams.toString();
     const nextParams = params.toString();
-    const nextUrl = `${basePath}${nextParams ? `?${nextParams}` : ''}`;
-    const currentUrl = `${basePath}${currentParams ? `?${currentParams}` : ''}`;
+    const nextUrl = `${window.location.pathname}${nextParams ? `?${nextParams}` : ''}${window.location.hash}`;
 
-    if (nextUrl !== currentUrl) {
-      router.push(nextUrl, { scroll: false });
+    if (nextParams !== currentParams) {
+      window.history.pushState(null, '', nextUrl);
     }
   }
 
