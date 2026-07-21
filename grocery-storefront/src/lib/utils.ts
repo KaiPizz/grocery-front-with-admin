@@ -15,6 +15,7 @@ export function formatPrice(amount: number, currency = 'PLN', locale = 'pl-PL'):
 
 interface NormalizeImageUrlOptions {
   maxWidth?: number;
+  proxyFallback?: 'placeholder' | 'error';
 }
 
 function normalizeWikimediaThumbnailUrl(parsed: URL) {
@@ -91,7 +92,12 @@ export function getImageSrc(url?: string | null, options: NormalizeImageUrlOptio
   if (!normalized) return null;
 
   if (normalized.startsWith('http://') || normalized.startsWith('https://')) {
-    return `/api/image?url=${encodeURIComponent(normalized)}`;
+    const searchParams = new URLSearchParams({ url: normalized });
+    if (options.proxyFallback === 'error') {
+      searchParams.set('fallback', 'error');
+    }
+
+    return `/api/image?${searchParams.toString()}`;
   }
 
   return normalized;

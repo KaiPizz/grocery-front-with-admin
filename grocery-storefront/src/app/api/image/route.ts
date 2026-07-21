@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  getAllowedRasterContentType,
+  hasExpectedRasterSignature,
+  IMAGE_PROXY_TIMEOUT_MS,
+  isAllowedImageProxyUrl,
+  MAX_PROXIED_IMAGE_BYTES,
+} from '@/lib/image-proxy-security';
 import { normalizeImageUrl } from '@/lib/utils';
 
 const PLACEHOLDER_SVG = `
@@ -17,12 +24,24 @@ const PLACEHOLDER_SVG = `
 </svg>
 `.trim();
 
-function placeholderResponse() {
+function placeholderResponse(fallbackMode: string | null) {
+  if (fallbackMode === 'error') {
+    return new NextResponse(null, {
+      status: 404,
+      headers: {
+        'Cache-Control': 'no-store',
+        'X-Image-Fallback': 'true',
+      },
+    });
+  }
+
   return new NextResponse(PLACEHOLDER_SVG, {
     status: 200,
     headers: {
       'Content-Type': 'image/svg+xml; charset=utf-8',
       'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+      'Content-Security-Policy': "default-src 'none'; sandbox",
+      'X-Content-Type-Options': 'nosniff',
       'X-Image-Fallback': 'true',
     },
   });
@@ -30,10 +49,11 @@ function placeholderResponse() {
 
 export async function GET(request: NextRequest) {
   const requestedUrl = request.nextUrl.searchParams.get('url');
+  const fallbackMode = request.nextUrl.searchParams.get('fallback');
   const imageUrl = normalizeImageUrl(requestedUrl);
 
-  if (!imageUrl || (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://'))) {
-    return placeholderResponse();
+  if (!imageUrl || !isAllowedImageProxyUrl(imageUrl)) {
+    return placeholderResponse(fallbackMode);
   }
 
   try {
@@ -41,21 +61,65 @@ export async function GET(request: NextRequest) {
       headers: {
         Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
       },
+      redirect: 'manual',
+      signal: AbortSignal.timeout(IMAGE_PROXY_TIMEOUT_MS),
       next: { revalidate: 3600 },
     });
 
     if (!response.ok || !response.body) {
-      return placeholderResponse();
+      return placeholderResponse(fallbackMode);
     }
 
-    return new NextResponse(response.body, {
+    const contentType = getAllowedRasterContentType(response.headers.get('content-type'));
+    const declaredSize = Number(response.headers.get('content-length'));
+    if (
+      !contentType
+      || (Number.isFinite(declaredSize) && declaredSize > MAX_PROXIED_IMAGE_BYTES)
+    ) {
+      await response.body.cancel();
+      return placeholderResponse(fallbackMode);
+    }
+
+    const reader = response.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let totalBytes = 0;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+
+      totalBytes += value.byteLength;
+      if (totalBytes > MAX_PROXIED_IMAGE_BYTES) {
+        await reader.cancel();
+        return placeholderResponse(fallbackMode);
+      }
+      chunks.push(value);
+    }
+
+    const imageBytes = new Uint8Array(totalBytes);
+    let offset = 0;
+    for (const chunk of chunks) {
+      imageBytes.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+
+    if (!hasExpectedRasterSignature(imageBytes, contentType)) {
+      return placeholderResponse(fallbackMode);
+    }
+
+    return new NextResponse(imageBytes, {
       status: 200,
       headers: {
-        'Content-Type': response.headers.get('content-type') || 'image/jpeg',
+        'Content-Type': contentType,
+        'Content-Length': String(totalBytes),
         'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+        'Content-Security-Policy': "default-src 'none'; sandbox",
+        'Cross-Origin-Resource-Policy': 'same-origin',
+        'X-Content-Type-Options': 'nosniff',
       },
     });
   } catch {
-    return placeholderResponse();
+    return placeholderResponse(fallbackMode);
   }
 }
