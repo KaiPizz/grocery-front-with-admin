@@ -69,6 +69,7 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   const dealsSection = config.homepage.sections.find((section) => section.id === 'deals');
   const categorySection = config.homepage.sections.find((section) => section.id === 'shopByZone');
   const koreanPantryBanner = config.homepage.promoBanners.find((banner) => banner.id === 'banner-korean-pantry');
+  const koreanPantryCollection = config.commercial.collections.find((collection) => collection.slug === 'korean-pantry');
   const heroBlock = config.homepage.blocks.find((block) => block.type === 'hero');
   const footerLinks = config.layout.footer.columns.flatMap((column) => column.links);
 
@@ -82,9 +83,19 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.equal(categorySection?.enabled, true);
   assert.equal(dealsSection?.enabled, false);
   assert.equal(koreanPantryBanner?.enabled, false);
+  assert.equal(koreanPantryCollection?.enabled, true);
+  assert.equal(koreanPantryCollection?.heroImageUrl, '/brand/hero/korean-pantry-hero.webp');
   assert.equal(config.commercial.outlet.enabled, false);
   assert.equal(config.commercial.outlet.collectionSlug, null);
   assert.equal(config.commercial.quickLinks.some((link) => link.kind === 'outlet' && link.enabled), false);
+  assert.equal(config.commercial.categoryHub.enabled, true);
+  assert.equal(config.commercial.categoryHub.items.length, 10);
+  assert.equal(new Set(config.commercial.categoryHub.items.map((item) => item.id)).size, 10);
+  assert.equal(new Set(config.commercial.categoryHub.items.map((item) => item.categorySlug)).size, 10);
+  assert.deepEqual(
+    config.commercial.categoryHub.items.map((item) => item.order),
+    Array.from({ length: 10 }, (_, index) => index),
+  );
   assert.equal(footerLinks.some((link) => link.label === 'Kontakt' && link.href === '/privacy'), false);
   assert.equal(footerLinks.some((link) => link.label === 'Dostawa' && link.href === '/terms'), false);
   assert.equal(readFileSync(asiaDeliGoConfigUrl, 'utf8'), raw);
@@ -121,6 +132,24 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
     assert.equal(bytes.subarray(8, 12).toString('ascii'), 'WEBP');
     assert.deepEqual(readWebpDimensions(bytes), { width: 800, height: 800 });
   }
+
+  for (const item of config.commercial.categoryHub.items) {
+    assert.equal(item.enabled, true);
+    assert.match(item.categorySlug, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    assert.match(item.imageUrl, /^\/brand\/categories\/[a-z0-9-]+\.webp$/);
+
+    const assetUrl = new URL(`../public${item.imageUrl}`, import.meta.url);
+    assert.equal(existsSync(assetUrl), true, `Missing category hub asset: ${item.imageUrl}`);
+    assert.ok(statSync(assetUrl).size <= 120 * 1024, `Category hub asset exceeds 120 KB: ${item.imageUrl}`);
+  }
+
+  const koreanPantryHeroUrl = new URL(`../public${koreanPantryCollection.heroImageUrl}`, import.meta.url);
+  assert.equal(existsSync(koreanPantryHeroUrl), true, 'Missing Korean pantry hero asset');
+  assert.ok(statSync(koreanPantryHeroUrl).size <= 120 * 1024, 'Korean pantry hero exceeds 120 KB');
+  const koreanPantryHeroBytes = readFileSync(koreanPantryHeroUrl);
+  assert.equal(koreanPantryHeroBytes.subarray(0, 4).toString('ascii'), 'RIFF');
+  assert.equal(koreanPantryHeroBytes.subarray(8, 12).toString('ascii'), 'WEBP');
+  assert.deepEqual(readWebpDimensions(koreanPantryHeroBytes), { width: 1920, height: 600 });
 
   for (const [index, slide] of heroBlock.slides.entries()) {
     const number = String(index + 1).padStart(2, '0');

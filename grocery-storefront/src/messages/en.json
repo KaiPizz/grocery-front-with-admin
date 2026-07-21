@@ -181,6 +181,11 @@
   "categories": {
     "eyebrow": "Browse",
     "title": "Categories",
+    "intro": "Find ingredients, snacks, and everyday cooking essentials — from kimchi and ramen to sauces, drinks, and kitchen accessories.",
+    "gridLabel": "Product categories",
+    "metadataTitle": "Asian grocery categories | Asia Deli Go",
+    "metadataDescription": "Browse kimchi, noodles, rice, sauces, snacks, drinks, and other Asian groceries available from Asia Deli Go.",
+    "productCount": "{count, plural, =1 {1 product} other {# products}}",
     "empty": "No categories available yet.",
     "comingSoon": "Coming soon",
     "browse": "Browse",

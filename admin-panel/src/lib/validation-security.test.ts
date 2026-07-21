@@ -94,6 +94,16 @@ function securityFixture(): StorefrontConfig {
   config.general.socialLinks = [{ platform: 'Facebook', url: 'https://facebook.com/example' }];
   config.commercial = {
     enabled: true,
+    categoryHub: {
+      enabled: true,
+      items: [{
+        id: 'category-hub-security-fixture',
+        categorySlug: 'security-fixture',
+        imageUrl: '/uploads/category-hub.jpg',
+        enabled: true,
+        order: 0,
+      }],
+    },
     quickLinks: [{
       id: 'quick-link-security-fixture',
       label: 'Quick link',
@@ -168,6 +178,7 @@ const resourceUrlFields: Array<[string, ConfigMutator]> = [
   ['sticky mobile image', (config, value) => { blockOfType(config, 'small_sticky').mobileImageUrl = value; }],
   ['SEO Open Graph image', (config, value) => { config.seo.ogImageUrl = value; }],
   ['commercial quick-link image', (config, value) => { config.commercial.quickLinks[0].imageUrl = value; }],
+  ['commercial category-hub image', (config, value) => { config.commercial.categoryHub.items[0].imageUrl = value; }],
   ['commercial collection image', (config, value) => { config.commercial.collections[0].heroImageUrl = value; }],
   ['commercial tile image', (config, value) => { config.commercial.collections[0].tiles[0].imageUrl = value; }],
 ];
@@ -290,6 +301,28 @@ test('rejects malformed or injectable tracking IDs even when tracking is disable
 });
 
 test('applies URL and tracking validation to partial draft updates', () => {
+  assert.equal(
+    partialStorefrontConfigSchema.safeParse({
+      commercial: { categoryHub: { enabled: false } },
+    }).success,
+    true
+  );
+  assert.equal(
+    partialStorefrontConfigSchema.safeParse({
+      commercial: {
+        categoryHub: {
+          items: [{
+            id: 'partial-category-hub',
+            categorySlug: 'partial-category',
+            imageUrl: 'javascript:alert(1)',
+            enabled: true,
+            order: 0,
+          }],
+        },
+      },
+    }).success,
+    false
+  );
   assert.equal(
     partialStorefrontConfigSchema.safeParse({
       homepage: { hero: { ctaLink: 'javascript:alert(1)' } },

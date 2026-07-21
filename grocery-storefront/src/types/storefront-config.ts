@@ -298,11 +298,25 @@ export interface CommercialOutletConfig {
   collectionSlug: string | null;
 }
 
+export interface CommercialCategoryHubItem {
+  id: string;
+  categorySlug: string;
+  imageUrl: string | null;
+  enabled: boolean;
+  order: number;
+}
+
+export interface CommercialCategoryHubConfig {
+  enabled: boolean;
+  items: CommercialCategoryHubItem[];
+}
+
 export interface CommercialConfig {
   enabled: boolean;
   quickLinks: CommercialQuickLink[];
   collections: CommercialCollection[];
   outlet: CommercialOutletConfig;
+  categoryHub: CommercialCategoryHubConfig;
 }
 
 export interface StorefrontConfig {

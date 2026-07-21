@@ -10,10 +10,16 @@ const DEFAULT_COMMERCIAL_CONFIG: StorefrontConfig['commercial'] = {
     label: 'Outlet',
     collectionSlug: null,
   },
+  categoryHub: {
+    enabled: true,
+    items: [],
+  },
 };
 
 export function withStorefrontConfigDefaults(config: StorefrontConfig | null): StorefrontConfig | null {
   if (!config) return null;
+
+  const commercial = config.commercial;
 
   return {
     ...config,
@@ -21,7 +27,12 @@ export function withStorefrontConfigDefaults(config: StorefrontConfig | null): S
       ...config.general,
       fulfillment: config.general.fulfillment ?? DEFAULT_FULFILLMENT_CONFIG,
     },
-    commercial: config.commercial ?? DEFAULT_COMMERCIAL_CONFIG,
+    commercial: commercial
+      ? {
+        ...commercial,
+        categoryHub: commercial.categoryHub ?? DEFAULT_COMMERCIAL_CONFIG.categoryHub,
+      }
+      : DEFAULT_COMMERCIAL_CONFIG,
   };
 }
 

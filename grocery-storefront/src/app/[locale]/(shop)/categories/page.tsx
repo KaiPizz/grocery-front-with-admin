@@ -1,12 +1,21 @@
+import type { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { RefreshCw } from 'lucide-react';
 
 import { Link } from '@/i18n/navigation';
+import { defaultLocale } from '@/i18n/config';
 import { PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
 import { CategoryHubClient } from '@/components/categories/CategoryHubClient';
 import { buildPublicCategories, type PublicCategory } from '@/lib/public-taxonomy';
+import { getStorefrontOriginForSeo, getStorefrontUrl } from '@/lib/seo-discovery';
+
+interface CategoriesPageProps {
+  params: Promise<{
+    locale: string;
+  }>;
+}
 
 interface CategoryNode {
   id: string;
@@ -27,14 +36,45 @@ interface CategoriesResponse {
 
 const CATEGORY_METADATA_REVALIDATE_SECONDS = 300;
 
-function formatProductCount(locale: string, count: number) {
-  if (locale === 'pl') {
-    if (count === 1) return '1 produkt';
-    if (count > 1 && count < 5) return `${count} produkty`;
-    return `${count} produktów`;
-  }
+function getCategoriesUrl(origin: string, locale: string) {
+  const localePrefix = locale.toLowerCase() === defaultLocale ? '' : `/${locale.toLowerCase()}`;
+  return getStorefrontUrl(origin, `${localePrefix}/categories`);
+}
 
-  return count === 1 ? '1 product' : `${count} products`;
+export async function generateMetadata({ params }: CategoriesPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const [t, origin] = await Promise.all([
+    getTranslations({ locale, namespace: 'categories' }),
+    getStorefrontOriginForSeo(),
+  ]);
+  const title = t('metadataTitle');
+  const description = t('metadataDescription');
+  const canonical = origin ? getCategoriesUrl(origin, locale) : undefined;
+
+  return {
+    title,
+    description,
+    alternates: canonical && origin
+      ? {
+        canonical,
+        languages: {
+          pl: getCategoriesUrl(origin, 'pl'),
+          en: getCategoriesUrl(origin, 'en'),
+        },
+      }
+      : undefined,
+    openGraph: {
+      type: 'website',
+      title,
+      description,
+      url: canonical,
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  };
 }
 
 function getProductCount(category: PublicCategory) {
@@ -59,26 +99,29 @@ export default async function CategoriesPage() {
     },
   );
   const categories = result.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  const publicCategories = buildPublicCategories(categories, locale);
+  const publicCategories = buildPublicCategories(categories, locale, { includeEmpty: true });
   const allCountsKnown = publicCategories.every((category) => getProductCount(category) !== null);
   const totalProducts = allCountsKnown
     ? publicCategories.reduce((sum, category) => sum + (getProductCount(category) ?? 0), 0)
     : null;
 
   return (
-    <div className="container-grocery py-8 md:py-12">
-      <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
+    <div className="container-grocery py-7 md:py-12">
+      <div className="mb-7 flex flex-col gap-3 md:mb-9 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-2xl">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
             {t('eyebrow')}
           </p>
           <h1 className="heading-display text-2xl md:text-3xl" style={{ color: 'var(--color-foreground)' }}>
             {t('title')}
           </h1>
+          <p className="mt-2 max-w-xl text-sm leading-relaxed md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
+            {t('intro')}
+          </p>
         </div>
         {totalProducts !== null && (
           <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {formatProductCount(locale, totalProducts)}
+            {t('productCount', { count: totalProducts })}
           </p>
         )}
       </div>

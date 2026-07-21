@@ -174,8 +174,8 @@
           "type": "horizontal",
           "enabled": true,
           "order": 3,
-          "imageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1600&q=80",
-          "mobileImageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=80",
+          "imageUrl": "https://asiandeligo-admin.eshoper.pro/uploads/01d00e9b-9242-4350-8ada-b63293f282b3-asiandeligo-ramen-ready-meals-1200x300.webp",
+          "mobileImageUrl": "https://asiandeligo-admin.eshoper.pro/uploads/a10ed466-8418-4563-8add-d50be81765e2-asiandeligo-ramen-ready-meals-768x240.webp",
           "title": "Ramen i gotowe dania na szybki obiad",
           "ctaText": "Zobacz dania gotowe",
           "ctaLink": "/pl/categories/dania-gotowe"
@@ -185,8 +185,8 @@
           "type": "horizontal",
           "enabled": true,
           "order": 4,
-          "imageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=1600&q=80",
-          "mobileImageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=900&q=80",
+          "imageUrl": "https://asiandeligo-admin.eshoper.pro/uploads/99d02721-5164-4710-a295-a3912bdebc1a-asiandeligo-snacks-drinks-1200x300.webp",
+          "mobileImageUrl": "https://asiandeligo-admin.eshoper.pro/uploads/b864e28b-c50b-4ab5-8055-0ba607662659-asiandeligo-snacks-drinks-768x240.webp",
           "title": "Przekąski i napoje do koszyka",
           "ctaText": "Zobacz przekąski",
           "ctaLink": "/pl/categories/przekaski-i-slodycze"
@@ -366,6 +366,81 @@
     },
     "commercial": {
       "enabled": true,
+      "categoryHub": {
+        "enabled": true,
+        "items": [
+          {
+            "id": "category-hub-kimchi-pickles",
+            "categorySlug": "kimchi-i-kiszonki",
+            "imageUrl": "/brand/categories/kimchi-pickles.webp",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "id": "category-hub-noodles-rice",
+            "categorySlug": "makaron-i-ryz",
+            "imageUrl": "/brand/categories/noodles-rice.webp",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "id": "category-hub-sauces-pastes",
+            "categorySlug": "sosy-pasty-i-przyprawy",
+            "imageUrl": "/brand/categories/sauces-pastes.webp",
+            "enabled": true,
+            "order": 2
+          },
+          {
+            "id": "category-hub-snacks-sweets",
+            "categorySlug": "przekaski-i-slodycze",
+            "imageUrl": "/brand/categories/snacks-sweets.webp",
+            "enabled": true,
+            "order": 3
+          },
+          {
+            "id": "category-hub-drinks",
+            "categorySlug": "napoje-herbaty-i-kawy",
+            "imageUrl": "/brand/categories/drinks.webp",
+            "enabled": true,
+            "order": 4
+          },
+          {
+            "id": "category-hub-ready-meals",
+            "categorySlug": "dania-gotowe",
+            "imageUrl": "/brand/categories/ready-meals.webp",
+            "enabled": true,
+            "order": 5
+          },
+          {
+            "id": "category-hub-sushi-seaweed",
+            "categorySlug": "sushi-i-algi",
+            "imageUrl": "/brand/categories/sushi-seaweed.webp",
+            "enabled": true,
+            "order": 6
+          },
+          {
+            "id": "category-hub-mushrooms-tofu",
+            "categorySlug": "grzyby-warzywa-i-tofu",
+            "imageUrl": "/brand/categories/mushrooms-tofu.webp",
+            "enabled": true,
+            "order": 7
+          },
+          {
+            "id": "category-hub-kitchen-tools",
+            "categorySlug": "akcesoria-kuchenne",
+            "imageUrl": "/brand/categories/kitchen-tools.webp",
+            "enabled": true,
+            "order": 8
+          },
+          {
+            "id": "category-hub-korean-cosmetics",
+            "categorySlug": "kosmetyki-koreanskie",
+            "imageUrl": "/brand/categories/korean-cosmetics.webp",
+            "enabled": true,
+            "order": 9
+          }
+        ]
+      },
       "quickLinks": [
         {
           "id": "quick-korean-pantry",
@@ -383,7 +458,7 @@
           "slug": "korean-pantry",
           "title": "Koreańska spiżarnia",
           "subtitle": "Ryż, sosy, makarony i podstawowe składniki do kuchni koreańskiej.",
-          "heroImageUrl": null,
+          "heroImageUrl": "/brand/hero/korean-pantry-hero.webp",
           "enabled": true,
           "order": 0,
           "tiles": [
@@ -392,25 +467,25 @@
               "title": "Kimchi",
               "href": "/categories/kimchi-i-kiszonki",
               "description": "Fermentowane dodatki, pasty i chłodzone produkty.",
-              "imageUrl": null,
+              "imageUrl": "/brand/categories/kimchi-pickles.webp",
               "enabled": true,
               "order": 0
             },
             {
               "id": "tile-sauces",
               "title": "Sosy i pasty",
-              "href": "/products?search=sos",
+              "href": "/categories/sosy-pasty-i-przyprawy",
               "description": "Gochujang, sojowe, sezamowe i ostre bazy smaku.",
-              "imageUrl": null,
+              "imageUrl": "/brand/categories/sauces-pastes.webp",
               "enabled": true,
               "order": 1
             },
             {
               "id": "tile-noodles",
               "title": "Makarony i ryż",
-              "href": "/products?search=makaron",
+              "href": "/categories/makaron-i-ryz",
               "description": "Codzienne podstawy do szybkich dań.",
-              "imageUrl": null,
+              "imageUrl": "/brand/categories/noodles-rice.webp",
               "enabled": true,
               "order": 2
             }

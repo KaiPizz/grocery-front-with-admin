@@ -181,6 +181,11 @@
   "categories": {
     "eyebrow": "Przeglądaj",
     "title": "Kategorie",
+    "intro": "Znajdź składniki, przekąski i produkty do codziennego gotowania — od kimchi i ramenu po sosy, napoje i akcesoria.",
+    "gridLabel": "Kategorie produktów",
+    "metadataTitle": "Kategorie produktów azjatyckich | Asia Deli Go",
+    "metadataDescription": "Przeglądaj kimchi, makarony, ryż, sosy, przekąski, napoje i inne azjatyckie produkty dostępne w Asia Deli Go.",
+    "productCount": "{count, plural, one {# produkt} few {# produkty} many {# produktów} other {# produktu}}",
     "empty": "Brak dostępnych kategorii.",
     "comingSoon": "Wkrótce",
     "browse": "Przeglądaj",

@@ -1,4 +1,7 @@
 import { expect, test } from '@playwright/test';
+import { getEnabledCategoryHub, mergeCategoryHub } from '../src/lib/category-hub';
+import type { PublicCategory } from '../src/lib/public-taxonomy';
+import { getImageSrc } from '../src/lib/utils';
 import { mockMobileStorefront } from './mobile-fixtures';
 
 const KIMCHI_RAW_CATEGORY_IDS = ['cat-kimchi', 'cat-pickled-vegetables'];
@@ -13,6 +16,111 @@ function hasCompleteKimchiScope(variables: Record<string, any>) {
     && KIMCHI_RAW_CATEGORY_IDS.every((categoryId) => categoryIds.includes(categoryId));
 }
 
+const CATEGORY_HUB_FIXTURES: PublicCategory[] = [
+  {
+    id: 'public:kimchi-i-kiszonki',
+    slug: 'kimchi-i-kiszonki',
+    name: 'Kimchi and pickles',
+    description: 'Fermented sides.',
+    products: { totalCount: 2 },
+    rawCategoryIds: ['cat-kimchi'],
+    rawCategorySlugs: ['kimchi'],
+  },
+  {
+    id: 'public:makaron-i-ryz',
+    slug: 'makaron-i-ryz',
+    name: 'Noodles and rice',
+    description: 'Everyday staples.',
+    products: { totalCount: 1 },
+    rawCategoryIds: ['cat-ramen'],
+    rawCategorySlugs: ['ramyun-ramen'],
+  },
+  {
+    id: 'public:grzyby-warzywa-i-tofu',
+    slug: 'grzyby-warzywa-i-tofu',
+    name: 'Mushrooms, vegetables, and tofu',
+    description: 'Plant-based ingredients.',
+    products: { totalCount: 0 },
+    rawCategoryIds: ['cat-tofu'],
+    rawCategorySlugs: ['tofu'],
+  },
+];
+
+test.describe('category hub presentation merge', () => {
+  test('keeps the full taxonomy as a backward-compatible fallback', () => {
+    const merged = mergeCategoryHub(CATEGORY_HUB_FIXTURES, undefined);
+
+    expect(merged.map(({ slug }) => slug)).toEqual(CATEGORY_HUB_FIXTURES.map(({ slug }) => slug));
+    expect(merged.every(({ imageUrl }) => imageUrl === null)).toBe(true);
+  });
+
+  test('applies owner order and images without losing unconfigured catalog categories', () => {
+    const merged = mergeCategoryHub(CATEGORY_HUB_FIXTURES, {
+      enabled: true,
+      items: [
+        {
+          id: 'hub-kimchi',
+          categorySlug: 'kimchi-i-kiszonki',
+          imageUrl: '/kimchi.webp',
+          enabled: false,
+          order: 1,
+        },
+        {
+          id: 'hub-noodles',
+          categorySlug: 'makaron-i-ryz',
+          imageUrl: '/noodles.webp',
+          enabled: true,
+          order: 0,
+        },
+      ],
+    });
+
+    expect(merged.map(({ slug }) => slug)).toEqual([
+      'makaron-i-ryz',
+      'grzyby-warzywa-i-tofu',
+    ]);
+    expect(merged[0].imageUrl).toBe('/noodles.webp');
+    expect(merged[1].imageUrl).toBeNull();
+  });
+
+  test('ignores category presentation when the commercial master switch is off', () => {
+    const categoryHub = getEnabledCategoryHub({
+      enabled: false,
+      categoryHub: {
+        enabled: true,
+        items: [{
+          id: 'hub-hidden-kimchi',
+          categorySlug: 'kimchi-i-kiszonki',
+          imageUrl: '/kimchi.webp',
+          enabled: false,
+          order: 0,
+        }],
+      },
+    });
+    const merged = mergeCategoryHub(CATEGORY_HUB_FIXTURES, categoryHub);
+
+    expect(categoryHub).toBeUndefined();
+    expect(merged.map(({ slug }) => slug)).toEqual(CATEGORY_HUB_FIXTURES.map(({ slug }) => slug));
+    expect(merged.every(({ imageUrl }) => imageUrl === null)).toBe(true);
+  });
+
+  test('asks the image proxy to expose remote failures to the category fallback', () => {
+    const src = getImageSrc('https://cdn.example.test/category.webp', {
+      proxyFallback: 'error',
+    });
+
+    expect(src).toContain('/api/image?');
+    expect(src).toContain('fallback=error');
+  });
+
+  test('returns an image error instead of a generic proxy placeholder when requested', async ({ request }) => {
+    const response = await request.get('/api/image?url=not-an-image-url&fallback=error');
+
+    expect(response.status()).toBe(404);
+    expect(response.headers()['x-image-fallback']).toBe('true');
+  });
+});
+
 test.describe('B1 category browsing', () => {
   test('server-renders the category index without requiring JavaScript', async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -25,6 +133,15 @@ test.describe('B1 category browsing', () => {
       await expect(page.getByRole('heading', { name: /categories/i })).toBeVisible();
       await expect(page.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
       await expect(page.getByRole('link', { name: /noodles and rice.*1 product/i })).toBeVisible();
+
+      const cards = page.getByTestId('category-hub-card');
+      await expect(cards).toHaveCount(3);
+      await expect(cards.nth(0)).toHaveAccessibleName(/noodles and rice.*1 product/i);
+      await expect(cards.nth(1)).toHaveAccessibleName(/kimchi and pickles.*2 products/i);
+      await expect(cards.nth(0).getByTestId('category-hub-image')).toBeVisible();
+      await expect(cards.nth(1).getByTestId('category-hub-image')).toBeVisible();
+      await expect(page.getByTestId('category-hub-image-fallback')).toHaveCount(1);
+      await expect(page.getByRole('searchbox', { name: /search categories/i })).toHaveCount(0);
     } finally {
       await context.close();
     }
@@ -55,6 +172,66 @@ test.describe('B1 category browsing', () => {
     await expect(page.getByRole('heading', { name: /categories/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /noodles and rice.*1 product/i })).toBeVisible();
+  });
+
+  test('keeps the visual hub keyboard-accessible with 2, 3, and 5 responsive columns', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/categories');
+
+    const grid = page.getByTestId('category-hub-grid');
+    const cards = page.getByTestId('category-hub-card');
+    const getColumnCount = () => grid.evaluate((element) => (
+      getComputedStyle(element).gridTemplateColumns.split(' ').filter(Boolean).length
+    ));
+
+    await expect.poll(getColumnCount).toBe(2);
+    await cards.first().focus();
+    await expect(cards.first()).toBeFocused();
+
+    const mobileCardBox = await cards.first().boundingBox();
+    expect(mobileCardBox).not.toBeNull();
+    expect(mobileCardBox!.height).toBeGreaterThanOrEqual(176);
+
+    await page.setViewportSize({ width: 800, height: 900 });
+    await expect.poll(getColumnCount).toBe(3);
+
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await expect.poll(getColumnCount).toBe(5);
+  });
+
+  test('publishes localized category metadata and canonical alternates', async ({ page }) => {
+    await mockMobileStorefront(page);
+
+    await page.goto('/categories');
+    await expect(page).toHaveTitle('Kategorie produktów azjatyckich | Asia Deli Go');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      /Przeglądaj kimchi, makarony, ryż, sosy/i,
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://store.example.test/categories',
+    );
+    await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+      'href',
+      'https://store.example.test/en/categories',
+    );
+
+    await page.goto('/en/categories');
+    await expect(page).toHaveTitle('Asian grocery categories | Asia Deli Go');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      /Browse kimchi, noodles, rice, sauces/i,
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://store.example.test/en/categories',
+    );
+    await expect(page.locator('link[rel="alternate"][hreflang="pl"]')).toHaveAttribute(
+      'href',
+      'https://store.example.test/categories',
+    );
   });
 
   test('opens a category slug page with only storefront-visible products from that category', async ({ page }) => {

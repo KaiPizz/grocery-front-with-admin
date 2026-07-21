@@ -21,6 +21,18 @@ function cloneConfig(): StorefrontConfig {
 function addCommercialFixture(config: StorefrontConfig): StorefrontConfig {
   config.commercial = {
     enabled: true,
+    categoryHub: {
+      enabled: true,
+      items: [
+        {
+          id: 'category-hub-noodles',
+          categorySlug: 'makaron-i-noodle',
+          imageUrl: '/uploads/noodles.jpg',
+          enabled: true,
+          order: 0,
+        },
+      ],
+    },
     quickLinks: [
       {
         id: 'quick-outlet',
@@ -76,12 +88,32 @@ function addCommercialFixture(config: StorefrontConfig): StorefrontConfig {
 
 test('commercial surfaces are disabled by default', () => {
   assert.equal(DEFAULT_CONFIG.commercial.enabled, false);
+  assert.deepEqual(DEFAULT_CONFIG.commercial.categoryHub, {
+    enabled: true,
+    items: [],
+  });
   assert.deepEqual(DEFAULT_CONFIG.commercial.quickLinks, []);
   assert.deepEqual(DEFAULT_CONFIG.commercial.collections, []);
   assert.deepEqual(DEFAULT_CONFIG.commercial.outlet, {
     enabled: false,
     label: 'Outlet',
     collectionSlug: null,
+  });
+});
+
+test('applies a backward-compatible category hub default to legacy configs', () => {
+  const config = cloneConfig() as StorefrontConfig & {
+    commercial: Omit<StorefrontConfig['commercial'], 'categoryHub'>;
+  };
+  delete (config.commercial as Partial<StorefrontConfig['commercial']>).categoryHub;
+
+  const result = storefrontConfigSchema.safeParse(config);
+
+  assert.equal(result.success, true);
+  if (!result.success) return;
+  assert.deepEqual(result.data.commercial.categoryHub, {
+    enabled: true,
+    items: [],
   });
 });
 
@@ -98,6 +130,35 @@ test('rejects collection slugs with spaces', () => {
   const result = storefrontConfigSchema.safeParse(config);
 
   assert.equal(result.success, false);
+});
+
+test('rejects invalid or duplicate category hub slugs', () => {
+  const invalid = addCommercialFixture(cloneConfig());
+  invalid.commercial.categoryHub.items[0].categorySlug = 'Makaron i noodle';
+  assert.equal(storefrontConfigSchema.safeParse(invalid).success, false);
+
+  const duplicate = addCommercialFixture(cloneConfig());
+  duplicate.commercial.categoryHub.items.push({
+    id: 'category-hub-noodles-duplicate',
+    categorySlug: 'makaron-i-noodle',
+    imageUrl: null,
+    enabled: true,
+    order: 1,
+  });
+  assert.equal(storefrontConfigSchema.safeParse(duplicate).success, false);
+});
+
+test('rejects duplicate category hub item IDs', () => {
+  const config = addCommercialFixture(cloneConfig());
+  config.commercial.categoryHub.items.push({
+    id: 'category-hub-noodles',
+    categorySlug: 'sosy-i-pasty',
+    imageUrl: null,
+    enabled: true,
+    order: 1,
+  });
+
+  assert.equal(storefrontConfigSchema.safeParse(config).success, false);
 });
 
 test('rejects enabled outlet config without a collection slug', () => {

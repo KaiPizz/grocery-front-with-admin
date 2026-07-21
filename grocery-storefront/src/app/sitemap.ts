@@ -1,8 +1,10 @@
 import type { MetadataRoute } from 'next';
 import { resolveChannel } from '@/lib/channel';
+import { getEnabledCommercialCollections } from '@/lib/commercial-config';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { PUBLIC_CATEGORY_DEFINITIONS } from '@/lib/public-taxonomy';
 import { getStorefrontOriginForSeo, getStorefrontUrl } from '@/lib/seo-discovery';
+import { fetchServerConfig } from '@/lib/storefront-config';
 
 export const revalidate = 3600;
 
@@ -97,10 +99,18 @@ async function getProductSlugs(): Promise<string[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const origin = await getStorefrontOriginForSeo();
+  const [origin, siteConfig, productSlugs] = await Promise.all([
+    getStorefrontOriginForSeo(),
+    fetchServerConfig({ next: { revalidate } }),
+    getProductSlugs(),
+  ]);
   if (!origin) return [];
 
-  const productSlugs = await getProductSlugs();
+  const collectionSlugs = new Set(
+    getEnabledCommercialCollections(siteConfig)
+      .map((collection) => collection.slug.trim())
+      .filter(Boolean),
+  );
   const entries: MetadataRoute.Sitemap = [];
 
   for (const localePrefix of ['', '/en'] as const) {
@@ -118,6 +128,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         localizedPath(localePrefix, `/categories/${encodeURIComponent(category.slug)}`),
         'weekly',
         0.8,
+      ));
+    }
+
+    for (const slug of collectionSlugs) {
+      entries.push(sitemapEntry(
+        origin,
+        localizedPath(localePrefix, `/collections/${encodeURIComponent(slug)}`),
+        'weekly',
+        0.7,
       ));
     }
 

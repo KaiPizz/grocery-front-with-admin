@@ -4,6 +4,7 @@ import { ChevronDown, ChevronUp, GripVertical, Plus, Trash2 } from 'lucide-react
 
 import { FieldLabel } from '@/components/FieldLabel';
 import { FormCard } from '@/components/FormCard';
+import { CategoryHubConfigEditor } from '@/components/CategoryHubConfigEditor';
 import { useLanguage } from '@/i18n';
 
 import type {
@@ -161,6 +162,11 @@ export function CommercialConfigEditor({ commercial, onChange }: CommercialConfi
         />
         <span className="text-sm text-gray-700">{t('layout.commercial.enable')}</span>
       </label>
+
+      <CategoryHubConfigEditor
+        categoryHub={commercial.categoryHub}
+        onChange={(categoryHub) => updateCommercial({ categoryHub })}
+      />
 
       <section className="space-y-2 border-t border-gray-100 pt-4">
         <div className="flex items-center justify-between gap-3">

@@ -190,6 +190,10 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
 
   commercial: {
     enabled: false,
+    categoryHub: {
+      enabled: true,
+      items: [],
+    },
     quickLinks: [],
     collections: [],
     outlet: {

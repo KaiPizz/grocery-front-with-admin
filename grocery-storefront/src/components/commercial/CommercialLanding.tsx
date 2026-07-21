@@ -19,7 +19,7 @@ export function CommercialLanding({ collection, title }: CommercialLandingProps)
   const heading = title ?? collection.title;
 
   return (
-    <main>
+    <>
       <section
         className="relative isolate overflow-hidden"
         style={{ backgroundColor: 'var(--color-accent)' }}
@@ -100,6 +100,6 @@ export function CommercialLanding({ collection, title }: CommercialLandingProps)
           </div>
         )}
       </section>
-    </main>
+    </>
   );
 }

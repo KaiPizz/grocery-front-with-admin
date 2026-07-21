@@ -22,13 +22,27 @@ async function ensureDataDir(): Promise<void> {
 }
 
 export function withConfigDefaults(config: StorefrontConfig): StorefrontConfig {
+  const commercial = config.commercial ?? DEFAULT_CONFIG.commercial;
+
   return {
     ...config,
     general: {
       ...config.general,
       fulfillment: config.general.fulfillment ?? DEFAULT_CONFIG.general.fulfillment,
     },
-    commercial: config.commercial ?? DEFAULT_CONFIG.commercial,
+    commercial: {
+      ...DEFAULT_CONFIG.commercial,
+      ...commercial,
+      categoryHub: {
+        ...DEFAULT_CONFIG.commercial.categoryHub,
+        ...commercial.categoryHub,
+        items: commercial.categoryHub?.items ?? DEFAULT_CONFIG.commercial.categoryHub.items,
+      },
+      outlet: {
+        ...DEFAULT_CONFIG.commercial.outlet,
+        ...commercial.outlet,
+      },
+    },
   };
 }
 
@@ -229,6 +243,10 @@ export async function patchDraftConfig(
       commercial: partial.commercial ? {
         ...currentDraft.commercial,
         ...partial.commercial,
+        categoryHub: partial.commercial?.categoryHub ? {
+          ...currentDraft.commercial.categoryHub,
+          ...partial.commercial.categoryHub,
+        } : currentDraft.commercial.categoryHub,
         outlet: partial.commercial?.outlet ? { ...currentDraft.commercial.outlet, ...partial.commercial.outlet } : currentDraft.commercial.outlet,
       } : currentDraft.commercial,
     };

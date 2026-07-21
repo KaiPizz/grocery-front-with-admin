@@ -6,10 +6,14 @@ import test from 'node:test';
 
 import {
   ConfigVersionConflictError,
+  patchDraftConfig,
   readStoredConfig,
   saveDraftConfig,
+  withConfigDefaults,
 } from './config-repository';
 import { DEFAULT_CONFIG } from './defaults';
+
+import type { StorefrontConfig } from '../types/config';
 
 test('version-checks and serializes draft writes', async (context) => {
   const previousDataDir = process.env.ADMIN_DATA_DIR;
@@ -22,8 +26,23 @@ test('version-checks and serializes draft writes', async (context) => {
   });
 
   const config = structuredClone(DEFAULT_CONFIG);
+  config.commercial.categoryHub.items = [{
+    id: 'category-hub-noodles',
+    categorySlug: 'makaron-i-noodle',
+    imageUrl: '/uploads/noodles.jpg',
+    enabled: true,
+    order: 0,
+  }];
   const first = await saveDraftConfig('asiandeligo', config, 0);
   assert.equal(first.version, 1);
+
+  const patched = await patchDraftConfig(
+    'asiandeligo',
+    { commercial: { categoryHub: { enabled: false } } } as never,
+    1
+  );
+  assert.equal(patched.draft.commercial.categoryHub.enabled, false);
+  assert.deepEqual(patched.draft.commercial.categoryHub.items, config.commercial.categoryHub.items);
 
   await assert.rejects(
     saveDraftConfig('asiandeligo', config, 0),
@@ -39,6 +58,18 @@ test('version-checks and serializes draft writes', async (context) => {
 
   const files = await fs.readdir(dataDir);
   assert.equal(files.some((filename) => filename.includes('.tmp-')), false);
+});
+
+test('deeply defaults category hub fields from legacy stored configs', () => {
+  const legacy = structuredClone(DEFAULT_CONFIG) as StorefrontConfig;
+  delete (legacy.commercial as Partial<StorefrontConfig['commercial']>).categoryHub;
+
+  const normalized = withConfigDefaults(legacy);
+
+  assert.deepEqual(normalized.commercial.categoryHub, {
+    enabled: true,
+    items: [],
+  });
 });
 
 test('only treats ENOENT as a missing config', async (context) => {

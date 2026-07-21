@@ -319,8 +319,22 @@ export interface CommercialOutletConfig {
   collectionSlug: string | null;
 }
 
+export interface CommercialCategoryHubItem {
+  id: string;
+  categorySlug: string;
+  imageUrl: string | null;
+  enabled: boolean;
+  order: number;
+}
+
+export interface CommercialCategoryHubConfig {
+  enabled: boolean;
+  items: CommercialCategoryHubItem[];
+}
+
 export interface CommercialConfig {
   enabled: boolean;
+  categoryHub: CommercialCategoryHubConfig;
   quickLinks: CommercialQuickLink[];
   collections: CommercialCollection[];
   outlet: CommercialOutletConfig;

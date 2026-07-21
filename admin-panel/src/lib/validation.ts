@@ -395,6 +395,49 @@ const collectionSlugSchema = z.string().regex(
   'Must use lowercase letters, numbers, and hyphens'
 );
 
+const commercialCategoryHubItemSchema = z.object({
+  id: z.string().trim().min(1).max(120),
+  categorySlug: collectionSlugSchema,
+  imageUrl: optionalUrl,
+  enabled: z.boolean(),
+  order: z.number().int().min(0),
+});
+
+const commercialCategoryHubItemsSchema = z.array(commercialCategoryHubItemSchema).max(50).superRefine((items, ctx) => {
+  const ids = new Set<string>();
+  const slugs = new Set<string>();
+
+  items.forEach((item, index) => {
+    if (ids.has(item.id)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [index, 'id'],
+        message: 'Category hub item IDs must be unique',
+      });
+    }
+    ids.add(item.id);
+
+    if (slugs.has(item.categorySlug)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [index, 'categorySlug'],
+        message: 'Category hub slugs must be unique',
+      });
+    }
+    slugs.add(item.categorySlug);
+  });
+});
+
+const commercialCategoryHubObjectSchema = z.object({
+  enabled: z.boolean(),
+  items: commercialCategoryHubItemsSchema,
+});
+
+const commercialCategoryHubSchema = commercialCategoryHubObjectSchema.default({
+  enabled: true,
+  items: [],
+});
+
 const commercialQuickLinkSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1).max(100),
@@ -432,12 +475,15 @@ const commercialOutletSchema = z.object({
   collectionSlug: collectionSlugSchema.nullable(),
 });
 
-const commercialSchema = z.object({
+const commercialObjectSchema = z.object({
   enabled: z.boolean(),
+  categoryHub: commercialCategoryHubSchema,
   quickLinks: z.array(commercialQuickLinkSchema),
   collections: z.array(commercialCollectionSchema),
   outlet: commercialOutletSchema,
-}).superRefine((commercial, ctx) => {
+});
+
+const commercialSchema = commercialObjectSchema.superRefine((commercial, ctx) => {
   if (!commercial.outlet.enabled) return;
 
   if (!commercial.outlet.collectionSlug) {
@@ -462,6 +508,10 @@ const commercialSchema = z.object({
   }
 }).default({
   enabled: false,
+  categoryHub: {
+    enabled: true,
+    items: [],
+  },
   quickLinks: [],
   collections: [],
   outlet: {
@@ -483,6 +533,15 @@ export const storefrontConfigSchema = z.object({
   commercial: commercialSchema,
 });
 
-export const partialStorefrontConfigSchema = storefrontConfigSchema.deepPartial();
+const partialCommercialCategoryHubSchema = z.object({
+  enabled: z.boolean().optional(),
+  items: commercialCategoryHubItemsSchema.optional(),
+});
+
+export const partialStorefrontConfigSchema = storefrontConfigSchema.deepPartial().extend({
+  commercial: commercialObjectSchema.deepPartial().extend({
+    categoryHub: partialCommercialCategoryHubSchema.optional(),
+  }).optional(),
+});
 
 export type ValidatedStorefrontConfig = z.infer<typeof storefrontConfigSchema>;

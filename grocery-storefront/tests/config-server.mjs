@@ -332,6 +332,25 @@ const config = {
   },
   commercial: {
     enabled: true,
+    categoryHub: {
+      enabled: true,
+      items: [
+        {
+          id: 'category-hub-noodles-rice',
+          categorySlug: 'makaron-i-ryz',
+          imageUrl: '/brand/categories/noodles-rice.webp',
+          enabled: true,
+          order: 0,
+        },
+        {
+          id: 'category-hub-kimchi-pickles',
+          categorySlug: 'kimchi-i-kiszonki',
+          imageUrl: '/brand/categories/kimchi-pickles.webp',
+          enabled: true,
+          order: 1,
+        },
+      ],
+    },
     quickLinks: [
       {
         id: 'quick-outlet',

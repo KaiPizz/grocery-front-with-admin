@@ -51,6 +51,8 @@ test.describe('SEO discovery endpoints', () => {
       'https://store.example.test/en/categories',
       'https://store.example.test/categories/kimchi-i-kiszonki',
       'https://store.example.test/en/categories/kimchi-i-kiszonki',
+      'https://store.example.test/collections/korean-pantry',
+      'https://store.example.test/en/collections/korean-pantry',
       'https://store.example.test/products/organic-gala-apples',
       'https://store.example.test/en/products/organic-gala-apples',
     ]) {
