@@ -335,7 +335,7 @@ export function ProductCard({
               alt=""
               fill
               priority={imagePriority}
-              className="object-contain p-3 motion-reduce:transition-none sm:p-4"
+              className="object-contain p-2 motion-reduce:transition-none"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               unoptimized={isImageProxySrc(primaryImage.src)}
               data-testid="product-card-image-primary"
@@ -358,7 +358,7 @@ export function ProductCard({
                   src={image.src}
                   alt=""
                   fill
-                  className={`object-contain p-4 transition-opacity duration-slow motion-reduce:transition-none ${index === activeImageIndex ? 'opacity-100' : 'opacity-0'}`}
+                  className={`object-contain p-2 transition-opacity duration-slow motion-reduce:transition-none ${index === activeImageIndex ? 'opacity-100' : 'opacity-0'}`}
                   sizes="(max-width: 1024px) 33vw, 25vw"
                   unoptimized={isImageProxySrc(image.src)}
                   data-testid="product-card-image-slide"

@@ -319,6 +319,37 @@ test.describe('PDP gallery production hardening', () => {
     );
   });
 
+  test('gallery fills its desktop column while preserving contained image fit', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 800 });
+    await mockMobileStorefront(page, { productDetailImages: 'multi-media' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const gallery = page.getByTestId('product-gallery');
+    const main = gallery.getByTestId('product-gallery-main');
+    const image = main.getByRole('img');
+
+    await expect(main).toBeVisible();
+
+    const galleryBox = await gallery.boundingBox();
+    const mainBox = await main.boundingBox();
+
+    expect(galleryBox).not.toBeNull();
+    expect(mainBox).not.toBeNull();
+    expect(mainBox!.width).toBeGreaterThanOrEqual(galleryBox!.width * 0.95);
+    const galleryRight = galleryBox!.x + galleryBox!.width;
+    const mainRight = mainBox!.x + mainBox!.width;
+    expect(galleryRight - mainRight).toBeLessThanOrEqual(galleryBox!.width * 0.05);
+    const imageStyles = await image.evaluate((element) => {
+      const styles = getComputedStyle(element);
+      return {
+        objectFit: styles.objectFit,
+        paddingTop: parseFloat(styles.paddingTop),
+      };
+    });
+    expect(imageStyles.objectFit).toBe('contain');
+    expect(imageStyles.paddingTop).toBeLessThanOrEqual(16);
+  });
+
   test('keeps crowded mobile thumbnail galleries within the viewport', async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 740 });
     await mockMobileStorefront(page, { productDetailImages: 'crowded-media' });

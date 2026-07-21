@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-07-20
+> **Last updated:** 2026-07-21
 
 ---
 
@@ -218,6 +218,23 @@
 ---
 
 ## CSS & Theming Errors
+
+### Viewport height cap collapsed desktop PDP gallery width
+- **Error:** Product-detail images rendered as a small square at the top-left
+  of a much wider desktop media column, leaving a large empty gap before the
+  purchase panel.
+- **Cause:** The square gallery had `max-h-[58vh]` at every breakpoint but no
+  explicit width. CSS aspect-ratio sizing transferred that short height cap to
+  the used width; at 1440x800 the 584px column therefore contained only a
+  464px-wide gallery frame. Generous image padding made package images look
+  smaller still.
+- **Fix:** Made the frame explicitly full-width, moved desktop height control
+  to a sticky-layout-aware `calc(100vh - 8rem)` cap, and reduced package-image
+  padding while preserving `object-contain`. Added desktop geometry and media
+  density regressions alongside the existing 320px overflow test.
+- **Rule:** A viewport-height cap on an aspect-ratio media frame must be tested
+  at both normal and short desktop heights. Give the frame an explicit track
+  width, and never trade package-label integrity for a visually fuller crop.
 
 ### Product preview carousel covered desktop wishlist controls
 - **Error:** Hovering a multi-image desktop product card made the carousel layer cover the wishlist hit target, and the card bottom looked oversized because an opacity-hidden quantity unit label still occupied layout space.

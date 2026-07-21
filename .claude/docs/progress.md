@@ -1,10 +1,29 @@
 # Feature Progress
 
-> **Last updated:** 2026-07-20
+> **Last updated:** 2026-07-21
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-07-21 Asia Deli Go Product Image Density Fix
+
+- Desktop product-detail galleries now use the full media grid column instead
+  of collapsing into a small square at its top-left edge. The viewport-height
+  cap remains useful on short screens without transferring its limit to the
+  gallery width.
+- PDP package images keep `object-contain` so labels are never cropped, while
+  reduced frame padding gives the product more visual weight. Listing-card
+  primary and carousel images now use the same compact padding, preventing a
+  size jump when the preview changes.
+- Added Playwright regression coverage for full-width desktop gallery geometry,
+  contained image fit, compact media padding, and matching product-card image
+  density. Existing 320px thumbnail-overflow coverage remains green.
+- Verified at 1440x800 (584px media column / 584px frame) and short 1366x600
+  (584px media column / 584px frame, height safely capped to 472px), plus 48
+  related Playwright tests, lint, TypeScript, and the production build.
+- Production is unchanged; this candidate still requires the guarded Asia Deli
+  Go release flow and fresh owner approval before activation.
 
 ## 2026-07-21 Asia Deli Go Landing Responsive And Category Image Foundation
 

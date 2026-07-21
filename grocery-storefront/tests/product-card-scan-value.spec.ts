@@ -128,10 +128,15 @@ test.describe('listing product card scan value', () => {
 
     await expect(card.getByTestId('product-card-fulfillment')).toHaveCount(0);
 
-    const primaryImageFit = await card.getByTestId('product-card-image-primary').evaluate((element) => {
-      return getComputedStyle(element).objectFit;
+    const primaryImageStyles = await card.getByTestId('product-card-image-primary').evaluate((element) => {
+      const styles = getComputedStyle(element);
+      return {
+        objectFit: styles.objectFit,
+        paddingTop: parseFloat(styles.paddingTop),
+      };
     });
-    expect(primaryImageFit).toBe('contain');
+    expect(primaryImageStyles.objectFit).toBe('contain');
+    expect(primaryImageStyles.paddingTop).toBeLessThanOrEqual(8);
     const imageCounter = card.getByTestId('product-card-image-counter');
     await expect(imageCounter).toContainText('1/3');
     await card.hover();
@@ -141,6 +146,10 @@ test.describe('listing product card scan value', () => {
       return getComputedStyle(element).transition;
     });
     expect(slideTransition).toContain('opacity');
+    const slidePadding = await card.getByTestId('product-card-image-slide').first().evaluate((element) => {
+      return parseFloat(getComputedStyle(element).paddingTop);
+    });
+    expect(slidePadding).toBe(primaryImageStyles.paddingTop);
     const imageLayerMetrics = await card.evaluate((element) => {
       const primaryImage = element.querySelector('[data-testid="product-card-image-primary"]');
       const imageContainer = primaryImage?.parentElement;

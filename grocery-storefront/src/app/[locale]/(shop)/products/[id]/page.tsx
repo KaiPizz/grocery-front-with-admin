@@ -185,7 +185,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
       data-testid="product-gallery"
     >
       <div
-        className="relative aspect-[4/3] max-h-[58vh] overflow-hidden rounded-2xl sm:aspect-square md:rounded-xl"
+        className="relative aspect-[4/3] w-full max-h-[58vh] overflow-hidden rounded-2xl sm:aspect-square md:max-h-[calc(100vh-8rem)] md:rounded-xl"
         style={{ backgroundColor: 'var(--color-muted)' }}
         data-testid="product-gallery-main"
       >
@@ -194,7 +194,7 @@ function ProductGallery({ product }: ProductGalleryProps) {
             src={activeImage.src}
             alt={activeImage.alt}
             fill
-            className="object-contain p-3 sm:p-6"
+            className="object-contain p-2 sm:p-4"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
             unoptimized={isImageProxySrc(activeImage.src)}
