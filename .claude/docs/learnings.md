@@ -8,6 +8,41 @@
 
 ## Project Documentation
 
+### Production-shape fixture imports must exclude generated columns
+- **Error:** Copying a complete `product_variants` row into a disposable
+  rehearsal database failed at the generated `available_stock` column.
+- **Cause:** A positional all-column copy included a PostgreSQL generated
+  column, which cannot accept an explicit value.
+- **Fix:** Built the copy column list from `information_schema.columns` where
+  `is_generated = 'NEVER'`; also used valid `pg_dump` flags (`-X` is a psql
+  option, not a `pg_dump` option).
+- **Rule:** Derive production-shape fixture copy lists from non-generated
+  columns and validate dump-tool flags before loading test data.
+
+### Product-name matches conflicted with exact-EAN nutrition evidence
+- **Error:** An initial Bento nutrition correction combined marketplace values
+  that disagreed with current listings for the exact product identifier.
+- **Cause:** Product-name similarity was treated as equivalent to an exact-EAN
+  match, and an ambiguous salt unit was converted without authoritative label
+  evidence.
+- **Fix:** Used the matching EAN 8850157405836 consensus from three current
+  retailers and held the separate salt correction pending a physical or
+  importer label.
+- **Rule:** Prefer multiple exact-EAN sources over name-only listings for food
+  nutrition; never convert an ambiguous label unit without authoritative
+  packaging evidence.
+
+### Psql meta-command backslash disappeared inside a JavaScript template
+- **Error:** A generated SQL artifact contained bare `set ON_ERROR_STOP on`
+  instead of the required psql `\set ON_ERROR_STOP on` command.
+- **Cause:** A single backslash in a JavaScript template literal was consumed
+  while rendering the generator output.
+- **Fix:** Escaped the source backslash as `\\set` and added a regression
+  that requires the generated line to begin with a literal backslash while
+  rejecting the bare form.
+- **Rule:** Every psql meta-command emitted from JavaScript must use a doubled
+  source backslash and have an assertion against the final generated artifact.
+
 ### Separate URL updates raced while clearing combined discovery state
 - **Error:** On `/products?search=...&dietary=...`, “Clear all” could remove the search and then restore the dietary filter (or the reverse) instead of clearing both.
 - **Cause:** The handler called the filter clear and search clear helpers independently; each built a router target from the same stale `searchParams` snapshot, so the competing navigation preserved the other parameter.

@@ -1,0 +1,568 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-data-fix-20260721-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-21T22:10:36Z",
+  "products": [
+    {
+      "sku": "ADG-000404",
+      "productId": "66852048-369d-4dc3-9b32-07d1bc68df24",
+      "variantId": "851bbd63-66a5-4ddc-92c9-27f461dbb556",
+      "name": "Kimchi Hot 300g - Runoland",
+      "slug": "kimchi-hot-300g-runoland",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723Z",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "allergens": [
+          "cereals"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 2.2,
+          "carbs": 9.7,
+          "sugar": 3.3,
+          "protein": 2.2,
+          "calories": 50,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "pricePerUnit": "36.33",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "8c4c679a-f5e8-427c-b734-1b20eb12a97b",
+          "name": "Kimchi",
+          "slug": "kimchi",
+          "isActive": true
+        }
+      },
+      "target": {
+        "allergens": [
+          "cereals",
+          "fish"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 2.2,
+          "carbs": 9.7,
+          "sugar": 3.3,
+          "protein": 2.2,
+          "calories": 50,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "pricePerUnit": "36.33",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "8c4c679a-f5e8-427c-b734-1b20eb12a97b",
+          "name": "Kimchi",
+          "slug": "kimchi",
+          "isActive": true
+        }
+      },
+      "confidence": "high",
+      "reason": "The supplier label lists wheat and fish sauce; retain cereals and add fish.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2168.html",
+          "kind": "supplier-label",
+          "supports": "Ingredient and allergen warning lists wheat and fish sauce."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/kimchi-hot-300g-runoland",
+          "kind": "public-pdp",
+          "supports": "Confirms the public product identity and current 300g pack."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000702",
+      "productId": "83a6fbe5-3152-4a0c-9a89-8a1c00decfd5",
+      "variantId": "935a36fc-900a-4047-b262-6ee23c2fb7f1",
+      "name": "Edomae Inari Age, smażone kieszonki tofu (24 szt.) 540g - Nishimoto",
+      "slug": "edomae-inari-age-smazone-kieszonki-tofu-24-szt-540g-nishimoto",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723Z",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "allergens": [],
+        "storageZone": null,
+        "nutritionFacts": null,
+        "pricePerUnit": "59.26",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "d7442ca6-6767-46e4-9e12-ff8d0f824d89",
+          "name": "Tofu",
+          "slug": "tofu",
+          "isActive": true
+        }
+      },
+      "target": {
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "calories": 263,
+          "fat": 13.2,
+          "saturatedFat": 2.45,
+          "carbs": 29.5,
+          "sugar": 27.9,
+          "protein": 8.3,
+          "salt": 1.48,
+          "servingSize": "w 100g/100ml"
+        },
+        "pricePerUnit": "59.26",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "d7442ca6-6767-46e4-9e12-ff8d0f824d89",
+          "name": "Tofu",
+          "slug": "tofu",
+          "isActive": true
+        }
+      },
+      "confidence": "high",
+      "reason": "Two independent retail listings agree on wheat/soy allergens, ambient storage, and the complete per-100g nutrition panel.",
+      "evidence": [
+        {
+          "url": "https://yamatomarket.pl/product/tofu-inari-540g-nishimoto/",
+          "kind": "retailer-label",
+          "supports": "Product ingredients, allergen, storage, and nutrition label."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-3396-Inari-smazone-kieszonki-tofu-540g-Nishimoto.html",
+          "kind": "retailer-label",
+          "supports": "Independent corroboration of the 540g Nishimoto product metadata."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/edomae-inari-age-smazone-kieszonki-tofu-24-szt-540g-nishimoto",
+          "kind": "public-pdp",
+          "supports": "Confirms the public product identity."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001014",
+      "productId": "f530e430-4d1d-42d4-a1d3-d33d90b0a395",
+      "variantId": "6f1272e3-05c0-4df9-be94-ee15c8cc2291",
+      "name": "Bento Squid Snack Sweet & Spicy, przekąska z kałamarnicy słodko-ostra 20g - Bento & Co",
+      "slug": "bento-squid-snack-sweet-and-spicy-przekaska-z-kalamarnicy-slodko-ostra-20g-bento-and-co",
+      "expectedUpdatedAt": "2026-07-09T12:38:27.209063Z",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "allergens": [
+          "cereals",
+          "fish",
+          "molluscs"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 6.6,
+          "carbs": 52,
+          "sugar": 26,
+          "protein": 23,
+          "calories": 610,
+          "servingSize": "w 100g/100ml"
+        },
+        "pricePerUnit": "480.00",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        }
+      },
+      "target": {
+        "allergens": [
+          "cereals",
+          "fish",
+          "molluscs"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "calories": 347,
+          "fat": 2.1,
+          "saturatedFat": 0.5,
+          "carbs": 57,
+          "sugar": 30,
+          "protein": 24,
+          "salt": 5,
+          "servingSize": "w 100g/100ml"
+        },
+        "pricePerUnit": "480.00",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        }
+      },
+      "confidence": "high",
+      "reason": "Three current retailer records tied to EAN 8850157405836 agree on the same per-100g nutrition panel; this is a packaged squid snack, not a ready meal.",
+      "evidence": [
+        {
+          "url": "https://asiapoint.de/tintenfisch-snack-sweet-spicy-bento-20g",
+          "kind": "retailer-label",
+          "supports": "EAN 8850157405836 and the reviewed per-100g nutrition panel."
+        },
+        {
+          "url": "https://www.fiksuruoka.fi/product/29091/bento-mixed-seafood-snack-sweet--spicy-merenelavasnacks-20g",
+          "kind": "retailer-label",
+          "supports": "Independent EAN 8850157405836 record with the same nutrition values."
+        },
+        {
+          "url": "https://www.tavato.de/p/8850157405836",
+          "kind": "retailer-label",
+          "supports": "Independent EAN-keyed record with the same nutrition values."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/bento-squid-snack-sweet-and-spicy-przekaska-z-kalamarnicy-slodko-ostra-20g-bento-and-co",
+          "kind": "public-pdp",
+          "supports": "Confirms the public product identity and current category."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001382",
+      "productId": "7f821fb2-729b-411d-aa9a-f34886fea0ec",
+      "variantId": "b9ff2de6-0788-4336-b756-846afff9fc8a",
+      "name": "2 x Dubai Chocolate, zestaw czekolad dubajskich z kremem pistacjowym i ciastem kataifi - mleczna i biała 160g Q Chew",
+      "slug": "2-x-dubai-chocolate-zestaw-czekolad-dubajskich-z-kremem-pistacjowym-i-ciastem-kataifi-mleczna-i-biala-160g-q-chew",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723Z",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk",
+          "nuts"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 32.9,
+          "salt": 50.7,
+          "carbs": 53.1,
+          "sugar": 40.4,
+          "protein": 10.9,
+          "calories": 552,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 19.4
+        },
+        "pricePerUnit": "623.75",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        }
+      },
+      "target": {
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk",
+          "nuts"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 32.9,
+          "salt": 50.7,
+          "carbs": 53.1,
+          "sugar": 40.4,
+          "protein": 10.9,
+          "calories": 552,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 19.4
+        },
+        "pricePerUnit": "311.88",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        }
+      },
+      "confidence": "high",
+      "reason": "The bundle contains two 160g bars, so the unit-price denominator is 320g. The suspicious salt value remains unchanged pending a physical or importer-label check.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-5215.html",
+          "kind": "supplier-label",
+          "supports": "Confirms the two 160g component products used for the unit-price denominator; salt is not changed in this batch."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/2-x-dubai-chocolate-zestaw-czekolad-dubajskich-z-kremem-pistacjowym-i-ciastem-kataifi-mleczna-i-biala-160g-q-chew",
+          "kind": "public-pdp",
+          "supports": "Confirms the public bundle identity and current unit price."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001383",
+      "productId": "adcd2bb3-9284-4ac4-9766-2d39c319ad86",
+      "variantId": "a4516e39-1a7b-466d-8c29-4cd5ac1b0269",
+      "name": "2 x Angel Hair Chocolate, zestaw czekolad z anielskim włosiem i pistacjami - biała i różowa 80g Mistachio",
+      "slug": "2-x-angel-hair-chocolate-zestaw-czekolad-z-anielskim-wlosiem-i-pistacjami-biala-i-rozowa-80g-mistachio",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723Z",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk",
+          "nuts"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 25,
+          "salt": 0.45,
+          "carbs": 57,
+          "sugar": 38,
+          "protein": 10,
+          "calories": 493,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 17
+        },
+        "pricePerUnit": "886.25",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        }
+      },
+      "target": {
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk",
+          "nuts"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 25,
+          "salt": 0.45,
+          "carbs": 57,
+          "sugar": 38,
+          "protein": 10,
+          "calories": 493,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 17
+        },
+        "pricePerUnit": "443.13",
+        "unitOfMeasure": "KG",
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        }
+      },
+      "confidence": "high",
+      "reason": "The bundle visibly contains two 80g packs, so its total comparison-price denominator is 160g rather than 80g.",
+      "evidence": [
+        {
+          "url": "https://img.zira.pl/asiandeligo/products/KIMCHI-5216/1.webp",
+          "kind": "public-product-image",
+          "supports": "Shows two component packs, each marked 80g."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-5216.html",
+          "kind": "supplier-listing",
+          "supports": "Confirms the two-pack bundle identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/2-x-angel-hair-chocolate-zestaw-czekolad-z-anielskim-wlosiem-i-pistacjami-biala-i-rozowa-80g-mistachio",
+          "kind": "public-pdp",
+          "supports": "Confirms the public bundle identity and current unit price."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001750",
+      "productId": "afb16814-879c-48ce-aa7e-d444740c35ad",
+      "variantId": "d5f36da0-410e-4c16-8519-0e6b13ee754c",
+      "name": "Buldak Hot Sauce Carbonara Flavour - sos o smaku pikantnego kurczaka carbonara 165ml Samyang",
+      "slug": "buldak-hot-sauce-carbonara-flavour-sos-o-smaku-pikantnego-kurczaka-carbonara-165ml-samyang",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723Z",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "celery"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 17,
+          "salt": 5.8,
+          "carbs": 42,
+          "sugar": 23,
+          "protein": 4.1,
+          "calories": 346,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 5.4
+        },
+        "pricePerUnit": "166.67",
+        "unitOfMeasure": "LITER",
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        }
+      },
+      "target": {
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "celery"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "fat": 17,
+          "salt": 5.8,
+          "carbs": 42,
+          "sugar": 23,
+          "protein": 4.1,
+          "calories": 346,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 5.4
+        },
+        "pricePerUnit": "166.67",
+        "unitOfMeasure": "LITER",
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        }
+      },
+      "confidence": "high",
+      "reason": "The item is a 165ml bottled hot sauce; move it from instant noodles to the sauce and marinade taxonomy.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-5783.html",
+          "kind": "supplier-listing",
+          "supports": "Title and contents identify a 165ml hot sauce."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/buldak-hot-sauce-carbonara-flavour-sos-o-smaku-pikantnego-kurczaka-carbonara-165ml-samyang",
+          "kind": "public-pdp",
+          "supports": "Confirms the public product identity and current Ramyun category."
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "The source facts were reviewed manually against public supplier/retailer pages and the current public Asia Deli Go product pages.",
+    "This batch updates only six rows in products; product_variants and categories are identity/status guards and remain read-only.",
+    "ADG-001014 deliberately uses the matching panel shared by three current EAN 8850157405836 retailer records; the conflicting Kimchi/Allegro-style 52/26/23/6.6 panel was reviewed and rejected for this batch.",
+    "ADG-001382 salt remains exactly 50.7 pending verification from a physical package or authoritative importer label.",
+    "Stock, retail price, EAN, publication state, translations, media, orders, reservations, and customer data are outside scope."
+  ]
+}

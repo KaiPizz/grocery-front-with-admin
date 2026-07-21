@@ -6,6 +6,22 @@
 
 ---
 
+## 2026-07-21 Asia Deli Go Catalog Data Remediation Preparation
+
+- Added an evidence-backed exact-six catalog decision set covering allergens,
+  storage, nutrition, comparison-unit prices, and two category corrections.
+- The Bento nutrition decision uses a three-source exact-EAN consensus; the
+  suspicious Dubai Chocolate salt value is intentionally held for a physical
+  or importer-label check and is not changed by this batch.
+- Generated one-shot SERIALIZABLE apply/rollback SQL with exact tenant,
+  product, variant, category, status, old-value, and `updated_at` guards.
+- Apply captures a persistent explicit-column backup and decision-SHA audit
+  trail before mutation; rollback refuses intervening product edits.
+- Production is unchanged. A production-shape disposable PostgreSQL rehearsal
+  passed apply, exact rollback, duplicate-run rejection, stale-row rejection,
+  and intervening-edit rollback rejection. The SQL remains a reviewed candidate
+  until the separate explicit production data-apply step.
+
 ## 2026-07-21 Asia Deli Go Discovery Main Integration
 
 - Integrated the catalog search, relevance sorting, public-route SEO, product-card accessibility, and catalog audit candidate onto the latest enriched category/Korean-discovery main line.
