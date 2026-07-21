@@ -787,6 +787,17 @@ export default function HomePage() {
 
   const [productsResult] = useQuery({
     query: PRODUCT_LISTING_QUERY,
+    variables: {
+      channel,
+      first: 8,
+      sortBy: { field: 'DATE', direction: 'DESC' },
+    },
+  });
+
+  const dealsEnabled = orderedSections.includes('deals');
+  const [dealsResult] = useQuery({
+    query: PRODUCT_LISTING_QUERY,
+    pause: !dealsEnabled,
     variables: { channel, first: 8 },
   });
 
@@ -801,10 +812,11 @@ export default function HomePage() {
   });
 
   const products = (productsResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
+  const dealCandidates = (dealsResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
   const recipes = (recipesResult.data?.recipes?.edges?.map((edge: { node: HomeRecipe }) => edge.node) ?? []) as HomeRecipe[];
   const categories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
 
-  const saleProducts = products
+  const saleProducts = dealCandidates
     .filter((product) => {
       const discounted = product.pricing?.priceRangeUndiscounted?.start?.gross?.amount;
       const currentPrice = product.pricing?.priceRange?.start?.gross?.amount;
@@ -813,10 +825,9 @@ export default function HomePage() {
     .slice(0, 4);
   const productsForDeals = saleProducts;
   const highlightedProductIds = new Set(productsForDeals.map((product) => product.id));
-  const freshPicks = products
-    .filter((product) => !highlightedProductIds.has(product.id))
-    .slice(0, 4);
-  const productsForFreshPicks = freshPicks.length > 0 ? freshPicks : products.slice(0, 4);
+  const freshPicks = products.filter((product) => !highlightedProductIds.has(product.id));
+  const productsForFreshPicks = freshPicks.length > 0 ? freshPicks : products;
+  const freshPicksLoading = productsResult.fetching || (dealsEnabled && dealsResult.fetching);
   return (
     <div className="pb-24 md:pb-12">
       {heroBlock ? <h1 className="sr-only">{heroHeadline}</h1> : null}
@@ -920,7 +931,7 @@ export default function HomePage() {
               );
 
             case 'deals':
-              if (!productsResult.fetching && productsForDeals.length === 0) return null;
+              if (!dealsResult.fetching && productsForDeals.length === 0) return null;
 
               return (
                 <section key="deals" id="home-deals" className="container-grocery py-5" data-testid="mobile-home-deals">
@@ -935,7 +946,7 @@ export default function HomePage() {
                       {t('seeAllDeals')}
                     </Link>
                   </div>
-                  {productsResult.fetching ? (
+                  {dealsResult.fetching ? (
                     <div className="grid grid-cols-2 gap-3">
                       {Array.from({ length: 4 }).map((_, index) => (
                         <HomeShelfSkeleton key={index} />
@@ -973,7 +984,7 @@ export default function HomePage() {
                       {t('seeAllProducts')}
                     </Link>
                   </div>
-                  {productsResult.fetching ? (
+                  {freshPicksLoading ? (
                     <div className="grid grid-cols-2 gap-3">
                       {Array.from({ length: 4 }).map((_, index) => (
                         <HomeShelfSkeleton key={index} />
@@ -981,7 +992,7 @@ export default function HomePage() {
                     </div>
                   ) : productsForFreshPicks.length > 0 ? (
                     <div className="grid grid-cols-2 gap-3">
-                      {productsForFreshPicks.map((product, index) => (
+                      {productsForFreshPicks.slice(0, 4).map((product, index) => (
                         <MobileProductCard
                           key={product.id}
                           product={product as never}
@@ -1154,7 +1165,7 @@ export default function HomePage() {
               );
 
             case 'deals':
-              if (!productsResult.fetching && productsForDeals.length === 0) return null;
+              if (!dealsResult.fetching && productsForDeals.length === 0) return null;
 
               return (
                 <section key="deals" className="container-grocery py-16 md:py-20">
@@ -1174,7 +1185,7 @@ export default function HomePage() {
                       <ChevronRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
                   </div>
-                  {productsResult.fetching ? (
+                  {dealsResult.fetching ? (
                     <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
                       {Array.from({ length: 4 }).map((_, index) => (
                         <HomeShelfSkeleton key={index} />
@@ -1223,15 +1234,15 @@ export default function HomePage() {
                       <ChevronRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
                   </div>
-                  {productsResult.fetching ? (
+                  {freshPicksLoading ? (
                     <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
                       {Array.from({ length: 8 }).map((_, index) => (
                         <HomeShelfSkeleton key={index} />
                       ))}
                     </div>
-                  ) : products.length > 0 ? (
+                  ) : productsForFreshPicks.length > 0 ? (
                     <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-                      {products.map((product, index) => (
+                      {productsForFreshPicks.map((product, index) => (
                         <ProductCard
                           key={product.id}
                           product={product as never}

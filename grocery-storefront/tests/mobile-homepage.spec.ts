@@ -150,6 +150,51 @@ async function mockHomepageHeroConfig(page: Page) {
 }
 
 test.describe('mobile homepage', () => {
+  test('labels the homepage shelf as new arrivals and requests newest products first', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockHomepageConfig(page);
+    await mockMobileStorefront(page, {
+      homepageShelfSources: 'distinct',
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en');
+
+    const englishShelf = page.getByTestId('desktop-home-fresh-picks');
+    await expect(englishShelf.getByRole('heading', { name: 'New arrivals' })).toBeVisible();
+    await expect.poll(() => productQueries.some((variables) => (
+      variables.first === 8
+      && variables.sortBy?.field === 'DATE'
+      && variables.sortBy?.direction === 'DESC'
+    ))).toBe(true);
+    await expect.poll(() => productQueries.some((variables) => (
+      variables.first === 8 && variables.sortBy == null
+    ))).toBe(true);
+    const dealsShelf = page.getByTestId('desktop-home-deals');
+    await expect(
+      englishShelf.getByRole('heading', { name: 'Blueberries Snack Box', exact: true }),
+    ).toBeVisible();
+    await expect(
+      englishShelf.getByRole('heading', { name: 'Spinach Ravioli Family Pack', exact: true }),
+    ).toBeVisible();
+    await expect(
+      dealsShelf.getByRole('heading', { name: 'Organic Gala Apples Family Value Pack', exact: true }),
+    ).toBeVisible();
+    await expect(
+      dealsShelf.getByRole('heading', { name: 'Sourdough Sandwich Bread', exact: true }),
+    ).toBeVisible();
+    await expect(
+      englishShelf.getByRole('heading', { name: 'Organic Gala Apples Family Value Pack', exact: true }),
+    ).toHaveCount(0);
+
+    await page.goto('/pl');
+    const polishShelf = page.getByTestId('desktop-home-fresh-picks');
+    await expect(polishShelf.getByRole('heading', { name: 'Nowości' })).toBeVisible();
+  });
+
   test('renders admin-configured homepage hero copy and CTA', async ({ page }) => {
     // Protects the admin homepage contract: published hero copy should affect
     // the first storefront viewport, not only lower banner blocks or metadata.
@@ -191,10 +236,18 @@ test.describe('mobile homepage', () => {
     await expect(deals).toBeVisible();
     await expect(freshPicks).toBeVisible();
     await expect(page.getByTestId('mobile-home-deal-card')).toHaveCount(2);
-    await expect(deals.getByText('Organic Gala Apples Family Value Pack')).toBeVisible();
-    await expect(deals.getByText('Sourdough Sandwich Bread')).toBeVisible();
-    await expect(deals.getByText('Blueberries Snack Box')).toHaveCount(0);
-    await expect(deals.getByText('Spinach Ravioli Family Pack')).toHaveCount(0);
+    await expect(
+      deals.getByRole('heading', { name: 'Organic Gala Apples Family Value Pack', exact: true }),
+    ).toBeVisible();
+    await expect(
+      deals.getByRole('heading', { name: 'Sourdough Sandwich Bread', exact: true }),
+    ).toBeVisible();
+    await expect(
+      deals.getByRole('heading', { name: 'Blueberries Snack Box', exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      deals.getByRole('heading', { name: 'Spinach Ravioli Family Pack', exact: true }),
+    ).toHaveCount(0);
     const firstDealCard = page.getByTestId('mobile-home-deal-card').first();
     const firstFreshCard = freshPicks.getByTestId('mobile-home-product-card').first();
 

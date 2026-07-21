@@ -930,6 +930,7 @@ interface MockMobileStorefrontOptions {
   facets?: 'populated' | 'empty';
   listingProductLimit?: number;
   filterCatalogProductLimit?: number;
+  homepageShelfSources?: 'shared' | 'distinct';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   beforeProductListingResponse?: () => Promise<void>;
   beforeProductFilterCatalogResponse?: () => Promise<void>;
@@ -1060,7 +1061,18 @@ export async function mockMobileStorefront(
           product.category.id === categoryKey || product.category.slug === categoryKey
         ))
       ));
-      const unpaginatedProducts = usesPublicTaxonomy ? PUBLIC_TAXONOMY_PRODUCTS : products;
+      const defaultListingProducts = usesPublicTaxonomy ? PUBLIC_TAXONOMY_PRODUCTS : products;
+      const usesNewestHomepageSource = body.variables?.sortBy?.field === 'DATE'
+        && body.variables?.sortBy?.direction === 'DESC';
+      const unpaginatedProducts = options.homepageShelfSources === 'distinct'
+        && isProductListingQuery
+        && !usesPublicTaxonomy
+        ? defaultListingProducts.filter((product) => (
+            usesNewestHomepageSource
+              ? product.id === 'prod-berries' || product.id === 'prod-ravioli'
+              : product.id === 'prod-apples' || product.id === 'prod-bread'
+          ))
+        : defaultListingProducts;
       const listingProducts = isProductListingQuery && options.listingProductLimit !== undefined
         ? unpaginatedProducts.slice(0, options.listingProductLimit)
         : unpaginatedProducts;
