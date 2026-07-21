@@ -119,21 +119,21 @@
           "items": [
             {
               "id": "asiandeligo-grid-korean-pantry",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-5781/1.webp",
+              "imageUrl": "/brand/categories/sauces-pastes.webp",
               "title": "Sosy i pasty",
               "href": "/pl/categories/sosy-pasty-i-przyprawy",
               "enabled": true
             },
             {
               "id": "asiandeligo-grid-drinks",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-5029/1.webp",
+              "imageUrl": "/brand/categories/drinks.webp",
               "title": "Napoje",
               "href": "/pl/categories/napoje-herbaty-i-kawy",
               "enabled": true
             },
             {
               "id": "asiandeligo-grid-ready-meals",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-2472/1.webp",
+              "imageUrl": "/brand/categories/ready-meals.webp",
               "title": "Dania gotowe",
               "href": "/pl/categories/dania-gotowe",
               "enabled": true
@@ -149,21 +149,21 @@
           "items": [
             {
               "id": "asiandeligo-grid-kimchi",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-2168/1.webp",
+              "imageUrl": "/brand/categories/kimchi-pickles.webp",
               "title": "Kimchi i kiszonki",
               "href": "/pl/categories/kimchi-i-kiszonki",
               "enabled": true
             },
             {
               "id": "asiandeligo-grid-noodles-rice",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-1136/1.webp",
+              "imageUrl": "/brand/categories/noodles-rice.webp",
               "title": "Makaron i ryż",
               "href": "/pl/categories/makaron-i-ryz",
               "enabled": true
             },
             {
               "id": "asiandeligo-grid-snacks-sweets",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-5215/1.webp",
+              "imageUrl": "/brand/categories/snacks-sweets.webp",
               "title": "Przekąski i słodycze",
               "href": "/pl/categories/przekaski-i-slodycze",
               "enabled": true
@@ -201,21 +201,21 @@
           "items": [
             {
               "id": "asiandeligo-round-sushi-algae",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-14/1.webp",
+              "imageUrl": "/brand/categories/sushi-seaweed.webp",
               "title": "Sushi i algi",
               "href": "/pl/categories/sushi-i-algi",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-mushrooms-tofu",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-1428/1.webp",
+              "imageUrl": "/brand/categories/mushrooms-tofu.webp",
               "title": "Grzyby i tofu",
               "href": "/pl/categories/grzyby-warzywa-i-tofu",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-kitchen-tools",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-2617/1.webp",
+              "imageUrl": "/brand/categories/kitchen-tools.webp",
               "title": "Akcesoria kuchenne",
               "href": "/pl/categories/akcesoria-kuchenne",
               "enabled": true
@@ -544,21 +544,21 @@
           "items": [
             {
               "id": "asiandeligo-grid-korean-pantry",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-5781/1.webp",
+              "imageUrl": "/brand/categories/sauces-pastes.webp",
               "title": "Sosy i pasty",
               "href": "/pl/categories/sosy-pasty-i-przyprawy",
               "enabled": true
             },
             {
               "id": "asiandeligo-grid-drinks",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-5029/1.webp",
+              "imageUrl": "/brand/categories/drinks.webp",
               "title": "Napoje",
               "href": "/pl/categories/napoje-herbaty-i-kawy",
               "enabled": true
             },
             {
               "id": "asiandeligo-grid-ready-meals",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-2472/1.webp",
+              "imageUrl": "/brand/categories/ready-meals.webp",
               "title": "Dania gotowe",
               "href": "/pl/categories/dania-gotowe",
               "enabled": true
@@ -574,21 +574,21 @@
           "items": [
             {
               "id": "asiandeligo-grid-kimchi",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-2168/1.webp",
+              "imageUrl": "/brand/categories/kimchi-pickles.webp",
               "title": "Kimchi i kiszonki",
               "href": "/pl/categories/kimchi-i-kiszonki",
               "enabled": true
             },
             {
               "id": "asiandeligo-grid-noodles-rice",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-1136/1.webp",
+              "imageUrl": "/brand/categories/noodles-rice.webp",
               "title": "Makaron i ryż",
               "href": "/pl/categories/makaron-i-ryz",
               "enabled": true
             },
             {
               "id": "asiandeligo-grid-snacks-sweets",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-5215/1.webp",
+              "imageUrl": "/brand/categories/snacks-sweets.webp",
               "title": "Przekąski i słodycze",
               "href": "/pl/categories/przekaski-i-slodycze",
               "enabled": true
@@ -626,21 +626,21 @@
           "items": [
             {
               "id": "asiandeligo-round-sushi-algae",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-14/1.webp",
+              "imageUrl": "/brand/categories/sushi-seaweed.webp",
               "title": "Sushi i algi",
               "href": "/pl/categories/sushi-i-algi",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-mushrooms-tofu",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-1428/1.webp",
+              "imageUrl": "/brand/categories/mushrooms-tofu.webp",
               "title": "Grzyby i tofu",
               "href": "/pl/categories/grzyby-warzywa-i-tofu",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-kitchen-tools",
-              "imageUrl": "https://img.zira.pl/asiandeligo/products/KIMCHI-2617/1.webp",
+              "imageUrl": "/brand/categories/kitchen-tools.webp",
               "title": "Akcesoria kuchenne",
               "href": "/pl/categories/akcesoria-kuchenne",
               "enabled": true
