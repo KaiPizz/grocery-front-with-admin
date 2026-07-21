@@ -422,6 +422,40 @@ test.describe('mobile products page', () => {
     await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
   });
 
+  test('clears search and dietary discovery state in one URL update', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products?ref=campaign&search=kimchi&dietary=vegetarian');
+
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    const vegetarianButton = filterPanel.getByRole('button', { name: /^vegetarian$/i });
+    const filterSummary = page.getByTestId('product-filter-summary');
+
+    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(filterSummary.getByRole('button', { name: /remove search: kimchi filter/i })).toBeVisible();
+    await expect(filterSummary.getByRole('button', { name: /remove vegetarian filter/i })).toBeVisible();
+
+    await filterSummary.getByRole('button', { name: /^clear all$/i }).click();
+
+    await expect.poll(() => {
+      const url = new URL(page.url());
+      return {
+        ref: url.searchParams.get('ref'),
+        search: url.searchParams.get('search'),
+        dietary: url.searchParams.getAll('dietary'),
+        sort: url.searchParams.get('sort'),
+      };
+    }).toEqual({
+      ref: 'campaign',
+      search: null,
+      dietary: [],
+      sort: null,
+    });
+    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'false');
+    await expect(filterSummary).toHaveCount(0);
+    await expect(page.getByTestId('product-card')).toHaveCount(4);
+  });
+
   test('restores the initial category listing when Back removes a dietary filter', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 1280, height: 900 });

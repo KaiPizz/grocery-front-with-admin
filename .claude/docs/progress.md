@@ -11,6 +11,7 @@
 - Integrated the catalog search, relevance sorting, public-route SEO, product-card accessibility, and catalog audit candidate onto the latest enriched category/Korean-discovery main line.
 - Preserved the live owner-configured visual category hub, Korean collection/category assets, and hardened remote-image proxy while reconciling the shared taxonomy fixtures.
 - Consolidated category and collection metadata under their shared layouts so configured branding, locale alternates (including `x-default`), sharing images, and structured data are no longer masked by older page-level metadata.
+- Restored URL-backed dietary deep links and made combined “Clear all” actions remove search, sort, and dietary state in one atomic navigation while preserving unrelated campaign parameters.
 
 ## 2026-07-21 Asia Deli Go Product Image Density Fix
 

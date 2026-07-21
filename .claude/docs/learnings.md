@@ -8,6 +8,12 @@
 
 ## Project Documentation
 
+### Separate URL updates raced while clearing combined discovery state
+- **Error:** On `/products?search=...&dietary=...`, “Clear all” could remove the search and then restore the dietary filter (or the reverse) instead of clearing both.
+- **Cause:** The handler called the filter clear and search clear helpers independently; each built a router target from the same stale `searchParams` snapshot, so the competing navigation preserved the other parameter.
+- **Fix:** Clear local search/filter/sort state together and perform one `router.replace` whose URL removes search, sort, and dietary parameters atomically while retaining unrelated campaign parameters.
+- **Rule:** A user action that changes multiple URL-backed filters must construct one complete target URL and issue one navigation; never compose it from helpers that each navigate from the current search-parameter snapshot.
+
 ### Page metadata overrode the shared SEO layout during main integration
 - **Error:** The integrated category index kept the old fixed Asia Deli Go title, and the collection route omitted the new `x-default` alternate even though both new SEO layouts rendered correctly on other routes.
 - **Cause:** Both pages still exported their own `generateMetadata`; Next.js gives the page-level result precedence over metadata returned by its parent layout.

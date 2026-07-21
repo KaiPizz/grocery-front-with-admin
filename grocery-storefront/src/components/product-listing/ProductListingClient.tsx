@@ -828,7 +828,11 @@ export function ProductListingClient({
     );
   }
 
-  function buildListingUrl(nextSort: string, nextSearch: string) {
+  function buildListingUrl(
+    nextSort: string,
+    nextSearch: string,
+    nextDietaryTags?: string[],
+  ) {
     const params = new URLSearchParams(searchParams.toString());
     const trimmedSearch = nextSearch.trim();
     const defaultSort = trimmedSearch ? 'relevance' : 'newest';
@@ -843,6 +847,10 @@ export function ProductListingClient({
       params.set('search', trimmedSearch);
     } else {
       params.delete('search');
+    }
+
+    if (nextDietaryTags) {
+      setDietaryQueryParams(params, nextDietaryTags);
     }
 
     const nextParams = params.toString();
@@ -1070,10 +1078,13 @@ export function ProductListingClient({
   }
 
   function clearAllDiscovery() {
-    clearCommittedFilters();
-    if (normalizedSearch) {
-      clearSearch();
-    }
+    setCommittedFilters(DEFAULT_FILTERS);
+    setDraftFilters(DEFAULT_FILTERS);
+    setSearch('');
+    setSort('newest');
+    setDraftSort('newest');
+    setLoadedProducts([]);
+    router.replace(buildListingUrl('newest', '', []), { scroll: false });
   }
 
   function clearDraftFilters() {
