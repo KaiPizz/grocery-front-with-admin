@@ -7,7 +7,7 @@ import { useQuery } from 'urql';
 
 import { Link } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
-import { PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
+import { PUBLIC_CATEGORY_NAVIGATION_QUERY } from '@/lib/graphql/operations/grocery';
 import { buildPublicCategories, type PublicCategory } from '@/lib/public-taxonomy';
 
 const COLUMN_COUNT = 4;
@@ -76,7 +76,7 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
   }, [open]);
 
   const [result] = useQuery<CategoriesResponse>({
-    query: PUBLIC_CATEGORIES_QUERY,
+    query: PUBLIC_CATEGORY_NAVIGATION_QUERY,
     variables: { channel },
     pause: !requested,
   });
@@ -86,7 +86,7 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
       .map((edge) => edge.node)
       .filter((category) => category.slug && category.name) ?? [];
 
-    return buildPublicCategories(rawCategories, locale);
+    return buildPublicCategories(rawCategories, locale, { requireProductCount: false });
   }, [locale, result.data]);
 
   const columns = useMemo(() => splitIntoColumns(categories), [categories]);

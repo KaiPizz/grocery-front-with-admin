@@ -4,16 +4,31 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState, type FormEvent 
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
-import { ArrowRight, Clock3, CornerUpLeft, Search, X } from 'lucide-react';
+import { ArrowRight, Clock3, CornerUpLeft, LayoutGrid, Search, X } from 'lucide-react';
 import { useRouter } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
-import { SEARCH_PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
+import { PUBLIC_CATEGORY_NAVIGATION_QUERY, SEARCH_PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
 import { getLocalizedProductName } from '@/lib/localization';
-import { normalizeSearchTerm, type SearchableProduct } from '@/lib/search';
+import { buildPublicCategories, type PublicTaxonomyRawCategory } from '@/lib/public-taxonomy';
+import { buildSearchSuggestions, normalizeSearchTerm, rankProductsForSearch, type SearchableProduct } from '@/lib/search';
 import { cn, formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import { useSearchStore } from '@/stores/search-store';
 
 const SEARCH_RESULT_LIMIT = 4;
+const SEARCH_CANDIDATE_LIMIT = 20;
+
+interface SearchProductsResponse {
+  searchProducts: {
+    edges: Array<{ node: SearchableProduct }>;
+    totalCount: number;
+  } | null;
+}
+
+interface SearchCategoriesResponse {
+  categories: {
+    edges: Array<{ node: PublicTaxonomyRawCategory }>;
+  } | null;
+}
 
 interface SearchAutocompleteProps {
   inputId: string;
@@ -53,23 +68,33 @@ export function SearchAutocomplete({
   const normalizedQuery = normalizeSearchTerm(deferredValue);
   const shouldSearch = normalizedQuery.length >= 2 && hasActivated;
 
-  const [result] = useQuery({
+  const [result] = useQuery<SearchProductsResponse>({
     query: SEARCH_PRODUCTS_QUERY,
     variables: {
       channel,
       query: deferredValue.trim(),
-      first: SEARCH_RESULT_LIMIT,
+      first: SEARCH_CANDIDATE_LIMIT,
     },
     pause: !shouldSearch,
   });
+  const [categoriesResult] = useQuery<SearchCategoriesResponse>({
+    query: PUBLIC_CATEGORY_NAVIGATION_QUERY,
+    variables: { channel },
+    pause: !hasActivated,
+  });
 
   const products = useMemo<SearchableProduct[]>(
-    () => (result.data?.searchProducts?.edges?.map((edge: any) => {
-      const node = edge.node.product as SearchableProduct;
+    () => (result.data?.searchProducts?.edges?.map((edge) => {
+      const node = edge.node;
       const localizedName = getLocalizedProductName(node, locale);
       return localizedName === node.name ? node : { ...node, name: localizedName };
     }) || []),
     [locale, result.data]
+  );
+
+  const rankedProducts = useMemo(
+    () => rankProductsForSearch(products, deferredValue, { preserveUnmatched: true }),
+    [deferredValue, products],
   );
 
   const suggestions = useMemo(() => {
@@ -81,28 +106,35 @@ export function SearchAutocomplete({
       return recentSearches.filter((entry) => normalizeSearchTerm(entry).includes(normalizedQuery)).slice(0, 4);
     }
 
-    const matches = recentSearches.filter((entry) => normalizeSearchTerm(entry).includes(normalizedQuery));
-    const seen = new Set(matches.map(normalizeSearchTerm));
-
-    for (const product of products) {
-      const normalizedName = normalizeSearchTerm(product.name);
-      if (!normalizedName || seen.has(normalizedName)) continue;
-      seen.add(normalizedName);
-      matches.push(product.name);
-      if (matches.length >= 4) break;
-    }
-
-    return matches.slice(0, 4);
-  }, [normalizedQuery, products, recentSearches]);
+    return buildSearchSuggestions(rankedProducts, deferredValue, recentSearches, 4);
+  }, [deferredValue, normalizedQuery, rankedProducts, recentSearches]);
 
   const productMatches = useMemo(
-    () => (normalizedQuery.length >= 2 ? products.slice(0, SEARCH_RESULT_LIMIT) : []),
-    [normalizedQuery, products]
+    () => (normalizedQuery.length >= 2 ? rankedProducts.slice(0, SEARCH_RESULT_LIMIT) : []),
+    [normalizedQuery, rankedProducts]
   );
+  const categoryMatches = useMemo(() => {
+    if (normalizedQuery.length < 2) return [];
+
+    return buildPublicCategories(
+      categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [],
+      locale,
+      { requireProductCount: false },
+    ).filter((category) => {
+      const searchableText = normalizeSearchTerm([
+        category.name,
+        category.description,
+        ...category.rawCategorySlugs,
+      ].join(' '));
+
+      return searchableText.includes(normalizedQuery);
+    }).slice(0, 2);
+  }, [categoriesResult.data, locale, normalizedQuery]);
 
   const hasDropdownContent =
     (normalizedQuery.length === 0 && recentSearches.length > 0) ||
     suggestions.length > 0 ||
+    categoryMatches.length > 0 ||
     productMatches.length > 0 ||
     result.fetching;
 
@@ -151,6 +183,16 @@ export function SearchAutocomplete({
     }
 
     router.push(`/products/${product.slug}`);
+    setIsOpen(false);
+    onDismiss?.();
+  }
+
+  function handleCategorySelect(slug: string) {
+    if (value.trim()) {
+      addRecentSearch(value.trim());
+    }
+
+    router.push(`/categories/${slug}`);
     setIsOpen(false);
     onDismiss?.();
   }
@@ -280,6 +322,38 @@ export function SearchAutocomplete({
                   >
                     {tSearch('resultsFor', { query: value.trim() })}
                   </p>
+
+                  {categoryMatches.length > 0 && (
+                    <div className="mb-3 space-y-1.5" data-testid="search-category-results">
+                      {categoryMatches.map((category) => (
+                        <button
+                          key={category.id}
+                          type="button"
+                          onClick={() => handleCategorySelect(category.slug)}
+                          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors duration-fast hover-surface"
+                        >
+                          <span
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                            style={{
+                              backgroundColor: 'color-mix(in srgb, var(--color-primary) 11%, var(--color-card))',
+                              color: 'var(--color-primary)',
+                            }}
+                          >
+                            <LayoutGrid className="h-4 w-4" aria-hidden="true" />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                              {category.name}
+                            </span>
+                            <span className="block truncate text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                              {tSearch('categoryResult')}
+                            </span>
+                          </span>
+                          <ArrowRight className="h-4 w-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
                   {result.fetching && products.length === 0 ? (
                     <p className="text-sm py-3" style={{ color: 'var(--color-muted-foreground)' }}>

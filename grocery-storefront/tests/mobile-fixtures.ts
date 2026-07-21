@@ -636,6 +636,18 @@ function buildCategoryFixtures(products: Array<(typeof PRODUCTS)[number]>) {
     slug: 'tofu',
   });
 
+  categories.set('cat-korean-cosmetics-empty', {
+    id: 'cat-korean-cosmetics-empty',
+    name: 'Korean cosmetics',
+    slug: 'koreańskie-kosmetyki',
+  });
+
+  categories.set('cat-rice-empty', {
+    id: 'cat-rice-empty',
+    name: 'Ryż',
+    slug: 'ryż-i-inne-ziarna',
+  });
+
   return Array.from(categories.values());
 }
 
@@ -1094,14 +1106,17 @@ export async function mockMobileStorefront(
         searchProducts: {
           edges: products.map((product) => ({
             node: {
-              product: {
-                id: product.id,
-                name: product.name,
-                slug: product.slug,
-                thumbnail: product.thumbnail,
-                pricing: {
-                  priceRange: product.pricing.priceRange,
-                },
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              thumbnail: product.thumbnail,
+              category: product.category,
+              variants: [
+                ...product.variants.map((variant) => ({ sku: variant.sku })),
+                ...(product.id === PRIMARY_PRODUCT.id ? [{ sku: 'ADG-001' }] : []),
+              ],
+              pricing: {
+                priceRange: product.pricing.priceRange,
               },
             },
           })),

@@ -5,7 +5,8 @@ import { defaultLocale } from '@/i18n/config';
 import { resolveChannel } from '@/lib/channel';
 import { PRODUCT_BY_SLUG_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
-import { fetchServerConfig, getConfigString } from '@/lib/storefront-config';
+import { fetchSeoStorefrontConfig } from '@/lib/seo-metadata';
+import { getConfigString } from '@/lib/storefront-config';
 import { normalizeImageUrl } from '@/lib/utils';
 
 interface ProductSeoTranslation {
@@ -203,6 +204,43 @@ function buildProductJsonLd(
   };
 }
 
+function buildProductBreadcrumbJsonLd(
+  product: ProductSeoData,
+  locale: string,
+  origin: string | null,
+) {
+  const homeUrl = origin ? getProductUrl(origin, locale, product.slug)?.replace(/\/products\/[^/]+$/, '') : undefined;
+  const categoriesUrl = homeUrl ? `${homeUrl.replace(/\/$/, '')}/categories` : undefined;
+  const productUrl = getProductUrl(origin, locale, product.slug);
+
+  if (!homeUrl || !categoriesUrl || !productUrl) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: locale.toLowerCase().startsWith('en') ? 'Home' : 'Strona główna',
+        item: homeUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: locale.toLowerCase().startsWith('en') ? 'Categories' : 'Kategorie',
+        item: categoriesUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: getProductName(product, locale),
+        item: productUrl,
+      },
+    ],
+  };
+}
+
 function serializeJsonLd(value: unknown): string {
   return JSON.stringify(value).replace(/</g, '\\u003c');
 }
@@ -215,7 +253,7 @@ export async function generateMetadata({
   const resolvedParams = await params;
   const [product, siteConfig] = await Promise.all([
     getProductForSeo(resolvedParams.id),
-    fetchServerConfig(),
+    fetchSeoStorefrontConfig(),
   ]);
 
   if (!product) {
@@ -241,6 +279,7 @@ export async function generateMetadata({
         languages: {
           en: getProductUrl(origin, 'en', product.slug)!,
           pl: getProductUrl(origin, 'pl', product.slug)!,
+          'x-default': getProductUrl(origin, defaultLocale, product.slug)!,
         },
       }
       : undefined,
@@ -272,7 +311,7 @@ export default async function ProductLayout({
   const resolvedParams = await params;
   const [product, siteConfig] = await Promise.all([
     getProductForSeo(resolvedParams.id),
-    fetchServerConfig(),
+    fetchSeoStorefrontConfig(),
   ]);
 
   if (!product) notFound();
@@ -280,6 +319,7 @@ export default async function ProductLayout({
   const origin = getStoreOrigin(getConfigString(siteConfig?.seo?.canonical));
   const storeName = getConfigString(siteConfig?.branding?.storeName) ?? 'Grocery Store';
   const productJsonLd = buildProductJsonLd(product, resolvedParams.locale, origin, storeName);
+  const breadcrumbJsonLd = buildProductBreadcrumbJsonLd(product, resolvedParams.locale, origin);
 
   return (
     <>
@@ -288,6 +328,13 @@ export default async function ProductLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }}
       />
+      {breadcrumbJsonLd && (
+        <script
+          id="product-breadcrumb-json-ld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+        />
+      )}
       {children}
     </>
   );

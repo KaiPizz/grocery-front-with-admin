@@ -7,7 +7,7 @@ import { ArrowDownUp, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { useClient, useQuery, type CombinedError } from 'urql';
 
 import { AllergenFilter } from '@/components/grocery/AllergenFilter';
-import { SortDropdown, SORT_OPTIONS } from '@/components/grocery/SortDropdown';
+import { SortDropdown, getSortOptions } from '@/components/grocery/SortDropdown';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useHydrated } from '@/hooks/use-hydrated';
@@ -259,9 +259,17 @@ export function ProductListingClient({
   const listingQueryResetMountedRef = useRef(false);
 
   useEffect(() => {
-    const urlSearch = searchParams.get('search') || '';
-    if (urlSearch !== search) setSearch(urlSearch);
-  }, [searchParams, search]);
+    const urlSearch = (searchParams.get('search') || '').trim();
+    const fallbackSort = urlSearch ? 'relevance' : 'newest';
+    const requestedSort = searchParams.get('sort') || fallbackSort;
+    const supportedSort = getSortOptions(Boolean(urlSearch)).some((option) => option.value === requestedSort)
+      ? requestedSort
+      : fallbackSort;
+
+    setSearch((currentSearch) => currentSearch === urlSearch ? currentSearch : urlSearch);
+    setSort((currentSort) => currentSort === supportedSort ? currentSort : supportedSort);
+    setDraftSort((currentSort) => currentSort === supportedSort ? currentSort : supportedSort);
+  }, [searchParams]);
 
   useEffect(() => {
     if (layoutMode !== 'adaptive' || !isHydrated) return;
@@ -278,7 +286,9 @@ export function ProductListingClient({
     };
   }, [isHydrated, layoutMode]);
 
-  const sortOption = SORT_OPTIONS.find((option) => option.value === sort) || SORT_OPTIONS[0];
+  const normalizedSearch = search.trim();
+  const sortOptions = getSortOptions(Boolean(normalizedSearch));
+  const sortOption = sortOptions.find((option) => option.value === sort) || sortOptions[0];
   const activeCategoryIds = useMemo(() => (
     categoryIds.length > 0 ? categoryIds : categoryId ? [categoryId] : []
   ), [categoryId, categoryIds]);
@@ -786,8 +796,9 @@ export function ProductListingClient({
   function buildListingUrl(nextSort: string, nextSearch: string) {
     const params = new URLSearchParams(searchParams.toString());
     const trimmedSearch = nextSearch.trim();
+    const defaultSort = trimmedSearch ? 'relevance' : 'newest';
 
-    if (nextSort !== 'newest') {
+    if (nextSort !== defaultSort) {
       params.set('sort', nextSort);
     } else {
       params.delete('sort');
@@ -808,6 +819,14 @@ export function ProductListingClient({
     setDraftSort(newSort);
     setLoadedProducts([]);
     router.replace(buildListingUrl(newSort, search), { scroll: false });
+  }
+
+  function clearSearch() {
+    setSearch('');
+    setSort('newest');
+    setDraftSort('newest');
+    setLoadedProducts([]);
+    router.replace(buildListingUrl('newest', ''), { scroll: false });
   }
 
   function openMobileFilters() {
@@ -1001,6 +1020,13 @@ export function ProductListingClient({
     setCommittedFilters(DEFAULT_FILTERS);
   }
 
+  function clearAllDiscovery() {
+    clearCommittedFilters();
+    if (normalizedSearch) {
+      clearSearch();
+    }
+  }
+
   function clearDraftFilters() {
     setDraftFilters(DEFAULT_FILTERS);
   }
@@ -1017,6 +1043,14 @@ export function ProductListingClient({
 
   function getActiveFilterChips() {
     const chips: ActiveFilterChip[] = [];
+
+    if (normalizedSearch) {
+      chips.push({
+        key: 'search',
+        label: t('searchFilter', { query: normalizedSearch }),
+        onRemove: clearSearch,
+      });
+    }
 
     for (const selectedCategoryId of normalizedCommittedFilters.categoryIds) {
       const label = categoryNameById.get(selectedCategoryId) ?? selectedCategoryId;
@@ -1154,7 +1188,7 @@ export function ProductListingClient({
           ))}
           <button
             type="button"
-            onClick={clearCommittedFilters}
+            onClick={clearAllDiscovery}
             className="px-2 py-1.5 text-xs font-semibold transition-opacity duration-fast hover:opacity-80"
             style={{ color: 'var(--color-primary)' }}
           >
@@ -1167,6 +1201,8 @@ export function ProductListingClient({
 
   function renderEmptyState(isCompact = false) {
     const hasActiveFilters = activeFilterCount > 0;
+    const hasSearch = Boolean(normalizedSearch);
+    const hasDiscoveryFilters = hasActiveFilters || hasSearch;
 
     return (
       <div
@@ -1174,15 +1210,19 @@ export function ProductListingClient({
         style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
       >
         <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-          {hasActiveFilters ? t('emptyFilteredTitle') : t('emptyTitle')}
+          {hasSearch
+            ? t('searchEmptyTitle', { query: normalizedSearch })
+            : hasActiveFilters ? t('emptyFilteredTitle') : t('emptyTitle')}
         </p>
         <p className="mx-auto mt-2 max-w-md text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          {hasActiveFilters ? t('emptyFilteredDescription') : t('emptyDescription')}
+          {hasSearch
+            ? t('searchEmptyDescription')
+            : hasActiveFilters ? t('emptyFilteredDescription') : t('emptyDescription')}
         </p>
-        {hasActiveFilters && (
+        {hasDiscoveryFilters && (
           <button
             type="button"
-            onClick={clearCommittedFilters}
+            onClick={clearAllDiscovery}
             className="mt-4 inline-flex items-center justify-center rounded-full border px-4 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
             style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
           >
@@ -1517,7 +1557,7 @@ export function ProductListingClient({
         <header className="space-y-4">
           {showTitle && (
             <h1
-              className="max-w-[11.5rem] text-[1.95rem] font-semibold leading-[0.98] tracking-[-0.045em]"
+              className="max-w-[18rem] text-[1.95rem] font-semibold leading-[0.98] tracking-[-0.045em]"
               style={{ color: 'var(--color-foreground)' }}
               data-testid="mobile-products-title"
             >
@@ -1565,7 +1605,7 @@ export function ProductListingClient({
                 style={{ color: 'var(--color-muted-foreground)' }}
                 aria-hidden="true"
               />
-              <input type="hidden" value={sort} data-testid="mobile-products-sort-select" readOnly />
+              <input type="hidden" value={sortOption.value} data-testid="mobile-products-sort-select" readOnly />
             </button>
 
             <button
@@ -1621,7 +1661,7 @@ export function ProductListingClient({
                     {t('sortBy')}
                   </p>
                   <p className="mt-1 text-sm" style={{ color: 'var(--color-foreground)' }}>
-                    {t((SORT_OPTIONS.find((option) => option.value === draftSort) || SORT_OPTIONS[0]).label as any)}
+                    {t((sortOptions.find((option) => option.value === draftSort) || sortOptions[0]).label as any)}
                   </p>
                 </div>
                 <button
@@ -1637,7 +1677,7 @@ export function ProductListingClient({
               </div>
 
               <div className="space-y-1.5 overflow-y-auto px-4 py-3" role="radiogroup" aria-label={t('sortBy')}>
-                {SORT_OPTIONS.map((option) => {
+                {sortOptions.map((option) => {
                   const isSelected = draftSort === option.value;
 
                   return (
@@ -1786,7 +1826,11 @@ export function ProductListingClient({
             <div aria-hidden="true" />
           )}
           <div className="flex items-center gap-2">
-            <SortDropdown value={sort} onChange={handleSortChange} />
+            <SortDropdown
+              value={sortOption.value}
+              onChange={handleSortChange}
+              showRelevance={Boolean(normalizedSearch)}
+            />
             {!hasDesktopSidebar && (
               <button
                 type="button"

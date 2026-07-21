@@ -203,13 +203,20 @@ export function MobileProductCard({
   }
 
   return (
-    <Link
-      href={`/products/${product.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-[1.45rem] border bg-[var(--color-card)] shadow-[0_18px_36px_-30px_rgba(66,109,72,0.35)] transition-transform duration-fast active:scale-[0.99]"
+    <article
+      className="group relative flex h-full flex-col overflow-hidden rounded-[1.45rem] border bg-[var(--color-card)] shadow-[0_18px_36px_-30px_rgba(66,109,72,0.35)] transition-transform duration-fast active:scale-[0.99]"
       style={{ borderColor: 'color-mix(in srgb, var(--color-border) 88%, white)' }}
-      aria-label={`${productName}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
       data-testid={testId ?? 'mobile-product-card'}
     >
+      <Link
+        href={`/products/${product.slug}`}
+        className="absolute inset-0 z-10 rounded-[1.45rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+        style={{ ['--tw-ring-color' as string]: 'var(--color-ring)' }}
+        aria-label={`${productName}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
+        data-testid="mobile-product-card-link"
+      >
+        <span className="sr-only">{productName}</span>
+      </Link>
       <div
         className="relative shrink-0 overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.96),_rgba(246,249,243,0.92)_72%)]"
         data-testid="mobile-product-card-media"
@@ -238,7 +245,7 @@ export function MobileProductCard({
 
           {imageCount > 1 && (
             <span
-              className="absolute bottom-1 right-1 z-10 rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
+              className="pointer-events-none absolute bottom-1 right-1 z-10 rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
               style={{
                 backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)',
                 color: 'var(--color-foreground)',
@@ -250,7 +257,7 @@ export function MobileProductCard({
           )}
 
           {showAddAction && (
-            <div className="absolute right-1 top-1 z-10">
+            <div className="absolute right-1 top-1 z-20">
               <button
                 type="button"
                 onClick={handleAddToCart}
@@ -274,7 +281,7 @@ export function MobileProductCard({
           )}
 
           {showWishlistAction && (
-            <div className="absolute bottom-1 left-1 z-10">
+            <div className="absolute bottom-1 left-1 z-20">
               <button
                 type="button"
                 onClick={handleWishlistToggle}
@@ -381,7 +388,7 @@ export function MobileProductCard({
 
         {isInCart && (
           <div
-            className="mt-3 grid h-11 grid-cols-3 overflow-hidden rounded-full border"
+            className="relative z-20 mt-3 grid h-11 grid-cols-3 overflow-hidden rounded-full border"
             style={{
               borderColor: 'var(--color-primary)',
               backgroundColor: 'var(--color-accent)',
@@ -418,6 +425,6 @@ export function MobileProductCard({
           </div>
         )}
       </div>
-    </Link>
+    </article>
   );
 }

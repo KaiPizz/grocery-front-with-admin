@@ -135,12 +135,12 @@ test.describe('B1 category browsing', () => {
       await expect(page.getByRole('link', { name: /noodles and rice.*1 product/i })).toBeVisible();
 
       const cards = page.getByTestId('category-hub-card');
-      await expect(cards).toHaveCount(3);
+      await expect(cards).toHaveCount(4);
       await expect(cards.nth(0)).toHaveAccessibleName(/noodles and rice.*1 product/i);
       await expect(cards.nth(1)).toHaveAccessibleName(/kimchi and pickles.*2 products/i);
       await expect(cards.nth(0).getByTestId('category-hub-image')).toBeVisible();
       await expect(cards.nth(1).getByTestId('category-hub-image')).toBeVisible();
-      await expect(page.getByTestId('category-hub-image-fallback')).toHaveCount(1);
+      await expect(page.getByTestId('category-hub-image-fallback')).toHaveCount(2);
       await expect(page.getByRole('searchbox', { name: /search categories/i })).toHaveCount(0);
     } finally {
       await context.close();
@@ -204,10 +204,10 @@ test.describe('B1 category browsing', () => {
     await mockMobileStorefront(page);
 
     await page.goto('/categories');
-    await expect(page).toHaveTitle('Kategorie produktów azjatyckich | Asia Deli Go');
+    await expect(page).toHaveTitle('Kategorie produktów azjatyckich | Configured Test Grocery');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
-      /Przeglądaj kimchi, makarony, ryż, sosy/i,
+      /Znajdź produkty azjatyckie według kategorii/i,
     );
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
@@ -217,12 +217,16 @@ test.describe('B1 category browsing', () => {
       'href',
       'https://store.example.test/en/categories',
     );
+    await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+      'href',
+      'https://store.example.test/categories',
+    );
 
     await page.goto('/en/categories');
-    await expect(page).toHaveTitle('Asian grocery categories | Asia Deli Go');
+    await expect(page).toHaveTitle('Asian grocery categories | Configured Test Grocery');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
-      /Browse kimchi, noodles, rice, sauces/i,
+      /Find Asian groceries by category/i,
     );
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
@@ -365,11 +369,11 @@ test.describe('desktop category navigation', () => {
     const megaMenu = page.getByRole('navigation', { name: /category mega menu/i });
     await expect(megaMenu).toBeVisible();
     await expect(megaMenu.getByRole('link', { name: /browse all categories/i })).toBeVisible();
-    await expect(megaMenu.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
-    await expect(megaMenu.getByRole('link', { name: /noodles and rice.*1 product/i })).toBeVisible();
+    await expect(megaMenu.getByRole('link', { name: /^kimchi and pickles$/i })).toBeVisible();
+    await expect(megaMenu.getByRole('link', { name: /^noodles and rice$/i })).toBeVisible();
     await expect(megaMenu.getByTestId('category-mega-menu-promo')).toBeVisible();
 
-    await megaMenu.getByRole('link', { name: /kimchi and pickles.*2 products/i }).click();
+    await megaMenu.getByRole('link', { name: /^kimchi and pickles$/i }).click();
     await expect(page).toHaveURL(/\/en\/categories\/kimchi-i-kiszonki$/);
   });
 

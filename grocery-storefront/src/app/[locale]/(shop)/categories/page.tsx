@@ -1,21 +1,12 @@
-import type { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { RefreshCw } from 'lucide-react';
 
 import { Link } from '@/i18n/navigation';
-import { defaultLocale } from '@/i18n/config';
 import { PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
 import { CategoryHubClient } from '@/components/categories/CategoryHubClient';
 import { buildPublicCategories, type PublicCategory } from '@/lib/public-taxonomy';
-import { getStorefrontOriginForSeo, getStorefrontUrl } from '@/lib/seo-discovery';
-
-interface CategoriesPageProps {
-  params: Promise<{
-    locale: string;
-  }>;
-}
 
 interface CategoryNode {
   id: string;
@@ -35,47 +26,6 @@ interface CategoriesResponse {
 }
 
 const CATEGORY_METADATA_REVALIDATE_SECONDS = 300;
-
-function getCategoriesUrl(origin: string, locale: string) {
-  const localePrefix = locale.toLowerCase() === defaultLocale ? '' : `/${locale.toLowerCase()}`;
-  return getStorefrontUrl(origin, `${localePrefix}/categories`);
-}
-
-export async function generateMetadata({ params }: CategoriesPageProps): Promise<Metadata> {
-  const { locale } = await params;
-  const [t, origin] = await Promise.all([
-    getTranslations({ locale, namespace: 'categories' }),
-    getStorefrontOriginForSeo(),
-  ]);
-  const title = t('metadataTitle');
-  const description = t('metadataDescription');
-  const canonical = origin ? getCategoriesUrl(origin, locale) : undefined;
-
-  return {
-    title,
-    description,
-    alternates: canonical && origin
-      ? {
-        canonical,
-        languages: {
-          pl: getCategoriesUrl(origin, 'pl'),
-          en: getCategoriesUrl(origin, 'en'),
-        },
-      }
-      : undefined,
-    openGraph: {
-      type: 'website',
-      title,
-      description,
-      url: canonical,
-    },
-    twitter: {
-      card: 'summary',
-      title,
-      description,
-    },
-  };
-}
 
 function getProductCount(category: PublicCategory) {
   return category.products?.totalCount ?? null;

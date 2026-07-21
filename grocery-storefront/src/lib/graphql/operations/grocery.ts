@@ -244,24 +244,29 @@ export const PRODUCT_COUNTRY_ORIGINS_QUERY = `
 
 export const SEARCH_PRODUCTS_QUERY = `
   query StorefrontProductSearch($channel: String!, $query: String!, $first: Int) {
-    searchProducts(channel: $channel, query: $query, first: $first) {
+    searchProducts: products(
+      channel: $channel
+      first: $first
+      filter: { search: $query }
+      sortBy: { field: RELEVANCE, direction: DESC }
+    ) {
       edges {
         node {
-          product {
-            id
+          id
+          name
+          slug
+          translation(languageCode: "en") {
+            language
             name
-            slug
-            translation(languageCode: "en") {
-              language
-              name
-              description
-              shortDescription
-            }
-            thumbnail { url alt }
-            pricing {
-              priceRange {
-                start { gross { amount currency } }
-              }
+            description
+            shortDescription
+          }
+          thumbnail { url alt }
+          category { name slug }
+          variants { sku }
+          pricing {
+            priceRange {
+              start { gross { amount currency } }
             }
           }
         }

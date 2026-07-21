@@ -9,7 +9,13 @@ import { ConfigProvider } from '@/components/ConfigProvider';
 import { TrackingScripts } from '@/components/TrackingScripts';
 import { SensitiveRouteBoundary } from '@/components/SensitiveRouteBoundary';
 import { localizeConfiguredStorefront } from '@/lib/configured-content-localization';
-import { fetchServerConfig, getConfigString } from '@/lib/storefront-config';
+import {
+  buildPublicPageMetadata,
+  buildWebsiteJsonLd,
+  fetchSeoStorefrontConfig,
+  serializeJsonLd,
+} from '@/lib/seo-metadata';
+import { getConfigString } from '@/lib/storefront-config';
 import './globals.css';
 
 export const dynamic = 'force-dynamic';
@@ -27,45 +33,48 @@ export const viewport: Viewport = {
 export async function generateMetadata(): Promise<Metadata> {
   const [locale, rawConfig] = await Promise.all([
     getLocale(),
-    fetchServerConfig(),
+    fetchSeoStorefrontConfig(),
   ]);
   const siteConfig = localizeConfiguredStorefront(rawConfig, locale);
   const title = getConfigString(siteConfig?.seo?.defaultTitle) ?? FALLBACK_TITLE;
   const description = getConfigString(siteConfig?.seo?.defaultDescription) ?? FALLBACK_DESCRIPTION;
   const faviconUrl = getConfigString(siteConfig?.branding?.faviconUrl);
-  const ogImageUrl = getConfigString(siteConfig?.seo?.ogImageUrl);
-  const canonical = getConfigString(siteConfig?.seo?.canonical);
-
-  return {
+  const metadata = buildPublicPageMetadata({
+    locale,
+    pathname: '/',
     title,
     description,
+    siteConfig: rawConfig,
+    appendStoreName: false,
+  });
+
+  return {
+    ...metadata,
     icons: {
       icon: faviconUrl ?? '/favicon.ico',
       shortcut: faviconUrl ?? '/favicon.ico',
       apple: faviconUrl ?? '/favicon.ico',
     },
-    openGraph: {
-      title,
-      description,
-      images: ogImageUrl ? [ogImageUrl] : undefined,
-    },
-    alternates: canonical
-      ? {
-        canonical,
-      }
-      : undefined,
   };
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [locale, initialConfig] = await Promise.all([
     getLocale(),
-    fetchServerConfig(),
+    fetchSeoStorefrontConfig(),
   ]);
+  const websiteJsonLd = buildWebsiteJsonLd({ siteConfig: initialConfig });
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body suppressHydrationWarning>
+        {websiteJsonLd && (
+          <script
+            id="website-json-ld"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
+          />
+        )}
         <ConfigProvider initialConfig={initialConfig}>
           <SensitiveRouteBoundary>
             <GraphQLProvider>

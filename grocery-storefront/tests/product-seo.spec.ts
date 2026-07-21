@@ -10,6 +10,10 @@ test.describe('product SEO', () => {
       'href',
       'https://store.example.test/en/products/organic-gala-apples',
     );
+    await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+      'href',
+      'https://store.example.test/products/organic-gala-apples',
+    );
     await expect(page).toHaveTitle('Organic Gala Apples 1 kg | Configured Test Grocery');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
@@ -37,6 +41,19 @@ test.describe('product SEO', () => {
     expect(productJsonLd.image).toEqual([
       'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
     ]);
+
+    const breadcrumbJsonLd = await page.locator('script#product-breadcrumb-json-ld').evaluate((element) => {
+      return JSON.parse(element.textContent ?? '{}');
+    });
+    expect(breadcrumbJsonLd).toMatchObject({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { position: 1, item: 'https://store.example.test/en' },
+        { position: 2, item: 'https://store.example.test/en/categories' },
+        { position: 3, item: 'https://store.example.test/en/products/organic-gala-apples' },
+      ],
+    });
   });
 
   test('uses the unprefixed canonical URL and product SEO fields for Polish', async ({ page }) => {
@@ -88,6 +105,6 @@ test.describe('product SEO', () => {
 
     expect(response?.status()).toBe(404);
     await expect(page.locator('script#product-json-ld')).toHaveCount(0);
-    await expect(page.locator('body')).toContainText(/not found|could not be found|nie znaleziono/i);
+    await expect(page.locator('body')).toContainText(/not found|could not be found|couldn't find|nie znaleziono/i);
   });
 });

@@ -71,6 +71,7 @@
   "search": {
     "recentSearches": "Ostatnie wyszukiwania",
     "suggestions": "Sugestie",
+    "categoryResult": "Kategoria",
     "resultsFor": "Wyniki dla: {query}",
     "seeResults": "Zobacz wyniki dla \"{query}\"",
     "clearRecent": "Wyczyść",
@@ -127,6 +128,8 @@
   },
   "products": {
     "title": "Wszystkie produkty",
+    "searchResultsTitle": "Wyniki dla „{query}”",
+    "searchFilter": "Wyszukiwanie: {query}",
     "filters": "Filtry",
     "clearFilters": "Wyczyść filtry",
     "clearAllFilters": "Wyczyść wszystko",
@@ -141,6 +144,7 @@
     "certFilter": "Certyfikaty",
     "sortBy": "Sortuj według",
     "sortNewest": "Najnowsze",
+    "sortRelevance": "Trafność",
     "sortPrice": "Cena: rosnąco",
     "sortPriceDesc": "Cena: malejąco",
     "sortName": "Nazwa A-Z",
@@ -159,6 +163,8 @@
     "emptyDescription": "Produkty pojawią się tutaj, gdy katalog będzie dostępny.",
     "emptyFilteredTitle": "Brak pasujących produktów",
     "emptyFilteredDescription": "Wyczyść filtry albo poszerz zakres cen.",
+    "searchEmptyTitle": "Brak wyników dla „{query}”",
+    "searchEmptyDescription": "Spróbuj krótszego hasła, innej pisowni albo przejdź do kategorii.",
     "withoutFilter": "Bez {value}",
     "showingWithout": "Wyświetlanie produktów bez",
     "vegan": "Wegańskie",

@@ -254,6 +254,41 @@ const categories = [
   { id: 'cat-ramen', name: 'Ramen', slug: 'ramyun-ramen' },
   { id: 'cat-household', name: 'Household', slug: 'household' },
   { id: 'cat-tofu-empty', name: 'Tofu', slug: 'tofu' },
+  { id: 'cat-korean-cosmetics-empty', name: 'Korean cosmetics', slug: 'koreańskie-kosmetyki' },
+  { id: 'cat-rice-empty', name: 'Ryż', slug: 'ryż-i-inne-ziarna' },
+];
+
+const recipes = [
+  {
+    id: 'recipe-salad',
+    name: 'Spring Fruit Salad',
+    slug: 'spring-fruit-salad',
+    description: 'A quick fruit salad with a bright, fresh finish.',
+    thumbnail: {
+      url: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Spring fruit salad',
+    },
+    servings: 2,
+    prepTime: 10,
+    cookTime: 0,
+    totalTime: 10,
+    difficulty: 'EASY',
+    steps: [
+      { stepNumber: 1, instruction: 'Prepare and combine the fruit.', image: null },
+    ],
+    ingredients: [
+      {
+        id: 'recipe-ingredient-apples',
+        quantity: 2,
+        unit: 'pieces',
+        displayName: 'apples',
+        isOptional: false,
+        inStock: true,
+        variant: null,
+        product: null,
+      },
+    ],
+  },
 ];
 
 const config = {
@@ -939,6 +974,29 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
           }),
           pageInfo: { hasNextPage: false, endCursor: null },
           totalCount: categories.length,
+        },
+      },
+    };
+  }
+
+  if (query.includes('query RecipeBySlug')) {
+    return {
+      data: {
+        recipe: recipes.find((recipe) => recipe.slug === variables.slug) ?? null,
+      },
+    };
+  }
+
+  if (query.includes('query Recipes')) {
+    return {
+      data: {
+        recipes: {
+          edges: recipes.map((recipe, index) => ({
+            cursor: `recipe-${index + 1}`,
+            node: recipe,
+          })),
+          pageInfo: { hasNextPage: false, endCursor: null },
+          totalCount: recipes.length,
         },
       },
     };

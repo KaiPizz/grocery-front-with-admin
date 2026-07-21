@@ -313,11 +313,9 @@ export function ProductCard({
 
   return (
     <>
-      <Link
-        href={`/products/${product.slug}`}
-        className="group flex h-full flex-col overflow-hidden rounded-none border-0 card-hover sm:rounded-xl sm:border"
+      <article
+        className="group relative flex h-full flex-col overflow-hidden rounded-none border-0 card-hover sm:rounded-xl sm:border"
         style={{ borderColor: 'var(--color-border)' }}
-        aria-label={`${productName}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
         onMouseEnter={handlePreviewStart}
         onMouseLeave={handlePreviewEnd}
         onFocus={handlePreviewStart}
@@ -328,6 +326,15 @@ export function ProductCard({
         }}
         data-testid="product-card"
       >
+        <Link
+          href={`/products/${product.slug}`}
+          className="absolute inset-0 z-10 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset sm:rounded-xl"
+          style={{ ['--tw-ring-color' as string]: 'var(--color-ring)' }}
+          aria-label={`${productName}, ${formatPrice(price, currency)}${!inStock ? `, ${t('product.outOfStock')}` : ''}`}
+          data-testid="product-card-link"
+        >
+          <span className="sr-only">{productName}</span>
+        </Link>
         <div className="relative aspect-square shrink-0 overflow-hidden" style={{ backgroundColor: 'var(--color-muted)' }}>
           {primaryImage ? (
             <Image
@@ -369,7 +376,7 @@ export function ProductCard({
 
           {hasPreviewImages && (
             <span
-              className="absolute bottom-2.5 left-2.5 z-10 overflow-hidden rounded-full border px-2.5 py-1 text-[11px] font-semibold leading-none tabular-nums"
+              className="pointer-events-none absolute bottom-2.5 left-2.5 z-10 overflow-hidden rounded-full border px-2.5 py-1 text-[11px] font-semibold leading-none tabular-nums"
               style={{
                 backgroundColor: 'color-mix(in srgb, var(--color-card) 92%, transparent)',
                 borderColor: 'color-mix(in srgb, var(--color-border) 75%, transparent)',
@@ -395,12 +402,15 @@ export function ProductCard({
           )}
 
           {product.freshness && (
-            <div className="absolute left-2.5 top-2.5 z-20 hidden sm:block">
+            <div
+              className="pointer-events-none absolute left-2.5 top-2.5 z-20 hidden sm:block"
+              data-testid="product-card-freshness-badge"
+            >
               <FreshnessBadge freshness={product.freshness} nearestExpiry={product.nearestExpiry} compact />
             </div>
           )}
 
-          <div className="absolute right-1.5 top-1.5 z-10 sm:hidden">
+          <div className="absolute right-1.5 top-1.5 z-20 sm:hidden">
             <button
               type="button"
               onClick={handleAddToCart}
@@ -422,7 +432,7 @@ export function ProductCard({
             </button>
           </div>
 
-          <div className="absolute bottom-1.5 left-1.5 z-10 sm:hidden">
+          <div className="absolute bottom-1.5 left-1.5 z-20 sm:hidden">
             <button
               type="button"
               onClick={handleWishlistToggle}
@@ -443,11 +453,14 @@ export function ProductCard({
             </button>
           </div>
 
-          <div className="absolute right-2.5 top-2.5 z-20 hidden flex-col items-end gap-2 sm:flex">
+          <div
+            className="pointer-events-none absolute right-2.5 top-2.5 z-20 hidden flex-col items-end gap-2 sm:flex"
+            data-testid="product-card-desktop-actions"
+          >
             <button
               type="button"
               onClick={handleWishlistToggle}
-              className={`flex h-11 w-11 items-center justify-center rounded-full border shadow-sm transition-[opacity,transform,box-shadow] duration-fast hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 ${wishlistActionClass}`}
+              className={`pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border shadow-sm transition-[opacity,transform,box-shadow] duration-fast hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 ${wishlistActionClass}`}
               style={{
                 backgroundColor: isWishlisted
                   ? 'color-mix(in srgb, var(--color-primary) 12%, var(--color-card))'
@@ -515,7 +528,7 @@ export function ProductCard({
                 <button
                   type="button"
                   onClick={handleNutritionClick}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98]"
+                  className="relative z-20 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-all duration-fast active:scale-[0.98]"
                   style={{
                     backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)',
                     borderColor: 'var(--color-border)',
@@ -625,7 +638,7 @@ export function ProductCard({
               </div>
             )}
 
-            <div className="mt-3 sm:grid sm:grid-cols-[92px,minmax(0,1fr)] sm:items-start sm:gap-2">
+            <div className="relative z-20 mt-3 sm:grid sm:grid-cols-[92px,minmax(0,1fr)] sm:items-start sm:gap-2">
               <div className={`group/quantity transition-[opacity,transform] duration-fast ${cartActionClass}`} data-testid="product-card-quantity" data-in-cart={isInCart ? 'true' : 'false'}>
                 <div
                   className="grid h-11 grid-cols-3 overflow-hidden rounded-full border"
@@ -684,7 +697,7 @@ export function ProductCard({
             </div>
           </div>
         </div>
-      </Link>
+      </article>
 
       <NutritionModal
         open={nutritionOpen}

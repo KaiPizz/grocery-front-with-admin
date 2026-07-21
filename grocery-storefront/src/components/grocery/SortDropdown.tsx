@@ -3,7 +3,7 @@
 import { useId } from 'react';
 import { useTranslations } from 'next-intl';
 
-interface SortOption {
+export interface SortOption {
   value: string;
   label: string;
   field: string;
@@ -17,14 +17,29 @@ export const SORT_OPTIONS: SortOption[] = [
   { value: 'name_asc', label: 'sortName', field: 'NAME', direction: 'ASC' },
 ];
 
+export const RELEVANCE_SORT_OPTION: SortOption = {
+  value: 'relevance',
+  label: 'sortRelevance',
+  field: 'RELEVANCE',
+  direction: 'DESC',
+};
+
+export function getSortOptions(includeRelevance = false) {
+  return includeRelevance
+    ? [RELEVANCE_SORT_OPTION, ...SORT_OPTIONS]
+    : SORT_OPTIONS;
+}
+
 interface SortDropdownProps {
   value: string;
   onChange: (value: string) => void;
+  showRelevance?: boolean;
 }
 
-export function SortDropdown({ value, onChange }: SortDropdownProps) {
+export function SortDropdown({ value, onChange, showRelevance = false }: SortDropdownProps) {
   const t = useTranslations('products');
   const selectId = useId();
+  const sortOptions = getSortOptions(showRelevance);
 
   return (
     <div className="flex items-center gap-2">
@@ -42,7 +57,7 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
           backgroundColor: 'var(--color-card)',
         }}
       >
-        {SORT_OPTIONS.map((opt) => (
+        {sortOptions.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {t(opt.label as any)}
           </option>

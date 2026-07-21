@@ -1,5 +1,5 @@
-const DIACRITIC_REGEX = /[\u0300-\u036f]/g;
-const NON_WORD_REGEX = /[^a-z0-9\s]/g;
+const DIACRITIC_REGEX = /\p{M}/gu;
+const NON_WORD_REGEX = /[^\p{L}\p{N}\s]/gu;
 
 export interface SearchableProduct {
   id: string;
@@ -13,6 +13,7 @@ export interface SearchableProduct {
   } | null;
   thumbnail?: { url?: string | null; alt?: string | null } | null;
   category?: { name?: string | null; slug?: string | null } | null;
+  variants?: Array<{ sku?: string | null }> | null;
   pricing?: {
     priceRange?: {
       start?: {
@@ -34,6 +35,8 @@ export function normalizeSearchTerm(value: string): string {
     .toLowerCase()
     .normalize('NFD')
     .replace(DIACRITIC_REGEX, '')
+    .replace(/ł/g, 'l')
+    .replace(/đ/g, 'd')
     .replace(NON_WORD_REGEX, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -101,21 +104,38 @@ function scoreTextMatch(text: string, query: string): number {
   return 0;
 }
 
-export function rankProductsForSearch(products: SearchableProduct[], rawQuery: string): RankedSearchProduct[] {
+export function rankProductsForSearch(
+  products: SearchableProduct[],
+  rawQuery: string,
+  options: { preserveUnmatched?: boolean } = {},
+): RankedSearchProduct[] {
   const query = normalizeSearchTerm(rawQuery);
   if (!query) return [];
 
   const queryTokens = query.split(' ').filter(Boolean);
 
-  return products
+  const scoredProducts = products
     .map((product) => {
       const normalizedName = normalizeSearchTerm(product.name);
       const normalizedCategory = normalizeSearchTerm(product.category?.name || '');
+      const normalizedTranslationName = normalizeSearchTerm(product.translation?.name || '');
+      const normalizedIdentifiers = (product.variants ?? [])
+        .map((variant) => normalizeSearchTerm(variant.sku || ''))
+        .filter(Boolean);
       const nameWords = normalizedName.split(' ').filter(Boolean);
       const categoryWords = normalizedCategory.split(' ').filter(Boolean);
+      const translationWords = normalizedTranslationName.split(' ').filter(Boolean);
+      const identifierWords = normalizedIdentifiers.flatMap((identifier) => identifier.split(' ').filter(Boolean));
 
       let score = scoreTextMatch(normalizedName, query);
+      score = Math.max(score, scoreTextMatch(normalizedTranslationName, query));
       score += Math.round(scoreTextMatch(normalizedCategory, query) * 0.45);
+      score += Math.max(0, ...normalizedIdentifiers.map((identifier) => {
+        if (identifier === query) return 1200;
+        if (identifier.startsWith(query)) return 1050;
+        if (identifier.includes(query)) return 900;
+        return 0;
+      }));
 
       let matchedTokens = 0;
 
@@ -130,6 +150,14 @@ export function rankProductsForSearch(products: SearchableProduct[], rawQuery: s
           tokenScore = Math.max(tokenScore, Math.round(scoreWordMatch(word, token) * 0.65));
         }
 
+        for (const word of translationWords) {
+          tokenScore = Math.max(tokenScore, scoreWordMatch(word, token));
+        }
+
+        for (const word of identifierWords) {
+          tokenScore = Math.max(tokenScore, Math.round(scoreWordMatch(word, token) * 1.2));
+        }
+
         if (tokenScore > 0) {
           matchedTokens += 1;
           score += tokenScore;
@@ -141,12 +169,23 @@ export function rankProductsForSearch(products: SearchableProduct[], rawQuery: s
       }
 
       return { ...product, score };
-    })
+    });
+  const rankedMatches = scoredProducts
     .filter((product) => product.score > 0)
     .sort((left, right) => {
       if (right.score !== left.score) return right.score - left.score;
       return left.name.localeCompare(right.name);
     });
+
+  if (!options.preserveUnmatched) return rankedMatches;
+
+  // The API has a wider search surface than this lightweight UI scorer
+  // (description, brand, product_code, and translated fields). Keep those
+  // valid server-ranked candidates instead of silently dropping them.
+  return [
+    ...rankedMatches,
+    ...scoredProducts.filter((product) => product.score === 0),
+  ];
 }
 
 export function buildSearchSuggestions(

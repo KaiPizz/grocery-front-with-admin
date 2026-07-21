@@ -8,6 +8,36 @@
 
 ## Project Documentation
 
+### Page metadata overrode the shared SEO layout during main integration
+- **Error:** The integrated category index kept the old fixed Asia Deli Go title, and the collection route omitted the new `x-default` alternate even though both new SEO layouts rendered correctly on other routes.
+- **Cause:** Both pages still exported their own `generateMetadata`; Next.js gives the page-level result precedence over metadata returned by its parent layout.
+- **Fix:** Removed the duplicate page metadata implementations so the shared route layouts own canonical, locale alternates, Open Graph, Twitter, and configured-brand metadata consistently.
+- **Rule:** When moving metadata into a route layout, search every descendant page for `generateMetadata` and test the final document head; a more specific export can silently mask the layout contract.
+
+### Expanded taxonomy fixtures changed the configured category hub contract
+- **Error:** The no-JavaScript category regression expected three cards after search fixtures introduced an empty Korean cosmetics category, so the integrated hub correctly rendered four and failed the stale count assertion.
+- **Cause:** The fixture was shared by search discovery and category browsing; adding a recognized public taxonomy slug changed a separate consumer's visible category set.
+- **Fix:** Kept the Korean discovery fixture and updated the hub contract to require four cards with two configured images and two intentional fallbacks.
+- **Rule:** When adding a category to a shared GraphQL fixture, rerun every taxonomy consumer and update expectations from the public-category mapping, not from the old fixture length.
+
+### Turbopack rejects a worktree dependency symlink outside its project root
+- **Error:** Playwright could not start Next dev in a fresh integration worktree and Turbopack reported that `[project]/node_modules` pointed outside the filesystem root.
+- **Cause:** The worktree reused dependencies through a directory symlink to another checkout; TypeScript and ESLint accepted it, but Turbopack validates symlink containment.
+- **Fix:** Replaced the symlink with a local hard-linked dependency directory before running browser tests.
+- **Rule:** For Next/Turbopack validation in a separate worktree, use a real local `node_modules` tree (installation, copy, or safe hard-link clone), not an external directory symlink.
+
+### Assumed the dedicated search index was the live catalog search source
+- **Error:** Header autocomplete returned no products for names, brands, and ADG SKUs even though the same catalog was visible through `products(filter.search)`.
+- **Cause:** The storefront called the separate `searchProducts` index, which was empty for the Asia Deli Go channel; the listing full-text path also passed raw punctuation into PostgreSQL and did not search the canonical variant SKU column.
+- **Fix:** Reused the tenant-scoped products query with explicit relevance ordering, tokenized Unicode input before `to_tsquery`, added accent-folded name/product-code/active-variant-SKU fallbacks, and correlated every SKU subquery by both template and salon.
+- **Rule:** Prove the live data source before building search UI. Search identifiers in their canonical table, keep fallbacks tenant-correlated, and never interpolate raw user syntax into a full-text query.
+
+### Used per-category product counts for navigation-only taxonomy
+- **Error:** Opening category discovery requested a nested product count for every raw category, delaying a small ten-group navigation surface by several seconds.
+- **Cause:** The rich category query was reused where the UI only needed IDs, slugs, names, and descriptions.
+- **Fix:** Switched autocomplete, mega-menu, and category-route metadata resolution to the slim navigation query while retaining the rich query only on the category index where counts are visible.
+- **Rule:** Do not pay N+1 count cost for navigation. Fetch counts only on surfaces that render them, and preserve zero-product routes with count-free taxonomy resolution.
+
 ### Header breakpoints must reflect measured content width, not device labels
 - **Error:** The full desktop header activated at Tailwind `md` (768px), making
   the document 1066px wide on a 768px viewport and still overflowing at 1200px.

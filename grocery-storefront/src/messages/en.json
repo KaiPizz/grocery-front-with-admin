@@ -71,6 +71,7 @@
   "search": {
     "recentSearches": "Recent searches",
     "suggestions": "Suggestions",
+    "categoryResult": "Category",
     "resultsFor": "Results for: {query}",
     "seeResults": "See results for \"{query}\"",
     "clearRecent": "Clear",
@@ -127,6 +128,8 @@
   },
   "products": {
     "title": "All products",
+    "searchResultsTitle": "Results for “{query}”",
+    "searchFilter": "Search: {query}",
     "filters": "Filters",
     "clearFilters": "Clear filters",
     "clearAllFilters": "Clear all",
@@ -141,6 +144,7 @@
     "certFilter": "Certifications",
     "sortBy": "Sort by",
     "sortNewest": "Newest",
+    "sortRelevance": "Relevance",
     "sortPrice": "Price: low to high",
     "sortPriceDesc": "Price: high to low",
     "sortName": "Name A-Z",
@@ -159,6 +163,8 @@
     "emptyDescription": "Products will appear here when this catalog is available.",
     "emptyFilteredTitle": "No matching products",
     "emptyFilteredDescription": "Try clearing filters or widening your price range.",
+    "searchEmptyTitle": "No results for “{query}”",
+    "searchEmptyDescription": "Try a shorter phrase, a different spelling, or browse a category.",
     "withoutFilter": "Without {value}",
     "showingWithout": "Showing products without",
     "vegan": "Vegan",

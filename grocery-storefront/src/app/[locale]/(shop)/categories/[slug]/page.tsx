@@ -1,9 +1,10 @@
 import { getLocale, getTranslations } from 'next-intl/server';
 import { ArrowLeft, PackageOpen, RefreshCw } from 'lucide-react';
+import { notFound } from 'next/navigation';
 
 import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { Link } from '@/i18n/navigation';
-import { CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY, PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
+import { CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY, PUBLIC_CATEGORY_NAVIGATION_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
 import { buildPublicCategories, findPublicCategory } from '@/lib/public-taxonomy';
@@ -111,7 +112,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
   const categorySlug = decodeRouteSlug(slug);
   const categoriesResult = await serverGraphqlRequest<CategoriesResponse>(
-    PUBLIC_CATEGORIES_QUERY,
+    PUBLIC_CATEGORY_NAVIGATION_QUERY,
     { channel },
     {
       next: {
@@ -121,8 +122,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     },
   );
   const rawCategories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  const publicCategories = buildPublicCategories(rawCategories, locale);
-  const publicCategory = findPublicCategory(rawCategories, categorySlug, locale, { includeEmpty: true });
+  const publicCategories = buildPublicCategories(rawCategories, locale, { requireProductCount: false });
+  const publicCategory = findPublicCategory(rawCategories, categorySlug, locale, {
+    requireProductCount: false,
+    includeEmpty: true,
+  });
   const publicProductsResult = publicCategory
     ? await serverGraphqlRequest<ProductsResponse>(PRODUCT_LISTING_QUERY, {
       channel,
@@ -148,6 +152,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       },
     });
   const category = result.data?.category ?? null;
+  const categoryLookupError = categoriesResult.errorMessage ?? result.errorMessage;
+  if (!publicCategory && !categoryLookupError && !category) {
+    notFound();
+  }
   const publicProducts = publicProductsResult?.data?.products ?? null;
   const totalCount = category?.products.totalCount ?? 0;
   const childCategories = category?.children?.edges.map((edge) => edge.node) ?? [];
@@ -268,13 +276,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </>
       )}
 
-      {!publicCategory && result.errorMessage && !category && (
+      {!publicCategory && categoryLookupError && !category && (
         <div className="rounded-lg border px-5 py-8 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
           <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
             {tCommon('error')}
           </p>
           <p className="mt-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {result.errorMessage}
+            {categoryLookupError}
           </p>
           <Link
             href={`/categories/${slug}`}
@@ -283,21 +291,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           >
             <RefreshCw className="h-4 w-4" aria-hidden="true" />
             {tCommon('retry')}
-          </Link>
-        </div>
-      )}
-
-      {!publicCategory && !result.errorMessage && !category && (
-        <div className="rounded-lg border px-5 py-8 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
-          <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-            {t('notFound')}
-          </p>
-          <Link
-            href="/categories"
-            className="mt-4 inline-flex rounded-lg border px-4 py-2.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
-            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-          >
-            {t('browseAll')}
           </Link>
         </div>
       )}

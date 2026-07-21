@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { pathToFileURL } from 'node:url';
 
 const DEFAULT_ENDPOINT = 'https://zira-ai.com/graphql/storefront';
 const DEFAULT_CHANNEL = 'kenmito';
@@ -14,6 +15,7 @@ const DEFAULT_DELAY_MS = 0;
 const DEFAULT_RETRIES = 2;
 const DEFAULT_CHECKPOINT_EVERY = 0;
 const DEFAULT_RESUME_EXISTING = false;
+const DEFAULT_SOURCE_MAPPING = 'docs/asiandeligo-sku-slug-source-20260708.json';
 
 const QUERY = `
   query KimchiSourceMetadataDryRun($channel: String!, $first: Int!, $after: String) {
@@ -119,12 +121,14 @@ function printUsage(exitCode = 0, errorMessage = null) {
   console.log('  --endpoint <url>       GraphQL endpoint');
   console.log('  --channel <slug>       Storefront channel slug');
   console.log(`  --limit <n>            Max products to inspect (default: ${DEFAULT_LIMIT})`);
-  console.log('  --all                  Inspect all products returned by the API');
+  console.log('  --all                  Inspect all eligible products (only cohort rows when filtered)');
   console.log('  --concurrency <n>      Source fetch concurrency');
   console.log('  --delay-ms <n>         Delay before each source request');
   console.log('  --retries <n>          Retry count for 429/timeouts');
   console.log('  --checkpoint-every <n> Write partial CSV after every n completed rows');
   console.log('  --resume-existing      Reuse completed rows from the target CSV and fetch only missing/error rows');
+  console.log(`  --source-mapping <path> Exact product ID -> KIMCHI source mapping (default: ${DEFAULT_SOURCE_MAPPING})`);
+  console.log('  --cohort-json <path>   Restrict source inspection to product IDs in a priority-cohort JSON');
   console.log('  --output <path>        Markdown report path');
   console.log('  --csv <path>           CSV detail report path');
   console.log('  --help                 Show this help message');
@@ -145,6 +149,8 @@ function parseArgs() {
     retries: DEFAULT_RETRIES,
     checkpointEvery: DEFAULT_CHECKPOINT_EVERY,
     resumeExisting: DEFAULT_RESUME_EXISTING,
+    sourceMapping: DEFAULT_SOURCE_MAPPING,
+    cohortJson: null,
     output: 'docs/kimchi-source-metadata-dry-run.md',
     csv: 'docs/kimchi-source-metadata-dry-run.csv',
   };
@@ -188,6 +194,12 @@ function parseArgs() {
         break;
       case 'checkpoint-every':
         options.checkpointEvery = parseNonNegativeInteger(value, '--checkpoint-every');
+        break;
+      case 'source-mapping':
+        options.sourceMapping = value;
+        break;
+      case 'cohort-json':
+        options.cohortJson = value;
         break;
       case 'output':
         options.output = value;
@@ -243,13 +255,16 @@ async function requestGraphql(endpoint, variables) {
   return payload.data.products;
 }
 
-async function fetchProducts(options) {
+async function fetchProducts(options, cohortProductIds = null) {
   const products = [];
   let after = null;
   let totalCount = null;
 
   while (true) {
-    const remaining = options.limit == null ? PAGE_SIZE : options.limit - products.length;
+    const fetchWholeCatalog = cohortProductIds !== null;
+    const remaining = fetchWholeCatalog || options.limit == null
+      ? PAGE_SIZE
+      : options.limit - products.length;
     if (remaining <= 0) break;
 
     const first = Math.min(PAGE_SIZE, remaining);
@@ -265,18 +280,103 @@ async function fetchProducts(options) {
     if (!page.pageInfo?.hasNextPage || !page.pageInfo.endCursor) break;
     after = page.pageInfo.endCursor;
   }
-  return { products, totalCount };
+
+  return {
+    products: cohortProductIds === null
+      ? products
+      : selectCohortProducts(products, cohortProductIds, options.limit),
+    totalCount,
+  };
 }
 
 function firstSku(product) {
   return product.variants?.find((variant) => variant?.sku?.trim())?.sku?.trim() ?? '';
 }
 
-function kimchiNumericId(product) {
+function directKimchiNumericId(product) {
   const sku = firstSku(product);
   const fromSku = sku.match(/^KIMCHI-(\d+)$/i)?.[1];
   if (fromSku) return fromSku;
   return product.slug?.match(/^KIMCHI-(\d+)$/i)?.[1] ?? null;
+}
+
+export function buildLegacySourceIdMap(entries) {
+  if (!Array.isArray(entries)) {
+    throw new Error('Historical source mapping must be a JSON array.');
+  }
+
+  const sourceIds = new Map();
+  for (const entry of entries) {
+    const productId = typeof entry?.id === 'string' ? entry.id.trim() : '';
+    const legacyId = String(entry?.current_slug ?? '').match(/^KIMCHI-(\d+)$/i)?.[1] ?? null;
+    if (!productId || !legacyId) continue;
+
+    if (sourceIds.has(productId)) {
+      throw new Error(`Duplicate product id in historical source mapping: ${productId}`);
+    }
+    sourceIds.set(productId, legacyId);
+  }
+  return sourceIds;
+}
+
+export function resolveKimchiSource(product, legacySourceIds = new Map()) {
+  const directId = directKimchiNumericId(product);
+  if (directId) {
+    return { id: directId, resolution: 'direct_kimchi_sku_or_slug' };
+  }
+
+  const mappedId = legacySourceIds.get(product?.id);
+  if (mappedId) {
+    return { id: mappedId, resolution: 'historical_product_id_mapping' };
+  }
+
+  return { id: null, resolution: 'unresolved' };
+}
+
+export function parseCohortProductIds(payload) {
+  if (!payload || typeof payload !== 'object' || !Array.isArray(payload.products)) {
+    throw new Error('Cohort JSON must contain a products array.');
+  }
+
+  const ids = [];
+  const seen = new Set();
+  for (const product of payload.products) {
+    const id = typeof product?.id === 'string' ? product.id.trim() : '';
+    if (!id) throw new Error('Every cohort product must have a non-empty id.');
+    if (seen.has(id)) throw new Error(`Duplicate product id in cohort JSON: ${id}`);
+    seen.add(id);
+    ids.push(id);
+  }
+  if (ids.length === 0) throw new Error('Cohort JSON products array must not be empty.');
+  return ids;
+}
+
+export function selectCohortProducts(products, cohortProductIds, limit = null) {
+  if (!Array.isArray(products)) throw new Error('Products must be an array.');
+  if (!Array.isArray(cohortProductIds) || cohortProductIds.length === 0) {
+    throw new Error('Cohort product IDs must be a non-empty array.');
+  }
+
+  const byId = new Map(products.map((product) => [product.id, product]));
+  const missingIds = cohortProductIds.filter((id) => !byId.has(id));
+  if (missingIds.length > 0) {
+    const preview = missingIds.slice(0, 5).join(', ');
+    throw new Error(`Cohort contains ${missingIds.length} product id(s) absent from the live published catalog: ${preview}`);
+  }
+
+  const selected = cohortProductIds.map((id) => byId.get(id));
+  return limit == null ? selected : selected.slice(0, limit);
+}
+
+function readLegacySourceIdMap(filePath) {
+  const payload = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return buildLegacySourceIdMap(payload);
+}
+
+function readCohortProductIds(filePath) {
+  if (!filePath) return null;
+  const payload = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return parseCohortProductIds(payload);
 }
 
 function compactText(value) {
@@ -567,6 +667,8 @@ function writeCsv(filePath, rows) {
     'name',
     'category',
     'firstSku',
+    'sourceLegacyId',
+    'sourceResolution',
     'sourceUrl',
     'sourceStatus',
     'currentIngredientsPresent',
@@ -683,6 +785,8 @@ function writeMarkdown(filePath, options, totalCount, rows, csvPath) {
     `Channel: ${options.channel}`,
     `Endpoint: ${options.endpoint}`,
     `Source: ${SOURCE_BASE}{id}.html via r.jina.ai`,
+    `Historical source mapping: ${options.sourceMapping} (${options.sourceMappingCount ?? 0} exact product IDs)`,
+    `Cohort filter: ${options.cohortJson ?? 'none'}${options.cohortProductCount != null ? ` (${options.cohortProductCount} requested IDs)` : ''}`,
     `Catalog total: ${totalCount ?? 'unknown'}`,
     `Inspected products: ${rows.length}`,
     '',
@@ -715,6 +819,8 @@ function writeMarkdown(filePath, options, totalCount, rows, csvPath) {
     '## Review Notes',
     '',
     '- Candidate allergen codes are extracted from kimchi.pl source text and still require review before DB apply.',
+    '- ADG SKUs resolve a legacy source only through an exact live product ID match in the historical mapping JSON.',
+    '- A cohort filter restricts inspection by exact product ID; it is not a sales or bestseller signal.',
     '- Nutrition values are parsed from source blocks when labels are present; keep raw nutrition text in the CSV for verification.',
     '- Storage zone is inferred conservatively from storage text: dry/shelf = AMBIENT, fridge/cool = CHILLED, freezer/frozen = FROZEN.',
     '- Cosmetic/non-food rows should be excluded before any legal food metadata apply.',
@@ -748,9 +854,13 @@ async function mapWithConcurrency(items, concurrency, mapper, onProgress = null)
 
 async function main() {
   const options = parseArgs();
-  console.log(`Read-only kimchi.pl scrape: channel=${options.channel}, limit=${options.limit ?? 'all'}, concurrency=${options.concurrency}, delayMs=${options.delayMs}, retries=${options.retries}, resume=${options.resumeExisting ? 'yes' : 'no'}`);
+  const legacySourceIds = readLegacySourceIdMap(options.sourceMapping);
+  const cohortProductIds = readCohortProductIds(options.cohortJson);
+  options.sourceMappingCount = legacySourceIds.size;
+  options.cohortProductCount = cohortProductIds?.length ?? null;
+  console.log(`Read-only kimchi.pl scrape: channel=${options.channel}, limit=${options.limit ?? 'all'}, concurrency=${options.concurrency}, delayMs=${options.delayMs}, retries=${options.retries}, resume=${options.resumeExisting ? 'yes' : 'no'}, cohort=${options.cohortJson ?? 'none'}`);
 
-  const { products, totalCount } = await fetchProducts(options);
+  const { products, totalCount } = await fetchProducts(options, cohortProductIds);
   const existingRows = options.resumeExisting ? readExistingRows(options.csv) : new Map();
   const reusableRows = new Map(
     [...existingRows.entries()].filter(([, row]) => row.decision && row.decision !== 'fetch_error'),
@@ -765,13 +875,16 @@ async function main() {
   await mapWithConcurrency(productsToFetch, options.concurrency, async (product, index) => {
     if ((index + 1) % 20 === 0) console.log(`Fetched source metadata for ${index + 1}/${products.length}`);
 
-    const id = kimchiNumericId(product);
+    const sourceResolution = resolveKimchiSource(product, legacySourceIds);
+    const id = sourceResolution.id;
     const baseRow = {
       id: product.id,
       slug: product.slug,
       name: product.name,
       category: product.category?.slug ?? '',
       firstSku: firstSku(product),
+      sourceLegacyId: id ? `KIMCHI-${id}` : '',
+      sourceResolution: sourceResolution.resolution,
       sourceUrl: id ? `${SOURCE_BASE}${id}.html` : '',
       sourceStatus: '',
       currentIngredientsPresent: product.ingredients?.trim() ? 'yes' : 'no',
@@ -870,7 +983,12 @@ async function main() {
   console.log(`Wrote ${options.csv}`);
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exit(1);
-});
+const isDirectExecution = process.argv[1]
+  && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+
+if (isDirectExecution) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exit(1);
+  });
+}

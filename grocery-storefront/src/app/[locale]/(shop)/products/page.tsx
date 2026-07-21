@@ -35,8 +35,8 @@ export default function ProductsPage() {
   const searchParams = useSearchParams();
   const channel = useChannel();
   const initialZone = searchParams.get('zone') as StorageZone | null;
-  const initialSearch = searchParams.get('search') || '';
-  const initialSort = searchParams.get('sort') || 'newest';
+  const initialSearch = (searchParams.get('search') || '').trim();
+  const initialSort = searchParams.get('sort') || (initialSearch ? 'relevance' : 'newest');
   const [categoriesResult] = useQuery<CategoriesResponse>({
     query: PUBLIC_CATEGORY_NAVIGATION_QUERY,
     variables: { channel },
@@ -59,7 +59,7 @@ export default function ProductsPage() {
     <ProductListingClient
       channel={channel}
       basePath="/products"
-      title={t('title')}
+      title={initialSearch ? t('searchResultsTitle', { query: initialSearch }) : t('title')}
       initialSearch={initialSearch}
       initialSort={initialSort}
       initialZone={initialZone || ''}
