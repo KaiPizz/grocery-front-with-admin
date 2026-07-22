@@ -1,0 +1,367 @@
+decision,id,slug,name,category,firstSku,sourceLegacyId,sourceResolution,sourceUrl,sourceStatus,currentIngredientsPresent,currentAllergensPresent,currentNutritionPresent,currentStorageZone,rawAllergenWarning,candidateAllergens,rawStorageText,candidateStorageZone,rawIngredients,nutritionServingSize,nutritionCaloriesKcal,nutritionEnergyKj,nutritionFat,nutritionSaturatedFat,nutritionCarbs,nutritionSugar,nutritionFiber,nutritionProtein,nutritionSalt,nutritionRaw,dietTraits,productTraits
+review_candidate,556b36b1-99c5-44b5-9458-218a02b7cce5,makaron-ryzowy-10mm-400g-farmer,Makaron ryżowy 10mm 400g - Farmer,makaron-ryżowy,ADG-000104,KIMCHI-387,historical_product_id_mapping,https://kimchi.pl/product-pol-387.html,200,yes,no,yes,,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Mąka ryżowa 90%, woda",w 100g/100ml,356,1514,0.8,0.3,80,0,,7,0.01,"(w 100g/100ml)
+Wartość energetyczna
+1514kJ/356kcal
+Tłuszcze
+0,8g
+Węglowodany
+80g
+*w tym cukry
+0g
+Białko
+7g
+Sól
+<0,01g
+*w tym kwasy tłuszczowe nasycone 0,3g
+Importer
+Nazwa firmy
+Heuschen & Schrouff OFT B.V.
+Adres
+Sperwerweg 1, 6374 AG Landgraaf, The Netherlands",,
+review_candidate,dc18a337-8019-4687-84e3-da6fba30adad,makaron-sojowy-vermicelli-500g-pakowane-po-5x100g-longkou,"Makaron sojowy Vermicelli 500g, pakowane po 5x100g - LongKou",makaron-szklisty,ADG-000123,KIMCHI-457,historical_product_id_mapping,https://kimchi.pl/product-pol-457.html,200,yes,no,yes,,,,,,"Skrobia grochowa, skrobia z fasoli mung, woda",w 100g/100ml,344,1462,0.5,0.1,86,0.5,,0.5,0.04,"(w 100g/100ml)
+Wartość energetyczna
+1462kJ/344kcal
+Tłuszcze
+0,5g
+Węglowodany
+86g
+*w tym cukry
+0,5g
+Białko
+0,5g
+Sól
+0,04g
+*w tym kwasy tłuszczowe nasycone 0,1g
+Importer
+Nazwa firmy
+""NOBI"" - Rafał Sikora
+Adres
+ul. Międzynarodowa 46/34 03-922 Warszawa",,
+review_candidate,8f80102c-7330-4f9f-b25f-f47f23732672,makaron-ryzowy-1mm-400g-farmer,Makaron ryżowy 1mm 400g - Farmer,makaron-ryżowy,ADG-000250,KIMCHI-1055,historical_product_id_mapping,https://kimchi.pl/product-pol-1055.html,200,yes,no,yes,,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Mąka ryżowa 90%, woda",w 100g/100ml,356,514,0.8,0.3,80,,,7,0.01,"(w 100g/100ml)
+Wartość energetyczna
+514kJ/356kcal
+Tłuszcze
+0,8g
+*w tym kwasy tłuszczowe nasycone
+0,3g
+Węglowodany
+80g
+Białko
+7g
+Sól
+<0,01g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez jajek|Bez oleju|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,8a77487b-0a91-4f6e-aef7-16b150ebd6ad,makaron-shirataki-konjac-nitki-400g-city-aroma,"Makaron Shirataki Konjac, nitki 400g - City Aroma",makaron-konjac,ADG-000251,KIMCHI-1057,historical_product_id_mapping,https://kimchi.pl/product-pol-1057.html,200,yes,no,yes,,,,,,,w 100g/100ml,9.5,36,0,,1.5,0,,0,0.1355,"(w 100g/100ml)
+Wartość energetyczna
+36kJ/9,5kcal
+Tłuszcze
+0g
+Węglowodany
+1,5g
+*w tym cukry
+0g
+Białko
+0g
+Sól
+0,1355g","[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html)|Pay|Po|Kup teraz, zapłać za 30 dni|Kup teraz, zapłać później - 4 kroki|Przy wyborze formy płatności, wybierz|Po.|Po opłaci twój rachunek w sklepie.|Na stronie|Po sprawdź swoje dane i podaj pesel.|Po otrzymaniu zakupów decydujesz co ci pasuje, a co nie.|Możesz zwrócić część albo całość zamówienia - wtedy zmniejszy się też kwota do zapłaty","Bez pszenicy|Importer|Nazwa firmy|Heuschen &|Schrouff|O|F|T|B.|V.|Adres|Sperwerweg 1, 6374|A|G|Landgraaf,|The|Netherlands|Aktualne informacje o towarach zamieszczone na stronie w momencie zakupu, tj. treść opisu, skład oraz wartości odżywcze produktu przekazywane są na adres mailowy|Klienta w formie pliku|P|D|F po złożeniu zamówienia.|Wszelkie materiały (treści, teksty, opisy produktów, grafiki, ikony, bannery, układ elementów itp.) przedstawione w sklepach|Sklep.na|Sushi.pl oraz|Kimchi.pl w obrębie domen: www.sklep.nasushi.pl, www.nasushi.pl oraz www.kimchi.pl są objęte prawami autorskimi|Sushi.pl,|Kimchi.pl lub ich dostawców treści i technologii."
+review_candidate,21da15e1-9601-454a-a501-5453470ec95e,makaron-sojowy-vermicelli-longkou-1kg-porcjowany-20-x-50g,"Makaron sojowy vermicelli LongKou 1kg, porcjowany 20 x 50g",makarony,ADG-000280,KIMCHI-1153,historical_product_id_mapping,https://kimchi.pl/product-pol-1153.html,200,yes,no,yes,,,,,,"Skrobia grochowa, skrobia z fasoli mung, woda",w 100g/100ml,344,1462,0.5,0.1,86,0.5,,0.5,0.04,"(w 100g/100ml)
+Wartość energetyczna
+1462kJ/344kcal
+Tłuszcze
+0,5g
+Węglowodany
+86g
+*w tym cukry
+0,5g
+Białko
+0,5g
+Sól
+0,04g
+*w tym kwasy tłuszczowe nasycone 0,1g
+Importer
+Nazwa firmy
+""NOBI"" - Rafał Sikora
+Adres
+ul. Międzynarodowa 46/34 03-922 Warszawa",,
+review_candidate,4d779243-f64b-4ee6-ae19-a96c3cd05ef6,ryz-czarny-kleisty-ketan-itam-400g-north-south,Ryż czarny kleisty (Ketan Itam) 400g - North South,ryż-i-inne-ziarna,ADG-000346,KIMCHI-1437,historical_product_id_mapping,https://kimchi.pl/product-pol-1437.html,200,yes,no,yes,,,,"UWAGA! Opakowanie zawiera woreczek ze środkiem chemicznym pochłaniającym tlen oraz saszetkę pochłaniającą wilgoć, które chronią produkt przed utratą pierwotnej jakości. Zawartość saszetek nie nadaje się do spożycia! Woreczki należy wyrzucić natychmiast po otwarciu opakowania.",,100% ryż czarny kleisty,w 100g/100ml,350,1486,2.3,,73,0,,9.4,0,"(w 100g/100ml)
+Wartość energetyczna
+1486kJ/350kcal
+Tłuszcze
+2,3g
+Węglowodany
+73g
+*w tym cukry
+0g
+Białko
+9,4g
+Sól
+0g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,c5d55aea-8dca-482e-8002-7053ffa3c19a,zupa-kimchi-ramen-hot-and-spicy-z-prawdziwym-kimchi-122g-jongga,Zupa Kimchi ramen Hot & Spicy z prawdziwym kimchi 122g - Jongga,ramyun-ramen,ADG-000419,KIMCHI-2212,historical_product_id_mapping,https://kimchi.pl/product-pol-2212.html,200,yes,yes,yes,,"Produkt zawiera pszenicę, soję, ryby (anchois, bonito) oraz krewetki.",cereals|fish|soybeans|milk,,,"Makaron: Mąka pszenna, olej palmowy, skrobia ziemniaczana, modyfikowana skrobia z tapioki, sól, guma guar (E412), tripolifosforan sodu, węglan potasu (E501), węglan sodu (E500), kolor kurkumy. Zupa: Kimchi w proszku (skrobia kukurydziana, sól, sos z anchois, kwas mlekowy (E270)), sól, aromat (maltodekstryna, sól, cebula w proszku, ekstrakt drożdżowy, sztuczny aromat), cukier, glutaminian monosodowy (E621), proszek chili , sos sojowy, (soja, pszenica, sól, maltodekstryna), suszone płatki cebuli, kremy nie-Nabiałowe, czosnek w proszku, czarny pieprz, barwnik papryka, E355, cebula w proszku, maltodekstryna, E330, E635, E150a, przeciwutleniacz. Kimchi: kapusta, skrobia, proszek z czerwonej papryki, fruktoza, czosnek, sfermentowany sos krewetkowy (krewetki, sól), por, szczypiorek, glutaminian sodu (E621), syrop kukurydziany, fermentowany sos anchois (sardela, sól), ekstrakt z bonito, Guma ksantanowa (E415), cukier, imbir, ocet, kwas jabłkowy (E296).",w 100g/100ml,330,1380,10.1,4.5,53.7,4.7,,7.7,3.9,"(w 100g/100ml)
+Wartość energetyczna
+1380kJ/330kcal
+Tłuszcze
+10,1g
+Węglowodany
+53,7g
+*w tym cukry
+4,7g
+Białko
+7,7g
+*w tym błonnik
+2,9g
+Sól
+3,9g
+*w tym kwasy tłuszczowe nasycone 4,5g
+Importer
+Nazwa firmy
+Asia Express Food B.V.
+Adres
+Kilbystraat 1, 8263 CJ, Kampen, Nederland",,
+review_candidate,9bce68bf-7b1c-4e01-90a6-6326112df584,ryz-do-sushi-tsuru-1kg-curtiriso,Ryż do sushi Tsuru 1kg - Curtiriso,ryż-i-inne-ziarna,ADG-000547,KIMCHI-2670,historical_product_id_mapping,https://kimchi.pl/product-pol-2670.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"na 6-8 porcji: * 500 g ryżu Tsuru * 600 ml wody * kawałek kombu (wymiary ok. 4 x 4 cm) * 150 ml octu ryżowego * 60 g cukru * 5 g soli Sposób przygotowania: Odmierzoną porcję ryżu wsypujemy do dużej miski i kilkakrotnie przepłukujemy w chłodnej wodzie, aż będzie ona przejrzysta. Umyty ryż zalewamy czystą, zimną wodą i odstawiamy do namoczenia na 30 minut. Następnie odcedzamy, przekładamy do garnka, zalewamy odmierzoną porcją świeżej, zimnej wody, a na wierzch kładziemy kombu. Wszystko razem podgrzewamy na średnim ogniu do zagotowania. Przez pierwsze 5 minut gotujemy ryż z dodatkiem kombu. Po tym czasie wyjmujemy algi, zmniejszamy płomień na najmniejszy i gotujemy pod przykryciem przez kolejne 8 minut. W międzyczasie należy przygotować zaprawę. W małym rondelku łączymy więc ocet, cukier oraz sól. Podgrzewamy na małym ogniu do całkowitego rozpuszczenia suchych składników. Odstawiamy do wystygnięcia. Ugotowany ryż zdejmujemy z palnika i pozostawiamy pod przykryciem na dodatkowe 10 minut. Następnie przekładamy go do zwilżonego wodą hangiri lub innego naczynia o dużej powierzchni, polewamy zaprawą octową i delikatnie mieszamy, tak aby nie uszkodzić ziaren. Po ostudzeniu do temperatury pokojowej ryż jest gotowy do formowania. :) * * * Przechowywać w suchym i chłodnym miejscu. Kraj pochodzenia: Włochy Pełny skład 100% ryż okrągłoziarnisty (short grain)",w 100g/100ml,354,1504,0.4,0.1,80.4,0.2,,6.7,0.01,"(w 100g/100ml)
+Wartość energetyczna
+1504kJ/354kcal
+Tłuszcze
+0,4g
+Węglowodany
+80,4g
+*w tym cukry
+0,2g
+Białko
+6,7g
+Sól
+0,01g
+*w tym kwasy tłuszczowe nasycone 0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,5ce19b8e-4f1a-4d52-9e72-ed1e05c6f67b,kluski-ryzowe-do-tteokbokki-male-slupki-600g-3-x-200g-matamun,"Kluski ryżowe do Tteokbokki, małe słupki 600g (3 x 200g) - Matamun",kluski-tteok-do-dań,ADG-000578,KIMCHI-2845,historical_product_id_mapping,https://kimchi.pl/product-pol-2845.html,200,yes,no,yes,,,,"Wskazówka - Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu. Zawartość alkoholu <0,1%",,"Ryż 99,1%, sól, regulator kwasowości: kwas cytrynowy; alkohol",w 100g/100ml,238,963,0.2,0.2,55,2.2,,4.5,0.33,"(w 100g/100ml)
+Wartość energetyczna
+963kJ/238kcal
+Tłuszcze
+0,2g
+Węglowodany
+55g
+*w tym cukry
+2,2g
+Białko
+4,5g
+Sól
+0,33g
+*w tym kwasy tłuszczowe nasycone 0,2g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,b91e7213-af53-460f-8515-5ac5740bae93,kluski-ryzowe-do-tteokguk-male-plasterki-600g-3-x-200g-matamun,"Kluski ryżowe do Tteokguk, małe plasterki 600g (3 x 200g) - Matamun",kluski-tteok-do-dań,ADG-000581,KIMCHI-2858,historical_product_id_mapping,https://kimchi.pl/product-pol-2858.html,200,yes,no,yes,,,,"Wskazówka - Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu. Zawartość alkoholu <0,1%",,"Ryż 99,1%, sól, regulator kwasowości: kwas cytrynowy; alkohol",w 100g/100ml,238,963,0.2,0.2,55,2.2,,4.5,0.33,"(w 100g/100ml)
+Wartość energetyczna
+963kJ/238kcal
+Tłuszcze
+0,2g
+Węglowodany
+55g
+*w tym cukry
+2,2g
+Białko
+4,5g
+Sól
+0,33g
+*w tym kwasy tłuszczowe nasycone 0,2g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,4a561e87-71ce-478a-87fa-f2cc4830cd9e,zupa-makaronowa-demae-ramen-o-smaku-kaczki-100g-nissin,Zupa makaronowa Demae Ramen o smaku kaczki 100g - Nissin,ramyun-ramen,ADG-000640,KIMCHI-3071,historical_product_id_mapping,https://kimchi.pl/product-pol-3071.html,200,yes,yes,yes,,"Produkt zawiera soję, pszenicę, selera, mięczaki, skorupiaki i ryby. Może zawierać gorczycę oraz sezam. Wyprodukowano na Węgrzech dla Nissin Foods GmbH Na zlecenie Nissin Food Products Co., Ltd, Tokio, Japonia",cereals|soybeans|milk|mustard|sesame,,,"Makaron (92,2%): mąka pszenna, olej palmowy, substancje spulchniające: węglan sodu, trifosforany; stabilizator: węglan potasu; zagęstnik: guma guar; przeciwutleniacz: ekstrakt nasycony tokoferolem Przyprawy (7,8%): sól, cukier, aromaty (zawierają pszenicę, soję, mleko), sos sojowy w proszku (soja, pszenica, sól, maltodekstryna), wzmacniacze smaku: glutaminian sodu, guanylan disodowy, inozynian disodowy; czosnek w proszku, zestaw przypraw, aromat kaczki, mięso drobiowe w proszku, barwnik: karmel amoniakalny; regulatory kwasowości: octan sodu, kwas cytrynowy; por, substancja przeciwzbrylająca: dwutlenek krzemu",w porcji 100g,450,,21,8,57,2,,10,,"(w porcji 100g)
+Wartość energetyczna
+450kcal
+Tłuszcze
+21g
+Węglowodany
+57g
+*w tym cukry
+2g
+*w tym błonnik
+3g
+Białko
+10g
+Sód
+2180mg
+*w tym kwasy tłuszczowe nasycone 8g
+Importer
+Nazwa firmy
+Asian Food Group B.V.
+Adres
+Klopsteen 6 | 5443 PW - The Netherlands",,
+review_candidate,02c517b1-1b8f-4085-9465-f573d043f844,zupa-makaronowa-demae-ramen-o-smaku-miso-100g-nissin,Zupa makaronowa Demae Ramen o smaku miso 100g - Nissin,ramyun-ramen,ADG-000693,KIMCHI-3267,historical_product_id_mapping,https://kimchi.pl/product-pol-3267.html,200,yes,yes,yes,,"Produkt zawiera soję, pszenicę i sezam. Może zawierać śladowe ilości selera, skorupiaków, ryb, mleka, mięczaków, musztardy. Wyprodukowano na Węgrzech dla Nissin Foods GmbH Na zlecenie Nissin Food Products Co., Ltd, Tokio, Japonia",cereals|crustaceans|fish|soybeans|milk|sesame|molluscs,,,"Makaron (90,8%): mąka pszenna, olej palmowy, sól, substancje spulchniające: węglan sodu, trifosforany; stabilizator: węglan potasu; zagęstnik: guma guar; przeciwutleniacz: tokoferol Przyprawa bulionowa (9,2%): sól, cukier, wzmacniacze smaku: glutaminian sodu, guanylan disodowy, inozynian disodowy; syrop glukozowy, pasta miso w proszku (soja, ryż, sól) Przyprawy (7,6%): przyprawy, zagęstnik: guma guar; cebula w proszku, aromaty (zawiera pszenicę, soję, sezam), barwniki: karmel amoniakalny, ekstrakt z papryki; sos sojowy w proszku (soja, pszenica, sól, maltodekstryna), substancja przeciwzbrylająca: dwutlenek krzemu; ekstrakt drożdżowy, hydrolizowane białko kukurydziane, regulator kwasowości: kwas bursztynowy",w 100g/100ml,90,378,3.7,2,11.6,0.8,,2,0.97,"(w 100g/100ml)
+Wartość energetyczna
+378kJ/90kcal
+Tłuszcze
+3,7g
+*w tym kwasy tłuszczowe nasycone
+2g
+Węglowodany
+11,6g
+*w tym cukry
+0,8g
+Białko
+2g
+Sól
+0,97g
+*w tym kwasy tłuszczowe nasycone 2g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,c655f731-bd4e-4903-a4a0-c3332daf3bc0,ryz-jasminowy-premium-quality-orange-5kg-royal-umbrella,Ryż jaśminowy Premium Quality Orange 5kg - Royal Umbrella,ryż-i-inne-ziarna,ADG-000781,KIMCHI-3742,historical_product_id_mapping,https://kimchi.pl/product-pol-3742.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym miejscu. Chronić przed wilgocią.,AMBIENT,Ryż jaśminowy 100%,,,,,,,,,,,,,
+review_candidate,b0afc235-8b9d-4b73-984c-9ea9c01b29e4,makaron-ryzowy-vermicelli-bun-gao-400g-icv,Makaron ryżowy Vermicelli Bun Gao 400g - ICV,makaron-ryżowy,ADG-000968,KIMCHI-4334,historical_product_id_mapping,https://kimchi.pl/product-pol-4334.html,200,yes,no,yes,,,,,,"Mąka ryżowa, woda.",w 100g/100ml,352,1506,1.06,0.52,79.8,0.24,,5.91,0.0034,"(w 100g/100ml)
+Wartość energetyczna
+1506kJ/352kcal
+Tłuszcze
+1,06g
+Węglowodany
+79,8g
+*w tym cukry
+0,24g
+Białko
+5,91g
+Sól
+0,0034g
+*w tym kwasy tłuszczowe nasycone 0,52g
+Importer
+Nazwa firmy
+Heuschen & Schrouff OFT B.V.
+Adres
+Sperwerweg 1, 6374 AG Landgraaf, The Netherlands",,
+review_candidate,1be21c1b-ce11-432f-aaca-7b617e314f8b,kluski-ryzowe-do-tteokbokki-krojone-male-slupki-a-500g-hosan,"Kluski ryżowe do tteokbokki krojone, małe słupki A+ 500g - HoSan",kluski-tteok-do-dań,ADG-001008,KIMCHI-4428,historical_product_id_mapping,https://kimchi.pl/product-pol-4428.html,200,yes,no,yes,,,,"Wskazówka - Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu.",,"Ryż (98,9%), sól, alkohol, regulator kwasowości: kwas cytrynowy (E330)",w 100g/100ml,139,581,0.3,,31.3,0,,2.4,0.5,"(w 100g/100ml)
+Wartość energetyczna
+581kJ/139kcal
+Tłuszcze
+0,3g
+Węglowodany
+31,3g
+*w tym cukry
+0g
+Białko
+2,4g
+Sól
+0,5g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,27937c35-4d6e-43de-85bc-37e078c3c327,ryz-basmati-original-1kg-swad,Ryż Basmati Original 1kg - Swad,ryż-i-inne-ziarna,ADG-001021,KIMCHI-4455,historical_product_id_mapping,https://kimchi.pl/product-pol-4455.html,200,yes,no,yes,,,,,,100% ryż basmati,w 100g/100ml,351,1495,0.5,0.1,84,0.1,,8,0.1,"(w 100g/100ml)
+Wartość energetyczna
+1495kJ/351kcal
+Tłuszcze
+0,5g
+Węglowodany
+84g
+*w tym cukry
+0,1g
+Białko
+8g
+Sól
+0,1g
+*w tym kwasy tłuszczowe nasycone 0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,bbd40b6f-2dc1-44dd-872f-2f0e7ee9c21e,ryz-jasminowy-thai-hom-mali-rice-1kg-aroy-d,Ryż jaśminowy Thai Hom Mali Rice 1kg - Aroy-D,ryż-i-inne-ziarna,ADG-001039,KIMCHI-4518,historical_product_id_mapping,https://kimchi.pl/product-pol-4518.html,200,yes,no,yes,,,,,,100% ryż jaśminowy długoziarnisty,w 100g/100ml,353,1477,1.2,0.3,78,0,,6.9,0,"(w 100g/100ml)
+Wartość energetyczna
+1477kJ/353kcal
+Tłuszcze
+1,2g
+Węglowodany
+78g
+*w tym cukry
+0g
+Białko
+6,9g
+Sól
+0g
+*w tym kwasy tłuszczowe nasycone 0,3g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,1d3ad7ff-c2d4-4af3-afd0-6fb9c7211778,ryz-kleisty-tajski-1kg-better-brand-stc,Ryż kleisty tajski 1kg - Better Brand STC,ryż-i-inne-ziarna,ADG-001285,KIMCHI-5057,historical_product_id_mapping,https://kimchi.pl/product-pol-5057.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i ciemnym miejscu.,AMBIENT,Ryż kleisty tajski.,,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,7f628ce5-d117-4045-927e-b93c4cd15f8c,ryz-basmati-premium-quality-1kg-royal-tiger,Ryż Basmati Premium Quality 1kg - Royal Tiger,ryż-do-sushi-i-nie-tylko,ADG-001415,KIMCHI-5260,historical_product_id_mapping,https://kimchi.pl/product-pol-5260.html,200,yes,no,yes,,,,,,100% ryż basmati,w 100g/100ml,349,1480,0.5,0.5,77,0.5,,8,0,"(w 100g/100ml)
+Wartość energetyczna
+1480kJ/349kcal
+Tłuszcze
+0,5g
+Węglowodany
+77g
+*w tym cukry
+0,5g
+Białko
+8g
+Sól
+0g
+*w tym kwasy tłuszczowe nasycone 0,5g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,ee7cf8bc-0e9d-4e95-980b-ca780f9856f5,ryz-jasminowy-premium-thai-hom-mali-1kg-smart-chef,Ryż jaśminowy Premium Thai Hom Mali 1kg Smart Chef,ryż-i-inne-ziarna,ADG-000002,KIMCHI-10,historical_product_id_mapping,https://kimchi.pl/product-pol-10.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu. Chronić przed wilgocią.,AMBIENT,100% ryż jaśminowy,w 100g/100ml,367,1550,1.1,0.3,81,0.1,,7.8,0.01,"(w 100g/100ml)
+Wartość energetyczna
+1550kJ/367kcal
+Tłuszcze
+1,1g
+*w tym kwasy tłuszczowe nasycone
+0,3g
+Węglowodany
+81g
+*w tym cukry
+0,1g
+Białko
+7,8g
+Sól
+0,01g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez konserwantów|Halal|Kupująć ten produkt otrzymasz pkt.
+review_candidate,fcb4e219-4932-4bf0-8774-4e1e0b481849,makaron-ryzowy-lami-m-do-pho-500g-hiep-long,Makaron ryżowy LaMi M do Pho 500g Hiep Long,makaron-ryżowy,ADG-000013,KIMCHI-38,historical_product_id_mapping,https://kimchi.pl/product-pol-38.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Mąka ryżowa, sól, woda",w 100g/100ml,350,1464,0,0,78,0.27,,7,,"(w 100g/100ml)
+Wartość energetyczna
+1464kJ/350kcal
+Tłuszcze
+0g
+*w tym kwasy tłuszczowe nasycone
+0g
+Węglowodany
+78g
+*w tym błonnik
+2g
+*w tym cukry
+0,27g
+Białko
+7g
+Sód
+0,18g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez jajek|Bez oleju|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,33b0bd6b-b697-4b01-ad4d-405380eda556,makaron-ryzowy-vermicelli-nitki-454g-farmer,"Makaron ryżowy Vermicelli, nitki 454g Farmer",makaron-ryżowy,ADG-000014,KIMCHI-39,historical_product_id_mapping,https://kimchi.pl/product-pol-39.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Mąka ryżowa 88%, woda",w 100g/100ml,354,1504,0.5,0.1,82,0.5,,6,0.1,"(w 100g/100ml)
+Wartość energetyczna
+1504kJ/354kcal
+Tłuszcze
+<0,5g
+*w tym kwasy tłuszczowe nasycone
+0,1g
+Węglowodany
+82g
+*w tym cukry
+<0,5g
+Białko
+6g
+Sól
+0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez jajek|Bez oleju|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,546df607-902a-4a38-b5d6-d0c74d422289,makaron-ryzowy-do-dania-bun-cha-500g-hiep-long,Makaron ryżowy do dania Bun Cha 500g Hiep Long,makaron-ryżowy,ADG-000015,KIMCHI-40,historical_product_id_mapping,https://kimchi.pl/product-pol-40.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Mąka ryżowa, sól, czysta woda",w 100g/100ml,350,514,0,0,78,0,,7,0.15,"(w 100g/100ml)
+Wartość energetyczna
+514kJ/350kcal
+Tłuszcze
+0g
+*w tym kwasy tłuszczowe nasycone
+0g
+Węglowodany
+78g
+*w tym cukry
+0g
+Białko
+7g
+Sól
+0,15g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html),Bez pszenicy|Bez jajek|Bez oleju|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,45f89ee5-d0fc-4d94-bc3b-814ff8d9bc6f,makaron-sojowy-vermicelli-100g-longkou,Makaron sojowy Vermicelli 100g LongKou,makaron-szklisty,ADG-000017,KIMCHI-42,historical_product_id_mapping,https://kimchi.pl/product-pol-42.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Skrobia grochowa, skrobia z fasoli mung, woda",w 100g/100ml,344,1462,0.5,0,86,0,,0,0.04,"(w 100g/100ml)
+Wartość energetyczna
+1462kJ/344kcal
+Tłuszcze
+0,5g
+*w tym kwasy tłuszczowe nasycone
+0g
+Węglowodany
+86g
+*w tym cukry
+0g
+Białko
+0g
+Sól
+0,04g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez jajek|Bez oleju|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,c8593d71-1a07-4b94-8457-dcebb41a025a,ryz-do-sushi-500g-house-of-asia,Ryż do sushi 500g House of Asia,ryż-i-inne-ziarna,ADG-000037,KIMCHI-134,historical_product_id_mapping,https://kimchi.pl/product-pol-134.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu. Chronić przed wilgocią.,AMBIENT,Ryż 100%,w 100g/100ml,355,1506,0.8,0.2,79,1.2,,6.6,0,"(w 100g/100ml)
+Wartość energetyczna
+1506kJ/355kcal
+Tłuszcze
+0,8g
+*w tym kwasy tłuszczowe nasycone
+0,2g
+Węglowodany
+79g
+*w tym cukry
+1,2g
+*w tym błonnik
+2,6g
+Białko
+6,6g
+Sól
+0g","[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Pay|Po|Kup teraz, zapłać za 30 dni|Kup teraz, zapłać później - 4 kroki|Przy wyborze formy płatności, wybierz|Po.|Po opłaci twój rachunek w sklepie.|Na stronie|Po sprawdź swoje dane i podaj pesel.|Po otrzymaniu zakupów decydujesz co ci pasuje, a co nie.|Możesz zwrócić część albo całość zamówienia - wtedy zmniejszy się też kwota do zapłaty|W ciągu 30 dni od zakupu płacisz|Po za swoje zakupy bez żadnych dodatkowych kosztów.|Jeśli chcesz, rozkładasz swoją płatność na raty.","Bez pszenicy|Bez konserwantów|Importer|Nazwa firmy|De|Care|Group|Sp. z o.o. i|Wspólnicy|Sp.|Komandytowo-|Akcyjna|Adres|Pieńków 147|A 05-152|Czosnów|Aktualne informacje o towarach zamieszczone na stronie w momencie zakupu, tj. treść opisu, skład oraz wartości odżywcze produktu przekazywane są na adres mailowy|Klienta w formie pliku|P|D|F po złożeniu zamówienia.|Wszelkie materiały (treści, teksty, opisy produktów, grafiki, ikony, bannery, układ elementów itp.) przedstawione w sklepach|Sklep.na|Sushi.pl oraz|Kimchi.pl w obrębie domen: www.sklep.nasushi.pl, www.nasushi.pl oraz www.kimchi.pl są objęte prawami autorskimi|Sushi.pl,|Kimchi.pl lub ich dostawców treści i technologii."

@@ -1,0 +1,92 @@
+# Asia Deli Go catalog metadata batch 3 rehearsal — 2026-07-22
+
+## Scope
+
+- Batch: `asiandeligo-catalog-metadata-batch3-20260722-v1`
+- Tenant: `e73271a9-53e3-4a20-a02e-791726b452aa`
+- Channel: `asiandeligo`
+- Reviewed queue slice: ranks 51–75, 25 exact SKUs
+- High-confidence transitions: 18 products / 24 field changes
+- Evidence or no-op holds: 7 products
+- Decision SHA-256: `01e138ed3f76c4871e981bec117a4e1051ba18d3bfdc8566364012c4c46fa00e`
+- Apply SQL SHA-256: `82abd50c275362bedae7c41caf68c682e6ddeaad16b25b861deda84a969a4d7c`
+- Rollback SQL SHA-256: `eb2b7b072a4833c73444a88fffd6551d21aa84fc4240f990f0c74cff5ae9b454`
+- Production access during preparation and rehearsal was read-only.
+
+Only six `products` metadata columns are writable: `allergens`,
+`may_contain_allergens`, `storage_zone`, `nutrition_facts`,
+`country_of_origin`, and `ingredients`. The reviewed set changes 16 storage
+zones, two nutrition objects, and six countries of origin. Allergens, trace
+declarations, ingredients, price, unit price, stock, category, name, slug,
+publication state, variants, and categories are not mutated.
+
+Seven rows remain held or are explicit no-ops:
+
+- `ADG-000013` and `ADG-000015`: exact production-EAN sources conflict on a
+  sulphite bleaching agent, formula, and nutrition;
+- `ADG-000017`: production EAN cannot be corroborated and differs from known
+  LongKou 100g pack EANs;
+- `ADG-001285`, `ADG-000002`, `ADG-000014`, and `ADG-000037`: safe fields are
+  already populated, while the remaining exact-pack nutrition/origin evidence
+  conflicts, so no zero-value rewrite is emitted.
+
+Independent review found that the Nissin Duck production row has no EAN and
+cannot be pinned to one of two conflicting label generations. Its allergens,
+trace declaration, and nutrition therefore remain unchanged; only Hungary
+origin and AMBIENT storage are written. The Nissin Miso nutrition object states
+its manufacturer basis explicitly as `100 ml gotowego produktu`. The Royal
+Umbrella orange-bag EAN is bound to Cambodia; Thai red-bag data is excluded.
+
+## Production-shape fixture
+
+A disposable PostgreSQL database was created locally from a current read-only
+production schema dump. Exact current rows were loaded through explicit
+non-generated column lists: one active channel, eight referenced categories,
+18 products, and 18 variants. The schema signatures matched production:
+
+| Table | Columns | Ordered schema signature |
+| --- | ---: | --- |
+| `categories` | 38 | `dcd8d20abe2b2716e9f231aef77a490f` |
+| `channels` | 39 | `6359ff6505a692f7f66571b7406dae53` |
+| `product_variants` | 134 | `8401537ee6cb8c4db3dd54c624d68c30` |
+| `products` | 178 | `b1f99aaf6c9db5fb8fec1ac051031de9` |
+
+The tracked metadata/price/category/variant signature was
+`7b9c3fa996a75a7217032369a55af5b4`. All 18 fixture variants retained stock
+`100`, and the required monotonic `products.updated_at` trigger was enabled.
+
+## Rehearsal results
+
+| Case | Result | Evidence |
+| --- | --- | --- |
+| Happy-path apply | PASS | Transaction `199528520` committed exactly 18 backups and 18 updates; all applied timestamps advanced. |
+| Exact target verification | PASS | 18/18 rows matched every target metadata field; counts were storage 16, nutrition 2, and country 6. |
+| Out-of-scope invariants | PASS | Price/unit/category/status matched 18/18 and all 18 variant stock values remained exactly `100`. |
+| Duplicate apply | PASS (rejected) | Exit `3`; existing dated backup/audit tables caused a full abort and counts remained `18/2`. |
+| Happy-path rollback | PASS | Transaction `199528522` restored all 18 products; tracked signature returned exactly to `7b9c3fa996a75a7217032369a55af5b4`, with newer rollback timestamps. |
+| Duplicate rollback | PASS (rejected) | Exit `3`; the existing `rollback_complete` audit caused a full abort. |
+| Stale pre-apply row | PASS (rejected atomically) | A local unit-price edit reduced exact locks to 17. Exit `3`; no backup/audit relation was created and pre/post-attempt signature stayed `cf151a9756851c337d5983c35422455d`. |
+| Intervening product edit | PASS (rollback rejected atomically) | A local post-apply ingredient marker reduced target locks to 17. Exit `3`; the marker remained and rollback audit count stayed zero. |
+| Tampered persistent backup | PASS (rollback rejected atomically) | A local backup-price edit failed the exact backup snapshot guard. Exit `3`; all 18 target products remained and rollback audit count stayed zero. |
+
+The generated SQL pins `search_path`, uses schema-qualified persistent
+relations, runs at `SERIALIZABLE`, locks exact product/variant/category rows,
+checks tenant, channel, IDs, SKU, status, category, metadata, price/unit, and
+`updated_at`, and never deletes or drops data.
+
+## Automated verification
+
+- Focused batch-3 generator suite: **4/4 passed**.
+- Full catalog audit suite: **37/37 passed**.
+- Final independent source and SQL review: **cleared with no blocker**.
+- Artifacts regenerated byte-for-byte from the decision file.
+- `node --check` and `git diff --check`: passed.
+- Live read-only checks remain a release gate before apply.
+
+No production database write, source transfer, application build, deployment,
+or service restart occurred during rehearsal.
+
+## Cleanup
+
+The base fixture and four case databases were explicitly removed. A final
+lookup returned zero matching rehearsal databases.
