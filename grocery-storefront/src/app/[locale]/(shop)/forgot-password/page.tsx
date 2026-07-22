@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 
 import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
+import { privateRouteMetadata } from '@/lib/seo-metadata';
 
 export const metadata: Metadata = {
-  robots: { index: false, follow: false },
+  ...privateRouteMetadata,
   referrer: 'no-referrer',
 };
 

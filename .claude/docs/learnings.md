@@ -6,6 +6,20 @@
 
 ---
 
+### robots.txt blocking prevents crawlers from observing page-level noindex
+- **Error:** Personal and transactional routes were disallowed in `robots.txt`;
+  adding a `noindex` meta tag alone would therefore leave compliant crawlers
+  unable to fetch and observe the deindexing instruction.
+- **Cause:** Crawl control and index control were treated as interchangeable,
+  even though `robots.txt` is neither an access-control layer nor a reliable
+  way to remove an already discovered URL from search results.
+- **Fix:** Keep private HTML routes out of the sitemap, let crawlers request
+  them, publish `noindex, nofollow`, and reserve `robots.txt` blocking for the
+  `/api/` surface.
+- **Rule:** When a page must be deindexed, make its `noindex` response
+  crawlable. Protect sensitive content with authentication, never with
+  `robots.txt`.
+
 ## Project Documentation
 
 ### A transitive image-library override can bypass framework adapter changes

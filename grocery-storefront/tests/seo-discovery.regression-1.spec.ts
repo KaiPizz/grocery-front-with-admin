@@ -15,9 +15,11 @@ test.describe('SEO discovery endpoints', () => {
     expect(body).toMatch(/User-Agent:\s*\*/i);
     expect(body).toContain('Allow: /');
     expect(body).toContain('Sitemap: https://store.example.test/sitemap.xml');
+    expect(body).toContain('Disallow: /api/');
 
+    // Private HTML routes must stay crawlable so search engines can observe
+    // their noindex metadata. robots.txt is not an access-control boundary.
     for (const path of [
-      '/api/',
       '/account',
       '/cart',
       '/checkout',
@@ -29,7 +31,7 @@ test.describe('SEO discovery endpoints', () => {
       '/en/login',
       '/en/register',
     ]) {
-      expect(body).toContain(`Disallow: ${path}`);
+      expect(body).not.toContain(`Disallow: ${path}`);
     }
   });
 

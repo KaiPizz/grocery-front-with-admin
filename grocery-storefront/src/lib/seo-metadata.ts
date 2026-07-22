@@ -19,6 +19,13 @@ const DEFAULT_OG_IMAGE_PATH = '/brand/hero/asia-deli-go-hero-01.webp';
 
 export const fetchSeoStorefrontConfig = cache(async () => fetchServerConfig());
 
+export const privateRouteMetadata = {
+  robots: { index: false, follow: false },
+  alternates: null,
+  openGraph: null,
+  twitter: null,
+} satisfies Metadata;
+
 const PUBLIC_ROUTE_COPY: Record<
   StorefrontSeoLocale,
   Record<PublicSeoRoute, { title: string; description: string }>

@@ -6,6 +6,21 @@
 
 ---
 
+## 2026-07-22 Asia Deli Go Private Route SEO Hygiene Candidate
+
+- Cart, checkout/confirmation, authentication, wishlist, and every account
+  route now publish `noindex, nofollow` while explicitly clearing inherited
+  homepage canonical, hreflang, Open Graph, and Twitter metadata.
+- The account session guard keeps its existing client behavior behind a server
+  layout so the metadata contract also covers order-detail descendants.
+- `robots.txt` continues to block `/api/` but allows private HTML routes to be
+  crawled so search engines can observe `noindex`; those routes remain excluded
+  from the sitemap.
+- Validation is green: 26 focused SEO/discovery Playwright cases, 60 customer
+  account contracts, exact-source ESLint, TypeScript, production build, and
+  standalone production smoke. Production remains unchanged pending the
+  guarded release flow and fresh owner approval.
+
 ## 2026-07-22 Asia Deli Go Patched Image Pipeline Candidate
 
 - The first guarded release check correctly stopped before staging because
