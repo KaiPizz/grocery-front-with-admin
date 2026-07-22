@@ -68,8 +68,11 @@ Immediately before execution at `2026-07-22 06:55 UTC`:
   `https://zira-ai.com/api/v1/health` returned HTTP 200 with `status=ok`.
 - `https://enail.pro/vi/login`, `https://enail.pro/app/mail-inbox`, and the
   Asia Deli Go homepage returned HTTP 200.
-- All PM2 processes remained online. The backend error log was not modified
-  after `06:40 UTC`, and the last 1,000 backend output lines contained zero
+- All PM2 processes remained online. At `07:00 UTC`, the backend error log
+  received recurring scheduled-job messages for missing IdoSell credentials
+  and Telegram HTTP 400 responses; the same jobs had logged before the catalog
+  transaction and were unrelated to it. No catalog, GraphQL, product, or PDP
+  error appeared, and the last 1,000 backend output lines contained zero
   `error`, `fatal`, `exception`, or `unhandled` signatures.
 
 ## Recovery state
