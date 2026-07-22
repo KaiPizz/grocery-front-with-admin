@@ -1,0 +1,338 @@
+decision,id,slug,name,category,firstSku,sourceLegacyId,sourceResolution,sourceUrl,sourceStatus,currentIngredientsPresent,currentAllergensPresent,currentNutritionPresent,currentStorageZone,rawAllergenWarning,candidateAllergens,rawStorageText,candidateStorageZone,rawIngredients,nutritionServingSize,nutritionCaloriesKcal,nutritionEnergyKj,nutritionFat,nutritionSaturatedFat,nutritionCarbs,nutritionSugar,nutritionFiber,nutritionProtein,nutritionSalt,nutritionRaw,dietTraits,productTraits
+review_candidate,ea8226b6-ba92-47ff-8c9c-9ad1c57c2c9d,sweet-chili-tteokbokki-kluski-ryzowe-w-sosie-slodkie-chili-290g-o-food,"Sweet Chili Tteokbokki, kluski ryżowe w sosie słodkie chili 290g - O'Food",dania-gotowe,ADG-001234,KIMCHI-4958,historical_product_id_mapping,https://kimchi.pl/product-pol-4958.html,200,yes,yes,yes,,Produkt zawiera soję. Przechowywać w suchym i chłodnym miejscu. Chronić przed bezpośrednim działaniem promieni słonecznych i wysokiej temperatury.,soybeans,"Wskazówki - O'Food Tteokbokki należy spożyć od razu po przygotowaniu. Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu.",,"Kluski ryżowe: ryż, woda, sól, regulator kwasowości: kwas cytrynowy (E330); alkohol Sos: Syrop z tapioki, cukier 11%, syrop ryżowy 11%, sos sojowy (soja, sól, woda), woda, pasta pomidorowa (pomidory, regulator kwasowości E330), olej sojowy, zmodyfikowana skrobia kukurydziana, cebula, czosnek, pasta z czerwonej papryki 3,5% (woda, syrop z tapioki, ryż brązowy, sproszkowana papryka chili, sól, alkohol, czosnek, cebula), alkohol, sól, ekstrakt z ananasa, ekstrakt drożdżowy, wzmacniacze smaku E627, E631; czarny pieprz w proszku, barwnik E160C, regulator kwasowości E330, cynamon w proszku, imbir w proszku.",w 100g/100ml,242,1013,1.5,0.3,53.6,6.5,,3.6,1.4,"(w 100g/100ml)
+Wartość energetyczna
+1013kJ/242kcal
+Tłuszcze
+1,5g
+Węglowodany
+53,6g
+*w tym cukry
+6,5g
+Białko
+3,6g
+Sól
+1,4g
+*w tym kwasy tłuszczowe nasycone 0,3g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez mięsa|Kupująć ten produkt otrzymasz pkt.
+review_candidate,5e6fd008-e5cf-47c3-ba30-f14c0d550d06,danie-instant-z-ziemniaczanym-makaronem-japchae-cup-82g-sempio,Danie instant z ziemniaczanym makaronem Japchae Cup 82g - Sempio,dania-gotowe,ADG-001387,KIMCHI-5223,historical_product_id_mapping,https://kimchi.pl/product-pol-5223.html,200,yes,yes,yes,,"Produkt zawiera soję, pszenicę, i sezam.",cereals|soybeans|sesame,,,"Skrobia ziemniaczana, skrobia z fasoli mung, sos sojowy (woda, soja, syrop fruktozowo-glukozowy, sól, alkohol, pszenica, ekstrakt drożdżowy w proszku, substancja konserwująca: E211. Słodzik: E955), syrop kukurydziany, cukier, cukier brązowy, woda, skrobia kukurydziana cebulowa, czosnek, olej sezamowy, ekstrakt z grzybów shiitake, wzmacniacz smaku: E621, sól, barwnik: E150c, czarny pieprz w proszku, stabilizator: E412, wzmacniacz smaku: E627,E631; mieszanka warzywna (suszona): marchew, grzyb shiitake, choisum, pak choi, grzyb (ucho żydowskie), olej sezamowy.",w porcji 100g,312,1318,4.9,0.7,63,9.9,,1.9,3.1,"(w porcji 100g)
+Wartość energetyczna
+1318kJ/312kcal
+Tłuszcze
+4,9g
+Węglowodany
+63g
+*w tym cukry
+9,9g
+Białko
+1,9g
+Sól
+3,1g
+*w tym kwasy tłuszczowe nasycone 0,7g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,4e91bc39-8db9-447c-a74e-f5cb3ee897f8,zupa-samgyetang-z-calym-kurczakiem-ryzem-warzywami-i-jujube-800g-harim,"Zupa Samgyetang z całym kurczakiem, ryżem, warzywami i jujube 800g Harim",dania-gotowe,ADG-001460,KIMCHI-5330,historical_product_id_mapping,https://kimchi.pl/product-pol-5330.html,200,yes,no,yes,AMBIENT,Produkt zawiera kasztany. Przechowywać w suchym i chłodnym miejscu.,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Kurczak (100%), ryż, żeń-szeń, kasztany, daktyle, czosnek, bulion warzywny (woda, cebula, czosnek, sól, imbir, cukier, biały pieprz)",w 100g/100ml,56,238,1.25,0.42,3.75,0.42,,7.5,0.45,"(w 100g/100ml)
+Wartość energetyczna
+238kJ/56kcal
+Tłuszcze
+1,25g
+Węglowodany
+3,75g
+*w tym cukry
+0,42g
+Białko
+7,5g
+Sól
+0,45g
+*w tym kwasy tłuszczowe nasycone 0,42g",,Bez pszenicy|Bez oleju|Bez nabiału|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,8fd6cf9b-278d-4bc5-95c9-19f0c5cfe585,danie-makaron-swiezy-udon-korean-style-tteokbokki-chilli-187g-bibigo,Danie makaron świeży udon Korean Style Tteokbokki Chilli 187g - Bibigo,dania-gotowe,ADG-001492,KIMCHI-5370,historical_product_id_mapping,https://kimchi.pl/product-pol-5370.html,200,yes,yes,yes,,Produkt zawiera soję i pszenicę.,cereals|soybeans|sesame,,,"Makaron udon (80,1%): mąka pszenna, woda, skrobia modyfikowana (E1442), gluten pszenny, sól, substancja zagęszczająca: alginian sodu (E401); Sos o smaku tteokbokki (18,7%): cukier, woda, pasta chili (17,5%) (pasta chili (64%) (mąka pszenna, woda, sól, proszek chili, pszenica, czosnek, cebula), syrop kukurydziany, odtłuszczona soja, mąka ryżowa i pszenna, alkohol, sól, proszek chili, syrop glukozowo-fruktozowy, sos sojowy (woda, odtłuszczona soja, sól, alkohol, glukoza, pszenica)), koncentrat gruszkowy, proszek chili (3,5%), przyprawy (soja, pszenica, ekstrakt czosnkowy), skrobia modyfikowana (E1442), sól, pieprz czarny, regulator kwasowości: kwas cytrynowy (E330), ekstrakt cytrusowy, substancja zagęszczająca: guma ksantanowa (E415), barwnik: ekstrakty karotenowe (E160c); Posypka (1,2%): wodorosty, sezam.",w 100g/100ml,186,790,1.4,0.2,38,4.1,,4.4,1.8,"(w 100g/100ml)
+Wartość energetyczna
+790kJ/186kcal
+Tłuszcze
+1,4g
+Węglowodany
+38g
+*w tym cukry
+4,1g
+Białko
+4,4g
+Sól
+1,8g
+*w tym kwasy tłuszczowe nasycone 0,2g
+Importer
+Nazwa firmy
+ASIA-FOODS Sp. z o.o.
+Adres
+Ul. Dzwonkowa 8, 02-290 Warszawa",,
+review_candidate,7afe3a35-bbd7-43e5-afd8-46600f967fa2,danie-makaron-swiezy-udon-korean-style-bbq-187g-bibigo,Danie makaron świeży udon Korean Style BBQ 187g - Bibigo,dania-gotowe,ADG-001493,KIMCHI-5371,historical_product_id_mapping,https://kimchi.pl/product-pol-5371.html,200,yes,yes,yes,,"Produkt zawiera soję, pszenicę i sezam.",cereals|soybeans|sesame,,,"Makaron Udon (80,1%): mąka pszenna, woda, skrobia modyfikowana (E 1442), gluten pszenny, sól, olej słonecznikowy (zawiera soję), regulator kwasowości (E 270), substancja zagęszczająca (E 401). Sos (18,7%): sos sojowy (4,7%: woda, odtłuszczona soja, sól, destylowany alkohol, glukoza, pszenica), cukier, syrop kukurydziany o wysokiej zawartości fruktozy, cukier brązowy, woda, cebula (0,9%), koncentrat gruszkowy, przyprawa (zawiera soję, pszenicę), przecier gruszkowy, skrobia modyfikowana (E 1442), czosnek (0,4%), dymka, syrop cukrowy, sól, olej sezamowy, substancja zagęszczająca (E 415), wzmacniacze smaku (E 627, E 631), czarny pieprz w proszku, regulator kwasowości (E 330), ekstrakt z owoców cytrusowych.",w 100g/100ml,186,790,1.4,0.2,38,4.1,,4.4,1.8,"(w 100g/100ml)
+Wartość energetyczna
+790kJ/186kcal
+Tłuszcze
+1,4g
+Węglowodany
+38g
+*w tym cukry
+4,1g
+Białko
+4,4g
+Sól
+1,8g
+*w tym kwasy tłuszczowe nasycone 0,2g
+Importer
+Nazwa firmy
+ASIA-FOODS Sp. z o.o.
+Adres
+Ul. Dzwonkowa 8, 02-290 Warszawa",,
+no_metadata_found,b4ca9175-f165-4684-9e64-d00055af4510,koszyk-wioli-znawca,Koszyk Wioli - Znawca,kimchi,ADG-000606,KIMCHI-2925,historical_product_id_mapping,https://kimchi.pl/product-pol-2925.html,200,no,no,no,,,,,,,,,,,,,,,,,,,
+review_candidate,e8783e91-cbb5-4323-b97c-84da8761a8c8,mango-plastry-w-syropie-lekko-slodzonym-425g-diamond,"Mango, plastry w syropie lekko słodzonym 425g Diamond",owoce-marynowane-warzywa,ADG-000074,KIMCHI-270,historical_product_id_mapping,https://kimchi.pl/product-pol-270.html,200,yes,no,yes,,,,,,"Mango, woda, cukier",w 100g/100ml,46,194,0.5,0.1,11,11,,0.5,0.01,"(w 100g/100ml)
+Wartość energetyczna
+194kJ/46kcal
+Tłuszcze
+<0,5g
+Węglowodany
+11g
+*w tym cukry
+11g
+Białko
+<0,5g
+Sól
+<0,01g
+*w tym kwasy tłuszczowe nasycone <0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,07904823-7178-459f-bd42-dd99432f1a3c,mango-przecier-bez-cukru-500g-philippine-brand,"Mango, przecier bez cukru 500g Philippine Brand",owoce-marynowane-warzywa,ADG-000182,KIMCHI-761,historical_product_id_mapping,https://kimchi.pl/product-pol-761.html,200,yes,no,yes,,,,,,"Przecier z mango, regulator kwasowości: kwas cytrynowy",w 100g/100ml,65,280,0,,16,14,,0.5,0.05,"(w 100g/100ml)
+Wartość energetyczna
+280kJ/65kcal
+Tłuszcze
+0g
+Węglowodany
+16g
+*w tym cukry
+14g
+Białko
+0,5g
+Sól
+<0,05g
+Importer
+Nazwa firmy
+Heuschen & Schrouff OFT B.V.
+Adres
+Sperwerweg 1, 6374 AG Landgraaf, The Netherlands",,
+review_candidate,2cb07157-8f9c-4a74-b02f-4892d9e7722e,rzodkiew-oshinko-takuan-marynowana-pocieta-350g-asia-kitchen,"Rzodkiew Oshinko (Takuan) marynowana, pocięta 350g - Asia Kitchen",owoce-marynowane-warzywa,ADG-000217,KIMCHI-882,historical_product_id_mapping,https://kimchi.pl/product-pol-882.html,200,yes,no,yes,,,,,,"Rzodkiew (85%), woda, sól, regulatory kwasowości: kwas octowy, kwas cytrynowy; substancje konserwujące: sorbinian potasu, pirosiarczyn sodu, substancje słodzące: sacharyna, acesulfam K, aspartam, barwnik: ryboflawina",w 100g/100ml,339,1441,0,,83.5,0.3,,0.2,0.6,"(w 100g/100ml)
+Wartość energetyczna
+1441kJ/339kcal
+Tłuszcze
+0g
+Węglowodany
+83,5g
+*w tym cukry
+0,3g
+Białko
+0,2g
+Sól
+0,6g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,a7334e6c-7afd-4169-a5a7-7093ccd55d85,napa-kimchi-koreanska-kiszona-kapustka-80g-jongga,"Napa kimchi, koreańska kiszona kapustka 80g - Jongga",owoce-marynowane-warzywa,ADG-000605,KIMCHI-2919,historical_product_id_mapping,https://kimchi.pl/product-pol-2919.html,200,yes,no,yes,,,,Nie wymaga przechowywania w lodówce,,"Kapusta pekińska, rzodkiew, zagęszczacz: guma ksantanowa; czerwona papryka w proszku, sól, cebula, czosnek, cukier, ekstrakt drożdżowy, bakterie kwasu mlekowego",w 100g/100ml,31,130,0,,4.9,1.4,,2.1,2.6,"(w 100g/100ml)
+Wartość energetyczna
+130kJ/31kcal
+Tłuszcze
+0g
+Węglowodany
+4,9g
+*w tym cukry
+1,4g
+Białko
+2,1g
+Sól
+2,6g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,1d17d3b0-e34a-41b5-ba6f-4ff2d1a2d092,fasola-edamame-ziarna-soi-w-zalewie-400g-ita-san,"Fasola edamame, ziarna soi w zalewie 400g - ITA-SAN",owoce-marynowane-warzywa,ADG-000793,KIMCHI-3762,historical_product_id_mapping,https://kimchi.pl/product-pol-3762.html,200,yes,no,yes,,,,"Fasolka sojowa edamame w zalewie marki Ita-san - gotowa do spożycia od razu po otwarciu. Ten oryginalny dodatek do dań orientalnych, doskonały do potraw z ryżu, stir-fry oraz sałatek z pewnością wprowadzi powiew świeżości do Twojej kuchni! :)",,"Ziarna soi, woda, sól, przeciwutleniacz: kwas askorbinowy; regulator kwasowości: kwas cytrynowy.",w 100g/100ml,121,502,7,0.1,1.2,1.2,,11,0.73,"(w 100g/100ml)
+Wartość energetyczna
+502kJ/121kcal
+Tłuszcze
+7g
+Węglowodany
+1,2g
+*w tym cukry
+1,2g
+*w tym błonnik
+3,8g
+Białko
+11g
+Sól
+0,73g
+*w tym kwasy tłuszczowe nasycone <0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,a34fd756-f108-4564-80bd-3bcac658d6ff,pedy-bambusa-nitki-227g-royal-orient,Pędy bambusa nitki 227g - Royal Orient,owoce-marynowane-warzywa,ADG-000998,KIMCHI-4405,historical_product_id_mapping,https://kimchi.pl/product-pol-4405.html,200,yes,no,yes,,,,,,"Pędy bambusa, woda, regulator kwasowości: kwas cytrynowy",w 100g/100ml,8,27,0,,1.6,0,,0,0,"(w 100g/100ml)
+Wartość energetyczna
+27kJ/8kcal
+Tłuszcze
+0g
+Węglowodany
+1,6g
+*w tym cukry
+0g
+Białko
+0g
+Sól
+0g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,f4403c8f-faf9-4160-bedb-49275227f93c,shiso-dzuke-umeboshi-sliwki-marynowane-z-shiso-12-soli-100g-king-of-plum,"Shiso-dzuke umeboshi, śliwki marynowane z shiso (12% soli) 100g - King of Plum",owoce-marynowane-warzywa,ADG-001105,KIMCHI-4684,historical_product_id_mapping,https://kimchi.pl/product-pol-4684.html,200,yes,no,yes,AMBIENT,,,"Przechowywać w chłodnym, zaciemnionym miejscu.",AMBIENT,"Śliwki (70%), sól, galaretka jaglana, alkohol, liście shiso, ekstrakt z shiso, wzmacniacze smaku (E621, E631), kwas (E330), barwnik (E163), substancje słodzące (E953, E955), witamina B1.",w 100g/100ml,73,306,0,,18,0.5,,0.7,12,"(w 100g/100ml)
+Wartość energetyczna
+306kJ/73kcal
+Tłuszcze
+0g
+Węglowodany
+18g
+*w tym cukry
+<0,5g
+Białko
+0,7g
+Sól
+12g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,ade5c8b4-ecfd-4795-a2e1-1872e37d4ce3,rzodkiew-oshinko-takuan-marynowana-pocieta-400g-sakura,"Rzodkiew Oshinko (Takuan) marynowana, pocięta 400g - Sakura",owoce-marynowane-warzywa,ADG-001166,KIMCHI-4796,historical_product_id_mapping,https://kimchi.pl/product-pol-4796.html,200,yes,no,yes,,,,,,"Rzodkiew, woda, sól, kwas octowy, kwas cytrynowy, sorbinian potasu, pirosiarczan sodu, substancje słodzące: sacharyny, acesulfam K, aspartam, barwnik: ryboflawina.",w 100g/100ml,13.9,58,0.05,0.01,3.9,0,,0.37,6.25,"(w 100g/100ml)
+Wartość energetyczna
+58kJ/13,9kcal
+Tłuszcze
+0,05g
+Węglowodany
+3,9g
+*w tym cukry
+0g
+Białko
+0,37g
+Sól
+6,25g
+*w tym kwasy tłuszczowe nasycone 0,01g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,8c6ed656-4076-405a-8746-48efe41b7fd4,pedy-bambusa-plastry-227g-royal-orient,Pędy bambusa plastry 227g - Royal Orient,owoce-marynowane-warzywa,ADG-001215,KIMCHI-4921,historical_product_id_mapping,https://kimchi.pl/product-pol-4921.html,200,yes,no,yes,,,,,,"Pędy bambusa, woda, regulator kwasowości: kwas cytrynowy",w 100g/100ml,8,27,0,,1.6,0,,0,0,"(w 100g/100ml)
+Wartość energetyczna
+27kJ/8kcal
+Tłuszcze
+0g
+Węglowodany
+1,6g
+*w tym cukry
+0g
+Białko
+0g
+Sól
+0g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,ef58d297-33b1-40a0-9df8-f77ebb50e73c,fasola-edamame-ziarna-soi-w-zalewie-400g-house-of-asia,"Fasola edamame, ziarna soi w zalewie 400g - House of Asia",owoce-marynowane-warzywa,ADG-001571,KIMCHI-5472,historical_product_id_mapping,https://kimchi.pl/product-pol-5472.html,200,yes,no,yes,,,,"Fasolka sojowa edamame w zalewie marki House of Asia - gotowa do spożycia od razu po otwarciu. Ten oryginalny dodatek do dań orientalnych, doskonały do potraw z ryżu, stir-fry oraz sałatek z pewnością wprowadzi powiew świeżości do Twojej kuchni! :)",,"Nasiona zielonej soi (Edamame) 50%, woda, sól, regulator kwasowości: kwas cytrynowy, przeciwutleniacz: kwas askorbinowy.",w 100g/100ml,113,475,3.5,0.6,6.9,2.2,,11,0.62,"(w 100g/100ml)
+Wartość energetyczna
+475kJ/113kcal
+Tłuszcze
+3,5g
+Węglowodany
+6,9g
+*w tym cukry
+2,2g
+Białko
+11g
+Sól
+0,62g
+*w tym kwasy tłuszczowe nasycone 0,6g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,f893ac83-94ec-450c-bc1a-d13227650c9a,pedy-bambusa-paseczki-225g-house-of-asia,"Pędy bambusa, paseczki 225g House of Asia",owoce-marynowane-warzywa,ADG-000020,KIMCHI-65,historical_product_id_mapping,https://kimchi.pl/product-pol-65.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Pędy bambusa 62,2%, woda",w 100g/100ml,19,78,0.7,0.1,0.8,0.4,,0.8,0,"(w 100g/100ml)
+Wartość energetyczna
+78kJ/19kcal
+Tłuszcze
+0,7g
+*w tym kwasy tłuszczowe nasycone
+0,1g
+Węglowodany
+0,8g
+*w tym cukry
+0,4g
+*w tym błonnik
+3,1g
+Białko
+0,8g
+Sól
+0g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,deb0400d-0933-4c43-9482-ecdb27e459b0,mlody-imbir-marynowany-rozowy-190g-house-of-asia,Młody imbir marynowany różowy 190g - House of Asia,imbir-marynowany,ADG-000035,KIMCHI-132,historical_product_id_mapping,https://kimchi.pl/product-pol-132.html,200,yes,no,yes,AMBIENT,,,"Przechowywać w suchym, chłodnym miejscu, z dala od bezpośredniego działania promieni słonecznych.",AMBIENT,"Imbir 57,8%, woda, sól, regulatory kwasowości: kwas octowy, kwas cytrynowy; substancja konserwująca: sorbinian potasu; substancje słodzące: aspartam, sacharyny, sukraloza; barwnik: antocyjany",w 100g/100ml,6,23,0.1,0,0.5,0,,0.2,2.4,"(w 100g/100ml)
+Wartość energetyczna
+23kJ/6kcal
+Tłuszcze
+0,1g
+*w tym kwasy tłuszczowe nasycone
+0g
+Węglowodany
+0,5g
+*w tym cukry
+0g
+Białko
+0,2g
+Sól
+2,4g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html),Bez pszenicy|Bez cukru|Kupująć ten produkt otrzymasz pkt.
+review_candidate,f459f271-4cca-4aac-befa-e79d52138595,kielki-fasoli-mung-330g-diamond,Kiełki fasoli mung 330g Diamond,owoce-marynowane-warzywa,ADG-000080,KIMCHI-286,historical_product_id_mapping,https://kimchi.pl/product-pol-286.html,200,yes,no,yes,CHILLED,,,Po otwarciu przechowywać w lodówce i spożyć w ciągu kilku dni.,CHILLED,"Kiełki fasoli mung, woda, sól, kwas: kwasek cytrynowy",w 100g/100ml,8,32,0.5,0.1,0.5,0.5,,0.9,0.67,"(w 100g/100ml)
+Wartość energetyczna
+32kJ/8kcal
+Tłuszcze
+<0,5g
+Węglowodany
+<0,5g
+*w tym kwasy tłuszczowe nasycone
+<0,1g
+*w tym cukry
+<0,5g
+Białko
+0,9g
+Sól
+0,67g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,7cfb28b3-b908-4bbc-ad27-5483e6cfe27e,zielony-jackfruit-w-slonej-zalewie-540g-twin-elephants-and-earth-brand,Zielony jackfruit w słonej zalewie 540g - Twin Elephants & Earth Brand,owoce-marynowane-warzywa,ADG-000276,KIMCHI-1145,historical_product_id_mapping,https://kimchi.pl/product-pol-1145.html,200,yes,no,yes,CHILLED,,,Po otwarciu przełożyć do zamykanego pojemnika i przechowywać w lodówce. Spożyć w ciągu 3-4 dni.,CHILLED,"Jackfruit 60%, woda, sól, regulator kwasowości: kwasek cytrynowy",w 100g/100ml,20,82,0,,1.4,0,,1.2,0.29,"(w 100g/100ml)
+Wartość energetyczna
+82kJ/20kcal
+Tłuszcze
+0g
+Węglowodany
+1,4g
+*w tym cukry
+0g
+Białko
+1,2g
+Sól
+0,29g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,1d87aa98-41fc-46a2-9c92-fa878fba5547,papier-ryzowy-okragly-22cm-500g-hiep-long,"Papier ryżowy okrągły 22cm, 500g - Hiep Long",papier-ryżowy,ADG-000110,KIMCHI-413,historical_product_id_mapping,https://kimchi.pl/product-pol-413.html,200,yes,no,no,,,,,,"Mąka ryżowa, sól, woda Importer Nazwa firmy ASIA-FOODS Sp. z o.o. Adres Ul. Dzwonkowa 8, 02-290 Warszawa",,,,,,,,,,,,,
+review_candidate,f382d156-0bfb-4705-b67e-a5be327c75b5,wakame-suszone-wodorosty-300g-3-x-100g-nobi,"Wakame, suszone wodorosty 300g (3 x 100g) Nobi",wakame-miyeok,ADG-000535,KIMCHI-2645,historical_product_id_mapping,https://kimchi.pl/product-pol-2645.html,200,yes,no,no,,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,100% alg morskich,w 100g/100ml,248,1050,3,,36,,,20,,"(w 100g/100ml)
+Wartość energetyczna
+1050kJ/248kcal
+Tłuszcze
+3g
+Węglowodany
+36g
+Białko
+20g
+Sód
+15,3g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez konserwantów|Bez|G|M|O|Kupująć ten produkt otrzymasz pkt.
+review_candidate,ddb76012-c5ea-4968-a0e9-02fd31742a1f,glony-do-sushi-yaki-nori-gold-50-szt-kc,Glony do sushi Yaki Nori GOLD 50 szt. - KC,arkusze-nori-gim,ADG-000265,KIMCHI-1093,historical_product_id_mapping,https://kimchi.pl/product-pol-1093.html,200,yes,no,yes,,,,,,50 arkuszy prażonych nori klasy Gold - 125g,w 100g/100ml,382,1569,4.46,1.94,40.9,0,,44.5,1.1,"(w 100g/100ml)
+Wartość energetyczna
+1569kJ/382kcal
+Tłuszcze
+4,46g
+Węglowodany
+40,9g
+Białko
+44,5g
+*w tym cukry
+0g
+Sól
+1,1g
+*w tym kwasy tłuszczowe nasycone 1,94g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Produkt nie zawiera:antyzbrylaczybarwnikówcholesterolucukrudrożdżyglutenu|G|M|Ojajekkonserwantówlaktozynabiałuoleju palmowegoorzechówpestekpszenicysoitłuszczy trans (utwardzanych)|Cechy dodatkowe:wegańskiewegetariańskie|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,b1525c0c-150e-4ec3-8ea7-35d3bd6d19ec,glony-yaki-sushi-nori-gold-50-szt-nobi,"Glony Yaki Sushi Nori Gold, 50 szt. - Nobi",arkusze-nori-gim,ADG-000453,KIMCHI-2326,historical_product_id_mapping,https://kimchi.pl/product-pol-2326.html,200,yes,no,yes,,,,,,50 arkuszy prażonych nori. Złota jakość,w 100g/100ml,325,1360,0,,37.6,0,,41.9,0,"(w 100g/100ml)
+Wartość energetyczna
+1360kJ/325kcal
+Tłuszcze
+0g
+Węglowodany
+37,6g
+*w tym cukry
+0g
+*w tym błonnik
+22,2g
+Białko
+41,9g
+Sól
+0g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,3c560dda-81db-4518-983b-c57dddd07b56,algi-sushi-nori-premium-gold-10-szt-asia-kitchen,Algi Sushi Nori Premium Gold 10 szt - Asia Kitchen,arkusze-nori-gim,ADG-000491,KIMCHI-2505,historical_product_id_mapping,https://kimchi.pl/product-pol-2505.html,200,yes,no,yes,,,,,,,w 100g/100ml,356,1489.5,5.52,2.17,36.9,0,,44.1,,"(w 100g/100ml)
+Wartość energetyczna
+1489,5kJ/356kcal
+Tłuszcze
+5,52g
+Węglowodany
+36,9g
+*w tym cukry
+0g
+Białko
+44,1g
+Sód
+939mg
+*w tym kwasy tłuszczowe nasycone 2,17g",Wegetariańska|Wegańska|Bezglutenowa,"Bez pszenicy|Importer|Nazwa firmy ""|N|O|B|I"" -|Rafał|Sikora|Adres ul.|Międzynarodowa 46/34 03-922|Warszawa|Aktualne informacje o towarach zamieszczone na stronie w momencie zakupu, tj. treść opisu, skład oraz wartości odżywcze produktu przekazywane są na adres mailowy|Klienta w formie pliku|P|D|F po złożeniu zamówienia.|Wszelkie materiały (treści, teksty, opisy produktów, grafiki, ikony, bannery, układ elementów itp.) przedstawione w sklepach|Sklep.na|Sushi.pl oraz|Kimchi.pl w obrębie domen: www.sklep.nasushi.pl, www.nasushi.pl oraz www.kimchi.pl są objęte prawami autorskimi|Sushi.pl,|Kimchi.pl lub ich dostawców treści i technologii."

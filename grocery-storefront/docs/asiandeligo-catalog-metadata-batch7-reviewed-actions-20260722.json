@@ -1,0 +1,605 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch7-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T12:50:31Z",
+  "cohortSkus": [
+    "ADG-001234",
+    "ADG-001387",
+    "ADG-001460",
+    "ADG-001492",
+    "ADG-001493",
+    "ADG-000606",
+    "ADG-000074",
+    "ADG-000182",
+    "ADG-000217",
+    "ADG-000605",
+    "ADG-000793",
+    "ADG-000998",
+    "ADG-001105",
+    "ADG-001166",
+    "ADG-001215",
+    "ADG-001571",
+    "ADG-000020",
+    "ADG-000035",
+    "ADG-000080",
+    "ADG-000276",
+    "ADG-000110",
+    "ADG-000535",
+    "ADG-000265",
+    "ADG-000453",
+    "ADG-000491"
+  ],
+  "actions": {
+    "ADG-001234": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-GTIN O'Food 290g listings consistently require cool, dry, room-temperature storage; conflicting secondary allergen declarations are deliberately left unchanged.",
+      "evidence": [
+        {
+          "url": "https://asia-foodstore.de/tteokbokki-sweet-chili-sauce-290g-en",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801052092911 and cool-dry storage for the 290g sweet-chilli product."
+        },
+        {
+          "url": "https://www.frisco.pl/pid%2C150338/n%2Co%27food-tteokbokki---kluski-ryzowe-ze-slodkim-sosem-chili/stn%2Cproduct",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and ambient storage are corroborated in Poland."
+        },
+        {
+          "url": "https://ofoodeurope.com/product/sweet-chili-tteokbokki/",
+          "kind": "manufacturer-page",
+          "supports": "Official European product page corroborates the exact brand, flavour, pack and formula."
+        }
+      ]
+    },
+    "ADG-001387": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Independent exact-pack Sempio Japchae Cup listings specify dry, cool shelf storage; disputed secondary sulphite wording is not imported.",
+      "evidence": [
+        {
+          "url": "https://www.japonshop.com/ramen-sopas/fideos-japchae-coreanos-instantaneos-sempio-82g",
+          "kind": "retailer-label",
+          "supports": "Exact 82g cup identity and cool-dry storage."
+        },
+        {
+          "url": "https://www.cesars.lv/lv/produkts/atri-pagatavojama-nudelu-zupa-bloda-japchae-82g",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801005202404 and dry-cool storage."
+        },
+        {
+          "url": "https://globalsempio.com/products/cup-japchae",
+          "kind": "manufacturer-page",
+          "supports": "Official Sempio page corroborates the cup product identity and direct allergens."
+        }
+      ]
+    },
+    "ADG-001460": {
+      "hold": true,
+      "reason": "Harim sells materially different ambient-retort and frozen 800g Samgyetang products; without the stocked GTIN or storage panel, no trace-allergen or other metadata transition is safe. Chestnut is not an EU-14 tree-nut allergen.",
+      "evidence": [
+        {
+          "url": "https://singkeefoods.co.uk/gb/products/12494-harim-korean-ginseng-chicken-stew-800g.html",
+          "kind": "retailer-label",
+          "supports": "An 800g European export listing represents an ambient-retort formula and trace-allergen set."
+        },
+        {
+          "url": "https://www.kankokuichiba.jp/en/products/ks-2093",
+          "kind": "retailer-label",
+          "supports": "A distinct exact-brand 800g Samgyetang product is explicitly frozen."
+        },
+        {
+          "url": "https://www.harim.com/main/?menu=98",
+          "kind": "manufacturer-page",
+          "supports": "Harim's official range confirms multiple storage formats, so name and weight alone do not identify the stocked label."
+        }
+      ]
+    },
+    "ADG-001492": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact 187g Bibigo Tteokbokki Udon labels consistently specify ambient cool-dry storage; broad trace-allergen lists vary by market and remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kocket.de/collections/bibigo/products/bibigo-udon-korean-style-tteokbokki-geschmack-187g",
+          "kind": "retailer-label",
+          "supports": "Exact pack and GTIN 8801392097928 with cool-dry storage."
+        },
+        {
+          "url": "https://www.denkinesiskekoebmand.dk/en/noodles/3302-udon-noodles-korean-tteokbokki-chili-flavored-187g-bibigo.html",
+          "kind": "retailer-label",
+          "supports": "Exact flavour and pack with dry storage away from sunlight."
+        },
+        {
+          "url": "https://mykorea.pl/pl/p/Korean-Style-Udon-Noodles-Tteokbokki-Chilli-Bibigo/2156",
+          "kind": "retailer-label",
+          "supports": "Polish listing corroborates exact identity, direct allergens and ambient storage."
+        }
+      ]
+    },
+    "ADG-001493": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact 187g Bibigo Korean BBQ Udon consumer unit is shelf-stable and labelled for cool-dry storage; variable cross-contact lists remain held.",
+      "evidence": [
+        {
+          "url": "https://m.cjcatalog.co.kr/product/detail/598",
+          "kind": "manufacturer-catalog",
+          "supports": "CJ's official catalog identifies the exact barcode and shelf-stable consumer unit."
+        },
+        {
+          "url": "https://kocket.de/collections/nudeln-reispapier/products/bibigo-udon-korean-style-bbq-geschmack-187g",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801392097904, pack and cool-dry storage."
+        },
+        {
+          "url": "https://bravekoko.com/products/bibigo-br-korean-style-udon-noodles-k-bbq-flavour-187-2g",
+          "kind": "retailer-label",
+          "supports": "Exact flavour and pack are independently corroborated."
+        }
+      ]
+    },
+    "ADG-000606": {
+      "hold": true,
+      "reason": "Koszyk Wioli - Znawca is a curated multi-item basket, not one stable prepacked food formula; ingredients, allergens, nutrition, origin and storage must not be synthesized for it.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2925.html",
+          "kind": "supplier-listing",
+          "supports": "The mapped source listing contains no stable single-product food metadata."
+        },
+        {
+          "url": "https://kimchi.pl/pol_m_Koszyk-Wioli-1217.html",
+          "kind": "supplier-category",
+          "supports": "The source classifies this identity as a curated Koszyk Wioli basket."
+        }
+      ]
+    },
+    "ADG-000074": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Distributor and retailer records for production GTIN 4316734047607 specify room-temperature or cool-dry storage; conflicting nutrition generations remain untouched.",
+      "evidence": [
+        {
+          "url": "https://kkpolska.pl/product/446/mango_w_plastrach_w_syropie.html",
+          "kind": "distributor-record",
+          "supports": "Exact GTIN, 425g product identity and room-temperature storage."
+        },
+        {
+          "url": "https://www.kaufland.de/product/338141266/",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and cool-dry storage."
+        },
+        {
+          "url": "https://cdn.metro-group.com/de/de_fir_123195001001_de.pdf",
+          "kind": "distributor-specification",
+          "supports": "Exact GTIN specification corroborates room-temperature storage."
+        }
+      ]
+    },
+    "ADG-000182": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact EU GTIN and exact-pack listings consistently require dry, dark or cool-dry shelf storage; disputed sulphite cross-contact wording remains held.",
+      "evidence": [
+        {
+          "url": "https://asia-foodstore.de/ph-brand-mangopueree-500g",
+          "kind": "retailer-label",
+          "supports": "Production GTIN 4809012888004 and dry-dark storage."
+        },
+        {
+          "url": "https://www.filipinoasianstore.de/en/p/philippine-brand-mango-puree-500g",
+          "kind": "retailer-label",
+          "supports": "Exact brand and 500g pack with cool-dry storage."
+        },
+        {
+          "url": "https://www.asia-in.de/Philippine-Brand-Mangopueree-ungesuesst-500g",
+          "kind": "retailer-label",
+          "supports": "Exact EU GTIN and pack identity are corroborated."
+        }
+      ]
+    },
+    "ADG-000217": {
+      "patch": {
+        "allergens": [
+          "sulphites"
+        ],
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-product labels explicitly declare sulphites from sodium metabisulphite and specify dry-cool shelf storage; conflicting nutrition values remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-882-Rzodkiew-Oshinko-Takuan-marynowana-pocieta-350g-Asia-Kitchen.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical source explicitly states that the product contains sulphites and identifies the formula."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-882-Rzodkiew-marynowana-oshinko-do-sushi-krojona-350g-Asia-Kitchen.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5903707849840 and dry-cool storage."
+        },
+        {
+          "url": "https://allegro.pl/oferta/rzodkiew-krojona-cieta-paski-daikon-oshinko-350g-6115030762",
+          "kind": "retailer-label",
+          "supports": "Exact product independently declares sulphites."
+        }
+      ]
+    },
+    "ADG-000605": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact 80g Jongga shelf-stable Napa kimchi is explicitly sold without refrigeration before opening; conflicting cross-contact presentations remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://www.denkinesiskekoebmand.dk/en/canned-food/2190-kimchi-napa-cabbage-spicy-80g-jongga.html",
+          "kind": "retailer-label",
+          "supports": "Exact 80g product explicitly requires no refrigeration before opening."
+        },
+        {
+          "url": "https://uchitomishop.ch/produit/mat-kimchi-shelf-stable-jongga-80g/",
+          "kind": "retailer-label",
+          "supports": "Exact shelf-stable 80g pack specifies ambient 1–25°C storage."
+        },
+        {
+          "url": "https://jonggausa.com/products/shelf-stable-mini-size-cabbage-kimchi",
+          "kind": "manufacturer-page",
+          "supports": "Official Jongga page identifies the exact 80g mini product as shelf-stable."
+        }
+      ]
+    },
+    "ADG-000793": {
+      "patch": {
+        "allergens": [
+          "soybeans"
+        ],
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-GTIN labels identify soybeans as the direct ingredient and allergen and specify room-temperature or cool-dry storage.",
+      "evidence": [
+        {
+          "url": "https://kkpolska.pl/product/3048/edamame.html",
+          "kind": "distributor-record",
+          "supports": "Primary distributor record pins GTIN 4316734052908, direct soy and room-temperature storage."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/fasola-edamame-ita-san-400-g/00356898",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN independently declares soy and room-temperature storage."
+        },
+        {
+          "url": "https://www.susi.cz/vyrobek/ita-san-edamame-v-konzerve-400-g/",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and cool-dry shelf storage are corroborated."
+        }
+      ]
+    },
+    "ADG-000998": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Current-label Royal Orient bamboo strips with the exact brand, form and 227g pack are consistently shelf-stable; label-revision nutrition and ingredient differences are held.",
+      "evidence": [
+        {
+          "url": "https://orientalmarket.pl/produkt/pedy-bambusa-nitki-royal-orient-227g/",
+          "kind": "retailer-label",
+          "supports": "Exact current GTIN 8719497398201, strips form, pack and storage."
+        },
+        {
+          "url": "https://asia-foodstore.de/bambus-streifen",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and cool-dry storage are independently corroborated."
+        },
+        {
+          "url": "https://allegro.pl/oferta/pedy-bambusa-nitki-227g-royal-orient-15007112390",
+          "kind": "marketplace-label",
+          "supports": "Current source item corroborates brand, strips form and pack."
+        }
+      ]
+    },
+    "ADG-001105": {
+      "patch": {
+        "countryOfOrigin": "Japonia"
+      },
+      "reason": "Independent exact-GTIN listings for the matching formula identify Japan as the product origin; the ambiguous historical composite value is not used.",
+      "evidence": [
+        {
+          "url": "https://sklepsoasian.com/en/products/japanese-preserved-plum-umeboshi-100g-king-of-plum-1978.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 4904033000784, matching formula and explicit Japan origin."
+        },
+        {
+          "url": "https://www.jasmino.cz/nanki-nakladany-blumy-s-shiso-listy-100g",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and Japan origin are independently corroborated."
+        }
+      ]
+    },
+    "ADG-001166": {
+      "patch": {
+        "allergens": [
+          "sulphites"
+        ],
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-EAN Sakura 400g labels explicitly declare sulphites and specify cool-dry shelf storage; the phenylalanine warning is outside the allergen-array schema.",
+      "evidence": [
+        {
+          "url": "https://zakupy.auchan.pl/products/rzodkiwe-marynowana-ci%C4%99ta-sakura-400-g/00392741",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5908235060859, explicit sulphites and cool-dry storage."
+        },
+        {
+          "url": "https://allegro.pl/produkt/rzodkiew-oshinko-takuan-marynowana-pocieta-400g-sakura-2b274d30-7e2c-4297-8bfc-077b7ff9c5f1",
+          "kind": "retailer-label",
+          "supports": "Exact brand, form, pack and allergen declaration are corroborated."
+        },
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-4796-Rzodkiew-Oshinko-Takuan-marynowana-pocieta-400g-Sakura.html",
+          "kind": "supplier-label",
+          "supports": "Exact source identity independently states sulphites and shelf storage."
+        }
+      ]
+    },
+    "ADG-001215": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Independent exact Royal Orient bamboo-slices 227g listings consistently identify a shelf-stable product; conflicting label revisions remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://sushi-sklep.pl/pedy-bambusa-plastry-royal-orient-227g",
+          "kind": "retailer-label",
+          "supports": "Exact brand, slices form and pack with dry-cool storage."
+        },
+        {
+          "url": "https://www.foodland-express.com/preserved-products/bamboo-slices-of-royal-orient-227g/",
+          "kind": "distributor-record",
+          "supports": "Exact brand, form and 227g pack are independently corroborated."
+        },
+        {
+          "url": "https://utoppa.com/en/products/royal-orient-bambussprossen-scheiben-227-g",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8719497398188 and pack identity."
+        }
+      ]
+    },
+    "ADG-001571": {
+      "patch": {
+        "allergens": [
+          "soybeans"
+        ],
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The official product and exact-EAN Polish listings identify soy as a direct ingredient and allergen and specify ambient storage.",
+      "evidence": [
+        {
+          "url": "https://houseofasia.pl/produkt/fasola-edamame-400-g/",
+          "kind": "manufacturer-page",
+          "supports": "Official House of Asia page identifies the exact product and 50% soy ingredient."
+        },
+        {
+          "url": "https://leclerc-online.pl/house-of-asia-edamame-ziarna-soi-400-g",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5904358554312 and ambient storage."
+        },
+        {
+          "url": "https://leclerc.com.pl/house-of-asia-edamame-ziarna-soi",
+          "kind": "retailer-label",
+          "supports": "Exact product independently declares soy as an allergen."
+        }
+      ]
+    },
+    "ADG-000020": {
+      "hold": true,
+      "reason": "The exact-EAN product already has AMBIENT storage and no regulated allergen; current ingredient and nutrition listings conflict with the stored label generation, so there is no safe non-zero transition.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-65.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical product identity and the already-recorded ambient storage."
+        },
+        {
+          "url": "https://leclerc.com.pl/house-of-asia-pedy-bambusa-paseczki",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5907603458809 exposes a different label generation, supporting the no-change hold."
+        },
+        {
+          "url": "https://deligro.pl/kuchnie-swiata/kuchnia-chinska/przetwory-warzywne/pedy-bambusa-paseczki-225-g-house-of-asia-649",
+          "kind": "retailer-label",
+          "supports": "Exact product and pack are corroborated while nutrition differences remain unresolved."
+        }
+      ]
+    },
+    "ADG-000035": {
+      "hold": true,
+      "reason": "The exact-EAN ginger already has AMBIENT storage and no EU-14 allergen; small nutrition revision differences and the separate phenylalanine warning do not support a database transition in this field scope.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-132.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical product identity and already-recorded ambient storage."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/imbir-m%C5%82ody-r%C3%B3%C5%BCowy-do-sushi-house-of-asia-190-g/00845425",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5907603458861 and current label generation."
+        },
+        {
+          "url": "https://www.bee.pl/house-of-asia-mlody-imbir-rozowy-do-sushi-190-g_p1366395.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN and ambient identity are independently corroborated."
+        }
+      ]
+    },
+    "ADG-000080": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-EAN shelf labels show that refrigeration applies only after opening; the current CHILLED value was inferred from that after-opening instruction and is wrong for unopened stock.",
+      "evidence": [
+        {
+          "url": "https://orientalmarket.pl/produkt/kielki-fasoli-mung-kielki-fasoli-2/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 4316734049946 and dry-cool unopened storage."
+        },
+        {
+          "url": "https://www.frisco.pl/pid%2C95407/n%2Cdiamond-kielki-fasoli-mung/stn%2Cproduct",
+          "kind": "retailer-label",
+          "supports": "Exact EAN and shelf-stable product identity are corroborated."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-286.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical source limits refrigeration to after opening."
+        }
+      ]
+    },
+    "ADG-000276": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "All located 540g Twin Elephants shelf variants are ambient before opening; the current CHILLED value came solely from a post-opening refrigeration instruction and is not an unopened storage class.",
+      "evidence": [
+        {
+          "url": "https://pitaya.pl/product-pol-6087-Mlody-Zielony-Jackfruit-w-Syropie-TWIN-ELEPHANTS-540g-Mit-Non-Dong-Hop-TWIN-ELEPHANTS-540g-X-24szt-krt-11912.html",
+          "kind": "distributor-record",
+          "supports": "Exact brand and 540g pack with GTIN 8851011221265 identify a shelf-stable can."
+        },
+        {
+          "url": "https://asiangroceryuk.com/products/twin-elephants-green-jackfruit-in-brine-540g",
+          "kind": "retailer-label",
+          "supports": "Exact brand and pack explicitly require room temperature before opening."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-1145.html",
+          "kind": "supplier-label",
+          "supports": "The exact historical listing limits chilled storage to after opening."
+        }
+      ]
+    },
+    "ADG-000110": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-barcode Hiep Long 22cm 500g rice-paper listings consistently specify dry-cool shelf storage; disputed country and absent nutrition stay unchanged.",
+      "evidence": [
+        {
+          "url": "https://www.asian-alley.com/en/products/7838869815530",
+          "kind": "retailer-label",
+          "supports": "Production barcode 8936005950021 and dry-cool storage."
+        },
+        {
+          "url": "https://b2b.kuchnieswiata.com.pl/rice-paper-22cm-round-thin-500g-40-hiep-long",
+          "kind": "distributor-record",
+          "supports": "Exact brand, diameter, pack and thin round format."
+        },
+        {
+          "url": "https://przepisychinskie.pl/papier-ryzowy-okragly-500g-hiep-long",
+          "kind": "retailer-label",
+          "supports": "Exact product identity and shelf-stable food format are independently corroborated."
+        }
+      ]
+    },
+    "ADG-000535": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact 3x100g Nobi wakame bundle and its exact 100g member unit both require dry-cool shelf storage; pack identity and nutrition are not changed.",
+      "evidence": [
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-2645-Wakame-suszone-wodorosty-300g-3-x-100g-Nobi.html",
+          "kind": "supplier-listing",
+          "supports": "Exact 3x100g bundle identity and dry-cool storage."
+        },
+        {
+          "url": "https://schroniskobukowina.pl/wodorosty-suszone-wakame-100g-nobi",
+          "kind": "retailer-label",
+          "supports": "Exact Nobi 100g member unit corroborates dry shelf storage."
+        },
+        {
+          "url": "https://b2b.biologistic.pl/asia-kitchen-wodorosty-suszone-wakame-100g",
+          "kind": "distributor-record",
+          "supports": "Member EAN 5903760634766 and exact dried-wakame identity."
+        }
+      ]
+    },
+    "ADG-000265": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact item-code 50-sheet KC Yaki Nori listings consistently specify dry-cool storage; alternate marketplace identifiers and weight tolerance are outside this patch.",
+      "evidence": [
+        {
+          "url": "https://orientalmarket.pl/produkt/wodorosty-glony-yaki-sushi-nori-premium-125g-50szt/",
+          "kind": "retailer-label",
+          "supports": "Exact item code 4779050010203, 50 sheets, 125g and dry-cool storage."
+        },
+        {
+          "url": "https://erli.pl/produkt/wodorosty-glony-yaki-sushi-nori-premium-125g-50szt%2C310926498",
+          "kind": "retailer-label",
+          "supports": "Exact item code and pack identity are independently corroborated."
+        },
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-1093-Glony-do-sushi-Yaki-Nori-GOLD-50-szt-KC.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical source confirms the product and 50-sheet format."
+        }
+      ]
+    },
+    "ADG-000453": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Both known Nobi 50-sheet label generations identify dried roasted nori with dry-cool shelf storage; GTIN drift is deliberately not resolved by this storage-only patch.",
+      "evidence": [
+        {
+          "url": "https://nobi.com.pl/produkt/nori-gold-130g/",
+          "kind": "manufacturer-page",
+          "supports": "Official Nobi page identifies the exact 50-sheet 130g product."
+        },
+        {
+          "url": "https://allegro.pl/oferta/nori-gold-50-arkuszy-130g-prazone-glony-morskie-do-sushi-i-potraw-orient-13689587829",
+          "kind": "retailer-label",
+          "supports": "Current EAN 5903796783100 and dry-cool storage."
+        },
+        {
+          "url": "https://rafex.eu/algi-morskie-nobi-yaki-sushi-nori-gold-50-arkuszy-130g-p-202572.html",
+          "kind": "retailer-label",
+          "supports": "Older GTIN generation has the same brand, pack and shelf-stable storage identity."
+        }
+      ]
+    },
+    "ADG-000491": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact 10-sheet Asia Kitchen Nori listings consistently specify dry-cool shelf storage; identifier and nutrition revisions remain untouched.",
+      "evidence": [
+        {
+          "url": "https://azjamarket.pl/pl/products/wodorosty-nori-gold-do-sushi-10-arkuszy-896.html",
+          "kind": "retailer-label",
+          "supports": "Exact current EAN 5903796783247, 26g pack and dry-cool storage."
+        },
+        {
+          "url": "https://allegro.pl/oferta/glony-do-sushi-yaki-nori-10-arkuszy-korea-10817527662",
+          "kind": "retailer-label",
+          "supports": "Exact 10-sheet Asia Kitchen product identity is independently corroborated."
+        },
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-2505-Algi-Sushi-Nori-Premium-Gold-10-szt-Asia-Kitchen.html",
+          "kind": "supplier-label",
+          "supports": "Historical exact source corroborates the pack and dried-nori identity."
+        }
+      ]
+    }
+  }
+}

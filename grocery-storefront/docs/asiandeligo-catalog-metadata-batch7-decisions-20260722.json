@@ -1,0 +1,2260 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch7-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T12:50:31Z",
+  "cohortSkus": [
+    "ADG-001234",
+    "ADG-001387",
+    "ADG-001460",
+    "ADG-001492",
+    "ADG-001493",
+    "ADG-000606",
+    "ADG-000074",
+    "ADG-000182",
+    "ADG-000217",
+    "ADG-000605",
+    "ADG-000793",
+    "ADG-000998",
+    "ADG-001105",
+    "ADG-001166",
+    "ADG-001215",
+    "ADG-001571",
+    "ADG-000020",
+    "ADG-000035",
+    "ADG-000080",
+    "ADG-000276",
+    "ADG-000110",
+    "ADG-000535",
+    "ADG-000265",
+    "ADG-000453",
+    "ADG-000491"
+  ],
+  "products": [
+    {
+      "sku": "ADG-001234",
+      "productId": "ea8226b6-ba92-47ff-8c9c-9ad1c57c2c9d",
+      "variantId": "d9c6ee09-f99d-4e2d-966d-61f18cd3db8c",
+      "name": "Sweet Chili Tteokbokki, kluski ryżowe w sosie słodkie chili 290g - O'Food",
+      "slug": "sweet-chili-tteokbokki-kluski-ryzowe-w-sosie-slodkie-chili-290g-o-food",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Kluski ryżowe: ryż, woda, sól, regulator kwasowości: kwas cytrynowy (E330); alkohol Sos: Syrop z tapioki, cukier 11%, syrop ryżowy 11%, sos sojowy ( soja , sól, woda), woda, pasta pomidorowa (pomidory, regulator kwasowości E330), olej sojowy , zmodyfikowana skrobia kukurydziana, cebula, czosnek, pasta z czerwonej papryki 3,5% (woda, syrop z tapioki, ryż brązowy, sproszkowana papryka chili, sól, alkohol, czosnek, cebula), alkohol, sól, ekstrakt z ananasa, ekstrakt drożdżowy, wzmacniacze smaku E627, E631; czarny pieprz w proszku, barwnik E160C, regulator kwasowości E330, cynamon w proszku, imbir w proszku.",
+        "storageZone": null,
+        "pricePerUnit": "106.55",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.5,
+          "salt": 1.4,
+          "carbs": 53.6,
+          "sugar": 6.5,
+          "protein": 3.6,
+          "calories": 242,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.3
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Kluski ryżowe: ryż, woda, sól, regulator kwasowości: kwas cytrynowy (E330); alkohol Sos: Syrop z tapioki, cukier 11%, syrop ryżowy 11%, sos sojowy ( soja , sól, woda), woda, pasta pomidorowa (pomidory, regulator kwasowości E330), olej sojowy , zmodyfikowana skrobia kukurydziana, cebula, czosnek, pasta z czerwonej papryki 3,5% (woda, syrop z tapioki, ryż brązowy, sproszkowana papryka chili, sól, alkohol, czosnek, cebula), alkohol, sól, ekstrakt z ananasa, ekstrakt drożdżowy, wzmacniacze smaku E627, E631; czarny pieprz w proszku, barwnik E160C, regulator kwasowości E330, cynamon w proszku, imbir w proszku.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "106.55",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.5,
+          "salt": 1.4,
+          "carbs": 53.6,
+          "sugar": 6.5,
+          "protein": 3.6,
+          "calories": 242,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.3
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-GTIN O'Food 290g listings consistently require cool, dry, room-temperature storage; conflicting secondary allergen declarations are deliberately left unchanged.",
+      "evidence": [
+        {
+          "url": "https://asia-foodstore.de/tteokbokki-sweet-chili-sauce-290g-en",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801052092911 and cool-dry storage for the 290g sweet-chilli product."
+        },
+        {
+          "url": "https://www.frisco.pl/pid%2C150338/n%2Co%27food-tteokbokki---kluski-ryzowe-ze-slodkim-sosem-chili/stn%2Cproduct",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and ambient storage are corroborated in Poland."
+        },
+        {
+          "url": "https://ofoodeurope.com/product/sweet-chili-tteokbokki/",
+          "kind": "manufacturer-page",
+          "supports": "Official European product page corroborates the exact brand, flavour, pack and formula."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/sweet-chili-tteokbokki-kluski-ryzowe-w-sosie-slodkie-chili-290g-o-food",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001387",
+      "productId": "5e6fd008-e5cf-47c3-ba30-f14c0d550d06",
+      "variantId": "05794de5-068d-4ecb-98f2-3cbcd4cebeac",
+      "name": "Danie instant z ziemniaczanym makaronem Japchae Cup 82g - Sempio",
+      "slug": "danie-instant-z-ziemniaczanym-makaronem-japchae-cup-82g-sempio",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Skrobia ziemniaczana, skrobia z fasoli mung, sos sojowy (woda, soja , syrop fruktozowo-glukozowy, sól, alkohol, pszenica , ekstrakt drożdżowy w proszku, substancja konserwująca: E211. Słodzik: E955), syrop kukurydziany, cukier, cukier brązowy, woda, skrobia kukurydziana cebulowa, czosnek, olej sezamowy , ekstrakt z grzybów shiitake, wzmacniacz smaku: E621, sól, barwnik: E150c, czarny pieprz w proszku, stabilizator: E412, wzmacniacz smaku: E627,E631; mieszanka warzywna (suszona): marchew, grzyb shiitake, choisum, pak choi, grzyb (ucho żydowskie), olej sezamowy .",
+        "storageZone": null,
+        "pricePerUnit": "207.20",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 4.9,
+          "salt": 3.1,
+          "carbs": 63,
+          "sugar": 9.9,
+          "protein": 1.9,
+          "calories": 312,
+          "servingSize": "w porcji 100g",
+          "saturatedFat": 0.7
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Skrobia ziemniaczana, skrobia z fasoli mung, sos sojowy (woda, soja , syrop fruktozowo-glukozowy, sól, alkohol, pszenica , ekstrakt drożdżowy w proszku, substancja konserwująca: E211. Słodzik: E955), syrop kukurydziany, cukier, cukier brązowy, woda, skrobia kukurydziana cebulowa, czosnek, olej sezamowy , ekstrakt z grzybów shiitake, wzmacniacz smaku: E621, sól, barwnik: E150c, czarny pieprz w proszku, stabilizator: E412, wzmacniacz smaku: E627,E631; mieszanka warzywna (suszona): marchew, grzyb shiitake, choisum, pak choi, grzyb (ucho żydowskie), olej sezamowy .",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "207.20",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 4.9,
+          "salt": 3.1,
+          "carbs": 63,
+          "sugar": 9.9,
+          "protein": 1.9,
+          "calories": 312,
+          "servingSize": "w porcji 100g",
+          "saturatedFat": 0.7
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Independent exact-pack Sempio Japchae Cup listings specify dry, cool shelf storage; disputed secondary sulphite wording is not imported.",
+      "evidence": [
+        {
+          "url": "https://www.japonshop.com/ramen-sopas/fideos-japchae-coreanos-instantaneos-sempio-82g",
+          "kind": "retailer-label",
+          "supports": "Exact 82g cup identity and cool-dry storage."
+        },
+        {
+          "url": "https://www.cesars.lv/lv/produkts/atri-pagatavojama-nudelu-zupa-bloda-japchae-82g",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801005202404 and dry-cool storage."
+        },
+        {
+          "url": "https://globalsempio.com/products/cup-japchae",
+          "kind": "manufacturer-page",
+          "supports": "Official Sempio page corroborates the cup product identity and direct allergens."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-instant-z-ziemniaczanym-makaronem-japchae-cup-82g-sempio",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001492",
+      "productId": "8fd6cf9b-278d-4bc5-95c9-19f0c5cfe585",
+      "variantId": "7b224130-59c1-49fe-8291-1ca37542e80b",
+      "name": "Danie makaron świeży udon Korean Style Tteokbokki Chilli 187g - Bibigo",
+      "slug": "danie-makaron-swiezy-udon-korean-style-tteokbokki-chilli-187g-bibigo",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Makaron udon (80,1%) : mąka pszenna , woda, skrobia modyfikowana (E1442), gluten pszenny , sól, substancja zagęszczająca: alginian sodu (E401); Sos o smaku tteokbokki (18,7%) : cukier, woda, pasta chili (17,5%) (pasta chili (64%) (mąka pszenna , woda, sól, proszek chili, pszenica , czosnek, cebula), syrop kukurydziany, odtłuszczona soja , mąka ryżowa i pszenna , alkohol, sól, proszek chili, syrop glukozowo-fruktozowy, sos sojowy (woda, odtłuszczona soja , sól, alkohol, glukoza, pszenica )), koncentrat gruszkowy, proszek chili (3,5%), przyprawy ( soja , pszenica , ekstrakt czosnkowy), skrobia modyfikowana (E1442), sól, pieprz czarny, regulator kwasowości: kwas cytrynowy (E330), ekstrakt cytrusowy, substancja zagęszczająca: guma ksantanowa (E415), barwnik: ekstrakty karotenowe (E160c); Posypka (1,2%) : wodorosty, sezam .",
+        "storageZone": null,
+        "pricePerUnit": "80.16",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.4,
+          "salt": 1.8,
+          "carbs": 38,
+          "sugar": 4.1,
+          "protein": 4.4,
+          "calories": 186,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Makaron udon (80,1%) : mąka pszenna , woda, skrobia modyfikowana (E1442), gluten pszenny , sól, substancja zagęszczająca: alginian sodu (E401); Sos o smaku tteokbokki (18,7%) : cukier, woda, pasta chili (17,5%) (pasta chili (64%) (mąka pszenna , woda, sól, proszek chili, pszenica , czosnek, cebula), syrop kukurydziany, odtłuszczona soja , mąka ryżowa i pszenna , alkohol, sól, proszek chili, syrop glukozowo-fruktozowy, sos sojowy (woda, odtłuszczona soja , sól, alkohol, glukoza, pszenica )), koncentrat gruszkowy, proszek chili (3,5%), przyprawy ( soja , pszenica , ekstrakt czosnkowy), skrobia modyfikowana (E1442), sól, pieprz czarny, regulator kwasowości: kwas cytrynowy (E330), ekstrakt cytrusowy, substancja zagęszczająca: guma ksantanowa (E415), barwnik: ekstrakty karotenowe (E160c); Posypka (1,2%) : wodorosty, sezam .",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "80.16",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.4,
+          "salt": 1.8,
+          "carbs": 38,
+          "sugar": 4.1,
+          "protein": 4.4,
+          "calories": 186,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 187g Bibigo Tteokbokki Udon labels consistently specify ambient cool-dry storage; broad trace-allergen lists vary by market and remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kocket.de/collections/bibigo/products/bibigo-udon-korean-style-tteokbokki-geschmack-187g",
+          "kind": "retailer-label",
+          "supports": "Exact pack and GTIN 8801392097928 with cool-dry storage."
+        },
+        {
+          "url": "https://www.denkinesiskekoebmand.dk/en/noodles/3302-udon-noodles-korean-tteokbokki-chili-flavored-187g-bibigo.html",
+          "kind": "retailer-label",
+          "supports": "Exact flavour and pack with dry storage away from sunlight."
+        },
+        {
+          "url": "https://mykorea.pl/pl/p/Korean-Style-Udon-Noodles-Tteokbokki-Chilli-Bibigo/2156",
+          "kind": "retailer-label",
+          "supports": "Polish listing corroborates exact identity, direct allergens and ambient storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-makaron-swiezy-udon-korean-style-tteokbokki-chilli-187g-bibigo",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001493",
+      "productId": "7afe3a35-bbd7-43e5-afd8-46600f967fa2",
+      "variantId": "939afb3c-182b-4efd-b90d-62b86e3f112f",
+      "name": "Danie makaron świeży udon Korean Style BBQ 187g - Bibigo",
+      "slug": "danie-makaron-swiezy-udon-korean-style-bbq-187g-bibigo",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Makaron Udon (80,1%) : mąka pszenna , woda, skrobia modyfikowana (E 1442), gluten pszenny , sól, olej słonecznikowy (zawiera soję ), regulator kwasowości (E 270), substancja zagęszczająca (E 401). Sos (18,7%) : sos sojowy (4,7%: woda, odtłuszczona soja , sól, destylowany alkohol, glukoza, pszenica ), cukier, syrop kukurydziany o wysokiej zawartości fruktozy, cukier brązowy, woda, cebula (0,9%), koncentrat gruszkowy, przyprawa (zawiera soję , pszenicę ), przecier gruszkowy, skrobia modyfikowana (E 1442), czosnek (0,4%), dymka, syrop cukrowy, sól, olej sezamowy , substancja zagęszczająca (E 415), wzmacniacze smaku (E 627, E 631), czarny pieprz w proszku, regulator kwasowości (E 330), ekstrakt z owoców cytrusowych.",
+        "storageZone": null,
+        "pricePerUnit": "80.16",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.4,
+          "salt": 1.8,
+          "carbs": 38,
+          "sugar": 4.1,
+          "protein": 4.4,
+          "calories": 186,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Makaron Udon (80,1%) : mąka pszenna , woda, skrobia modyfikowana (E 1442), gluten pszenny , sól, olej słonecznikowy (zawiera soję ), regulator kwasowości (E 270), substancja zagęszczająca (E 401). Sos (18,7%) : sos sojowy (4,7%: woda, odtłuszczona soja , sól, destylowany alkohol, glukoza, pszenica ), cukier, syrop kukurydziany o wysokiej zawartości fruktozy, cukier brązowy, woda, cebula (0,9%), koncentrat gruszkowy, przyprawa (zawiera soję , pszenicę ), przecier gruszkowy, skrobia modyfikowana (E 1442), czosnek (0,4%), dymka, syrop cukrowy, sól, olej sezamowy , substancja zagęszczająca (E 415), wzmacniacze smaku (E 627, E 631), czarny pieprz w proszku, regulator kwasowości (E 330), ekstrakt z owoców cytrusowych.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "80.16",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.4,
+          "salt": 1.8,
+          "carbs": 38,
+          "sugar": 4.1,
+          "protein": 4.4,
+          "calories": 186,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 187g Bibigo Korean BBQ Udon consumer unit is shelf-stable and labelled for cool-dry storage; variable cross-contact lists remain held.",
+      "evidence": [
+        {
+          "url": "https://m.cjcatalog.co.kr/product/detail/598",
+          "kind": "manufacturer-catalog",
+          "supports": "CJ's official catalog identifies the exact barcode and shelf-stable consumer unit."
+        },
+        {
+          "url": "https://kocket.de/collections/nudeln-reispapier/products/bibigo-udon-korean-style-bbq-geschmack-187g",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801392097904, pack and cool-dry storage."
+        },
+        {
+          "url": "https://bravekoko.com/products/bibigo-br-korean-style-udon-noodles-k-bbq-flavour-187-2g",
+          "kind": "retailer-label",
+          "supports": "Exact flavour and pack are independently corroborated."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-makaron-swiezy-udon-korean-style-bbq-187g-bibigo",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000074",
+      "productId": "e8783e91-cbb5-4323-b97c-84da8761a8c8",
+      "variantId": "1823dff5-79be-43a2-b9b0-b021c993ef6c",
+      "name": "Mango, plastry w syropie lekko słodzonym 425g Diamond",
+      "slug": "mango-plastry-w-syropie-lekko-slodzonym-425g-diamond",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mango, woda, cukier",
+        "storageZone": null,
+        "pricePerUnit": "22.35",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.01,
+          "carbs": 11,
+          "sugar": 11,
+          "protein": 0.5,
+          "calories": 46,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mango, woda, cukier",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "22.35",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.01,
+          "carbs": 11,
+          "sugar": 11,
+          "protein": 0.5,
+          "calories": 46,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Distributor and retailer records for production GTIN 4316734047607 specify room-temperature or cool-dry storage; conflicting nutrition generations remain untouched.",
+      "evidence": [
+        {
+          "url": "https://kkpolska.pl/product/446/mango_w_plastrach_w_syropie.html",
+          "kind": "distributor-record",
+          "supports": "Exact GTIN, 425g product identity and room-temperature storage."
+        },
+        {
+          "url": "https://www.kaufland.de/product/338141266/",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and cool-dry storage."
+        },
+        {
+          "url": "https://cdn.metro-group.com/de/de_fir_123195001001_de.pdf",
+          "kind": "distributor-specification",
+          "supports": "Exact GTIN specification corroborates room-temperature storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/mango-plastry-w-syropie-lekko-slodzonym-425g-diamond",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000182",
+      "productId": "07904823-7178-459f-bd42-dd99432f1a3c",
+      "variantId": "ac13f583-51d1-45e6-90aa-df9addf762c2",
+      "name": "Mango, przecier bez cukru 500g Philippine Brand",
+      "slug": "mango-przecier-bez-cukru-500g-philippine-brand",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Przecier z mango, regulator kwasowości: kwas cytrynowy",
+        "storageZone": null,
+        "pricePerUnit": "47.98",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0.05,
+          "carbs": 16,
+          "sugar": 14,
+          "protein": 0.5,
+          "calories": 65,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Filipiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Przecier z mango, regulator kwasowości: kwas cytrynowy",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "47.98",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0.05,
+          "carbs": 16,
+          "sugar": 14,
+          "protein": 0.5,
+          "calories": 65,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Filipiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact EU GTIN and exact-pack listings consistently require dry, dark or cool-dry shelf storage; disputed sulphite cross-contact wording remains held.",
+      "evidence": [
+        {
+          "url": "https://asia-foodstore.de/ph-brand-mangopueree-500g",
+          "kind": "retailer-label",
+          "supports": "Production GTIN 4809012888004 and dry-dark storage."
+        },
+        {
+          "url": "https://www.filipinoasianstore.de/en/p/philippine-brand-mango-puree-500g",
+          "kind": "retailer-label",
+          "supports": "Exact brand and 500g pack with cool-dry storage."
+        },
+        {
+          "url": "https://www.asia-in.de/Philippine-Brand-Mangopueree-ungesuesst-500g",
+          "kind": "retailer-label",
+          "supports": "Exact EU GTIN and pack identity are corroborated."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/mango-przecier-bez-cukru-500g-philippine-brand",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000217",
+      "productId": "2cb07157-8f9c-4a74-b02f-4892d9e7722e",
+      "variantId": "73f9d75d-07d2-46ff-8005-8aeb0bd12ce2",
+      "name": "Rzodkiew Oshinko (Takuan) marynowana, pocięta 350g - Asia Kitchen",
+      "slug": "rzodkiew-oshinko-takuan-marynowana-pocieta-350g-asia-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Rzodkiew (85%), woda, sól, regulatory kwasowości: kwas octowy, kwas cytrynowy; substancje konserwujące: sorbinian potasu, pirosiarczyn sodu, substancje słodzące: sacharyna, acesulfam K, aspartam, barwnik: ryboflawina",
+        "storageZone": null,
+        "pricePerUnit": "24.86",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0.6,
+          "carbs": 83.5,
+          "sugar": 0.3,
+          "protein": 0.2,
+          "calories": 339,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [
+          "sulphites"
+        ],
+        "ingredients": "Rzodkiew (85%), woda, sól, regulatory kwasowości: kwas octowy, kwas cytrynowy; substancje konserwujące: sorbinian potasu, pirosiarczyn sodu, substancje słodzące: sacharyna, acesulfam K, aspartam, barwnik: ryboflawina",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "24.86",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0.6,
+          "carbs": 83.5,
+          "sugar": 0.3,
+          "protein": 0.2,
+          "calories": 339,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "allergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-product labels explicitly declare sulphites from sodium metabisulphite and specify dry-cool shelf storage; conflicting nutrition values remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-882-Rzodkiew-Oshinko-Takuan-marynowana-pocieta-350g-Asia-Kitchen.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical source explicitly states that the product contains sulphites and identifies the formula."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-882-Rzodkiew-marynowana-oshinko-do-sushi-krojona-350g-Asia-Kitchen.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5903707849840 and dry-cool storage."
+        },
+        {
+          "url": "https://allegro.pl/oferta/rzodkiew-krojona-cieta-paski-daikon-oshinko-350g-6115030762",
+          "kind": "retailer-label",
+          "supports": "Exact product independently declares sulphites."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/rzodkiew-oshinko-takuan-marynowana-pocieta-350g-asia-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000605",
+      "productId": "a7334e6c-7afd-4169-a5a7-7093ccd55d85",
+      "variantId": "c4519c8f-20e7-4be0-a7ca-9932ceeed45c",
+      "name": "Napa kimchi, koreańska kiszona kapustka 80g - Jongga",
+      "slug": "napa-kimchi-koreanska-kiszona-kapustka-80g-jongga",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Kapusta pekińska, rzodkiew, zagęszczacz: guma ksantanowa; czerwona papryka w proszku, sól, cebula, czosnek, cukier, ekstrakt drożdżowy, bakterie kwasu mlekowego",
+        "storageZone": null,
+        "pricePerUnit": "112.38",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 2.6,
+          "carbs": 4.9,
+          "sugar": 1.4,
+          "protein": 2.1,
+          "calories": 31,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Kapusta pekińska, rzodkiew, zagęszczacz: guma ksantanowa; czerwona papryka w proszku, sól, cebula, czosnek, cukier, ekstrakt drożdżowy, bakterie kwasu mlekowego",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "112.38",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 2.6,
+          "carbs": 4.9,
+          "sugar": 1.4,
+          "protein": 2.1,
+          "calories": 31,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 80g Jongga shelf-stable Napa kimchi is explicitly sold without refrigeration before opening; conflicting cross-contact presentations remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://www.denkinesiskekoebmand.dk/en/canned-food/2190-kimchi-napa-cabbage-spicy-80g-jongga.html",
+          "kind": "retailer-label",
+          "supports": "Exact 80g product explicitly requires no refrigeration before opening."
+        },
+        {
+          "url": "https://uchitomishop.ch/produit/mat-kimchi-shelf-stable-jongga-80g/",
+          "kind": "retailer-label",
+          "supports": "Exact shelf-stable 80g pack specifies ambient 1–25°C storage."
+        },
+        {
+          "url": "https://jonggausa.com/products/shelf-stable-mini-size-cabbage-kimchi",
+          "kind": "manufacturer-page",
+          "supports": "Official Jongga page identifies the exact 80g mini product as shelf-stable."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/napa-kimchi-koreanska-kiszona-kapustka-80g-jongga",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000793",
+      "productId": "1d17d3b0-e34a-41b5-ba6f-4ff2d1a2d092",
+      "variantId": "5f70632c-099a-4fae-95b3-f1b8873b5399",
+      "name": "Fasola edamame, ziarna soi w zalewie 400g - ITA-SAN",
+      "slug": "fasola-edamame-ziarna-soi-w-zalewie-400g-ita-san",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ziarna soi, woda, sól, przeciwutleniacz: kwas askorbinowy; regulator kwasowości: kwas cytrynowy.",
+        "storageZone": null,
+        "pricePerUnit": "27.47",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7,
+          "salt": 0.73,
+          "carbs": 1.2,
+          "sugar": 1.2,
+          "protein": 11,
+          "calories": 121,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Ziarna soi, woda, sól, przeciwutleniacz: kwas askorbinowy; regulator kwasowości: kwas cytrynowy.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "27.47",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7,
+          "salt": 0.73,
+          "carbs": 1.2,
+          "sugar": 1.2,
+          "protein": 11,
+          "calories": 121,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "allergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-GTIN labels identify soybeans as the direct ingredient and allergen and specify room-temperature or cool-dry storage.",
+      "evidence": [
+        {
+          "url": "https://kkpolska.pl/product/3048/edamame.html",
+          "kind": "distributor-record",
+          "supports": "Primary distributor record pins GTIN 4316734052908, direct soy and room-temperature storage."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/fasola-edamame-ita-san-400-g/00356898",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN independently declares soy and room-temperature storage."
+        },
+        {
+          "url": "https://www.susi.cz/vyrobek/ita-san-edamame-v-konzerve-400-g/",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and cool-dry shelf storage are corroborated."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/fasola-edamame-ziarna-soi-w-zalewie-400g-ita-san",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000998",
+      "productId": "a34fd756-f108-4564-80bd-3bcac658d6ff",
+      "variantId": "a87df1fc-84f6-4ace-be11-59e66b0b7051",
+      "name": "Pędy bambusa nitki 227g - Royal Orient",
+      "slug": "pedy-bambusa-nitki-227g-royal-orient",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Pędy bambusa, woda, regulator kwasowości: kwas cytrynowy",
+        "storageZone": null,
+        "pricePerUnit": "29.52",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 1.6,
+          "sugar": 0,
+          "protein": 0,
+          "calories": 8,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Pędy bambusa, woda, regulator kwasowości: kwas cytrynowy",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "29.52",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 1.6,
+          "sugar": 0,
+          "protein": 0,
+          "calories": 8,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Current-label Royal Orient bamboo strips with the exact brand, form and 227g pack are consistently shelf-stable; label-revision nutrition and ingredient differences are held.",
+      "evidence": [
+        {
+          "url": "https://orientalmarket.pl/produkt/pedy-bambusa-nitki-royal-orient-227g/",
+          "kind": "retailer-label",
+          "supports": "Exact current GTIN 8719497398201, strips form, pack and storage."
+        },
+        {
+          "url": "https://asia-foodstore.de/bambus-streifen",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and cool-dry storage are independently corroborated."
+        },
+        {
+          "url": "https://allegro.pl/oferta/pedy-bambusa-nitki-227g-royal-orient-15007112390",
+          "kind": "marketplace-label",
+          "supports": "Current source item corroborates brand, strips form and pack."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/pedy-bambusa-nitki-227g-royal-orient",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001105",
+      "productId": "f4403c8f-faf9-4160-bedb-49275227f93c",
+      "variantId": "5b5d365c-6b4a-47d5-bd9e-ce04ced8d0c5",
+      "name": "Shiso-dzuke umeboshi, śliwki marynowane z shiso (12% soli) 100g - King of Plum",
+      "slug": "shiso-dzuke-umeboshi-sliwki-marynowane-z-shiso-12-soli-100g-king-of-plum",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Śliwki (70%), sól, galaretka jaglana, alkohol, liście shiso, ekstrakt z shiso, wzmacniacze smaku (E621, E631), kwas (E330), barwnik (E163), substancje słodzące (E953, E955), witamina B1.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "112.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 12,
+          "carbs": 18,
+          "sugar": 0.5,
+          "protein": 0.7,
+          "calories": 73,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Śliwki (70%), sól, galaretka jaglana, alkohol, liście shiso, ekstrakt z shiso, wzmacniacze smaku (E621, E631), kwas (E330), barwnik (E163), substancje słodzące (E953, E955), witamina B1.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "112.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 12,
+          "carbs": 18,
+          "sugar": 0.5,
+          "protein": 0.7,
+          "calories": 73,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "Independent exact-GTIN listings for the matching formula identify Japan as the product origin; the ambiguous historical composite value is not used.",
+      "evidence": [
+        {
+          "url": "https://sklepsoasian.com/en/products/japanese-preserved-plum-umeboshi-100g-king-of-plum-1978.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 4904033000784, matching formula and explicit Japan origin."
+        },
+        {
+          "url": "https://www.jasmino.cz/nanki-nakladany-blumy-s-shiso-listy-100g",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN and Japan origin are independently corroborated."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/shiso-dzuke-umeboshi-sliwki-marynowane-z-shiso-12-soli-100g-king-of-plum",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001166",
+      "productId": "ade5c8b4-ecfd-4795-a2e1-1872e37d4ce3",
+      "variantId": "3419fbc0-8f2d-41bb-81a0-7f333f348c60",
+      "name": "Rzodkiew Oshinko (Takuan) marynowana, pocięta 400g - Sakura",
+      "slug": "rzodkiew-oshinko-takuan-marynowana-pocieta-400g-sakura",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Rzodkiew, woda, sól, kwas octowy, kwas cytrynowy, sorbinian potasu, pirosiarczan sodu, substancje słodzące: sacharyny, acesulfam K, aspartam, barwnik: ryboflawina.",
+        "storageZone": null,
+        "pricePerUnit": "27.25",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.05,
+          "salt": 6.25,
+          "carbs": 3.9,
+          "sugar": 0,
+          "protein": 0.37,
+          "calories": 13.9,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.01
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [
+          "sulphites"
+        ],
+        "ingredients": "Rzodkiew, woda, sól, kwas octowy, kwas cytrynowy, sorbinian potasu, pirosiarczan sodu, substancje słodzące: sacharyny, acesulfam K, aspartam, barwnik: ryboflawina.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "27.25",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.05,
+          "salt": 6.25,
+          "carbs": 3.9,
+          "sugar": 0,
+          "protein": 0.37,
+          "calories": 13.9,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.01
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "allergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Sakura 400g labels explicitly declare sulphites and specify cool-dry shelf storage; the phenylalanine warning is outside the allergen-array schema.",
+      "evidence": [
+        {
+          "url": "https://zakupy.auchan.pl/products/rzodkiwe-marynowana-ci%C4%99ta-sakura-400-g/00392741",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5908235060859, explicit sulphites and cool-dry storage."
+        },
+        {
+          "url": "https://allegro.pl/produkt/rzodkiew-oshinko-takuan-marynowana-pocieta-400g-sakura-2b274d30-7e2c-4297-8bfc-077b7ff9c5f1",
+          "kind": "retailer-label",
+          "supports": "Exact brand, form, pack and allergen declaration are corroborated."
+        },
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-4796-Rzodkiew-Oshinko-Takuan-marynowana-pocieta-400g-Sakura.html",
+          "kind": "supplier-label",
+          "supports": "Exact source identity independently states sulphites and shelf storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/rzodkiew-oshinko-takuan-marynowana-pocieta-400g-sakura",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001215",
+      "productId": "8c6ed656-4076-405a-8746-48efe41b7fd4",
+      "variantId": "dc157fe6-80e6-4dec-983f-5b9e5ff8d9c3",
+      "name": "Pędy bambusa plastry 227g - Royal Orient",
+      "slug": "pedy-bambusa-plastry-227g-royal-orient",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Pędy bambusa, woda, regulator kwasowości: kwas cytrynowy",
+        "storageZone": null,
+        "pricePerUnit": "29.52",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 1.6,
+          "sugar": 0,
+          "protein": 0,
+          "calories": 8,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Pędy bambusa, woda, regulator kwasowości: kwas cytrynowy",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "29.52",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 1.6,
+          "sugar": 0,
+          "protein": 0,
+          "calories": 8,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Independent exact Royal Orient bamboo-slices 227g listings consistently identify a shelf-stable product; conflicting label revisions remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://sushi-sklep.pl/pedy-bambusa-plastry-royal-orient-227g",
+          "kind": "retailer-label",
+          "supports": "Exact brand, slices form and pack with dry-cool storage."
+        },
+        {
+          "url": "https://www.foodland-express.com/preserved-products/bamboo-slices-of-royal-orient-227g/",
+          "kind": "distributor-record",
+          "supports": "Exact brand, form and 227g pack are independently corroborated."
+        },
+        {
+          "url": "https://utoppa.com/en/products/royal-orient-bambussprossen-scheiben-227-g",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8719497398188 and pack identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/pedy-bambusa-plastry-227g-royal-orient",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001571",
+      "productId": "ef58d297-33b1-40a0-9df8-f77ebb50e73c",
+      "variantId": "b4e2c717-f009-4e52-a46f-351f3f271a56",
+      "name": "Fasola edamame, ziarna soi w zalewie 400g - House of Asia",
+      "slug": "fasola-edamame-ziarna-soi-w-zalewie-400g-house-of-asia",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Nasiona zielonej soi (Edamame) 50%, woda, sól, regulator kwasowości: kwas cytrynowy, przeciwutleniacz: kwas askorbinowy.",
+        "storageZone": null,
+        "pricePerUnit": "31.25",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 3.5,
+          "salt": 0.62,
+          "carbs": 6.9,
+          "sugar": 2.2,
+          "protein": 11,
+          "calories": 113,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.6
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Nasiona zielonej soi (Edamame) 50%, woda, sól, regulator kwasowości: kwas cytrynowy, przeciwutleniacz: kwas askorbinowy.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "31.25",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 3.5,
+          "salt": 0.62,
+          "carbs": 6.9,
+          "sugar": 2.2,
+          "protein": 11,
+          "calories": 113,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.6
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "allergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The official product and exact-EAN Polish listings identify soy as a direct ingredient and allergen and specify ambient storage.",
+      "evidence": [
+        {
+          "url": "https://houseofasia.pl/produkt/fasola-edamame-400-g/",
+          "kind": "manufacturer-page",
+          "supports": "Official House of Asia page identifies the exact product and 50% soy ingredient."
+        },
+        {
+          "url": "https://leclerc-online.pl/house-of-asia-edamame-ziarna-soi-400-g",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5904358554312 and ambient storage."
+        },
+        {
+          "url": "https://leclerc.com.pl/house-of-asia-edamame-ziarna-soi",
+          "kind": "retailer-label",
+          "supports": "Exact product independently declares soy as an allergen."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/fasola-edamame-ziarna-soi-w-zalewie-400g-house-of-asia",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000080",
+      "productId": "f459f271-4cca-4aac-befa-e79d52138595",
+      "variantId": "46c7f85d-9aeb-42de-b4dc-3713e75b6c72",
+      "name": "Kiełki fasoli mung 330g Diamond",
+      "slug": "kielki-fasoli-mung-330g-diamond",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Kiełki fasoli mung, woda, sól, kwas: kwasek cytrynowy",
+        "storageZone": "CHILLED",
+        "pricePerUnit": "23.33",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.67,
+          "carbs": 0.5,
+          "sugar": 0.5,
+          "protein": 0.9,
+          "calories": 8,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Kiełki fasoli mung, woda, sól, kwas: kwasek cytrynowy",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "23.33",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.67,
+          "carbs": 0.5,
+          "sugar": 0.5,
+          "protein": 0.9,
+          "calories": 8,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN shelf labels show that refrigeration applies only after opening; the current CHILLED value was inferred from that after-opening instruction and is wrong for unopened stock.",
+      "evidence": [
+        {
+          "url": "https://orientalmarket.pl/produkt/kielki-fasoli-mung-kielki-fasoli-2/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 4316734049946 and dry-cool unopened storage."
+        },
+        {
+          "url": "https://www.frisco.pl/pid%2C95407/n%2Cdiamond-kielki-fasoli-mung/stn%2Cproduct",
+          "kind": "retailer-label",
+          "supports": "Exact EAN and shelf-stable product identity are corroborated."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-286.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical source limits refrigeration to after opening."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/kielki-fasoli-mung-330g-diamond",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000276",
+      "productId": "7cfb28b3-b908-4bbc-ad27-5483e6cfe27e",
+      "variantId": "b463928a-2646-4886-bc88-acd7d0988128",
+      "name": "Zielony jackfruit w słonej zalewie 540g - Twin Elephants & Earth Brand",
+      "slug": "zielony-jackfruit-w-slonej-zalewie-540g-twin-elephants-and-earth-brand",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Jackfruit 60%, woda, sól, regulator kwasowości: kwasek cytrynowy",
+        "storageZone": "CHILLED",
+        "pricePerUnit": "21.30",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0.29,
+          "carbs": 1.4,
+          "sugar": 0,
+          "protein": 1.2,
+          "calories": 20,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "bf8d474f-8736-4b19-8bcf-d37cc3bf899f",
+          "name": "Owoce / Marynowane warzywa",
+          "slug": "owoce-marynowane-warzywa",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Jackfruit 60%, woda, sól, regulator kwasowości: kwasek cytrynowy",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "21.30",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0.29,
+          "carbs": 1.4,
+          "sugar": 0,
+          "protein": 1.2,
+          "calories": 20,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "All located 540g Twin Elephants shelf variants are ambient before opening; the current CHILLED value came solely from a post-opening refrigeration instruction and is not an unopened storage class.",
+      "evidence": [
+        {
+          "url": "https://pitaya.pl/product-pol-6087-Mlody-Zielony-Jackfruit-w-Syropie-TWIN-ELEPHANTS-540g-Mit-Non-Dong-Hop-TWIN-ELEPHANTS-540g-X-24szt-krt-11912.html",
+          "kind": "distributor-record",
+          "supports": "Exact brand and 540g pack with GTIN 8851011221265 identify a shelf-stable can."
+        },
+        {
+          "url": "https://asiangroceryuk.com/products/twin-elephants-green-jackfruit-in-brine-540g",
+          "kind": "retailer-label",
+          "supports": "Exact brand and pack explicitly require room temperature before opening."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-1145.html",
+          "kind": "supplier-label",
+          "supports": "The exact historical listing limits chilled storage to after opening."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/zielony-jackfruit-w-slonej-zalewie-540g-twin-elephants-and-earth-brand",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000110",
+      "productId": "1d87aa98-41fc-46a2-9c92-fa878fba5547",
+      "variantId": "3c6a8345-3642-4917-8f7c-7ab556a2b286",
+      "name": "Papier ryżowy okrągły 22cm, 500g - Hiep Long",
+      "slug": "papier-ryzowy-okragly-22cm-500g-hiep-long",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43c3d274-436c-4b10-be9b-da734017bd0b",
+          "name": "Papier ryżowy",
+          "slug": "papier-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mąka ryżowa, sól, woda",
+        "storageZone": null,
+        "pricePerUnit": "27.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Wietnam",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43c3d274-436c-4b10-be9b-da734017bd0b",
+          "name": "Papier ryżowy",
+          "slug": "papier-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mąka ryżowa, sól, woda",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "27.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Wietnam",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-barcode Hiep Long 22cm 500g rice-paper listings consistently specify dry-cool shelf storage; disputed country and absent nutrition stay unchanged.",
+      "evidence": [
+        {
+          "url": "https://www.asian-alley.com/en/products/7838869815530",
+          "kind": "retailer-label",
+          "supports": "Production barcode 8936005950021 and dry-cool storage."
+        },
+        {
+          "url": "https://b2b.kuchnieswiata.com.pl/rice-paper-22cm-round-thin-500g-40-hiep-long",
+          "kind": "distributor-record",
+          "supports": "Exact brand, diameter, pack and thin round format."
+        },
+        {
+          "url": "https://przepisychinskie.pl/papier-ryzowy-okragly-500g-hiep-long",
+          "kind": "retailer-label",
+          "supports": "Exact product identity and shelf-stable food format are independently corroborated."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/papier-ryzowy-okragly-22cm-500g-hiep-long",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000535",
+      "productId": "f382d156-0bfb-4705-b67e-a5be327c75b5",
+      "variantId": "cfa66607-3bd0-4ff3-b28c-6ee0b2e6513b",
+      "name": "Wakame, suszone wodorosty 300g (3 x 100g) Nobi",
+      "slug": "wakame-suszone-wodorosty-300g-3-x-100g-nobi",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "a7edbaad-4696-4d12-bba0-588a39971511",
+          "name": "Wakame / Miyeok",
+          "slug": "wakame-miyeok",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% alg morskich",
+        "storageZone": null,
+        "pricePerUnit": "144.70",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "a7edbaad-4696-4d12-bba0-588a39971511",
+          "name": "Wakame / Miyeok",
+          "slug": "wakame-miyeok",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% alg morskich",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "144.70",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 3x100g Nobi wakame bundle and its exact 100g member unit both require dry-cool shelf storage; pack identity and nutrition are not changed.",
+      "evidence": [
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-2645-Wakame-suszone-wodorosty-300g-3-x-100g-Nobi.html",
+          "kind": "supplier-listing",
+          "supports": "Exact 3x100g bundle identity and dry-cool storage."
+        },
+        {
+          "url": "https://schroniskobukowina.pl/wodorosty-suszone-wakame-100g-nobi",
+          "kind": "retailer-label",
+          "supports": "Exact Nobi 100g member unit corroborates dry shelf storage."
+        },
+        {
+          "url": "https://b2b.biologistic.pl/asia-kitchen-wodorosty-suszone-wakame-100g",
+          "kind": "distributor-record",
+          "supports": "Member EAN 5903760634766 and exact dried-wakame identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/wakame-suszone-wodorosty-300g-3-x-100g-nobi",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000265",
+      "productId": "ddb76012-c5ea-4968-a0e9-02fd31742a1f",
+      "variantId": "7bd963e4-a16e-4368-bc0e-32e2186dc5ae",
+      "name": "Glony do sushi Yaki Nori GOLD 50 szt. - KC",
+      "slug": "glony-do-sushi-yaki-nori-gold-50-szt-kc",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "50 arkuszy prażonych nori klasy Gold - 125g",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 4.46,
+          "salt": 1.1,
+          "carbs": 40.9,
+          "sugar": 0,
+          "protein": 44.5,
+          "calories": 382,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 1.94
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "50 arkuszy prażonych nori klasy Gold - 125g",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 4.46,
+          "salt": 1.1,
+          "carbs": 40.9,
+          "sugar": 0,
+          "protein": 44.5,
+          "calories": 382,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 1.94
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact item-code 50-sheet KC Yaki Nori listings consistently specify dry-cool storage; alternate marketplace identifiers and weight tolerance are outside this patch.",
+      "evidence": [
+        {
+          "url": "https://orientalmarket.pl/produkt/wodorosty-glony-yaki-sushi-nori-premium-125g-50szt/",
+          "kind": "retailer-label",
+          "supports": "Exact item code 4779050010203, 50 sheets, 125g and dry-cool storage."
+        },
+        {
+          "url": "https://erli.pl/produkt/wodorosty-glony-yaki-sushi-nori-premium-125g-50szt%2C310926498",
+          "kind": "retailer-label",
+          "supports": "Exact item code and pack identity are independently corroborated."
+        },
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-1093-Glony-do-sushi-Yaki-Nori-GOLD-50-szt-KC.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical source confirms the product and 50-sheet format."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/glony-do-sushi-yaki-nori-gold-50-szt-kc",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000453",
+      "productId": "b1525c0c-150e-4ec3-8ea7-35d3bd6d19ec",
+      "variantId": "22995eff-8eef-46ea-9d30-5921483858e3",
+      "name": "Glony Yaki Sushi Nori Gold, 50 szt. - Nobi",
+      "slug": "glony-yaki-sushi-nori-gold-50-szt-nobi",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "50 arkuszy prażonych nori. Złota jakość",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 37.6,
+          "sugar": 0,
+          "protein": 41.9,
+          "calories": 325,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "50 arkuszy prażonych nori. Złota jakość",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 37.6,
+          "sugar": 0,
+          "protein": 41.9,
+          "calories": 325,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Both known Nobi 50-sheet label generations identify dried roasted nori with dry-cool shelf storage; GTIN drift is deliberately not resolved by this storage-only patch.",
+      "evidence": [
+        {
+          "url": "https://nobi.com.pl/produkt/nori-gold-130g/",
+          "kind": "manufacturer-page",
+          "supports": "Official Nobi page identifies the exact 50-sheet 130g product."
+        },
+        {
+          "url": "https://allegro.pl/oferta/nori-gold-50-arkuszy-130g-prazone-glony-morskie-do-sushi-i-potraw-orient-13689587829",
+          "kind": "retailer-label",
+          "supports": "Current EAN 5903796783100 and dry-cool storage."
+        },
+        {
+          "url": "https://rafex.eu/algi-morskie-nobi-yaki-sushi-nori-gold-50-arkuszy-130g-p-202572.html",
+          "kind": "retailer-label",
+          "supports": "Older GTIN generation has the same brand, pack and shelf-stable storage identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/glony-yaki-sushi-nori-gold-50-szt-nobi",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000491",
+      "productId": "3c560dda-81db-4518-983b-c57dddd07b56",
+      "variantId": "c2e1a5f7-3af6-4f65-89af-99fcbe915f27",
+      "name": "Algi Sushi Nori Premium Gold 10 szt - Asia Kitchen",
+      "slug": "algi-sushi-nori-premium-gold-10-szt-asia-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Arkusze z suszonych wodorostów, prażone 26g",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 5.52,
+          "carbs": 36.9,
+          "sugar": 0,
+          "protein": 44.1,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2.17
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Arkusze z suszonych wodorostów, prażone 26g",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 5.52,
+          "carbs": 36.9,
+          "sugar": 0,
+          "protein": 44.1,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2.17
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 10-sheet Asia Kitchen Nori listings consistently specify dry-cool shelf storage; identifier and nutrition revisions remain untouched.",
+      "evidence": [
+        {
+          "url": "https://azjamarket.pl/pl/products/wodorosty-nori-gold-do-sushi-10-arkuszy-896.html",
+          "kind": "retailer-label",
+          "supports": "Exact current EAN 5903796783247, 26g pack and dry-cool storage."
+        },
+        {
+          "url": "https://allegro.pl/oferta/glony-do-sushi-yaki-nori-10-arkuszy-korea-10817527662",
+          "kind": "retailer-label",
+          "supports": "Exact 10-sheet Asia Kitchen product identity is independently corroborated."
+        },
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-2505-Algi-Sushi-Nori-Premium-Gold-10-szt-Asia-Kitchen.html",
+          "kind": "supplier-label",
+          "supports": "Historical exact source corroborates the pack and dried-nori identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/algi-sushi-nori-premium-gold-10-szt-asia-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ],
+  "holds": [
+    {
+      "sku": "ADG-001460",
+      "reason": "Harim sells materially different ambient-retort and frozen 800g Samgyetang products; without the stocked GTIN or storage panel, no trace-allergen or other metadata transition is safe. Chestnut is not an EU-14 tree-nut allergen.",
+      "evidence": [
+        {
+          "url": "https://singkeefoods.co.uk/gb/products/12494-harim-korean-ginseng-chicken-stew-800g.html",
+          "kind": "retailer-label",
+          "supports": "An 800g European export listing represents an ambient-retort formula and trace-allergen set."
+        },
+        {
+          "url": "https://www.kankokuichiba.jp/en/products/ks-2093",
+          "kind": "retailer-label",
+          "supports": "A distinct exact-brand 800g Samgyetang product is explicitly frozen."
+        },
+        {
+          "url": "https://www.harim.com/main/?menu=98",
+          "kind": "manufacturer-page",
+          "supports": "Harim's official range confirms multiple storage formats, so name and weight alone do not identify the stocked label."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/zupa-samgyetang-z-calym-kurczakiem-ryzem-warzywami-i-jujube-800g-harim",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000606",
+      "reason": "Koszyk Wioli - Znawca is a curated multi-item basket, not one stable prepacked food formula; ingredients, allergens, nutrition, origin and storage must not be synthesized for it.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2925.html",
+          "kind": "supplier-listing",
+          "supports": "The mapped source listing contains no stable single-product food metadata."
+        },
+        {
+          "url": "https://kimchi.pl/pol_m_Koszyk-Wioli-1217.html",
+          "kind": "supplier-category",
+          "supports": "The source classifies this identity as a curated Koszyk Wioli basket."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/koszyk-wioli-znawca",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000020",
+      "reason": "The exact-EAN product already has AMBIENT storage and no regulated allergen; current ingredient and nutrition listings conflict with the stored label generation, so there is no safe non-zero transition.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-65.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical product identity and the already-recorded ambient storage."
+        },
+        {
+          "url": "https://leclerc.com.pl/house-of-asia-pedy-bambusa-paseczki",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5907603458809 exposes a different label generation, supporting the no-change hold."
+        },
+        {
+          "url": "https://deligro.pl/kuchnie-swiata/kuchnia-chinska/przetwory-warzywne/pedy-bambusa-paseczki-225-g-house-of-asia-649",
+          "kind": "retailer-label",
+          "supports": "Exact product and pack are corroborated while nutrition differences remain unresolved."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/pedy-bambusa-paseczki-225g-house-of-asia",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000035",
+      "reason": "The exact-EAN ginger already has AMBIENT storage and no EU-14 allergen; small nutrition revision differences and the separate phenylalanine warning do not support a database transition in this field scope.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-132.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical product identity and already-recorded ambient storage."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/imbir-m%C5%82ody-r%C3%B3%C5%BCowy-do-sushi-house-of-asia-190-g/00845425",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5907603458861 and current label generation."
+        },
+        {
+          "url": "https://www.bee.pl/house-of-asia-mlody-imbir-rozowy-do-sushi-190-g_p1366395.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN and ambient identity are independently corroborated."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/mlody-imbir-marynowany-rozowy-190g-house-of-asia",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ]
+}
