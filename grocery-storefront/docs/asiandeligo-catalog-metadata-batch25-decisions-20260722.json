@@ -1,0 +1,787 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch25-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T07:39:35Z",
+  "cohortSkus": [
+    "ADG-000118", "ADG-000193", "ADG-000211", "ADG-000219", "ADG-000270",
+    "ADG-000372", "ADG-000437", "ADG-000455", "ADG-000497", "ADG-001241",
+    "ADG-000054", "ADG-000055", "ADG-000056", "ADG-000073", "ADG-000078",
+    "ADG-000079", "ADG-000085", "ADG-000091", "ADG-000092", "ADG-000097",
+    "ADG-000116", "ADG-000117", "ADG-000119", "ADG-000125", "ADG-000128"
+  ],
+  "products": [
+    {
+      "sku": "ADG-000118",
+      "productId": "1e99d371-8e7d-484c-83d9-f83d5fb13ba2",
+      "variantId": "ac65fc1f-3a82-4b13-ba27-0c2d7af4fbee",
+      "name": "Trawa cytrynowa suszona w kawałkach 50g",
+      "slug": "trawa-cytrynowa-suszona-w-kawalkach-50g",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null, "nutritionFacts": null, "countryOfOrigin": "Tajlandia",
+        "ingredients": "100% suszonej trawy cytrynowej", "pricePerUnit": "159.80", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Tajlandia",
+        "ingredients": "100% suszonej trawy cytrynowej", "pricePerUnit": "159.80", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact 50g listing is tied to the production EAN and specifies room-temperature dry storage; allergen and nutrition fields remain unchanged.",
+      "evidence": [
+        {"url": "https://papatka.pl/przyprawy-/57182-trawa-cytrynowa-suszona-50-g-084909005434.html", "kind": "retailer-label", "supports": "Exact EAN 0084909005434, 50g product identity, and room-temperature storage."},
+        {"url": "https://asiandeligo.eshoper.pro/products/trawa-cytrynowa-suszona-w-kawalkach-50g", "kind": "public-pdp", "supports": "Confirms the current public product and pack identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000193",
+      "productId": "9a81adc5-a8cb-43ad-92b9-0f633c0afd1c",
+      "variantId": "a53c3d52-d7a3-4145-978e-d4b26c886e76",
+      "name": "Sos Hoisin 455ml - Flying Goose",
+      "slug": "sos-hoisin-455ml-flying-goose",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [],
+        "mayContainAllergens": [],
+        "storageZone": null,
+        "nutritionFacts": null,
+        "countryOfOrigin": "Tajlandia",
+        "ingredients": "Woda, cukier, pasta sojowa 12%, sól, ocet spirytusowy, skrobia kukurydziana, czosnek, barwnik: E150; olej sezamowy, anyż, substancja konserwująca E202",
+        "pricePerUnit": "47.25",
+        "unitOfMeasure": "LITER",
+        "category": {"id": "5a595c44-ad26-429f-ac6a-9cb0d2378f37", "name": "Sosy / Marynaty / Oleje", "slug": "sosy-marynaty-oleje", "isActive": true}
+      },
+      "target": {
+        "allergens": ["cereals", "soybeans", "sesame"],
+        "mayContainAllergens": ["peanuts"],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Tajlandia",
+        "ingredients": "Woda, cukier, pasta sojowa 12%, sól, ocet spirytusowy, skrobia kukurydziana, czosnek, barwnik: E150; olej sezamowy, anyż, substancja konserwująca E202",
+        "pricePerUnit": "47.25",
+        "unitOfMeasure": "LITER",
+        "category": {"id": "5a595c44-ad26-429f-ac6a-9cb0d2378f37", "name": "Sosy / Marynaty / Oleje", "slug": "sosy-marynaty-oleje", "isActive": true}
+      },
+      "changedFields": ["allergens", "mayContainAllergens", "storageZone"],
+      "confidence": "high",
+      "reason": "The exact Flying Goose 455ml formula contains wheat, soy, and sesame; its label also warns of peanut traces and specifies dry ambient storage.",
+      "evidence": [
+        {"url": "https://www.geyskens.be/geyskens/articles.nsf/%28ArticlesbyArtnr%29/D630100/%24File/D630100%20-%20HOISIN%20SAUS%20FLYING%20GOOSE%20455%20ML.pdf", "kind": "importer-label", "supports": "Exact 455ml product ingredients, allergens, trace warning, and storage instruction."},
+        {"url": "https://kimchi.pl/product-pol-808.html", "kind": "supplier-listing", "supports": "Confirms the exact Polish listing, formula, peanut trace warning, and Thailand origin."},
+        {"url": "https://asiandeligo.eshoper.pro/products/sos-hoisin-455ml-flying-goose", "kind": "public-pdp", "supports": "Confirms the public product identity and 455ml pack."}
+      ]
+    },
+    {
+      "sku": "ADG-000211",
+      "productId": "1d7b9985-bc5b-4994-83e5-e4704b70f260",
+      "variantId": "6212acd9-101e-4778-b453-438319b54901",
+      "name": "Ocet z brązowego ryżu 900ml - CJO Essential",
+      "slug": "ocet-z-brazowego-ryzu-900ml-cjo-essential",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null, "nutritionFacts": null, "countryOfOrigin": "Korea Południowa",
+        "ingredients": "Woda (48%), ocet z ziaren ryżu, ektrakty z brązowego ryżu, syrop kukurydziany, izomalto-oligosacharidy, kwasek cytrynowy, aromat jabłkowy",
+        "pricePerUnit": "18.88", "unitOfMeasure": "LITER",
+        "category": {"id": "5b5e9a99-a4c6-4d2a-b542-cc678f688de9", "name": "Octy i winne przyprawy", "slug": "octy-i-winne-przyprawy", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Korea Południowa",
+        "ingredients": "Woda (48%), ocet z ziaren ryżu, ektrakty z brązowego ryżu, syrop kukurydziany, izomalto-oligosacharidy, kwasek cytrynowy, aromat jabłkowy",
+        "pricePerUnit": "18.88", "unitOfMeasure": "LITER",
+        "category": {"id": "5b5e9a99-a4c6-4d2a-b542-cc678f688de9", "name": "Octy i winne przyprawy", "slug": "octy-i-winne-przyprawy", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "Two exact Chung Jung One/CJO 900ml listings specify cool, dry ambient storage; disputed formula and nutrition data remain unchanged.",
+      "evidence": [
+        {"url": "https://allegro.pl/produkt/ocet-ryzowy-z-brazowego-ryzu-cjw-900ml-8403007-b5840b38-ee77-44ec-a735-8886ec6dfb50", "kind": "retailer-label", "supports": "Exact 900ml brown-rice vinegar identity and dry storage."},
+        {"url": "https://asianfood.nz/products/chung-jung-one-brown-rice-vinegar-900ml-korean-natural-fermented-vinegar-for-cooking-marinades", "kind": "retailer-label", "supports": "Independent exact brand and pack with cool, dry storage."},
+        {"url": "https://asiandeligo.eshoper.pro/products/ocet-z-brazowego-ryzu-900ml-cjo-essential", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000270",
+      "productId": "7b2d6206-f0ec-4e73-b59c-6027f1ad4bae",
+      "variantId": "b8619b0c-11be-471d-be31-12a34b437927",
+      "name": "Suszone liście limonki kaffir, liście papedy całe 25g - Thai Dancer",
+      "slug": "suszone-liscie-limonki-kaffir-liscie-papedy-cale-25g-thai-dancer",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null, "nutritionFacts": null, "countryOfOrigin": "Tajlandia",
+        "ingredients": "Liście kaffiru, znane również jako makrut, to prawdziwy must-have dla fanów orientalnych przypraw i smaków. Te liście o intensywnym, cytrusowo-ziołowym aromacie są źródłem niepowtarzalnego smaku, który urozmaici każdą potrawę. Idealnie komponują się z daniami wymagającymi świeżej nuty, która przełamie cięższe smaki. Już niewielki dodatek wprowadzi do Twoich potraw odświeżający, prawdziwie egzotyczny charakter. Wyrazisty akcent liści kaffiru to jeden z sekretów autentycznego czerwonego curry czy ulubionej tom kha. Oprócz tradycyjnych dań, liście kaffiru doskonale sprawdzą się w ziołowych naparach, herbacie, a nawet w deserach, wnosząc powiew inspiracji do każdej kuchni.",
+        "pricePerUnit": "279.60", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Tajlandia",
+        "ingredients": "Suszone liście limonki kaffir 100%",
+        "pricePerUnit": "279.60", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "changedFields": ["storageZone", "ingredients"],
+      "confidence": "high",
+      "reason": "Two exact Thai Dancer 25g listings identify a single 100% dried kaffir-lime-leaf ingredient and dry ambient storage; the current ingredients field contains marketing copy.",
+      "evidence": [
+        {"url": "https://www.pinoys.eu/p/dried-lime-leaves-25-g-thai-dancer", "kind": "retailer-label", "supports": "Exact brand and pack with dried kaffir lime leaves and cool, dry storage."},
+        {"url": "https://thaipiac.hu/szaritott-kaffir-lime-level-25-gr-thai-dancer-dried-kaffir-lime-leaves", "kind": "retailer-label", "supports": "Independent exact 25g listing states 100% kaffir leaf, Thailand origin, and dry storage."},
+        {"url": "https://asiandeligo.eshoper.pro/products/suszone-liscie-limonki-kaffir-liscie-papedy-cale-25g-thai-dancer", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000372",
+      "productId": "9d96ed24-853b-428d-9e82-79520409a56c",
+      "variantId": "be6359c1-efe0-4945-a223-1dd1bd197179",
+      "name": "Sos sojowy o zmniejszonej zawartości soli 150ml - Kikkoman",
+      "slug": "sos-sojowy-o-zmniejszonej-zawartosci-soli-150ml-kikkoman",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 0, "salt": 9.1, "carbs": 6.9, "sugar": 3.9, "protein": 9.7, "calories": 107, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": null, "ingredients": "Woda, ziarna soi, pszenica, sól, ocet, alkohol etylowy, cukier",
+        "pricePerUnit": "131.33", "unitOfMeasure": "LITER",
+        "category": {"id": "b063c79f-f940-4da4-abff-e23db6b09d8e", "name": "Sos sojowy", "slug": "sos-sojowy", "isActive": true}
+      },
+      "target": {
+        "allergens": ["cereals", "soybeans"], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 0, "salt": 9.1, "carbs": 6.9, "sugar": 3.9, "protein": 9.7, "calories": 107, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": null, "ingredients": "Woda, ziarna soi, pszenica, sól, ocet, alkohol etylowy, cukier",
+        "pricePerUnit": "131.33", "unitOfMeasure": "LITER",
+        "category": {"id": "b063c79f-f940-4da4-abff-e23db6b09d8e", "name": "Sos sojowy", "slug": "sos-sojowy", "isActive": true}
+      },
+      "changedFields": ["allergens", "storageZone"],
+      "confidence": "high",
+      "reason": "Kikkoman and the exact supplier listing both identify wheat and soy allergens and shelf-stable storage before opening; conflicting nutrition/country claims are deliberately unchanged.",
+      "evidence": [
+        {"url": "https://www.kikkoman.pl/produkty/detail/naturalnie-warzony-sos-sojowy-z-obnizona-zawartoscia-soli", "kind": "manufacturer-label", "supports": "Reduced-salt Kikkoman ingredients identify soy and wheat and give storage guidance."},
+        {"url": "https://kimchi.pl/product-pol-1541.html", "kind": "supplier-listing", "supports": "Confirms the exact 150ml product identity, ingredient allergens, and storage instruction."},
+        {"url": "https://asiandeligo.eshoper.pro/products/sos-sojowy-o-zmniejszonej-zawartosci-soli-150ml-kikkoman", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000437",
+      "productId": "53ea2d5e-70ce-4628-a83a-e30ccafff173",
+      "variantId": "2743a625-8d9c-4388-9d56-9c0da1b19a02",
+      "name": "Ocet ryżowy 1l - Asia Kitchen",
+      "slug": "ocet-ryzowy-1l-asia-kitchen",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null, "nutritionFacts": null, "countryOfOrigin": "Chiny",
+        "ingredients": "Woda, ryż 30%", "pricePerUnit": "15.50", "unitOfMeasure": "LITER",
+        "category": {"id": "5b5e9a99-a4c6-4d2a-b542-cc678f688de9", "name": "Octy i winne przyprawy", "slug": "octy-i-winne-przyprawy", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Chiny",
+        "ingredients": "Woda, ryż 30%", "pricePerUnit": "15.50", "unitOfMeasure": "LITER",
+        "category": {"id": "5b5e9a99-a4c6-4d2a-b542-cc678f688de9", "name": "Octy i winne przyprawy", "slug": "octy-i-winne-przyprawy", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "Two exact Asia Kitchen 1l listings specify room-temperature, dry and dark storage; formula and nutrition remain unchanged.",
+      "evidence": [
+        {"url": "https://paleczkami.pl/product-pol-2254-Asia-Kitchen-Ocet-ryzowy-1L.html", "kind": "retailer-label", "supports": "Exact product identity and ambient dry/dark storage."},
+        {"url": "https://www.kaufland.pl/product/516123955/", "kind": "retailer-label", "supports": "Independent exact Asia Kitchen 1l listing with room-temperature storage."},
+        {"url": "https://asiandeligo.eshoper.pro/products/ocet-ryzowy-1l-asia-kitchen", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000455",
+      "productId": "1ac37bfa-e68d-4768-b780-2575f93a123a",
+      "variantId": "b023ed41-1a0d-4af8-afd0-be8ea1e21cbc",
+      "name": "Glutaminian sodu, Aji-no-Moto MSG 200g - Ajinomoto",
+      "slug": "glutaminian-sodu-aji-no-moto-msg-200g-ajinomoto",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null, "nutritionFacts": null, "countryOfOrigin": "Francja",
+        "ingredients": "Glutaminian monosodowy (E621). Czystość powyżej 99%. Do stosowania w umiarkowanych ilościach",
+        "pricePerUnit": "39.00", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Francja",
+        "ingredients": "Glutaminian monosodowy (E621). Czystość powyżej 99%. Do stosowania w umiarkowanych ilościach",
+        "pricePerUnit": "39.00", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "Exact Ajinomoto 200g listings and the manufacturer formulation support cool, dry ambient storage; no allergen or nutrition value is invented.",
+      "evidence": [
+        {"url": "https://www.foodland-express.pl/przyprawy-i-dodatki-smakowe/ajinomoto-glutaminian-sodu-200g/", "kind": "retailer-label", "supports": "Exact Ajinomoto 200g pack and cool, dry storage."},
+        {"url": "https://www.ceneo.pl/94148583", "kind": "retailer-index", "supports": "Independent exact 200g product identity and storage details."},
+        {"url": "https://asiandeligo.eshoper.pro/products/glutaminian-sodu-aji-no-moto-msg-200g-ajinomoto", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000497",
+      "productId": "91a4b6de-81e3-4c1a-9acc-536964cae9a5",
+      "variantId": "255be9a3-b908-4ac1-af41-ebc551c760e6",
+      "name": "Glutaminian sodu, Aji-no-Moto MSG 454g - Ajinomoto",
+      "slug": "glutaminian-sodu-aji-no-moto-msg-454g-ajinomoto",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null, "nutritionFacts": null, "countryOfOrigin": "Francja",
+        "ingredients": "Glutaminian monosodowy (E621). Czystość powyżej 99%.Do stosowania w umiarkowanych ilościach",
+        "pricePerUnit": "30.81", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Francja",
+        "ingredients": "Glutaminian monosodowy (E621). Czystość powyżej 99%.Do stosowania w umiarkowanych ilościach",
+        "pricePerUnit": "30.81", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "Manufacturer and exact-pack retail evidence identify dry ambient storage; no allergen or nutrition value is invented for pure MSG.",
+      "evidence": [
+        {"url": "https://ajifoodsolutions.eu/product/aji-no-moto-monosodium-glutamate/", "kind": "manufacturer-page", "supports": "Identifies AJI-NO-MOTO as monosodium glutamate and gives dry storage guidance."},
+        {"url": "https://przepisychinskie.pl/glutaminian-sodu-smak-umami-wzmacniacz-smaku-glutamate-454g-ajinomoto", "kind": "retailer-label", "supports": "Confirms the exact Ajinomoto 454g pack and ambient dry storage."},
+        {"url": "https://asiandeligo.eshoper.pro/products/glutaminian-sodu-aji-no-moto-msg-454g-ajinomoto", "kind": "public-pdp", "supports": "Confirms the public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-001241",
+      "productId": "570c6a24-2464-491f-ad48-f22b9a5ed7a4",
+      "variantId": "7f10b4a1-6f64-468a-afb9-b7514b472bb7",
+      "name": "Koreański sos rybny do kimchi Kanari Jeot 800g - YakMokCham",
+      "slug": "koreanski-sos-rybny-do-kimchi-kanari-jeot-800g-yakmokcham",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null, "nutritionFacts": null, "countryOfOrigin": "Korea Południowa",
+        "ingredients": "Lanca piaskowa (Ammodytes hexapterus) 50%, krewetka opos (Leptomysis mediterranea) 25%, sól 25%.",
+        "pricePerUnit": "68.63", "unitOfMeasure": "KG",
+        "category": {"id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def", "name": "Sosy, marynaty", "slug": "sosy-marynaty", "isActive": true}
+      },
+      "target": {
+        "allergens": ["crustaceans", "fish"], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa", "ingredients": "Lanca piaskowa (Ammodytes hexapterus) 50%, krewetka opos (Leptomysis mediterranea) 25%, sól 25%.",
+        "pricePerUnit": "68.63", "unitOfMeasure": "KG",
+        "category": {"id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def", "name": "Sosy, marynaty", "slug": "sosy-marynaty", "isActive": true}
+      },
+      "changedFields": ["allergens", "storageZone"],
+      "confidence": "high",
+      "reason": "Exact 800g YakMokCham listings agree on fish and crustacean ingredients and ambient storage; conflicting exact-EAN nutrition panels are deliberately held.",
+      "evidence": [
+        {"url": "https://sklep.nasushi.pl/product-pol-4974-Koreanski-sos-rybny-do-kimchi-Kanari-Jeot-800g-YakMokCham.html", "kind": "retailer-label", "supports": "Exact 800g product allergens, country, and storage."},
+        {"url": "https://kimchi.pl/product-pol-4974.html", "kind": "supplier-listing", "supports": "Independent exact product listing with matching fish/crustacean ingredients and storage."},
+        {"url": "https://asiandeligo.eshoper.pro/products/koreanski-sos-rybny-do-kimchi-kanari-jeot-800g-yakmokcham", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000054",
+      "productId": "02fe4e19-1af4-4171-8703-27d8e35a9ed5",
+      "variantId": "faf5972c-5553-490d-819e-a68bef457336",
+      "name": "Pasta Curry Massaman 50g",
+      "slug": "pasta-curry-massaman-50g",
+      "expectedUpdatedAt": "2026-07-09T10:32:29.281246+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"salt": 13.1, "carbs": 2.1, "sugar": 2.1, "protein": 4.1, "calories": 127, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Suszone chili czerwone 20%, czosnek, szalotka, sól, trawa cytrynowa, kminek, kurkuma, galangal",
+        "pricePerUnit": "110.00", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"salt": 13.1, "carbs": 2.1, "sugar": 2.1, "protein": 4.1, "calories": 127, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Suszone chili czerwone 20%, czosnek, szalotka, sól, trawa cytrynowa, kminek, kurkuma, galangal",
+        "pricePerUnit": "110.00", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact 50g supplier product is shelf-stable and instructs cool, dry storage; existing formula and nutrition remain unchanged.",
+      "evidence": [
+        {"url": "https://kimchi.pl/product-pol-190.html", "kind": "supplier-listing", "supports": "Exact 50g Massaman curry paste storage and product details."},
+        {"url": "https://asiandeligo.eshoper.pro/products/pasta-curry-massaman-50g", "kind": "public-pdp", "supports": "Confirms the current public product identity and 50g pack."}
+      ]
+    },
+    {
+      "sku": "ADG-000055",
+      "productId": "da4e62d4-0ca7-4074-ab18-f3ce75df5d85",
+      "variantId": "905530a3-8ee8-4558-a063-ab45f6b5e969",
+      "name": "Pasta curry czerwona 50g",
+      "slug": "pasta-curry-czerwona-50g",
+      "expectedUpdatedAt": "2026-07-09T10:32:29.281246+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 7.8, "salt": 11.2, "carbs": 4.6, "sugar": 4.6, "protein": 4.3, "calories": 130, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Suszone chili czerwone 28%, trawa cytrynowa, czosnek, szalotka, sól, skórka limonki kaffir, galangal, nasiona kolendry, kmin",
+        "pricePerUnit": "99.80", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 7.8, "salt": 11.2, "carbs": 4.6, "sugar": 4.6, "protein": 4.3, "calories": 130, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Suszone chili czerwone 28%, trawa cytrynowa, czosnek, szalotka, sól, skórka limonki kaffir, galangal, nasiona kolendry, kmin",
+        "pricePerUnit": "99.80", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact 50g supplier product specifies cool, dry shelf storage; existing formula and nutrition remain unchanged.",
+      "evidence": [
+        {"url": "https://kimchi.pl/product-pol-191.html", "kind": "supplier-listing", "supports": "Exact 50g red curry paste storage and product details."},
+        {"url": "https://asiandeligo.eshoper.pro/products/pasta-curry-czerwona-50g", "kind": "public-pdp", "supports": "Confirms the current public product identity and pack."}
+      ]
+    },
+    {
+      "sku": "ADG-000056",
+      "productId": "dfbd5ffe-4745-4f6e-92de-ffe2aecc2c5a",
+      "variantId": "87e1e167-7dfb-4b5a-a368-55e7fbe445aa",
+      "name": "Pasta curry zielona 50g Cock Brand",
+      "slug": "pasta-curry-zielona-50g-cock-brand",
+      "expectedUpdatedAt": "2026-07-09T10:32:29.281246+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 6.9, "salt": 12.3, "carbs": 2.9, "sugar": 2.7, "protein": 4.2, "calories": 105, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Świeże chili zielone 33%, trawa cytrynowa, czosnek, szalotka, sól, galangal, kmin, nasiona kolendry",
+        "pricePerUnit": "99.80", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 6.9, "salt": 12.3, "carbs": 2.9, "sugar": 2.7, "protein": 4.2, "calories": 105, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Świeże chili zielone 33%, trawa cytrynowa, czosnek, szalotka, sól, galangal, kmin, nasiona kolendry",
+        "pricePerUnit": "99.80", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact 50g Cock Brand listing specifies cool, dry shelf storage; existing formula and nutrition remain unchanged.",
+      "evidence": [
+        {"url": "https://kimchi.pl/product-pol-192.html", "kind": "supplier-listing", "supports": "Exact 50g green curry paste storage and product details."},
+        {"url": "https://asiandeligo.eshoper.pro/products/pasta-curry-zielona-50g-cock-brand", "kind": "public-pdp", "supports": "Confirms the current public product identity and pack."}
+      ]
+    },
+    {
+      "sku": "ADG-000073",
+      "productId": "a7afb846-034f-4204-87e6-f33846105833",
+      "variantId": "4908c4dc-5604-417e-9e4f-0a3800e4332d",
+      "name": "Galangal w proszku 100g Cock Brand",
+      "slug": "galangal-w-proszku-100g-cock-brand",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Tajlandia",
+        "ingredients": "100% galangal w proszku", "pricePerUnit": "104.90", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"calories": 273, "fat": 0.7, "saturatedFat": 0, "carbs": 48, "sugar": 0, "fiber": 31, "protein": 3.1, "salt": 0.05, "servingSize": "100g"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "100% galangal w proszku", "pricePerUnit": "104.90", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "changedFields": ["nutritionFacts"],
+      "confidence": "high",
+      "reason": "The exact Cock Brand 100g product listing supplies the complete per-100g nutrition panel for the same single-ingredient powder.",
+      "evidence": [
+        {"url": "https://asia-foodstore.de/cock-brand-galgant-pulver-100g-en", "kind": "retailer-label", "supports": "Exact brand, pack, ingredient, origin, and complete per-100g nutrition panel."},
+        {"url": "https://kimchi.pl/product-pol-269.html", "kind": "supplier-listing", "supports": "Confirms the exact Polish 100g Cock Brand product identity."},
+        {"url": "https://asiandeligo.eshoper.pro/products/galangal-w-proszku-100g-cock-brand", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000078",
+      "productId": "157af52f-61b3-404c-8481-065a12269279",
+      "variantId": "e7e5037b-9f96-4bb6-acf6-f003809f9439",
+      "name": "Pasta z tamaryndowca 227g - Suree",
+      "slug": "pasta-z-tamaryndowca-227g-suree",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"salt": 0.14, "carbs": 25, "sugar": 11, "protein": 1, "calories": 106, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Tamarynd 80%, woda, regulator kwasowości: kwas octowy; substancja konserwująca: benzoesan sodu",
+        "pricePerUnit": "47.14", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"salt": 0.14, "carbs": 25, "sugar": 11, "protein": 1, "calories": 106, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Tamarynd 80%, woda, regulator kwasowości: kwas octowy; substancja konserwująca: benzoesan sodu",
+        "pricePerUnit": "47.14", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact Suree 227g technical sheet specifies dry ambient storage; current formula and nutrition remain unchanged.",
+      "evidence": [
+        {"url": "https://onlineshop.wedl.com/dta.php/vendfiles/wedl/prodspecs/de/152246.pdf", "kind": "distributor-specification", "supports": "Exact Suree product technical specification and storage instruction."},
+        {"url": "https://kimchi.pl/product-pol-279.html", "kind": "supplier-listing", "supports": "Confirms the Polish Suree 227g product identity."},
+        {"url": "https://asiandeligo.eshoper.pro/products/pasta-z-tamaryndowca-227g-suree", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000079",
+      "productId": "66c1dd47-05d2-4610-8de8-f53f8d519c81",
+      "variantId": "6a8c889c-6921-4648-b356-64809b7f65d7",
+      "name": "Dhania, kolendra mielona 100g TRS",
+      "slug": "dhania-kolendra-mielona-100g-trs",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Indie",
+        "ingredients": "100% kolendra", "pricePerUnit": "69.90", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": ["peanuts", "nuts", "sesame", "cereals", "milk", "celery", "soybeans", "mustard", "sulphites"],
+        "storageZone": "AMBIENT", "nutritionFacts": null, "countryOfOrigin": "Indie",
+        "ingredients": "100% kolendra", "pricePerUnit": "69.90", "unitOfMeasure": "KG",
+        "category": {"id": "3a5525a6-7e8c-4d23-a80c-465177318f0a", "name": "Przyprawy", "slug": "przyprawy", "isActive": true}
+      },
+      "changedFields": ["mayContainAllergens"],
+      "confidence": "high",
+      "reason": "The TRS manufacturer page gives the cross-contact warning for this coriander powder; it is stored separately from declared ingredients.",
+      "evidence": [
+        {"url": "https://www.trsfood.com/product/trs-coriander-powder/", "kind": "manufacturer-label", "supports": "Official product page lists the may-contain allergens for TRS coriander powder."},
+        {"url": "https://kimchi.pl/product-pol-281.html", "kind": "supplier-listing", "supports": "Confirms the exact Polish TRS 100g product identity."},
+        {"url": "https://asiandeligo.eshoper.pro/products/dhania-kolendra-mielona-100g-trs", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000085",
+      "productId": "f238ff91-b625-4762-9aca-a6fa5e91a55a",
+      "variantId": "d934f609-47c2-4167-b6e8-018301c5a57c",
+      "name": "Pasta curry czerwona 400g",
+      "slug": "pasta-curry-czerwona-400g",
+      "expectedUpdatedAt": "2026-07-09T10:32:29.281246+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 5.4, "salt": 11.7, "carbs": 10, "sugar": 4, "protein": 3.9, "calories": 122, "servingSize": "w 100g/100ml", "saturatedFat": 2.8},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Suszone chili czerwone 28%, trawa cytrynowa, czosnek, szalotka, sól, skórka limonki kaffir, galangal, nasiona kolendry, kmin",
+        "pricePerUnit": "37.48", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 5.4, "salt": 11.7, "carbs": 10, "sugar": 4, "protein": 3.9, "calories": 122, "servingSize": "w 100g/100ml", "saturatedFat": 2.8},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Suszone chili czerwone 28%, trawa cytrynowa, czosnek, szalotka, sól, skórka limonki kaffir, galangal, nasiona kolendry, kmin",
+        "pricePerUnit": "37.48", "unitOfMeasure": "KG",
+        "category": {"id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f", "name": "Pasty smakowe", "slug": "pasty-smakowe", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact Cock Brand 400g retail label specifies room-temperature dry storage; all other metadata stays unchanged.",
+      "evidence": [
+        {"url": "https://zakupy.auchan.pl/products/pasta-curry-czerwona-cock-brand-400-g/00261544", "kind": "retailer-label", "supports": "Exact brand and 400g pack with ambient storage instruction."},
+        {"url": "https://kimchi.pl/product-pol-318.html", "kind": "supplier-listing", "supports": "Confirms the exact Polish 400g product identity."},
+        {"url": "https://asiandeligo.eshoper.pro/products/pasta-curry-czerwona-400g", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000091",
+      "productId": "f588dea3-e54b-4fc8-b2f9-56ca33933098",
+      "variantId": "2ec4af02-7380-43b2-ac03-5286024a5150",
+      "name": "Cukier trzcinowy (brązowy) nierafinowany 500g - Mauritius Golden Cane",
+      "slug": "cukier-trzcinowy-brazowy-nierafinowany-500g-mauritius-golden-cane",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 0, "salt": 0, "carbs": 100, "sugar": 100, "protein": 0, "calories": 400, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Mauritius", "ingredients": "100% cukier trzcinowy", "pricePerUnit": "21.98", "unitOfMeasure": "KG",
+        "category": {"id": "38034a3f-033a-4272-b8a7-5f2f13d3d7a8", "name": "Przyprawy jednoskładnikowe", "slug": "przyprawy-jednoskładnikowe", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 0, "salt": 0, "carbs": 100, "sugar": 100, "protein": 0, "calories": 400, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Mauritius", "ingredients": "100% cukier trzcinowy", "pricePerUnit": "21.98", "unitOfMeasure": "KG",
+        "category": {"id": "38034a3f-033a-4272-b8a7-5f2f13d3d7a8", "name": "Przyprawy jednoskładnikowe", "slug": "przyprawy-jednoskładnikowe", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The matching Mauritius Golden Cane 500g listing specifies dry room-temperature storage; other metadata remains untouched.",
+      "evidence": [
+        {"url": "https://www.kaufland.de/product/379527859/", "kind": "retailer-label", "supports": "Matching Golden Cane 500g product and dry storage instruction."},
+        {"url": "https://kimchi.pl/product-pol-343.html", "kind": "supplier-listing", "supports": "Confirms the exact Polish 500g product identity."},
+        {"url": "https://asiandeligo.eshoper.pro/products/cukier-trzcinowy-brazowy-nierafinowany-500g-mauritius-golden-cane", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000092",
+      "productId": "a490f812-95f6-4684-b022-4ced38007635",
+      "variantId": "f1e960d3-3fba-4c27-b260-446898fe6387",
+      "name": "Syrop kukurydziany 100% 700g - CJO Essential",
+      "slug": "syrop-kukurydziany-100-700g-cjo-essential",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 0, "salt": 0, "carbs": 76, "sugar": 76, "protein": 3.4, "calories": 304, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Korea Południowa", "ingredients": "Syrop skrobiowy z kukurydzy 100%", "pricePerUnit": "23.57", "unitOfMeasure": "KG",
+        "category": {"id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def", "name": "Sosy, marynaty", "slug": "sosy-marynaty", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 0, "salt": 0, "carbs": 76, "sugar": 76, "protein": 3.4, "calories": 304, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Korea Południowa", "ingredients": "Syrop skrobiowy z kukurydzy 100%", "pricePerUnit": "23.57", "unitOfMeasure": "KG",
+        "category": {"id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def", "name": "Sosy, marynaty", "slug": "sosy-marynaty", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact 700g Chung Jung One/CJO corn syrup listing specifies dry ambient storage; conflicting nutrition is deliberately unchanged.",
+      "evidence": [
+        {"url": "https://www.yoaxia.de/lebensmittel/backzutaten/700g-chung-jung-one-maissirup-koreanischer-mais-sirup_9792_6052", "kind": "retailer-label", "supports": "Exact 700g Korean corn syrup identity and ambient storage."},
+        {"url": "https://kimchi.pl/product-pol-348.html", "kind": "supplier-listing", "supports": "Confirms the exact Polish product identity."},
+        {"url": "https://asiandeligo.eshoper.pro/products/syrop-kukurydziany-100-700g-cjo-essential", "kind": "public-pdp", "supports": "Confirms the current public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000097",
+      "productId": "d41e1380-bb47-443d-867a-05c201800686",
+      "variantId": "8ec6a18d-5792-4aea-abf0-b0e88668b1dc",
+      "name": "Słodko-pikantny sos chili do kurczaka 650ml - Cock Brand",
+      "slug": "slodko-pikantny-sos-chili-do-kurczaka-650ml-cock-brand",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 1, "salt": 3, "carbs": 51, "sugar": 47, "protein": 1, "calories": 207, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Cukier, woda, czerwone chili (16%), czosnek, sól, modyfikowana skrobia kukurydziana, regulator kwasowości (E260)",
+        "pricePerUnit": "30.00", "unitOfMeasure": "LITER",
+        "category": {"id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def", "name": "Sosy, marynaty", "slug": "sosy-marynaty", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 1, "salt": 3, "carbs": 51, "sugar": 47, "protein": 1, "calories": 207, "servingSize": "w 100g/100ml"},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Cukier, woda, czerwone chili (16%), czosnek, sól, modyfikowana skrobia kukurydziana, regulator kwasowości (E260)",
+        "pricePerUnit": "30.00", "unitOfMeasure": "LITER",
+        "category": {"id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def", "name": "Sosy, marynaty", "slug": "sosy-marynaty", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "Two matching Cock Brand 650ml listings specify cool, dry ambient storage; current formula and nutrition remain unchanged.",
+      "evidence": [
+        {"url": "https://www.gourmet-versand.com/en/article2470/chili-sauce-for-poultry-gold-label-cock-brand-650ml.html", "kind": "retailer-label", "supports": "Exact Cock Brand 650ml product and storage instruction."},
+        {"url": "https://atlantik-asiashop.de/products/800g-650ml-cock-susse-chilisosse-fur-hunchen-sweet-chilli-sauce-for-chicken-1", "kind": "retailer-label", "supports": "Independent matching product and ambient storage."},
+        {"url": "https://asiandeligo.eshoper.pro/products/slodko-pikantny-sos-chili-do-kurczaka-650ml-cock-brand", "kind": "public-pdp", "supports": "Confirms the public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000116",
+      "productId": "895634b9-1aa6-4257-b5f0-0597385c0991",
+      "variantId": "92454c59-ddf4-4ec9-81ee-e51766bb669f",
+      "name": "Mąka ryżowa, bezglutenowa 400g - Cock Brand",
+      "slug": "maka-ryzowa-bezglutenowa-400g-cock-brand",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 0.5, "salt": 0.02, "carbs": 79, "sugar": 0.5, "protein": 6.8, "calories": 343, "servingSize": "w 100g/100ml", "saturatedFat": 0.1},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Ryż (98%), woda", "pricePerUnit": "19.75", "unitOfMeasure": "KG",
+        "category": {"id": "ad59df51-8278-4ad5-8d6e-4f86256f9a4d", "name": "Mąki / Panierki / Tapioka", "slug": "mąki-panierki-tapioka", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 0.5, "salt": 0.02, "carbs": 79, "sugar": 0.5, "protein": 6.8, "calories": 343, "servingSize": "w 100g/100ml", "saturatedFat": 0.1},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Ryż (98%), woda", "pricePerUnit": "19.75", "unitOfMeasure": "KG",
+        "category": {"id": "ad59df51-8278-4ad5-8d6e-4f86256f9a4d", "name": "Mąki / Panierki / Tapioka", "slug": "mąki-panierki-tapioka", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact Cock Brand 400g rice flour trade listing specifies cool, dry ambient storage; all other fields remain unchanged.",
+      "evidence": [
+        {"url": "https://ctfood.se/rice-flour-50x400g-cock-brand/", "kind": "distributor-label", "supports": "Exact Cock Brand 400g rice flour and storage instruction."},
+        {"url": "https://kimchi.pl/product-pol-426.html", "kind": "supplier-listing", "supports": "Confirms the exact Polish product identity."},
+        {"url": "https://asiandeligo.eshoper.pro/products/maka-ryzowa-bezglutenowa-400g-cock-brand", "kind": "public-pdp", "supports": "Confirms the public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000117",
+      "productId": "e372e7da-30a3-4548-ab2f-f9da05ffee53",
+      "variantId": "8830c299-7577-43c7-ba9a-0b66d8be3d13",
+      "name": "Mąka ryżowa kleista 400g bezglutenowa - Cock Brand",
+      "slug": "maka-ryzowa-kleista-400g-bezglutenowa-cock-brand",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 0.5, "salt": 0.01, "carbs": 81, "sugar": 0.5, "protein": 6.3, "calories": 349, "servingSize": "w 100g/100ml", "saturatedFat": 0.1},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Ryż (98%), woda", "pricePerUnit": "21.75", "unitOfMeasure": "KG",
+        "category": {"id": "ad59df51-8278-4ad5-8d6e-4f86256f9a4d", "name": "Mąki / Panierki / Tapioka", "slug": "mąki-panierki-tapioka", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 0.5, "salt": 0.01, "carbs": 81, "sugar": 0.5, "protein": 6.3, "calories": 349, "servingSize": "w 100g/100ml", "saturatedFat": 0.1},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Ryż (98%), woda", "pricePerUnit": "21.75", "unitOfMeasure": "KG",
+        "category": {"id": "ad59df51-8278-4ad5-8d6e-4f86256f9a4d", "name": "Mąki / Panierki / Tapioka", "slug": "mąki-panierki-tapioka", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "The exact Cock Brand 400g glutinous rice flour trade listing specifies cool, dry ambient storage; all other fields remain unchanged.",
+      "evidence": [
+        {"url": "https://ctfood.se/glutinous-rice-flour-50x400g-cock-brand/", "kind": "distributor-label", "supports": "Exact Cock Brand 400g glutinous rice flour and storage instruction."},
+        {"url": "https://kimchi.pl/product-pol-427.html", "kind": "supplier-listing", "supports": "Confirms the exact Polish product identity."},
+        {"url": "https://asiandeligo.eshoper.pro/products/maka-ryzowa-kleista-400g-bezglutenowa-cock-brand", "kind": "public-pdp", "supports": "Confirms the public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000125",
+      "productId": "cb263336-13b4-47ab-86b9-9aeab82064b5",
+      "variantId": "955938a4-5316-4862-b350-0fb97d07fe0b",
+      "name": "Tapioka, perełki małe 400g - Cock Brand",
+      "slug": "tapioka-perelki-male-400g-cock-brand",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 0.5, "salt": 0.1, "carbs": 86, "sugar": 0.5, "protein": 0.5, "calories": 350, "servingSize": "w 100g/100ml", "saturatedFat": 0.1},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Skrobia z tapioki 98%, woda", "pricePerUnit": "24.97", "unitOfMeasure": "KG",
+        "category": {"id": "ad59df51-8278-4ad5-8d6e-4f86256f9a4d", "name": "Mąki / Panierki / Tapioka", "slug": "mąki-panierki-tapioka", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 0.5, "salt": 0.1, "carbs": 86, "sugar": 0.5, "protein": 0.5, "calories": 350, "servingSize": "w 100g/100ml", "saturatedFat": 0.1},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Skrobia z tapioki 98%, woda", "pricePerUnit": "24.97", "unitOfMeasure": "KG",
+        "category": {"id": "ad59df51-8278-4ad5-8d6e-4f86256f9a4d", "name": "Mąki / Panierki / Tapioka", "slug": "mąki-panierki-tapioka", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "Two matching Cock Brand small tapioca pearl listings specify dry ambient storage; other metadata remains unchanged.",
+      "evidence": [
+        {"url": "https://www.asiamarket.ie/cock-tapioca-pearl-small-400g.html", "kind": "retailer-label", "supports": "Exact Cock Brand 400g small tapioca pearls and storage instruction."},
+        {"url": "https://www.filipinoasianstore.de/en/p/cock-tapioca-pearl-small-400g", "kind": "retailer-label", "supports": "Independent exact-pack corroboration and ambient dry storage."},
+        {"url": "https://asiandeligo.eshoper.pro/products/tapioka-perelki-male-400g-cock-brand", "kind": "public-pdp", "supports": "Confirms the public product identity."}
+      ]
+    },
+    {
+      "sku": "ADG-000128",
+      "productId": "91dac45c-73ca-4cdd-9902-2789fbceaff2",
+      "variantId": "f2f4a4c3-db01-4d10-a454-86ed5d1b0224",
+      "name": "Tapioka, perełki duże 454g - Cock Brand",
+      "slug": "tapioka-perelki-duze-454g-cock-brand",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.93723+00:00",
+      "status": {
+        "product": {"isActive": true, "isPublished": true, "isVisible": true, "status": "active", "deletedAt": null},
+        "variant": {"isActive": true, "isPublished": false, "isForSale": true, "syncStatus": "synced", "availabilityStatus": "IN_STOCK", "deletedAt": null}
+      },
+      "expected": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": null,
+        "nutritionFacts": {"fat": 0.5, "salt": 0.1, "carbs": 86, "sugar": 0.5, "protein": 0.5, "calories": 350, "servingSize": "w 100g/100ml", "saturatedFat": 0.1},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Mąka tapioki, konserwant: E220", "pricePerUnit": "27.47", "unitOfMeasure": "KG",
+        "category": {"id": "ad59df51-8278-4ad5-8d6e-4f86256f9a4d", "name": "Mąki / Panierki / Tapioka", "slug": "mąki-panierki-tapioka", "isActive": true}
+      },
+      "target": {
+        "allergens": [], "mayContainAllergens": [], "storageZone": "AMBIENT",
+        "nutritionFacts": {"fat": 0.5, "salt": 0.1, "carbs": 86, "sugar": 0.5, "protein": 0.5, "calories": 350, "servingSize": "w 100g/100ml", "saturatedFat": 0.1},
+        "countryOfOrigin": "Tajlandia", "ingredients": "Mąka tapioki, konserwant: E220", "pricePerUnit": "27.47", "unitOfMeasure": "KG",
+        "category": {"id": "ad59df51-8278-4ad5-8d6e-4f86256f9a4d", "name": "Mąki / Panierki / Tapioka", "slug": "mąki-panierki-tapioka", "isActive": true}
+      },
+      "changedFields": ["storageZone"],
+      "confidence": "high",
+      "reason": "Two exact 454g large tapioca pearl listings support dry ambient storage; conflicting formula and nutrition claims are deliberately left unchanged.",
+      "evidence": [
+        {"url": "https://www.asiamach.com/farine/cq-tapioca-large-454gr", "kind": "retailer-label", "supports": "Exact Cock Brand 454g large tapioca pearls and storage instruction."},
+        {"url": "https://tibiona.eu/en/tapioca-pearls-large-454g.html", "kind": "retailer-label", "supports": "Independent exact-pack product and ambient storage corroboration."},
+        {"url": "https://asiandeligo.eshoper.pro/products/tapioka-perelki-duze-454g-cock-brand", "kind": "public-pdp", "supports": "Confirms the public product identity."}
+      ]
+    }
+  ],
+  "holds": [
+    {
+      "sku": "ADG-000219",
+      "reason": "No current exact Hiep Long 100g package label was found to support nutrition and allergen fields.",
+      "evidence": [{"url": "https://kimchi.pl/product-pol-901.html", "kind": "supplier-listing", "supports": "Confirms identity but not a complete authoritative package label."}]
+    },
+    {
+      "sku": "ADG-000119",
+      "reason": "The title claims a 70% chili Sriracha, while the current ingredients and matching manufacturer result describe a 51% chili extra-garlic formula; hold until package/EAN identity is verified.",
+      "evidence": [
+        {"url": "https://www.flyinggoosebrand.com/product/sriracha-extra-garlic/", "kind": "manufacturer-page", "supports": "Shows the conflicting extra-garlic formula matching the current ingredients."},
+        {"url": "https://kimchi.pl/product-pol-440.html", "kind": "supplier-listing", "supports": "Confirms the public source listing whose exact formula needs reconciliation."}
+      ]
+    }
+  ],
+  "notes": [
+    "This exact rolling queue slice was reviewed product by product against public supplier, manufacturer, importer, or retailer evidence.",
+    "Only high-confidence deltas are transitions; conflicting or evidence-insufficient fields remain byte-for-byte unchanged.",
+    "An empty allergen array can correctly mean no declared regulated allergen; the current catalog audit cannot yet distinguish reviewed-none from unreviewed-empty.",
+    "Stock, prices, categories, publication state, media, identifiers, orders, reservations, and customer data are outside scope."
+  ]
+}

@@ -1,0 +1,240 @@
+decision,id,slug,name,category,firstSku,sourceLegacyId,sourceResolution,sourceUrl,sourceStatus,currentIngredientsPresent,currentAllergensPresent,currentNutritionPresent,currentStorageZone,rawAllergenWarning,candidateAllergens,rawStorageText,candidateStorageZone,rawIngredients,nutritionServingSize,nutritionCaloriesKcal,nutritionEnergyKj,nutritionFat,nutritionSaturatedFat,nutritionCarbs,nutritionSugar,nutritionFiber,nutritionProtein,nutritionSalt,nutritionRaw,dietTraits,productTraits
+review_candidate,1e99d371-8e7d-484c-83d9-f83d5fb13ba2,trawa-cytrynowa-suszona-w-kawalkach-50g,Trawa cytrynowa suszona w kawałkach 50g,przyprawy,ADG-000118,KIMCHI-436,historical_product_id_mapping,https://kimchi.pl/product-pol-436.html,200,yes,no,no,,,,,,100% suszonej trawy cytrynowej Importer Nazwa firmy PANASIA POLSKA SP. Z O. O. Adres ul. Sochaczewska 108 05-850 Macierzysz,,,,,,,,,,,,,
+review_candidate,9a81adc5-a8cb-43ad-92b9-0f633c0afd1c,sos-hoisin-455ml-flying-goose,Sos Hoisin 455ml - Flying Goose,sosy-marynaty-oleje,ADG-000193,KIMCHI-808,historical_product_id_mapping,https://kimchi.pl/product-pol-808.html,200,yes,no,no,,,,,,"* 350 g krewetek, * 1 łyżka startego czosnku, * 1/2 zielonej papryki, pokrojonej w kostkę * 1/2 czerwonej papryki, pokrojonej w kostkę * 2 łyżki sosu Hoisin, * 1 łyżka sosu ostrygowego Sposób przygotowania: Na rozgrzaną patelnię wrzucamy krewetki oraz czosnek i smażymy przez dwie minuty. Następnie dodajemy pokrojoną paprykę, sos Hoisin i sos ostrygowy i smażymy przez kolejną minutę. Smacznego! * * * Produkt może zawierać śladowe ilości orzeszków ziemnych. Kraj pochodzenia: Tajlandia Pełny skład Woda, cukier, pasta sojowa 12%, sól, ocet spirytusowy, skrobia kukurydziana, czosnek, barwnik: E150; olej sezamowy, anyż, substancja konserwująca E202",w 100g/100ml,238,1011,1.9,0.3,53,49,,2.3,7.8,"(w 100g/100ml)
+Wartość energetyczna
+1011kJ/238kcal
+Tłuszcze
+1,9g
+Węglowodany
+53g
+*w tym cukry
+49g
+Białko
+2,3g
+Sól
+7,8g
+*w tym kwasy tłuszczowe nasycone 0,3g
+Importer
+Nazwa firmy
+Heuschen & Schrouff OFT B.V.
+Adres
+Sperwerweg 1, 6374 AG Landgraaf, The Netherlands",,
+review_candidate,1d7b9985-bc5b-4994-83e5-e4704b70f260,ocet-z-brazowego-ryzu-900ml-cjo-essential,Ocet z brązowego ryżu 900ml - CJO Essential,octy-i-winne-przyprawy,ADG-000211,KIMCHI-863,historical_product_id_mapping,https://kimchi.pl/product-pol-863.html,200,yes,no,no,,,,,,"Woda (48%), ocet z ziaren ryżu, ektrakty z brązowego ryżu, syrop kukurydziany, izomalto-oligosacharidy, kwasek cytrynowy, aromat jabłkowy Importer Nazwa firmy PANASIA POLSKA SP. Z O. O. Adres ul. Sochaczewska 108 05-850 Macierzysz",,,,,,,,,,,,,
+review_candidate,8166c9ea-669f-4330-96f6-b00b98c8812b,mieszanka-przypraw-do-zupy-pho-anyz-cynamon-kardamon-100g-hiep-long,"Mieszanka przypraw do zupy Pho - anyż, cynamon, kardamon 100g - Hiep Long",przyprawy,ADG-000219,KIMCHI-901,historical_product_id_mapping,https://kimchi.pl/product-pol-901.html,200,yes,no,no,,,,,,"Anyż, cynamon, kardamon Importer Nazwa firmy ASIA-FOODS Sp. z o.o. Adres Ul. Dzwonkowa 8, 02-290 Warszawa",,,,,,,,,,,,,
+no_metadata_found,7b2d6206-f0ec-4e73-b59c-6027f1ad4bae,suszone-liscie-limonki-kaffir-liscie-papedy-cale-25g-thai-dancer,"Suszone liście limonki kaffir, liście papedy całe 25g - Thai Dancer",przyprawy,ADG-000270,KIMCHI-1135,historical_product_id_mapping,https://kimchi.pl/product-pol-1135.html,200,yes,no,no,,,,,,,,,,,,,,,,,,Wegetariańska|Wegańska|Bezglutenowa,"Bez konserwantów|Importer|Nazwa firmy|Heuschen &|Schrouff|O|F|T|B.|V.|Adres|Sperwerweg 1, 6374|A|G|Landgraaf,|The|Netherlands|Aktualne informacje o towarach zamieszczone na stronie w momencie zakupu, tj. treść opisu, skład oraz wartości odżywcze produktu przekazywane są na adres mailowy|Klienta w formie pliku|P|D|F po złożeniu zamówienia.|Wszelkie materiały (treści, teksty, opisy produktów, grafiki, ikony, bannery, układ elementów itp.) przedstawione w sklepach|Sklep.na|Sushi.pl oraz|Kimchi.pl w obrębie domen: www.sklep.nasushi.pl, www.nasushi.pl oraz www.kimchi.pl są objęte prawami autorskimi|Sushi.pl,|Kimchi.pl lub ich dostawców treści i technologii."
+review_candidate,9d96ed24-853b-428d-9e82-79520409a56c,sos-sojowy-o-zmniejszonej-zawartosci-soli-150ml-kikkoman,Sos sojowy o zmniejszonej zawartości soli 150ml - Kikkoman,sos-sojowy,ADG-000372,KIMCHI-1541,historical_product_id_mapping,https://kimchi.pl/product-pol-1541.html,200,yes,no,yes,,,,,,,w 100g/100ml,107,450,0,,6.9,3.9,,9.7,9.1,"(w 100g/100ml)
+Wartość energetyczna
+450kJ/107kcal
+Tłuszcze
+0g
+Węglowodany
+6,9g
+*w tym cukry
+3,9g
+Białko
+9,7g
+Sól
+9,1g","[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Pay|Po|Kup teraz, zapłać za 30 dni|Kup teraz, zapłać później - 4 kroki|Przy wyborze formy płatności, wybierz|Po.|Po opłaci twój rachunek w sklepie.|Na stronie|Po sprawdź swoje dane i podaj pesel.|Po otrzymaniu zakupów decydujesz co ci pasuje, a co nie.|Możesz zwrócić część albo całość zamówienia - wtedy zmniejszy się też kwota do zapłaty|W ciągu 30 dni od zakupu płacisz|Po za swoje zakupy bez żadnych dodatkowych kosztów.|Jeśli chcesz, rozkładasz swoją płatność na raty.",
+review_candidate,53ea2d5e-70ce-4628-a83a-e30ccafff173,ocet-ryzowy-1l-asia-kitchen,Ocet ryżowy 1l - Asia Kitchen,octy-i-winne-przyprawy,ADG-000437,KIMCHI-2254,historical_product_id_mapping,https://kimchi.pl/product-pol-2254.html,200,yes,no,no,,,,,,"Woda, ryż 30%",,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,1ac37bfa-e68d-4768-b780-2575f93a123a,glutaminian-sodu-aji-no-moto-msg-200g-ajinomoto,"Glutaminian sodu, Aji-no-Moto MSG 200g - Ajinomoto",przyprawy,ADG-000455,KIMCHI-2329,historical_product_id_mapping,https://kimchi.pl/product-pol-2329.html,200,yes,no,no,,,,,,Glutaminian monosodowy (E621). Czystość powyżej 99%. Do stosowania w umiarkowanych ilościach,,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,91a4b6de-81e3-4c1a-9acc-536964cae9a5,glutaminian-sodu-aji-no-moto-msg-454g-ajinomoto,"Glutaminian sodu, Aji-no-Moto MSG 454g - Ajinomoto",przyprawy,ADG-000497,KIMCHI-2518,historical_product_id_mapping,https://kimchi.pl/product-pol-2518.html,200,yes,no,no,,,,,,Glutaminian monosodowy (E621). Czystość powyżej 99%.Do stosowania w umiarkowanych ilościach,,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,570c6a24-2464-491f-ad48-f22b9a5ed7a4,koreanski-sos-rybny-do-kimchi-kanari-jeot-800g-yakmokcham,Koreański sos rybny do kimchi Kanari Jeot 800g - YakMokCham,sosy-marynaty,ADG-001241,KIMCHI-4974,historical_product_id_mapping,https://kimchi.pl/product-pol-4974.html,200,yes,no,no,,,,Po zalogowaniu możesz umieścić i przechowywać na liście zakupowej dowolną liczbę produktów nieskończenie długo.,,,,,,,,,,,,,,,
+review_candidate,02fe4e19-1af4-4171-8703-27d8e35a9ed5,pasta-curry-massaman-50g,Pasta Curry Massaman 50g,pasty-smakowe,ADG-000054,KIMCHI-190,historical_product_id_mapping,https://kimchi.pl/product-pol-190.html,200,yes,no,yes,,,,"Przechowywać w suchym i chłodnym miejscu, z dala od słońca.",AMBIENT,"Suszone chili czerwone 20%, czosnek, szalotka, sól, trawa cytrynowa, kminek, kurkuma, galangal",w 100g/100ml,127,524,,3.6,2.1,2.1,,4.1,13.1,"(w 100g/100ml)
+Wartość energetyczna
+524kJ/127kcal
+Węglowodany
+2,1g
+*w tym kwasy tłuszczowe nasycone
+3,6g
+*w tym cukry
+2,1g
+Białko
+4,1g
+Sól
+13,1g",[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html),Bez pszenicy|Bez oleju|Bez cukru|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,da4e62d4-0ca7-4074-ab18-f3ce75df5d85,pasta-curry-czerwona-50g,Pasta curry czerwona 50g,pasty-smakowe,ADG-000055,KIMCHI-191,historical_product_id_mapping,https://kimchi.pl/product-pol-191.html,200,yes,no,yes,,,,"Przechowywać w suchym i chłodnym miejscu, z dala od słońca.",AMBIENT,"Suszone chili czerwone 28%, trawa cytrynowa, czosnek, szalotka, sól, skórka limonki kaffir, galangal, nasiona kolendry, kmin",w 100g/100ml,130,536,7.8,3.3,4.6,4.6,,4.3,11.2,"(w 100g/100ml)
+Wartość energetyczna
+536kJ/130kcal
+Tłuszcze
+7,8g
+*w tym kwasy tłuszczowe nasycone
+3,3g
+Węglowodany
+4,6g
+*w tym cukry
+4,6g
+Białko
+4,3g
+Sól
+11,2g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html),Bez pszenicy|Bez oleju|Bez cukru|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,dfbd5ffe-4745-4f6e-92de-ffe2aecc2c5a,pasta-curry-zielona-50g-cock-brand,Pasta curry zielona 50g Cock Brand,pasty-smakowe,ADG-000056,KIMCHI-192,historical_product_id_mapping,https://kimchi.pl/product-pol-192.html,200,yes,no,yes,,,,"Przechowywać w suchym i chłodnym miejscu, z dala od słońca.",AMBIENT,"Świeże chili zielone 33%, trawa cytrynowa, czosnek, szalotka, sól, galangal, kmin, nasiona kolendry",w 100g/100ml,105,433,6.9,2.9,2.9,2.7,,4.2,12.3,"(w 100g/100ml)
+Wartość energetyczna
+433kJ/105kcal
+Tłuszcze
+6,9g
+*w tym kwasy tłuszczowe nasycone
+2,9g
+Węglowodany
+2,9g
+*w tym cukry
+2,7g
+Białko
+4,2g
+Sól
+12,3g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html),Bez pszenicy|Bez oleju|Bez cukru|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,a7afb846-034f-4204-87e6-f33846105833,galangal-w-proszku-100g-cock-brand,Galangal w proszku 100g Cock Brand,przyprawy,ADG-000073,KIMCHI-269,historical_product_id_mapping,https://kimchi.pl/product-pol-269.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym miejscu.,AMBIENT,100% galangal w proszku Importer Nazwa firmy Asian Food Group B.V. Adres Klopsteen 6 | 5443 PW - The Netherlands,,,,,,,,,,,,,
+review_candidate,157af52f-61b3-404c-8481-065a12269279,pasta-z-tamaryndowca-227g-suree,Pasta z tamaryndowca 227g - Suree,pasty-smakowe,ADG-000078,KIMCHI-279,historical_product_id_mapping,https://kimchi.pl/product-pol-279.html,200,yes,no,yes,,,,,,"Tamarynd 80%, woda, regulator kwasowości: kwas octowy; substancja konserwująca: benzoesan sodu",w 100g/100ml,106,451,,,25,11,,1,0.14,"(w 100g/100ml)
+Wartość energetyczna
+451kJ/106kcal
+Węglowodany
+25g
+*w tym cukry
+11g
+Białko
+1g
+Sól
+0,14g
+*w tym tłuszcze nasycone: 0g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,66c1dd47-05d2-4610-8de8-f53f8d519c81,dhania-kolendra-mielona-100g-trs,"Dhania, kolendra mielona 100g TRS",przyprawy,ADG-000079,KIMCHI-281,historical_product_id_mapping,https://kimchi.pl/product-pol-281.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,100% kolendra,,,,,,,,,,,,"[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Pay|Po|Kup teraz, zapłać za 30 dni|Kup teraz, zapłać później - 4 kroki|Przy wyborze formy płatności, wybierz|Po.|Po opłaci twój rachunek w sklepie.|Na stronie|Po sprawdź swoje dane i podaj pesel.|Po otrzymaniu zakupów decydujesz co ci pasuje, a co nie.|Możesz zwrócić część albo całość zamówienia - wtedy zmniejszy się też kwota do zapłaty|W ciągu 30 dni od zakupu płacisz|Po za swoje zakupy bez żadnych dodatkowych kosztów.|Jeśli chcesz, rozkładasz swoją płatność na raty.",
+review_candidate,f238ff91-b625-4762-9aca-a6fa5e91a55a,pasta-curry-czerwona-400g,Pasta curry czerwona 400g,pasty-smakowe,ADG-000085,KIMCHI-318,historical_product_id_mapping,https://kimchi.pl/product-pol-318.html,200,yes,no,yes,,,,,,"Suszone chili czerwone 28%, trawa cytrynowa, czosnek, szalotka, sól, skórka limonki kaffir, galangal, nasiona kolendry, kmin",w 100g/100ml,122,509,5.4,2.8,10,4,,3.9,11.7,"(w 100g/100ml)
+Wartość energetyczna
+509kJ/122kcal
+Tłuszcze
+5,4g
+Węglowodany
+10g
+*w tym cukry
+4g
+*w tym błonnik
+9,1g
+Białko
+3,9g
+Sól
+11,7g
+*w tym kwasy tłuszczowe nasycone 2,8g
+Importer
+Nazwa firmy
+ASIA-FOODS Sp. z o.o.
+Adres
+Ul. Dzwonkowa 8, 02-290 Warszawa",,
+review_candidate,f588dea3-e54b-4fc8-b2f9-56ca33933098,cukier-trzcinowy-brazowy-nierafinowany-500g-mauritius-golden-cane,Cukier trzcinowy (brązowy) nierafinowany 500g - Mauritius Golden Cane,przyprawy-jednoskładnikowe,ADG-000091,KIMCHI-343,historical_product_id_mapping,https://kimchi.pl/product-pol-343.html,200,yes,no,yes,,,,"Ahhhh... to tak smakuje cukier trzcinowy!!! To co jest w marketach nawet nie leżało obok, po otwarciu uderzył mnie zapach rośliny. Rewelacja, zjadłem klika łyżeczek &34;na surowo&34; ...",,,w 100g/100ml,400,1700,0,,100,100,,0,0,"(w 100g/100ml)
+Wartość energetyczna
+1700kJ/400kcal
+Tłuszcze
+0g
+Węglowodany
+100g
+*w tym cukry
+100g
+Białko
+0g
+Sól
+0g
+Importer
+Nazwa firmy
+KK POLSKA sp. z o.o.
+Adres
+ul. Działkowców 15 84-230 Rumia",,
+review_candidate,a490f812-95f6-4684-b022-4ced38007635,syrop-kukurydziany-100-700g-cjo-essential,Syrop kukurydziany 100% 700g - CJO Essential,sosy-marynaty,ADG-000092,KIMCHI-348,historical_product_id_mapping,https://kimchi.pl/product-pol-348.html,200,yes,no,yes,,,,,,Syrop skrobiowy z kukurydzy 100%,w 100g/100ml,304,1247,0,,76,76,,3.4,0,"(w 100g/100ml)
+Wartość energetyczna
+1247kJ/304kcal
+Tłuszcze
+0g
+Węglowodany
+76g
+*w tym cukry
+76g
+Białko
+3,4g
+Sól
+0g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,d41e1380-bb47-443d-867a-05c201800686,slodko-pikantny-sos-chili-do-kurczaka-650ml-cock-brand,Słodko-pikantny sos chili do kurczaka 650ml - Cock Brand,sosy-marynaty,ADG-000097,KIMCHI-357,historical_product_id_mapping,https://kimchi.pl/product-pol-357.html,200,yes,no,yes,,,,,,"Cukier, woda, czerwone chili (16%), czosnek, sól, modyfikowana skrobia kukurydziana, regulator kwasowości (E260)",w 100g/100ml,207,880,1,,51,47,,1,3,"(w 100g/100ml)
+Wartość energetyczna
+880kJ/207kcal
+Tłuszcze
+1g
+Węglowodany
+51g
+*w tym cukry
+47g
+*w tym błonnik
+1,6g
+Białko
+1g
+Sól
+3g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,895634b9-1aa6-4257-b5f0-0597385c0991,maka-ryzowa-bezglutenowa-400g-cock-brand,"Mąka ryżowa, bezglutenowa 400g - Cock Brand",mąki-panierki-tapioka,ADG-000116,KIMCHI-426,historical_product_id_mapping,https://kimchi.pl/product-pol-426.html,200,yes,no,yes,,,,,,"Ryż (98%), woda",w 100g/100ml,343,1459,0.5,0.1,79,0.5,,6.8,0.02,"(w 100g/100ml)
+Wartość energetyczna
+1459kJ/343kcal
+Tłuszcze
+<0,5g
+Węglowodany
+79g
+*w tym cukry
+<0,5g
+Białko
+6,8g
+Sól
+0,02g
+*w tym kwasy tłuszczowe nasycone <0,1g",[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html)[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,e372e7da-30a3-4548-ab2f-f9da05ffee53,maka-ryzowa-kleista-400g-bezglutenowa-cock-brand,Mąka ryżowa kleista 400g bezglutenowa - Cock Brand,mąki-panierki-tapioka,ADG-000117,KIMCHI-427,historical_product_id_mapping,https://kimchi.pl/product-pol-427.html,200,yes,no,yes,,,,,,"Ryż (98%), woda",w 100g/100ml,349,1484,0.5,0.1,81,0.5,,6.3,0.01,"(w 100g/100ml)
+Wartość energetyczna
+1484kJ/349kcal
+Tłuszcze
+<0,5g
+Węglowodany
+81g
+*w tym cukry
+<0,5g
+Białko
+6,3g
+Sól
+<0,01g
+*w tym kwasy tłuszczowe nasycone <0,1g",[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html)[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,a418903f-3562-42dc-b9a4-b02c4aa9d136,sos-chili-sriracha-bardzo-ostry-chili-70-200ml-flying-goose,"Sos chili Sriracha, bardzo ostry (chili 70%) 200ml - Flying Goose",sosy-marynaty,ADG-000119,KIMCHI-440,historical_product_id_mapping,https://kimchi.pl/product-pol-440.html,200,yes,no,yes,,,,,,"Chili 51%, czosnek 22%, cukier, sól, woda, regulator kwasowości E330, substancja wzmacniająca E621, stabilizator E415, substancja konserwująca E202, E220",w 100g/100ml,132,558,0.9,0.5,26,23,,3.1,9,"(w 100g/100ml)
+Wartość energetyczna
+558kJ/132kcal
+Tłuszcze
+0,9g
+Węglowodany
+26g
+*w tym cukry
+23g
+Białko
+3,1g
+Sól
+9g
+*w tym kwasy tłuszczowe nasycone 0,5g
+Importer
+Nazwa firmy
+Heuschen & Schrouff OFT B.V.
+Adres
+Sperwerweg 1, 6374 AG Landgraaf, The Netherlands",,
+review_candidate,cb263336-13b4-47ab-86b9-9aeab82064b5,tapioka-perelki-male-400g-cock-brand,"Tapioka, perełki małe 400g - Cock Brand",mąki-panierki-tapioka,ADG-000125,KIMCHI-468,historical_product_id_mapping,https://kimchi.pl/product-pol-468.html,200,yes,no,yes,,,,,,"Skrobia z tapioki 98%, woda",w 100g/100ml,350,1485,0.5,0.1,86,0.5,,0.5,0.1,"(w 100g/100ml)
+Wartość energetyczna
+1485kJ/350kcal
+Tłuszcze
+<0,5g
+Węglowodany
+86g
+*w tym cukry
+<0,5g
+Białko
+<0,5g
+Sól
+0,1g
+*w tym kwasy tłuszczowe nasycone <0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,91dac45c-73ca-4cdd-9902-2789fbceaff2,tapioka-perelki-duze-454g-cock-brand,"Tapioka, perełki duże 454g - Cock Brand",mąki-panierki-tapioka,ADG-000128,KIMCHI-493,historical_product_id_mapping,https://kimchi.pl/product-pol-493.html,200,yes,no,yes,,,,,,"Mąka tapioki, konserwant: E220",w 100g/100ml,350,1485,0.5,0.1,86,0.5,,0.5,0.1,"(w 100g/100ml)
+Wartość energetyczna
+1485kJ/350kcal
+Tłuszcze
+<0,5g
+Węglowodany
+86g
+*w tym cukry
+<0,5g
+Białko
+<0,5g
+Sól
+0,1g
+*w tym kwasy tłuszczowe nasycone <0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
