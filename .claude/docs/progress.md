@@ -17,10 +17,12 @@
   product, variant, category, status, old-value, and `updated_at` guards.
 - Apply captures a persistent explicit-column backup and decision-SHA audit
   trail before mutation; rollback refuses intervening product edits.
-- Production is unchanged. A production-shape disposable PostgreSQL rehearsal
-  passed apply, exact rollback, duplicate-run rejection, stale-row rejection,
-  and intervening-edit rollback rejection. The SQL remains a reviewed candidate
-  until the separate explicit production data-apply step.
+- A production-shape disposable PostgreSQL rehearsal passed apply, exact
+  rollback, duplicate-run rejection, stale-row rejection, and intervening-edit
+  rollback rejection. After separate owner approval, production apply committed
+  on 2026-07-22 as transaction `7045960`: six backups, six exact product
+  updates, 6/6 GraphQL target matches, all PDP/health/auth checks green, and no
+  variant/category writes. The rollback artifact remains unexecuted and gated.
 
 ## 2026-07-21 Asia Deli Go Discovery Main Integration
 

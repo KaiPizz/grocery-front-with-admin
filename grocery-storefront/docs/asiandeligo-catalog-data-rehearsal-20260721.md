@@ -68,9 +68,11 @@ Immediately after rehearsal, production was re-read without mutation:
 - all six `updated_at` values still exactly matched the decision file;
 - dated backup and audit tables did not exist.
 
-The committed SQL remains a candidate until the separate production data-apply
-approval gate. No storefront/backend build, artifact transfer, PM2 restart, or
-Contabo build is required for this data-only batch.
+At rehearsal close, the committed SQL remained a candidate until the separate
+production data-apply approval gate. The later approved execution is recorded
+in `docs/asiandeligo-catalog-data-production-apply-20260722.md`. No
+storefront/backend build, artifact transfer, PM2 restart, or Contabo build was
+required for this data-only batch.
 
 ## Cleanup
 
