@@ -83,6 +83,8 @@
     "heroBannerSlideAlt": "{title} — slajd {number}",
     "heroBannerCtaAria": "Przeglądaj {title}",
     "heroBannerGoToSlide": "Przejdź do slajdu {number}",
+    "heroBannerPreviousSlide": "Poprzedni slajd",
+    "heroBannerNextSlide": "Następny slajd",
     "quickCategories": "Popularne kategorie",
     "categoryShortcuts": "Przeglądaj kategorie",
     "seeAllCategories": "Zobacz wszystkie",

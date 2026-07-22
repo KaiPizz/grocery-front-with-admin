@@ -694,3 +694,9 @@
 - **Cause:** Locale presentation code hardcoded a two-slide allowlist and replaced the configured slide array after it was loaded.
 - **Fix:** Removed the hero allowlist so Polish and English storefronts preserve all enabled slides and their admin-defined order; regression and accessibility tests now require six images and six controls.
 - **Rule:** Never silently hide owner-enabled CMS media in presentation localization. Flag questionable copy for explicit content remediation while keeping the published config as the display source of truth.
+
+### Do not let carousel hit targets dominate the banner artwork
+- **Error:** Restoring six hero slides made six widely spaced carousel controls visually overpower the mobile banner.
+- **Cause:** The indicator layout treated the full accessibility hit area as the visual spacing unit and offered no alternate desktop navigation.
+- **Fix:** Separated compact visual indicators from their larger buttons, added labeled desktop edge arrows, and added guarded horizontal swipe on mobile.
+- **Rule:** Carousel controls must separate visual scale from interaction scale: keep indicators quiet, expose keyboard-safe arrows where space allows, and preserve swipe without triggering the slide link.

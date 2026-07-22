@@ -1,6 +1,15 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type FocusEvent,
+  type MouseEvent,
+  type PointerEvent,
+} from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { getLocaleNeutralConfiguredHref } from '@/lib/configured-content-localization';
@@ -17,6 +26,8 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
   const slides = block.slides.filter((s) => s.enabled);
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pointerStartRef = useRef<{ id: number; x: number; y: number } | null>(null);
+  const lastSwipeAtRef = useRef(0);
 
   const goTo = useCallback(
     (index: number) => setCurrent((slides.length + index) % slides.length),
@@ -24,14 +35,27 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
   );
 
   const startTimer = useCallback(() => {
-    if (!block.autoPlay || slides.length <= 1) return;
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (
+      !block.autoPlay ||
+      slides.length <= 1 ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
     timerRef.current = setInterval(() => {
       setCurrent((c) => (c + 1) % slides.length);
     }, block.autoPlayInterval);
   }, [block.autoPlay, block.autoPlayInterval, slides.length]);
 
   const stopTimer = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
   }, []);
 
   useEffect(() => {
@@ -44,13 +68,78 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
   const activeIndex = current % slides.length;
   const fallbackHeading = heading?.trim() || t('hero');
 
+  function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== 'touch' || !event.isPrimary) return;
+    pointerStartRef.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+    };
+    stopTimer();
+  }
+
+  function handlePointerUp(event: PointerEvent<HTMLDivElement>) {
+    const start = pointerStartRef.current;
+    pointerStartRef.current = null;
+
+    if (start?.id === event.pointerId) {
+      const deltaX = event.clientX - start.x;
+      const deltaY = event.clientY - start.y;
+      const isHorizontalDrag =
+        Math.abs(deltaX) >= 10 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
+
+      if (isHorizontalDrag) {
+        lastSwipeAtRef.current = Date.now();
+      }
+      if (isHorizontalDrag && Math.abs(deltaX) >= 40) {
+        goTo(activeIndex + (deltaX > 0 ? -1 : 1));
+      }
+    }
+
+    startTimer();
+  }
+
+  function handlePointerCancel() {
+    pointerStartRef.current = null;
+    startTimer();
+  }
+
+  function handleClickCapture(event: MouseEvent<HTMLDivElement>) {
+    if (Date.now() - lastSwipeAtRef.current < 500) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  function handleMouseLeave(event: MouseEvent<HTMLDivElement>) {
+    if (event.currentTarget.contains(document.activeElement)) return;
+    startTimer();
+  }
+
+  function handleBlurCapture(event: FocusEvent<HTMLDivElement>) {
+    if (
+      event.relatedTarget &&
+      event.currentTarget.contains(event.relatedTarget as Node)
+    ) {
+      return;
+    }
+    startTimer();
+  }
+
   const inner = (
     <div
-      className="relative aspect-[3.2/1] w-full overflow-hidden"
+      className="relative aspect-[3.2/1] w-full touch-pan-y overflow-hidden"
+      role="region"
+      aria-label={fallbackHeading}
+      aria-roledescription="carousel"
       onMouseEnter={stopTimer}
-      onMouseLeave={startTimer}
+      onMouseLeave={handleMouseLeave}
       onFocusCapture={stopTimer}
-      onBlurCapture={startTimer}
+      onBlurCapture={handleBlurCapture}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerCancel}
+      onClickCapture={handleClickCapture}
     >
       {slides.map((s, i) => {
         const isActive = i === activeIndex;
@@ -115,21 +204,43 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
 
       {slides.length > 1 && (
         <>
-          <div className="absolute bottom-0 left-1/2 z-20 flex -translate-x-1/2">
+          <button
+            type="button"
+            onClick={() => goTo(activeIndex - 1)}
+            className="absolute left-2 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-black/25 text-white shadow-md backdrop-blur-sm hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:flex"
+            aria-label={t('heroBannerPreviousSlide')}
+          >
+            <ChevronLeft className="h-5 w-5 drop-shadow" aria-hidden="true" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => goTo(activeIndex + 1)}
+            className="absolute right-2 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-black/25 text-white shadow-md backdrop-blur-sm hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:flex"
+            aria-label={t('heroBannerNextSlide')}
+          >
+            <ChevronRight className="h-5 w-5 drop-shadow" aria-hidden="true" />
+          </button>
+
+          <div
+            className="absolute bottom-0 left-1/2 z-20 flex -translate-x-1/2"
+            data-testid="hero-carousel-indicators"
+          >
             {slides.map((_, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => goTo(i)}
-                className="flex h-11 w-11 items-center justify-center rounded-full"
+                className="flex h-11 w-6 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-black/40"
                 aria-label={t('heroBannerGoToSlide', { number: i + 1 })}
                 aria-current={i === activeIndex ? 'true' : undefined}
               >
                 <span
-                  className={`h-2 rounded-full transition-all ${i === activeIndex ? 'w-4' : 'w-2'}`}
+                  data-testid="hero-carousel-indicator"
+                  className={`h-1.5 rounded-full ${i === activeIndex ? 'w-3.5' : 'w-1.5'}`}
                   style={{
-                    backgroundColor: i === activeIndex ? 'var(--color-primary)' : 'var(--color-card)',
-                    boxShadow: '0 0 0 1px color-mix(in srgb, var(--color-foreground) 45%, transparent), 0 1px 3px color-mix(in srgb, var(--color-foreground) 24%, transparent)',
+                    backgroundColor: i === activeIndex ? 'var(--color-primary)' : 'rgba(255, 255, 255, 0.78)',
+                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.48)',
                   }}
                   aria-hidden="true"
                 />

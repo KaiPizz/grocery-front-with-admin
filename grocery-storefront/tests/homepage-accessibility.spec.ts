@@ -16,11 +16,23 @@ test.use({
 
 async function mockHeroBlockConfig(
   page: Parameters<typeof mockMobileStorefront>[0],
-  { headline, firstSlideTitle = '' }: { headline: string; firstSlideTitle?: string }
+  {
+    headline,
+    firstSlideTitle = '',
+    autoPlay = false,
+    autoPlayInterval,
+  }: {
+    headline: string;
+    firstSlideTitle?: string;
+    autoPlay?: boolean;
+    autoPlayInterval?: number;
+  }
 ) {
   const envelope = structuredClone(asiaDeliGoConfig);
   envelope.config.homepage.hero.headline = headline;
   const heroBlock = envelope.config.homepage.blocks.find((block: { type: string }) => block.type === 'hero');
+  heroBlock.autoPlay = autoPlay;
+  if (autoPlayInterval !== undefined) heroBlock.autoPlayInterval = autoPlayInterval;
   heroBlock.slides[0].title = firstSlideTitle;
 
   await page.route('**/api/config/**', async (route) => {
@@ -66,22 +78,184 @@ test.describe('homepage accessibility', () => {
       'alt',
       'Azjatyckie produkty spożywcze na co dzień — slajd 2'
     );
-    await expect(
-      page.getByTestId('mobile-home-hero').getByRole('link', {
-        name: /przeglądaj azjatyckie produkty spożywcze na co dzień/i,
-      })
-    ).toHaveAttribute('href', '/products');
-    const carouselDots = page.getByTestId('mobile-home-hero').getByRole('button', {
+    const mobileHero = page.getByTestId('mobile-home-hero');
+    const carouselDots = mobileHero.getByRole('button', {
       name: /przejdź do slajdu/i,
     });
     await expect(carouselDots).toHaveCount(6);
+    const indicatorRowBox = await mobileHero
+      .getByTestId('hero-carousel-indicators')
+      .boundingBox();
+    expect(indicatorRowBox).not.toBeNull();
+    expect(Math.round(indicatorRowBox!.width)).toBeLessThanOrEqual(144);
     for (let index = 0; index < 6; index += 1) {
       const box = await carouselDots.nth(index).boundingBox();
+      const indicatorBox = await carouselDots
+        .nth(index)
+        .getByTestId('hero-carousel-indicator')
+        .boundingBox();
       expect(box).not.toBeNull();
-      expect(Math.round(box!.width)).toBeGreaterThanOrEqual(44);
+      expect(Math.round(box!.width)).toBeGreaterThanOrEqual(24);
       expect(Math.round(box!.height)).toBeGreaterThanOrEqual(44);
+      expect(indicatorBox).not.toBeNull();
+      expect(Math.round(indicatorBox!.width)).toBeLessThanOrEqual(14);
+      expect(Math.round(indicatorBox!.height)).toBeLessThanOrEqual(6);
     }
+    await expect(
+      page.getByTestId('mobile-home-hero').getByRole('button', { name: 'Poprzedni slajd' })
+    ).toBeHidden();
+    await expect(
+      page.getByTestId('mobile-home-hero').getByRole('button', { name: 'Następny slajd' })
+    ).toBeHidden();
     await expect(main.locator('img[alt^="Store promotion banner"]')).toHaveCount(0);
+  });
+
+  test('uses desktop edge arrows and lets mobile shoppers swipe between slides', async ({ page }) => {
+    await mockHeroBlockConfig(page, {
+      headline: 'Azjatyckie produkty spożywcze na co dzień',
+    });
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl');
+
+    const desktopHero = page.getByTestId('desktop-home-hero');
+    const desktopCarousel = desktopHero.locator('[aria-roledescription="carousel"]');
+    const desktopDots = desktopHero.getByRole('button', { name: /przejdź do slajdu/i });
+    const previous = desktopHero.getByRole('button', { name: 'Poprzedni slajd' });
+    const next = desktopHero.getByRole('button', { name: 'Następny slajd' });
+
+    await expect(previous).toBeVisible();
+    await expect(next).toBeVisible();
+    const carouselBox = await desktopCarousel.boundingBox();
+    const previousBox = await previous.boundingBox();
+    const nextBox = await next.boundingBox();
+    expect(carouselBox).not.toBeNull();
+    expect(previousBox).not.toBeNull();
+    expect(nextBox).not.toBeNull();
+    expect(previousBox!.width).toBeGreaterThanOrEqual(44);
+    expect(previousBox!.height).toBeGreaterThanOrEqual(44);
+    expect(nextBox!.width).toBeGreaterThanOrEqual(44);
+    expect(nextBox!.height).toBeGreaterThanOrEqual(44);
+    expect(previousBox!.x - carouselBox!.x).toBeLessThanOrEqual(16);
+    expect(carouselBox!.x + carouselBox!.width - (nextBox!.x + nextBox!.width)).toBeLessThanOrEqual(
+      16
+    );
+    await expect(desktopDots.nth(0)).toHaveAttribute('aria-current', 'true');
+    await next.click();
+    await expect(desktopDots.nth(1)).toHaveAttribute('aria-current', 'true');
+    await previous.click();
+    await expect(desktopDots.nth(0)).toHaveAttribute('aria-current', 'true');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const mobileHero = page.getByTestId('mobile-home-hero');
+    const mobileCarousel = mobileHero.locator('[aria-roledescription="carousel"]');
+    const mobileDots = mobileHero.getByRole('button', { name: /przejdź do slajdu/i });
+    await expect(mobileHero).toBeVisible();
+    const homepageUrl = page.url();
+    await mobileCarousel.dispatchEvent('pointerdown', {
+      pointerId: 1,
+      isPrimary: true,
+      pointerType: 'touch',
+      clientX: 320,
+      clientY: 160,
+    });
+    await mobileCarousel.dispatchEvent('pointerup', {
+      pointerId: 1,
+      isPrimary: true,
+      pointerType: 'touch',
+      clientX: 100,
+      clientY: 164,
+    });
+    await expect(mobileDots.nth(1)).toHaveAttribute('aria-current', 'true');
+    const activeLink = mobileCarousel.locator('a[tabindex="0"]');
+    await expect(activeLink).toHaveAttribute('href', '/products');
+    await activeLink.dispatchEvent('click');
+    await page.waitForTimeout(600);
+    await expect(page).toHaveURL(homepageUrl);
+
+    await mobileCarousel.dispatchEvent('pointerdown', {
+      pointerId: 2,
+      isPrimary: true,
+      pointerType: 'touch',
+      clientX: 240,
+      clientY: 80,
+    });
+    await mobileCarousel.dispatchEvent('pointerup', {
+      pointerId: 2,
+      isPrimary: true,
+      pointerType: 'touch',
+      clientX: 190,
+      clientY: 220,
+    });
+    await expect(mobileDots.nth(1)).toHaveAttribute('aria-current', 'true');
+
+    await mobileCarousel.dispatchEvent('pointerdown', {
+      pointerId: 3,
+      isPrimary: true,
+      pointerType: 'touch',
+      clientX: 240,
+      clientY: 120,
+    });
+    await mobileCarousel.dispatchEvent('pointerup', {
+      pointerId: 3,
+      isPrimary: true,
+      pointerType: 'touch',
+      clientX: 220,
+      clientY: 122,
+    });
+    await expect(mobileDots.nth(1)).toHaveAttribute('aria-current', 'true');
+    await activeLink.dispatchEvent('click');
+    await page.waitForTimeout(600);
+    await expect(page).toHaveURL(homepageUrl);
+
+    await activeLink.click();
+    await expect(page).toHaveURL(/\/products(?:[?#]|$)/);
+  });
+
+  test('disables hero autoplay when the shopper requests reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await mockHeroBlockConfig(page, {
+      headline: 'Azjatyckie produkty spożywcze na co dzień',
+      autoPlay: true,
+      autoPlayInterval: 100,
+    });
+    await mockMobileStorefront(page);
+    await page.goto('/pl');
+
+    const dots = page
+      .getByTestId('mobile-home-hero')
+      .getByRole('button', { name: /przejdź do slajdu/i });
+    await expect(dots.nth(0)).toHaveAttribute('aria-current', 'true');
+    await page.waitForTimeout(350);
+    await expect(dots.nth(0)).toHaveAttribute('aria-current', 'true');
+  });
+
+  test('keeps autoplay paused while a carousel control owns keyboard focus', async ({ page }) => {
+    await mockHeroBlockConfig(page, {
+      headline: 'Azjatyckie produkty spożywcze na co dzień',
+      autoPlay: true,
+      autoPlayInterval: 100,
+    });
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl');
+
+    const hero = page.getByTestId('desktop-home-hero');
+    const carousel = hero.locator('[aria-roledescription="carousel"]');
+    const dots = hero.getByRole('button', { name: /przejdź do slajdu/i });
+    const next = hero.getByRole('button', { name: 'Następny slajd' });
+    const carouselBox = await carousel.boundingBox();
+    expect(carouselBox).not.toBeNull();
+
+    await page.mouse.move(carouselBox!.x + carouselBox!.width / 2, carouselBox!.y + 10);
+    await next.focus();
+    const focusedIndex = await dots.evaluateAll((buttons) =>
+      buttons.findIndex((button) => button.getAttribute('aria-current') === 'true')
+    );
+    expect(focusedIndex).toBeGreaterThanOrEqual(0);
+    await page.mouse.move(1, 1);
+    await page.waitForTimeout(350);
+    await expect(dots.nth(focusedIndex)).toHaveAttribute('aria-current', 'true');
   });
 
   test('uses the localized homepage heading when configured hero copy is blank', async ({ page }) => {
