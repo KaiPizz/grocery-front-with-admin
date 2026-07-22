@@ -1,0 +1,1587 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch8-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T13:55:14Z",
+  "cohortSkus": [
+    "ADG-000492",
+    "ADG-000493",
+    "ADG-000537",
+    "ADG-000538",
+    "ADG-000539",
+    "ADG-000564",
+    "ADG-000105",
+    "ADG-000121",
+    "ADG-000234",
+    "ADG-000352",
+    "ADG-000025",
+    "ADG-000702",
+    "ADG-000062",
+    "ADG-000069",
+    "ADG-000089",
+    "ADG-000179",
+    "ADG-000382",
+    "ADG-000957",
+    "ADG-000029",
+    "ADG-000034",
+    "ADG-000071",
+    "ADG-000308",
+    "ADG-000349",
+    "ADG-000350",
+    "ADG-000371"
+  ],
+  "products": [
+    {
+      "sku": "ADG-000492",
+      "productId": "cc9d23b3-fb57-4788-8a28-e73456484a76",
+      "variantId": "663f9e87-1a33-485f-b3f7-8b04817fa5ea",
+      "name": "Algi Sushi Nori Premium Gold 3 x 10 szt - Asia Kitchen",
+      "slug": "algi-sushi-nori-premium-gold-3-x-10-szt-asia-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Arkusze z suszonych wodorostów, prażone 78g",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 5.52,
+          "carbs": 36.9,
+          "sugar": 0,
+          "protein": 44.1,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2.17
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Arkusze z suszonych wodorostów, prażone 78g",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 5.52,
+          "carbs": 36.9,
+          "sugar": 0,
+          "protein": 44.1,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2.17
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 3 x 10 Asia Kitchen bundle contains the same 26g dry nori consumer unit; independent exact-unit labels require dry, cool shelf storage. Iodine and desiccant warnings are not misrepresented as allergens.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2506-Algi-Sushi-Nori-Premium-Gold-3-x-10-szt-Asia-Kitchen.html",
+          "kind": "supplier-bundle",
+          "supports": "Confirms the exact three-pack identity and that it contains three matching 10-sheet Asia Kitchen units."
+        },
+        {
+          "url": "https://e-spar.com.pl/towar/algi-morskie-asia-kitchen-nori/294285",
+          "kind": "retailer-label",
+          "supports": "Confirms the exact 26g Asia Kitchen member unit and dry, cool storage."
+        },
+        {
+          "url": "https://www.bee.pl/asia-kitchen-wodorosty-nori-do-sushi-10-szt_p1374820.html",
+          "kind": "retailer-label",
+          "supports": "Independently corroborates the exact member unit and ambient dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/algi-sushi-nori-premium-gold-3-x-10-szt-asia-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000493",
+      "productId": "15562453-ea2a-486c-af9b-69f839c457e8",
+      "variantId": "d1cfe5cb-f48b-4582-acc5-4e762661b18d",
+      "name": "Algi Sushi Nori Premium Gold 5 x 10 szt - Asia Kitchen",
+      "slug": "algi-sushi-nori-premium-gold-5-x-10-szt-asia-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Arkusze z suszonych wodorostów, prażone 130g",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 5.52,
+          "carbs": 36.9,
+          "sugar": 0,
+          "protein": 44.1,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2.17
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Arkusze z suszonych wodorostów, prażone 130g",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 5.52,
+          "carbs": 36.9,
+          "sugar": 0,
+          "protein": 44.1,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2.17
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 5 x 10 Asia Kitchen bundle contains five matching dry nori consumer units; independent exact-unit labels require dry, cool shelf storage. Iodine and desiccant warnings remain outside this metadata patch.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2507-Algi-Sushi-Nori-Premium-Gold-5-x-10-szt-Asia-Kitchen.html",
+          "kind": "supplier-bundle",
+          "supports": "Confirms the exact five-pack identity and matching Asia Kitchen 10-sheet units."
+        },
+        {
+          "url": "https://e-spar.com.pl/towar/algi-morskie-asia-kitchen-nori/294285",
+          "kind": "retailer-label",
+          "supports": "Confirms the exact 26g Asia Kitchen member unit and dry, cool storage."
+        },
+        {
+          "url": "https://www.bee.pl/asia-kitchen-wodorosty-nori-do-sushi-10-szt_p1374820.html",
+          "kind": "retailer-label",
+          "supports": "Independently corroborates the exact member unit and ambient dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/algi-sushi-nori-premium-gold-5-x-10-szt-asia-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000537",
+      "productId": "8fca21b8-f8b4-4f3d-9145-94286bea5193",
+      "variantId": "ba395725-3da2-4eb1-a4c3-5699f35e79bb",
+      "name": "Glony do sushi Yaki Nori GOLD 10 szt. - KC",
+      "slug": "glony-do-sushi-yaki-nori-gold-10-szt-kc",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "10 arkuszy prażonych nori klasy Gold - 25g",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 4.46,
+          "salt": 1.1,
+          "carbs": 40.9,
+          "sugar": 0,
+          "protein": 44.5,
+          "calories": 382,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 1.94
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "10 arkuszy prażonych nori klasy Gold - 25g",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 4.46,
+          "salt": 1.1,
+          "carbs": 40.9,
+          "sugar": 0,
+          "protein": 44.5,
+          "calories": 382,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 1.94
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact Kwang Cheon Kim 10-sheet/25g nori unit is a dry shelf product; exact and same-unit listings specify protection from sunlight and moisture. Nutrition and warning fields remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2648-Glony-do-sushi-Yaki-Nori-GOLD-10-szt-KC.html",
+          "kind": "supplier-label",
+          "supports": "Confirms the exact 10-sheet Kwang Cheon Kim product and formula."
+        },
+        {
+          "url": "https://1mal1japan.de/en/produkt/sushi-nori-sheets-25g-10-sheets-kwang-cheon-kim/",
+          "kind": "retailer-label",
+          "supports": "Exact 25g/10-sheet product specifies ambient storage away from sunlight and airtight after opening."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-2649-Koreanskie-Glony-Algi-Gold-30-szt-KC.html",
+          "kind": "retailer-bundle",
+          "supports": "The exact three-pack of the same unit independently corroborates dry storage and moisture protection."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/glony-do-sushi-yaki-nori-gold-10-szt-kc",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000538",
+      "productId": "0526158d-78a8-42d8-8967-79c48996af93",
+      "variantId": "0b046b5c-ff12-46fd-b108-b1202d912a99",
+      "name": "Glony do sushi Yaki Nori GOLD 3 x 10 szt. - KC",
+      "slug": "glony-do-sushi-yaki-nori-gold-3-x-10-szt-kc",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "10 arkuszy prażonych nori klasy Gold - 25g",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 4.46,
+          "salt": 1.1,
+          "carbs": 40.9,
+          "sugar": 0,
+          "protein": 44.5,
+          "calories": 382,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 1.94
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "10 arkuszy prażonych nori klasy Gold - 25g",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 4.46,
+          "salt": 1.1,
+          "carbs": 40.9,
+          "sugar": 0,
+          "protein": 44.5,
+          "calories": 382,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 1.94
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 3 x 10 Kwang Cheon Kim bundle is composed of the same dry 25g nori unit; independent exact-unit and bundle labels establish ambient storage.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2649-Glony-do-sushi-Yaki-Nori-GOLD-3-x-10-szt-KC.html",
+          "kind": "supplier-bundle",
+          "supports": "Confirms the exact three-pack identity."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-2649-Koreanskie-Glony-Algi-Gold-30-szt-KC.html",
+          "kind": "retailer-bundle",
+          "supports": "Confirms the same exact 30-sheet bundle and moisture-protected storage."
+        },
+        {
+          "url": "https://1mal1japan.de/en/produkt/sushi-nori-sheets-25g-10-sheets-kwang-cheon-kim/",
+          "kind": "retailer-label",
+          "supports": "Exact member unit specifies ambient storage away from sunlight."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/glony-do-sushi-yaki-nori-gold-3-x-10-szt-kc",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000539",
+      "productId": "83158f9d-da2a-4cd7-acbe-e486b3819dca",
+      "variantId": "24e45455-25fb-4465-abaa-368275afadee",
+      "name": "Glony do sushi Yaki Nori GOLD 5 x 10 szt. - KC",
+      "slug": "glony-do-sushi-yaki-nori-gold-5-x-10-szt-kc",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "10 arkuszy prażonych nori klasy Gold - 25g",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 4.46,
+          "salt": 1.1,
+          "carbs": 40.9,
+          "sugar": 0,
+          "protein": 44.5,
+          "calories": 382,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 1.94
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "10 arkuszy prażonych nori klasy Gold - 25g",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 4.46,
+          "salt": 1.1,
+          "carbs": 40.9,
+          "sugar": 0,
+          "protein": 44.5,
+          "calories": 382,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 1.94
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 5 x 10 Kwang Cheon Kim bundle contains five matching dry nori units; the source bundle and independent exact-unit family labels establish ambient shelf storage.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2650-Glony-do-sushi-Yaki-Nori-GOLD-5-x-10-szt-KC.html",
+          "kind": "supplier-bundle",
+          "supports": "Confirms the exact five-pack and its matching member units."
+        },
+        {
+          "url": "https://1mal1japan.de/en/produkt/sushi-nori-sheets-25g-10-sheets-kwang-cheon-kim/",
+          "kind": "retailer-label",
+          "supports": "Exact 25g/10-sheet member unit specifies ambient storage away from sunlight."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-2649-Koreanskie-Glony-Algi-Gold-30-szt-KC.html",
+          "kind": "retailer-bundle",
+          "supports": "The same product family and consumer unit independently corroborate dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/glony-do-sushi-yaki-nori-gold-5-x-10-szt-kc",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000564",
+      "productId": "9772939b-e59e-4f3f-b110-0c629561662a",
+      "variantId": "5352ac81-e706-4ea3-85c5-2763a33955ac",
+      "name": "Algi Sushi Nori Gold 50 szt. - Sen Soy",
+      "slug": "algi-sushi-nori-gold-50-szt-sen-soy",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Suszone algi morskie Nori 125g",
+        "storageZone": null,
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 2.5,
+          "carbs": 42,
+          "sugar": 0,
+          "protein": 42.5,
+          "calories": 361,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "265455d4-4635-430a-bb50-9d8f3d4fcc25",
+          "name": "Arkusze Nori / Gim",
+          "slug": "arkusze-nori-gim",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Suszone algi morskie Nori 125g",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": null,
+        "unitOfMeasure": null,
+        "nutritionFacts": {
+          "fat": 2.5,
+          "carbs": 42,
+          "sugar": 0,
+          "protein": 42.5,
+          "calories": 361,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Sen Soy 50-sheet/125g listings identify a dry nori product that must be protected from moisture; only unopened storage is changed.",
+      "evidence": [
+        {
+          "url": "https://e-spar.com.pl/towar/sushi-nori-sen-soy-50-arkuszy/304546",
+          "kind": "retailer-label",
+          "supports": "Confirms exact EAN 8936181660547, 125g/50-sheet identity and dry storage."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-2761-Algi-Nori-Gold-50-szt-125g-SEN-SOY.html",
+          "kind": "retailer-label",
+          "supports": "Independently confirms exact pack identity and moisture-protected shelf storage."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-2761-Algi-Sushi-Nori-Gold-50-szt-Sen-Soy.html",
+          "kind": "supplier-label",
+          "supports": "Confirms the mapped source product and formula."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/algi-sushi-nori-gold-50-szt-sen-soy",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000234",
+      "productId": "1f5af118-c419-4fbb-b1cd-1c9689105e76",
+      "variantId": "1ca36038-05ca-4117-b22e-2aa93ac6421b",
+      "name": "Wakame (miyeok) suszone wodorosty sałatkowe 25g - CJO Essential",
+      "slug": "wakame-miyeok-suszone-wodorosty-salatkowe-25g-cjo-essential",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "a7edbaad-4696-4d12-bba0-588a39971511",
+          "name": "Wakame / Miyeok",
+          "slug": "wakame-miyeok",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% suszone wakame",
+        "storageZone": null,
+        "pricePerUnit": "348.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 4,
+          "carbs": 39.78,
+          "protein": 22,
+          "calories": 207,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "a7edbaad-4696-4d12-bba0-588a39971511",
+          "name": "Wakame / Miyeok",
+          "slug": "wakame-miyeok",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% suszone wakame",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "348.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 4,
+          "carbs": 39.78,
+          "protein": 22,
+          "calories": 207,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Independent exact-GTIN CJO 25g wakame listings specify dry shelf storage. Conflicting trace-shellfish statements are deliberately not imported.",
+      "evidence": [
+        {
+          "url": "https://saigon-monsun.com/cheong-jeong-won-dried-Seaweed-Wakame-25g",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801052202044 and 25g identity with dry storage."
+        },
+        {
+          "url": "https://longdan.co.uk/ja/products/ds-cjo-dried-seaweed-25g",
+          "kind": "retailer-label",
+          "supports": "Independently confirms the exact CJO 25g product and ambient storage."
+        },
+        {
+          "url": "https://asianfood.nz/collections/korean-seaweed/products/chung-jung-one-dried-seaweed-25g-80g-100g-200g",
+          "kind": "retailer-label",
+          "supports": "Shows market-specific trace-allergen wording, which is intentionally held."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/wakame-miyeok-suszone-wodorosty-salatkowe-25g-cjo-essential",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000352",
+      "productId": "3b327d75-8dbf-488f-b314-4ce50670ff0b",
+      "variantId": "6abf1f95-1bc1-4713-b45e-669362efedc0",
+      "name": "Wakame, suszone wodorosty 100g - Eagle Brand",
+      "slug": "wakame-suszone-wodorosty-100g-eagle-brand",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "a7edbaad-4696-4d12-bba0-588a39971511",
+          "name": "Wakame / Miyeok",
+          "slug": "wakame-miyeok",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% suszone wodorosty morskie wakame",
+        "storageZone": null,
+        "pricePerUnit": "135.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 4,
+          "salt": 23.75,
+          "carbs": 41.8,
+          "sugar": 0,
+          "protein": 18,
+          "calories": 138,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "a7edbaad-4696-4d12-bba0-588a39971511",
+          "name": "Wakame / Miyeok",
+          "slug": "wakame-miyeok",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% suszone wodorosty morskie wakame",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "135.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 4,
+          "salt": 23.75,
+          "carbs": 41.8,
+          "sugar": 0,
+          "protein": 18,
+          "calories": 138,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact Eagle Brand 100g wakame listings consistently describe a dry shelf product; no positive regulated allergen is invented.",
+      "evidence": [
+        {
+          "url": "https://www.waiyeehong.com/food-ingredients/dried-products/dried-beancurd-seaweed/dried-wakame-seaweed-fueru-wakame?language=en",
+          "kind": "retailer-label",
+          "supports": "Confirms exact Eagle Brand 100g/EAN 4901536033356 and dry storage."
+        },
+        {
+          "url": "https://b2b.kuchnieswiata.com.pl/wakame-seaweed-cn-100g-20",
+          "kind": "distributor-label",
+          "supports": "Independently confirms the exact pack and cool, dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/wakame-suszone-wodorosty-100g-eagle-brand",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000025",
+      "productId": "12ce76e0-949b-4a99-acde-fb8643d64880",
+      "variantId": "ff73cc9c-6ef1-402b-ba02-7e4aae2e93bf",
+      "name": "Wodorosty kombu 100g Asia Kitchen",
+      "slug": "wodorosty-kombu-100g-asia-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "9f4269f0-a59e-4c3f-89c1-08de03b8b9cc",
+          "name": "Kombu / Dasima",
+          "slug": "kombu-dasima",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% alg morskich kombu",
+        "storageZone": null,
+        "pricePerUnit": "155.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "9f4269f0-a59e-4c3f-89c1-08de03b8b9cc",
+          "name": "Kombu / Dasima",
+          "slug": "kombu-dasima",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% alg morskich kombu",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "155.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Asia Kitchen kombu labels consistently require dry, cool ambient storage. Conflicting nutrition generations and the separate iodine warning are left unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-78-Wodorosty-kombu-100g-Asia-Kitchen.html",
+          "kind": "supplier-label",
+          "supports": "Exact mapped product states dry, cool storage and contains the iodine warning."
+        },
+        {
+          "url": "https://www.kaufland.de/product/516124611/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5904422540104 independently confirms dry, cool storage."
+        },
+        {
+          "url": "https://schroniskobukowina.pl/wodorosty-kombu-100g-asia-kitchen",
+          "kind": "retailer-label",
+          "supports": "Exact EAN and 100g pack corroborate room-temperature storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/wodorosty-kombu-100g-asia-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000069",
+      "productId": "8c8ec793-c6a8-4c5e-ad09-5a6e44578392",
+      "variantId": "75e6979f-233f-4a2a-8c03-6d4d003abb34",
+      "name": "Grzyby shiitake w zalewie 284g Diamond",
+      "slug": "grzyby-shiitake-w-zalewie-284g-diamond",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "63153137-4198-4c98-871b-a7d35caf221d",
+          "name": "Grzyby shiitake",
+          "slug": "grzyby-shiitake",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Grzyby shiitake, woda, sól, regulator kwasowości: kwas cytrynowy",
+        "storageZone": null,
+        "pricePerUnit": "23.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.86,
+          "carbs": 0.5,
+          "sugar": 0.5,
+          "protein": 1.6,
+          "calories": 15,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "63153137-4198-4c98-871b-a7d35caf221d",
+          "name": "Grzyby shiitake",
+          "slug": "grzyby-shiitake",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Grzyby shiitake, woda, sól, regulator kwasowości: kwas cytrynowy",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "23.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.86,
+          "carbs": 0.5,
+          "sugar": 0.5,
+          "protein": 1.6,
+          "calories": 15,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Diamond shiitake 284g labels specify cool, dry room-temperature storage; refrigeration applies only after opening.",
+      "evidence": [
+        {
+          "url": "https://leclerc.com.pl/diamond-grzyby-shiitake-cale-284-g",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 4316734039619 and cool, dry unopened storage."
+        },
+        {
+          "url": "https://przepisychinskie.pl/grzyby-shiitake-poku-tonko-w-zalewie-284g-diamond",
+          "kind": "retailer-label",
+          "supports": "Exact Diamond 284g pack independently confirms ambient unopened storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/grzyby-shiitake-w-zalewie-284g-diamond",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000089",
+      "productId": "86eba157-77c4-47a8-9e10-465f49055467",
+      "variantId": "530a0635-d103-4656-9977-2332aaf43e61",
+      "name": "Grzyby słomiane (pochwiaki) 425g - Diamond",
+      "slug": "grzyby-slomiane-pochwiaki-425g-diamond",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "7be2022f-8bd6-4c59-ae49-0091d5b40d69",
+          "name": "Inne grzyby azjatyckie",
+          "slug": "inne-grzyby-azjatyckie",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Grzyby słomiane (Volvariella volvacea), woda, sól",
+        "storageZone": null,
+        "pricePerUnit": "25.86",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.66,
+          "carbs": 1.6,
+          "sugar": 0.5,
+          "protein": 2.9,
+          "calories": 24,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "7be2022f-8bd6-4c59-ae49-0091d5b40d69",
+          "name": "Inne grzyby azjatyckie",
+          "slug": "inne-grzyby-azjatyckie",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Grzyby słomiane (Volvariella volvacea), woda, sól",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "25.86",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.66,
+          "carbs": 1.6,
+          "sugar": 0.5,
+          "protein": 2.9,
+          "calories": 24,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Diamond straw-mushroom 425g labels consistently specify dry, cool shelf storage; after-opening refrigeration is not used as the unopened class.",
+      "evidence": [
+        {
+          "url": "https://www.cocowoods.cz/en/diamond-canned-mushrooms-425g/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 4316734039572, pack and dry-cool unopened storage."
+        },
+        {
+          "url": "https://asia-foodstore.de/diamond-reisstroh-pilze-425g/200g",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN independently corroborates cool, dry shelf storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/grzyby-slomiane-pochwiaki-425g-diamond",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000957",
+      "productId": "753061da-9a37-4ca8-9d5c-bb5166850fe6",
+      "variantId": "e9fe7c19-e20a-4ac7-848e-a5a9c1afe84c",
+      "name": "Grzyby shiitake w zalewie 284g - House of Asia",
+      "slug": "grzyby-shiitake-w-zalewie-284g-house-of-asia",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "63153137-4198-4c98-871b-a7d35caf221d",
+          "name": "Grzyby shiitake",
+          "slug": "grzyby-shiitake",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Grzyby shiitake (Lentinus edodes (Berk.) Singer) 54,9%, woda, sól.",
+        "storageZone": null,
+        "pricePerUnit": "37.32",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0.72,
+          "carbs": 0,
+          "sugar": 0,
+          "protein": 1.6,
+          "calories": 15,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "63153137-4198-4c98-871b-a7d35caf221d",
+          "name": "Grzyby shiitake",
+          "slug": "grzyby-shiitake",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Grzyby shiitake (Lentinus edodes (Berk.) Singer) 54,9%, woda, sól.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "37.32",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0.72,
+          "carbs": 0,
+          "sugar": 0,
+          "protein": 1.6,
+          "calories": 15,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Independent exact-EAN House of Asia shiitake 284g labels specify dry, cool unopened storage and reserve refrigeration for after opening.",
+      "evidence": [
+        {
+          "url": "https://www.frisco.pl/pid%2C142548/n%2Chouse-of-asia-grzyby-shiitake-%28w-zalewie%29/stn%2Cproduct",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5902898828122 and dry, cool unopened storage."
+        },
+        {
+          "url": "https://www.bee.pl/house-of-asia-grzyby-shiitake-w-zalewie-284-g_p1533451.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN independently corroborates ambient storage away from sunlight."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/grzyby-shiitake-w-zalewie-284g-house-of-asia",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000308",
+      "productId": "af4d6e84-9d20-41c9-8da7-c9a73c340942",
+      "variantId": "cc8803b8-192e-472b-8f71-8995a89430f0",
+      "name": "Yuba, suszone płaty tofu 200g - Swallow Sailing",
+      "slug": "yuba-suszone-platy-tofu-200g-swallow-sailing",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "d7442ca6-6767-46e4-9e12-ff8d0f824d89",
+          "name": "Tofu",
+          "slug": "tofu",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Soja, woda",
+        "storageZone": null,
+        "pricePerUnit": "133.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 9,
+          "carbs": 9,
+          "sugar": 0,
+          "protein": 19,
+          "calories": 190,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 8
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "d7442ca6-6767-46e4-9e12-ff8d0f824d89",
+          "name": "Tofu",
+          "slug": "tofu",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Soja, woda",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "133.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 9,
+          "carbs": 9,
+          "sugar": 0,
+          "protein": 19,
+          "calories": 190,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 8
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Swallow Sailing yuba 200g labels specify dry, cool shelf storage. Existing soybean allergen data is retained and conflicting nutrition generations are not imported.",
+      "evidence": [
+        {
+          "url": "https://asiapoint.de/tofu-blaetter-getrocknet-swallow-sailing-200g",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 6931309400090 and dry storage."
+        },
+        {
+          "url": "https://b2b.kuchnieswiata.com.pl/soja-suszyuba-arkusze-200g/20",
+          "kind": "distributor-label",
+          "supports": "Exact EAN independently confirms cool, dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/yuba-suszone-platy-tofu-200g-swallow-sailing",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ],
+  "holds": [
+    {
+      "sku": "ADG-000105",
+      "reason": "The historical mapped source identifies a Diamond 22cm/300g paper while the live row and stored EAN identify Ricefield Cu Chi. Although Ricefield storage evidence is consistent, this batch does not pin the EAN in SQL, so an identity-sensitive transition is held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-388-Papier-ryzowy-okragly-22cm-300g-DIAMOND.html",
+          "kind": "historical-source",
+          "supports": "The immutable historical mapping resolves to Diamond, not the live Ricefield brand."
+        },
+        {
+          "url": "https://leclerc.com.pl/ricefield-cu-chi-papier-ryzowy-o22-cm",
+          "kind": "retailer-label",
+          "supports": "Exact live EAN 4316734047805 identifies Ricefield and dry storage, demonstrating the source-brand conflict."
+        },
+        {
+          "url": "https://kkpolska.pl/product/326/papier_ryzowy_cu_chi_22_cm.html",
+          "kind": "distributor-record",
+          "supports": "Distributor record corroborates the live Ricefield EAN and ambient storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/papier-ryzowy-okragly-22cm-300g-ricefield-cu-chi",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000121",
+      "reason": "The historical mapped source identifies a Diamond square paper while the live row and stored EAN identify Ricefield Cu Chi. The source-brand conflict must be reconciled in an identity-pinned batch before storage is changed.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-448-Papier-ryzowy-kwadratowy-16cm-300g-DIAMOND.html",
+          "kind": "historical-source",
+          "supports": "The immutable historical mapping resolves to Diamond, not the live Ricefield brand."
+        },
+        {
+          "url": "https://leclerc.com.pl/ricefield-cu-chi-papier-ryzowy-16-x-16-cm",
+          "kind": "retailer-label",
+          "supports": "Exact live EAN 4316734047812 identifies Ricefield and dry storage, demonstrating the mismatch."
+        },
+        {
+          "url": "https://www.gourmet-versand.com/en/article12643/rice-paper-square-16x16cm-300-g-40-sheets.html",
+          "kind": "retailer-label",
+          "supports": "Independently corroborates the Ricefield pack and dry shelf storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/papier-ryzowy-kwadratowy-16x16cm-300g-ricefield-cu-chi",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000702",
+      "reason": "Production already contains AMBIENT storage, cereals and soybeans allergens, and a complete nutrition object consistent with exact-EAN listings; no actual in-scope transition remains.",
+      "evidence": [
+        {
+          "url": "https://yamatomarket.pl/product/tofu-inari-540g-nishimoto/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 4903127804024 corroborates the 24-piece/540g product and existing metadata."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-3396-Inari-smazone-kieszonki-tofu-540g-Nishimoto.html",
+          "kind": "supplier-label",
+          "supports": "Confirms the mapped exact product identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/edomae-inari-age-smazone-kieszonki-tofu-24-szt-540g-nishimoto",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000062",
+      "reason": "The live row says sliced Mun mushrooms, while its historical source ID resolves to whole Asia Kitchen mushrooms with a different EAN. Storage and food metadata cannot be transferred across that identity mismatch.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-224-Suszone-grzyby-mun-cale-100g-Asia-Kitchen.html",
+          "kind": "historical-source",
+          "supports": "Mapped source ID 224 is the whole-mushroom product."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-251-Suszone-grzyby-mun-krojone-100g-Asia-Kitchen.html",
+          "kind": "supplier-label",
+          "supports": "The sliced product is a distinct source ID and exact EAN."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-224-Suszone-grzyby-mun-cale-100g-Asia-Kitchen.html",
+          "kind": "retailer-label",
+          "supports": "Independently corroborates that source ID 224 is whole, not sliced."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/suszone-grzyby-mun-krojone-100g",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000179",
+      "reason": "An official California Proposition 65 complaint names the exact UPC and alleges arsenic exposure. This is not treated as a recall or adjudicated finding, but the schema has no warning field, so even an isolated storage transition is held for current EU-label review.",
+      "evidence": [
+        {
+          "url": "https://oag.ca.gov/system/files/prop65/complaints/2022-02772C8030.pdf",
+          "kind": "official-safety-complaint",
+          "supports": "Official complaint explicitly names Assi dried kelp 56g and UPC 081652071051 with an arsenic-exposure allegation."
+        },
+        {
+          "url": "https://mykorea.pl/pl/p/Dashima-suszone-glony-konbu-Assi/1752",
+          "kind": "retailer-label",
+          "supports": "Confirms the exact UPC/product identity and dry storage."
+        },
+        {
+          "url": "https://asiapoint.de/dashima-konbu-blaetter-assi-56g",
+          "kind": "retailer-label",
+          "supports": "Independently confirms the exact 56g Assi product."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/glony-dasima-kombu-suszone-56g-assi-brand",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000382",
+      "reason": "Production already has AMBIENT storage, while exact-GTIN nutrition panels materially conflict and a historical lot-specific excess-iodine recall exists. A current physical label is required before any nutrition or warning-related transition.",
+      "evidence": [
+        {
+          "url": "https://www.chef1.co.kr/product/prod-agricultural-livestock/%EC%B2%AD%EC%A0%95%EB%8B%A4%EC%8B%9C%EB%A7%88150g/",
+          "kind": "manufacturer-page",
+          "supports": "Official exact-barcode page confirms the 150g CJO kombu identity and ambient format."
+        },
+        {
+          "url": "https://kocket.de/collections/chung-jung-one/products/chung-jung-one-getrockneter-kelp-150g",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8801052202211 presents a materially different nutrition panel from other exact-EAN sources."
+        },
+        {
+          "url": "https://www.cleankids.de/2013/09/20/produktrueckrufe/ruckrufe-lebensmittel/40993/",
+          "kind": "historical-recall",
+          "supports": "Documents a historical lot-specific iodine recall; it is not represented as a current recall."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/wodorosty-kombu-dasima-ciete-150g-cjo-essential",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000029",
+      "reason": "Exact-EAN labels describe pure dried shiitake and production already has AMBIENT storage; there is no positive regulated allergen or other non-zero transition to write.",
+      "evidence": [
+        {
+          "url": "https://azjamarket.pl/pl/products/grzyby-shiitake-suszone-50g-asia-kitchen-998.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5903796783056 and 50g pure dried-shiitake identity."
+        },
+        {
+          "url": "https://www.frisco.pl/pid%2C131920/n%2Casia-kitchen-grzyby-shiitake/stn%2Cproduct",
+          "kind": "retailer-label",
+          "supports": "Independently confirms exact EAN and ingredient identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/grzyby-shiitake-suszone-50g-asia-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000034",
+      "reason": "Exact-EAN labels describe pure dried shiitake and production already has AMBIENT storage; an empty or negative allergen declaration is not invented.",
+      "evidence": [
+        {
+          "url": "https://paleczkami.pl/product-pol-128-Grzyby-shiitake-suszone-100G-Asia-Kitchen.html",
+          "kind": "supplier-label",
+          "supports": "Exact EAN 5903796783049 and pure dried-shiitake identity."
+        },
+        {
+          "url": "https://www.kaufland.pl/product/537579647/",
+          "kind": "retailer-label",
+          "supports": "Independently confirms exact pack/EAN and ingredient identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/grzyby-shiitake-suszone-100g-asia-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000071",
+      "reason": "Exact-EAN labels describe dried Mun mushrooms and production already has AMBIENT storage; no positive regulated allergen exists to write. The cook-before-eating warning has no field in this batch.",
+      "evidence": [
+        {
+          "url": "https://www.kaufland.pl/product/516124603/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5903796783087 and sliced dried-Mun identity."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-251-Suszone-grzyby-mun-krojone-100g-Asia-Kitchen.html",
+          "kind": "supplier-label",
+          "supports": "Independently confirms exact EAN, product and preparation warning."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/suszone-grzyby-mun-krojone-100g-asia-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000349",
+      "reason": "Exact-EAN labels identify pure dried whole Mun mushrooms and production already has AMBIENT storage; there is no positive regulated allergen transition.",
+      "evidence": [
+        {
+          "url": "https://paleczkami.pl/product-pol-1444-Suszone-grzyby-Mun-cale-50g.html",
+          "kind": "supplier-label",
+          "supports": "Exact EAN 6924394100181 and whole dried-Mun identity."
+        },
+        {
+          "url": "https://allegro.pl/oferta/suszone-grzyby-mun-cale-50g-12859013175",
+          "kind": "retailer-label",
+          "supports": "Independently confirms the exact code/EAN and product."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/suszone-grzyby-mun-cale-50g-green-pagoda",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000350",
+      "reason": "Exact-pack labels identify dried shredded Mun mushrooms and production already has AMBIENT storage; a negative retailer allergen assertion is not converted into a positive declaration.",
+      "evidence": [
+        {
+          "url": "https://www.kaufland.de/product/549047809/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 6924394100167 and dried-Mun identity; retailer reports no allergens."
+        },
+        {
+          "url": "https://www.littleindia.pl/en/3744.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact manufacturer-code and pack confirmation."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/suszone-grzyby-mun-nitki-50g-green-pagoda",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000371",
+      "reason": "The mapped source describes a Hiep Long 1kg product without a GTIN, while independent 1kg results identify a materially different Green Pagoda product and nutrition panel. Barcode/current-label evidence is required.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1535-Suszone-grzyby-mun-krojone-1kg.html",
+          "kind": "historical-source",
+          "supports": "Mapped source identifies Hiep Long and one nutrition generation but no exact GTIN."
+        },
+        {
+          "url": "https://b2b.kuchnieswiata.com.pl/grzyby-mun-krojone-nitki-suszone-1kg/10-green-pagoda",
+          "kind": "distributor-label",
+          "supports": "A likely lookalike is Green Pagoda GTIN 6924394100198 with materially different identity/nutrition."
+        },
+        {
+          "url": "https://asiafoods.pl/pl/product/2514%2Cgrzyby-kawalki-mun-cn-1kg-opk-10-krt",
+          "kind": "distributor-label",
+          "supports": "Independently corroborates the distinct Green Pagoda 1kg product."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/suszone-grzyby-mun-krojone-1kg",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ]
+}
