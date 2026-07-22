@@ -8,6 +8,44 @@
 
 ## Project Documentation
 
+### A transitive image-library override can bypass framework adapter changes
+- **Error:** The first release candidate inherited vulnerable Sharp 0.34.5
+  through Next, but overriding Sharp alone would have paired a new native image
+  library with the older Next image-optimizer adapter.
+- **Cause:** The security advisory was visible at the transitive package level,
+  while the upstream fix also changed Next's image metadata and AVIF handling.
+- **Fix:** Upgrade Next and `eslint-config-next` together to the exact patched
+  preview line that declares Sharp 0.35.3, then validate standalone JPEG, WebP,
+  and AVIF optimization before release.
+- **Rule:** When a framework owns a native transitive dependency and its
+  adapter, use a matching patched framework release; do not force the native
+  dependency independently without an upstream compatibility contract.
+
+### Preview framework peers need a narrow explicit compatibility contract
+- **Error:** A clean storefront `npm ci` rejected Next 16.3 preview even though
+  the application compiled against it, and `next dev` could generate new agent
+  instruction files that made the guarded worktree dirty.
+- **Cause:** Stable `next-intl` declares `^16.0.0`, whose SemVer range excludes
+  prereleases, while this Next preview also enables `agentRules` by default.
+- **Fix:** Override only `next-intl`'s Next peer to the exact root dependency
+  with `$next`, prove one deduplicated tree with plain `npm ci`, and set
+  `agentRules: false` in both application configs.
+- **Rule:** Never use broad `legacy-peer-deps` for one preview peer mismatch.
+  Encode the narrow peer relationship explicitly and disable preview defaults
+  that mutate a release worktree.
+
+### Server-side relative config fetches can deadlock static prerender
+- **Error:** Next 16.3 preview compiled the storefront but timed out repeatedly
+  while prerendering `/sitemap.xml` whenever the static config fallback was the
+  relative URL `/config/asiandeligo.json`.
+- **Cause:** Server config loading passed the browser-relative URL to `fetch()`;
+  during static generation that becomes a self-request before a server exists.
+- **Fix:** Split browser-safe config helpers from the server loader, read only
+  validated `/config/<safe-name>.json` files under the fixed `public/config`
+  root, and cover SSR config plus clean production builds in standalone smoke.
+- **Rule:** Relative assets may be fetched by the browser, but server build and
+  SSR paths must read tracked local assets directly or use an absolute origin.
+
 ### Search audits need bounded load and anti-false-green assertions
 - **Error:** The first 36-keyword audit sent every aliased search to both the
   direct and proxy URLs concurrently, while a shared single result could make

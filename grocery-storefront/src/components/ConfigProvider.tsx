@@ -5,7 +5,7 @@ import {
   extractStorefrontConfig,
   getStorefrontConfigUrls,
   withStorefrontConfigDefaults,
-} from '@/lib/storefront-config';
+} from '@/lib/storefront-config-shared';
 import { localizeConfiguredStorefront } from '@/lib/configured-content-localization';
 import type { StorefrontConfig } from '@/types/storefront-config';
 

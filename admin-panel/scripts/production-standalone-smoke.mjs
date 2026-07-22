@@ -20,6 +20,9 @@ import { fileURLToPath } from 'node:url';
 const appDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const serverEntry = resolve(appDir, '.next/standalone/server.js');
 const fixtureConfig = resolve(appDir, 'data/config-asiandeligo.json');
+const imageFixtureSource = resolve(appDir, 'public/brand/asia-deli-go-logo.jpg');
+const imageFixtureDir = resolve(appDir, '.next/standalone/public/__image-smoke__');
+const imageFixtureName = 'source.jpg';
 const adminUsername = 'smoke-admin';
 const currentPassword = 'Smoke current password 2026!';
 const newPassword = 'Smoke replacement password 2026!';
@@ -27,6 +30,7 @@ const configuredOrigin = 'https://admin.smoke.example';
 
 await access(serverEntry);
 await access(fixtureConfig);
+await access(imageFixtureSource);
 
 const delay = (milliseconds) => new Promise((resolveDelay) => {
   setTimeout(resolveDelay, milliseconds);
@@ -74,6 +78,24 @@ async function login(baseUrl, password) {
   });
 }
 
+async function assertOptimizedImage(baseUrl, accept, expectedType) {
+  const response = await fetch(
+    `${baseUrl}/_next/image?url=%2F__image-smoke__%2F${imageFixtureName}&w=256&q=75`,
+    { headers: { Accept: accept } },
+  );
+  assert.equal(response.status, 200, `image optimizer must encode ${expectedType}`);
+  assert.equal(response.headers.get('content-type'), expectedType);
+
+  const body = Buffer.from(await response.arrayBuffer());
+  assert(body.length > 100, `${expectedType} optimizer output must not be empty`);
+  if (expectedType === 'image/webp') {
+    assert.equal(body.subarray(0, 4).toString('ascii'), 'RIFF');
+    assert.equal(body.subarray(8, 12).toString('ascii'), 'WEBP');
+  } else {
+    assert.deepEqual([...body.subarray(0, 3)], [0xff, 0xd8, 0xff]);
+  }
+}
+
 const runtimeRoot = await mkdtemp(join(tmpdir(), 'asiandeligo-admin-smoke-'));
 const dataDir = join(runtimeRoot, 'data');
 const authDir = join(runtimeRoot, 'auth');
@@ -82,6 +104,9 @@ await mkdir(dataDir);
 await mkdir(authDir, { mode: 0o700 });
 await mkdir(uploadDir);
 await copyFile(fixtureConfig, join(dataDir, 'config-asiandeligo.json'));
+await rm(imageFixtureDir, { recursive: true, force: true });
+await mkdir(imageFixtureDir, { recursive: true });
+await copyFile(imageFixtureSource, join(imageFixtureDir, imageFixtureName));
 const initialPasswordHash = await createPasswordHash(currentPassword);
 await writeFile(join(authDir, 'admin-auth-state.json'), `${JSON.stringify({
   schemaVersion: 1,
@@ -150,6 +175,9 @@ try {
   assert.equal(loginPageResponse.status, 200);
   assert.match(loginPageResponse.headers.get('cache-control') ?? '', /no-store/i);
   assert.equal(loginPageResponse.headers.get('x-powered-by'), null);
+
+  await assertOptimizedImage(baseUrl, 'image/jpeg', 'image/jpeg');
+  await assertOptimizedImage(baseUrl, 'image/webp', 'image/webp');
 
   const admin = await fetch(`${baseUrl}/admin`, { redirect: 'manual' });
   assert.equal(admin.status, 307);
@@ -260,4 +288,5 @@ try {
     await Promise.race([once(server, 'exit'), delay(3_000)]);
   }
   await rm(runtimeRoot, { recursive: true, force: true });
+  await rm(imageFixtureDir, { recursive: true, force: true });
 }

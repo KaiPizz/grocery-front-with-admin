@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 const serverConfigSource = readFileSync(new URL('../src/lib/storefront-config.ts', import.meta.url), 'utf8');
+const sharedConfigSource = readFileSync(new URL('../src/lib/storefront-config-shared.ts', import.meta.url), 'utf8');
 const clientProviderSource = readFileSync(new URL('../src/components/ConfigProvider.tsx', import.meta.url), 'utf8');
 const heroBannerSource = readFileSync(new URL('../src/components/blocks/HeroBanner.tsx', import.meta.url), 'utf8');
 const staticConfigUrl = new URL('../public/config/kenmito.json', import.meta.url);
@@ -51,10 +52,14 @@ function readWebpDimensions(bytes) {
 }
 
 test('storefront can load a static config source when no admin config API is configured', () => {
-  assert.match(serverConfigSource, /NEXT_PUBLIC_STATIC_CONFIG_URL/);
+  assert.match(sharedConfigSource, /NEXT_PUBLIC_STATIC_CONFIG_URL/);
   assert.match(clientProviderSource, /getStorefrontConfigUrls/);
   assert.match(serverConfigSource, /extractStorefrontConfig/);
   assert.match(clientProviderSource, /extractStorefrontConfig/);
+  assert.match(serverConfigSource, /readFile\(filePath, 'utf8'\)/);
+  assert.match(serverConfigSource, /resolve\(process\.cwd\(\), 'public', 'config', fileName\)/);
+  assert.match(clientProviderSource, /storefront-config-shared/);
+  assert.doesNotMatch(clientProviderSource, /from '@\/lib\/storefront-config'/);
 });
 
 test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {

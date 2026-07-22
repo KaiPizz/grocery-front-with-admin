@@ -1,72 +1,18 @@
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
 import type { StorefrontConfig } from '@/types/storefront-config';
-import { DEFAULT_FULFILLMENT_CONFIG } from '@/lib/fulfillment';
+import {
+  extractStorefrontConfig,
+  getStorefrontConfigUrls,
+} from '@/lib/storefront-config-shared';
 
-const DEFAULT_COMMERCIAL_CONFIG: StorefrontConfig['commercial'] = {
-  enabled: false,
-  quickLinks: [],
-  collections: [],
-  outlet: {
-    enabled: false,
-    label: 'Outlet',
-    collectionSlug: null,
-  },
-  categoryHub: {
-    enabled: true,
-    items: [],
-  },
-};
-
-export function withStorefrontConfigDefaults(config: StorefrontConfig | null): StorefrontConfig | null {
-  if (!config) return null;
-
-  const commercial = config.commercial;
-
-  return {
-    ...config,
-    general: {
-      ...config.general,
-      fulfillment: config.general.fulfillment ?? DEFAULT_FULFILLMENT_CONFIG,
-    },
-    commercial: commercial
-      ? {
-        ...commercial,
-        categoryHub: commercial.categoryHub ?? DEFAULT_COMMERCIAL_CONFIG.categoryHub,
-      }
-      : DEFAULT_COMMERCIAL_CONFIG,
-  };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
-}
-
-export function extractStorefrontConfig(payload: unknown): StorefrontConfig | null {
-  if (!isRecord(payload)) return null;
-
-  const data = isRecord(payload.data) ? payload.data : null;
-  const candidate = data?.config ?? payload.config ?? payload.published ?? null;
-
-  if (!isRecord(candidate)) return null;
-
-  return withStorefrontConfigDefaults(candidate as unknown as StorefrontConfig);
-}
-
-export function getStorefrontConfigUrls(): string[] {
-  const apiUrl = process.env.NEXT_PUBLIC_CONFIG_API_URL?.trim();
-  const staticUrl = process.env.NEXT_PUBLIC_STATIC_CONFIG_URL?.trim();
-  const slug = process.env.NEXT_PUBLIC_SALON_SLUG || 'my-grocery-store';
-  const urls: string[] = [];
-
-  if (apiUrl) {
-    urls.push(`${apiUrl.replace(/\/$/, '')}/api/config/${encodeURIComponent(slug)}`);
-  }
-
-  if (staticUrl) {
-    urls.push(staticUrl);
-  }
-
-  return urls;
-}
+export {
+  extractStorefrontConfig,
+  getConfigString,
+  getStorefrontConfigUrls,
+  withStorefrontConfigDefaults,
+} from '@/lib/storefront-config-shared';
 
 interface FetchServerConfigOptions {
   cache?: RequestCache;
@@ -76,10 +22,44 @@ interface FetchServerConfigOptions {
   };
 }
 
+function getLocalPublicConfigName(url: string): string | null {
+  if (!url.startsWith('/') || url.startsWith('//')) return null;
+
+  let pathname: string;
+  try {
+    const parsed = new URL(url, 'https://local-static-config.invalid');
+    if (parsed.search || parsed.hash) return null;
+    pathname = decodeURIComponent(parsed.pathname);
+  } catch {
+    return null;
+  }
+
+  const match = /^\/config\/([A-Za-z0-9][A-Za-z0-9._-]*\.json)$/.exec(pathname);
+  return match?.[1] ?? null;
+}
+
+async function readLocalPublicConfig(url: string): Promise<StorefrontConfig | null> {
+  const fileName = getLocalPublicConfigName(url);
+  if (!fileName) return null;
+
+  try {
+    const filePath = resolve(process.cwd(), 'public', 'config', fileName);
+    return extractStorefrontConfig(JSON.parse(await readFile(filePath, 'utf8')));
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchServerConfig(
   options: FetchServerConfigOptions = {},
 ): Promise<StorefrontConfig | null> {
   for (const url of getStorefrontConfigUrls()) {
+    if (url.startsWith('/') && !url.startsWith('//')) {
+      const localConfig = await readLocalPublicConfig(url);
+      if (localConfig) return localConfig;
+      continue;
+    }
+
     try {
       const requestInit: RequestInit & { next?: FetchServerConfigOptions['next'] } = {};
 
@@ -92,8 +72,7 @@ export async function fetchServerConfig(
 
       const res = await fetch(url, requestInit);
       if (!res.ok) continue;
-      const json = await res.json();
-      const config = extractStorefrontConfig(json);
+      const config = extractStorefrontConfig(await res.json());
       if (config) return config;
     } catch {
       // Try the next configured source.
@@ -101,9 +80,4 @@ export async function fetchServerConfig(
   }
 
   return null;
-}
-
-export function getConfigString(value: string | null | undefined): string | undefined {
-  const nextValue = value?.trim();
-  return nextValue ? nextValue : undefined;
 }

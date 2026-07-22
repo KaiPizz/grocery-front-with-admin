@@ -6,6 +6,28 @@
 
 ---
 
+## 2026-07-22 Asia Deli Go Patched Image Pipeline Candidate
+
+- The first guarded release check correctly stopped before staging because
+  Next 16.2.10 resolved vulnerable Sharp 0.34.5 in both the admin and
+  storefront production dependency trees.
+- Both applications now pin the exact matching Next/ESLint preview line that
+  declares Sharp 0.35.3, including the framework image-optimizer changes
+  required by that Sharp release. Storefront keeps one narrow `next-intl` peer
+  override to the exact root Next version, and both apps disable the preview's
+  new dev-time agent-file generator so validation cannot dirty release source.
+- Server config loading now reads safe `/config/*.json` fallbacks directly from
+  `public/config` instead of self-fetching a relative URL during prerender. This
+  removes the reproducible `/sitemap.xml` build timeout while the browser keeps
+  its existing static-config refresh path.
+- Clean installs and production audits have zero findings. Both production
+  builds and standalone smokes pass, including server-rendered static config
+  plus JPEG/WebP/AVIF optimizer signatures; 75 focused Playwright cases covering
+  runtime security, image proxying, search, listings, and PDPs are green.
+- Production remains unchanged. This candidate must pass the Netcup build and
+  read-only Contabo preflight before a fresh owner confirmation can authorize
+  activation.
+
 ## 2026-07-22 Asia Deli Go Taxonomy And Search Quality Candidate
 
 - Assigned all 69 non-empty production category slugs explicitly to the ten

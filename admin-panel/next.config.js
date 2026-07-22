@@ -32,6 +32,9 @@ const securityHeaders = [
 
 const nextConfig = {
   output: 'standalone',
+  // Next 16.3 previews generate repository agent files during `next dev` by
+  // default. Keep this application and the guarded release worktree immutable.
+  agentRules: false,
   poweredByHeader: false,
   outputFileTracingRoot: __dirname,
   outputFileTracingExcludes: {
