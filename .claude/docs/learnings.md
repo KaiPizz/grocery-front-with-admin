@@ -686,5 +686,11 @@
 ### Treated configured homepage block order as a complete merchandising strategy
 - **Error:** Asia Deli Go rendered every enabled category and promotional block before the first product shelf, then added a generic campaign built from the first three catalog products. Products appeared several viewports down and the campaign label did not describe those products.
 - **Cause:** The storefront treated one flat admin block order as the full page hierarchy and inferred campaign products without an explicit collection or product source.
-- **Fix:** Category blocks are composed into one compact browse section, a single promotion follows the product shelf, and the inferred campaign is skipped when curated category navigation already exists. Verified language-specific hero artwork is filtered only while its exact media set matches, so later owner edits remain authoritative.
+- **Fix:** Category blocks are composed into one compact browse section, a single promotion follows the product shelf, and the inferred campaign is skipped when curated category navigation already exists.
 - **Rule:** Homepage presentation must distinguish navigation, commerce, fulfillment, and promotion. Never label arbitrary leading products as a curated campaign; require an explicit product source or omit the claim.
+
+### Hid owner-enabled hero slides in the presentation layer
+- **Error:** Asia Deli Go had six enabled hero slides in the published admin config, but the storefront carousel rendered only two.
+- **Cause:** Locale presentation code hardcoded a two-slide allowlist and replaced the configured slide array after it was loaded.
+- **Fix:** Removed the hero allowlist so Polish and English storefronts preserve all enabled slides and their admin-defined order; regression and accessibility tests now require six images and six controls.
+- **Rule:** Never silently hide owner-enabled CMS media in presentation localization. Flag questionable copy for explicit content remediation while keeping the published config as the display source of truth.

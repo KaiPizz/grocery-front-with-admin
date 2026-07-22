@@ -60,7 +60,7 @@ test.describe('homepage accessibility', () => {
 
     await expect(main.locator('h1')).toHaveCount(1);
     await expect(main.locator('h1')).toHaveText('Azjatyckie produkty spożywcze na co dzień');
-    await expect(heroImages).toHaveCount(2);
+    await expect(heroImages).toHaveCount(6);
     await expect(heroImages.nth(0)).toHaveAttribute('alt', 'Smaki Korei');
     await expect(heroImages.nth(1)).toHaveAttribute(
       'alt',
@@ -74,8 +74,8 @@ test.describe('homepage accessibility', () => {
     const carouselDots = page.getByTestId('mobile-home-hero').getByRole('button', {
       name: /przejdź do slajdu/i,
     });
-    await expect(carouselDots).toHaveCount(2);
-    for (let index = 0; index < 2; index += 1) {
+    await expect(carouselDots).toHaveCount(6);
+    for (let index = 0; index < 6; index += 1) {
       const box = await carouselDots.nth(index).boundingBox();
       expect(box).not.toBeNull();
       expect(Math.round(box!.width)).toBeGreaterThanOrEqual(44);

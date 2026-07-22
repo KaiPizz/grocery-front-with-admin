@@ -156,7 +156,7 @@ test.describe('catalog display localization', () => {
     const sourceSnapshot = JSON.stringify(source);
 
     const polish = localizeConfiguredStorefront(source, 'pl');
-    expect(polish).not.toBe(source);
+    expect(polish).toBe(source);
     expect(polish).not.toBeNull();
 
     const english = localizeConfiguredStorefront(source, 'en-GB');
@@ -235,17 +235,12 @@ test.describe('catalog display localization', () => {
     const polishHero = polish?.homepage.blocks.find((block) => block.type === 'hero');
     const englishHero = english?.homepage.blocks.find((block) => block.type === 'hero');
     expect(sourceHero?.type === 'hero' ? sourceHero.slides : []).toHaveLength(6);
-    expect(polishHero?.type === 'hero' ? polishHero.slides.map((slide) => slide.id) : []).toEqual([
-      'asiandeligo-drive-hero-slide-1',
-      'asiandeligo-drive-hero-slide-6',
-    ]);
-    const expectedEnglishHeroSlides = sourceHero?.type === 'hero'
-      ? sourceHero.slides.filter((slide) => [
-        'asiandeligo-drive-hero-slide-4',
-        'asiandeligo-drive-hero-slide-5',
-      ].includes(slide.id))
-      : [];
-    expect(englishHero?.type === 'hero' ? englishHero.slides : []).toEqual(expectedEnglishHeroSlides);
+    expect(polishHero?.type === 'hero' ? polishHero.slides : []).toEqual(
+      sourceHero?.type === 'hero' ? sourceHero.slides : [],
+    );
+    expect(englishHero?.type === 'hero' ? englishHero.slides : []).toEqual(
+      sourceHero?.type === 'hero' ? sourceHero.slides : [],
+    );
     expect(english?.homepage.blocks.flatMap((block) => {
       if (block.type === 'grid' || block.type === 'round_grid') {
         return block.items.map((item) => ({
@@ -289,7 +284,7 @@ test.describe('catalog display localization', () => {
     )).toBe('/pl/categories/dania-gotowe');
   });
 
-  test('renders the verified production homepage copy and links fully in English', async ({ page }, testInfo) => {
+  test('localizes homepage chrome in English while preserving owner-managed hero artwork', async ({ page }, testInfo) => {
     await mockMobileStorefront(page, { catalogLabels: 'polish-source' });
     await mockAsiaDeliGoProductionConfig(page);
     await page.setViewportSize({ width: 1280, height: 1000 });
@@ -298,18 +293,18 @@ test.describe('catalog display localization', () => {
     const body = page.locator('body');
     await expect(body).toContainText('Sauces and pastes');
     await expect(page.locator('h1.sr-only')).toHaveText('Asian groceries for everyday shopping');
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(2);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
     await expect(page.locator('[data-testid="desktop-home-hero"] img').first()).toHaveAttribute(
       'alt',
       /Asian groceries for everyday shopping/i,
     );
     await expect(page.locator('[data-testid="desktop-home-hero"] img').first()).toHaveAttribute(
       'src',
-      /asia-deli-go-hero-04\.webp/,
+      /asia-deli-go-hero-01\.webp/,
     );
     await expect(page.locator('[data-testid="desktop-home-hero"] source').first()).toHaveAttribute(
       'srcset',
-      /asia-deli-go-hero-04-mobile\.webp/,
+      /asia-deli-go-hero-01-mobile\.webp/,
     );
     await expect(page.locator('a[href^="/pl/"]')).toHaveCount(0);
 
@@ -356,12 +351,12 @@ test.describe('catalog display localization', () => {
 
     await page.setViewportSize({ width: 412, height: 915 });
     await expect(page.locator('[data-testid="mobile-home-hero"]')).toBeVisible();
-    await expect(page.locator('[data-testid="mobile-home-hero"] img')).toHaveCount(2);
+    await expect(page.locator('[data-testid="mobile-home-hero"] img')).toHaveCount(6);
     await expect.poll(async () => (
       page.locator('[data-testid="mobile-home-hero"] img').first().evaluate((image) => (
         (image as HTMLImageElement).currentSrc
       ))
-    )).toContain('asia-deli-go-hero-04-mobile.webp');
+    )).toContain('asia-deli-go-hero-01-mobile.webp');
     await page.setViewportSize({ width: 1280, height: 1000 });
     await expect(readyMealsLink).toBeVisible();
 
@@ -392,21 +387,21 @@ test.describe('catalog display localization', () => {
     }).first();
     await expect(readyMealsLink).toBeVisible();
 
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(2);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
     await page.getByRole('button', { name: /przejdź do slajdu 2/i }).click();
     await page.locator('button[aria-haspopup="listbox"]:visible').click();
     await page.getByRole('option', { name: /English/ }).click();
     await expect(page).toHaveURL(/\/en$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.locator('h1.sr-only')).toHaveText('Asian groceries for everyday shopping');
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(2);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
 
     await page.locator('button[aria-haspopup="listbox"]:visible').click();
     await page.getByRole('option', { name: /Polski/ }).click();
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'pl');
     await expect(page.locator('h1.sr-only')).toHaveText('Azjatyckie produkty spożywcze na co dzień');
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(2);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
   });
 
   test('shows English catalog labels while keeping the raw Polish country filter value', async ({ page }) => {

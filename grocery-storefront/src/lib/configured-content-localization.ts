@@ -75,29 +75,6 @@ const HORIZONTAL_BLOCK_COPY: Record<string, {
   },
 };
 
-const VERIFIED_HERO_MEDIA: Record<string, { imageUrl: string; mobileImageUrl: string }> = Object.fromEntries(
-  Array.from({ length: 6 }, (_, index) => {
-    const number = String(index + 1).padStart(2, '0');
-    return [
-      `asiandeligo-drive-hero-slide-${index + 1}`,
-      {
-        imageUrl: `/brand/hero/asia-deli-go-hero-${number}.webp`,
-        mobileImageUrl: `/brand/hero/asia-deli-go-hero-${number}-mobile.webp`,
-      },
-    ];
-  }),
-);
-
-const ENGLISH_HERO_SLIDE_IDS = new Set([
-  'asiandeligo-drive-hero-slide-4',
-  'asiandeligo-drive-hero-slide-5',
-]);
-
-const POLISH_HERO_SLIDE_IDS = new Set([
-  'asiandeligo-drive-hero-slide-1',
-  'asiandeligo-drive-hero-slide-6',
-]);
-
 const QUICK_LINK_COPY: Record<string, {
   label: ExactTranslation;
   description: ExactTranslation;
@@ -186,38 +163,7 @@ function localizeGridItem(item: GridItem): GridItem {
   return title ? { ...item, title: translateExact(item.title, title) } : item;
 }
 
-function filterVerifiedHeroSlides(block: BannerBlock, locale: string): BannerBlock {
-  if (block.type === 'hero' && block.id === 'asiandeligo-drive-hero-20260713') {
-    const matchesVerifiedMedia = block.slides.length === Object.keys(VERIFIED_HERO_MEDIA).length
-      && block.slides.every((slide) => {
-        const media = VERIFIED_HERO_MEDIA[slide.id];
-        return Boolean(
-          media
-          && slide.imageUrl === media.imageUrl
-          && slide.mobileImageUrl === media.mobileImageUrl,
-        );
-      });
-    const localeSlideIds = isEnglishLocale(locale)
-      ? ENGLISH_HERO_SLIDE_IDS
-      : POLISH_HERO_SLIDE_IDS;
-    const localeSlides = block.slides.filter((slide) => localeSlideIds.has(slide.id));
-
-    // The verified six-image set contains language-specific baked-in copy and
-    // one obsolete shipping promise. Keep only the safe pair for each locale.
-    // Any owner media edit disables this safeguard instead of hiding new work.
-    if (matchesVerifiedMedia && localeSlides.some((slide) => slide.enabled)) {
-      return { ...block, slides: localeSlides };
-    }
-  }
-
-  return block;
-}
-
 function localizeBlock(block: BannerBlock): BannerBlock {
-  if (block.type === 'hero') {
-    return filterVerifiedHeroSlides(block, 'en');
-  }
-
   if (block.type === 'grid' || block.type === 'round_grid') {
     return {
       ...block,
@@ -276,25 +222,10 @@ export function localizeConfiguredStorefront(
 ): StorefrontConfig | null {
   if (
     !config
+    || !isEnglishLocale(locale)
     || config.branding.storeName.trim() !== ASIA_DELI_GO_STORE_NAME
   ) {
     return config;
-  }
-
-  if (!isEnglishLocale(locale)) {
-    const blocks = config.homepage.blocks.map((block) => filterVerifiedHeroSlides(block, locale));
-
-    if (blocks.every((block, index) => block === config.homepage.blocks[index])) {
-      return config;
-    }
-
-    return {
-      ...config,
-      homepage: {
-        ...config.homepage,
-        blocks,
-      },
-    };
   }
 
   return {
