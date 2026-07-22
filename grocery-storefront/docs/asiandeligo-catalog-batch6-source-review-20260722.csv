@@ -1,0 +1,251 @@
+decision,id,slug,name,category,firstSku,sourceLegacyId,sourceResolution,sourceUrl,sourceStatus,currentIngredientsPresent,currentAllergensPresent,currentNutritionPresent,currentStorageZone,rawAllergenWarning,candidateAllergens,rawStorageText,candidateStorageZone,rawIngredients,nutritionServingSize,nutritionCaloriesKcal,nutritionEnergyKj,nutritionFat,nutritionSaturatedFat,nutritionCarbs,nutritionSugar,nutritionFiber,nutritionProtein,nutritionSalt,nutritionRaw,dietTraits,productTraits
+review_candidate,d8daa744-822d-4b90-872d-a5ca92f5b9f4,kawa-mielona-trung-nguyen-che-phin-4-500g,Kawa mielona Trung Nguyen Che Phin 4 - 500g,kawy,ADG-000485,KIMCHI-2480,historical_product_id_mapping,https://kimchi.pl/product-pol-2480.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Kawa średnio palona (Arabica i Robusta 98,9%, masło 1%, aromat czekolady 0,1%)",,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)|Kupująć ten produkt otrzymasz pkt.,
+no_metadata_found,96fa6853-7b5d-402e-afec-9412e30310fd,matcha-sproszkowana-zielona-herbata-w-puszce-80g-x-2-tian-hu-shan,"Matcha, sproszkowana zielona herbata w puszce 80g x 2 - Tian Hu Shan",herbaty,ADG-000556,KIMCHI-2723,historical_product_id_mapping,https://kimchi.pl/product-pol-2723.html,200,yes,yes,no,,,,,,,,,,,,,,,,,,"[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html)|Pay|Po|Kup teraz, zapłać za 30 dni|Kup teraz, zapłać później - 4 kroki|Przy wyborze formy płatności, wybierz|Po.|Po opłaci twój rachunek w sklepie.|Na stronie|Po sprawdź swoje dane i podaj pesel.|Po otrzymaniu zakupów decydujesz co ci pasuje, a co nie.|Możesz zwrócić część albo całość zamówienia - wtedy zmniejszy się też kwota do zapłaty","Bez pszenicy|Importer|Nazwa firmy|Heuschen &|Schrouff|O|F|T|B.|V.|Adres|Sperwerweg 1, 6374|A|G|Landgraaf,|The|Netherlands|Aktualne informacje o towarach zamieszczone na stronie w momencie zakupu, tj. treść opisu, skład oraz wartości odżywcze produktu przekazywane są na adres mailowy|Klienta w formie pliku|P|D|F po złożeniu zamówienia.|Wszelkie materiały (treści, teksty, opisy produktów, grafiki, ikony, bannery, układ elementów itp.) przedstawione w sklepach|Sklep.na|Sushi.pl oraz|Kimchi.pl w obrębie domen: www.sklep.nasushi.pl, www.nasushi.pl oraz www.kimchi.pl są objęte prawami autorskimi|Sushi.pl,|Kimchi.pl lub ich dostawców treści i technologii."
+review_candidate,39cc5545-dbd4-4e38-b697-b19d873784cf,kawa-mielona-trung-nguyen-sang-tao-3-340g,Kawa mielona Trung Nguyen Sang Tao 3 - 340g,kawy,ADG-000658,KIMCHI-3149,historical_product_id_mapping,https://kimchi.pl/product-pol-3149.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Kawa palona, grubo mielona (Arabica Sparrow) - aromaty wanilii, karmelu, kwiatowe",,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez cukru|Bez nabiału|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,58149eff-b8aa-4e1e-aeaa-bb2c563df3fd,matcha-uji-cha-sproszkowana-zielona-herbata-50g-maruka,"Matcha Uji-cha, sproszkowana zielona herbata 50g - Maruka",herbaty,ADG-000759,KIMCHI-3692,historical_product_id_mapping,https://kimchi.pl/product-pol-3692.html,200,yes,no,no,AMBIENT,,,"Przechowywać w suchym i chłodnym miejscu, z dala od słońca oraz światła sztucznego.",AMBIENT,Japońska zielona herbata matcha 100%,,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez cukru|Bez konserwantów|Bez nabiału|Kupująć ten produkt otrzymasz pkt.
+review_candidate,496982df-0fc6-47e1-b236-5d77523372dd,matcha-iri-genmaicha-zielona-herbata-z-prazonym-ryzem-i-matcha-70g-maruka,"Matcha Iri Genmaicha, zielona herbata z prażonym ryżem i matchą 70g - Maruka",herbaty,ADG-000804,KIMCHI-3794,historical_product_id_mapping,https://kimchi.pl/product-pol-3794.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Zielona herbata japońska liściasta, zielona herbata japońska sproszkowana Matcha, prażone ziarna ryżu",,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,762e8c58-8152-4369-aeb0-f3bf39f653b2,bancha-zielona-herbata-z-poznego-zbioru-60g-maruka,"Bancha, zielona herbata z późnego zbioru 60g - Maruka",herbaty,ADG-000805,KIMCHI-3795,historical_product_id_mapping,https://kimchi.pl/product-pol-3795.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,Zielona herbata japońska liściasta,,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,c7abe525-3e07-46f7-ab8b-94a7159e4dd7,shizuoka-sencha-zielona-herbata-50g-maruka,"Shizuoka Sencha, zielona herbata 50g - Maruka",herbaty,ADG-000806,KIMCHI-3796,historical_product_id_mapping,https://kimchi.pl/product-pol-3796.html,200,yes,no,no,AMBIENT,,,"Po otwarciu opakowania, fukamushi sencha przykuwa wzrok intensywnym, ciemnozielonym kolorem i charakterystyczną wonią świeżej roślinności. Po zaparzeniu suszu otrzymamy napój o zielonej barwie i bogatym, wytrawnym smaku, łączącym w sobie dużą dozę umami, subtelną słodycz oraz odrobinę kwasowości. Niektórzy mówią, że kubeczek świeżo parzonej senchy smakuje jak esencja pachnących, wiosennych łąk, skąpanych w ciepłych promieniach słońca. Każdy łyk pogłębia uczucie spokoju i odprężenia, nakłaniając do chwili odpoczynku i zadumy, po których następuje przyjemne orzeźwienie. Na finiszu czeka zaś naturalny zastrzyk energii, który z pewnością wspomoże Cię w codziennych wyzwaniach.",AMBIENT,Zielona herbata japońska liściasta,,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,f2898ff9-566c-4ead-a25b-6453d79f2419,hojicha-prazona-zielona-herbata-50g-maruka,"Hojicha, prażona zielona herbata 50g - Maruka",herbaty,ADG-000807,KIMCHI-3797,historical_product_id_mapping,https://kimchi.pl/product-pol-3797.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,Zielona herbata japońska liściasta prażona,,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,f56f94b1-eae2-4d98-a2ba-af814ce98dc1,herbata-z-zen-szenia-instant-10-x-2g-20g-meridian,Herbata z żeń-szenia instant (10 x 2g) 20g - Meridian,herbaty,ADG-000854,KIMCHI-3935,historical_product_id_mapping,https://kimchi.pl/product-pol-3935.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,Granulowany sproszkowany korzeń Żeń-szenia koreańskiego,,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html)[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,e7e3bf86-4cda-483e-9d85-177427a39ed0,sok-z-limonki-250ml-golden-turtle,Sok z limonki 250ml - Golden Turtle,napoje,ADG-000859,KIMCHI-3950,historical_product_id_mapping,https://kimchi.pl/product-pol-3950.html,200,yes,no,no,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu. Po otwarciu przechowywać w lodówce.,AMBIENT,"Sok z limonki z koncentratu soku z limonki, olejek z limonki, substancja konserwująca: pirosiarczyn potasu (E224)",,,,,,,,,,,,[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,1822ef89-da85-4fa5-bc38-5242c10d3a37,mielonka-wieprzowa-luncheon-meat-340g-chung-jung-one,Mielonka wieprzowa Luncheon Meat 340g - Chung Jung One,dania-gotowe,ADG-000526,KIMCHI-2625,historical_product_id_mapping,https://kimchi.pl/product-pol-2625.html,200,yes,no,yes,,Produkt zawiera mięso (wieprzowina). Może zawierać mleko. Metalowe opakowanie z wygodną zawleczką. Nie wymaga użycia otwieracza do konserw. Po otwarciu zawartość opakowania należy umieścić w niemetalowym pojemniku i spożyć w ciągu 2 dni. Kraj produkcji: Dania,milk,Po otwarciu zawartość opakowania należy umieścić w niemetalowym pojemniku i spożyć w ciągu 2 dni.,,"Wieprzowina 93%, woda, sól, cukier, stabilizator: trifosforany (E451); wzmacniacz smaku: glutaminian sodu (E621); cebula w proszku, ekstrakty przypraw, przeciwutleniacz: askorbinian sodu (E301), substancja konserwująca: azotyn sodu (E250)",w 100g/100ml,299,1237,27,10,0,0,,14,2.5,"(w 100g/100ml)
+Wartość energetyczna
+1237kJ/299kcal
+Tłuszcze
+27g
+Węglowodany
+0g
+*w tym cukry
+0g
+Białko
+14g
+Sól
+2,5g
+*w tym kwasy tłuszczowe nasycone 10g
+Importer
+Nazwa firmy
+Asia Express Food B.V.
+Adres
+Kilbystraat 1, 8263 CJ, Kampen, Nederland",,
+review_candidate,4da56e11-a287-4c6b-83ea-2a7fb945c29b,garlic-tteokbokki-kluski-ryzowe-w-sosie-czosnkowo-paprykowym-260g-o-food,"Garlic Tteokbokki, kluski ryżowe w sosie czosnkowo-paprykowym 260g - O'Food",dania-gotowe,ADG-000655,KIMCHI-3134,historical_product_id_mapping,https://kimchi.pl/product-pol-3134.html,200,yes,no,yes,,,,"Wskazówki - O'Food Tteokbokki należy spożyć od razu po przygotowaniu. Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu.",,"Kluski ryżowe: ryż, woda, sól, zagęstnik: kwas cytrynowy (E330); alkohol Sos: cukier, woda, czerwona papryka w proszku, sól, cebula, ekstrakt drożdżowy, mniej niż 2%: alkohol etylowy (dla zachowania świeżości), wzmacniacze smaku: guanylan disodowy (E627), inozynian disodowy (E631); zagęstniki: kwas cytrynowy (E330), guma ksantanowa (E415); sztuczny aromat, barwnik: papryka",w porcji 130g,300,,2,,67,12,,5,,"(w porcji 130g)
+Wartość energetyczna
+300kcal
+Tłuszcze
+2g
+Węglowodany
+67g
+*w tym cukry
+12g
+*w tym błonnik
+1g
+Białko
+5g
+Sód
+610mg",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,a4e3169b-f42b-4b33-ab7e-c0a3cbc43494,original-tteokbokki-kluski-ryzowe-w-sosie-gochujang-260g-o-food,"Original Tteokbokki, kluski ryżowe w sosie gochujang 260g - O'Food",dania-gotowe,ADG-000656,KIMCHI-3135,historical_product_id_mapping,https://kimchi.pl/product-pol-3135.html,200,yes,no,yes,,,,"Wskazówki - O'Food Tteokbokki należy spożyć od razu po przygotowaniu. Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu.",,"Kluski ryżowe: ryż, woda, sól, zagęstnik: kwas cytrynowy (E330); alkohol Sos: cukier, pasta z czerwonej papryki (woda, syrop z tapioki, ryż brązowy, czerwona papryka w proszku, sól, alkohol, czosnek, cebula), woda, cebula, sól, mniej niż 2%: ekstrakt z drożdży, alkohol etylowy (dla zachowania świeżości), czosnek, wzmacniacze smaku: guanylan disodowy (E627), inozynian disodowy (E631); barwnik: papryka; sztuczny aromat, zagęstnik: guma ksantanowa (E415); czarny pieprz w proszku",w porcji 130g,310,,2,,67,12,,5,,"(w porcji 130g)
+Wartość energetyczna
+310kcal
+Tłuszcze
+2g
+Węglowodany
+67g
+*w tym cukry
+12g
+*w tym błonnik
+1g
+Białko
+5g
+Sód
+800mg",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+no_metadata_found,62e9c9c0-63ba-427f-91b1-b3eb4c6a004a,mieso-z-kraba-w-puszce-170g-ambition,Mięso z kraba w puszce 170g - Ambition,dania-gotowe,ADG-000389,KIMCHI-1916,historical_product_id_mapping,https://kimchi.pl/product-pol-1916.html,200,yes,yes,no,AMBIENT,,,,,,,,,,,,,,,,,,
+review_candidate,c247e939-2734-416a-8785-e92228c5461e,pocket-onigiri-kombu-kulka-ryzowa-instant-z-duszonymi-algami-42g-onisi,"Pocket Onigiri Kombu, kulka ryżowa instant z duszonymi algami 42g - Onisi",dania-gotowe,ADG-000876,KIMCHI-4013,historical_product_id_mapping,https://kimchi.pl/product-pol-4013.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Ryż kleisty, solone wodorosty (hydrolizat białkowy, wodorosty, sól) / glutaminian monosodowy (E621), substancja słodząca (sorbitol, lukrecja), barwnik (E150a), zagęszczacz polisacharydowy.",w 100g/100ml,357,1494,0.7,0,80,0,,7.4,1.67,"(w 100g/100ml)
+Wartość energetyczna
+1494kJ/357kcal
+Tłuszcze
+0,7g
+*w tym kwasy tłuszczowe nasycone
+0g
+Węglowodany
+80g
+*w tym cukry
+0g
+Białko
+7,4g
+Sól
+1,67g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html),Bez pszenicy|Bez nabiału|Bez mięsa|Bez oleju|Kupująć ten produkt otrzymasz pkt.
+review_candidate,d2274c7c-6ad5-484f-8256-b66c5d771c66,danie-instant-tteokbokki-kluski-ryzowe-w-pikantnym-sosie-160g-sempio,"Danie instant Tteokbokki, kluski ryżowe w pikantnym sosie 160g - Sempio",dania-gotowe,ADG-000901,KIMCHI-4098,historical_product_id_mapping,https://kimchi.pl/product-pol-4098.html,200,yes,yes,yes,,"Produkt zawiera pszenicę, soję i gluten. Przechowywać w suchym i chłodnym miejscu. Chronić przed bezpośrednim działaniem promieni słonecznych i wysokiej temperatury.",cereals|soybeans,"Wskazówki - Tteokbokki należy spożyć od razu po przygotowaniu. Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu.",,"Kluski ryżowe: ryż, alkohol, sól, dekstryna, estry gliceryny kwasów tłuszczowych, modyfikowana skrobia z tapioki, substancja słodząca: E422. Sos: pasta gochujang (syrop kukurydziany, woda, mąka pszenna, czerwona papryka, sproszkowana pszenica, sól, alkohol, hydrolizowane białko pszenicy, soja, koji), syrop kukurydziany o wysokiej zawartości fruktozy, cukier, woda, mieszanka przypraw (czerwona papryka w proszku, woda, czosnek, cebula, sól), przyprawa sojowa (fermentowany peptyd sojowy, gluten pszenny, woda, sól, naturalnie fermentowany koncentrat sosu sojowego, alkohol, ekstrakt z drożdży), sos sojowy (woda, odtłuszczona soja, sól, syrop kukurydziany o wysokiej zawartości fruktozy, alkohol, pszenica, ekstrakt z drożdży w proszku, konserwant: E211; substancja słodząca: E955), sos pomidorowy (woda, pasta pomidorowa, syrop kukurydziany o wysokiej zawartości fruktozy, ocet, sól, cukier, skrobia modyfikowana, przyprawy), alkohol, czosnek, regulator kwasowości: E574, ekstrakt z pszenicy, skrobia modyfikowana, przecier ananasowy, sól, ekstrakt z drożdży w proszku, ekstrakt z cebuli (konserwant: E270, koncentrat cebuli, syrop kukurydziany, ekstrakt cebuli, maltodekstryna, sól, stabilizator: E414, olejek eteryczny z cebuli), oleożywica Capsicum.",w 100g/100ml,227,965,0.6,0.2,50.8,8.2,,3.9,1.5,"(w 100g/100ml)
+Wartość energetyczna
+965kJ/227kcal
+Tłuszcze
+0,6g
+Węglowodany
+50,8g
+*w tym cukry
+8,2g
+Białko
+3,9g
+Sól
+1,5g
+*w tym kwasy tłuszczowe nasycone 0,2g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,73f84fcb-c4f7-488c-b7dc-db881e153c46,danie-instant-tteokbokki-kluski-ryzowe-w-slodko-pikantnym-sosie-160g-sempio,"Danie instant Tteokbokki, kluski ryżowe w słodko-pikantnym sosie 160g - Sempio",dania-gotowe,ADG-000902,KIMCHI-4099,historical_product_id_mapping,https://kimchi.pl/product-pol-4099.html,200,yes,yes,yes,,"Produkt zawiera pszenicę, soję i gluten. Przechowywać w suchym i chłodnym miejscu. Chronić przed bezpośrednim działaniem promieni słonecznych i wysokiej temperatury.",cereals|soybeans,"Wskazówki - Tteokbokki należy spożyć od razu po przygotowaniu. Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu.",,"Kluski ryżowe: ryż, mniej niż 2%: alkohol, sól, dekstryna, estry gliceryny i kwasów tłuszczowych, modyfikowana skrobia z tapioki, glicerol. Sos: pasta gochujang(syrop kukurydziany, woda, mąka pszenna, przyprawa z czerwonej papryki, sproszkowana pszenica, sól, alkohol, hydrolizowane białko pszenicy, soja, koji), syrop kukurydziany o wysokiej zawartości fruktozy, cukier, syrop kukurydziany, woda, przyprawa sojowa(fermentowany peptyd sojowy, gluten pszenny, woda, sól, naturalnie fermentowany koncentrat sosu sojowego, alkohol, ekstrakt drożdżowy), sos pomidorowy (woda, koncentrat pomidorowy, syrop kukurydziany o wysokiej zawartości fruktozy, ocet, sól, cukier, skrobia modyfikowana, przyprawa), mieszanka przypraw (czerwona papryka w proszku, (woda, czosnek, cebula, sól), sos sojowy (woda, odtłuszczona soja, sól, syrop kukurydziany o wysokiej zawartości fruktozy, alkohol, pszenica, ekstrakt drożdżowy w proszku, benzoesan sodu, sukraloza), przecier ananasowy, alkohol, skrobia modyfikowana, ekstrakt pszenny, kwas glukonowy, sól, ekstrakt drożdżowy w proszku, ekstrakt z cebuli (mieszanina kwasu mlekowego, koncentrat cebuli, syrop kukurydziany, ekstrakt z cebuli, maltodekstryna, sól, guma arabska, olejek eteryczny z cebuli), olej paprykowy (olej sojowy, oleożywica z papryki, estry gliceryny i kwasów tłuszczowych)",w 100g/100ml,227,965,0.6,0.2,50.8,8.2,,3.9,1.5,"(w 100g/100ml)
+Wartość energetyczna
+965kJ/227kcal
+Tłuszcze
+0,6g
+Węglowodany
+50,8g
+*w tym cukry
+8,2g
+Białko
+3,9g
+Sól
+1,5g
+*w tym kwasy tłuszczowe nasycone 0,2g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,6983b76e-062e-4a24-a21b-1da567123dd9,wolowina-konserwowa-corned-beef-340g-hereford,Wołowina konserwowa Corned Beef 340g - Hereford,dania-gotowe,ADG-000914,KIMCHI-4142,historical_product_id_mapping,https://kimchi.pl/product-pol-4142.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu. Po otwarciu przechowywać w lodówce.,AMBIENT,"Gotowana wołowina 98,5% (mięso wołowe, gotowana wołowina), sól, cukier, konserwant E250 (azotyn sodu).",w 100g/100ml,232,968,14.8,6,0.5,0,,24.2,1.5,"(w 100g/100ml)
+Wartość energetyczna
+968kJ/232kcal
+Tłuszcze
+14,8g
+Węglowodany
+0,5g
+*w tym cukry
+0g
+Białko
+24,2g
+Sól
+1,5g
+*w tym kwasy tłuszczowe nasycone 6g
+Importer
+Nazwa firmy
+Heuschen & Schrouff OFT B.V.
+Adres
+Sperwerweg 1, 6374 AG Landgraaf, The Netherlands",,
+review_candidate,93f1960c-343c-42b3-9968-6f4a090a3782,makaron-stir-fry-instant-o-smaku-solonego-jajka-85g-mama-oriental-kitchen,Makaron stir-fry instant o smaku solonego jajka 85g - MAMA Oriental Kitchen,dania-gotowe,ADG-000943,KIMCHI-4258,historical_product_id_mapping,https://kimchi.pl/product-pol-4258.html,200,yes,yes,yes,,"Produkt zawiera pszenicę i soję. Może zawierać śladowe ilości jaj, mleka, skorupiaków, sezamu, selera i mięczaków",cereals|crustaceans|eggs|soybeans|milk|molluscs,,,"Mąka pszenna 56%, olej palmowy, skrobia modyfikowana z tapioki, cukier, jaja w proszku 3,61%, sól, aromat (mleko, soja ) 1,04%, przyprawy, wzmacniacz smaku (E621, E635), chilli w proszku, regulator kwasowości (E500, E501, E451), suszona szalotka, substancja zagęszczająca (E466), substancja przeciwzbrylająca (E551), regulator kwasowości (E330), barwnik (E150a), oleorezynowy ekstrakt z papryki, ekstrakt z rozmarynu.",w 100g/100ml,191,802,7.8,3.4,26.3,2.9,,3.9,1.5,"(w 100g/100ml)
+Wartość energetyczna
+802kJ/191kcal
+Tłuszcze
+7,8g
+Węglowodany
+26,3g
+*w tym cukry
+2,9g
+Białko
+3,9g
+Sól
+1,5g
+*w tym kwasy tłuszczowe nasycone 3,4g
+Importer
+Nazwa firmy
+UNIFOOD sp. z o.o.
+Adres
+ul.Wolska 84/86 01-141 Warszawa",,
+review_candidate,8f609ee0-5dc2-437f-bee9-d5f9f80ad85e,bbq-tteokbokki-kluski-ryzowe-w-sosie-barbecue-260g-o-food,"BBQ Tteokbokki, kluski ryżowe w sosie barbecue 260g - O'Food",dania-gotowe,ADG-001068,KIMCHI-4595,historical_product_id_mapping,https://kimchi.pl/product-pol-4595.html,200,yes,yes,yes,,Produkt zawiera soję. Przechowywać w suchym i chłodnym miejscu. Chronić przed bezpośrednim działaniem promieni słonecznych i wysokiej temperatury.,soybeans,"Wskazówki - O'Food Tteokbokki należy spożyć od razu po przygotowaniu. Po otwarciu opakowania kluski mogą mieć delikatny zapach alkoholu, używanego jako naturalny konserwant. Pozostałości ulegną wyparowaniu podczas podgrzewania produktu.",,"Kluski ryżowe: ryż, woda, sól, regulator kwasowości: kwas cytrynowy (E330); alkohol Sos: cukier, woda, sos sojowy 14,5% (soja, sól, woda), olej sojowy, czosnek, cebula, alkohol, ekstrakt drożdżowy, bulion w proszku (maltodekstryna, sól, dekstroza), sztuczny aromat, modyfikowana skrobia kukurydziana, hydrolizowane białko sojowe, czarny pieprz w proszku 0,1%, wzmacniacze smaku: E627, E631; regulator kwasowości: E330; substancja zagęszczająca: E415.",w 100g/100ml,245,1025,1.8,0.4,53.3,6.2,,4,1.1,"(w 100g/100ml)
+Wartość energetyczna
+1025kJ/245kcal
+Tłuszcze
+1,8g
+Węglowodany
+53,3g
+*w tym cukry
+6,2g
+Białko
+4g
+Sól
+1,1g
+*w tym kwasy tłuszczowe nasycone 0,4g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html),Bez pszenicy|Bez mięsa|Kupująć ten produkt otrzymasz pkt.
+review_candidate,f6bdd14a-4db0-440d-ab1f-7455ff157663,danie-makaron-carbonara-o-smaku-bekonu-85g-mama-oriental-kitchen,Danie makaron carbonara o smaku bekonu 85g - MAMA Oriental Kitchen,dania-gotowe,ADG-001120,KIMCHI-4715,historical_product_id_mapping,https://kimchi.pl/product-pol-4715.html,200,yes,yes,yes,,"Produkt zawiera pszenicę, jęczmień, soję, mleko i jaja, . Może zawierać śladowe ilości skorupiaków, sezamu, ryb, selera i mięczaków.",cereals|crustaceans|eggs|fish|soybeans|milk|molluscs,,,"Mąka pszenna 58%, skrobia z tapioki, olej palmowy, zabielacz (syrop glukozowy, uwodorniony olej palmowy, kazeina (mleko), środek przeciwzbrylający (E551)), maltodekstryna, skrobia modyfikowana z kukurydzy), olej ryżowy, cukier, sól, białko sojowe, aromat (mleko) 0.68%, wzmacniacze smaku (E621, E635), przyprawy, regulatory kwasowości (E500, E501, E451), jaja w proszku, sos sojowy (ziarno sojowe, sól, ekstrakt słodowy (jęczmień), pszenica, ekstrakt drożdżowy, olej palmowy), drożdże w proszku, substancja zagęszczająca (E466), środek przeciwzbrylający (E551), płatki pietruszki, kwas cytrynowy (E330).",w 100g/100ml,191,802,7.8,3.4,26.3,2.9,,3.9,1.5,"(w 100g/100ml)
+Wartość energetyczna
+802kJ/191kcal
+Tłuszcze
+7,8g
+Węglowodany
+26,3g
+*w tym cukry
+2,9g
+Białko
+3,9g
+Sól
+1,5g
+*w tym kwasy tłuszczowe nasycone 3,4g
+Importer
+Nazwa firmy
+UNIFOOD sp. z o.o.
+Adres
+ul.Wolska 84/86 01-141 Warszawa",,
+review_candidate,45dc6a6c-fa19-4e20-a27f-6ec5f1081b36,zupa-makaron-mala-o-smaku-wolowiny-85g-mama-oriental-kitchen,Zupa makaron Mala o smaku wołowiny 85g - MAMA Oriental Kitchen,dania-gotowe,ADG-001121,KIMCHI-4716,historical_product_id_mapping,https://kimchi.pl/product-pol-4716.html,200,yes,yes,yes,,"Produkt zawiera pszenicę. Może zawierać śladowe ilości mleka, jaj, soi, sezamu, skorupiaków, ryb, selera i mięczaków.",cereals|crustaceans|eggs|fish|milk|molluscs,,,"Mąka pszenna 58%, olej palmowy, modyfikowana skrobia z tapioki, sól, cukier, chili w proszku, wzmacniacze smaku (E621, E635), regulatory kwasowości (E500, E501, E451), aromat, przyprawy, barwniki (E150c, E160c), substancja zagęszczająca (E466), dymka suszona, papryka oleoresin, substancja przeciwzbrylająca (E551).",w 100g/100ml,95,398,4,2,13,0.5,,1.7,0.82,"(w 100g/100ml)
+Wartość energetyczna
+398kJ/95kcal
+Tłuszcze
+4g
+Węglowodany
+13g
+*w tym cukry
+<0,5g
+Białko
+1,7g
+Sól
+0,82g
+*w tym kwasy tłuszczowe nasycone 2g
+Importer
+Nazwa firmy
+UNIFOOD sp. z o.o.
+Adres
+ul.Wolska 84/86 01-141 Warszawa",,
+review_candidate,1ac6ad82-2f23-452c-abca-90e5a170a74b,danie-makaron-udon-sesame-teriyaki-bowl-240g-obento,Danie makaron udon Sesame Teriyaki Bowl 240g - Obento,dania-gotowe,ADG-001129,KIMCHI-4737,historical_product_id_mapping,https://kimchi.pl/product-pol-4737.html,200,yes,yes,yes,,"Produkt zawiera pszenicę, soję i sezam.",cereals|soybeans|sesame,,,"Makaron (78,3%): woda, mąka pszenna, zmodyfikowana skrobia z tapioki, sól, regulator kwasowości E270. Sos (20%): cukier, sos sojowy (woda, pszenica, soja, sól), czosnek, koncentrat syropu z cytrusów (woda, cukier, koncentrat soku jabłkowego, koncentrat soku z cytryny, stabilizator E466), regulator kwasowości E330, zagęszczacze: E412, E440; przeciwutleniacz E300), modyfikowana skrobia kukurydziana, pasta sezamowa (1,6%), olej sojowy, sól, ekstrakt drożdżowy, przyprawy, olej sezamowy (0,8%), regulator kwasowości E330. Suszone warzywa (0,8%): marchewka, czerwona papryka, cebulka. Posypka (0,8%): nasiona prażonego sezamu.",w 100g/100ml,155,647,2,0.2,28,6.3,,4.8,1.1,"(w 100g/100ml)
+Wartość energetyczna
+647kJ/155kcal
+Tłuszcze
+2g
+Węglowodany
+28g
+*w tym cukry
+6,3g
+Białko
+4,8g
+Sól
+1,1g
+*w tym kwasy tłuszczowe nasycone 0,2g
+Importer
+Nazwa firmy
+Oriental Merchant (Europe)
+Adres
+Vorstengrafdonk 8 5342 LT Oss The Netherlands",,
+review_candidate,2baa3d40-f01d-4040-bb16-db824f0525da,danie-makaron-udon-spicy-kung-pao-bowl-240g-obento,Danie makaron udon Spicy Kung Pao Bowl 240g - Obento,dania-gotowe,ADG-001130,KIMCHI-4738,historical_product_id_mapping,https://kimchi.pl/product-pol-4738.html,200,yes,yes,yes,,"Produkt zawiera soję, pszenicę, sezam i orzechy.",cereals|peanuts|soybeans|nuts|sesame,,,"Makaron (78,3%): woda, mąka pszenna, zmodyfikowana skrobia z tapioki, sól, regulator kwasowości E270. Sos (19,6%): woda, cukier, sos sojowy (woda, pszenica, soja, sól), pasta sojowa (woda, soja, sól), czosnek, sól, pasta orzechowa, hydrolizowane białko sojowe, olej sojowy, olej sezamowy, pasta sezamowa, modyfikowana skrobia kukurydziana, przyprawy, imbir, regulator kwasowości E330. Suszone warzywa (1,3%): marchewka, czerwona papryka, cebulka. Posypka (0,8%): prażone orzeszki ziemne.",w 100g/100ml,158,662,3.3,0.5,26,5.3,,4.9,2,"(w 100g/100ml)
+Wartość energetyczna
+662kJ/158kcal
+Tłuszcze
+3,3g
+Węglowodany
+26g
+*w tym cukry
+5,3g
+Białko
+4,9g
+Sól
+2g
+*w tym kwasy tłuszczowe nasycone 0,5g
+Importer
+Nazwa firmy
+Oriental Merchant (Europe)
+Adres
+Vorstengrafdonk 8 5342 LT Oss The Netherlands",,
+review_candidate,4722669d-4afa-4c08-b99e-0b6c92e82c38,danie-makaron-tom-yum-z-krewetkami-85g-mama-oriental-kitchen,Danie makaron Tom Yum z krewetkami 85g - MAMA Oriental Kitchen,dania-gotowe,ADG-001205,KIMCHI-4903,historical_product_id_mapping,https://kimchi.pl/product-pol-4903.html,200,yes,yes,yes,,"Produkt zawiera pszenicę, soję, ryby i owoce morza, . Może zawierać śladowe ilości skorupiaków, sezamu, selera i mięczaków.",cereals|crustaceans|fish|soybeans|molluscs,,,"Mąka pszenna 58%, olej palmowy, skrobia modyfikowana z tapioki, cukier, sól, przyprawy, chili 0.9%, wzmacniacz smaku: E621, E635, suszone krewetki 0.74%, cukier palmowy, sos rybny (anchois, sól , cukier), regulator kwasowości: E500, E501, E451, E330; suszona zielona cebulka, krewetki w proszku 0.15%, substancja zagęszczająca: E466, papryka w proszku, aromat (zawiera soję), ekstrakt z chili.",w 100g/100ml,460,1931,18,8,65,7.1,,9.4,3.9,"(w 100g/100ml)
+Wartość energetyczna
+1931kJ/460kcal
+Tłuszcze
+18g
+Węglowodany
+65g
+*w tym cukry
+7,1g
+Białko
+9,4g
+Sól
+3,9g
+*w tym kwasy tłuszczowe nasycone 8g
+Importer
+Nazwa firmy
+Asia Express Food B.V.
+Adres
+Kilbystraat 1, 8263 CJ, Kampen, Nederland",,

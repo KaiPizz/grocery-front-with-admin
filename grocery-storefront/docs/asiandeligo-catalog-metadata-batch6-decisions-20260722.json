@@ -1,0 +1,1754 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch6-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T12:04:23Z",
+  "cohortSkus": [
+    "ADG-000485",
+    "ADG-000556",
+    "ADG-000658",
+    "ADG-000759",
+    "ADG-000804",
+    "ADG-000805",
+    "ADG-000806",
+    "ADG-000807",
+    "ADG-000854",
+    "ADG-000859",
+    "ADG-000526",
+    "ADG-000655",
+    "ADG-000656",
+    "ADG-000389",
+    "ADG-000876",
+    "ADG-000901",
+    "ADG-000902",
+    "ADG-000914",
+    "ADG-000943",
+    "ADG-001068",
+    "ADG-001120",
+    "ADG-001121",
+    "ADG-001129",
+    "ADG-001130",
+    "ADG-001205"
+  ],
+  "products": [
+    {
+      "sku": "ADG-000556",
+      "productId": "96fa6853-7b5d-402e-afec-9412e30310fd",
+      "variantId": "63b730be-da32-43da-a45c-f8c7945c7e4b",
+      "name": "Matcha, sproszkowana zielona herbata w puszce 80g x 2 - Tian Hu Shan",
+      "slug": "matcha-sproszkowana-zielona-herbata-w-puszce-80g-x-2-tian-hu-shan",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "94c0da76-0649-45aa-a990-09aa949c8407",
+          "name": "Herbaty",
+          "slug": "herbaty",
+          "isActive": true
+        },
+        "allergens": [
+          "eggs",
+          "milk"
+        ],
+        "ingredients": "100% naturalna zielona herbata",
+        "storageZone": null,
+        "pricePerUnit": "424.75",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "94c0da76-0649-45aa-a990-09aa949c8407",
+          "name": "Herbaty",
+          "slug": "herbaty",
+          "isActive": true
+        },
+        "allergens": [
+          "eggs",
+          "milk"
+        ],
+        "ingredients": "100% naturalna zielona herbata",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "424.75",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact Tian Hu Shan 80g consumer unit used by this two-pack has a supplier specification for storage between 2 and 30°C and independent cool-dry guidance; nutrition and the suspect egg/milk declaration remain untouched pending a current label photo.",
+      "evidence": [
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-2723-Matcha-sproszkowana-zielona-herbata-w-puszce-80g-x-2-Tian-Hu-Shan.html",
+          "kind": "supplier-label",
+          "supports": "Confirms the exact two-pack identity and two 80g Tian Hu Shan cans."
+        },
+        {
+          "url": "https://www.geyskens.be/geyskens/articles.nsf/%28ArticlesbyArtnr%29/D61021/%24File/D61021%20-%20MATCHA%20GROENE%20THEE%20POEDER%2080%20G.pdf",
+          "kind": "supplier-specification",
+          "supports": "Exact 80g product specification gives 2–30°C storage and the product composition."
+        },
+        {
+          "url": "https://www.yoaxia.de/tee/tee-accessoires/gruenteepulver-matcha-tea-80g-pulveresierter-gruener-tee-green-tea-powder-kv_7803_3261",
+          "kind": "retailer-label",
+          "supports": "Exact consumer unit corroborates the GTIN and shelf-stable cool-dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/matcha-sproszkowana-zielona-herbata-w-puszce-80g-x-2-tian-hu-shan",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000859",
+      "productId": "e7e3bf86-4cda-483e-9d85-177427a39ed0",
+      "variantId": "5c3ef4d8-ac32-4436-ac7c-1eecf7bbb99e",
+      "name": "Sok z limonki 250ml - Golden Turtle",
+      "slug": "sok-z-limonki-250ml-golden-turtle",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "6682de83-41a7-4294-86f4-05ede2ae3bbf",
+          "name": "Napoje",
+          "slug": "napoje",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Sok z limonki z koncentratu soku z limonki, olejek z limonki, substancja konserwująca: pirosiarczyn potasu (E224)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "30.00",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Belgia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "6682de83-41a7-4294-86f4-05ede2ae3bbf",
+          "name": "Napoje",
+          "slug": "napoje",
+          "isActive": true
+        },
+        "allergens": [
+          "sulphites"
+        ],
+        "ingredients": "Sok z limonki z koncentratu soku z limonki, olejek z limonki, substancja konserwująca: pirosiarczyn potasu (E224)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "30.00",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Belgia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "allergens"
+      ],
+      "confidence": "high",
+      "reason": "The current ingredient text explicitly contains potassium metabisulphite E224, and exact-EAN current labels identify sulphite; nutrition remains held because exact-pack sources disagree.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3950.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 250ml product and ingredient list explicitly containing E224."
+        },
+        {
+          "url": "https://www.denkinesiskekoebmand.dk/en/spices/3126-lime-juice-250ml-golden-turtle.html",
+          "kind": "retailer-label",
+          "supports": "Exact product formulation explicitly labels E224 as sulphite and gives cool-dry storage."
+        },
+        {
+          "url": "https://pinoyfood.de/shop/other-asian-products/golden-turtle-lime-juice-250ml/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8720301109111 corroborates potassium metabisulphite in the 250ml product."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/sok-z-limonki-250ml-golden-turtle",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000526",
+      "productId": "1822ef89-da85-4fa5-bc38-5242c10d3a37",
+      "variantId": "130530c8-30d9-44d9-96a3-071c03a68613",
+      "name": "Mielonka wieprzowa Luncheon Meat 340g - Chung Jung One",
+      "slug": "mielonka-wieprzowa-luncheon-meat-340g-chung-jung-one",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Wieprzowina 93%, woda, sól, cukier, stabilizator: trifosforany (E451); wzmacniacz smaku: glutaminian sodu (E621); cebula w proszku, ekstrakty przypraw, przeciwutleniacz: askorbinian sodu (E301), substancja konserwująca: azotyn sodu (E250)",
+        "storageZone": null,
+        "pricePerUnit": "80.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 27,
+          "salt": 2.5,
+          "carbs": 0,
+          "sugar": 0,
+          "protein": 14,
+          "calories": 299,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 10
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": [
+          "milk"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Wieprzowina 93%, woda, sól, cukier, stabilizator: trifosforany (E451); wzmacniacz smaku: glutaminian sodu (E621); cebula w proszku, ekstrakty przypraw, przeciwutleniacz: askorbinian sodu (E301), substancja konserwująca: azotyn sodu (E250)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "80.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 27,
+          "salt": 2.5,
+          "carbs": 0,
+          "sugar": 0,
+          "protein": 14,
+          "calories": 299,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 10
+        },
+        "countryOfOrigin": "Dania",
+        "mayContainAllergens": [
+          "milk"
+        ]
+      },
+      "changedFields": [
+        "storageZone",
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "The exact EAN and current 93%-pork formulation are manufactured in Denmark and labelled for cool-dry shelf storage before opening.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2625.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 340g formulation, Denmark production statement, and current nutrition."
+        },
+        {
+          "url": "https://order.asiaexpressfood.nl/en/assortiment/preserved-products/meat/luncheon-meat-varken-6242.html",
+          "kind": "distributor-record",
+          "supports": "Distributor identifies consumer EAN 8801052034928 and Denmark as country of origin."
+        },
+        {
+          "url": "https://pongmarket.se/luncheon-meat-fl%C3%A4sk-340g-chung-jung-one-dk/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN, formulation, Denmark origin, and dry-cool storage are corroborated together."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/mielonka-wieprzowa-luncheon-meat-340g-chung-jung-one",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000655",
+      "productId": "4da56e11-a287-4c6b-83ea-2a7fb945c29b",
+      "variantId": "639faae3-3ce9-4cc8-8c33-254b0273b7db",
+      "name": "Garlic Tteokbokki, kluski ryżowe w sosie czosnkowo-paprykowym 260g - O'Food",
+      "slug": "garlic-tteokbokki-kluski-ryzowe-w-sosie-czosnkowo-paprykowym-260g-o-food",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Kluski ryżowe: ryż, woda, sól, zagęstnik: kwas cytrynowy (E330); alkohol Sos: cukier, woda, czerwona papryka w proszku, sól, cebula, ekstrakt drożdżowy, mniej niż 2%: alkohol etylowy (dla zachowania świeżości), wzmacniacze smaku: guanylan disodowy (E627), inozynian disodowy (E631); zagęstniki: kwas cytrynowy (E330), guma ksantanowa (E415); sztuczny aromat, barwnik: papryka",
+        "storageZone": null,
+        "pricePerUnit": "96.12",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2,
+          "carbs": 67,
+          "sugar": 12,
+          "protein": 5,
+          "calories": 300,
+          "servingSize": "w porcji 130g"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Kluski ryżowe: ryż, woda, sól, zagęstnik: kwas cytrynowy (E330); alkohol Sos: cukier, woda, czerwona papryka w proszku, sól, cebula, ekstrakt drożdżowy, mniej niż 2%: alkohol etylowy (dla zachowania świeżości), wzmacniacze smaku: guanylan disodowy (E627), inozynian disodowy (E631); zagęstniki: kwas cytrynowy (E330), guma ksantanowa (E415); sztuczny aromat, barwnik: papryka",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "96.12",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2,
+          "carbs": 67,
+          "sugar": 12,
+          "protein": 5,
+          "calories": 300,
+          "servingSize": "w porcji 130g"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 260g O'Food garlic tteokbokki sources identify a shelf-stable product stored at room temperature or cool and dry; conflicting trace-allergen policies are deliberately left unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3134.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 260g product identity and matching formulation."
+        },
+        {
+          "url": "https://daesanguk.com/products/ready-meals/Garlic%20Tteokbokki/8",
+          "kind": "manufacturer-page",
+          "supports": "Daesang identifies the exact garlic 260g ready meal as a long-life consumer product."
+        },
+        {
+          "url": "https://polskikoszyk.pl/o-food-tteokbokki-garlic-260g",
+          "kind": "retailer-label",
+          "supports": "Exact product label confirms room-temperature dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/garlic-tteokbokki-kluski-ryzowe-w-sosie-czosnkowo-paprykowym-260g-o-food",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000656",
+      "productId": "a4e3169b-f42b-4b33-ab7e-c0a3cbc43494",
+      "variantId": "08d5a086-7cd5-4b81-8cad-38c15afb5812",
+      "name": "Original Tteokbokki, kluski ryżowe w sosie gochujang 260g - O'Food",
+      "slug": "original-tteokbokki-kluski-ryzowe-w-sosie-gochujang-260g-o-food",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Kluski ryżowe: ryż, woda, sól, zagęstnik: kwas cytrynowy (E330); alkohol Sos: cukier, pasta z czerwonej papryki (woda, syrop z tapioki, ryż brązowy, czerwona papryka w proszku, sól, alkohol , czosnek, cebula), woda, cebula, sól, mniej niż 2%: ekstrakt z drożdży, alkohol etylowy (dla zachowania świeżości), czosnek, wzmacniacze smaku: guanylan disodowy (E627), inozynian disodowy (E631); barwnik: papryka; sztuczny aromat, zagęstnik: guma ksantanowa (E415); czarny pieprz w proszku",
+        "storageZone": null,
+        "pricePerUnit": "99.96",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2,
+          "carbs": 67,
+          "sugar": 12,
+          "protein": 5,
+          "calories": 310,
+          "servingSize": "w porcji 130g"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Kluski ryżowe: ryż, woda, sól, zagęstnik: kwas cytrynowy (E330); alkohol Sos: cukier, pasta z czerwonej papryki (woda, syrop z tapioki, ryż brązowy, czerwona papryka w proszku, sól, alkohol , czosnek, cebula), woda, cebula, sól, mniej niż 2%: ekstrakt z drożdży, alkohol etylowy (dla zachowania świeżości), czosnek, wzmacniacze smaku: guanylan disodowy (E627), inozynian disodowy (E631); barwnik: papryka; sztuczny aromat, zagęstnik: guma ksantanowa (E415); czarny pieprz w proszku",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "99.96",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2,
+          "carbs": 67,
+          "sugar": 12,
+          "protein": 5,
+          "calories": 310,
+          "servingSize": "w porcji 130g"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 260g O'Food original tteokbokki is a two-serving shelf-stable product with explicit room-temperature storage; its populated composition remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3135.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 260g original product identity and matching formulation."
+        },
+        {
+          "url": "https://ofoodeurope.com/product/original-tteokbokki-2/",
+          "kind": "manufacturer-page",
+          "supports": "Official O'Food page corroborates the exact product format and shelf-stable preparation."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/tteokbokki-kluski-ry%C5%BCowe-z-pikantnym-sosem-gochujang-o-food-260-g/00302090",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801052081939 label specifies room-temperature storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/original-tteokbokki-kluski-ryzowe-w-sosie-gochujang-260g-o-food",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000901",
+      "productId": "d2274c7c-6ad5-484f-8256-b66c5d771c66",
+      "variantId": "784dd0ab-4b3f-4575-89b1-7862fa49ea05",
+      "name": "Danie instant Tteokbokki, kluski ryżowe w pikantnym sosie 160g - Sempio",
+      "slug": "danie-instant-tteokbokki-kluski-ryzowe-w-pikantnym-sosie-160g-sempio",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "ingredients": "Kluski ryżowe: ryż, alkohol, sól, dekstryna, estry gliceryny kwasów tłuszczowych, modyfikowana skrobia z tapioki, substancja słodząca: E422. Sos: pasta gochujang (syrop kukurydziany, woda, mąka pszenna , czerwona papryka, sproszkowana pszenica , sól, alkohol, hydrolizowane białko pszenicy , soja , koji), syrop kukurydziany o wysokiej zawartości fruktozy, cukier, woda, mieszanka przypraw (czerwona papryka w proszku, woda, czosnek, cebula, sól), przyprawa sojowa (fermentowany peptyd sojowy , gluten pszenny , woda, sól, naturalnie fermentowany koncentrat sosu sojowego , alkohol, ekstrakt z drożdży), sos sojowy (woda, odtłuszczona soja , sól, syrop kukurydziany o wysokiej zawartości fruktozy, alkohol, pszenica , ekstrakt z drożdży w proszku, konserwant: E211; substancja słodząca: E955), sos pomidorowy (woda, pasta pomidorowa, syrop kukurydziany o wysokiej zawartości fruktozy, ocet, sól, cukier, skrobia modyfikowana, przyprawy), alkohol, czosnek, regulator kwasowości: E574, ekstrakt z pszenicy , skrobia modyfikowana, przecier ananasowy, sól, ekstrakt z drożdży w proszku, ekstrakt z cebuli (konserwant: E270, koncentrat cebuli, syrop kukurydziany, ekstrakt cebuli, maltodekstryna, sól, stabilizator: E414, olejek eteryczny z cebuli), oleożywica Capsicum.",
+        "storageZone": null,
+        "pricePerUnit": "74.38",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.6,
+          "salt": 1.5,
+          "carbs": 50.8,
+          "sugar": 8.2,
+          "protein": 3.9,
+          "calories": 227,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "ingredients": "Kluski ryżowe: ryż, alkohol, sól, dekstryna, estry gliceryny kwasów tłuszczowych, modyfikowana skrobia z tapioki, substancja słodząca: E422. Sos: pasta gochujang (syrop kukurydziany, woda, mąka pszenna , czerwona papryka, sproszkowana pszenica , sól, alkohol, hydrolizowane białko pszenicy , soja , koji), syrop kukurydziany o wysokiej zawartości fruktozy, cukier, woda, mieszanka przypraw (czerwona papryka w proszku, woda, czosnek, cebula, sól), przyprawa sojowa (fermentowany peptyd sojowy , gluten pszenny , woda, sól, naturalnie fermentowany koncentrat sosu sojowego , alkohol, ekstrakt z drożdży), sos sojowy (woda, odtłuszczona soja , sól, syrop kukurydziany o wysokiej zawartości fruktozy, alkohol, pszenica , ekstrakt z drożdży w proszku, konserwant: E211; substancja słodząca: E955), sos pomidorowy (woda, pasta pomidorowa, syrop kukurydziany o wysokiej zawartości fruktozy, ocet, sól, cukier, skrobia modyfikowana, przyprawy), alkohol, czosnek, regulator kwasowości: E574, ekstrakt z pszenicy , skrobia modyfikowana, przecier ananasowy, sól, ekstrakt z drożdży w proszku, ekstrakt z cebuli (konserwant: E270, koncentrat cebuli, syrop kukurydziany, ekstrakt cebuli, maltodekstryna, sól, stabilizator: E414, olejek eteryczny z cebuli), oleożywica Capsicum.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "74.38",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.6,
+          "salt": 1.5,
+          "carbs": 50.8,
+          "sugar": 8.2,
+          "protein": 3.9,
+          "calories": 227,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact GTIN Sempio 160g spicy cup label instructs cool-dry storage; its existing ingredients, allergens, and nutrition remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4098.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 160g product mapping and matching label data."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/tteokbokki-kluski-ry%C5%BCowe-hot-spicy-sempio-160-g/00355042",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801005198455 label specifies cool-dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-instant-tteokbokki-kluski-ryzowe-w-pikantnym-sosie-160g-sempio",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000902",
+      "productId": "73f84fcb-c4f7-488c-b7dc-db881e153c46",
+      "variantId": "04acd115-395a-44de-9984-3bef9458242f",
+      "name": "Danie instant Tteokbokki, kluski ryżowe w słodko-pikantnym sosie 160g - Sempio",
+      "slug": "danie-instant-tteokbokki-kluski-ryzowe-w-slodko-pikantnym-sosie-160g-sempio",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "ingredients": "Kluski ryżowe: ryż, mniej niż 2%: alkohol, sól, dekstryna, estry gliceryny i kwasów tłuszczowych, modyfikowana skrobia z tapioki, glicerol. Sos: pasta gochujang(syrop kukurydziany, woda, mąka pszenna , przyprawa z czerwonej papryki, sproszkowana pszenica , sól, alkohol, hydrolizowane białko pszenicy , soja , koji), syrop kukurydziany o wysokiej zawartości fruktozy, cukier, syrop kukurydziany, woda, przyprawa sojowa (fermentowany peptyd sojowy , gluten pszenny , woda, sól, naturalnie fermentowany koncentrat sosu sojowego , alkohol, ekstrakt drożdżowy), sos pomidorowy (woda, koncentrat pomidorowy, syrop kukurydziany o wysokiej zawartości fruktozy, ocet, sól, cukier, skrobia modyfikowana, przyprawa), mieszanka przypraw (czerwona papryka w proszku, (woda, czosnek, cebula, sól), sos sojowy (woda, odtłuszczona soja , sól, syrop kukurydziany o wysokiej zawartości fruktozy, alkohol, pszenica , ekstrakt drożdżowy w proszku, benzoesan sodu, sukraloza), przecier ananasowy, alkohol, skrobia modyfikowana, ekstrakt pszenny , kwas glukonowy, sól, ekstrakt drożdżowy w proszku, ekstrakt z cebuli (mieszanina kwasu mlekowego, koncentrat cebuli, syrop kukurydziany, ekstrakt z cebuli, maltodekstryna, sól, guma arabska, olejek eteryczny z cebuli), olej paprykowy (olej sojowy, oleożywica z papryki, estry gliceryny i kwasów tłuszczowych)",
+        "storageZone": null,
+        "pricePerUnit": "74.38",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.6,
+          "salt": 1.5,
+          "carbs": 50.8,
+          "sugar": 8.2,
+          "protein": 3.9,
+          "calories": 227,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "ingredients": "Kluski ryżowe: ryż, mniej niż 2%: alkohol, sól, dekstryna, estry gliceryny i kwasów tłuszczowych, modyfikowana skrobia z tapioki, glicerol. Sos: pasta gochujang(syrop kukurydziany, woda, mąka pszenna , przyprawa z czerwonej papryki, sproszkowana pszenica , sól, alkohol, hydrolizowane białko pszenicy , soja , koji), syrop kukurydziany o wysokiej zawartości fruktozy, cukier, syrop kukurydziany, woda, przyprawa sojowa (fermentowany peptyd sojowy , gluten pszenny , woda, sól, naturalnie fermentowany koncentrat sosu sojowego , alkohol, ekstrakt drożdżowy), sos pomidorowy (woda, koncentrat pomidorowy, syrop kukurydziany o wysokiej zawartości fruktozy, ocet, sól, cukier, skrobia modyfikowana, przyprawa), mieszanka przypraw (czerwona papryka w proszku, (woda, czosnek, cebula, sól), sos sojowy (woda, odtłuszczona soja , sól, syrop kukurydziany o wysokiej zawartości fruktozy, alkohol, pszenica , ekstrakt drożdżowy w proszku, benzoesan sodu, sukraloza), przecier ananasowy, alkohol, skrobia modyfikowana, ekstrakt pszenny , kwas glukonowy, sól, ekstrakt drożdżowy w proszku, ekstrakt z cebuli (mieszanina kwasu mlekowego, koncentrat cebuli, syrop kukurydziany, ekstrakt z cebuli, maltodekstryna, sól, guma arabska, olejek eteryczny z cebuli), olej paprykowy (olej sojowy, oleożywica z papryki, estry gliceryny i kwasów tłuszczowych)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "74.38",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.6,
+          "salt": 1.5,
+          "carbs": 50.8,
+          "sugar": 8.2,
+          "protein": 3.9,
+          "calories": 227,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact GTIN Sempio 160g sweet-and-spicy cup is explicitly stored at room temperature; populated food metadata is retained.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4099.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 160g product mapping and matching label data."
+        },
+        {
+          "url": "https://www.y-mart.de/en/category/ready-to-cook-canned-food/3-mins-quick-meals/sempio-dalkom-tteokbokki.8801005198462-1275385430.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801005198462 label specifies room-temperature storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-instant-tteokbokki-kluski-ryzowe-w-slodko-pikantnym-sosie-160g-sempio",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000943",
+      "productId": "93f1960c-343c-42b3-9968-6f4a090a3782",
+      "variantId": "dbcff121-00f5-4a35-b336-887444b72cec",
+      "name": "Makaron stir-fry instant o smaku solonego jajka 85g - MAMA Oriental Kitchen",
+      "slug": "makaron-stir-fry-instant-o-smaku-solonego-jajka-85g-mama-oriental-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "eggs",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna 56%, olej palmowy, skrobia modyfikowana z tapioki, cukier, jaja w proszku 3,61%, sól, aromat ( mleko , soja ) 1,04%, przyprawy, wzmacniacz smaku (E621, E635), chilli w proszku, regulator kwasowości (E500, E501, E451), suszona szalotka, substancja zagęszczająca (E466), substancja przeciwzbrylająca (E551), regulator kwasowości (E330), barwnik (E150a), oleorezynowy ekstrakt z papryki, ekstrakt z rozmarynu.",
+        "storageZone": null,
+        "pricePerUnit": "82.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7.8,
+          "salt": 1.5,
+          "carbs": 26.3,
+          "sugar": 2.9,
+          "protein": 3.9,
+          "calories": 191,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 3.4
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "eggs",
+          "milk",
+          "celery",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "eggs",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna 56%, olej palmowy, skrobia modyfikowana z tapioki, cukier, jaja w proszku 3,61%, sól, aromat ( mleko , soja ) 1,04%, przyprawy, wzmacniacz smaku (E621, E635), chilli w proszku, regulator kwasowości (E500, E501, E451), suszona szalotka, substancja zagęszczająca (E466), substancja przeciwzbrylająca (E551), regulator kwasowości (E330), barwnik (E150a), oleorezynowy ekstrakt z papryki, ekstrakt z rozmarynu.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "82.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7.8,
+          "salt": 1.5,
+          "carbs": 26.3,
+          "sugar": 2.9,
+          "protein": 3.9,
+          "calories": 191,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 3.4
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "eggs",
+          "milk",
+          "celery",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact MAMA Oriental Kitchen salted-egg 85g product label specifies cool-dry storage away from sunlight; all populated composition fields are preserved.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4258.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 85g product mapping and matching composition."
+        },
+        {
+          "url": "https://www.woolworths.com.au/shop/productdetails/122207/mama-oriental-kitchen-salted-egg",
+          "kind": "retailer-label",
+          "supports": "Exact product label specifies cool-dry storage away from sunlight."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/makaron-stir-fry-instant-o-smaku-solonego-jajka-85g-mama-oriental-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001068",
+      "productId": "8f609ee0-5dc2-437f-bee9-d5f9f80ad85e",
+      "variantId": "6f8c8902-a9e3-4060-8272-e115be2b1472",
+      "name": "BBQ Tteokbokki, kluski ryżowe w sosie barbecue 260g - O'Food",
+      "slug": "bbq-tteokbokki-kluski-ryzowe-w-sosie-barbecue-260g-o-food",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Kluski ryżowe: ryż, woda, sól, regulator kwasowości: kwas cytrynowy (E330); alkohol Sos: cukier, woda, sos sojowy 14,5% ( soja , sól, woda), olej sojowy, czosnek, cebula, alkohol, ekstrakt drożdżowy, bulion w proszku (maltodekstryna, sól, dekstroza), sztuczny aromat, modyfikowana skrobia kukurydziana, hydrolizowane białko sojowe , czarny pieprz w proszku 0,1%, wzmacniacze smaku: E627, E631; regulator kwasowości: E330; substancja zagęszczająca: E415.",
+        "storageZone": null,
+        "pricePerUnit": "118.85",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.8,
+          "salt": 1.1,
+          "carbs": 53.3,
+          "sugar": 6.2,
+          "protein": 4,
+          "calories": 245,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.4
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Kluski ryżowe: ryż, woda, sól, regulator kwasowości: kwas cytrynowy (E330); alkohol Sos: cukier, woda, sos sojowy 14,5% ( soja , sól, woda), olej sojowy, czosnek, cebula, alkohol, ekstrakt drożdżowy, bulion w proszku (maltodekstryna, sól, dekstroza), sztuczny aromat, modyfikowana skrobia kukurydziana, hydrolizowane białko sojowe , czarny pieprz w proszku 0,1%, wzmacniacze smaku: E627, E631; regulator kwasowości: E330; substancja zagęszczająca: E415.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "118.85",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.8,
+          "salt": 1.1,
+          "carbs": 53.3,
+          "sugar": 6.2,
+          "protein": 4,
+          "calories": 245,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.4
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact GTIN and official O'Food sources identify the 260g BBQ tteokbokki as a shelf-stable product stored at room temperature or cool and dry.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4595.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 260g product and matching formulation."
+        },
+        {
+          "url": "https://www.y-mart.de/en/category/ready-to-cook-canned-food/microwavable-rice-suppe/cjo-ofood-3-minutes-bbq-tteokbokki.8801052092898-1244735115.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801052092898 label confirms room-temperature storage."
+        },
+        {
+          "url": "https://ofoodeurope.com/product/bbq-tteokbokki/",
+          "kind": "manufacturer-page",
+          "supports": "Official O'Food page corroborates exact product formulation and format."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/bbq-tteokbokki-kluski-ryzowe-w-sosie-barbecue-260g-o-food",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001120",
+      "productId": "f6bdd14a-4db0-440d-ab1f-7455ff157663",
+      "variantId": "837d615f-2fd0-4b98-847d-9c15a9c49481",
+      "name": "Danie makaron carbonara o smaku bekonu 85g - MAMA Oriental Kitchen",
+      "slug": "danie-makaron-carbonara-o-smaku-bekonu-85g-mama-oriental-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna 58%, skrobia z tapioki, olej palmowy, zabielacz (syrop glukozowy, uwodorniony olej palmowy, kazeina (mleko), środek przeciwzbrylający (E551)), maltodekstryna, skrobia modyfikowana z kukurydzy), olej ryżowy, cukier, sól, białko sojowe , aromat ( mleko ) 0.68%, wzmacniacze smaku (E621, E635), przyprawy, regulatory kwasowości (E500, E501, E451), jaja w proszku, sos sojowy (ziarno sojowe , sól, ekstrakt słodowy ( jęczmień ), pszenica , ekstrakt drożdżowy, olej palmowy), drożdże w proszku, substancja zagęszczająca (E466), środek przeciwzbrylający (E551), płatki pietruszki, kwas cytrynowy (E330).",
+        "storageZone": null,
+        "pricePerUnit": "82.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7.8,
+          "salt": 1.5,
+          "carbs": 26.3,
+          "sugar": 2.9,
+          "protein": 3.9,
+          "calories": 191,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 3.4
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "celery",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna 58%, skrobia z tapioki, olej palmowy, zabielacz (syrop glukozowy, uwodorniony olej palmowy, kazeina (mleko), środek przeciwzbrylający (E551)), maltodekstryna, skrobia modyfikowana z kukurydzy), olej ryżowy, cukier, sól, białko sojowe , aromat ( mleko ) 0.68%, wzmacniacze smaku (E621, E635), przyprawy, regulatory kwasowości (E500, E501, E451), jaja w proszku, sos sojowy (ziarno sojowe , sól, ekstrakt słodowy ( jęczmień ), pszenica , ekstrakt drożdżowy, olej palmowy), drożdże w proszku, substancja zagęszczająca (E466), środek przeciwzbrylający (E551), płatki pietruszki, kwas cytrynowy (E330).",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "82.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7.8,
+          "salt": 1.5,
+          "carbs": 26.3,
+          "sugar": 2.9,
+          "protein": 3.9,
+          "calories": 191,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 3.4
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "celery",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact GTIN MAMA carbonara-bacon 85g label specifies cool-dry storage, so only the missing storage classification changes.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4715.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 85g product and matching composition."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/danie-orientalne-carbonara-z-bekonem-unifood-mama-85-g/00586153",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8850987150098 label specifies cool-dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-makaron-carbonara-o-smaku-bekonu-85g-mama-oriental-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001121",
+      "productId": "45dc6a6c-fa19-4e20-a27f-6ec5f1081b36",
+      "variantId": "dacb831a-e132-49f8-a92a-35e670352bb8",
+      "name": "Zupa makaron Mala o smaku wołowiny 85g - MAMA Oriental Kitchen",
+      "slug": "zupa-makaron-mala-o-smaku-wolowiny-85g-mama-oriental-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals"
+        ],
+        "ingredients": "Mąka pszenna 58%, olej palmowy, modyfikowana skrobia z tapioki, sól, cukier, chili w proszku, wzmacniacze smaku (E621, E635), regulatory kwasowości (E500, E501, E451), aromat, przyprawy, barwniki (E150c, E160c), substancja zagęszczająca (E466), dymka suszona, papryka oleoresin, substancja przeciwzbrylająca (E551).",
+        "storageZone": null,
+        "pricePerUnit": "82.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 4,
+          "salt": 0.82,
+          "carbs": 13,
+          "sugar": 0.5,
+          "protein": 1.7,
+          "calories": 95,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "eggs",
+          "milk",
+          "celery",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals"
+        ],
+        "ingredients": "Mąka pszenna 58%, olej palmowy, modyfikowana skrobia z tapioki, sól, cukier, chili w proszku, wzmacniacze smaku (E621, E635), regulatory kwasowości (E500, E501, E451), aromat, przyprawy, barwniki (E150c, E160c), substancja zagęszczająca (E466), dymka suszona, papryka oleoresin, substancja przeciwzbrylająca (E551).",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "82.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 4,
+          "salt": 0.82,
+          "carbs": 13,
+          "sugar": 0.5,
+          "protein": 1.7,
+          "calories": 95,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "eggs",
+          "milk",
+          "celery",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact GTIN MAMA Mala beef 85g label specifies dry room-temperature storage; existing ingredients, allergens, and nutrition remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4716.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 85g product and matching composition."
+        },
+        {
+          "url": "https://www.s-kaupat.fi/tuote/mama-ok-mala-naudanlihanmakuinen-nuudeli-85g/8850987151279",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8850987151279 label specifies dry room-temperature storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/zupa-makaron-mala-o-smaku-wolowiny-85g-mama-oriental-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001129",
+      "productId": "1ac6ad82-2f23-452c-abca-90e5a170a74b",
+      "variantId": "516b3ef8-1154-42c1-8cc5-ebd7c4f927e9",
+      "name": "Danie makaron udon Sesame Teriyaki Bowl 240g - Obento",
+      "slug": "danie-makaron-udon-sesame-teriyaki-bowl-240g-obento",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Makaron (78,3%) : woda, mąka pszenna , zmodyfikowana skrobia z tapioki, sól, regulator kwasowości E270. Sos (20%) : cukier, sos sojowy (woda, pszenica , soja , sól), czosnek, koncentrat syropu z cytrusów (woda, cukier, koncentrat soku jabłkowego, koncentrat soku z cytryny, stabilizator E466), regulator kwasowości E330, zagęszczacze: E412, E440; przeciwutleniacz E300), modyfikowana skrobia kukurydziana, pasta sezamowa (1,6%), olej sojowy , sól, ekstrakt drożdżowy, przyprawy, olej sezamowy (0,8%), regulator kwasowości E330. Suszone warzywa (0,8%) : marchewka, czerwona papryka, cebulka. Posypka (0,8%) : nasiona prażonego sezamu.",
+        "storageZone": null,
+        "pricePerUnit": "57.92",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2,
+          "salt": 1.1,
+          "carbs": 28,
+          "sugar": 6.3,
+          "protein": 4.8,
+          "calories": 155,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Makaron (78,3%) : woda, mąka pszenna , zmodyfikowana skrobia z tapioki, sól, regulator kwasowości E270. Sos (20%) : cukier, sos sojowy (woda, pszenica , soja , sól), czosnek, koncentrat syropu z cytrusów (woda, cukier, koncentrat soku jabłkowego, koncentrat soku z cytryny, stabilizator E466), regulator kwasowości E330, zagęszczacze: E412, E440; przeciwutleniacz E300), modyfikowana skrobia kukurydziana, pasta sezamowa (1,6%), olej sojowy , sól, ekstrakt drożdżowy, przyprawy, olej sezamowy (0,8%), regulator kwasowości E330. Suszone warzywa (0,8%) : marchewka, czerwona papryka, cebulka. Posypka (0,8%) : nasiona prażonego sezamu.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "57.92",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2,
+          "salt": 1.1,
+          "carbs": 28,
+          "sugar": 6.3,
+          "protein": 4.8,
+          "calories": 155,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The matching Obento Sesame Teriyaki 240g China label specifies cool-dry storage, supporting an ambient classification without altering composition.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4737.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 240g product and matching label composition."
+        },
+        {
+          "url": "https://www.satsuki.fr/en/4708-udon-noodles-bowl-obento-teriyaki-sesame-sauce-240g.html",
+          "kind": "retailer-label",
+          "supports": "Matching GTIN 9310432003656 product gives China origin and cool-dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-makaron-udon-sesame-teriyaki-bowl-240g-obento",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001130",
+      "productId": "2baa3d40-f01d-4040-bb16-db824f0525da",
+      "variantId": "1d4e401e-fa58-40a2-b37c-dc1ba4282965",
+      "name": "Danie makaron udon Spicy Kung Pao Bowl 240g - Obento",
+      "slug": "danie-makaron-udon-spicy-kung-pao-bowl-240g-obento",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "nuts",
+          "sesame",
+          "peanuts"
+        ],
+        "ingredients": "Makaron (78,3%) : woda, mąka pszenna , zmodyfikowana skrobia z tapioki, sól, regulator kwasowości E270. Sos (19,6%) : woda, cukier, sos sojowy (woda, pszenica , soja , sól), pasta sojowa (woda, soja , sól), czosnek, sól, pasta orzechowa , hydrolizowane białko sojowe , olej sojowy , olej sezamowy , pasta sezamowa , modyfikowana skrobia kukurydziana, przyprawy, imbir, regulator kwasowości E330. Suszone warzywa (1,3%) : marchewka, czerwona papryka, cebulka. Posypka (0,8%) : prażone orzeszki ziemne.",
+        "storageZone": null,
+        "pricePerUnit": "57.92",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 3.3,
+          "salt": 2,
+          "carbs": 26,
+          "sugar": 5.3,
+          "protein": 4.9,
+          "calories": 158,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.5
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "nuts",
+          "sesame",
+          "peanuts"
+        ],
+        "ingredients": "Makaron (78,3%) : woda, mąka pszenna , zmodyfikowana skrobia z tapioki, sól, regulator kwasowości E270. Sos (19,6%) : woda, cukier, sos sojowy (woda, pszenica , soja , sól), pasta sojowa (woda, soja , sól), czosnek, sól, pasta orzechowa , hydrolizowane białko sojowe , olej sojowy , olej sezamowy , pasta sezamowa , modyfikowana skrobia kukurydziana, przyprawy, imbir, regulator kwasowości E330. Suszone warzywa (1,3%) : marchewka, czerwona papryka, cebulka. Posypka (0,8%) : prażone orzeszki ziemne.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "57.92",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 3.3,
+          "salt": 2,
+          "carbs": 26,
+          "sugar": 5.3,
+          "protein": 4.9,
+          "calories": 158,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.5
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The matching Obento Spicy Kung Pao 240g formula is sold for ambient shelf storage; all populated food metadata remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4738.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 240g product and matching composition."
+        },
+        {
+          "url": "https://www.plus.nl/product/obento-spicy-kung-pao-udon-noodle-wikkel-240-g-486725",
+          "kind": "retailer-label",
+          "supports": "Matching GTIN 9310432003663 product corroborates the shelf-stable consumer unit."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-makaron-udon-spicy-kung-pao-bowl-240g-obento",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001205",
+      "productId": "4722669d-4afa-4c08-b99e-0b6c92e82c38",
+      "variantId": "d94c32ce-f996-4a35-8f42-19d65e274bf7",
+      "name": "Danie makaron Tom Yum z krewetkami 85g - MAMA Oriental Kitchen",
+      "slug": "danie-makaron-tom-yum-z-krewetkami-85g-mama-oriental-kitchen",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "fish",
+          "soybeans",
+          "crustaceans"
+        ],
+        "ingredients": "Mąka pszenna 58%, olej palmowy, skrobia modyfikowana z tapioki, cukier, sól, przyprawy, chili 0.9%, wzmacniacz smaku: E621, E635, suszone krewetki 0.74%, cukier palmowy, sos rybny ( anchois , sól , cukier), regulator kwasowości: E500, E501, E451, E330; suszona zielona cebulka, krewetki w proszku 0.15%, substancja zagęszczająca: E466, papryka w proszku, aromat (zawiera soję ), ekstrakt z chili.",
+        "storageZone": null,
+        "pricePerUnit": "82.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 18,
+          "salt": 3.9,
+          "carbs": 65,
+          "sugar": 7.1,
+          "protein": 9.4,
+          "calories": 460,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 8
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "celery",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "43098ab7-106a-47f1-b91b-aa497c1c62db",
+          "name": "Dania gotowe",
+          "slug": "dania-gotowe",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "fish",
+          "soybeans",
+          "crustaceans"
+        ],
+        "ingredients": "Mąka pszenna 58%, olej palmowy, skrobia modyfikowana z tapioki, cukier, sól, przyprawy, chili 0.9%, wzmacniacz smaku: E621, E635, suszone krewetki 0.74%, cukier palmowy, sos rybny ( anchois , sól , cukier), regulator kwasowości: E500, E501, E451, E330; suszona zielona cebulka, krewetki w proszku 0.15%, substancja zagęszczająca: E466, papryka w proszku, aromat (zawiera soję ), ekstrakt z chili.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "82.24",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 18,
+          "salt": 3.9,
+          "carbs": 65,
+          "sugar": 7.1,
+          "protein": 9.4,
+          "calories": 460,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 8
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "celery",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact GTIN MAMA Tom Yum shrimp 85g label specifies cool-dry storage; only the absent storage classification is added.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4903.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 85g product and matching composition."
+        },
+        {
+          "url": "https://www.piccantino.ch/en-CH/mama-instant-asian-meals/instant-noodles-shrimp-stir-fried-tom-yum-sauce",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8850987148255 label specifies cool-dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-makaron-tom-yum-z-krewetkami-85g-mama-oriental-kitchen",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ],
+  "holds": [
+    {
+      "sku": "ADG-000485",
+      "reason": "Exact-EAN Che Phin 4 listings conflict on both formulation and nutrition, so neither a positive allergen declaration nor a nutrition panel can be selected safely without a current pack photo.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2480.html",
+          "kind": "supplier-label",
+          "supports": "Historical exact product mapping, 500g identity, ingredient generation, and ambient storage."
+        },
+        {
+          "url": "https://www.asiamart.cz/en/275-trung-nguyen-ground-coffee-che-phin-4-500g.html",
+          "kind": "retailer-label",
+          "supports": "Exact-EAN EU listing with a different formulation and nutrition panel."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/kawa-mielona-trung-nguyen-che-phin-4-500g",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000658",
+      "reason": "Sang Tao 3 sources conflict between a pure-Arabica formulation and an exact-EAN EU formulation containing soy and additives; nutrition panels also disagree, so no safe transition is available.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3149.html",
+          "kind": "supplier-label",
+          "supports": "Historical exact 340g product mapping and pure-Arabica formulation."
+        },
+        {
+          "url": "https://trungnguyenlegend.com/files/HO-SO-TU-CONG-BO-SAN-PHAM/CPRX-SANGTAO3.pdf",
+          "kind": "manufacturer-document",
+          "supports": "Manufacturer document confirms Sang Tao 3 identity but not the current EU label generation."
+        },
+        {
+          "url": "https://www.asiamart.cz/cs/269-trung-nguyen-mleta-kava-sang-tao-3-340g.html",
+          "kind": "retailer-label",
+          "supports": "Exact-EAN EU listing shows a materially different composition."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/kawa-mielona-trung-nguyen-sang-tao-3-340g",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000759",
+      "reason": "The exact product is already recorded as pure Japanese matcha with no regulated allergen and ambient storage; plain tea may be exempt from a mandatory nutrition declaration, so filling nutrition would invent data.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3692.html",
+          "kind": "supplier-label",
+          "supports": "Exact 50g Maruka matcha identity, pure-tea ingredients, Japan origin, and ambient storage."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU food-information rules allow the nutrition declaration exemption applicable to unmodified tea."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/matcha-uji-cha-sproszkowana-zielona-herbata-50g-maruka",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000804",
+      "reason": "The exact genmaicha is already recorded with its tea-and-rice ingredients, no regulated allergen, Japan origin, and ambient storage; no product-specific nutrition panel is available or required to create a safe change.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3794.html",
+          "kind": "supplier-label",
+          "supports": "Exact 70g Maruka genmaicha identity, composition, origin, and ambient storage."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU rules explain why unmodified tea products may legitimately omit nutrition."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/matcha-iri-genmaicha-zielona-herbata-z-prazonym-ryzem-i-matcha-70g-maruka",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000805",
+      "reason": "The exact bancha is already pure Japanese tea with no regulated allergen and ambient storage; its absent nutrition panel is not a safe metadata gap to synthesize.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3795.html",
+          "kind": "supplier-label",
+          "supports": "Exact 60g Maruka bancha identity, single ingredient, origin, and ambient storage."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU rules support legitimate nutrition omission for unmodified tea."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/bancha-zielona-herbata-z-poznego-zbioru-60g-maruka",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000806",
+      "reason": "The exact sencha is already pure Japanese tea with no regulated allergen and ambient storage; no exact label nutrition is available and none should be inferred from brewed tea.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3796.html",
+          "kind": "supplier-label",
+          "supports": "Exact 50g Maruka sencha identity, single ingredient, origin, and current storage state."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU rules support legitimate nutrition omission for unmodified tea."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/shizuoka-sencha-zielona-herbata-50g-maruka",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000807",
+      "reason": "The exact hojicha is already recorded as pure roasted Japanese tea with no regulated allergen and ambient storage; adding nutrition without its current label would be speculative.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3797.html",
+          "kind": "supplier-label",
+          "supports": "Exact 50g Maruka hojicha identity, single ingredient, origin, and ambient storage."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU rules support legitimate nutrition omission for unmodified tea."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/hojicha-prazona-zielona-herbata-50g-maruka",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000854",
+      "reason": "Exact-EAN listings describe pure Korean ginseng granules already stored with no regulated allergen, Korea origin, and ambient storage; no current-pack nutrition panel supports a change.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3935.html",
+          "kind": "supplier-label",
+          "supports": "Exact 10x2g Meridian product mapping, pure-ginseng ingredient, origin, and ambient storage."
+        },
+        {
+          "url": "https://wiesiolek-pharma.pl/herbaty-i-kawy/7098-meridian-korean-ginseng-tea-10-sasz-meridian.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5906489288074 corroborates the 20g pure-ginseng product identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/herbata-z-zen-szenia-instant-10-x-2g-20g-meridian",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000389",
+      "reason": "Three current listings for exact GTIN 8710647102006 disagree materially on calories, protein, and salt, so the missing nutrition panel requires a current can photo.",
+      "evidence": [
+        {
+          "url": "https://www.y-mart.de/en/category/ready-to-cook-canned-food/canned-product/ambition-crab-meat.8710647102006-1114822453.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN label reports one nutrition generation."
+        },
+        {
+          "url": "https://www.orientalwebshop.nl/en/ambition-crab-meat-170g-170",
+          "kind": "retailer-label",
+          "supports": "Exact product reports a materially different nutrition panel."
+        },
+        {
+          "url": "https://pandasia.dk/vare/ambition-krabbekoed-crab-meat-paa-daase-170-g/",
+          "kind": "retailer-label",
+          "supports": "Independent exact product reports a third conflicting nutrition panel."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/mieso-z-kraba-w-puszce-170g-ambition",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000876",
+      "reason": "The historical EU listing names soy and molluscs while the official exact-JAN Japanese specification declares none of its regulated 28 allergens; a current EU sticker photo is required before changing allergen fields.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4013.html",
+          "kind": "supplier-label",
+          "supports": "Historical exact 42g EU listing and its allergen interpretation."
+        },
+        {
+          "url": "https://www.onisifoods.co.jp/products/pdf/kikaku_04.pdf",
+          "kind": "manufacturer-specification",
+          "supports": "Official exact JAN 4970088140478 specification declares none of the Japanese regulated 28 allergens."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/pocket-onigiri-kombu-kulka-ryzowa-instant-z-duszonymi-algami-42g-onisi",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000914",
+      "reason": "The exact historical Hereford generation declares no positive regulated allergen and production already stores an empty allergen list, so there is no evidence-backed metadata transition to apply.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4142.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Brazil-origin 340g generation and no positive allergen declaration."
+        },
+        {
+          "url": "https://heuschenschroufforder.com/corned-beef-340-gr",
+          "kind": "distributor-record",
+          "supports": "Distributor corroborates the Brazil-origin consumer generation used by the historical listing."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/wolowina-konserwowa-corned-beef-340g-hereford",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ]
+}

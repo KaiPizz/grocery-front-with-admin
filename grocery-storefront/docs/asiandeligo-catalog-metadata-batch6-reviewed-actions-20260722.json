@@ -1,0 +1,507 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch6-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T12:04:23Z",
+  "cohortSkus": [
+    "ADG-000485",
+    "ADG-000556",
+    "ADG-000658",
+    "ADG-000759",
+    "ADG-000804",
+    "ADG-000805",
+    "ADG-000806",
+    "ADG-000807",
+    "ADG-000854",
+    "ADG-000859",
+    "ADG-000526",
+    "ADG-000655",
+    "ADG-000656",
+    "ADG-000389",
+    "ADG-000876",
+    "ADG-000901",
+    "ADG-000902",
+    "ADG-000914",
+    "ADG-000943",
+    "ADG-001068",
+    "ADG-001120",
+    "ADG-001121",
+    "ADG-001129",
+    "ADG-001130",
+    "ADG-001205"
+  ],
+  "actions": {
+    "ADG-000485": {
+      "hold": true,
+      "reason": "Exact-EAN Che Phin 4 listings conflict on both formulation and nutrition, so neither a positive allergen declaration nor a nutrition panel can be selected safely without a current pack photo.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2480.html",
+          "kind": "supplier-label",
+          "supports": "Historical exact product mapping, 500g identity, ingredient generation, and ambient storage."
+        },
+        {
+          "url": "https://www.asiamart.cz/en/275-trung-nguyen-ground-coffee-che-phin-4-500g.html",
+          "kind": "retailer-label",
+          "supports": "Exact-EAN EU listing with a different formulation and nutrition panel."
+      }
+      ]
+    },
+    "ADG-000556": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact Tian Hu Shan 80g consumer unit used by this two-pack has a supplier specification for storage between 2 and 30°C and independent cool-dry guidance; nutrition and the suspect egg/milk declaration remain untouched pending a current label photo.",
+      "evidence": [
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-2723-Matcha-sproszkowana-zielona-herbata-w-puszce-80g-x-2-Tian-Hu-Shan.html",
+          "kind": "supplier-label",
+          "supports": "Confirms the exact two-pack identity and two 80g Tian Hu Shan cans."
+        },
+        {
+          "url": "https://www.geyskens.be/geyskens/articles.nsf/%28ArticlesbyArtnr%29/D61021/%24File/D61021%20-%20MATCHA%20GROENE%20THEE%20POEDER%2080%20G.pdf",
+          "kind": "supplier-specification",
+          "supports": "Exact 80g product specification gives 2–30°C storage and the product composition."
+        },
+        {
+          "url": "https://www.yoaxia.de/tee/tee-accessoires/gruenteepulver-matcha-tea-80g-pulveresierter-gruener-tee-green-tea-powder-kv_7803_3261",
+          "kind": "retailer-label",
+          "supports": "Exact consumer unit corroborates the GTIN and shelf-stable cool-dry storage."
+        }
+      ]
+    },
+    "ADG-000658": {
+      "hold": true,
+      "reason": "Sang Tao 3 sources conflict between a pure-Arabica formulation and an exact-EAN EU formulation containing soy and additives; nutrition panels also disagree, so no safe transition is available.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3149.html",
+          "kind": "supplier-label",
+          "supports": "Historical exact 340g product mapping and pure-Arabica formulation."
+        },
+        {
+          "url": "https://trungnguyenlegend.com/files/HO-SO-TU-CONG-BO-SAN-PHAM/CPRX-SANGTAO3.pdf",
+          "kind": "manufacturer-document",
+          "supports": "Manufacturer document confirms Sang Tao 3 identity but not the current EU label generation."
+        },
+        {
+          "url": "https://www.asiamart.cz/cs/269-trung-nguyen-mleta-kava-sang-tao-3-340g.html",
+          "kind": "retailer-label",
+          "supports": "Exact-EAN EU listing shows a materially different composition."
+        }
+      ]
+    },
+    "ADG-000759": {
+      "hold": true,
+      "reason": "The exact product is already recorded as pure Japanese matcha with no regulated allergen and ambient storage; plain tea may be exempt from a mandatory nutrition declaration, so filling nutrition would invent data.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3692.html",
+          "kind": "supplier-label",
+          "supports": "Exact 50g Maruka matcha identity, pure-tea ingredients, Japan origin, and ambient storage."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU food-information rules allow the nutrition declaration exemption applicable to unmodified tea."
+        }
+      ]
+    },
+    "ADG-000804": {
+      "hold": true,
+      "reason": "The exact genmaicha is already recorded with its tea-and-rice ingredients, no regulated allergen, Japan origin, and ambient storage; no product-specific nutrition panel is available or required to create a safe change.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3794.html",
+          "kind": "supplier-label",
+          "supports": "Exact 70g Maruka genmaicha identity, composition, origin, and ambient storage."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU rules explain why unmodified tea products may legitimately omit nutrition."
+        }
+      ]
+    },
+    "ADG-000805": {
+      "hold": true,
+      "reason": "The exact bancha is already pure Japanese tea with no regulated allergen and ambient storage; its absent nutrition panel is not a safe metadata gap to synthesize.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3795.html",
+          "kind": "supplier-label",
+          "supports": "Exact 60g Maruka bancha identity, single ingredient, origin, and ambient storage."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU rules support legitimate nutrition omission for unmodified tea."
+        }
+      ]
+    },
+    "ADG-000806": {
+      "hold": true,
+      "reason": "The exact sencha is already pure Japanese tea with no regulated allergen and ambient storage; no exact label nutrition is available and none should be inferred from brewed tea.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3796.html",
+          "kind": "supplier-label",
+          "supports": "Exact 50g Maruka sencha identity, single ingredient, origin, and current storage state."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU rules support legitimate nutrition omission for unmodified tea."
+        }
+      ]
+    },
+    "ADG-000807": {
+      "hold": true,
+      "reason": "The exact hojicha is already recorded as pure roasted Japanese tea with no regulated allergen and ambient storage; adding nutrition without its current label would be speculative.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3797.html",
+          "kind": "supplier-label",
+          "supports": "Exact 50g Maruka hojicha identity, single ingredient, origin, and ambient storage."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+          "kind": "official-regulation",
+          "supports": "EU rules support legitimate nutrition omission for unmodified tea."
+        }
+      ]
+    },
+    "ADG-000854": {
+      "hold": true,
+      "reason": "Exact-EAN listings describe pure Korean ginseng granules already stored with no regulated allergen, Korea origin, and ambient storage; no current-pack nutrition panel supports a change.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3935.html",
+          "kind": "supplier-label",
+          "supports": "Exact 10x2g Meridian product mapping, pure-ginseng ingredient, origin, and ambient storage."
+        },
+        {
+          "url": "https://wiesiolek-pharma.pl/herbaty-i-kawy/7098-meridian-korean-ginseng-tea-10-sasz-meridian.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 5906489288074 corroborates the 20g pure-ginseng product identity."
+        }
+      ]
+    },
+    "ADG-000859": {
+      "patch": {
+        "allergens": [
+          "sulphites"
+        ]
+      },
+      "reason": "The current ingredient text explicitly contains potassium metabisulphite E224, and exact-EAN current labels identify sulphite; nutrition remains held because exact-pack sources disagree.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3950.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 250ml product and ingredient list explicitly containing E224."
+        },
+        {
+          "url": "https://www.denkinesiskekoebmand.dk/en/spices/3126-lime-juice-250ml-golden-turtle.html",
+          "kind": "retailer-label",
+          "supports": "Exact product formulation explicitly labels E224 as sulphite and gives cool-dry storage."
+        },
+        {
+          "url": "https://pinoyfood.de/shop/other-asian-products/golden-turtle-lime-juice-250ml/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8720301109111 corroborates potassium metabisulphite in the 250ml product."
+        }
+      ]
+    },
+    "ADG-000526": {
+      "patch": {
+        "storageZone": "AMBIENT",
+        "countryOfOrigin": "Dania"
+      },
+      "reason": "The exact EAN and current 93%-pork formulation are manufactured in Denmark and labelled for cool-dry shelf storage before opening.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2625.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 340g formulation, Denmark production statement, and current nutrition."
+        },
+        {
+          "url": "https://order.asiaexpressfood.nl/en/assortiment/preserved-products/meat/luncheon-meat-varken-6242.html",
+          "kind": "distributor-record",
+          "supports": "Distributor identifies consumer EAN 8801052034928 and Denmark as country of origin."
+        },
+        {
+          "url": "https://pongmarket.se/luncheon-meat-fl%C3%A4sk-340g-chung-jung-one-dk/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN, formulation, Denmark origin, and dry-cool storage are corroborated together."
+        }
+      ]
+    },
+    "ADG-000655": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact 260g O'Food garlic tteokbokki sources identify a shelf-stable product stored at room temperature or cool and dry; conflicting trace-allergen policies are deliberately left unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3134.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 260g product identity and matching formulation."
+        },
+        {
+          "url": "https://daesanguk.com/products/ready-meals/Garlic%20Tteokbokki/8",
+          "kind": "manufacturer-page",
+          "supports": "Daesang identifies the exact garlic 260g ready meal as a long-life consumer product."
+        },
+        {
+          "url": "https://polskikoszyk.pl/o-food-tteokbokki-garlic-260g",
+          "kind": "retailer-label",
+          "supports": "Exact product label confirms room-temperature dry storage."
+        }
+      ]
+    },
+    "ADG-000656": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact 260g O'Food original tteokbokki is a two-serving shelf-stable product with explicit room-temperature storage; its populated composition remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3135.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 260g original product identity and matching formulation."
+        },
+        {
+          "url": "https://ofoodeurope.com/product/original-tteokbokki-2/",
+          "kind": "manufacturer-page",
+          "supports": "Official O'Food page corroborates the exact product format and shelf-stable preparation."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/tteokbokki-kluski-ry%C5%BCowe-z-pikantnym-sosem-gochujang-o-food-260-g/00302090",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801052081939 label specifies room-temperature storage."
+        }
+      ]
+    },
+    "ADG-000389": {
+      "hold": true,
+      "reason": "Three current listings for exact GTIN 8710647102006 disagree materially on calories, protein, and salt, so the missing nutrition panel requires a current can photo.",
+      "evidence": [
+        {
+          "url": "https://www.y-mart.de/en/category/ready-to-cook-canned-food/canned-product/ambition-crab-meat.8710647102006-1114822453.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN label reports one nutrition generation."
+        },
+        {
+          "url": "https://www.orientalwebshop.nl/en/ambition-crab-meat-170g-170",
+          "kind": "retailer-label",
+          "supports": "Exact product reports a materially different nutrition panel."
+        },
+        {
+          "url": "https://pandasia.dk/vare/ambition-krabbekoed-crab-meat-paa-daase-170-g/",
+          "kind": "retailer-label",
+          "supports": "Independent exact product reports a third conflicting nutrition panel."
+        }
+      ]
+    },
+    "ADG-000876": {
+      "hold": true,
+      "reason": "The historical EU listing names soy and molluscs while the official exact-JAN Japanese specification declares none of its regulated 28 allergens; a current EU sticker photo is required before changing allergen fields.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4013.html",
+          "kind": "supplier-label",
+          "supports": "Historical exact 42g EU listing and its allergen interpretation."
+        },
+        {
+          "url": "https://www.onisifoods.co.jp/products/pdf/kikaku_04.pdf",
+          "kind": "manufacturer-specification",
+          "supports": "Official exact JAN 4970088140478 specification declares none of the Japanese regulated 28 allergens."
+        }
+      ]
+    },
+    "ADG-000901": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact GTIN Sempio 160g spicy cup label instructs cool-dry storage; its existing ingredients, allergens, and nutrition remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4098.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 160g product mapping and matching label data."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/tteokbokki-kluski-ry%C5%BCowe-hot-spicy-sempio-160-g/00355042",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801005198455 label specifies cool-dry storage."
+        }
+      ]
+    },
+    "ADG-000902": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact GTIN Sempio 160g sweet-and-spicy cup is explicitly stored at room temperature; populated food metadata is retained.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4099.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 160g product mapping and matching label data."
+        },
+        {
+          "url": "https://www.y-mart.de/en/category/ready-to-cook-canned-food/3-mins-quick-meals/sempio-dalkom-tteokbokki.8801005198462-1275385430.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801005198462 label specifies room-temperature storage."
+        }
+      ]
+    },
+    "ADG-000914": {
+      "hold": true,
+      "reason": "The exact historical Hereford generation declares no positive regulated allergen and production already stores an empty allergen list, so there is no evidence-backed metadata transition to apply.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4142.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Brazil-origin 340g generation and no positive allergen declaration."
+        },
+        {
+          "url": "https://heuschenschroufforder.com/corned-beef-340-gr",
+          "kind": "distributor-record",
+          "supports": "Distributor corroborates the Brazil-origin consumer generation used by the historical listing."
+        }
+      ]
+    },
+    "ADG-000943": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact MAMA Oriental Kitchen salted-egg 85g product label specifies cool-dry storage away from sunlight; all populated composition fields are preserved.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4258.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 85g product mapping and matching composition."
+        },
+        {
+          "url": "https://www.woolworths.com.au/shop/productdetails/122207/mama-oriental-kitchen-salted-egg",
+          "kind": "retailer-label",
+          "supports": "Exact product label specifies cool-dry storage away from sunlight."
+        }
+      ]
+    },
+    "ADG-001068": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact GTIN and official O'Food sources identify the 260g BBQ tteokbokki as a shelf-stable product stored at room temperature or cool and dry.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4595.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 260g product and matching formulation."
+        },
+        {
+          "url": "https://www.y-mart.de/en/category/ready-to-cook-canned-food/microwavable-rice-suppe/cjo-ofood-3-minutes-bbq-tteokbokki.8801052092898-1244735115.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801052092898 label confirms room-temperature storage."
+        },
+        {
+          "url": "https://ofoodeurope.com/product/bbq-tteokbokki/",
+          "kind": "manufacturer-page",
+          "supports": "Official O'Food page corroborates exact product formulation and format."
+        }
+      ]
+    },
+    "ADG-001120": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact GTIN MAMA carbonara-bacon 85g label specifies cool-dry storage, so only the missing storage classification changes.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4715.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 85g product and matching composition."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/danie-orientalne-carbonara-z-bekonem-unifood-mama-85-g/00586153",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8850987150098 label specifies cool-dry storage."
+        }
+      ]
+    },
+    "ADG-001121": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact GTIN MAMA Mala beef 85g label specifies dry room-temperature storage; existing ingredients, allergens, and nutrition remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4716.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 85g product and matching composition."
+        },
+        {
+          "url": "https://www.s-kaupat.fi/tuote/mama-ok-mala-naudanlihanmakuinen-nuudeli-85g/8850987151279",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8850987151279 label specifies dry room-temperature storage."
+        }
+      ]
+    },
+    "ADG-001129": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The matching Obento Sesame Teriyaki 240g China label specifies cool-dry storage, supporting an ambient classification without altering composition.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4737.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 240g product and matching label composition."
+        },
+        {
+          "url": "https://www.satsuki.fr/en/4708-udon-noodles-bowl-obento-teriyaki-sesame-sauce-240g.html",
+          "kind": "retailer-label",
+          "supports": "Matching GTIN 9310432003656 product gives China origin and cool-dry storage."
+        }
+      ]
+    },
+    "ADG-001130": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The matching Obento Spicy Kung Pao 240g formula is sold for ambient shelf storage; all populated food metadata remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4738.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 240g product and matching composition."
+        },
+        {
+          "url": "https://www.plus.nl/product/obento-spicy-kung-pao-udon-noodle-wikkel-240-g-486725",
+          "kind": "retailer-label",
+          "supports": "Matching GTIN 9310432003663 product corroborates the shelf-stable consumer unit."
+        }
+      ]
+    },
+    "ADG-001205": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact GTIN MAMA Tom Yum shrimp 85g label specifies cool-dry storage; only the absent storage classification is added.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4903.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 85g product and matching composition."
+        },
+        {
+          "url": "https://www.piccantino.ch/en-CH/mama-instant-asian-meals/instant-noodles-shrimp-stir-fried-tom-yum-sauce",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8850987148255 label specifies cool-dry storage."
+        }
+      ]
+    }
+  }
+}
