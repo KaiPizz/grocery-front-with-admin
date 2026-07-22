@@ -1,0 +1,2544 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch4-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T10:13:50Z",
+  "cohortSkus": [
+    "ADG-000040",
+    "ADG-000087",
+    "ADG-000096",
+    "ADG-000107",
+    "ADG-000133",
+    "ADG-000274",
+    "ADG-000816",
+    "ADG-001046",
+    "ADG-001217",
+    "ADG-000262",
+    "ADG-000263",
+    "ADG-000286",
+    "ADG-000298",
+    "ADG-000347",
+    "ADG-000396",
+    "ADG-000575",
+    "ADG-000965",
+    "ADG-000066",
+    "ADG-000120",
+    "ADG-000129",
+    "ADG-000172",
+    "ADG-000220",
+    "ADG-000221",
+    "ADG-000222",
+    "ADG-000227"
+  ],
+  "products": [
+    {
+      "sku": "ADG-000087",
+      "productId": "e1b1219f-d952-4e0b-85b0-52e48f01800e",
+      "variantId": "6269497f-5311-4bf0-8c12-ede2a7df9caa",
+      "name": "Zupa makaronowa Neoguri Ramyun z owocami morza, ostra 120g - Nongshim",
+      "slug": "zupa-makaronowa-neoguri-ramyun-z-owocami-morza-ostra-120g-nongshim",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans",
+          "fish",
+          "soybeans",
+          "molluscs"
+        ],
+        "ingredients": "Makaron (89%): mąka pszenna , skrobia ziemniaczana, olej palmowy, przyprawa (substancja utrzymująca wilgoć: sorbitol (E420); olej słonecznikowy, kałamarnica, anchois , emulgator: lecytyna sojowa (E322); krewetki ), sól, gluten pszenny , tokoferol w płynie (zawiera emulgator: lecytyna sojowa (E322)); regulatory kwasowości: węglan potasu (E501), fosforan sodu (E339), węglan sodu (E500); ekstrakt z zielonej herbaty (oligosacharydy, katechiny), barwnik: ryboflawiny (E101) Przyprawa bulionowa (9%): przyprawa (maltodekstryna, małże , sól, hydrolizowane białko roślinne ( soja, pszenica ), kałamarnica , cukier, olej palmowy, małże Venus, anchois, tuńczyk, tuńczyk bonito ), sól, przyprawa (maltodekstryna, papryczka chili, pieprz czarny), cukier, glukoza, wzmacniacze smaku: guanylan disodowy (E627), inozynian disodowy (E631); karmel w proszku (maltodekstryna, barwnik: karmel amoniakalny (E150c) Posypka (2%): algi, wodorosty morskie, cebula, ciasto rybne ( dorsz czarny, skrobia pszenna, kałamarnica ), marchew",
+        "storageZone": null,
+        "pricePerUnit": "53.33",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 12,
+          "salt": 3.7,
+          "carbs": 68,
+          "sugar": 3.1,
+          "protein": 6.8,
+          "calories": 407,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 5.9
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": [
+          "cereals",
+          "eggs",
+          "peanuts",
+          "milk",
+          "celery",
+          "mustard",
+          "sesame"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans",
+          "fish",
+          "soybeans",
+          "molluscs"
+        ],
+        "ingredients": "Makaron (89%): mąka pszenna , skrobia ziemniaczana, olej palmowy, przyprawa (substancja utrzymująca wilgoć: sorbitol (E420); olej słonecznikowy, kałamarnica, anchois , emulgator: lecytyna sojowa (E322); krewetki ), sól, gluten pszenny , tokoferol w płynie (zawiera emulgator: lecytyna sojowa (E322)); regulatory kwasowości: węglan potasu (E501), fosforan sodu (E339), węglan sodu (E500); ekstrakt z zielonej herbaty (oligosacharydy, katechiny), barwnik: ryboflawiny (E101) Przyprawa bulionowa (9%): przyprawa (maltodekstryna, małże , sól, hydrolizowane białko roślinne ( soja, pszenica ), kałamarnica , cukier, olej palmowy, małże Venus, anchois, tuńczyk, tuńczyk bonito ), sól, przyprawa (maltodekstryna, papryczka chili, pieprz czarny), cukier, glukoza, wzmacniacze smaku: guanylan disodowy (E627), inozynian disodowy (E631); karmel w proszku (maltodekstryna, barwnik: karmel amoniakalny (E150c) Posypka (2%): algi, wodorosty morskie, cebula, ciasto rybne ( dorsz czarny, skrobia pszenna, kałamarnica ), marchew",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "53.33",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 12,
+          "salt": 3.7,
+          "carbs": 68,
+          "sugar": 3.1,
+          "protein": 6.8,
+          "calories": 407,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 5.9
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": [
+          "cereals",
+          "eggs",
+          "peanuts",
+          "milk",
+          "celery",
+          "mustard",
+          "sesame"
+        ]
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Nongshim Neoguri 120g sources support unopened cool, dry ambient storage; conflicting formula generations remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-324.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043157711 and product identity."
+        },
+        {
+          "url": "https://kurogami.com/en/product/spicy-seafood-ramen-noodles-nongshim-120-g",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and ambient storage guidance."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/zupa-makaronowa-neoguri-ramyun-z-owocami-morza-ostra-120g-nongshim",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000096",
+      "productId": "fbb02e6e-7afd-456c-a95b-89191d711b7d",
+      "variantId": "b3b0d658-4f24-499a-8857-6202e1dbdc02",
+      "name": "Zupa instant Shin Kimchi Ramyun, ostra 120g Nongshim",
+      "slug": "zupa-instant-shin-kimchi-ramyun-ostra-120g-nongshim",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans",
+          "eggs",
+          "fish",
+          "peanuts",
+          "soybeans",
+          "milk",
+          "celery",
+          "mustard",
+          "sesame",
+          "molluscs"
+        ],
+        "ingredients": "Makaron (87%): mąka pszenna , skrobia ziemniaczana, olej palmowy, sól, regulatory kwasowości: węglan potasu (E501), węglan sodu (E500), fosforan sodu (E339); emulgator: lecytyna (E322 - zawiera soję ); przyprawa (ekstrakt drożdżowy, nasiona soi , czosnek, skrobia pszenna ), ekstrakt z zielonej herbaty (oligosacharydy, katechiny z herbaty), barwnik: ryboflawina (E101) Przyprawa bulionowa (10%): przyprawy (maltodekstryna, hydrolizowane białko roślinne ( soja, pszenica ), sól, ekstrakt drożdżowy, olej musztardowy ), sól, cukier, wzmacniacze smaku: glutaminian sodu (E621), guanylan disodowy (E627), inozynian disodowy (E631); przyprawy (maltodekstryna, czosnek, glukoza, czarny pieprz), kwas spożywczy: kwas cytrynowy (E330); barwnik: karmel amoniakalny (E150c) Posypka (3%): płatki kimchi 1% (kapusta pekińska, czosnek, czerwona papryka chili), kapusta bok choy, marchew, zielona cebulka",
+        "storageZone": null,
+        "pricePerUnit": "46.25",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 13,
+          "salt": 4.5,
+          "carbs": 68,
+          "sugar": 4.9,
+          "protein": 9.6,
+          "calories": 427,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 6.5
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans",
+          "eggs",
+          "fish",
+          "peanuts",
+          "soybeans",
+          "milk",
+          "celery",
+          "mustard",
+          "sesame",
+          "molluscs"
+        ],
+        "ingredients": "Makaron (87%): mąka pszenna , skrobia ziemniaczana, olej palmowy, sól, regulatory kwasowości: węglan potasu (E501), węglan sodu (E500), fosforan sodu (E339); emulgator: lecytyna (E322 - zawiera soję ); przyprawa (ekstrakt drożdżowy, nasiona soi , czosnek, skrobia pszenna ), ekstrakt z zielonej herbaty (oligosacharydy, katechiny z herbaty), barwnik: ryboflawina (E101) Przyprawa bulionowa (10%): przyprawy (maltodekstryna, hydrolizowane białko roślinne ( soja, pszenica ), sól, ekstrakt drożdżowy, olej musztardowy ), sól, cukier, wzmacniacze smaku: glutaminian sodu (E621), guanylan disodowy (E627), inozynian disodowy (E631); przyprawy (maltodekstryna, czosnek, glukoza, czarny pieprz), kwas spożywczy: kwas cytrynowy (E330); barwnik: karmel amoniakalny (E150c) Posypka (3%): płatki kimchi 1% (kapusta pekińska, czosnek, czerwona papryka chili), kapusta bok choy, marchew, zielona cebulka",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "46.25",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 13,
+          "salt": 4.5,
+          "carbs": 68,
+          "sugar": 4.9,
+          "protein": 9.6,
+          "calories": 427,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 6.5
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Nongshim Kimchi Ramyun 120g sources support dry ambient storage, while exact-EAN allergen and recipe generations conflict and are deliberately held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-355.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043157742, pack identity, and storage."
+        },
+        {
+          "url": "https://www.kespro.com/tuotteet/nongshim-pikanuudeli-120g-kimchi-ramyun-8801043157742",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN pack and shelf-stable storage corroboration."
+        },
+        {
+          "url": "https://rappel.conso.gouv.fr/fiche-rappel/6490/Interne",
+          "kind": "regulatory-record",
+          "supports": "Demonstrates an exact-product historical formula generation, supporting the decision not to rewrite composition."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/zupa-instant-shin-kimchi-ramyun-ostra-120g-nongshim",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000107",
+      "productId": "2fd8be3e-3631-4eba-aa9f-3655859c1e45",
+      "variantId": "e823d650-5991-4586-9885-a248e74c456a",
+      "name": "Zupa Soon Veggie Ramyun, lekko pikantna 112g - Nongshim",
+      "slug": "zupa-soon-veggie-ramyun-lekko-pikantna-112g-nongshim",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans",
+          "eggs",
+          "fish",
+          "peanuts",
+          "milk",
+          "nuts",
+          "celery",
+          "mustard",
+          "sesame",
+          "molluscs",
+          "soybeans"
+        ],
+        "ingredients": "Makaron: mąka pszenna, olej palmowy, skrobia ziemniaczana, modyfikowana skrobia ziemniaczana, sól, regulatory kwasowości: węglan potasu (E501), węglan sodu (E500), fosforan sodu (E339); przyprawa (ekstrakt z drożdży, sos sojowy , czosnek), płynny tokoferol (tokoferol, emulgator: lecytyna (zawiera soję )), ekstrakt z zielonej herbaty (oligosacharydy, ekstrakt z zielonej herbaty, regulator kwasowości: kwas cytrynowy), barwnik: ryboflawina Zupa: przyprawa (hydrolizowane białko roślinne ( soja ), maltodekstryna, ekstrakt z drożdży, sól, sos sojowy , soja , cukier, mąka pszenna ), przyprawy (maltodekstryna, czosnek, pieprz czerwony, sól, pieprz czarny, imbir, cebula, zielona cebulka), sól, cukier, wzmacniacze smaku: inozynian disodowy (E631), guanylan disodowy (E627); maltodekstryna, grzyby shiitake, kwas cytrynowy (E330)",
+        "storageZone": null,
+        "pricePerUnit": "57.14",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 14,
+          "salt": 4.1,
+          "carbs": 67,
+          "sugar": 3,
+          "protein": 9,
+          "calories": 430,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 6.8
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "ingredients": "Makaron: mąka pszenna, olej palmowy, skrobia ziemniaczana, modyfikowana skrobia ziemniaczana, sól, regulatory kwasowości: węglan potasu (E501), węglan sodu (E500), fosforan sodu (E339); przyprawa (ekstrakt z drożdży, sos sojowy , czosnek), płynny tokoferol (tokoferol, emulgator: lecytyna (zawiera soję )), ekstrakt z zielonej herbaty (oligosacharydy, ekstrakt z zielonej herbaty, regulator kwasowości: kwas cytrynowy), barwnik: ryboflawina Zupa: przyprawa (hydrolizowane białko roślinne ( soja ), maltodekstryna, ekstrakt z drożdży, sól, sos sojowy , soja , cukier, mąka pszenna ), przyprawy (maltodekstryna, czosnek, pieprz czerwony, sól, pieprz czarny, imbir, cebula, zielona cebulka), sól, cukier, wzmacniacze smaku: inozynian disodowy (E631), guanylan disodowy (E627); maltodekstryna, grzyby shiitake, kwas cytrynowy (E330)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "57.14",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 14,
+          "salt": 4.1,
+          "carbs": 67,
+          "sugar": 3,
+          "protein": 9,
+          "calories": 430,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 6.8
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": [
+          "cereals",
+          "crustaceans",
+          "eggs",
+          "fish",
+          "peanuts",
+          "milk",
+          "celery",
+          "mustard",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "changedFields": [
+        "allergens",
+        "mayContainAllergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact 112g Soon Veggie label separates direct wheat/soy from its trace declaration and specifies dry ambient storage; the current broad direct-allergen parse is corrected.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-404.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical product, ingredients, allergen split, and storage statement."
+        },
+        {
+          "url": "https://dae-yang.online/en/products/instantnudeln-soon-veggie-ramyun-mild",
+          "kind": "retailer-label",
+          "supports": "Independent 112g product label corroborates direct wheat/soy and trace allergens."
+        },
+        {
+          "url": "https://www.mocafino.ae/nongshim-soon-veggie-ramyun-112-g/",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack and ambient-storage corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/zupa-soon-veggie-ramyun-lekko-pikantna-112g-nongshim",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000133",
+      "productId": "c610df48-b6c8-469e-8414-c6b3c2bbec3b",
+      "variantId": "095a5859-6b52-4421-88d5-e26582e131b9",
+      "name": "Zupa instant Shin Ramyun, duża micha 114g - Nongshim",
+      "slug": "zupa-instant-shin-ramyun-duza-micha-114g-nongshim",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "ingredients": "Makaron (86%): mąka pszenna , skrobia ziemniaczana, olej palmowy, sól, przyprawa (hydrolizowane białko roślinne ( soja ), ekstrakt z drożdży), regulatory kwasowości: węglan potasu (E501), węglan sodu (E500), fosforan sodu (E339); przeciwutleniacz: tokoferol (E306); emulgator: lecytyna (E322 - zawiera soję ); ekstrakt z zielonej herbaty, barwnik: ryboflawiny (E101) Zupa (12%): przyprawa (hydrolizowane białko roślinne ( soja ), maltodekstryna, ekstrakt z drożdży, sól, rzodkiewka, mąka pszenna ), przyprawy (maltodekstryna, glukoza, pieprz czarny, czerwona papryka chili, sól, ekstrakt z chili), wzmacniacze smaku: glutaminian sodu (E621), guanylan disodowy (E627), inozynian disodowy (E631); sól, cukier, grzyby shiitake, glukoza, skrobia ziemniaczana Posypka (2%): teksturowane białko roślinne ( soja, gluten pszenny ), cebula, grzyby shiitake, marchew, kapusta bok choy, czerwona papryka chili",
+        "storageZone": null,
+        "pricePerUnit": "98.25",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 14,
+          "salt": 3.6,
+          "carbs": 69,
+          "sugar": 4.5,
+          "protein": 8.4,
+          "calories": 436,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 6.8
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": [
+          "cereals",
+          "crustaceans",
+          "eggs",
+          "fish",
+          "peanuts",
+          "milk",
+          "celery",
+          "mustard",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "ingredients": "Makaron (86%): mąka pszenna , skrobia ziemniaczana, olej palmowy, sól, przyprawa (hydrolizowane białko roślinne ( soja ), ekstrakt z drożdży), regulatory kwasowości: węglan potasu (E501), węglan sodu (E500), fosforan sodu (E339); przeciwutleniacz: tokoferol (E306); emulgator: lecytyna (E322 - zawiera soję ); ekstrakt z zielonej herbaty, barwnik: ryboflawiny (E101) Zupa (12%): przyprawa (hydrolizowane białko roślinne ( soja ), maltodekstryna, ekstrakt z drożdży, sól, rzodkiewka, mąka pszenna ), przyprawy (maltodekstryna, glukoza, pieprz czarny, czerwona papryka chili, sól, ekstrakt z chili), wzmacniacze smaku: glutaminian sodu (E621), guanylan disodowy (E627), inozynian disodowy (E631); sól, cukier, grzyby shiitake, glukoza, skrobia ziemniaczana Posypka (2%): teksturowane białko roślinne ( soja, gluten pszenny ), cebula, grzyby shiitake, marchew, kapusta bok choy, czerwona papryka chili",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "98.25",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 14,
+          "salt": 3.6,
+          "carbs": 69,
+          "sugar": 4.5,
+          "protein": 8.4,
+          "calories": 436,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 6.8
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": [
+          "cereals",
+          "crustaceans",
+          "eggs",
+          "fish",
+          "peanuts",
+          "milk",
+          "celery",
+          "mustard",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Nongshim Shin Big Bowl 114g listings identify an unopened shelf-stable product; current composition fields are retained.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-510.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043025256 and product identity."
+        },
+        {
+          "url": "https://www.bestwaywholesale.co.uk/product/814829-1",
+          "kind": "distributor-label",
+          "supports": "Independent exact product and ambient-storage treatment."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/zupa-instant-shin-ramyun-duza-micha-114g-nongshim",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000274",
+      "productId": "c74ff8cf-a726-448a-a12f-194db70b2c90",
+      "variantId": "e09fe448-1333-4c2a-8c48-f6ed53acf686",
+      "name": "Larwy jedwabnika w zalewie 130g - Yoo Dong",
+      "slug": "larwy-jedwabnika-w-zalewie-130g-yoo-dong",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Larwy jedwabnika 70%, woda, sos sojowy, maka pszenna, E621, sól",
+        "storageZone": null,
+        "pricePerUnit": "111.54",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Larwy jedwabnika 70%, woda, sos sojowy, maka pszenna, E621, sól",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "111.54",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The mapped Yoo Dong 130g canned product is shelf-stable, but production has no EAN and current exact-pack labels expand both direct and trace allergens; all composition fields are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1140-Larwy-jedwabnika-w-zalewie-130g-Yoo-Dong.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical mapped 130g product identity and ambient storage."
+        },
+        {
+          "url": "https://emile.emarteveryday.co.kr/product/ProductView?skuCode=8801063310011&strCode=4006",
+          "kind": "retailer-label",
+          "supports": "Current exact 130g label has a broader allergen generation, proving composition is unsafe to rewrite on the null-EAN production row."
+        },
+        {
+          "url": "https://woorimarketplace.com/products/yoodong-silkworm-pupa",
+          "kind": "retailer-label",
+          "supports": "Independent brand/product corroboration and shelf-stable canned format."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/larwy-jedwabnika-w-zalewie-130g-yoo-dong",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000816",
+      "productId": "97346035-6c6c-42c6-988f-04ceab267c29",
+      "variantId": "c326de6e-b413-47a8-81aa-a722e4a7174f",
+      "name": "Mochi, ryżowe ciasteczka w 3 smakach 250g - Royal Family",
+      "slug": "mochi-ryzowe-ciasteczka-w-3-smakach-250g-royal-family",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mochi czerwona fasola: maltoza (20,5%), cukier (18,6%), ryż kleisty (18%), czerwona fasola (17,17%), stabilizator: skrobia modyfikowana (E1442) (14,3%); olej palmowy (11,1%), aromat (0,3%), konserwant: kwas sorbowy (E200) (0,03%) Mochi mleczne: maltoza (21,5%), cukier (19,6%), ryż kleisty (19%), stabilizator: skrobia modyfikowana (E1442) (15,8%), olej palmowy (12,4%), mleko (4,8%), trehaloza (4,42%), żelatyna (2%), aromat (0,3%), sorbitol (E420) (0,1%), barwnik: karoteny (E160a) (0,05%); konserwant: kwas sorbowy (E200) (0,03%) Mochi matcha: maltoza (20,5%), cukier (18,6%), ryż kleisty (18%), stabilizator: skrobia modyfikowana (E1442) (16,16%), pasta z czerwonej fasoli (15,3%) (czerwona fasola, cukier, maltoza, olej palmowy), zielona herbata matcha w proszku (11,1%), olej palmowy (0,3%), aromat (0,02%), konserwant: kwas sorbowy (E200) (0,02%)",
+        "storageZone": null,
+        "pricePerUnit": "90.80",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Tajwan",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mochi czerwona fasola: maltoza (20,5%), cukier (18,6%), ryż kleisty (18%), czerwona fasola (17,17%), stabilizator: skrobia modyfikowana (E1442) (14,3%); olej palmowy (11,1%), aromat (0,3%), konserwant: kwas sorbowy (E200) (0,03%) Mochi mleczne: maltoza (21,5%), cukier (19,6%), ryż kleisty (19%), stabilizator: skrobia modyfikowana (E1442) (15,8%), olej palmowy (12,4%), mleko (4,8%), trehaloza (4,42%), żelatyna (2%), aromat (0,3%), sorbitol (E420) (0,1%), barwnik: karoteny (E160a) (0,05%); konserwant: kwas sorbowy (E200) (0,03%) Mochi matcha: maltoza (20,5%), cukier (18,6%), ryż kleisty (18%), stabilizator: skrobia modyfikowana (E1442) (16,16%), pasta z czerwonej fasoli (15,3%) (czerwona fasola, cukier, maltoza, olej palmowy), zielona herbata matcha w proszku (11,1%), olej palmowy (0,3%), aromat (0,02%), konserwant: kwas sorbowy (E200) (0,02%)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "90.80",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Tajwan",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Royal Family mixed-mochi 250g sources support dry ambient storage, but exact-GTIN label generations conflict on allergens and nutrition; all composition fields are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3811-Mochi-ryzowe-ciasteczka-w-3-smakach-250g-Royal-Family.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 250g mixed pack identity and ambient storage; its composition is treated as a historical generation only."
+        },
+        {
+          "url": "https://konbini.uk/products/royal-family-mix-mochi-rbean-milk-matcha-250g",
+          "kind": "retailer-label",
+          "supports": "Independent exact brand, flavor mix, pack size, and shelf-stable format."
+        },
+        {
+          "url": "https://singkeefoods.co.uk/gb/products/127-royal-family-mixed-mochi-250g-4711931030115.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN pack corroboration that exposes a conflicting label generation."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/mochi-ryzowe-ciasteczka-w-3-smakach-250g-royal-family",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001046",
+      "productId": "b24409ce-8c4f-486b-b939-4674d05d8b58",
+      "variantId": "9561672a-7ccd-453f-93b8-3f8f2c6aa203",
+      "name": "Chipsy ziemniaczane Chili Spicy Crayfish o smaku raka 104g - Lay's",
+      "slug": "chipsy-ziemniaczane-chili-spicy-crayfish-o-smaku-raka-104g-lay-s",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Suszone ziemniaki, olej roślinny, pikantna przyprawa o smaku raków, aromat, białko roślinne w proszku, sos sojowy w proszku, chili w proszku, cebula w proszku, czosnek w proszku, dwutlenek krzemu, pieprz w proszku, nukleotyd disodowy o smaku 5', papryka czerwona, substancja słodząca: aspartam.",
+        "storageZone": null,
+        "pricePerUnit": "187.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Suszone ziemniaki, olej roślinny, pikantna przyprawa o smaku raków, aromat, białko roślinne w proszku, sos sojowy w proszku, chili w proszku, cebula w proszku, czosnek w proszku, dwutlenek krzemu, pieprz w proszku, nukleotyd disodowy o smaku 5', papryka czerwona, substancja słodząca: aspartam.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "187.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Mapped Lay's Spicy Crayfish 104g sources support shelf-stable storage, but production has no EAN and current exact-product labels conflict on direct allergens; composition remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-4531-Chipsy-ziemniaczane-Chili-Spicy-Crayfish-o-smaku-raka-104g-Lays.html",
+          "kind": "supplier-label",
+          "supports": "Exact mapped historical 104g product identity and ambient storage."
+        },
+        {
+          "url": "https://americanuncle.it/products/lays-spicy-crayfish-104g",
+          "kind": "retailer-label",
+          "supports": "Independent exact brand/flavor/pack-size corroboration."
+        },
+        {
+          "url": "https://www.kroger.com/p/lay-s-spicy-crayfish-potato-chips/0692474392665",
+          "kind": "retailer-label",
+          "supports": "Independent current exact-product identity with a broader allergen generation, proving composition is unsafe to rewrite."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/chipsy-ziemniaczane-chili-spicy-crayfish-o-smaku-raka-104g-lay-s",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001217",
+      "productId": "7d4cc756-383f-46b6-85d3-1496122108a6",
+      "variantId": "3fdb5e8b-04be-4cd7-96ac-782ae2c73fd7",
+      "name": "Wafelki z nadzieniem Cream Collon Assari Milk 81g - Glico",
+      "slug": "wafelki-z-nadzieniem-cream-collon-assari-milk-81g-glico",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Tłuszcz roślinny, mąka pszenna , cukier, laktoza , maltoza, glukoza, jajka , dekstryna, mleko w proszku, suszone białka jajek , syrop cukrowy o obniżonej zawartości cukru, alkohol, sól, emulgator: lecytyna sojowa ; aromat, barwnik: E160c.",
+        "storageZone": null,
+        "pricePerUnit": "228.40",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Tłuszcz roślinny, mąka pszenna , cukier, laktoza , maltoza, glukoza, jajka , dekstryna, mleko w proszku, suszone białka jajek , syrop cukrowy o obniżonej zawartości cukru, alkohol, sól, emulgator: lecytyna sojowa ; aromat, barwnik: E160c.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "228.40",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "calories": 76,
+          "fat": 4.6,
+          "carbs": 8,
+          "protein": 0.6,
+          "salt": 0.025,
+          "servingSize": "w porcji 13,5g"
+        },
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "allergens",
+        "storageZone",
+        "nutritionFacts"
+      ],
+      "confidence": "high",
+      "reason": "The official Japanese Glico listing pins the exact 81g pack, four direct allergen groups, ambient storage, and per-13.5g nutrition basis; no unsupported trace allergens are added.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4923-Wafelki-z-nadzieniem-Cream-Collon-Assari-Milk-81g-Glico.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 81g product identity and Polish label metadata."
+        },
+        {
+          "url": "https://www.glico.com/jp/product/snack_biscuit_cookie/collon/45269/",
+          "kind": "manufacturer-label",
+          "supports": "Official exact JAN 4901005104068 pack, allergens, storage, and per-bag nutrition."
+        },
+        {
+          "url": "https://hiyou.co/products/glico-collon-light-milk-wafer-roll-81g",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack-size and product corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/wafelki-z-nadzieniem-cream-collon-assari-milk-81g-glico",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000262",
+      "productId": "c5c604f4-1b67-4d77-bbb0-e409e4f5cd0b",
+      "variantId": "51543484-e245-4271-83de-9d338f3a5a08",
+      "name": "Paluszki Pepero Migdały i Czekolada 32g - Lotte",
+      "slug": "paluszki-pepero-migdaly-i-czekolada-32g-lotte",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk",
+          "nuts"
+        ],
+        "ingredients": "Mąka pszenna, migdały , cukier, tłuszcz roślinny - (olej palmowy, olej słonecznikowy, lecytyna , witamina E), masa kakaowa - ( mleko w proszku, masa kakaowa), laktoza , tłuszcz roślinny - (olej palmowy, naturalny tokoferol), paluszki zbożowe - ( pszenica , ryż, ryż kleisty), mleko w proszku, masa kakaowa, masło przetworzone - ( masło , olej kokosowy), jajko , regulator kwasowości - (fosforan sodu, wodorowęglan amonu, wodorowęglan sodu), ekstrakt słodowy, emulgator - ( lecytyna , polirycynooleinian poliglicerolu), sól, fruktoza, syrop kukurydziany, aromat waniliowy - (glikol propylenowy, wanilina, tracetyna, acetoina, kwas dekanowy), enzymy - (gliceryna, ekstrakt z papai, pirosiarczyn sodu), drożdże (drożdże, monostearynian sorbitanu, witamina C)",
+        "storageZone": null,
+        "pricePerUnit": "249.69",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk",
+          "nuts"
+        ],
+        "ingredients": "Mąka pszenna, migdały , cukier, tłuszcz roślinny - (olej palmowy, olej słonecznikowy, lecytyna , witamina E), masa kakaowa - ( mleko w proszku, masa kakaowa), laktoza , tłuszcz roślinny - (olej palmowy, naturalny tokoferol), paluszki zbożowe - ( pszenica , ryż, ryż kleisty), mleko w proszku, masa kakaowa, masło przetworzone - ( masło , olej kokosowy), jajko , regulator kwasowości - (fosforan sodu, wodorowęglan amonu, wodorowęglan sodu), ekstrakt słodowy, emulgator - ( lecytyna , polirycynooleinian poliglicerolu), sól, fruktoza, syrop kukurydziany, aromat waniliowy - (glikol propylenowy, wanilina, tracetyna, acetoina, kwas dekanowy), enzymy - (gliceryna, ekstrakt z papai, pirosiarczyn sodu), drożdże (drożdże, monostearynian sorbitanu, witamina C)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "249.69",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 32g Lotte Almond Pepero sources support dry ambient storage; conflicting regional formula and nutrition generations remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1090.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 32g product identity and storage."
+        },
+        {
+          "url": "https://www.y-mart.de/en/category/sweets-snack/lotte-pepero-almond.8801062267712-1076599036.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN pack and shelf-stable storage corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/paluszki-pepero-migdaly-i-czekolada-32g-lotte",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000263",
+      "productId": "db81d177-7b67-4f34-8812-8154c98d8024",
+      "variantId": "188c93a3-cdf9-4d6d-814c-38942d51c68e",
+      "name": "Paluszki Pepero Czekoladowe Original 47g - Lotte",
+      "slug": "paluszki-pepero-czekoladowe-original-47g-lotte",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , cukier, masa kakaowa, oleje roślinne (palmowy, słonecznikowy, lecytyna sojowa ),witamina E, olej palmowy, tokoferol, laktoza (z mleka ), pełne mleko w proszku, miazga kakaowa, jaja , masło ( z mleka ), laktoza (z mleka ), olej palmowy, śmietanka (z mleka ), kazeinian sodu, fosforan dipotasowy, emulgator (E476), aromat mleka, sól, fosforan sodu trójzasadowy (E339), E503, E500, E322), aromat czekoladowy, wanilina, aromat mleka kondensowanego, aromat wanilii, preparaty enzymatyczne.",
+        "storageZone": null,
+        "pricePerUnit": "170.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , cukier, masa kakaowa, oleje roślinne (palmowy, słonecznikowy, lecytyna sojowa ),witamina E, olej palmowy, tokoferol, laktoza (z mleka ), pełne mleko w proszku, miazga kakaowa, jaja , masło ( z mleka ), laktoza (z mleka ), olej palmowy, śmietanka (z mleka ), kazeinian sodu, fosforan dipotasowy, emulgator (E476), aromat mleka, sól, fosforan sodu trójzasadowy (E339), E503, E500, E322), aromat czekoladowy, wanilina, aromat mleka kondensowanego, aromat wanilii, preparaty enzymatyczne.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "170.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 47g Lotte Original Pepero sources support dry ambient storage; formula and nutrition revisions are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1091.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 47g product identity and storage."
+        },
+        {
+          "url": "https://www.foodello.nl/product/12223/lotte-pepero-original-47g",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and pack-size corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/paluszki-pepero-czekoladowe-original-47g-lotte",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000286",
+      "productId": "7a524bd1-a6a9-4548-b7cb-cc2cf63abcc7",
+      "variantId": "8bdf62fb-f83e-4b88-967c-a8036089f80a",
+      "name": "Jelly Belly Bean Boozled Spinner - Fasolki wszystkich smaków 100g",
+      "slug": "jelly-belly-bean-boozled-spinner-fasolki-wszystkich-smakow-100g",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Cukier, syrop glukozowy, skrobia kukurydziana modyfikowana, aromaty, koncentrat puree brzoskwiniowe, barwniki: (E102, E1129, E132, E133, E150d, E171), regulator kwasowości (E325, E330, E331), sól, substancja glazurująca (E901, E903, E904), czekolada, koncentrat soku z limonki, koncentrat z soku z gruszek, koncentraty z (jabłek, fioletowej marchwi, hibiskusa), kakao w proszku, kokos, przeciwutleniacze: kwas askorbinowy, dekstryna z tapioki. Czekolada zawiera min 35% kakao.",
+        "storageZone": null,
+        "pricePerUnit": "499.90",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 91,
+          "sugar": 62,
+          "protein": 1,
+          "calories": 364,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Cukier, syrop glukozowy, skrobia kukurydziana modyfikowana, aromaty, koncentrat puree brzoskwiniowe, barwniki: (E102, E1129, E132, E133, E150d, E171), regulator kwasowości (E325, E330, E331), sól, substancja glazurująca (E901, E903, E904), czekolada, koncentrat soku z limonki, koncentrat z soku z gruszek, koncentraty z (jabłek, fioletowej marchwi, hibiskusa), kakao w proszku, kokos, przeciwutleniacze: kwas askorbinowy, dekstryna z tapioki. Czekolada zawiera min 35% kakao.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "499.90",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 91,
+          "sugar": 62,
+          "protein": 1,
+          "calories": 364,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Jelly Belly Bean Boozled Spinner 100g sources consistently support unopened ambient storage; changing edition-specific formula or nutrition would be unsafe.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1176.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 100g spinner product and storage statement."
+        },
+        {
+          "url": "https://foodscan.ai/en/product/Candy-JELLY-BELLY-Bean-Boozled-Spinner-Gift-Box-100-g/0071567990516",
+          "kind": "label-index",
+          "supports": "Exact-GTIN and pack-format corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/jelly-belly-bean-boozled-spinner-fasolki-wszystkich-smakow-100g",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000298",
+      "productId": "ac0c46ca-6c6a-4245-a1cd-1ac9ce56e8cb",
+      "variantId": "ff01feb3-26d8-4dd2-8420-0a218d2e7024",
+      "name": "Paluszki Pocky Cookies & Cream 40g - Glico",
+      "slug": "paluszki-pocky-cookies-and-cream-40g-glico",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , cukier, olej roślinny (olej z nasion palmy, olej palmowy, olej rzepakowy), laktoza, pełne mleko w proszku 9,2%, częściowo utwardzony tłuszcz roślinny (olej palmowy, emulgator: estry glikolu propylenowego kwasów tłuszczowych), przeciwutleniacz: tokoferol; kakao w proszku, sztuczne aromaty, emulgator: lecytyna; sól, drożdże, skrobia kukurydziana, środek spulchniający: wodorowęglan sodu; regulator kwasowości: wodorotlenek sodu; barwnik: beta-karoten; enzym: papaina. Zawartość kremu mlecznego 56%.",
+        "storageZone": null,
+        "pricePerUnit": "217.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 8.9,
+          "salt": 0.1,
+          "carbs": 27.2,
+          "sugar": 14.8,
+          "protein": 2.9,
+          "calories": 200,
+          "servingSize": "w porcji 40g"
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": [
+          "nuts"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , cukier, olej roślinny (olej z nasion palmy, olej palmowy, olej rzepakowy), laktoza, pełne mleko w proszku 9,2%, częściowo utwardzony tłuszcz roślinny (olej palmowy, emulgator: estry glikolu propylenowego kwasów tłuszczowych), przeciwutleniacz: tokoferol; kakao w proszku, sztuczne aromaty, emulgator: lecytyna; sól, drożdże, skrobia kukurydziana, środek spulchniający: wodorowęglan sodu; regulator kwasowości: wodorotlenek sodu; barwnik: beta-karoten; enzym: papaina. Zawartość kremu mlecznego 56%.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "217.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 8.9,
+          "salt": 0.1,
+          "carbs": 27.2,
+          "sugar": 14.8,
+          "protein": 2.9,
+          "calories": 200,
+          "servingSize": "w porcji 40g"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "nuts"
+        ]
+      },
+      "changedFields": [
+        "storageZone",
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "The exact 40g Glico Pocky Cookies & Cream pack is Thai-made and shelf-stable; existing allergen and nutrition fields are preserved.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1196-Paluszki-Pocky-Cookies-Cream-40g-Glico.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 40g product identity and metadata."
+        },
+        {
+          "url": "https://halal.co.th/en/product/detail/314185",
+          "kind": "certification-record",
+          "supports": "Exact Thai product certification and manufacturing identity."
+        },
+        {
+          "url": "https://www.lottemart.vn/en-bdh/product/pocky-cookies-cream-covered-biscuit-sticks-40g-8851019500195-p12434",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN, pack size, Thailand origin, and storage corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/paluszki-pocky-cookies-and-cream-40g-glico",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000347",
+      "productId": "c280f8ce-0568-4432-8be6-3a9a4050b579",
+      "variantId": "87864aa1-fce8-4fb7-be2e-276e94b5f86c",
+      "name": "Choco Pie, ciastka biszkoptowe z pianką, pudełko (12 szt. x 28g) - Lotte",
+      "slug": "choco-pie-ciastka-biszkoptowe-z-pianka-pudelko-12-szt-x-28g-lotte",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna, cukier, syrop kukurydziany, tłuszcz roślinny (częściowo uwodorniony olej palmowy, tłuszcz piekarski (częściowo uwodorniony olej palmowy, olej kokosowy), D-sorbitol, kakao w proszku, mleko w proszku, laktoza, zaczyn (wodorowęglan amonu, wodorowęglan sodu, mono fosforan wapnia), masa kakaowa, sól, emulgator (lecytyna sojowa, mono i digliceryd), wanilina, hydrolizowane białko z mleka, aromat waniliowy",
+        "storageZone": null,
+        "pricePerUnit": "999.64",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 10,
+          "salt": 0,
+          "carbs": 71,
+          "sugar": 45,
+          "protein": 0,
+          "calories": 378,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 6.5
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna, cukier, syrop kukurydziany, tłuszcz roślinny (częściowo uwodorniony olej palmowy, tłuszcz piekarski (częściowo uwodorniony olej palmowy, olej kokosowy), D-sorbitol, kakao w proszku, mleko w proszku, laktoza, zaczyn (wodorowęglan amonu, wodorowęglan sodu, mono fosforan wapnia), masa kakaowa, sól, emulgator (lecytyna sojowa, mono i digliceryd), wanilina, hydrolizowane białko z mleka, aromat waniliowy",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "999.64",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 10,
+          "salt": 0,
+          "carbs": 71,
+          "sugar": 45,
+          "protein": 0,
+          "calories": 378,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 6.5
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone",
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "Exact Lotte Choco Pie 12-pack sources agree on South Korean production and shelf-stable storage; market-specific formula and allergen revisions remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1439.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 12-piece pack identity."
+        },
+        {
+          "url": "https://www.orientalmart.co.uk/lotte-choco-pie-12-pcs?locale=en",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack, Korean origin, and ambient storage."
+        },
+        {
+          "url": "https://www.jfc.com/product/item/19250",
+          "kind": "distributor-label",
+          "supports": "Independent product and South Korean origin corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/choco-pie-ciastka-biszkoptowe-z-pianka-pudelko-12-szt-x-28g-lotte",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000396",
+      "productId": "7be9060a-4b47-4c70-824f-8fc1bfa0c8c8",
+      "variantId": "83a7f2f7-4a64-4c4e-b4a4-4e54ae911e9e",
+      "name": "Chipsy z wodorostów, chrupiące nori 32g - Tao Kae Noi",
+      "slug": "chipsy-z-wodorostow-chrupiace-nori-32g-tao-kae-noi",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Wodorosty 50% (Porphyra Yezoensis), olej z otrębów ryżowych, mieszanka przypraw (6%) (maltodekstryna, pieprz, sól, wzmacniacze smaku: E627, E631).",
+        "storageZone": null,
+        "pricePerUnit": "468.44",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 64.3,
+          "salt": 1.4,
+          "carbs": 7.4,
+          "sugar": 0.5,
+          "protein": 13.2,
+          "calories": 680,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 23.1
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Wodorosty 50% (Porphyra Yezoensis), olej z otrębów ryżowych, mieszanka przypraw (6%) (maltodekstryna, pieprz, sól, wzmacniacze smaku: E627, E631).",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "468.44",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 64.3,
+          "salt": 1.4,
+          "carbs": 7.4,
+          "sugar": 0.5,
+          "protein": 13.2,
+          "calories": 680,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 23.1
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact Tao Kae Noi Crispy Seaweed Original 32g sources specify unopened dry ambient storage; existing formula and nutrition are retained.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2131.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 32g product identity and storage."
+        },
+        {
+          "url": "https://www.pepis.shop/tao-kae-noi/tao-kae-noi-crispy-original-seaweed-32g-tha/",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and pack-size corroboration."
+        },
+        {
+          "url": "https://sg.taokaenoiglobal.com/product/original/",
+          "kind": "manufacturer-label",
+          "supports": "Official product-family identity and shelf-stable snack format."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/chipsy-z-wodorostow-chrupiace-nori-32g-tao-kae-noi",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000575",
+      "productId": "22771774-0901-4e2c-919c-1c7c9b8a028e",
+      "variantId": "f25b3def-4867-4480-8c89-288fd426edc4",
+      "name": "Chipsy ziemniaczane Potechi Wasabi Nori 100g - Koikeya",
+      "slug": "chipsy-ziemniaczane-potechi-wasabi-nori-100g-koikeya",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ziemniaki 64,2% (UE), olej słonecznikowy 28,8%, przyprawa wasabi-nori 7% (mąka ryżowa, cukier, sól, dekstroza, przyprawy, aromat, wodorosty 0,2%, kwas (dwuoctan sodu, kwas cytrynowy), zioła, ocet w proszku (maltodekstryna, ocet spirytusowy), wasabi 0,4%)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "109.90",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 29,
+          "salt": 1.2,
+          "carbs": 55.9,
+          "sugar": 2.5,
+          "protein": 6.4,
+          "calories": 518,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2.4
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ziemniaki 64,2% (UE), olej słonecznikowy 28,8%, przyprawa wasabi-nori 7% (mąka ryżowa, cukier, sól, dekstroza, przyprawy, aromat, wodorosty 0,2%, kwas (dwuoctan sodu, kwas cytrynowy), zioła, ocet w proszku (maltodekstryna, ocet spirytusowy), wasabi 0,4%)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "109.90",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 29,
+          "salt": 1.2,
+          "carbs": 55.9,
+          "sugar": 2.5,
+          "protein": 6.4,
+          "calories": 518,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 2.4
+        },
+        "countryOfOrigin": "Belgia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "The Koikeya Europe product specification and exact-EAN retailer record identify the 100g Potechi Wasabi Nori pack as made in Belgium.",
+      "evidence": [
+        {
+          "url": "https://www.koike-ya.eu/product.html",
+          "kind": "manufacturer-label",
+          "supports": "Official European product page identifies Belgium production."
+        },
+        {
+          "url": "https://www.s-kaupat.fi/tuote/potechi-wasabi-nori-100g/4901335006070",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 4901335006070, 100g pack, and Belgium origin."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-2839-Chipsy-ziemniaczane-Potechi-Wasabi-Nori-100g-Koikeya.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Polish product identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/chipsy-ziemniaczane-potechi-wasabi-nori-100g-koikeya",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000965",
+      "productId": "e7a4cba6-7bec-4822-b7d7-5a326c29c996",
+      "variantId": "c4ebf152-18d1-4df2-9941-6a38d6068888",
+      "name": "Hokkaido Yude Azuki, gotowana słodka czerwona fasola cała 200g - Imuraya",
+      "slug": "hokkaido-yude-azuki-gotowana-slodka-czerwona-fasola-cala-200g-imuraya",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Woda, cukier, fasola czerwona azuki (21%), sól",
+        "storageZone": null,
+        "pricePerUnit": "104.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.48,
+          "salt": 0.09,
+          "carbs": 49.88,
+          "sugar": 38.8,
+          "protein": 4.2,
+          "calories": 220,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Woda, cukier, fasola czerwona azuki (21%), sól",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "104.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.48,
+          "salt": 0.09,
+          "carbs": 49.88,
+          "sugar": 38.8,
+          "protein": 4.2,
+          "calories": 220,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0
+        },
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone",
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "Official Imuraya and Japanese retailer records identify the Yude Azuki canned beans as Japanese and shelf-stable, correcting the current Korea origin.",
+      "evidence": [
+        {
+          "url": "https://www.imuraya.co.jp/goods/an/c-yude/pazuki/",
+          "kind": "manufacturer-label",
+          "supports": "Official Japanese manufacturer product identity."
+        },
+        {
+          "url": "https://shimojima.jp/shop/g/g2500500000817/?ismodesmartphone=on",
+          "kind": "retailer-label",
+          "supports": "Japanese retail record corroborates product and origin."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-4316.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Polish product and shelf-stable storage metadata."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/hokkaido-yude-azuki-gotowana-slodka-czerwona-fasola-cala-200g-imuraya",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000066",
+      "productId": "399a4a67-8e13-4881-bd9a-9a0542373382",
+      "variantId": "1a2854fe-2492-4c2e-b0d9-6a75c14f98d7",
+      "name": "Chipsy krewetkowe 75g - Nongshim",
+      "slug": "chipsy-krewetkowe-75g-nongshim",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans"
+        ],
+        "ingredients": "Mąka z tapioki, olej palmowy, krewetki, mąka pszenna , cukier, sól, cebula, czosnek",
+        "storageZone": null,
+        "pricePerUnit": "159.87",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 25,
+          "salt": 1,
+          "carbs": 69,
+          "sugar": 10,
+          "protein": 2,
+          "calories": 510,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 8
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans"
+        ],
+        "ingredients": "Mąka z tapioki, olej palmowy, krewetki, mąka pszenna , cukier, sól, cebula, czosnek",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "159.87",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 25,
+          "salt": 1,
+          "carbs": 69,
+          "sugar": 10,
+          "protein": 2,
+          "calories": 510,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 8
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Nongshim Shrimp Cracker 75g sources support cool, dry ambient storage; old and new formulas conflict, so composition remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-238.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043216128, pack identity, and storage."
+        },
+        {
+          "url": "https://www.aasiamarket.fi/en/product/shrimp-flavoured-cracker-fi939/",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and ambient storage."
+        },
+        {
+          "url": "https://www.elatukku.fi/teolliset-elintarvikkeet/nongshim-shrimp-flavour-cracker-katkarapusnack-75g/p/16565/",
+          "kind": "retailer-label",
+          "supports": "Independent exact 75g product corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/chipsy-krewetkowe-75g-nongshim",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000120",
+      "productId": "597531c0-d89f-446a-9733-e47f8e158ed9",
+      "variantId": "2bb3dee2-5573-4994-8fac-458429baf382",
+      "name": "Chipsy krewetkowe, pikantne 75g - Nongshim",
+      "slug": "chipsy-krewetkowe-pikantne-75g-nongshim",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna 52%, olej palmowy, skrobia pszenna, krewetki 5,7%, olej z otrębów ryżowych, cukier, sól, aromat krewetkowy, papryka, cebula w proszku, czosnek w proszku, kwas: kwas cytrynowy, soja, laktoza",
+        "storageZone": null,
+        "pricePerUnit": "133.20",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 25,
+          "salt": 1,
+          "carbs": 65,
+          "sugar": 4,
+          "protein": 6,
+          "calories": 510,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "crustaceans",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna 52%, olej palmowy, skrobia pszenna, krewetki 5,7%, olej z otrębów ryżowych, cukier, sól, aromat krewetkowy, papryka, cebula w proszku, czosnek w proszku, kwas: kwas cytrynowy, soja, laktoza",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "133.20",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 25,
+          "salt": 1,
+          "carbs": 65,
+          "sugar": 4,
+          "protein": 6,
+          "calories": 510,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Nongshim Hot & Spicy Shrimp Cracker 75g sources support dry ambient storage; conflicting shrimp percentages and formula generations are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-443.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043001786, pack identity, and storage."
+        },
+        {
+          "url": "https://hmart.co.uk/shop/ko/snack/359--75g-8801043001786.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN product corroboration."
+        },
+        {
+          "url": "https://www.elatukku.fi/teolliset-elintarvikkeet/nongshim-shrimp-flavour-cracker-hotspicy-katkarapusnacks-tulinenmausteinen-75g/p/16574/",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack and ambient storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/chipsy-krewetkowe-pikantne-75g-nongshim",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000172",
+      "productId": "5883b68f-89fd-41c0-8cdf-aa61e1e55e6c",
+      "variantId": "785d0e30-898b-40eb-aa4b-1d213074cf29",
+      "name": "Mochi, ryżowe ciasteczka z pastą z fasolki azuki 210g -  Yuki & Love",
+      "slug": "mochi-ryzowe-ciasteczka-z-pasta-z-fasolki-azuki-210g-yuki-and-love",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Maltoza, pasta z fasoli azuki 27% (fasola azuki 42,6%, maltoza, cukier, olej sojowy) ryż kleisty w proszku 13,2% cukier, proszek z ziemniaków, woda, substancja konserwująca: E202; emulgator: E471; substancja zagęszczająca: E415",
+        "storageZone": null,
+        "pricePerUnit": "58.10",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.3,
+          "salt": 0.1,
+          "carbs": 77,
+          "sugar": 47,
+          "protein": 1.2,
+          "calories": 323,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.7
+        },
+        "countryOfOrigin": "Tajwan",
+        "mayContainAllergens": [
+          "cereals",
+          "nuts",
+          "sesame"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Maltoza, pasta z fasoli azuki 27% (fasola azuki 42,6%, maltoza, cukier, olej sojowy) ryż kleisty w proszku 13,2% cukier, proszek z ziemniaków, woda, substancja konserwująca: E202; emulgator: E471; substancja zagęszczająca: E415",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "58.10",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 1.3,
+          "salt": 0.1,
+          "carbs": 77,
+          "sugar": 47,
+          "protein": 1.2,
+          "calories": 323,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.7
+        },
+        "countryOfOrigin": "Tajwan",
+        "mayContainAllergens": [
+          "cereals",
+          "peanuts",
+          "nuts",
+          "sesame"
+        ]
+      },
+      "changedFields": [
+        "mayContainAllergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-EAN Yuki & Love red-bean mochi sources keep soy as direct and add the omitted peanut trace alongside gluten, nuts, and sesame; unopened storage is ambient.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-737.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical product explicitly separates direct soy and gluten/peanut/nut/sesame traces."
+        },
+        {
+          "url": "https://taipec.com/product/sg-mochi-red-bean/",
+          "kind": "manufacturer-distributor-label",
+          "supports": "Exact GTIN 4712905016050, direct soy declaration, product identity, and storage."
+        },
+        {
+          "url": "https://asia-foodstore.de/yuki-love-mochi-adzuki-rote-bohnen-210g",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack and trace declaration corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/mochi-ryzowe-ciasteczka-z-pasta-z-fasolki-azuki-210g-yuki-and-love",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000220",
+      "productId": "6e0a3a88-5894-4b95-9697-4dac506aa0e2",
+      "variantId": "8158d461-d95f-4d7a-9253-4f468a510fd7",
+      "name": "Paluszki Pocky Czekoladowe Original 47g - Glico",
+      "slug": "paluszki-pocky-czekoladowe-original-47g-glico",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , cukier, olej roślinny, kakao w proszku, mleko odtłuszczone w proszku, tłuszcz piekarniczy, przeciwutleniacz: tokoferol; masa kakaowa, mleko pełne w proszku, ekstrakt słodowy, skrobia modyfikowana, sól, lecytyna , drożdże, aromaty, proszek do pieczenia, regulator kwasowości wodorowęglan sodu (E524), papaina. Zawiera 53% kremu czekoladowego.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "185.11",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7.4,
+          "salt": 0.1,
+          "carbs": 28,
+          "sugar": 15.7,
+          "protein": 3.4,
+          "calories": 192,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": [
+          "nuts",
+          "sesame"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , cukier, olej roślinny, kakao w proszku, mleko odtłuszczone w proszku, tłuszcz piekarniczy, przeciwutleniacz: tokoferol; masa kakaowa, mleko pełne w proszku, ekstrakt słodowy, skrobia modyfikowana, sól, lecytyna , drożdże, aromaty, proszek do pieczenia, regulator kwasowości wodorowęglan sodu (E524), papaina. Zawiera 53% kremu czekoladowego.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "185.11",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7.4,
+          "salt": 0.1,
+          "carbs": 28,
+          "sugar": 15.7,
+          "protein": 3.4,
+          "calories": 192,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "nuts",
+          "sesame"
+        ]
+      },
+      "changedFields": [
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "The mapped Glico Pocky Chocolate 47g product and exact GTIN records identify Thai production; formula revisions are not changed on the null-EAN production row.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-902.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical mapped 47g product identity."
+        },
+        {
+          "url": "https://www.fresh-store.eu/en/food/11072-glico-pocky-chocolate-bars-47g-8851019010137.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8851019010137, pack size, and Thailand origin."
+        },
+        {
+          "url": "https://pocky.glico.com/global/products/th/chocolate.html",
+          "kind": "manufacturer-label",
+          "supports": "Official Thai Glico product-family corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/paluszki-pocky-czekoladowe-original-47g-glico",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000221",
+      "productId": "1f77cc6c-5b37-4b7a-a1cf-06041aa94e84",
+      "variantId": "957dd431-1658-4f01-83e5-6c2edc00a3d5",
+      "name": "Pocky Double Choco, kakaowe paluszki z kremem czekoladowym 39g - Glico",
+      "slug": "pocky-double-choco-kakaowe-paluszki-z-kremem-czekoladowym-39g-glico",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Wyobraź sobie kuszące połączenie lekkości, chrupkości i słodkiego rozpieszczenia , niezmiennie satysfakcjonującego w każdym kawałku. To właśnie Pocky Double Choco! Te pyszne paluszki od lat są totalnym hitem w Japonii, Korei i Tajlandii, a dzięki atrakcyjnemu wyborowi smaków i estetycznych opakowań ich popularność w Europie nie przestaje rosnąć!",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "223.08",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7.2,
+          "salt": 0.1,
+          "carbs": 25.2,
+          "protein": 3.4,
+          "calories": 179,
+          "servingSize": "w porcji 39g"
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": [
+          "nuts",
+          "sesame"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna, cukier, olej roślinny, kakao w proszku, tłuszcz piekarniczy, mleko odtłuszczone w proszku, masa kakaowa, mleko pełne w proszku, sól, drożdże, aromaty, proszek do pieczenia, lecytyna sojowa, regulator kwasowości (E524), papaina",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "223.08",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 7.2,
+          "salt": 0.1,
+          "carbs": 25.2,
+          "protein": 3.4,
+          "calories": 179,
+          "servingSize": "w porcji 39g"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "nuts",
+          "sesame"
+        ]
+      },
+      "changedFields": [
+        "countryOfOrigin",
+        "ingredients"
+      ],
+      "confidence": "high",
+      "reason": "Exact Glico Double Chocolate 39g label records replace marketing prose in ingredients with the actual formula and identify Thai production.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-903.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical mapped product, Polish ingredient formula, and origin."
+        },
+        {
+          "url": "https://www.kgelectronic.com.au/p/12PK-Glico-Pocky-Double-Chocolate-Sticks-Japanese/BE-00ACCGPD_12PK",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and formula corroboration."
+        },
+        {
+          "url": "https://www.lottemart.vn/en-wle/product/pocky-double-chocolate-covered-biscuit-sticks-39g-8851019310244-p12433",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8851019310244, 39g pack, ingredients, and Thailand origin."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/pocky-double-choco-kakaowe-paluszki-z-kremem-czekoladowym-39g-glico",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000222",
+      "productId": "7b732093-0dd2-43be-befa-f9b800e762c3",
+      "variantId": "0d3b5cd4-1432-4c7e-8269-88a177e1b460",
+      "name": "Paluszki Pocky Truskawkowe 45g - Glico",
+      "slug": "paluszki-pocky-truskawkowe-45g-glico",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , cukier, olej roślinny, laktoza, mleko pełne w proszku, tłuszcz piekarniczy, przeciwutleniacz: tokoferol; ekstrakt słodowy, skrobia modyfikowana, sól, lecytyna , drożdże, aromaty, proszek do pieczenia, truskawki w proszku, barwnik: karminy; regulator kwasowości: wodorowęglan sodu (E524); papaina. Zawiera 51% kremu truskawkowego.",
+        "storageZone": null,
+        "pricePerUnit": "193.33",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 6.7,
+          "salt": 0.1,
+          "carbs": 27.4,
+          "sugar": 13.9,
+          "protein": 3,
+          "calories": 182,
+          "servingSize": "w porcji 37g"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "nuts"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , cukier, olej roślinny, laktoza, mleko pełne w proszku, tłuszcz piekarniczy, przeciwutleniacz: tokoferol; ekstrakt słodowy, skrobia modyfikowana, sól, lecytyna , drożdże, aromaty, proszek do pieczenia, truskawki w proszku, barwnik: karminy; regulator kwasowości: wodorowęglan sodu (E524); papaina. Zawiera 51% kremu truskawkowego.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "193.33",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 6.7,
+          "salt": 0.1,
+          "carbs": 27.4,
+          "sugar": 13.9,
+          "protein": 3,
+          "calories": 182,
+          "servingSize": "w porcji 37g"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "nuts"
+        ]
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Mapped Glico Pocky Strawberry sources consistently support unopened ambient storage; multiple 35g/45g/47g formula revisions prevent composition or nutrition changes.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-904.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical mapped product and storage."
+        },
+        {
+          "url": "https://www.halal.co.th/en/product/detail/127810",
+          "kind": "certification-record",
+          "supports": "Thai product certification and manufacturing identity."
+        },
+        {
+          "url": "https://thaithai.online/glico-pocky-pocky-strawberry-flavour-biscuit-sticks-47-grams",
+          "kind": "retailer-label",
+          "supports": "Independent product-family and shelf-stable pack corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/paluszki-pocky-truskawkowe-45g-glico",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000227",
+      "productId": "f61ce151-3690-45aa-827d-98871394699b",
+      "variantId": "9c646882-7370-4c37-a2f7-b7003155694e",
+      "name": "Orzeszki ziemne w skorupce kokosowej 185g - Khao Shong",
+      "slug": "orzeszki-ziemne-w-skorupce-kokosowej-185g-khao-shong",
+      "expectedUpdatedAt": "2026-07-08 12:12:07.93723+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "peanuts",
+          "milk"
+        ],
+        "ingredients": "Orzeszki ziemne, mąka pszenna, cukier, mleko kokosowe, sól",
+        "storageZone": null,
+        "pricePerUnit": "82.54",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 31.7,
+          "salt": 1.45,
+          "carbs": 45.9,
+          "sugar": 17.3,
+          "protein": 17,
+          "calories": 537,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 11.9
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "milk",
+          "nuts",
+          "mustard",
+          "sesame"
+        ]
+      },
+      "target": {
+        "category": {
+          "id": "5825ea08-e9d9-4786-aaad-05c4dde1131e",
+          "name": "Słodycze / Przekąski",
+          "slug": "słodycze-przekąski",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "peanuts"
+        ],
+        "ingredients": "Orzeszki ziemne, mąka pszenna, cukier, mleko kokosowe, sól",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "82.54",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 31.7,
+          "salt": 1.45,
+          "carbs": 45.9,
+          "sugar": 17.3,
+          "protein": 17,
+          "calories": 537,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 11.9
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": [
+          "crustaceans",
+          "fish",
+          "soybeans",
+          "milk",
+          "nuts",
+          "mustard",
+          "sesame",
+          "molluscs"
+        ]
+      },
+      "changedFields": [
+        "allergens",
+        "mayContainAllergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact Khao Shong Coconut Coated Peanuts 185g label separates direct wheat/peanut from its trace list; coconut milk is not dairy, and the unopened product is ambient.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-936.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 185g product, formula, and storage metadata."
+        },
+        {
+          "url": "https://www.foodland-express.com/sweets-and-snacks/coconut-flavour-coated-peanuts-khao-shong-185g/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8850043124582 and authoritative direct-versus-trace allergen split."
+        },
+        {
+          "url": "https://www.east-asia-mart.eu/en/products/drinks-and-snacks/khao-shong-crispy-coconut-coated-peanuts-185g",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack, allergen, and ambient-storage corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/orzeszki-ziemne-w-skorupce-kokosowej-185g-khao-shong",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ],
+  "holds": [
+    {
+      "sku": "ADG-000040",
+      "reason": "The exact 1kg Kimpo sushi-rice row is already complete for the safe reviewed fields; no zero-value rewrite is emitted.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-146.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Kimpo 1kg product identity and label metadata."
+        },
+        {
+          "url": "https://www.foodland-express.com/sushi-rice/sushi-rice-kimpo-1-kg/",
+          "kind": "retailer-label",
+          "supports": "Independent exact-brand and pack-size corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/ryz-do-sushi-1kg-kimpo",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000129",
+      "reason": "The exact-EAN Vinamit jackfruit row already contains the safe reviewed origin, storage, ingredients, allergen, and nutrition fields; no zero-value rewrite is emitted.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-494.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8934743022901 and product metadata."
+        },
+        {
+          "url": "https://www.zing-asia.co.uk/preserved-vegetables-asian-food/15167-vinamit-jackfruit-chips-mit-say-250g-vietnamese-jackfruit-chips-8934743022901.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN pack and Vietnam origin corroboration."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/chipsy-z-jackfruita-dzakfruta-250g-vinamit",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ]
+}

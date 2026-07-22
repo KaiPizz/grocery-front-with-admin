@@ -1,0 +1,626 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch4-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T10:13:50Z",
+  "cohortSkus": [
+    "ADG-000040",
+    "ADG-000087",
+    "ADG-000096",
+    "ADG-000107",
+    "ADG-000133",
+    "ADG-000274",
+    "ADG-000816",
+    "ADG-001046",
+    "ADG-001217",
+    "ADG-000262",
+    "ADG-000263",
+    "ADG-000286",
+    "ADG-000298",
+    "ADG-000347",
+    "ADG-000396",
+    "ADG-000575",
+    "ADG-000965",
+    "ADG-000066",
+    "ADG-000120",
+    "ADG-000129",
+    "ADG-000172",
+    "ADG-000220",
+    "ADG-000221",
+    "ADG-000222",
+    "ADG-000227"
+  ],
+  "actions": {
+    "ADG-000040": {
+      "hold": true,
+      "reason": "The exact 1kg Kimpo sushi-rice row is already complete for the safe reviewed fields; no zero-value rewrite is emitted.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-146.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Kimpo 1kg product identity and label metadata."
+        },
+        {
+          "url": "https://www.foodland-express.com/sushi-rice/sushi-rice-kimpo-1-kg/",
+          "kind": "retailer-label",
+          "supports": "Independent exact-brand and pack-size corroboration."
+        }
+      ]
+    },
+    "ADG-000087": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-EAN Nongshim Neoguri 120g sources support unopened cool, dry ambient storage; conflicting formula generations remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-324.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043157711 and product identity."
+        },
+        {
+          "url": "https://kurogami.com/en/product/spicy-seafood-ramen-noodles-nongshim-120-g",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and ambient storage guidance."
+        }
+      ]
+    },
+    "ADG-000096": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-EAN Nongshim Kimchi Ramyun 120g sources support dry ambient storage, while exact-EAN allergen and recipe generations conflict and are deliberately held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-355.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043157742, pack identity, and storage."
+        },
+        {
+          "url": "https://www.kespro.com/tuotteet/nongshim-pikanuudeli-120g-kimchi-ramyun-8801043157742",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN pack and shelf-stable storage corroboration."
+        },
+        {
+          "url": "https://rappel.conso.gouv.fr/fiche-rappel/6490/Interne",
+          "kind": "regulatory-record",
+          "supports": "Demonstrates an exact-product historical formula generation, supporting the decision not to rewrite composition."
+        }
+      ]
+    },
+    "ADG-000107": {
+      "patch": {
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "mayContainAllergens": [
+          "cereals",
+          "crustaceans",
+          "eggs",
+          "fish",
+          "peanuts",
+          "milk",
+          "celery",
+          "mustard",
+          "sesame",
+          "molluscs"
+        ],
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact 112g Soon Veggie label separates direct wheat/soy from its trace declaration and specifies dry ambient storage; the current broad direct-allergen parse is corrected.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-404.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical product, ingredients, allergen split, and storage statement."
+        },
+        {
+          "url": "https://dae-yang.online/en/products/instantnudeln-soon-veggie-ramyun-mild",
+          "kind": "retailer-label",
+          "supports": "Independent 112g product label corroborates direct wheat/soy and trace allergens."
+        },
+        {
+          "url": "https://www.mocafino.ae/nongshim-soon-veggie-ramyun-112-g/",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack and ambient-storage corroboration."
+        }
+      ]
+    },
+    "ADG-000133": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-EAN Nongshim Shin Big Bowl 114g listings identify an unopened shelf-stable product; current composition fields are retained.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-510.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043025256 and product identity."
+        },
+        {
+          "url": "https://www.bestwaywholesale.co.uk/product/814829-1",
+          "kind": "distributor-label",
+          "supports": "Independent exact product and ambient-storage treatment."
+        }
+      ]
+    },
+    "ADG-000274": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The mapped Yoo Dong 130g canned product is shelf-stable, but production has no EAN and current exact-pack labels expand both direct and trace allergens; all composition fields are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1140-Larwy-jedwabnika-w-zalewie-130g-Yoo-Dong.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical mapped 130g product identity and ambient storage."
+        },
+        {
+          "url": "https://emile.emarteveryday.co.kr/product/ProductView?skuCode=8801063310011&strCode=4006",
+          "kind": "retailer-label",
+          "supports": "Current exact 130g label has a broader allergen generation, proving composition is unsafe to rewrite on the null-EAN production row."
+        },
+        {
+          "url": "https://woorimarketplace.com/products/yoodong-silkworm-pupa",
+          "kind": "retailer-label",
+          "supports": "Independent brand/product corroboration and shelf-stable canned format."
+        }
+      ]
+    },
+    "ADG-000816": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Royal Family mixed-mochi 250g sources support dry ambient storage, but exact-GTIN label generations conflict on allergens and nutrition; all composition fields are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-3811-Mochi-ryzowe-ciasteczka-w-3-smakach-250g-Royal-Family.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 250g mixed pack identity and ambient storage; its composition is treated as a historical generation only."
+        },
+        {
+          "url": "https://konbini.uk/products/royal-family-mix-mochi-rbean-milk-matcha-250g",
+          "kind": "retailer-label",
+          "supports": "Independent exact brand, flavor mix, pack size, and shelf-stable format."
+        },
+        {
+          "url": "https://singkeefoods.co.uk/gb/products/127-royal-family-mixed-mochi-250g-4711931030115.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN pack corroboration that exposes a conflicting label generation."
+        }
+      ]
+    },
+    "ADG-001046": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Mapped Lay's Spicy Crayfish 104g sources support shelf-stable storage, but production has no EAN and current exact-product labels conflict on direct allergens; composition remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://sklep.nasushi.pl/product-pol-4531-Chipsy-ziemniaczane-Chili-Spicy-Crayfish-o-smaku-raka-104g-Lays.html",
+          "kind": "supplier-label",
+          "supports": "Exact mapped historical 104g product identity and ambient storage."
+        },
+        {
+          "url": "https://americanuncle.it/products/lays-spicy-crayfish-104g",
+          "kind": "retailer-label",
+          "supports": "Independent exact brand/flavor/pack-size corroboration."
+        },
+        {
+          "url": "https://www.kroger.com/p/lay-s-spicy-crayfish-potato-chips/0692474392665",
+          "kind": "retailer-label",
+          "supports": "Independent current exact-product identity with a broader allergen generation, proving composition is unsafe to rewrite."
+        }
+      ]
+    },
+    "ADG-001217": {
+      "patch": {
+        "allergens": [
+          "cereals",
+          "eggs",
+          "soybeans",
+          "milk"
+        ],
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "calories": 76,
+          "fat": 4.6,
+          "carbs": 8,
+          "protein": 0.6,
+          "salt": 0.025,
+          "servingSize": "w porcji 13,5g"
+        }
+      },
+      "reason": "The official Japanese Glico listing pins the exact 81g pack, four direct allergen groups, ambient storage, and per-13.5g nutrition basis; no unsupported trace allergens are added.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4923-Wafelki-z-nadzieniem-Cream-Collon-Assari-Milk-81g-Glico.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 81g product identity and Polish label metadata."
+        },
+        {
+          "url": "https://www.glico.com/jp/product/snack_biscuit_cookie/collon/45269/",
+          "kind": "manufacturer-label",
+          "supports": "Official exact JAN 4901005104068 pack, allergens, storage, and per-bag nutrition."
+        },
+        {
+          "url": "https://hiyou.co/products/glico-collon-light-milk-wafer-roll-81g",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack-size and product corroboration."
+        }
+      ]
+    },
+    "ADG-000262": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact 32g Lotte Almond Pepero sources support dry ambient storage; conflicting regional formula and nutrition generations remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1090.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 32g product identity and storage."
+        },
+        {
+          "url": "https://www.y-mart.de/en/category/sweets-snack/lotte-pepero-almond.8801062267712-1076599036.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN pack and shelf-stable storage corroboration."
+        }
+      ]
+    },
+    "ADG-000263": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact 47g Lotte Original Pepero sources support dry ambient storage; formula and nutrition revisions are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1091.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 47g product identity and storage."
+        },
+        {
+          "url": "https://www.foodello.nl/product/12223/lotte-pepero-original-47g",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and pack-size corroboration."
+        }
+      ]
+    },
+    "ADG-000286": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Jelly Belly Bean Boozled Spinner 100g sources consistently support unopened ambient storage; changing edition-specific formula or nutrition would be unsafe.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1176.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 100g spinner product and storage statement."
+        },
+        {
+          "url": "https://foodscan.ai/en/product/Candy-JELLY-BELLY-Bean-Boozled-Spinner-Gift-Box-100-g/0071567990516",
+          "kind": "label-index",
+          "supports": "Exact-GTIN and pack-format corroboration."
+        }
+      ]
+    },
+    "ADG-000298": {
+      "patch": {
+        "storageZone": "AMBIENT",
+        "countryOfOrigin": "Tajlandia"
+      },
+      "reason": "The exact 40g Glico Pocky Cookies & Cream pack is Thai-made and shelf-stable; existing allergen and nutrition fields are preserved.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1196-Paluszki-Pocky-Cookies-Cream-40g-Glico.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 40g product identity and metadata."
+        },
+        {
+          "url": "https://halal.co.th/en/product/detail/314185",
+          "kind": "certification-record",
+          "supports": "Exact Thai product certification and manufacturing identity."
+        },
+        {
+          "url": "https://www.lottemart.vn/en-bdh/product/pocky-cookies-cream-covered-biscuit-sticks-40g-8851019500195-p12434",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN, pack size, Thailand origin, and storage corroboration."
+        }
+      ]
+    },
+    "ADG-000347": {
+      "patch": {
+        "storageZone": "AMBIENT",
+        "countryOfOrigin": "Korea Południowa"
+      },
+      "reason": "Exact Lotte Choco Pie 12-pack sources agree on South Korean production and shelf-stable storage; market-specific formula and allergen revisions remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-1439.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 12-piece pack identity."
+        },
+        {
+          "url": "https://www.orientalmart.co.uk/lotte-choco-pie-12-pcs?locale=en",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack, Korean origin, and ambient storage."
+        },
+        {
+          "url": "https://www.jfc.com/product/item/19250",
+          "kind": "distributor-label",
+          "supports": "Independent product and South Korean origin corroboration."
+        }
+      ]
+    },
+    "ADG-000396": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact Tao Kae Noi Crispy Seaweed Original 32g sources specify unopened dry ambient storage; existing formula and nutrition are retained.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-2131.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 32g product identity and storage."
+        },
+        {
+          "url": "https://www.pepis.shop/tao-kae-noi/tao-kae-noi-crispy-original-seaweed-32g-tha/",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and pack-size corroboration."
+        },
+        {
+          "url": "https://sg.taokaenoiglobal.com/product/original/",
+          "kind": "manufacturer-label",
+          "supports": "Official product-family identity and shelf-stable snack format."
+        }
+      ]
+    },
+    "ADG-000575": {
+      "patch": {
+        "countryOfOrigin": "Belgia"
+      },
+      "reason": "The Koikeya Europe product specification and exact-EAN retailer record identify the 100g Potechi Wasabi Nori pack as made in Belgium.",
+      "evidence": [
+        {
+          "url": "https://www.koike-ya.eu/product.html",
+          "kind": "manufacturer-label",
+          "supports": "Official European product page identifies Belgium production."
+        },
+        {
+          "url": "https://www.s-kaupat.fi/tuote/potechi-wasabi-nori-100g/4901335006070",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 4901335006070, 100g pack, and Belgium origin."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-2839-Chipsy-ziemniaczane-Potechi-Wasabi-Nori-100g-Koikeya.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Polish product identity."
+        }
+      ]
+    },
+    "ADG-000965": {
+      "patch": {
+        "storageZone": "AMBIENT",
+        "countryOfOrigin": "Japonia"
+      },
+      "reason": "Official Imuraya and Japanese retailer records identify the Yude Azuki canned beans as Japanese and shelf-stable, correcting the current Korea origin.",
+      "evidence": [
+        {
+          "url": "https://www.imuraya.co.jp/goods/an/c-yude/pazuki/",
+          "kind": "manufacturer-label",
+          "supports": "Official Japanese manufacturer product identity."
+        },
+        {
+          "url": "https://shimojima.jp/shop/g/g2500500000817/?ismodesmartphone=on",
+          "kind": "retailer-label",
+          "supports": "Japanese retail record corroborates product and origin."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-4316.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Polish product and shelf-stable storage metadata."
+        }
+      ]
+    },
+    "ADG-000066": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-EAN Nongshim Shrimp Cracker 75g sources support cool, dry ambient storage; old and new formulas conflict, so composition remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-238.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043216128, pack identity, and storage."
+        },
+        {
+          "url": "https://www.aasiamarket.fi/en/product/shrimp-flavoured-cracker-fi939/",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and ambient storage."
+        },
+        {
+          "url": "https://www.elatukku.fi/teolliset-elintarvikkeet/nongshim-shrimp-flavour-cracker-katkarapusnack-75g/p/16565/",
+          "kind": "retailer-label",
+          "supports": "Independent exact 75g product corroboration."
+        }
+      ]
+    },
+    "ADG-000120": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-EAN Nongshim Hot & Spicy Shrimp Cracker 75g sources support dry ambient storage; conflicting shrimp percentages and formula generations are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-443.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8801043001786, pack identity, and storage."
+        },
+        {
+          "url": "https://hmart.co.uk/shop/ko/snack/359--75g-8801043001786.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN product corroboration."
+        },
+        {
+          "url": "https://www.elatukku.fi/teolliset-elintarvikkeet/nongshim-shrimp-flavour-cracker-hotspicy-katkarapusnacks-tulinenmausteinen-75g/p/16574/",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack and ambient storage."
+        }
+      ]
+    },
+    "ADG-000129": {
+      "hold": true,
+      "reason": "The exact-EAN Vinamit jackfruit row already contains the safe reviewed origin, storage, ingredients, allergen, and nutrition fields; no zero-value rewrite is emitted.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-494.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical EAN 8934743022901 and product metadata."
+        },
+        {
+          "url": "https://www.zing-asia.co.uk/preserved-vegetables-asian-food/15167-vinamit-jackfruit-chips-mit-say-250g-vietnamese-jackfruit-chips-8934743022901.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN pack and Vietnam origin corroboration."
+        }
+      ]
+    },
+    "ADG-000172": {
+      "patch": {
+        "mayContainAllergens": [
+          "cereals",
+          "peanuts",
+          "nuts",
+          "sesame"
+        ],
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Exact-EAN Yuki & Love red-bean mochi sources keep soy as direct and add the omitted peanut trace alongside gluten, nuts, and sesame; unopened storage is ambient.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-737.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical product explicitly separates direct soy and gluten/peanut/nut/sesame traces."
+        },
+        {
+          "url": "https://taipec.com/product/sg-mochi-red-bean/",
+          "kind": "manufacturer-distributor-label",
+          "supports": "Exact GTIN 4712905016050, direct soy declaration, product identity, and storage."
+        },
+        {
+          "url": "https://asia-foodstore.de/yuki-love-mochi-adzuki-rote-bohnen-210g",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack and trace declaration corroboration."
+        }
+      ]
+    },
+    "ADG-000220": {
+      "patch": {
+        "countryOfOrigin": "Tajlandia"
+      },
+      "reason": "The mapped Glico Pocky Chocolate 47g product and exact GTIN records identify Thai production; formula revisions are not changed on the null-EAN production row.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-902.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical mapped 47g product identity."
+        },
+        {
+          "url": "https://www.fresh-store.eu/en/food/11072-glico-pocky-chocolate-bars-47g-8851019010137.html",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8851019010137, pack size, and Thailand origin."
+        },
+        {
+          "url": "https://pocky.glico.com/global/products/th/chocolate.html",
+          "kind": "manufacturer-label",
+          "supports": "Official Thai Glico product-family corroboration."
+        }
+      ]
+    },
+    "ADG-000221": {
+      "patch": {
+        "ingredients": "Mąka pszenna, cukier, olej roślinny, kakao w proszku, tłuszcz piekarniczy, mleko odtłuszczone w proszku, masa kakaowa, mleko pełne w proszku, sól, drożdże, aromaty, proszek do pieczenia, lecytyna sojowa, regulator kwasowości (E524), papaina",
+        "countryOfOrigin": "Tajlandia"
+      },
+      "reason": "Exact Glico Double Chocolate 39g label records replace marketing prose in ingredients with the actual formula and identify Thai production.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-903.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical mapped product, Polish ingredient formula, and origin."
+        },
+        {
+          "url": "https://www.kgelectronic.com.au/p/12PK-Glico-Pocky-Double-Chocolate-Sticks-Japanese/BE-00ACCGPD_12PK",
+          "kind": "retailer-label",
+          "supports": "Independent exact product and formula corroboration."
+        },
+        {
+          "url": "https://www.lottemart.vn/en-wle/product/pocky-double-chocolate-covered-biscuit-sticks-39g-8851019310244-p12433",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8851019310244, 39g pack, ingredients, and Thailand origin."
+        }
+      ]
+    },
+    "ADG-000222": {
+      "patch": {
+        "storageZone": "AMBIENT"
+      },
+      "reason": "Mapped Glico Pocky Strawberry sources consistently support unopened ambient storage; multiple 35g/45g/47g formula revisions prevent composition or nutrition changes.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-904.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical mapped product and storage."
+        },
+        {
+          "url": "https://www.halal.co.th/en/product/detail/127810",
+          "kind": "certification-record",
+          "supports": "Thai product certification and manufacturing identity."
+        },
+        {
+          "url": "https://thaithai.online/glico-pocky-pocky-strawberry-flavour-biscuit-sticks-47-grams",
+          "kind": "retailer-label",
+          "supports": "Independent product-family and shelf-stable pack corroboration."
+        }
+      ]
+    },
+    "ADG-000227": {
+      "patch": {
+        "allergens": [
+          "cereals",
+          "peanuts"
+        ],
+        "mayContainAllergens": [
+          "crustaceans",
+          "fish",
+          "soybeans",
+          "milk",
+          "nuts",
+          "mustard",
+          "sesame",
+          "molluscs"
+        ],
+        "storageZone": "AMBIENT"
+      },
+      "reason": "The exact Khao Shong Coconut Coated Peanuts 185g label separates direct wheat/peanut from its trace list; coconut milk is not dairy, and the unopened product is ambient.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-936.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical 185g product, formula, and storage metadata."
+        },
+        {
+          "url": "https://www.foodland-express.com/sweets-and-snacks/coconut-flavour-coated-peanuts-khao-shong-185g/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8850043124582 and authoritative direct-versus-trace allergen split."
+        },
+        {
+          "url": "https://www.east-asia-mart.eu/en/products/drinks-and-snacks/khao-shong-crispy-coconut-coated-peanuts-185g",
+          "kind": "retailer-label",
+          "supports": "Independent exact pack, allergen, and ambient-storage corroboration."
+        }
+      ]
+    }
+  }
+}
