@@ -83,11 +83,22 @@ test.describe('homepage accessibility', () => {
       name: /przejdź do slajdu/i,
     });
     await expect(carouselDots).toHaveCount(6);
+    // Owner-approved mobile controls stay visible without overpowering the hero artwork.
+    const mobileCarousel = mobileHero.locator('[aria-roledescription="carousel"]');
     const indicatorRowBox = await mobileHero
       .getByTestId('hero-carousel-indicators')
       .boundingBox();
+    const mobileCarouselBox = await mobileCarousel.boundingBox();
     expect(indicatorRowBox).not.toBeNull();
-    expect(Math.round(indicatorRowBox!.width)).toBeLessThanOrEqual(144);
+    expect(mobileCarouselBox).not.toBeNull();
+    expect(Math.round(indicatorRowBox!.width)).toBeLessThanOrEqual(120);
+    expect(
+      Math.round(
+        mobileCarouselBox!.y +
+          mobileCarouselBox!.height -
+          (indicatorRowBox!.y + indicatorRowBox!.height)
+      )
+    ).toBeLessThanOrEqual(3);
     for (let index = 0; index < 6; index += 1) {
       const box = await carouselDots.nth(index).boundingBox();
       const indicatorBox = await carouselDots
@@ -95,22 +106,73 @@ test.describe('homepage accessibility', () => {
         .getByTestId('hero-carousel-indicator')
         .boundingBox();
       expect(box).not.toBeNull();
-      expect(Math.round(box!.width)).toBeGreaterThanOrEqual(24);
-      expect(Math.round(box!.height)).toBeGreaterThanOrEqual(44);
+      expect(Math.round(box!.width)).toBeGreaterThanOrEqual(20);
+      expect(Math.round(box!.width)).toBeLessThanOrEqual(20);
+      expect(Math.round(box!.height)).toBeGreaterThanOrEqual(36);
+      expect(Math.round(box!.height)).toBeLessThanOrEqual(36);
       expect(indicatorBox).not.toBeNull();
-      expect(Math.round(indicatorBox!.width)).toBeLessThanOrEqual(14);
-      expect(Math.round(indicatorBox!.height)).toBeLessThanOrEqual(6);
+      expect(Math.round(indicatorBox!.width)).toBeLessThanOrEqual(10);
+      expect(Math.round(indicatorBox!.height)).toBeLessThanOrEqual(4);
+      const indicatorBottomGap =
+        mobileCarouselBox!.y + mobileCarouselBox!.height - (indicatorBox!.y + indicatorBox!.height);
+      expect(Math.round(indicatorBottomGap)).toBeGreaterThanOrEqual(3);
+      expect(Math.round(indicatorBottomGap)).toBeLessThanOrEqual(6);
     }
-    await expect(
-      page.getByTestId('mobile-home-hero').getByRole('button', { name: 'Poprzedni slajd' })
-    ).toBeHidden();
-    await expect(
-      page.getByTestId('mobile-home-hero').getByRole('button', { name: 'Następny slajd' })
-    ).toBeHidden();
+    const previous = mobileHero.getByRole('button', { name: 'Poprzedni slajd' });
+    const next = mobileHero.getByRole('button', { name: 'Następny slajd' });
+    await expect(previous).toBeVisible();
+    await expect(next).toBeVisible();
+    const previousBox = await previous.boundingBox();
+    const nextBox = await next.boundingBox();
+    expect(previousBox).not.toBeNull();
+    expect(nextBox).not.toBeNull();
+    expect(Math.round(previousBox!.width)).toBeGreaterThanOrEqual(44);
+    expect(Math.round(previousBox!.height)).toBeGreaterThanOrEqual(44);
+    expect(Math.round(nextBox!.width)).toBeGreaterThanOrEqual(44);
+    expect(Math.round(nextBox!.height)).toBeGreaterThanOrEqual(44);
+    const arrowVisuals = mobileHero.getByTestId('hero-carousel-arrow-visual');
+    await expect(arrowVisuals).toHaveCount(2);
+    for (let index = 0; index < 2; index += 1) {
+      const arrowVisualBox = await arrowVisuals.nth(index).boundingBox();
+      expect(arrowVisualBox).not.toBeNull();
+      expect(Math.round(arrowVisualBox!.width)).toBeLessThanOrEqual(28);
+      expect(Math.round(arrowVisualBox!.height)).toBeLessThanOrEqual(28);
+    }
+    expect(previousBox!.x - mobileCarouselBox!.x).toBeLessThanOrEqual(4);
+    expect(
+      mobileCarouselBox!.x + mobileCarouselBox!.width - (nextBox!.x + nextBox!.width)
+    ).toBeLessThanOrEqual(4);
+    await expect(carouselDots.nth(0)).toHaveAttribute('aria-current', 'true');
+    await next.click();
+    await expect(carouselDots.nth(1)).toHaveAttribute('aria-current', 'true');
+    await previous.click();
+    await expect(carouselDots.nth(0)).toHaveAttribute('aria-current', 'true');
+
+    await page.setViewportSize({ width: 320, height: 700 });
+    const narrowCarouselBox = await mobileCarousel.boundingBox();
+    const narrowPreviousBox = await previous.boundingBox();
+    const narrowNextBox = await next.boundingBox();
+    const narrowIndicatorRowBox = await mobileHero
+      .getByTestId('hero-carousel-indicators')
+      .boundingBox();
+    expect(narrowCarouselBox).not.toBeNull();
+    expect(narrowPreviousBox).not.toBeNull();
+    expect(narrowNextBox).not.toBeNull();
+    expect(narrowIndicatorRowBox).not.toBeNull();
+    expect(narrowPreviousBox!.x).toBeGreaterThanOrEqual(narrowCarouselBox!.x);
+    expect(narrowNextBox!.x + narrowNextBox!.width).toBeLessThanOrEqual(
+      narrowCarouselBox!.x + narrowCarouselBox!.width
+    );
+    expect(narrowPreviousBox!.x + narrowPreviousBox!.width).toBeLessThan(
+      narrowIndicatorRowBox!.x
+    );
+    expect(narrowNextBox!.x).toBeGreaterThan(
+      narrowIndicatorRowBox!.x + narrowIndicatorRowBox!.width
+    );
     await expect(main.locator('img[alt^="Store promotion banner"]')).toHaveCount(0);
   });
 
-  test('uses desktop edge arrows and lets mobile shoppers swipe between slides', async ({ page }) => {
+  test('uses edge arrows and lets mobile shoppers swipe between slides', async ({ page }) => {
     await mockHeroBlockConfig(page, {
       headline: 'Azjatyckie produkty spożywcze na co dzień',
     });

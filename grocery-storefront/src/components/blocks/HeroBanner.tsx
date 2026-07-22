@@ -207,19 +207,35 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
           <button
             type="button"
             onClick={() => goTo(activeIndex - 1)}
-            className="absolute left-2 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-black/25 text-white shadow-md backdrop-blur-sm hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:flex"
+            className="absolute left-0.5 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:left-2"
             aria-label={t('heroBannerPreviousSlide')}
           >
-            <ChevronLeft className="h-5 w-5 drop-shadow" aria-hidden="true" />
+            <span
+              data-testid="hero-carousel-arrow-visual"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/60 bg-black/25 shadow-md backdrop-blur-sm hover:bg-black/45 md:h-11 md:w-11"
+            >
+              <ChevronLeft
+                className="h-4 w-4 drop-shadow md:h-5 md:w-5"
+                aria-hidden="true"
+              />
+            </span>
           </button>
 
           <button
             type="button"
             onClick={() => goTo(activeIndex + 1)}
-            className="absolute right-2 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-black/25 text-white shadow-md backdrop-blur-sm hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:flex"
+            className="absolute right-0.5 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:right-2"
             aria-label={t('heroBannerNextSlide')}
           >
-            <ChevronRight className="h-5 w-5 drop-shadow" aria-hidden="true" />
+            <span
+              data-testid="hero-carousel-arrow-visual"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/60 bg-black/25 shadow-md backdrop-blur-sm hover:bg-black/45 md:h-11 md:w-11"
+            >
+              <ChevronRight
+                className="h-4 w-4 drop-shadow md:h-5 md:w-5"
+                aria-hidden="true"
+              />
+            </span>
           </button>
 
           <div
@@ -231,13 +247,13 @@ export function HeroBanner({ block, heading }: HeroBannerProps) {
                 key={i}
                 type="button"
                 onClick={() => goTo(i)}
-                className="flex h-11 w-6 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-black/40"
+                className="flex h-9 w-5 items-end justify-center rounded-full pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-black/40"
                 aria-label={t('heroBannerGoToSlide', { number: i + 1 })}
                 aria-current={i === activeIndex ? 'true' : undefined}
               >
                 <span
                   data-testid="hero-carousel-indicator"
-                  className={`h-1.5 rounded-full ${i === activeIndex ? 'w-3.5' : 'w-1.5'}`}
+                  className={`h-1 rounded-full ${i === activeIndex ? 'w-2.5' : 'w-1'}`}
                   style={{
                     backgroundColor: i === activeIndex ? 'var(--color-primary)' : 'rgba(255, 255, 255, 0.78)',
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.48)',

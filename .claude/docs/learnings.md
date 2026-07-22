@@ -540,6 +540,12 @@
 
 ## Testing Errors
 
+### Omitting dev dependencies let Next rewrite the pinned TypeScript version
+- **Error:** A fresh worktree became dirty after Playwright started Next dev: `package.json` and the lockfile changed from pinned TypeScript 5.9.3 to the latest 6.0.3.
+- **Cause:** The inherited npm environment omitted dev dependencies, so plain `npm ci` installed only 94 production packages. Next detected that TypeScript was missing and auto-installed the current release while starting the typed app.
+- **Fix:** Restored the reviewed package files, reinstalled with `npm ci --include=dev`, verified TypeScript 5.9.3, and confirmed the package files stayed unchanged.
+- **Rule:** Validation worktrees must install with `--include=dev` and verify the pinned toolchain before starting Next or Playwright; a small production-only install can trigger framework auto-install mutations.
+
 ### Parallel Playwright runs collide on the fixed config-server port
 - **Error:** Running multiple Playwright commands in parallel caused one worker to fail before tests with `EADDRINUSE: address already in use 127.0.0.1:4199`.
 - **Cause:** `playwright.config.ts` starts `node tests/config-server.mjs` on the fixed port `4199` with `reuseExistingServer: false`; simultaneous commands race for the same port.
@@ -700,3 +706,9 @@
 - **Cause:** The indicator layout treated the full accessibility hit area as the visual spacing unit and offered no alternate desktop navigation.
 - **Fix:** Separated compact visual indicators from their larger buttons, added labeled desktop edge arrows, and added guarded horizontal swipe on mobile.
 - **Rule:** Carousel controls must separate visual scale from interaction scale: keep indicators quiet, expose keyboard-safe arrows where space allows, and preserve swipe without triggering the slide link.
+
+### A desktop-only breakpoint can hide an expected carousel control
+- **Error:** The hero had labeled edge arrows on desktop, but mobile shoppers saw only the indicator row and reasonably read the arrows as missing.
+- **Cause:** Both arrow buttons used `hidden ... md:flex`; swipe was implemented as an alternative interaction but gave no visible affordance.
+- **Fix:** Made smaller edge arrows visible on mobile, retained the 44px desktop controls, and moved a tighter 4px indicator set close to the banner bottom.
+- **Rule:** If navigation is expected visually at every breakpoint, do not substitute an undiscoverable gesture below a CSS breakpoint; keep a compact visible control and treat swipe as an enhancement.
