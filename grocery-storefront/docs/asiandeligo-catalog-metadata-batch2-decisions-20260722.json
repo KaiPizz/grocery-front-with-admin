@@ -1,0 +1,2317 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch2-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T08:36:49Z",
+  "cohortSkus": [
+    "ADG-000155",
+    "ADG-000163",
+    "ADG-000168",
+    "ADG-000176",
+    "ADG-000177",
+    "ADG-000191",
+    "ADG-000199",
+    "ADG-000200",
+    "ADG-000201",
+    "ADG-000206",
+    "ADG-000209",
+    "ADG-000213",
+    "ADG-000246",
+    "ADG-000248",
+    "ADG-000255",
+    "ADG-000154",
+    "ADG-000174",
+    "ADG-000301",
+    "ADG-000405",
+    "ADG-001154",
+    "ADG-001210",
+    "ADG-001374",
+    "ADG-000047",
+    "ADG-000048",
+    "ADG-000059"
+  ],
+  "products": [
+    {
+      "sku": "ADG-000155",
+      "productId": "613b56fb-6482-4a28-8569-e3f9a774ec4b",
+      "variantId": "a07cedb2-3995-4d23-95cf-65148d1a945c",
+      "name": "Płatki suszonego tuńczyka bonito, Katsuobushi 20g",
+      "slug": "platki-suszonego-tunczyka-bonito-katsuobushi-20g",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "05955e9b-c202-4954-bddc-557a59563373",
+          "name": "Buliony",
+          "slug": "buliony",
+          "isActive": true
+        },
+        "allergens": [
+          "fish"
+        ],
+        "ingredients": "Płatki suszonego tuńczyka bonito 100%",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "625.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": null,
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "05955e9b-c202-4954-bddc-557a59563373",
+          "name": "Buliony",
+          "slug": "buliony",
+          "isActive": true
+        },
+        "allergens": [
+          "fish"
+        ],
+        "ingredients": "Płatki suszonego tuńczyka bonito 100%",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "625.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Hiszpania",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "The manufacturer and exact historical Polish listing identify production in Spain; the disputed nutrition panel remains held rather than mixing market variants.",
+      "evidence": [
+        {
+          "url": "https://www.wadakyueurope.com/product-page/k2008-itogaki-20g",
+          "kind": "manufacturer-label",
+          "supports": "Exact 20g barcode and Spain production."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-639.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Polish product and Wadakyu Spain production statement."
+        },
+        {
+          "url": "https://www.orientalmarket.es/shop/itogaki-virutas-de-bonito-de-vientre-rayado-seco-y-ahumado-wadakyu-20g.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact Wadakyu 20g barcode and pack identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/platki-suszonego-tunczyka-bonito-katsuobushi-20g",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000163",
+      "productId": "dde98b49-679c-4555-a3c9-76fa8685e152",
+      "variantId": "ab72c0c5-cdad-4bfc-9c8a-3028fa7de366",
+      "name": "Mleko kokosowe (70% wyciągu z kokosa) w kartonie 500ml - AROY-D",
+      "slug": "mleko-kokosowe-70-wyciagu-z-kokosa-w-kartonie-500ml-aroy-d",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "55cb91c3-2987-4fd8-b3ea-14a5ebc4448c",
+          "name": "Mleczko kokosowe",
+          "slug": "mleczko-kokosowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ekstrakt z orzecha kokosowego 70%, woda, emulgator: polisorbat 65 (E436)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "27.98",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 19,
+          "salt": 0.05,
+          "carbs": 2,
+          "sugar": 2,
+          "protein": 1.6,
+          "calories": 185,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 17
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "55cb91c3-2987-4fd8-b3ea-14a5ebc4448c",
+          "name": "Mleczko kokosowe",
+          "slug": "mleczko-kokosowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ekstrakt z orzecha kokosowego 70%, woda, emulgator: polisorbat 65 (E436)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "27.98",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 19,
+          "salt": 0.05,
+          "carbs": 2,
+          "sugar": 2,
+          "protein": 1.6,
+          "calories": 185,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 17
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "Exact-GTIN product data and an independent exact-pack retailer identify Thailand as the origin; the current nutrition and allergen arrays remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://www.dabas.com/productsheet/08851613101385",
+          "kind": "gtin-product-sheet",
+          "supports": "Exact GTIN 8851613101385, 500ml formulation, and Thailand origin."
+        },
+        {
+          "url": "https://www.gourmet-versand.com/en/article25204/coconut-milk-aroy-d-500-ml.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact EAN and 500ml AROY-D product identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/mleko-kokosowe-70-wyciagu-z-kokosa-w-kartonie-500ml-aroy-d",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000168",
+      "productId": "a2b30fec-71ef-480d-ab87-857a66c7ba28",
+      "variantId": "47931bd2-d720-4f92-8cce-14cce17fa69c",
+      "name": "Pasta Harissa ostra (chili 87%) 135g - Le Phare Du Cap Bon",
+      "slug": "pasta-harissa-ostra-chili-87-135g-le-phare-du-cap-bon",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f",
+          "name": "Pasty smakowe",
+          "slug": "pasty-smakowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Czerwona papryka ostra 87%, czosnek, kolendra, sól, kminek",
+        "storageZone": null,
+        "pricePerUnit": "51.78",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2.6,
+          "salt": 2.3,
+          "carbs": 8.3,
+          "sugar": 2.6,
+          "protein": 3.1,
+          "calories": 69,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tunezja",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f",
+          "name": "Pasty smakowe",
+          "slug": "pasty-smakowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Czerwona papryka ostra 87%, czosnek, kolendra, sól, kminek",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "51.78",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2.6,
+          "salt": 2.3,
+          "carbs": 8.3,
+          "sugar": 2.6,
+          "protein": 3.1,
+          "calories": 69,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tunezja",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 135g listings specify shelf-stable dry ambient storage before opening; conflicting market nutrition panels are not changed.",
+      "evidence": [
+        {
+          "url": "https://www.carrefour.fr/p/sauce-harissa-le-phare-du-cap-bon-6194049100013",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 6194049100013, 135g formula, and storage guidance."
+        },
+        {
+          "url": "https://edeka-foodservice.de/eigenmarken/produkte/594134002/le-phare-du-cap-bon-harissa-135g",
+          "kind": "foodservice-label",
+          "supports": "Independent exact 135g product and ambient storage before opening."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/pasta-harissa-ostra-chili-87-135g-le-phare-du-cap-bon",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000177",
+      "productId": "34717b00-9905-410c-9334-38a545df6271",
+      "variantId": "520fafe1-0819-4381-97b8-1d4372700e8a",
+      "name": "Papryka Gochugaru do kimchi 500g - Ourhome",
+      "slug": "papryka-gochugaru-do-kimchi-500g-ourhome",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "3a5525a6-7e8c-4d23-a80c-465177318f0a",
+          "name": "Przyprawy",
+          "slug": "przyprawy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% czerwona papryka",
+        "storageZone": null,
+        "pricePerUnit": "59.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 1,
+          "sugar": 1,
+          "protein": 1,
+          "calories": 17,
+          "servingSize": "w 5g",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "3a5525a6-7e8c-4d23-a80c-465177318f0a",
+          "name": "Przyprawy",
+          "slug": "przyprawy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% czerwona papryka",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "59.00",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 1,
+          "sugar": 1,
+          "protein": 1,
+          "calories": 17,
+          "servingSize": "w 5g",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Two exact-EAN Ourhome 500g listings specify room-temperature dry storage; possible duplication with another catalog row is left for a separate identity review.",
+      "evidence": [
+        {
+          "url": "https://www.y-mart.de/ko/kategori/jangnyu-jomiryo/bunmal-jomiryo/awohom-gimchiyong-gochutgaru.9120027415166-1299446487.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 9120027415166, Ourhome 500g identity, and room-temperature storage."
+        },
+        {
+          "url": "https://k-shop.eu/ko/ol-gewurze/770-paprikapulver-grob-fur-kimchi-500g-x-30-9120027415166.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact EAN and 500g kimchi pepper identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/papryka-gochugaru-do-kimchi-500g-ourhome",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000191",
+      "productId": "b8ab7c3a-fbf6-4138-b53b-91401309982b",
+      "variantId": "34157548-6fe3-4e45-8cde-f0fa3af7ac61",
+      "name": "Chrzan wasabi w proszku S&B puszka 30g",
+      "slug": "chrzan-wasabi-w-proszku-s-and-b-puszka-30g",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "3c32e788-02b4-4906-a4ff-9e245aa61eda",
+          "name": "Wasabi",
+          "slug": "wasabi",
+          "isActive": true
+        },
+        "allergens": [
+          "mustard"
+        ],
+        "ingredients": "Chrzan 76%, gorczyca, skrobia z tapioki, Wasabi Japonica 2%",
+        "storageZone": null,
+        "pricePerUnit": "366.33",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "3c32e788-02b4-4906-a4ff-9e245aa61eda",
+          "name": "Wasabi",
+          "slug": "wasabi",
+          "isActive": true
+        },
+        "allergens": [
+          "mustard"
+        ],
+        "ingredients": "Chrzan 76%, gorczyca, skrobia z tapioki, Wasabi Japonica 2%",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "366.33",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "calories": 378,
+          "fat": 9.1,
+          "saturatedFat": 0.7,
+          "carbs": 50,
+          "sugar": 29,
+          "protein": 15,
+          "salt": 0.12,
+          "servingSize": "100g"
+        },
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone",
+        "nutritionFacts"
+      ],
+      "confidence": "high",
+      "reason": "Exact JAN/EAN listings for the H&S EU label agree on the 30g nutrition panel and dry ambient storage; the existing mustard allergen remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://www.tasteofasia.cz/p/krenovy-wasabi-prasek-s-b-30-g",
+          "kind": "eu-importer-label",
+          "supports": "Exact JAN 49181173 with EU nutrition values and dry storage."
+        },
+        {
+          "url": "https://www.foodland.sk/susi/sb-wasabi-prasok-30-g/",
+          "kind": "retailer-label",
+          "supports": "Independent exact 30g S&B label with the same EU nutrition panel and storage."
+        },
+        {
+          "url": "https://www.sbfoods-worldwide.com/products/search/051.html",
+          "kind": "manufacturer-product",
+          "supports": "Manufacturer confirms exact product identity and mustard-containing formulation."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/chrzan-wasabi-w-proszku-s-and-b-puszka-30g",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000199",
+      "productId": "28810d83-1b5b-453d-b678-1936013f7f67",
+      "variantId": "87399e81-7f15-4b13-8f71-e87f38af644e",
+      "name": "Sos chili Sriracha z czosnkiem, ostry (51% chili) 730ml - Flying Goose",
+      "slug": "sos-chili-sriracha-z-czosnkiem-ostry-51-chili-730ml-flying-goose",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Chili 51%, czosnek 22%, cukier, sól, woda, regulator kwasowości E330, substancja wzmacniająca E621, stabilizator E415, substancja konserwująca E202, E220",
+        "storageZone": null,
+        "pricePerUnit": "41.78",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 0.9,
+          "salt": 9,
+          "carbs": 26,
+          "sugar": 23,
+          "protein": 3.1,
+          "calories": 132,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Indie",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Chili 51%, czosnek 22%, cukier, sól, woda, regulator kwasowości E330, substancja wzmacniająca E621, stabilizator E415, substancja konserwująca E202, E220",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "41.78",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 0.9,
+          "salt": 9,
+          "carbs": 26,
+          "sugar": 23,
+          "protein": 3.1,
+          "calories": 132,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.2
+        },
+        "countryOfOrigin": "Indie",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The exact-EAN 730ml extra-garlic product is shelf stable before opening; conflicting old and current formula/allergen panels are deliberately held.",
+      "evidence": [
+        {
+          "url": "https://www.asia-in.de/Flying-Goose-Sriracha-Chilisauce-mit-extra-Knoblauch-brauner-Deckel-730-ml",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8853662056104 and ambient dry storage."
+        },
+        {
+          "url": "https://www.flyinggoosebrand.com/product/sriracha-extra-garlic/",
+          "kind": "manufacturer-product",
+          "supports": "Manufacturer confirms the brown-cap extra-garlic product identity and current formula."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/sos-chili-sriracha-z-czosnkiem-ostry-51-chili-730ml-flying-goose",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000200",
+      "productId": "b738fcfa-dba8-44a1-b496-dfb2a8dcb59b",
+      "variantId": "2a31a8f8-958e-40e0-a412-2c3b3b0fb2cb",
+      "name": "Sos chili Sriracha, bardzo ostry (chili 61%) 730ml - Flying Goose",
+      "slug": "sos-chili-sriracha-bardzo-ostry-chili-61-730ml-flying-goose",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Chili 61%, cukier, czosnek, sól, woda, kwasek cytrynowy E330, E260, wzmacniacz smaku: glutamat E621, środek zagęszczający ksantan E415, konserwant E20",
+        "storageZone": null,
+        "pricePerUnit": "34.93",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 1.3,
+          "salt": 7.2,
+          "carbs": 59,
+          "sugar": 18,
+          "protein": 1.8,
+          "calories": 122,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Indie",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Chili 61%, cukier, czosnek, sól, woda, kwasek cytrynowy E330, E260, wzmacniacz smaku: glutamat E621, środek zagęszczający ksantan E415, konserwant E20",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "34.93",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 1.3,
+          "salt": 7.2,
+          "carbs": 59,
+          "sugar": 18,
+          "protein": 1.8,
+          "calories": 122,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Indie",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "An exact-GTIN importer specification requires cool, dry ambient storage; the inconsistent product name and nutrition are held for physical-label review.",
+      "evidence": [
+        {
+          "url": "https://storage.googleapis.com/service-file-documents-public-bucket-prod/attribute_file/b894816c-cc7e-4337-bca8-8ea805ac8194",
+          "kind": "importer-technical-sheet",
+          "supports": "Exact GTIN 8853662056029, 730ml product, storage, origin, and allergen matrix."
+        },
+        {
+          "url": "https://kimchi.pl/product-pol-838.html",
+          "kind": "supplier-label",
+          "supports": "Exact historical Polish 61% chilli 730ml product and dry cool storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/sos-chili-sriracha-bardzo-ostry-chili-61-730ml-flying-goose",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000201",
+      "productId": "a938c19f-4922-4203-af85-360607fe85e5",
+      "variantId": "00fb0562-c43b-4a6a-a43c-e8b82d008f03",
+      "name": "Syrop kukurydziany 100% 2,45kg - CJO Essential",
+      "slug": "syrop-kukurydziany-100-2-45kg-cjo-essential",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Syrop glukozowy z kukurydzy 100%",
+        "storageZone": null,
+        "pricePerUnit": "23.22",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 76,
+          "sugar": 76,
+          "protein": 0,
+          "calories": 304,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Syrop glukozowy z kukurydzy 100%",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "23.22",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 76,
+          "sugar": 76,
+          "protein": 0,
+          "calories": 304,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Two exact-EAN sources identify the 2.45kg CJO corn syrup and specify room-temperature storage; other metadata remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://kocket.de/products/chung-jung-one-maissirup-2-45kg",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8801052451039, 2.45kg identity, and room-temperature storage."
+        },
+        {
+          "url": "https://store.shopping.yahoo.co.jp/kankoku-ichiba/3017.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact EAN and storage guidance."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/syrop-kukurydziany-100-2-45kg-cjo-essential",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000206",
+      "productId": "f0d8fa02-6e6b-4b63-8a69-6dfd5bedde59",
+      "variantId": "42a0d380-2e0a-4757-a131-0383cbff8568",
+      "name": "Pasta Harissa ostra (chili 87%) 70g - Le Phare Du Cap Bon",
+      "slug": "pasta-harissa-ostra-chili-87-70g-le-phare-du-cap-bon",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f",
+          "name": "Pasty smakowe",
+          "slug": "pasty-smakowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Czerwona papryka ostra 87%, czosnek, kolendra, sól, kminek",
+        "storageZone": null,
+        "pricePerUnit": "99.86",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2.6,
+          "salt": 2.3,
+          "carbs": 8.3,
+          "sugar": 2.6,
+          "protein": 3.1,
+          "calories": 69,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tunezja",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "142af5dc-2ab5-4ae8-a44c-76ba71847c0f",
+          "name": "Pasty smakowe",
+          "slug": "pasty-smakowe",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Czerwona papryka ostra 87%, czosnek, kolendra, sól, kminek",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "99.86",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 2.6,
+          "salt": 2.3,
+          "carbs": 8.3,
+          "sugar": 2.6,
+          "protein": 3.1,
+          "calories": 69,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Tunezja",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 70g Harissa sources specify dry ambient storage before opening and refrigeration only after opening; allergen and nutrition data remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://www.tesco.ie/shop/en-IE/products/271614153",
+          "kind": "retailer-label",
+          "supports": "Exact 70g product, formulation, nutrition, and storage guidance."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-850-Pasta-Harissa-ostra-chili-87-70g-Le-Phare-Du-Cap-Bon.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 6194049100044 and dry cool storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/pasta-harissa-ostra-chili-87-70g-le-phare-du-cap-bon",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000209",
+      "productId": "d56cf741-5152-46ae-a325-738965bccaf9",
+      "variantId": "1cf4c050-6180-4bac-8b25-8120d61cb3f7",
+      "name": "Sos chili Sambal Oelek (chili 86%) 750g - Windmill",
+      "slug": "sos-chili-sambal-oelek-chili-86-750g-windmill",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Chili (86%), sól, regulatory kwasowości: kwas octowy (E260), kwas cytrynowy (E330); substancja konserwująca: benzoesan sodu (E211)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "25.32",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 11.5,
+          "carbs": 3.6,
+          "sugar": 3.6,
+          "protein": 1.6,
+          "calories": 31,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Chili (86%), sól, regulatory kwasowości: kwas octowy (E260), kwas cytrynowy (E330); substancja konserwująca: benzoesan sodu (E211)",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "25.32",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 11.5,
+          "carbs": 3.6,
+          "sugar": 3.6,
+          "protein": 1.6,
+          "calories": 31,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Holandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "The exact-GTIN manufacturer-fed specification and an independent exact-EAN retailer identify production in the Netherlands; existing storage and allergen arrays remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://www.solucious.be/tech-fiche/123258/pdf?_locale=nl",
+          "kind": "manufacturer-fed-specification",
+          "supports": "Exact EAN 8728200180033, 750g product, Netherlands production, storage, and allergen matrix."
+        },
+        {
+          "url": "https://www.burgen-stern.shop/Windmill-Sambal-Oelek-750g/700000478",
+          "kind": "retailer-label",
+          "supports": "Independent exact EAN, formula, storage, and Netherlands origin."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/sos-chili-sambal-oelek-chili-86-750g-windmill",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000213",
+      "productId": "cefdee71-32c7-4a38-8d6f-15cb95873846",
+      "variantId": "1cc5a067-c59c-4a08-a4f2-d4f7822e1864",
+      "name": "Pasta Inaka Aka Miso, ciemna 400g - Hikari Miso",
+      "slug": "pasta-inaka-aka-miso-ciemna-400g-hikari-miso",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "35345a48-aebd-4dc5-a6d1-7bc6c27a9183",
+          "name": "Pasta miso",
+          "slug": "pasta-miso",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": null,
+        "storageZone": "CHILLED",
+        "pricePerUnit": "27.47",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 5.8,
+          "salt": 11.3,
+          "carbs": 25,
+          "sugar": 11.5,
+          "protein": 10,
+          "calories": 194,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.9
+        },
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "35345a48-aebd-4dc5-a6d1-7bc6c27a9183",
+          "name": "Pasta miso",
+          "slug": "pasta-miso",
+          "isActive": true
+        },
+        "allergens": [
+          "soybeans"
+        ],
+        "ingredients": "Woda, soja, ryż, sól, alkohol.",
+        "storageZone": "CHILLED",
+        "pricePerUnit": "27.47",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 5.8,
+          "salt": 11.3,
+          "carbs": 25,
+          "sugar": 11.5,
+          "protein": 10,
+          "calories": 194,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.9
+        },
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "allergens",
+        "ingredients"
+      ],
+      "confidence": "high",
+      "reason": "Hikari specifies the exact 400g Inaka Miso ingredients and a positive soy allergen declaration, corroborated by exact-EAN retailers.",
+      "evidence": [
+        {
+          "url": "https://hikarimiso.com/products/inaka-miso/",
+          "kind": "manufacturer-label",
+          "supports": "Exact Inaka Miso 400g ingredients and Contains Soybeans declaration."
+        },
+        {
+          "url": "https://www.aasiamarket.fi/en/product/miso-inaka-red-miso-fi4702/",
+          "kind": "retailer-label",
+          "supports": "Independent exact EAN 4902663007531 and pack identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/pasta-inaka-aka-miso-ciemna-400g-hikari-miso",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000246",
+      "productId": "3dbd7fe1-78ee-47c9-b16e-fc2d23724d74",
+      "variantId": "4bbf8ce8-152e-4d2b-8bc2-332d6211534b",
+      "name": "Wino ryżowe do gotowania Mijak (Mirin) imbirowo-śliwkowe 410ml - CJO Essential",
+      "slug": "wino-ryzowe-do-gotowania-mijak-mirin-imbirowo-sliwkowe-410ml-cjo-essential",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5b5e9a99-a4c6-4d2a-b542-cc678f688de9",
+          "name": "Octy i winne przyprawy",
+          "slug": "octy-i-winne-przyprawy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Woda, syrop kukurydziany, cukier, ocet, ekstrakt imbirowy, sól, wino ryżowe, kwas cytrynowy, kwas jabłkowy, kwas mlekowy, kwas bursztynowy, koncentrat ze śliwki",
+        "storageZone": null,
+        "pricePerUnit": "41.95",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 0.1,
+          "salt": 1.1,
+          "carbs": 38.7,
+          "sugar": 34.8,
+          "protein": 0.1,
+          "calories": 156,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5b5e9a99-a4c6-4d2a-b542-cc678f688de9",
+          "name": "Octy i winne przyprawy",
+          "slug": "octy-i-winne-przyprawy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Woda, syrop kukurydziany, cukier, ocet, ekstrakt imbirowy, sól, wino ryżowe, kwas cytrynowy, kwas jabłkowy, kwas mlekowy, kwas bursztynowy, koncentrat ze śliwki",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "41.95",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 0.1,
+          "salt": 1.1,
+          "carbs": 38.7,
+          "sugar": 34.8,
+          "protein": 0.1,
+          "calories": 156,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Two exact 410ml CJO cooking-sauce listings require dry ambient storage; conflicting formulation and nutrition panels remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://jcook.pl/produkt/ryzowe-wino-do-gotowania-chung-jung-one-410ml/",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 8801052135779 and product identity."
+        },
+        {
+          "url": "https://www.tjinstoko.eu/en/chung-jung-one-koreaanse-kooksaus-410ml.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact product/formula and dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/wino-ryzowe-do-gotowania-mijak-mirin-imbirowo-sliwkowe-410ml-cjo-essential",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000248",
+      "productId": "4b6f2741-deb9-45b7-ab4e-dd17443e8f0c",
+      "variantId": "e5b92453-ce20-430f-a133-eb86181ff12e",
+      "name": "Syrop ryżowy 100% 700g - CJO Essential",
+      "slug": "syrop-ryzowy-100-700g-cjo-essential",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Skrobia ryżowa 100%",
+        "storageZone": null,
+        "pricePerUnit": "32.71",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 79.2,
+          "sugar": 55.8,
+          "protein": 0.9,
+          "calories": 320,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "691e2a51-4453-4fd9-bd02-f9abdf9a0def",
+          "name": "Sosy, marynaty",
+          "slug": "sosy-marynaty",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Skrobia ryżowa 100%",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "32.71",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0,
+          "salt": 0,
+          "carbs": 79.2,
+          "sugar": 55.8,
+          "protein": 0.9,
+          "calories": 320,
+          "servingSize": "w 100g/100ml"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 700g 100%-rice-starch product sources specify cool, dry ambient storage; unresolved EAN, nutrition, and wrong-size gallery image are held.",
+      "evidence": [
+        {
+          "url": "https://www.tjinstoko.eu/en/rice-malt-syrup-700g.html",
+          "kind": "retailer-label",
+          "supports": "Exact 700g rice syrup formula and cool, dry storage."
+        },
+        {
+          "url": "https://prod.danawa.com/info/?pcode=6953350",
+          "kind": "product-database",
+          "supports": "Independent Daesang 700g 100% rice product identity."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/syrop-ryzowy-100-700g-cjo-essential",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000255",
+      "productId": "369bef7e-2187-4b02-b56b-e112ad3b6c11",
+      "variantId": "bff19bcf-a0e9-4fe9-a6d3-27e05aa52671",
+      "name": "Zaprawa do ryżu 500ml - Miyata",
+      "slug": "zaprawa-do-ryzu-500ml-miyata",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "5b5e9a99-a4c6-4d2a-b542-cc678f688de9",
+          "name": "Octy i winne przyprawy",
+          "slug": "octy-i-winne-przyprawy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ocet 55%, cukier, sól",
+        "storageZone": null,
+        "pricePerUnit": "39.20",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 1,
+          "salt": 6.2,
+          "carbs": 37,
+          "sugar": 36,
+          "protein": 0.5,
+          "calories": 147,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "5b5e9a99-a4c6-4d2a-b542-cc678f688de9",
+          "name": "Octy i winne przyprawy",
+          "slug": "octy-i-winne-przyprawy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ocet 55%, cukier, sól",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "39.20",
+        "unitOfMeasure": "LITER",
+        "nutritionFacts": {
+          "fat": 1,
+          "salt": 6.2,
+          "carbs": 37,
+          "sugar": 36,
+          "protein": 0.5,
+          "calories": 147,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.1
+        },
+        "countryOfOrigin": "Chiny",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Independent exact 500ml Miyata seasoned-vinegar listings specify shelf-stable storage before opening; conflicting EAN generations are not changed.",
+      "evidence": [
+        {
+          "url": "https://www.cocowoods.cz/en/miyata-sushi-vinegar-500ml/",
+          "kind": "retailer-label",
+          "supports": "Exact 500ml formula and storage guidance."
+        },
+        {
+          "url": "https://www.kuchnieorientu.pl/zaprawa-do-sushi-miyata-500ml/",
+          "kind": "retailer-label",
+          "supports": "Independent exact Miyata 500ml product and ambient storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/zaprawa-do-ryzu-500ml-miyata",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000154",
+      "productId": "ce3e9adb-083c-4b07-b5b2-2bcda8671cb5",
+      "variantId": "9dcca02b-1692-4fa5-92e0-a4a5a98830b2",
+      "name": "Ryż do sushi Calrose Kimpo 4,5kg",
+      "slug": "ryz-do-sushi-calrose-kimpo-4-5kg",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "62db9128-0d76-4643-87fb-e9c5e875e9cf",
+          "name": "Ryż i inne ziarna",
+          "slug": "ryż-i-inne-ziarna",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% ziaren ryżu Calrose",
+        "storageZone": null,
+        "pricePerUnit": "18.20",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": null,
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "62db9128-0d76-4643-87fb-e9c5e875e9cf",
+          "name": "Ryż i inne ziarna",
+          "slug": "ryż-i-inne-ziarna",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% ziaren ryżu Calrose",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "18.20",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "USA",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone",
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "The Polish distributor and an independent exact-EAN listing identify California/USA-grown Calrose rice and dry ambient storage; conflicting calorie labels are held.",
+      "evidence": [
+        {
+          "url": "https://panasiapolska.abstore.pl/ryz-do-sushi-ryz-kimpo-4-5kg%2Cc52%2Cp116%2Co1%2Cs1001%2Cpl.html",
+          "kind": "distributor-label",
+          "supports": "Exact Kimpo 4.5kg product, California USA origin, and storage."
+        },
+        {
+          "url": "https://sklepsoasian.com/en/products/kimpo-sushi-rice-4-5-kg-2123.html",
+          "kind": "retailer-label",
+          "supports": "Exact EAN 9120027410741, USA-grown rice, and dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/ryz-do-sushi-calrose-kimpo-4-5kg",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000174",
+      "productId": "acbbe570-b0a7-4021-9531-7beea26e4764",
+      "variantId": "59d88dba-1a95-4d6e-bc3f-67083406157e",
+      "name": "Makaron ryżowy czerwony Hiep Long 500g",
+      "slug": "makaron-ryzowy-czerwony-hiep-long-500g",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "f331b4dd-5539-4137-8320-e14795d23f5f",
+          "name": "Makaron ryżowy",
+          "slug": "makaron-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ryż, woda, sól",
+        "storageZone": null,
+        "pricePerUnit": "23.98",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Wietnam",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "f331b4dd-5539-4137-8320-e14795d23f5f",
+          "name": "Makaron ryżowy",
+          "slug": "makaron-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ryż, woda, sól",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "23.98",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "calories": 350,
+          "fat": 0.01,
+          "saturatedFat": 0,
+          "carbs": 78,
+          "protein": 5,
+          "servingSize": "100g"
+        },
+        "countryOfOrigin": "Wietnam",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone",
+        "nutritionFacts"
+      ],
+      "confidence": "high",
+      "reason": "The exact-EAN Polish importer provides the 7mm/500g nutrition panel and dry storage, independently corroborated; disputed salt and threshold-only sugar values are omitted rather than guessed.",
+      "evidence": [
+        {
+          "url": "https://asiafoods.pl/pl/product/2618%2Cmakaron-ryz-czerwony-7mm-500g-20opk-krt",
+          "kind": "importer-label",
+          "supports": "Exact EAN 8936005950403, 7mm/500g identity, nutrition, Vietnam origin, and dry storage."
+        },
+        {
+          "url": "https://www.smakiorientu.waw.pl/products-2/product/makaron-ry%C5%BCowy-7mm-500g.html",
+          "kind": "retailer-label",
+          "supports": "Independent exact EAN and substantially matching nutrition/storage data."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/makaron-ryzowy-czerwony-hiep-long-500g",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000301",
+      "productId": "8a55515a-bece-45f7-80b7-376097b6c012",
+      "variantId": "e43114f5-64f1-4089-b77c-fc41966844f0",
+      "name": "Makaron z brązowego ryżu Vermicelli, nitki 200g - MAMA",
+      "slug": "makaron-z-brazowego-ryzu-vermicelli-nitki-200g-mama",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "f331b4dd-5539-4137-8320-e14795d23f5f",
+          "name": "Makaron ryżowy",
+          "slug": "makaron-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ryż pełnoziarnisty (brązowy) 60%, ryż 20%, otręby ryżowe 15%, skrobia z tapioki 5%",
+        "storageZone": null,
+        "pricePerUnit": "49.95",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "f331b4dd-5539-4137-8320-e14795d23f5f",
+          "name": "Makaron ryżowy",
+          "slug": "makaron-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Ryż pełnoziarnisty (brązowy) 60%, ryż 20%, otręby ryżowe 15%, skrobia z tapioki 5%",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "49.95",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "calories": 350,
+          "fat": 1.5,
+          "saturatedFat": 0.5,
+          "carbs": 72,
+          "sugar": 0,
+          "protein": 8.8,
+          "salt": 0.08,
+          "servingSize": "100g"
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone",
+        "nutritionFacts"
+      ],
+      "confidence": "high",
+      "reason": "Three current exact-GTIN listings agree on the MAMA 200g brown-rice formula, nutrition panel, and dry ambient storage; no allergen-free declaration is inferred.",
+      "evidence": [
+        {
+          "url": "https://www.foodland-express.com/rice-noodles/whole-grain-rice-vermicelli-mama-200-g/",
+          "kind": "retailer-label",
+          "supports": "Exact brown-rice 200g product, GTIN, nutrition, and dry storage."
+        },
+        {
+          "url": "https://comenzi.farmaciatei.ro/dieta-si-wellness/paine-si-paste/paste/taitei-vermicelli-orez-brun-integral-mama-200-g-econatur-p393977",
+          "kind": "retailer-label",
+          "supports": "Independent exact-GTIN product with matching nutrition panel."
+        },
+        {
+          "url": "https://www.piccantino.es/mama-platos-asiaticos-y-fideos-instantaneos/fideos-de-arroz-integral-vermicelli",
+          "kind": "retailer-label",
+          "supports": "Third exact product listing corroborating the panel and pack."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/makaron-z-brazowego-ryzu-vermicelli-nitki-200g-mama",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000405",
+      "productId": "ed06e3fe-ff8a-4b32-ac90-b9de823754fa",
+      "variantId": "8c6aec81-4ba7-496a-957d-09f2b00aa250",
+      "name": "Jjajang Men, makaron z sosem z czarnej fasoli, łagodny 200g - Paldo",
+      "slug": "jjajang-men-makaron-z-sosem-z-czarnej-fasoli-lagodny-200g-paldo",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "strong>Makaron: mąka pszenna, olej palmowy, modyfikowana skrobia ziemniaczana, sól, olej emulgowany (pestki słonecznika, lecytyna sojowa), regulatory kwasowości: E501, E500, E339, ekstrakt z cebuli, zagęszczacz: E412, skrobia ziemniaczana, olej rzepakowy Sos: cebula, woda, sos z czarnej fasoli (pszenica, soja, sól), olej rzepakowy, kapusta, ziemniaki, cukier, sos sojowy w proszku (soja, pszenica, sól), białko sojowe, skrobia ziemniaczana, sól, ekstrakt z imbiru, wzmacniacz smaku: E635, regulator kwasowości: E500",
+        "storageZone": null,
+        "pricePerUnit": "39.95",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans"
+        ],
+        "ingredients": "Makaron: mąka pszenna, olej palmowy, modyfikowana skrobia ziemniaczana, sól, olej emulgowany (pestki słonecznika, lecytyna sojowa), regulatory kwasowości: E501, E500, E339, ekstrakt z cebuli, zagęszczacz: E412, skrobia ziemniaczana, olej rzepakowy. Sos: cebula, woda, sos z czarnej fasoli (pszenica, soja, sól), olej rzepakowy, kapusta, ziemniaki, cukier, sos sojowy w proszku (soja, pszenica, sól), białko sojowe, skrobia ziemniaczana, sól, ekstrakt z imbiru, wzmacniacz smaku: E635, regulator kwasowości: E500",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "39.95",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "calories": 286,
+          "fat": 10,
+          "saturatedFat": 2.7,
+          "carbs": 44,
+          "sugar": 4,
+          "protein": 6.6,
+          "salt": 2.04,
+          "servingSize": "100g"
+        },
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": [
+          "fish",
+          "crustaceans",
+          "molluscs",
+          "milk",
+          "eggs",
+          "nuts",
+          "peanuts",
+          "celery",
+          "mustard",
+          "sesame",
+          "sulphites"
+        ]
+      },
+      "changedFields": [
+        "allergens",
+        "mayContainAllergens",
+        "storageZone",
+        "nutritionFacts",
+        "ingredients"
+      ],
+      "confidence": "high",
+      "reason": "The exact 200g EU label and Paldo identify wheat/soy allergens, the trace declaration, nutrition, and ambient storage; the malformed leading HTML fragment and missing section separator are repaired without rewriting the formula.",
+      "evidence": [
+        {
+          "url": "https://paldofood.com/en/sub/product/list.php?idx=25&mode=view",
+          "kind": "manufacturer-label",
+          "supports": "Paldo confirms soy, wheat, and gluten allergens for Jjajang Men."
+        },
+        {
+          "url": "https://paleczkami.pl/product-pol-2170-Jjajang-Men-makaron-z-sosem-z-czarnej-fasoli-lagodny-200g-Paldo.html",
+          "kind": "eu-retailer-label",
+          "supports": "Exact 200g EU product, nutrition, positive allergens, trace warning, and storage."
+        },
+        {
+          "url": "https://rozetka.com.ua/ua/paldo-648436100590/p499405499/",
+          "kind": "retailer-label",
+          "supports": "Independent exact UPC 648436100590 and label data."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/jjajang-men-makaron-z-sosem-z-czarnej-fasoli-lagodny-200g-paldo",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001154",
+      "productId": "8cc82ac5-1ffb-4fe4-8ac6-ddfe6bfd8ce4",
+      "variantId": "29994e05-9254-43c7-8737-226ce77a45cf",
+      "name": "Ramen Kumamoto Mokkosu o smaku tonkotsu 104g - Itsuki",
+      "slug": "ramen-kumamoto-mokkosu-o-smaku-tonkotsu-104g-itsuki",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Makaron: mąka pszenna , sól, węglan sodu. Zupa: hydrolizowane białko (kukurydziane, pszenne , sojowe ), sól, cebula w proszku, sproszkowane mleko sojowe , cukier, ekstrakt drożdży, sos sojowy w proszku (odtłuszczona soja , pszenica , sól, soja , dekstryna), sproszkowany olej palmowy (dekstryna, sól sodowa oktenylobursztynianu skrobiowego), glutaminian sodu, czosnek w proszku, zielona cebulka w proszku, miso w proszku ( soja , ryż, sól), imbir w proszku, przyprawy, rybonukleotydy disodowe. Olej: aromatyzowany olej palmowy, czosnek, olej sezamowy , ekstrakt z przypraw.",
+        "storageZone": null,
+        "pricePerUnit": "133.65",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "sesame"
+        ],
+        "ingredients": "Makaron: mąka pszenna , sól, węglan sodu. Zupa: hydrolizowane białko (kukurydziane, pszenne , sojowe ), sól, cebula w proszku, sproszkowane mleko sojowe , cukier, ekstrakt drożdży, sos sojowy w proszku (odtłuszczona soja , pszenica , sól, soja , dekstryna), sproszkowany olej palmowy (dekstryna, sól sodowa oktenylobursztynianu skrobiowego), glutaminian sodu, czosnek w proszku, zielona cebulka w proszku, miso w proszku ( soja , ryż, sól), imbir w proszku, przyprawy, rybonukleotydy disodowe. Olej: aromatyzowany olej palmowy, czosnek, olej sezamowy , ekstrakt z przypraw.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "133.65",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Japonia",
+        "mayContainAllergens": [
+          "milk",
+          "eggs",
+          "fish",
+          "crustaceans"
+        ]
+      },
+      "changedFields": [
+        "allergens",
+        "mayContainAllergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact 104g EU animal-free variant listings match the current ingredients and declare wheat, soy, sesame, and listed traces; conflicting nutrition and EAN revisions are held.",
+      "evidence": [
+        {
+          "url": "https://kimchi.pl/product-pol-4777-Ramen-Kumamoto-Mokkosu-o-smaku-tonkotsu-104g-Itsuki.html",
+          "kind": "supplier-label",
+          "supports": "Exact Polish 104g listing with ingredients, positive allergens, trace warning, and storage."
+        },
+        {
+          "url": "https://www.nikankitchen.com/en/products/567/itsuki-kumamoto-mokkosu-ramen-104g",
+          "kind": "retailer-label",
+          "supports": "Independent exact 104g animal-free variant and allergen/storage data."
+        },
+        {
+          "url": "https://longdan.co.uk/zh-hant/products/itsuki-kumamoto-mokkosu-animal-free-ramen-104g",
+          "kind": "retailer-label",
+          "supports": "Third exact 104g variant corroborating identity and storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/ramen-kumamoto-mokkosu-o-smaku-tonkotsu-104g-itsuki",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001210",
+      "productId": "9f872603-dec3-447e-9c8f-c6704f3a50a6",
+      "variantId": "0ab7f872-b3cb-49e6-9378-99727467f28a",
+      "name": "Ryż Basmati Everyday 1kg - India Gate",
+      "slug": "ryz-basmati-everyday-1kg-india-gate",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "62db9128-0d76-4643-87fb-e9c5e875e9cf",
+          "name": "Ryż i inne ziarna",
+          "slug": "ryż-i-inne-ziarna",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% ryż basmati",
+        "storageZone": null,
+        "pricePerUnit": "18.20",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Indie",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "62db9128-0d76-4643-87fb-e9c5e875e9cf",
+          "name": "Ryż i inne ziarna",
+          "slug": "ryż-i-inne-ziarna",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% ryż basmati",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "18.20",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Indie",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The manufacturer and an independent exact-pack listing specify cool, dry storage away from sunlight; nutrition and allergen declarations remain held.",
+      "evidence": [
+        {
+          "url": "https://www.indiagatefoods.com/our-range/india-gate-everyday-rice/",
+          "kind": "manufacturer-label",
+          "supports": "Official Everyday Basmati pack, India origin, and cool dry storage."
+        },
+        {
+          "url": "https://dookan.com/products/india-gate-everyday-basmati-rice-1kg",
+          "kind": "retailer-label",
+          "supports": "Independent exact India Gate Everyday 1kg identity and storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/ryz-basmati-everyday-1kg-india-gate",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-001374",
+      "productId": "cbdef7c1-deaf-493a-a97e-8e9b8c314377",
+      "variantId": "6a7c343b-ff4a-4be2-86c4-58bb66eb8875",
+      "name": "Danie makaronowe Bodle Bodle Stir-fry Cheese Ramen o smaku serowym, lekko pikantne 120g - Ottogi",
+      "slug": "danie-makaronowe-bodle-bodle-stir-fry-cheese-ramen-o-smaku-serowym-lekko-pikantne-120g-ottogi",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mąka pszenna , modyfikowana skrobia z tapioki, olej palmowy, ser ( ser , pszenica , olej palmowy, dekstryna), gluten pszenny , sól, aromat serowy (cukier, glukoza, sól, sztuczne aromaty), cukier, pszenica , zemulgowany olej (oligosacharyd, olej sojowy , tokoferol, lecytyna, mono- i diglicerydy kwasów tłuszczowych), glukoza, przyprawa drożdżowa (sól, dekstryna, ekstrakt drożdżowy), ekstrakt drożdżowy, skrobia ziemniaczana, regulatory kwasowości (węglan sodu, węglan potasu, trójpolifosforan sodu, kwasowy pirofosforan sodu), śmietanka w proszku ( mleko ), glutaminian sodu, sproszkowane warzywa (czosnek, dekstryna, cebula), glicyna, guma ksantanowa, sproszkowana czerwona papryka, pietruszka, ekstrakt drożdżowy, inozynian disodu, guanylan disodowy, ekstrakt chili, kurkuma, ekstrakt z zielonej herbaty, ryboflawina.",
+        "storageZone": null,
+        "pricePerUnit": "67.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "7da30509-aad0-475e-ab39-ca7764bffda2",
+          "name": "Ramyun / Ramen",
+          "slug": "ramyun-ramen",
+          "isActive": true
+        },
+        "allergens": [
+          "cereals",
+          "soybeans",
+          "milk"
+        ],
+        "ingredients": "Mąka pszenna , modyfikowana skrobia z tapioki, olej palmowy, ser ( ser , pszenica , olej palmowy, dekstryna), gluten pszenny , sól, aromat serowy (cukier, glukoza, sól, sztuczne aromaty), cukier, pszenica , zemulgowany olej (oligosacharyd, olej sojowy , tokoferol, lecytyna, mono- i diglicerydy kwasów tłuszczowych), glukoza, przyprawa drożdżowa (sól, dekstryna, ekstrakt drożdżowy), ekstrakt drożdżowy, skrobia ziemniaczana, regulatory kwasowości (węglan sodu, węglan potasu, trójpolifosforan sodu, kwasowy pirofosforan sodu), śmietanka w proszku ( mleko ), glutaminian sodu, sproszkowane warzywa (czosnek, dekstryna, cebula), glicyna, guma ksantanowa, sproszkowana czerwona papryka, pietruszka, ekstrakt drożdżowy, inozynian disodu, guanylan disodowy, ekstrakt chili, kurkuma, ekstrakt z zielonej herbaty, ryboflawina.",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "67.50",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": null,
+        "countryOfOrigin": "Korea Południowa",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "allergens",
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Exact-GTIN export labels match the current wheat/soy/milk formulation and dry ambient storage; conflicting nutrition and trace panels are not changed.",
+      "evidence": [
+        {
+          "url": "https://shop.pxgo.com.tw/hourArrive/goods/241828-07010229-8801045009209",
+          "kind": "retailer-label",
+          "supports": "Exact GTIN 8801045009209, 120g formula, and allergen identity."
+        },
+        {
+          "url": "https://kurogami.com/en/product/cheese-stir-fry-instant-noodles-ramen-ottogi-120-g",
+          "kind": "retailer-label",
+          "supports": "Independent exact product with wheat, soy, milk ingredients and dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/danie-makaronowe-bodle-bodle-stir-fry-cheese-ramen-o-smaku-serowym-lekko-pikantne-120g-ottogi",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000047",
+      "productId": "6a1f47f9-7b57-4832-9795-3dd3e442a21b",
+      "variantId": "5104733a-fc84-4a97-9874-5b109e15dcfb",
+      "name": "Makaron ryżowy 3mm 400g Farmer",
+      "slug": "makaron-ryzowy-3mm-400g-farmer",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "f331b4dd-5539-4137-8320-e14795d23f5f",
+          "name": "Makaron ryżowy",
+          "slug": "makaron-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mąka ryżowa 90%, woda",
+        "storageZone": null,
+        "pricePerUnit": "22.47",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.8,
+          "carbs": 80.3,
+          "sugar": 0,
+          "protein": 7,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.3
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "f331b4dd-5539-4137-8320-e14795d23f5f",
+          "name": "Makaron ryżowy",
+          "slug": "makaron-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mąka ryżowa 90%, woda",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "22.47",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.8,
+          "carbs": 80.3,
+          "sugar": 0,
+          "protein": 7,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.3
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "The current exact-EAN fact sheet and an independent historical exact listing specify dry room-temperature storage; conflicting formula percentages remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://cdn.metro-group.com/rs/rs_fir_379550001001_sr.pdf",
+          "kind": "retailer-fact-sheet",
+          "supports": "Exact EAN 4316734763668 and room-temperature dry storage."
+        },
+        {
+          "url": "https://zakupy.auchan.pl/products/makaron-ry%C5%BCowy-3mm-kk-400-g/00219340",
+          "kind": "retailer-label",
+          "supports": "Independent exact 3mm/400g identity and cool dry storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/makaron-ryzowy-3mm-400g-farmer",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000048",
+      "productId": "d7a3e40d-8c0b-4fa2-87b4-eda855f18c80",
+      "variantId": "d91b353e-cb5b-46c2-8ae5-5ddc34df5dfe",
+      "name": "Makaron ryżowy 5mm 400g Farmer",
+      "slug": "makaron-ryzowy-5mm-400g-farmer",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "f331b4dd-5539-4137-8320-e14795d23f5f",
+          "name": "Makaron ryżowy",
+          "slug": "makaron-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mąka ryżowa 90%, woda",
+        "storageZone": null,
+        "pricePerUnit": "22.47",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.8,
+          "salt": 0.01,
+          "carbs": 80,
+          "sugar": 0,
+          "protein": 7,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.3
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "f331b4dd-5539-4137-8320-e14795d23f5f",
+          "name": "Makaron ryżowy",
+          "slug": "makaron-ryżowy",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "Mąka ryżowa 90%, woda",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "22.47",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.8,
+          "salt": 0.01,
+          "carbs": 80,
+          "sugar": 0,
+          "protein": 7,
+          "calories": 356,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.3
+        },
+        "countryOfOrigin": "Tajlandia",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "storageZone"
+      ],
+      "confidence": "high",
+      "reason": "Two exact-EAN 5mm/400g listings specify dry ambient storage; conflicting nutrition/formula data remains unchanged.",
+      "evidence": [
+        {
+          "url": "https://cdn.metro-group.com/de/de_fir_305842001001_de.pdf",
+          "kind": "retailer-fact-sheet",
+          "supports": "Exact EAN 4316734763675 and dry storage."
+        },
+        {
+          "url": "https://www.frisco.pl/pid%2C149794/n%2Cfarmer-makaron-ryzowy-%285-mm%29/stn%2Cproduct",
+          "kind": "retailer-label",
+          "supports": "Independent exact-EAN 5mm/400g product and storage."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/makaron-ryzowy-5mm-400g-farmer",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    },
+    {
+      "sku": "ADG-000059",
+      "productId": "7884aa86-036b-4036-994a-b1c040deba29",
+      "variantId": "21949b47-1ab3-46d9-9293-b7290bcda8a0",
+      "name": "Ryż do sushi Kimpo Calrose 9,07 kg",
+      "slug": "ryz-do-sushi-kimpo-calrose-9-07-kg",
+      "expectedUpdatedAt": "2026-07-08T12:12:07.937230+00:00",
+      "status": {
+        "product": {
+          "isActive": true,
+          "isPublished": true,
+          "isVisible": true,
+          "status": "active",
+          "deletedAt": null
+        },
+        "variant": {
+          "isActive": true,
+          "isPublished": false,
+          "isForSale": true,
+          "syncStatus": "synced",
+          "availabilityStatus": "IN_STOCK",
+          "deletedAt": null
+        }
+      },
+      "expected": {
+        "category": {
+          "id": "62db9128-0d76-4643-87fb-e9c5e875e9cf",
+          "name": "Ryż i inne ziarna",
+          "slug": "ryż-i-inne-ziarna",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% ziaren ryżu",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "13.78",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.06,
+          "carbs": 78.5,
+          "sugar": 0.3,
+          "protein": 7.7,
+          "calories": 349,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.22
+        },
+        "countryOfOrigin": null,
+        "mayContainAllergens": []
+      },
+      "target": {
+        "category": {
+          "id": "62db9128-0d76-4643-87fb-e9c5e875e9cf",
+          "name": "Ryż i inne ziarna",
+          "slug": "ryż-i-inne-ziarna",
+          "isActive": true
+        },
+        "allergens": [],
+        "ingredients": "100% ziaren ryżu",
+        "storageZone": "AMBIENT",
+        "pricePerUnit": "13.78",
+        "unitOfMeasure": "KG",
+        "nutritionFacts": {
+          "fat": 0.5,
+          "salt": 0.06,
+          "carbs": 78.5,
+          "sugar": 0.3,
+          "protein": 7.7,
+          "calories": 349,
+          "servingSize": "w 100g/100ml",
+          "saturatedFat": 0.22
+        },
+        "countryOfOrigin": "USA",
+        "mayContainAllergens": []
+      },
+      "changedFields": [
+        "countryOfOrigin"
+      ],
+      "confidence": "high",
+      "reason": "The exact-EAN Polish distributor and an independent exact-EAN retailer identify USA-grown Calrose rice; existing nutrition and storage remain unchanged.",
+      "evidence": [
+        {
+          "url": "https://b2b.kuchnieswiata.com.pl/calrose-rice-kimpo-9.07-kg",
+          "kind": "distributor-label",
+          "supports": "Exact EAN 9120027410031, 9.07kg pack, USA origin, and storage."
+        },
+        {
+          "url": "https://momokoshop.hu/en/kimpo-premium-sushi-rice-9kg/",
+          "kind": "retailer-label",
+          "supports": "Independent exact EAN and USA origin."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/ryz-do-sushi-kimpo-calrose-9-07-kg",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ],
+  "holds": [
+    {
+      "sku": "ADG-000176",
+      "reason": "Hold: production EAN 8809054400086 does not match the exact Ourhome 500g evidence EAN 9120027415166, which is already assigned to ADG-000177; a physical-label duplicate/identity review is required before mutation.",
+      "evidence": [
+        {
+          "url": "https://www.y-mart.de/ko/kategori/jangnyu-jomiryo/bunmal-jomiryo/awohom-gimchiyong-gochutgaru.9120027415166-1299446487.html",
+          "kind": "retailer-label",
+          "supports": "Binds the proposed metadata to EAN 9120027415166 rather than the production EAN on this held row."
+        },
+        {
+          "url": "https://asiandeligo.eshoper.pro/products/papryka-gochugaru-red-pepper-powder-500g-ourhome",
+          "kind": "public-pdp",
+          "supports": "Confirms the current public product identity and pack description."
+        }
+      ]
+    }
+  ]
+}

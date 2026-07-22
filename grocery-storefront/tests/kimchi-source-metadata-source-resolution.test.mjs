@@ -89,6 +89,18 @@ test('restricts live products to exact cohort IDs while preserving cohort order 
     selectCohortProducts(liveProducts, cohortIds, 1).map((product) => product.id),
     ['product-c'],
   );
+  assert.deepEqual(
+    selectCohortProducts(liveProducts, cohortIds, 1, 1).map((product) => product.id),
+    ['product-a'],
+  );
+  assert.deepEqual(
+    selectCohortProducts(liveProducts, cohortIds, null, 2).map((product) => product.id),
+    [],
+  );
+  assert.throws(
+    () => selectCohortProducts(liveProducts, cohortIds, null, -1),
+    /offset must be a non-negative integer/,
+  );
   assert.throws(
     () => selectCohortProducts(liveProducts, ['product-c', 'not-live'], null),
     /absent from the live published catalog/,

@@ -1,0 +1,303 @@
+decision,id,slug,name,category,firstSku,sourceLegacyId,sourceResolution,sourceUrl,sourceStatus,currentIngredientsPresent,currentAllergensPresent,currentNutritionPresent,currentStorageZone,rawAllergenWarning,candidateAllergens,rawStorageText,candidateStorageZone,rawIngredients,nutritionServingSize,nutritionCaloriesKcal,nutritionEnergyKj,nutritionFat,nutritionSaturatedFat,nutritionCarbs,nutritionSugar,nutritionFiber,nutritionProtein,nutritionSalt,nutritionRaw,dietTraits,productTraits
+review_candidate,613b56fb-6482-4a28-8569-e3f9a774ec4b,platki-suszonego-tunczyka-bonito-katsuobushi-20g,"Płatki suszonego tuńczyka bonito, Katsuobushi 20g",buliony,ADG-000155,KIMCHI-639,historical_product_id_mapping,https://kimchi.pl/product-pol-639.html,200,yes,yes,no,AMBIENT,"Zawiera ryby. Przechowywać w suchym i chłodnym miejscu. Po otwarciu przechowywać szczelnie zamknięte. Produkt rozważany, zamknięty szczelnie w strunowym woreczku. Płatki katsuobushi wyprodukowane przez Wadakyu Europe SL w O Porriño, Hiszpania Na zlecenie Wadakyu Co., LTD w Tokio, Japonia",fish,Przechowywać w suchym i chłodnym miejscu. Po otwarciu przechowywać szczelnie zamknięte.,AMBIENT,"Płatki suszonego tuńczyka bonito 100% Importer Nazwa firmy WADAKYU EUROPE S.L. Adres Pol. Ind. As Gándaras, 47, Parc. 1-1-B 36418 O Porriño, Pontevedra, SPAIN",,,,,,,,,,,,,
+review_candidate,dde98b49-679c-4555-a3c9-76fa8685e152,mleko-kokosowe-70-wyciagu-z-kokosa-w-kartonie-500ml-aroy-d,Mleko kokosowe (70% wyciągu z kokosa) w kartonie 500ml - AROY-D,mleczko-kokosowe,ADG-000163,KIMCHI-682,historical_product_id_mapping,https://kimchi.pl/product-pol-682.html,200,yes,no,yes,AMBIENT,,,"Jeśli tak, nie ma powodów do obaw! Ta, być może nieco zaskakująca metamorfoza faktury nie jest dla mleka kokosowego niczym niezwykłym. Po ciężkiej podróży, leżakowaniu w chłodnej szafce czy przedłużającym się pobycie w lodówce, mleko może ulec rozwarstwianiu oraz gęstnieniu. Dzieje się tak, ponieważ mleko kokosowe jest produktem obfitym w tłuszcze - proces tężenia zachodzi w sposób naturalny i nie wpływa na jego jakość. Przeciętny okres przydatności dla poprawnie przechowywanego mleka kokosowego wynosi od 2 do 5 lat.",AMBIENT,,w 100g/100ml,185,764,19,17,2,2,,1.6,0.05,"(w 100g/100ml)
+Wartość energetyczna
+764kJ/185kcal
+Tłuszcze
+19g
+Węglowodany
+2g
+*w tym cukry
+2g
+Białko
+1,6g
+Sól
+0,05g
+*w tym kwasy tłuszczowe nasycone 17g
+Importer
+Nazwa firmy
+Asian Food Group B.V.
+Adres
+Klopsteen 6 | 5443 PW - The Netherlands",,
+review_candidate,a2b30fec-71ef-480d-ab87-857a66c7ba28,pasta-harissa-ostra-chili-87-135g-le-phare-du-cap-bon,Pasta Harissa ostra (chili 87%) 135g - Le Phare Du Cap Bon,pasty-smakowe,ADG-000168,KIMCHI-728,historical_product_id_mapping,https://kimchi.pl/product-pol-728.html,200,yes,no,yes,,,,,,"Czerwona papryka ostra 87%, czosnek, kolendra, sól, kminek",w 100g/100ml,69,290,2.6,,8.3,2.6,,3.1,2.3,"(w 100g/100ml)
+Wartość energetyczna
+290kJ/69kcal
+Tłuszcze
+2,6g
+Węglowodany
+8,3g
+*w tym cukry
+2,6g
+Białko
+3,1g
+Sól
+2,3g
+*w tym tłuszcze nasycone <0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html)|Kraj pochodzenia:|Tunezja,Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,1a939d8e-aa13-45e1-8419-5aeb2b20238b,papryka-gochugaru-red-pepper-powder-500g-ourhome,Papryka Gochugaru / Red Pepper Powder 500g - OURHOME,przyprawy,ADG-000176,KIMCHI-748,historical_product_id_mapping,https://kimchi.pl/product-pol-748.html,200,yes,no,yes,,,,,,100% czerwona papryka,w 5g,17,69,0.5,0.1,1,1,,1,0,"(w 5g)
+Wartość energetyczna
+69kJ/17kcal
+Tłuszcze
+0,5g
+Węglowodany
+1g
+*w tym cukry
+1g
+*w tym błonnik
+2g
+Białko
+1g
+Sól
+0g
+*w tym kwasy tłuszczowe nasycone 0,1g
+Importer
+Nazwa firmy
+PANASIA POLSKA SP. Z O. O.
+Adres
+ul. Sochaczewska 108 05-850 Macierzysz",,
+review_candidate,34717b00-9905-410c-9334-38a545df6271,papryka-gochugaru-do-kimchi-500g-ourhome,Papryka Gochugaru do kimchi 500g - Ourhome,przyprawy,ADG-000177,KIMCHI-749,historical_product_id_mapping,https://kimchi.pl/product-pol-749.html,200,yes,no,yes,,,,,,100% czerwona papryka,w 5g,17,69,0,0.1,1,1,,1,0,"(w 5g)
+Wartość energetyczna
+69kJ/17kcal
+Tłuszcze
+0
+5g
+Węglowodany
+1g
+*w tym cukry
+1g
+*w tym błonnik
+2g
+Białko
+1g
+Sól
+0g
+*w tym kwasy tłuszczowe nasycone 0,1g
+Importer
+Nazwa firmy
+PANASIA POLSKA SP. Z O. O.
+Adres
+ul. Sochaczewska 108 05-850 Macierzysz",,
+review_candidate,b8ab7c3a-fbf6-4138-b53b-91401309982b,chrzan-wasabi-w-proszku-s-and-b-puszka-30g,Chrzan wasabi w proszku S&B puszka 30g,wasabi,ADG-000191,KIMCHI-796,historical_product_id_mapping,https://kimchi.pl/product-pol-796.html,200,yes,yes,no,,,,,,"skromny, oryginalny proszek wasabi to raptem kilka pyocent. Ładna puszka. 2024-06-26 Filip 5/5 Opinia niepotwierdzona zakupem Wasabi w proszku 30g S&B. Super Troszkę za delikatny, ale prosty skład bez zbędnych dodatków chemicznych. Polecam 2017-12-27 Jacek, Iłża 5/5 Opinia niepotwierdzona zakupem Potwierdzam najlepszw Wasabi . 2017-01-21 Andrzej, Piła 5/5 Opinia niepotwierdzona zakupem Moje najlepsze wasabi. 2016-08-24 Zbigniew, Koszalin 5/5 Opinia niepotwierdzona zakupem Pyszne wasabi o prostym składzie. Małe opakowanie, ale przynajmniej bez niepotrzebnych &34;dodatków&34; typu barwniki. 2016-05-24 Aleksandra, Kraków 5/5 Opinia niepotwierdzona zakupem Wasabi Klasa samo w sobie, bardzo dobre, ostre i do tego w wygodnym opakowaniu. 2016-03-31 Agnieszka, Gdynia, Polska 5/5 Opinia niepotwierdzona zakupem Jak na razie najlepsze wasabi. - gustowne i poręczne opakowanie, - nie za mało i nie za dużo, - wygoda użytkowania, - lepszy smak niż tych wyciskanych, - dużo lepszy skład niż tych wyciskanych, - zaufane źródło pochodzenia - Japonia, - droższe, ale wyważone co do jakości doskonale. 2014-05-17 Konrad, Wrocław 5/5 Opinia niepotwierdzona zakupem Pyyyyszności! 2013-11-19 Elżbieta, Biały Bór Napisz swoją opinię Zapytaj o produkt * sklep@kimchi.pl * Kimchi.pl, ul. Geodetów 176 Budynek F, 05-500 Piaseczno Dane kupującegoAdres będzie na potwierdzeniu zakupu Tel. odbiorcy: Chcę otrzymać fakturę - [x] Nazwa firmy NIP Ulica Nr domu / lokalu Kod pocztowy Miejscowość Adres na fakturzeNIP: Zmień Zapisz Płatność Dostawa Odbiór osobisty - [x] Tel. odbiorcy: - [x] Zmień Numer telefonu Zapisz Nr klienta w systemie kuriera: Zmień Nr klienta w systemie kuriera Zapisz [](https://kimchi.pl/product-pol-796.htmlchangeDelivery) Przepraszamy, ale nie przewidzieliśmy możliwości złożenia zamówienia w obecnej konfiguracji. Możesz kontynuować składanie zamówienia, jednak wyliczenie kosztu dostawy może nie być w tej chwili możliwe. Zostanie on ustalony indywidualnie przez naszą obsługę po przyjęciu zamówienia, po czym skontaktujemy się z Tobą w celu jego potwierdzenia. Jeżeli takie rozwiązanie nie odpowiada Ci, skontaktuj się z nami w celu uzyskania bardziej szczegółowych informacji na temat kosztu dostawy lub możliwości złożenia zamówienia indywidualnie. Zmień adres dostawy Wartość zamówienia: Rabat: Koszt płatności: Koszt przesyłki: Koszt ubezpieczenia: Opłacone z salda: (nadpłaty na koncie klienta) Do zapłaty - [x] Zapoznałem się z moim prawem do odstąpienia od umowy - [x] Wyrażam zgodę i proszę zarazem o spełnienie świadczenia przed upływem terminu do odstąpienia od umowy. Jestem świadomy/a, że udzielając niniejszej zgody tracę moje prawo do odstąpienia od umowy wraz z momentem rozpoczęcia świadczenia - [x] - [x] Wyrażam zgodę i proszę zarazem o rozpoczęcie świadczenia usługi przed upływem terminu do odstąpienia od umowy. Jestem świadomy/a, że w przypadku pełnego wykonania usługi tracę moje prawo do odstąpienia od umowy - [x] Akceptuję, zamawiam i płacę Do zapłaty",,,,,,,,,,,,,
+review_candidate,28810d83-1b5b-453d-b678-1936013f7f67,sos-chili-sriracha-z-czosnkiem-ostry-51-chili-730ml-flying-goose,"Sos chili Sriracha z czosnkiem, ostry (51% chili) 730ml - Flying Goose",sosy-marynaty,ADG-000199,KIMCHI-836,historical_product_id_mapping,https://kimchi.pl/product-pol-836.html,200,yes,no,yes,,,,,,"Chili 51%, czosnek 22%, cukier, sól, woda, regulator kwasowości E330, substancja wzmacniająca E621, stabilizator E415, substancja konserwująca E202, E220",w 100g/100ml,132,558,0.9,0.2,26,23,,3.1,9,"(w 100g/100ml)
+Wartość energetyczna
+558kJ/132kcal
+Tłuszcze
+0,9g
+Węglowodany
+26g
+*w tym cukry
+23g
+Białko
+3,1g
+Sól
+9g
+*w tym kwasy tłuszczowe nasycone 0,2g
+Importer
+Nazwa firmy
+Heuschen & Schrouff OFT B.V.
+Adres
+Sperwerweg 1, 6374 AG Landgraaf, The Netherlands",,
+review_candidate,b738fcfa-dba8-44a1-b496-dfb2a8dcb59b,sos-chili-sriracha-bardzo-ostry-chili-61-730ml-flying-goose,"Sos chili Sriracha, bardzo ostry (chili 61%) 730ml - Flying Goose",sosy-marynaty,ADG-000200,KIMCHI-838,historical_product_id_mapping,https://kimchi.pl/product-pol-838.html,200,yes,no,yes,,,,Przechowywać w suchym i chłodnym miejscu. Po otwarciu przechowywać w lodówce.,AMBIENT,"Chili 61%, cukier, czosnek, sól, woda, regulatory kwasowości: kwas cytrynowy (E330), kwas octowy (E260); wzmacniacz smaku: glutaminian sodu (E621); substancja zagęszczająca: guma ksantanowa (E415); substancja konserwująca: sorbinian potasu (E202)",w 100g/100ml,122,513,1.3,0.1,59,18,,1.8,7.2,"(w 100g/100ml)
+Wartość energetyczna
+513kJ/122kcal
+Tłuszcze
+1,3g
+Węglowodany
+59g
+*w tym cukry
+18g
+Białko
+1,8g
+Sól
+7,2g
+*w tym kwasy tłuszczowe nasycone <0,1g
+Importer
+Nazwa firmy
+ASIA-FOODS Sp. z o.o.
+Adres
+Ul. Dzwonkowa 8, 02-290 Warszawa",,
+review_candidate,a938c19f-4922-4203-af85-360607fe85e5,syrop-kukurydziany-100-2-45kg-cjo-essential,"Syrop kukurydziany 100% 2,45kg - CJO Essential",sosy-marynaty,ADG-000201,KIMCHI-839,historical_product_id_mapping,https://kimchi.pl/product-pol-839.html,200,yes,no,yes,,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,Syrop glukozowy z kukurydzy 100%,w 100g/100ml,304,1247,0,,76,76,,0,0,"(w 100g/100ml)
+Wartość energetyczna
+1247kJ/304kcal
+Tłuszcze
+0g
+Węglowodany
+76g
+*w tym cukry
+76g
+Białko
+0g
+Sól
+0g
+Importer
+Nazwa firmy
+PANASIA POLSKA SP. Z O. O.
+Adres
+ul. Sochaczewska 108 05-850 Macierzysz",,
+review_candidate,f0d8fa02-6e6b-4b63-8a69-6dfd5bedde59,pasta-harissa-ostra-chili-87-70g-le-phare-du-cap-bon,Pasta Harissa ostra (chili 87%) 70g - Le Phare Du Cap Bon,pasty-smakowe,ADG-000206,KIMCHI-850,historical_product_id_mapping,https://kimchi.pl/product-pol-850.html,200,yes,no,yes,,,,,,"Czerwona papryka ostra 87%, czosnek, kolendra, sól, kminek",w 100g/100ml,69,290,2.6,,8.3,2.6,,3.1,2.3,"(w 100g/100ml)
+Wartość energetyczna
+290kJ/69kcal
+Tłuszcze
+2,6g
+Węglowodany
+8,3g
+*w tym cukry
+2,6g
+Białko
+3,1g
+Sól
+2,3g
+*w tym tłuszcze nasycone <0,1g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html)|Kraj pochodzenia:|Tunezja,Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,d56cf741-5152-46ae-a325-738965bccaf9,sos-chili-sambal-oelek-chili-86-750g-windmill,Sos chili Sambal Oelek (chili 86%) 750g - Windmill,sosy-marynaty,ADG-000209,KIMCHI-860,historical_product_id_mapping,https://kimchi.pl/product-pol-860.html,200,yes,no,yes,AMBIENT,,,,,,w 100g/100ml,31,131,0.5,0.1,3.6,3.6,,1.6,11.5,"(w 100g/100ml)
+Wartość energetyczna
+131kJ/31kcal
+Tłuszcze
+0,5g
+Węglowodany
+3,6g
+*w tym cukry
+3,6g
+Białko
+1,6g
+Sól
+11,5g
+*w tym kwasy tłuszczowe nasycone 0,1g
+Importer
+Nazwa firmy
+Heuschen & Schrouff OFT B.V.
+Adres
+Sperwerweg 1, 6374 AG Landgraaf, The Netherlands",,
+review_candidate,cefdee71-32c7-4a38-8d6f-15cb95873846,pasta-inaka-aka-miso-ciemna-400g-hikari-miso,"Pasta Inaka Aka Miso, ciemna 400g - Hikari Miso",pasta-miso,ADG-000213,KIMCHI-874,historical_product_id_mapping,https://kimchi.pl/product-pol-874.html,200,no,no,yes,CHILLED,,,,,,w 100g/100ml,194,810,5.8,0.9,25,11.5,,10,11.3,"(w 100g/100ml)
+Wartość energetyczna
+810kJ/194kcal
+Tłuszcze
+5,8g
+Węglowodany
+25g
+*w tym cukry
+11,5g
+Białko
+10g
+Sól
+11,3g
+*w tym kwasy tłuszczowe nasycone 0,9g","[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)|Pay|Po|Kup teraz, zapłać za 30 dni|Kup teraz, zapłać później - 4 kroki|Przy wyborze formy płatności, wybierz|Po.|Po opłaci twój rachunek w sklepie.|Na stronie|Po sprawdź swoje dane i podaj pesel.|Po otrzymaniu zakupów decydujesz co ci pasuje, a co nie.|Możesz zwrócić część albo całość zamówienia - wtedy zmniejszy się też kwota do zapłaty|W ciągu 30 dni od zakupu płacisz|Po za swoje zakupy bez żadnych dodatkowych kosztów.|Jeśli chcesz, rozkładasz swoją płatność na raty.",
+review_candidate,3dbd7fe1-78ee-47c9-b16e-fc2d23724d74,wino-ryzowe-do-gotowania-mijak-mirin-imbirowo-sliwkowe-410ml-cjo-essential,Wino ryżowe do gotowania Mijak (Mirin) imbirowo-śliwkowe 410ml - CJO Essential,octy-i-winne-przyprawy,ADG-000246,KIMCHI-1026,historical_product_id_mapping,https://kimchi.pl/product-pol-1026.html,200,yes,no,yes,,,,,,"Woda, syrop kukurydziany, cukier, ocet, ekstrakt imbirowy, sól, wino ryżowe, kwas cytrynowy, kwas jabłkowy, kwas mlekowy, kwas bursztynowy, koncentrat ze śliwki",w 100g/100ml,156,654,0.1,,38.7,34.8,,0.1,1.1,"(w 100g/100ml)
+Wartość energetyczna
+654kJ/156kcal
+Tłuszcze
+0,1g
+Węglowodany
+38,7g
+Białko
+0,1g
+*w tym cukry
+34,8g
+Sól
+1,1g
+Importer
+Nazwa firmy
+Asia Express Food B.V.
+Adres
+Kilbystraat 1, 8263 CJ, Kampen, Nederland",,
+review_candidate,4b6f2741-deb9-45b7-ab4e-dd17443e8f0c,syrop-ryzowy-100-700g-cjo-essential,Syrop ryżowy 100% 700g - CJO Essential,sosy-marynaty,ADG-000248,KIMCHI-1032,historical_product_id_mapping,https://kimchi.pl/product-pol-1032.html,200,yes,no,yes,,,,,,Skrobia ryżowa 100%,w 100g/100ml,320,1339,0,,79.2,55.8,,0.9,0,"(w 100g/100ml)
+Wartość energetyczna
+1339kJ/320kcal
+Tłuszcze
+0g
+Węglowodany
+79,2g
+*w tym cukry
+55,8g
+Białko
+0,9g
+Sól
+0g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Kupująć ten produkt otrzymasz pkt.
+review_candidate,369bef7e-2187-4b02-b56b-e112ad3b6c11,zaprawa-do-ryzu-500ml-miyata,Zaprawa do ryżu 500ml - Miyata,octy-i-winne-przyprawy,ADG-000255,KIMCHI-1065,historical_product_id_mapping,https://kimchi.pl/product-pol-1065.html,200,yes,no,yes,,,,,,,w 100g/100ml,147,623,1,0.1,37,36,,0.5,6.2,"(w 100g/100ml)
+Wartość energetyczna
+623kJ/147kcal
+Tłuszcze
+1g
+Węglowodany
+37g
+*w tym cukry
+36g
+Białko
+<0,5g
+Sól
+6,2g
+*w tym kwasy tłuszczowe nasycone <0,1g
+Importer
+Nazwa firmy
+KK POLSKA sp. z o.o.
+Adres
+ul. Działkowców 15 84-230 Rumia",,
+no_metadata_found,ce3e9adb-083c-4b07-b5b2-2bcda8671cb5,ryz-do-sushi-calrose-kimpo-4-5kg,"Ryż do sushi Calrose Kimpo 4,5kg",ryż-i-inne-ziarna,ADG-000154,KIMCHI-631,historical_product_id_mapping,https://kimchi.pl/product-pol-631.html,200,yes,no,no,,,,,,,,,,,,,,,,,,,
+review_candidate,acbbe570-b0a7-4021-9531-7beea26e4764,makaron-ryzowy-czerwony-hiep-long-500g,Makaron ryżowy czerwony Hiep Long 500g,makaron-ryżowy,ADG-000174,KIMCHI-739,historical_product_id_mapping,https://kimchi.pl/product-pol-739.html,200,yes,no,no,,,,,,"Ryż, woda, sól Importer Nazwa firmy ASIA-FOODS Sp. z o.o. Adres Ul. Dzwonkowa 8, 02-290 Warszawa",,,,,,,,,,,,,
+review_candidate,8a55515a-bece-45f7-80b7-376097b6c012,makaron-z-brazowego-ryzu-vermicelli-nitki-200g-mama,"Makaron z brązowego ryżu Vermicelli, nitki 200g - MAMA",makaron-ryżowy,ADG-000301,KIMCHI-1201,historical_product_id_mapping,https://kimchi.pl/product-pol-1201.html,200,yes,no,no,,,,,,"Ryż pełnoziarnisty (brązowy) 60%, ryż 20%, otręby ryżowe 15%, skrobia z tapioki 5% Importer Nazwa firmy Asia Express Food B.V. Adres Kilbystraat 1, 8263 CJ, Kampen, Nederland",,,,,,,,,,,,,
+review_candidate,ed06e3fe-ff8a-4b32-ac90-b9de823754fa,jjajang-men-makaron-z-sosem-z-czarnej-fasoli-lagodny-200g-paldo,"Jjajang Men, makaron z sosem z czarnej fasoli, łagodny 200g - Paldo",ramyun-ramen,ADG-000405,KIMCHI-2170,historical_product_id_mapping,https://kimchi.pl/product-pol-2170.html,200,yes,no,no,,"Produkt zawiera pszenicę oraz soję. Wyprodukowano w zakładzie, w którym przetwarzane są również ryby, skorupiaki, małże, mleko, jajka, orzechy, orzeszki ziemne, seler, musztarda, sezam, łopian i siarczyny.",cereals|peanuts|soybeans|milk|nuts|celery|sesame|molluscs,,,"strong>Makaron: mąka pszenna, olej palmowy, modyfikowana skrobia ziemniaczana, sól, olej emulgowany (pestki słonecznika, lecytyna sojowa), regulatory kwasowości: E501, E500, E339, ekstrakt z cebuli, zagęszczacz: E412, skrobia ziemniaczana, olej rzepakowy Sos:cebula, woda, sos z czarnej fasoli (pszenica, soja, sól), olej rzepakowy, kapusta, ziemniaki, cukier, sos sojowy w proszku (soja, pszenica, sól), białko sojowe, skrobia ziemniaczana, sól, ekstrakt z imbiru, wzmacniacz smaku: E635, regulator kwasowości: E500",w 100g/100ml,286,1195,10,2.7,44,4,,6.6,2.04,"(w 100g/100ml)
+Wartość energetyczna
+1195kJ/286kcal
+Tłuszcze
+10g
+Węglowodany
+44g
+*w tym cukry
+4g
+Białko
+6,6g
+Sól
+2,04g
+*w tym kwasy tłuszczowe nasycone 2,7g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)|Kupująć ten produkt otrzymasz pkt.,
+review_candidate,8cc82ac5-1ffb-4fe4-8ac6-ddfe6bfd8ce4,ramen-kumamoto-mokkosu-o-smaku-tonkotsu-104g-itsuki,Ramen Kumamoto Mokkosu o smaku tonkotsu 104g - Itsuki,ramyun-ramen,ADG-001154,KIMCHI-4777,historical_product_id_mapping,https://kimchi.pl/product-pol-4777.html,200,yes,no,no,,,,Po zalogowaniu możesz umieścić i przechowywać na liście zakupowej dowolną liczbę produktów nieskończenie długo.,,,,,,,,,,,,,,,
+review_candidate,9f872603-dec3-447e-9c8f-c6704f3a50a6,ryz-basmati-everyday-1kg-india-gate,Ryż Basmati Everyday 1kg - India Gate,ryż-i-inne-ziarna,ADG-001210,KIMCHI-4913,historical_product_id_mapping,https://kimchi.pl/product-pol-4913.html,200,yes,no,no,,,,,,"100% ryż basmati Importer Nazwa firmy Asia Express Food B.V. Adres Kilbystraat 1, 8263 CJ, Kampen, Nederland",,,,,,,,,,,,,
+review_candidate,cbdef7c1-deaf-493a-a97e-8e9b8c314377,danie-makaronowe-bodle-bodle-stir-fry-cheese-ramen-o-smaku-serowym-lekko-pikantne-120g-ottogi,"Danie makaronowe Bodle Bodle Stir-fry Cheese Ramen o smaku serowym, lekko pikantne 120g - Ottogi",ramyun-ramen,ADG-001374,KIMCHI-5200,historical_product_id_mapping,https://kimchi.pl/product-pol-5200.html,200,yes,no,no,,,,Po zalogowaniu możesz umieścić i przechowywać na liście zakupowej dowolną liczbę produktów nieskończenie długo.,,,,,,,,,,,,,,,
+review_candidate,6a1f47f9-7b57-4832-9795-3dd3e442a21b,makaron-ryzowy-3mm-400g-farmer,Makaron ryżowy 3mm 400g Farmer,makaron-ryżowy,ADG-000047,KIMCHI-157,historical_product_id_mapping,https://kimchi.pl/product-pol-157.html,200,yes,no,yes,,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Mąka ryżowa 90%, woda",w 100g/100ml,356,1514,0.8,0.3,80.3,0,,7,,"(w 100g/100ml)
+Wartość energetyczna
+1514kJ/356kcal
+Tłuszcze
+0,8g
+*w tym kwasy tłuszczowe nasycone
+0,3g
+Węglowodany
+80,3g
+*w tym cukry
+0g
+*w tym błonnik
+0,8g
+Białko
+7g
+Sód
+0,02g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez jajek|Bez oleju|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,d7a3e40d-8c0b-4fa2-87b4-eda855f18c80,makaron-ryzowy-5mm-400g-farmer,Makaron ryżowy 5mm 400g Farmer,makaron-ryżowy,ADG-000048,KIMCHI-158,historical_product_id_mapping,https://kimchi.pl/product-pol-158.html,200,yes,no,yes,,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,"Mąka ryżowa 90%, woda",w 100g/100ml,356,1514,0.8,0.3,80,0,,7,0.01,"(w 100g/100ml)
+Wartość energetyczna
+1514kJ/356kcal
+Tłuszcze
+0,8g
+*w tym kwasy tłuszczowe nasycone
+0,3g
+Węglowodany
+80g
+*w tym cukry
+0g
+Białko
+7g
+Sól
+<0,01g",[](https://kimchi.pl/tra-pol-1796-|Wegetarianska.html)[](https://kimchi.pl/tra-pol-1797-|Weganska.html)[](https://kimchi.pl/tra-pol-1798-|Bezglutenowa.html),Bez pszenicy|Bez jajek|Bez oleju|Bez konserwantów|Kupująć ten produkt otrzymasz pkt.
+review_candidate,7884aa86-036b-4036-994a-b1c040deba29,ryz-do-sushi-kimpo-calrose-9-07-kg,"Ryż do sushi Kimpo Calrose 9,07 kg",ryż-i-inne-ziarna,ADG-000059,KIMCHI-199,historical_product_id_mapping,https://kimchi.pl/product-pol-199.html,200,yes,no,yes,AMBIENT,,,Przechowywać w suchym i chłodnym miejscu.,AMBIENT,100% ziaren ryżu,w 100g/100ml,349,1483,0.5,0.22,78.5,0.3,,7.7,0.06,"(w 100g/100ml)
+Wartość energetyczna
+1483kJ/349kcal
+Tłuszcze
+0,5g
+Węglowodany
+78,5g
+*w tym cukry
+0,3g
+Białko
+7,7g
+Sól
+0,06g
+*w tym kwasy tłuszczowe nasycone 0,22g
+Importer
+Nazwa firmy
+PANASIA POLSKA SP. Z O. O.
+Adres
+ul. Sochaczewska 108 05-850 Macierzysz",,

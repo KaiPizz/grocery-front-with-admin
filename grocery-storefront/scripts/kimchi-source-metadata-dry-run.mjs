@@ -121,6 +121,7 @@ function printUsage(exitCode = 0, errorMessage = null) {
   console.log('  --endpoint <url>       GraphQL endpoint');
   console.log('  --channel <slug>       Storefront channel slug');
   console.log(`  --limit <n>            Max products to inspect (default: ${DEFAULT_LIMIT})`);
+  console.log('  --cohort-offset <n>    Skip the first n ranked cohort products (default: 0)');
   console.log('  --all                  Inspect all eligible products (only cohort rows when filtered)');
   console.log('  --concurrency <n>      Source fetch concurrency');
   console.log('  --delay-ms <n>         Delay before each source request');
@@ -144,6 +145,7 @@ function parseArgs() {
       || loadEnvValue('NEXT_PUBLIC_CHANNEL')
       || DEFAULT_CHANNEL,
     limit: DEFAULT_LIMIT,
+    cohortOffset: 0,
     concurrency: DEFAULT_CONCURRENCY,
     delayMs: DEFAULT_DELAY_MS,
     retries: DEFAULT_RETRIES,
@@ -182,6 +184,9 @@ function parseArgs() {
         break;
       case 'limit':
         options.limit = parsePositiveInteger(value, '--limit');
+        break;
+      case 'cohort-offset':
+        options.cohortOffset = parseNonNegativeInteger(value, '--cohort-offset');
         break;
       case 'concurrency':
         options.concurrency = parsePositiveInteger(value, '--concurrency');
@@ -284,7 +289,7 @@ async function fetchProducts(options, cohortProductIds = null) {
   return {
     products: cohortProductIds === null
       ? products
-      : selectCohortProducts(products, cohortProductIds, options.limit),
+      : selectCohortProducts(products, cohortProductIds, options.limit, options.cohortOffset),
     totalCount,
   };
 }
@@ -351,10 +356,13 @@ export function parseCohortProductIds(payload) {
   return ids;
 }
 
-export function selectCohortProducts(products, cohortProductIds, limit = null) {
+export function selectCohortProducts(products, cohortProductIds, limit = null, offset = 0) {
   if (!Array.isArray(products)) throw new Error('Products must be an array.');
   if (!Array.isArray(cohortProductIds) || cohortProductIds.length === 0) {
     throw new Error('Cohort product IDs must be a non-empty array.');
+  }
+  if (!Number.isInteger(offset) || offset < 0) {
+    throw new Error('Cohort offset must be a non-negative integer.');
   }
 
   const byId = new Map(products.map((product) => [product.id, product]));
@@ -364,7 +372,7 @@ export function selectCohortProducts(products, cohortProductIds, limit = null) {
     throw new Error(`Cohort contains ${missingIds.length} product id(s) absent from the live published catalog: ${preview}`);
   }
 
-  const selected = cohortProductIds.map((id) => byId.get(id));
+  const selected = cohortProductIds.map((id) => byId.get(id)).slice(offset);
   return limit == null ? selected : selected.slice(0, limit);
 }
 
@@ -787,6 +795,7 @@ function writeMarkdown(filePath, options, totalCount, rows, csvPath) {
     `Source: ${SOURCE_BASE}{id}.html via r.jina.ai`,
     `Historical source mapping: ${options.sourceMapping} (${options.sourceMappingCount ?? 0} exact product IDs)`,
     `Cohort filter: ${options.cohortJson ?? 'none'}${options.cohortProductCount != null ? ` (${options.cohortProductCount} requested IDs)` : ''}`,
+    `Cohort offset: ${options.cohortOffset}`,
     `Catalog total: ${totalCount ?? 'unknown'}`,
     `Inspected products: ${rows.length}`,
     '',
@@ -858,7 +867,7 @@ async function main() {
   const cohortProductIds = readCohortProductIds(options.cohortJson);
   options.sourceMappingCount = legacySourceIds.size;
   options.cohortProductCount = cohortProductIds?.length ?? null;
-  console.log(`Read-only kimchi.pl scrape: channel=${options.channel}, limit=${options.limit ?? 'all'}, concurrency=${options.concurrency}, delayMs=${options.delayMs}, retries=${options.retries}, resume=${options.resumeExisting ? 'yes' : 'no'}, cohort=${options.cohortJson ?? 'none'}`);
+  console.log(`Read-only kimchi.pl scrape: channel=${options.channel}, limit=${options.limit ?? 'all'}, cohortOffset=${options.cohortOffset}, concurrency=${options.concurrency}, delayMs=${options.delayMs}, retries=${options.retries}, resume=${options.resumeExisting ? 'yes' : 'no'}, cohort=${options.cohortJson ?? 'none'}`);
 
   const { products, totalCount } = await fetchProducts(options, cohortProductIds);
   const existingRows = options.resumeExisting ? readExistingRows(options.csv) : new Map();
