@@ -10,7 +10,7 @@ import { useChannel } from '@/hooks/use-channel';
 import { PUBLIC_CATEGORY_NAVIGATION_QUERY, SEARCH_PRODUCTS_QUERY } from '@/lib/graphql/operations/grocery';
 import { getLocalizedProductName } from '@/lib/localization';
 import { buildPublicCategories, type PublicTaxonomyRawCategory } from '@/lib/public-taxonomy';
-import { buildSearchSuggestions, normalizeSearchTerm, rankProductsForSearch, type SearchableProduct } from '@/lib/search';
+import { buildSearchSuggestions, normalizeSearchTerm, type SearchableProduct } from '@/lib/search';
 import { cn, formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import { useSearchStore } from '@/stores/search-store';
 
@@ -92,11 +92,6 @@ export function SearchAutocomplete({
     [locale, result.data]
   );
 
-  const rankedProducts = useMemo(
-    () => rankProductsForSearch(products, deferredValue, { preserveUnmatched: true }),
-    [deferredValue, products],
-  );
-
   const suggestions = useMemo(() => {
     if (!normalizedQuery) {
       return recentSearches.slice(0, 4);
@@ -106,12 +101,15 @@ export function SearchAutocomplete({
       return recentSearches.filter((entry) => normalizeSearchTerm(entry).includes(normalizedQuery)).slice(0, 4);
     }
 
-    return buildSearchSuggestions(rankedProducts, deferredValue, recentSearches, 4);
-  }, [deferredValue, normalizedQuery, rankedProducts, recentSearches]);
+    return buildSearchSuggestions(products, deferredValue, recentSearches, 4);
+  }, [deferredValue, normalizedQuery, products, recentSearches]);
 
   const productMatches = useMemo(
-    () => (normalizedQuery.length >= 2 ? rankedProducts.slice(0, SEARCH_RESULT_LIMIT) : []),
-    [normalizedQuery, rankedProducts]
+    // The backend already sorts these edges by relevance across a wider index
+    // (brand, EAN, product code, descriptions, translations). Re-ranking with
+    // the smaller visible client payload would demote valid backend-only hits.
+    () => (normalizedQuery.length >= 2 ? products.slice(0, SEARCH_RESULT_LIMIT) : []),
+    [normalizedQuery, products]
   );
   const categoryMatches = useMemo(() => {
     if (normalizedQuery.length < 2) return [];
@@ -131,12 +129,17 @@ export function SearchAutocomplete({
     }).slice(0, 2);
   }, [categoriesResult.data, locale, normalizedQuery]);
 
+  const hasCompletedSearch = shouldSearch
+    && !result.fetching
+    && !result.error
+    && result.data?.searchProducts !== undefined;
   const hasDropdownContent =
     (normalizedQuery.length === 0 && recentSearches.length > 0) ||
     suggestions.length > 0 ||
     categoryMatches.length > 0 ||
     productMatches.length > 0 ||
-    result.fetching;
+    result.fetching ||
+    hasCompletedSearch;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -360,7 +363,7 @@ export function SearchAutocomplete({
                       {tCommon('loading')}
                     </p>
                   ) : productMatches.length > 0 ? (
-                    <div className="space-y-2">
+                    <div className="space-y-2" data-testid="search-product-results">
                       {productMatches.map((product) => {
                         const imageUrl = getImageSrc(product.thumbnail?.url);
                         const amount = product.pricing?.priceRange?.start?.gross?.amount ?? 0;

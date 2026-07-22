@@ -56,7 +56,12 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Kimchi, marynowane warzywa i fermentowane dodatki.',
       en: 'Kimchi, pickled vegetables, and fermented side dishes.',
     },
-    rawSlugs: ['kimchi', 'owoce-marynowane-warzywa', 'imbir-marynowany'],
+    rawSlugs: [
+      'kimchi',
+      'owoce-marynowane-warzywa',
+      'marynowane-warzywa-i-owoce',
+      'imbir-marynowany',
+    ],
     keywords: ['kimchi', 'kiszon', 'marynowan', 'pickl', 'ferment'],
   },
   {
@@ -66,7 +71,19 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Ramen, ryż, kluski i makarony do codziennych dań.',
       en: 'Ramen, rice, rice cakes, and noodles for everyday meals.',
     },
-    rawSlugs: ['ramyun-ramen', 'ryż-i-inne-ziarna', 'makaron-pszenny', 'makaron-ryżowy', 'makaron-konjac', 'makaron-szklisty', 'makaron-gryczany', 'makarony', 'kluski-tteok-do-dań'],
+    rawSlugs: [
+      'ramyun-ramen',
+      'ryż-i-inne-ziarna',
+      'ryż-do-sushi-i-nie-tylko',
+      'japońskie-ciasto-ryżowe',
+      'makaron-pszenny',
+      'makaron-ryżowy',
+      'makaron-konjac',
+      'makaron-szklisty',
+      'makaron-gryczany',
+      'makarony',
+      'kluski-tteok-do-dań',
+    ],
     keywords: ['ramen', 'ramyun', 'makaron', 'ryz', 'ryż', 'kluski', 'tteok', 'noodle'],
   },
   {
@@ -76,7 +93,28 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Sosy, pasty, oleje, octy i przyprawy azjatyckie.',
       en: 'Asian sauces, pastes, oils, vinegars, and spices.',
     },
-    rawSlugs: ['sosy-marynaty', 'sos-sojowy', 'pasty-smakowe', 'przyprawy', 'sosy-marynaty-oleje', 'octy-i-winne-przyprawy', 'oleje', 'pasta-miso', 'wasabi', 'sezam', 'mleczko-kokosowe', 'buliony', 'pasty', 'mąki-panierki-tapioka', 'sól'],
+    rawSlugs: [
+      'sosy-marynaty',
+      'sosy-i-marynaty',
+      'sos-sojowy',
+      'sosy-sojowe',
+      'pasty-smakowe',
+      'przyprawy',
+      'przyprawy-jednoskładnikowe',
+      'sosy-marynaty-oleje',
+      'octy-i-winne-przyprawy',
+      'ocet-ryżowy-do-sushi',
+      'oleje',
+      'oleje-sezamowe',
+      'pasta-miso',
+      'wasabi',
+      'sezam',
+      'mleczko-kokosowe',
+      'buliony',
+      'pasty',
+      'mąki-panierki-tapioka',
+      'sól',
+    ],
     keywords: ['sos', 'pasta', 'pasty', 'przypraw', 'olej', 'ocet', 'miso', 'wasabi', 'sezam', 'bulion', 'marynat', 'kokos', 'mąk', 'maki', 'panier', 'tapioka', 'sól', 'sol'],
   },
   {
@@ -86,7 +124,7 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Słodkie i słone przekąski, ciastka, chipsy i czekolady.',
       en: 'Sweet and savory snacks, cookies, chips, and chocolates.',
     },
-    rawSlugs: ['słodycze-przekąski'],
+    rawSlugs: ['słodycze-przekąski', 'słodycze-japońskie'],
     keywords: ['slodyc', 'słodyc', 'przekask', 'chips', 'czekolad', 'snack'],
   },
   {
@@ -106,28 +144,28 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Gotowe dania, szybkie posilki i produkty instant.',
       en: 'Ready meals, quick meals, and instant products.',
     },
-    rawSlugs: ['dania-gotowe'],
-    keywords: ['dania gotowe', 'gotowe', 'instant', 'meal'],
+    rawSlugs: ['dania-gotowe', 'zupy-buliony', 'duża-micha'],
+    keywords: ['dania-gotowe', 'dania gotowe', 'zupy-buliony', 'duża-micha', 'gotowe', 'instant', 'meal'],
   },
   {
     slug: 'sushi-i-algi',
     names: { pl: 'Sushi i algi', en: 'Sushi and seaweed' },
     descriptions: {
-      pl: 'Nori, papier ryżowy i zestawy do sushi.',
-      en: 'Nori, rice paper, and sushi sets.',
+      pl: 'Nori, kombu, wakame i papier ryżowy.',
+      en: 'Nori, kombu, wakame, and rice paper.',
     },
-    rawSlugs: ['arkusze-nori-gim', 'papier-ryżowy', 'komplety-do-sushi-i-herbaty', 'wakame-miyeok', 'zestawy-do-sushi'],
-    keywords: ['sushi', 'nori', 'gim', 'papier ryzowy', 'papier-ryzowy', 'papier-ryżowy', 'wakame', 'miyeok', 'algi'],
+    rawSlugs: ['arkusze-nori-gim', 'papier-ryżowy', 'wakame-miyeok', 'kombu-dasima'],
+    keywords: ['sushi', 'nori', 'gim', 'papier ryzowy', 'papier-ryzowy', 'papier-ryżowy', 'wakame', 'miyeok', 'kombu', 'dasima', 'algi'],
   },
   {
     slug: 'grzyby-warzywa-i-tofu',
     names: { pl: 'Grzyby, warzywa i tofu', en: 'Mushrooms, vegetables, and tofu' },
     descriptions: {
-      pl: 'Grzyby azjatyckie, tofu, kombu i produkty roślinne.',
-      en: 'Asian mushrooms, tofu, kombu, and plant-based ingredients.',
+      pl: 'Grzyby azjatyckie, tofu i świeże produkty roślinne.',
+      en: 'Asian mushrooms, tofu, and fresh plant-based ingredients.',
     },
-    rawSlugs: ['grzyby-shiitake', 'inne-grzyby-azjatyckie', 'grzyby-mun', 'kombu-dasima', 'tofu', 'świeże-produkty'],
-    keywords: ['grzyb', 'shiitake', 'mun', 'kombu', 'dasima', 'tofu', 'świeże', 'swieze'],
+    rawSlugs: ['grzyby-shiitake', 'inne-grzyby-azjatyckie', 'grzyby-mun', 'tofu', 'świeże-produkty'],
+    keywords: ['grzyb', 'shiitake', 'mun', 'tofu', 'świeże', 'swieze'],
   },
   {
     slug: 'akcesoria-kuchenne',
@@ -136,8 +174,24 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
       pl: 'Naczynia, pałeczki, noże, maty, miski i akcesoria do gotowania.',
       en: 'Tableware, chopsticks, knives, mats, bowls, and cooking tools.',
     },
-    rawSlugs: ['pałeczki-i-sztućce', 'noże', 'miski', 'duża-micha', 'patelnie-wok-grill', 'patelnie-tamago', 'parowary-bambusowe', 'maty-do-zwijania', 'foremki', 'moździerze', 'naczynia', 'koty-szczęścia-i-inne-gadżety', 'prezenty'],
-    keywords: ['paleczki', 'pałeczki', 'sztucce', 'sztućce', 'noze', 'noże', 'miski', 'micha', 'patelnie', 'wok', 'tamago', 'parowary', 'maty', 'foremki', 'mozdzierze', 'moździerze', 'naczynia', 'gadzety', 'gadżety', 'prezent'],
+    rawSlugs: [
+      'pałeczki-i-sztućce',
+      'noże',
+      'miski',
+      'patelnie-wok-grill',
+      'patelnie-tamago',
+      'parowary-bambusowe',
+      'maty-do-zwijania',
+      'foremki',
+      'moździerze',
+      'naczynia',
+      'komplety-do-sushi-i-herbaty',
+      'zaparzacze-do-kawy',
+      'zestawy-do-sushi',
+      'koty-szczęścia-i-inne-gadżety',
+      'prezenty',
+    ],
+    keywords: ['zestawy-do-sushi', 'komplety-do-sushi', 'zaparzacze-do-kawy', 'paleczki', 'pałeczki', 'sztucce', 'sztućce', 'noze', 'noże', 'miski', 'micha', 'patelnie', 'wok', 'tamago', 'parowary', 'maty', 'foremki', 'mozdzierze', 'moździerze', 'naczynia', 'gadzety', 'gadżety', 'prezent'],
   },
   {
     slug: 'kosmetyki-koreanskie',
@@ -177,11 +231,23 @@ function findDefinition(category: PublicTaxonomyRawCategory) {
 
   if (rawSlugMatch) return rawSlugMatch;
 
-  return PUBLIC_CATEGORY_DEFINITIONS.find((definition) => {
-    const hasKeywordMatch = definition.keywords?.some((keyword) => searchText.includes(normalizeText(keyword)));
+  // Prefer the most specific matching phrase across all groups. Definition
+  // order alone would let a broad word such as "sushi", "bulion", or "micha"
+  // steal future variants of known accessory/ready-meal categories.
+  const keywordMatches = PUBLIC_CATEGORY_DEFINITIONS.flatMap((definition, definitionIndex) => (
+    (definition.keywords ?? []).map((keyword) => ({
+      definition,
+      definitionIndex,
+      normalizedKeyword: normalizeText(keyword),
+    }))
+  )).filter(({ normalizedKeyword }) => searchText.includes(normalizedKeyword));
 
-    return Boolean(hasKeywordMatch);
-  }) ?? null;
+  keywordMatches.sort((left, right) => (
+    right.normalizedKeyword.length - left.normalizedKeyword.length
+    || left.definitionIndex - right.definitionIndex
+  ));
+
+  return keywordMatches[0]?.definition ?? null;
 }
 
 function mergeProductCounts(left: number | null, right: number | null) {

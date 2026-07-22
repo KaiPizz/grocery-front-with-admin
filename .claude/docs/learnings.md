@@ -2,11 +2,82 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-07-21
+> **Last updated:** 2026-07-22
 
 ---
 
 ## Project Documentation
+
+### Search audits need bounded load and anti-false-green assertions
+- **Error:** The first 36-keyword audit sent every aliased search to both the
+  direct and proxy URLs concurrently, while a shared single result could make
+  accent overlap look perfect and `go` could pass on the substring in `mango`.
+- **Cause:** The audit treated GraphQL batching as serial work and measured
+  overlap against however many rows happened to return instead of the required
+  result window and search intent.
+- **Fix:** Run the two endpoints sequentially in batches of at most six, require
+  minimum pair coverage plus a relevant top result, and assert short queries at
+  word-prefix boundaries.
+- **Rule:** A quality gate must constrain its own production load and include
+  adversarial fixtures that prove each positive assertion can fail.
+
+### Small-catalog search fallbacks can become catastrophic tenant-wide scans
+- **Error:** A search candidate that was acceptable across 1,779 grocery
+  products took several seconds against a 138k-product tenant and bypassed the
+  existing SKU/EAN/barcode indexes by wrapping identifiers in normalization
+  functions inside one broad `OR` tree.
+- **Cause:** Functional `%...%` predicates, translation/category subqueries,
+  and exact identifiers were composed as though every tenant had the same
+  catalog shape; unit tests asserted SQL text but never exercised query plans.
+- **Fix:** Resolve exact input through one tenant-scoped, equality-only
+  SKU/EAN/barcode BitmapOr lookup that uses the existing indexes, normalize
+  compact SKU punctuation symmetrically in TypeScript, and enable
+  accent/category/typo scans only after a cached bounded
+  probe proves the public catalog has at most 5,000 products. Larger catalogs
+  use indexed full-text search plus exact identifiers.
+- **Rule:** Benchmark search SQL on both the target tenant and the largest live
+  tenant. Never put indexed exact identifiers behind transformed columns or a
+  generic fallback `OR`.
+
+### Whole-field trigram matching made typo fallback too broad
+- **Error:** Comparing a misspelled token with an entire product/category text
+  admitted unrelated rows whenever one small part of a long field happened to
+  produce enough trigram overlap.
+- **Cause:** `word_similarity` was bounded by score but not by the candidate
+  word's length, and category text could fan one typo out across a whole group.
+- **Fix:** Split normalized fields into words, require a maximum one-character
+  length delta, and permit fuzzy fallback only for one letter-only query token
+  of bounded length. Read-only production checks kept three intended typos and
+  returned zero for eight unrelated controls.
+- **Rule:** Typo tolerance must compare word to word with a length bound and a
+  negative-query matrix; never apply a permissive trigram threshold to an
+  arbitrary full description.
+
+### Client re-ranking could undo richer backend relevance
+- **Error:** Autocomplete re-ranked the first backend candidates using only the
+  fields returned to the browser, so an exact EAN/brand/product-code hit could
+  be pushed below a weaker visible-name or SKU match.
+- **Cause:** The client scorer had a smaller search surface than the server and
+  treated missing private index fields as evidence that the result was weak.
+- **Fix:** Preserve backend order for rendered products and retain the client
+  scorer only for display suggestions; add a fixture where the winning backend
+  match is invisible to the browser scorer.
+- **Rule:** A client may refine labels or suggestions, but it must not replace
+  authoritative ranking unless it receives every field and weight used by the
+  backend.
+
+### Keyword fallback is not a stable public taxonomy contract
+- **Error:** Several live raw categories were assigned by incidental words in
+  their slugs, placing tableware in Sushi, coffee brewers in Drinks, rice
+  vinegar in Rice/Noodles, and instant bowl noodles in Kitchen accessories.
+- **Cause:** The ten-group public taxonomy covered only some raw slugs
+  explicitly and silently routed the rest through broad keyword matching.
+- **Fix:** Freeze the 69 non-empty production slugs in a uniqueness/coverage
+  regression and assign each exactly once; retain keyword matching only as a
+  backwards-compatible fallback for genuinely new categories.
+- **Rule:** Public navigation taxonomy needs explicit, exhaustive live-slug
+  ownership. Use keyword routing only as an observable fallback, never as the
+  primary contract.
 
 ### Production-shape fixture imports must exclude generated columns
 - **Error:** Copying a complete `product_variants` row into a disposable

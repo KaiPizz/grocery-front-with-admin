@@ -1,10 +1,90 @@
 import { expect, test } from '@playwright/test';
 import { getEnabledCategoryHub, mergeCategoryHub } from '../src/lib/category-hub';
-import type { PublicCategory } from '../src/lib/public-taxonomy';
+import {
+  PUBLIC_CATEGORY_DEFINITIONS,
+  buildPublicCategories,
+  type PublicCategory,
+} from '../src/lib/public-taxonomy';
 import { getImageSrc } from '../src/lib/utils';
 import { mockMobileStorefront } from './mobile-fixtures';
 
 const KIMCHI_RAW_CATEGORY_IDS = ['cat-kimchi', 'cat-pickled-vegetables'];
+
+// Frozen from the 2026-07-22 Asia Deli Go production taxonomy. The seventieth
+// active raw category, `pozostałe-produkty`, is intentionally hidden because it
+// has no published products. Every public raw category must be assigned by an
+// explicit slug, not by the loose keyword fallback.
+const ASIA_DELI_GO_PUBLIC_RAW_SLUGS = [
+  'arkusze-nori-gim',
+  'buliony',
+  'dania-gotowe',
+  'duża-micha',
+  'foremki',
+  'grzyby-mun',
+  'grzyby-shiitake',
+  'herbaty',
+  'imbir-marynowany',
+  'inne-grzyby-azjatyckie',
+  'japońskie-ciasto-ryżowe',
+  'kawy',
+  'kimchi',
+  'kluski-tteok-do-dań',
+  'kombu-dasima',
+  'komplety-do-sushi-i-herbaty',
+  'koreańskie-kosmetyki',
+  'koty-szczęścia-i-inne-gadżety',
+  'makaron-gryczany',
+  'makaron-konjac',
+  'makaron-pszenny',
+  'makaron-ryżowy',
+  'makaron-szklisty',
+  'makarony',
+  'marynowane-warzywa-i-owoce',
+  'maty-do-zwijania',
+  'mąki-panierki-tapioka',
+  'miski',
+  'mleczko-kokosowe',
+  'moździerze',
+  'naczynia',
+  'napoje',
+  'noże',
+  'ocet-ryżowy-do-sushi',
+  'octy-i-winne-przyprawy',
+  'oleje',
+  'oleje-sezamowe',
+  'owoce-marynowane-warzywa',
+  'pałeczki-i-sztućce',
+  'papier-ryżowy',
+  'parowary-bambusowe',
+  'pasta-miso',
+  'pasty',
+  'pasty-smakowe',
+  'patelnie-tamago',
+  'patelnie-wok-grill',
+  'prezenty',
+  'przyprawy',
+  'przyprawy-jednoskładnikowe',
+  'ramyun-ramen',
+  'ryż-do-sushi-i-nie-tylko',
+  'ryż-i-inne-ziarna',
+  'sezam',
+  'słodycze-japońskie',
+  'słodycze-przekąski',
+  'sos-sojowy',
+  'sosy-i-marynaty',
+  'sosy-marynaty',
+  'sosy-marynaty-oleje',
+  'sosy-sojowe',
+  'sól',
+  'syropy',
+  'świeże-produkty',
+  'tofu',
+  'wakame-miyeok',
+  'wasabi',
+  'zaparzacze-do-kawy',
+  'zestawy-do-sushi',
+  'zupy-buliony',
+] as const;
 
 function hasCompleteKimchiScope(variables: Record<string, any>) {
   const filter = variables.filter as Record<string, any> | undefined;
@@ -47,6 +127,84 @@ const CATEGORY_HUB_FIXTURES: PublicCategory[] = [
 ];
 
 test.describe('category hub presentation merge', () => {
+  test('assigns every live Asia Deli Go raw category through one explicit slug mapping', () => {
+    const explicitRawSlugs = PUBLIC_CATEGORY_DEFINITIONS.flatMap((definition) => definition.rawSlugs ?? []);
+    const uniqueRawSlugs = new Set(explicitRawSlugs);
+
+    expect(explicitRawSlugs).toHaveLength(uniqueRawSlugs.size);
+    expect(ASIA_DELI_GO_PUBLIC_RAW_SLUGS.every((slug) => uniqueRawSlugs.has(slug))).toBe(true);
+
+    const publicCategories = buildPublicCategories(
+      ASIA_DELI_GO_PUBLIC_RAW_SLUGS.map((slug) => ({
+        id: `raw:${slug}`,
+        slug,
+        name: slug,
+        description: null,
+        products: { totalCount: 1 },
+      })),
+      'pl',
+    );
+    const assignedRawSlugs = publicCategories.flatMap((category) => category.rawCategorySlugs);
+
+    expect(publicCategories).toHaveLength(10);
+    expect(assignedRawSlugs.sort()).toEqual([...ASIA_DELI_GO_PUBLIC_RAW_SLUGS].sort());
+    expect(publicCategories.reduce((sum, category) => sum + (category.products.totalCount ?? 0), 0)).toBe(69);
+  });
+
+  test('keeps known food and accessory categories in their correct public groups', () => {
+    const criticalRawSlugs = [
+      'komplety-do-sushi-i-herbaty',
+      'zaparzacze-do-kawy',
+      'zestawy-do-sushi',
+      'ocet-ryżowy-do-sushi',
+      'zupy-buliony',
+      'duża-micha',
+      'kombu-dasima',
+    ];
+    const publicCategories = buildPublicCategories(criticalRawSlugs.map((slug) => ({
+      id: `raw:${slug}`,
+      slug,
+      name: slug,
+      description: null,
+      products: { totalCount: 1 },
+    })));
+    const publicSlugByRawSlug = new Map(publicCategories.flatMap((category) => (
+      category.rawCategorySlugs.map((rawSlug) => [rawSlug, category.slug] as const)
+    )));
+
+    expect(publicSlugByRawSlug.get('komplety-do-sushi-i-herbaty')).toBe('akcesoria-kuchenne');
+    expect(publicSlugByRawSlug.get('zaparzacze-do-kawy')).toBe('akcesoria-kuchenne');
+    expect(publicSlugByRawSlug.get('zestawy-do-sushi')).toBe('akcesoria-kuchenne');
+    expect(publicSlugByRawSlug.get('ocet-ryżowy-do-sushi')).toBe('sosy-pasty-i-przyprawy');
+    expect(publicSlugByRawSlug.get('zupy-buliony')).toBe('dania-gotowe');
+    expect(publicSlugByRawSlug.get('duża-micha')).toBe('dania-gotowe');
+    expect(publicSlugByRawSlug.get('kombu-dasima')).toBe('sushi-i-algi');
+  });
+
+  test('routes future slug variants by their most specific taxonomy phrase', () => {
+    const futureSlugs = [
+      'nowe-zupy-buliony-instant',
+      'promocja-duża-micha-koreańska',
+      'premium-zestawy-do-sushi-ceramika',
+      'nowe-komplety-do-sushi-dla-dwojga',
+    ];
+    const publicCategories = buildPublicCategories(futureSlugs.map((slug) => ({
+      id: `future:${slug}`,
+      slug,
+      name: slug,
+      description: null,
+      products: { totalCount: 1 },
+    })));
+    const publicSlugByRawSlug = new Map(publicCategories.flatMap((category) => (
+      category.rawCategorySlugs.map((rawSlug) => [rawSlug, category.slug] as const)
+    )));
+
+    expect(publicSlugByRawSlug.get('nowe-zupy-buliony-instant')).toBe('dania-gotowe');
+    expect(publicSlugByRawSlug.get('promocja-duża-micha-koreańska')).toBe('dania-gotowe');
+    expect(publicSlugByRawSlug.get('premium-zestawy-do-sushi-ceramika')).toBe('akcesoria-kuchenne');
+    expect(publicSlugByRawSlug.get('nowe-komplety-do-sushi-dla-dwojga')).toBe('akcesoria-kuchenne');
+  });
+
   test('keeps the full taxonomy as a backward-compatible fallback', () => {
     const merged = mergeCategoryHub(CATEGORY_HUB_FIXTURES, undefined);
 

@@ -1,10 +1,42 @@
 # Feature Progress
 
-> **Last updated:** 2026-07-21
+> **Last updated:** 2026-07-22
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-07-22 Asia Deli Go Taxonomy And Search Quality Candidate
+
+- Assigned all 69 non-empty production category slugs explicitly to the ten
+  public storefront groups, removing live dependence on loose keyword routing.
+  Tableware/tea sets, coffee brewers, sushi serving sets, rice vinegar,
+  instant bowl noodles, Yopokki/Rapokki soups, and kombu seaweed now belong to
+  their intended public groups.
+- Expanded the tenant-correlated backend search candidate to rank product
+  names, brands, translations, category names/slugs, product codes, and active
+  variant SKU/barcode/EAN. Compact identifiers use indexed exact pre-lookups;
+  no identifier or description substring scan is added. Accent/category/typo
+  fallback is limited to public catalogs of at most 5,000 products, and typos
+  compare one bounded letter-only token with similarly sized words via
+  `pg_trgm`; larger catalogs stay on indexed FTS plus exact identifiers.
+- Autocomplete preserves the backend relevance order and keeps a localized
+  no-result dropdown open. Search fixtures now filter by the submitted query
+  instead of returning the complete fixture catalog.
+- Added a reusable production audit contract with 32 cases / 36 unique queries
+  across identifiers, products, brands, categories, Polish accents, typos,
+  multi-token searches, English translations, and negative controls. It checks
+  both the direct GraphQL endpoint and storefront proxy in sequential batches
+  capped at six searches, preventing both URLs from doubling backend load.
+- Validation is green: 9 audit unit tests, 70 focused Playwright cases on
+  iPhone/Pixel, 34 backend search tests, exact-file ESLint, TypeScript, and both
+  backend/Next.js production builds. Read-only production checks confirmed the
+  proposed match thresholds, bounded the two-character `go` query to 208 Asia
+  Deli Go products, and returned zero for eight negative controls; no database
+  write was performed.
+- Production is intentionally unchanged. Its recorded pre-deploy baseline
+  remains red for compact SKU/EAN, four category intents, three typos, and two
+  accent-equivalence pairs, which the post-deploy audit must turn green.
 
 ## 2026-07-21 Asia Deli Go Catalog Data Remediation Preparation
 

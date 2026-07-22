@@ -447,6 +447,78 @@ const PUBLIC_TAXONOMY_PRODUCTS: ProductFixture[] = [
   },
 ];
 
+interface SearchProductFixture {
+  product: ProductFixture;
+  aliases?: string[];
+  brand?: string;
+  productCode?: string;
+  ean?: string;
+  visibleVariantAliases?: string[];
+}
+
+// Model the wider backend search surface without leaking those private index
+// fields into the autocomplete response. Fixture order is backend relevance
+// order. In particular, the exact EAN result intentionally precedes a product
+// whose visible SKU only contains that EAN, so UI tests catch client re-ranking.
+const SEARCH_PRODUCT_FIXTURES: SearchProductFixture[] = [
+  {
+    product: SECONDARY_PRODUCT,
+    brand: 'Blue Farm',
+    ean: '5901234567890',
+  },
+  {
+    product: PRIMARY_PRODUCT,
+    aliases: ['jabłka'],
+    brand: 'Fresh Orchard',
+    productCode: 'backend-only-product-code',
+    visibleVariantAliases: ['ADG-001', '5901234567890-SAMPLE'],
+  },
+  {
+    product: PUBLIC_TAXONOMY_PRODUCTS[2],
+    aliases: ['ramen'],
+    brand: 'Nongshim',
+  },
+  { product: THIRD_PRODUCT },
+  { product: FOURTH_PRODUCT },
+];
+
+function normalizeFixtureSearchTerm(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(/ł/g, 'l')
+    .replace(/đ/g, 'd')
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function matchesSearchProductFixture(fixture: SearchProductFixture, rawQuery: string): boolean {
+  const query = normalizeFixtureSearchTerm(rawQuery);
+  if (!query) return false;
+
+  const compactQuery = query.replace(/\s/g, '');
+  const searchableFields = [
+    fixture.product.name,
+    fixture.product.category.name,
+    ...fixture.product.variants.map((variant) => variant.sku),
+    ...(fixture.aliases ?? []),
+    fixture.brand,
+    fixture.productCode,
+    fixture.ean,
+    ...(fixture.visibleVariantAliases ?? []),
+  ];
+
+  return searchableFields.some((field) => {
+    if (!field) return false;
+
+    const normalizedField = normalizeFixtureSearchTerm(field);
+    return normalizedField.includes(query)
+      || normalizedField.replace(/\s/g, '').includes(compactQuery);
+  });
+}
+
 const PRODUCT_DETAIL_MEDIA = [
   {
     url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80',
@@ -1114,9 +1186,14 @@ export async function mockMobileStorefront(
 
     if (operationName === 'StorefrontProductSearch' || query.includes('query StorefrontProductSearch')) {
       options.onSearchProductsIndexQuery?.(body.variables ?? {});
+      const searchQuery = typeof body.variables?.query === 'string' ? body.variables.query : '';
+      const matchingSearchFixtures = SEARCH_PRODUCT_FIXTURES.filter((fixture) => (
+        matchesSearchProductFixture(fixture, searchQuery)
+      ));
+
       await fulfill(route, {
         searchProducts: {
-          edges: products.map((product) => ({
+          edges: matchingSearchFixtures.map(({ product, visibleVariantAliases = [] }) => ({
             node: {
               id: product.id,
               name: product.name,
@@ -1125,14 +1202,14 @@ export async function mockMobileStorefront(
               category: product.category,
               variants: [
                 ...product.variants.map((variant) => ({ sku: variant.sku })),
-                ...(product.id === PRIMARY_PRODUCT.id ? [{ sku: 'ADG-001' }] : []),
+                ...visibleVariantAliases.map((sku) => ({ sku })),
               ],
               pricing: {
                 priceRange: product.pricing.priceRange,
               },
             },
           })),
-          totalCount: products.length,
+          totalCount: matchingSearchFixtures.length,
         },
       });
       return;

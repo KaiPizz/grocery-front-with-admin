@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "channel": "asiandeligo",
+  "first": 10,
+  "cases": [
+    {
+      "id": "identifier-exact-sku",
+      "group": "identifier",
+      "query": "ADG-001593",
+      "expect": { "minTotal": 1, "topSku": "ADG-001593" }
+    },
+    {
+      "id": "identifier-compact-sku",
+      "group": "identifier",
+      "query": "adg001593",
+      "expect": { "minTotal": 1, "topSku": "ADG-001593" }
+    },
+    {
+      "id": "identifier-ean",
+      "group": "identifier",
+      "query": "5907599956228",
+      "expect": { "minTotal": 1, "topSku": "ADG-000001" }
+    },
+    {
+      "id": "product-ramen",
+      "group": "product",
+      "query": "ramen",
+      "expect": { "minTotal": 20, "topNameIncludes": ["ramen"] }
+    },
+    {
+      "id": "product-ramyun",
+      "group": "product",
+      "query": "ramyun",
+      "expect": { "minTotal": 20, "topNameIncludes": ["ramyun"] }
+    },
+    {
+      "id": "product-kimchi",
+      "group": "product",
+      "query": "kimchi",
+      "expect": { "minTotal": 10, "topNameIncludes": ["kimchi"] }
+    },
+    {
+      "id": "product-gochujang",
+      "group": "product",
+      "query": "gochujang",
+      "expect": { "minTotal": 5, "topNameIncludes": ["gochujang"] }
+    },
+    {
+      "id": "product-nori",
+      "group": "product",
+      "query": "nori",
+      "expect": { "minTotal": 5, "topNameIncludes": ["nori"] }
+    },
+    {
+      "id": "product-tofu",
+      "group": "product",
+      "query": "tofu",
+      "expect": { "minTotal": 5, "topNameIncludes": ["tofu"] }
+    },
+    {
+      "id": "product-mochi",
+      "group": "product",
+      "query": "mochi",
+      "expect": { "minTotal": 5, "topNameIncludes": ["mochi"] }
+    },
+    {
+      "id": "product-sriracha",
+      "group": "product",
+      "query": "sriracha",
+      "expect": { "minTotal": 5, "topNameIncludes": ["sriracha"] }
+    },
+    {
+      "id": "product-matcha",
+      "group": "product",
+      "query": "matcha",
+      "expect": { "minTotal": 5, "topNameIncludes": ["matcha"] }
+    },
+    {
+      "id": "brand-nissin",
+      "group": "brand",
+      "query": "Nissin",
+      "expect": { "minTotal": 5, "topNameIncludes": ["nissin"] }
+    },
+    {
+      "id": "brand-samyang",
+      "group": "brand",
+      "query": "Samyang",
+      "expect": { "minTotal": 5, "topNameIncludes": ["samyang"] }
+    },
+    {
+      "id": "brand-lee-kum-kee",
+      "group": "brand",
+      "query": "Lee Kum Kee",
+      "expect": { "minTotal": 5, "topNameIncludes": ["lee", "kum", "kee"] }
+    },
+    {
+      "id": "category-drinks",
+      "group": "category",
+      "query": "napoje",
+      "expect": {
+        "minTotal": 50,
+        "topCategorySlugs": ["napoje"],
+        "minTopCategoryMatches": 4
+      }
+    },
+    {
+      "id": "category-sweets-unaccented",
+      "group": "category",
+      "query": "slodycze przekaski",
+      "expect": {
+        "minTotal": 100,
+        "topCategorySlugs": ["słodycze-przekąski", "słodycze-japońskie"],
+        "minTopCategoryMatches": 4
+      }
+    },
+    {
+      "id": "category-sauces",
+      "group": "category",
+      "query": "sosy marynaty",
+      "expect": {
+        "minTotal": 50,
+        "topCategorySlugs": ["sosy-marynaty", "sosy-i-marynaty", "sosy-marynaty-oleje"],
+        "minTopCategoryMatches": 3
+      }
+    },
+    {
+      "id": "category-flour-breading-tapioca",
+      "group": "category",
+      "query": "maki panierki tapioka",
+      "expect": {
+        "minTotal": 20,
+        "topCategorySlugs": ["mąki-panierki-tapioka"],
+        "minTopCategoryMatches": 4
+      }
+    },
+    {
+      "id": "accent-rice-unaccented",
+      "group": "accent",
+      "query": "ryz",
+      "expect": { "minTotal": 20, "topNameIncludes": ["ryz"] }
+    },
+    {
+      "id": "accent-japanese-unaccented",
+      "group": "accent",
+      "query": "japonski",
+      "expect": { "minTotal": 5, "topNameIncludes": ["japonsk"] }
+    },
+    {
+      "id": "typo-ramen",
+      "group": "typo",
+      "query": "ramne",
+      "expect": { "minTotal": 1, "topNameIncludes": ["ramen"] }
+    },
+    {
+      "id": "typo-gochujang",
+      "group": "typo",
+      "query": "gochujnag",
+      "expect": { "minTotal": 1, "topNameIncludes": ["gochujang"] }
+    },
+    {
+      "id": "typo-nissin",
+      "group": "typo",
+      "query": "nissinn",
+      "expect": { "minTotal": 1, "topNameIncludes": ["nissin"] }
+    },
+    {
+      "id": "multi-soy-sauce",
+      "group": "multi-token",
+      "query": "sos sojowy",
+      "expect": { "minTotal": 10, "topNameIncludes": ["sos", "sojowy"] }
+    },
+    {
+      "id": "multi-red-curry-paste",
+      "group": "multi-token",
+      "query": "pasta curry czerwona",
+      "expect": { "minTotal": 1, "topNameIncludes": ["pasta", "curry", "czerwon"] }
+    },
+    {
+      "id": "multi-pho-rice-noodle",
+      "group": "multi-token",
+      "query": "makaron ryzowy pho",
+      "expect": { "minTotal": 1, "topNameIncludes": ["makaron", "ryz", "pho"] }
+    },
+    {
+      "id": "translation-star-anise",
+      "group": "translation",
+      "query": "star anise",
+      "expect": { "minTotal": 1, "topSku": "ADG-000709" }
+    },
+    {
+      "id": "translation-rice-paper",
+      "group": "translation",
+      "query": "rice paper",
+      "expect": { "minTotal": 5, "topSku": "ADG-000105" }
+    },
+    {
+      "id": "short-token-go",
+      "group": "short-token",
+      "query": "go",
+      "expect": { "minTotal": 1, "maxTotal": 400, "topNameWordPrefixes": ["go"] }
+    },
+    {
+      "id": "negative-nonsense",
+      "group": "negative",
+      "query": "zzzxqv987654",
+      "expect": { "maxTotal": 0 }
+    },
+    {
+      "id": "negative-unrelated",
+      "group": "negative",
+      "query": "komputer gamingowy",
+      "expect": { "maxTotal": 0 }
+    }
+  ],
+  "pairs": [
+    {
+      "id": "accent-pair-rice",
+      "left": "ryż",
+      "right": "ryz",
+      "window": 5,
+      "minResults": 5,
+      "minOverlap": 0.6,
+      "topNameIncludes": ["ryz"]
+    },
+    {
+      "id": "accent-pair-sweets",
+      "left": "słodycze",
+      "right": "slodycze",
+      "window": 5,
+      "minResults": 5,
+      "minOverlap": 0.8,
+      "topCategorySlugs": ["słodycze-przekąski", "słodycze-japońskie"]
+    },
+    {
+      "id": "accent-pair-japanese",
+      "left": "japoński",
+      "right": "japonski",
+      "window": 5,
+      "minResults": 5,
+      "minOverlap": 0.6,
+      "topNameIncludes": ["japonsk"]
+    }
+  ]
+}
