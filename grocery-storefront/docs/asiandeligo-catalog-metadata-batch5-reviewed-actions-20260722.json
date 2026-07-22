@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "batch": "asiandeligo-catalog-metadata-batch5-20260722-v1",
+  "channel": "asiandeligo",
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "preparedAt": "2026-07-22T11:17:58Z",
+  "cohortSkus": [
+    "ADG-000231",
+    "ADG-000249",
+    "ADG-000264",
+    "ADG-000273",
+    "ADG-000304",
+    "ADG-000316",
+    "ADG-000325",
+    "ADG-000331",
+    "ADG-000341",
+    "ADG-000351",
+    "ADG-000292",
+    "ADG-000293",
+    "ADG-001263",
+    "ADG-001265",
+    "ADG-001287",
+    "ADG-001650",
+    "ADG-000457",
+    "ADG-000131",
+    "ADG-000189",
+    "ADG-000239",
+    "ADG-000291",
+    "ADG-000294",
+    "ADG-000296",
+    "ADG-000470",
+    "ADG-000482"
+  ],
+  "actions": {
+    "ADG-000231": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "The mapped Yuki & Love sesame mochi and exact-EAN EU listings identify an unopened shelf-stable 210g product; its already populated composition is retained.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-980.html", "kind": "supplier-label", "supports": "Exact historical product identity, composition, allergen split, and pack size." },
+        { "url": "https://www.asianfoodshop.eu/p/mochi-cookies-sesame-yuki-love-210-g", "kind": "retailer-label", "supports": "Exact EAN 4712905016043 and current EU pack corroboration." },
+        { "url": "https://www.foodland-express.com/mochi/mochi-sesame-japanese-style-yuki-love-210g/", "kind": "retailer-label", "supports": "Independent 210g pack, Taiwan origin, and cool-dry storage guidance." }
+      ]
+    },
+    "ADG-000249": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "The mapped Yuki & Love peanut mochi and exact-EAN EU listings support unopened dry ambient storage; existing composition fields remain unchanged.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1044.html", "kind": "supplier-label", "supports": "Exact historical product identity, composition, allergen split, and pack size." },
+        { "url": "https://www.asianfoodshop.eu/p/mochi-cookies-peanuts-yuki-love-210-g", "kind": "retailer-label", "supports": "Exact EAN 4712905016036 and current EU pack corroboration." },
+        { "url": "https://www.pinoys.eu/p/mochi-peanut-japanese-rice-cake-210-g-yuki-love", "kind": "retailer-label", "supports": "Independent 210g pack, Taiwan origin, and shelf-stable format." }
+      ]
+    },
+    "ADG-000264": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Pepero Nude 45g sources support cool, dry ambient storage; conflicting formula generations make composition and nutrition unsafe to rewrite.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1092.html", "kind": "supplier-label", "supports": "Exact historical 45g product identity and label generation." },
+        { "url": "https://paleczkami.pl/product-pol-1092-Pepero-Nude-Paluszki-wypelnione-czekolada-45g-Lotte.html", "kind": "retailer-label", "supports": "Exact EAN 8801062267699 and ambient storage guidance." },
+        { "url": "https://www.y-mart.de/en/category/sweets-snack/lotte-pepero-nude.8801062267699-1281997628.html", "kind": "retailer-label", "supports": "Current exact-EAN label demonstrates a conflicting composition generation." }
+      ]
+    },
+    "ADG-000273": {
+      "hold": true,
+      "reason": "The product declares no positive EU-regulated allergen and is already ambient; exact-GTIN recipe generations conflict, so there is no safe metadata transition.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1138.html", "kind": "supplier-label", "supports": "Historical mapped 170g product label and ambient storage." },
+        { "url": "https://saigon-monsun.com/six-fortune-gesalzene-dicke-bohnen-170g-en", "kind": "importer-label", "supports": "Exact GTIN 079763110158 shows a different current recipe generation." },
+        { "url": "https://www.woolworths.com.au/shop/productdetails/854286/six-fortune-broad-bean-prepared-regular", "kind": "retailer-label", "supports": "Independent exact-brand 170g product and nutrition corroboration." }
+      ]
+    },
+    "ADG-000304": {
+      "hold": true,
+      "reason": "Current official Bertie Bott's 35g information still declares no positive EU allergen but differs from the historical formula; the already ambient row has no safe transition.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1233.html", "kind": "supplier-label", "supports": "Historical exact 35g identity, label, and dry-storage statement." },
+        { "url": "https://www.jellybelly.co.uk/product/bertie-bott-s-every-flavour-beans-35g-box/", "kind": "manufacturer-label", "supports": "Official current 35g product, dietary declarations, and changed formula generation." },
+        { "url": "https://cdn.waterstones.com/special/pdf/0071567998338.pdf", "kind": "supplier-sheet", "supports": "Exact GTIN, origin, pack size, and storage corroboration." }
+      ]
+    },
+    "ADG-000316": {
+      "patch": { "countryOfOrigin": "Holandia" },
+      "reason": "The exact-EAN Golden Turtle Yamato Mix 300g is produced in the Netherlands; existing ingredients, allergens, nutrition, and ambient storage are retained.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1317.html", "kind": "supplier-label", "supports": "Exact historical pack identity and composition metadata." },
+        { "url": "https://allegro.hu/termek/golden-turtle-yamato-mix-rizskeksz-300-g-d218f794-c30f-460b-b51b-f776b55f1000", "kind": "retailer-label", "supports": "Exact EAN 8717703616873, 300g pack, and Netherlands origin." }
+      ]
+    },
+    "ADG-000325": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Lotte Malang Cow 79g sources specify room-temperature dry storage; conflicting formula generations are deliberately left untouched.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1361.html", "kind": "supplier-label", "supports": "Exact historical 79g product identity and label generation." },
+        { "url": "https://www.y-mart.de/de/kategorie/suesses-knabbereien/suessgebaeck-chips-suesswaren/lotte-malang-cow.8801062013388-1234485820.html", "kind": "retailer-label", "supports": "Current exact EAN 8801062013388, ambient storage, and changed label generation." },
+        { "url": "https://lotteconf.ru/katalog/konfety/zhevatelnye-molochnye-konfety-malang-cow-79g/", "kind": "manufacturer-distributor", "supports": "Independent exact 79g pack and dry room-temperature storage guidance." }
+      ]
+    },
+    "ADG-000331": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Khao Shong wasabi peas are shelf-stable, while historic and current EU recipe/allergen generations conflict; only storage is safe to add.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1385.html", "kind": "supplier-label", "supports": "Historical mapped 140g product, label, and allergen split." },
+        { "url": "https://www.cesars.lv/en/product/green-peas-wasabi-snacks-hot-140g", "kind": "importer-label", "supports": "Exact EAN 8850043140018 current EU label with a materially different formula." },
+        { "url": "https://www.foodland-express.com/sweets-and-snacks/green-peas-coated-on-wasabi-khao-shong-140-g/", "kind": "retailer-label", "supports": "Independent exact 140g identity and ambient storage guidance." }
+      ]
+    },
+    "ADG-000341": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Tao Kae Noi Hi Tempura Original 40g sources support ambient storage; composition and nutrition generations conflict and remain unchanged.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1416.html", "kind": "supplier-label", "supports": "Historical mapped product identity and label generation." },
+        { "url": "https://www.mocofoodservices.com.au/globalassets/images/35794-apr2024-wtsot-taokaenoi-tempura-seaweed-original-40g.pdf", "kind": "supplier-sheet", "supports": "Exact EAN 8858702401265, pack size, origin, and ambient storage." },
+        { "url": "https://www.pinoys.eu/p/seaweed-snack-hi-tempura-40-g-tao-kae-noi", "kind": "retailer-label", "supports": "Independent exact 40g product and shelf-stable format." }
+      ]
+    },
+    "ADG-000351": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Tao Kae Noi Hi Tempura Spicy 40g sources support ambient storage, but older and newer labels disagree on egg and nutrition.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1448.html", "kind": "supplier-label", "supports": "Historical mapped product identity and label generation." },
+        { "url": "https://www.tesco.com/shop/en-GB/products/281936246", "kind": "retailer-label", "supports": "Exact current spicy 40g product, storage, and changed label generation." },
+        { "url": "https://www.gourmet-versand.com/en/article29560/taokaenoi-tempura-seaweed-spicy-very-crispy-seaweed-chips-40g.html", "kind": "retailer-label", "supports": "Exact EAN 8858702401272 and independent pack corroboration." }
+      ]
+    },
+    "ADG-000292": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Manufacturer and EU listings identify Espresso Innovator 500g as shelf-stable coffee; conflicting nutrition and trace statements remain held on the null-EAN row.",
+      "evidence": [
+        { "url": "https://trungnguyenlegend.com/wp-content/uploads/2021/04/64.-CPHR-ESPRESSO-COFFEE-INNOVATOR.pdf", "kind": "manufacturer-declaration", "supports": "Official exact product, 500g pack, composition, origin, and dry storage." },
+        { "url": "https://asiafoods.pl/pl/product/6157%2Ckawa-ziarna-espresso-innovator-tn-500g-12-krt", "kind": "importer-label", "supports": "Independent EU 500g product and storage corroboration." },
+        { "url": "https://www.mocafino.ca/trung-nguyen-espresso-innovator-coffee-beans-500-g/", "kind": "retailer-label", "supports": "Independent exact pack that exposes conflicting nutrition information." }
+      ]
+    },
+    "ADG-000293": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-pack Creative 3 250g sources support cool, dry ambient storage; market labels conflict on traces and nutrition, so those fields remain unchanged.",
+      "evidence": [
+        { "url": "https://www.trung-nguyen-kaffee.de/de/creative-3.html", "kind": "retailer-label", "supports": "Exact 250g Creative 3 product, Vietnam origin, and shelf-stable format." },
+        { "url": "https://www.cremashop.eu/en/products/trung-nguyen/creative-3", "kind": "retailer-label", "supports": "Exact EAN 8935024142042 and EU pack corroboration." },
+        { "url": "https://www.yoaxia.de/getraenke/kaffee/trung-nguyen-arabica-kaffee-gemahlen-250g-creative-no-3-vietnam_10861_7172", "kind": "retailer-label", "supports": "Independent exact product that demonstrates label-generation disagreement." }
+      ]
+    },
+    "ADG-001263": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "The mapped Suntory BOSS milk-banana can is shelf-stable before opening; barcode-less catalog identity and conflicting Japanese generations make allergens and nutrition unsafe to rewrite.",
+      "evidence": [
+        { "url": "https://www.suntory.co.jp/softdrink/news/pr/article/SBF1480.html", "kind": "manufacturer-release", "supports": "Official exact BOSS Manzoku Milk Banana identity and formula." },
+        { "url": "https://sumotori.trade/catalog/coffee_drinks/boss_manzoku_cafe_coffee_milk_and_banana_185g_1_30/", "kind": "importer-label", "supports": "Exact JAN 4901777417144, allergens, nutrition, and storage." },
+        { "url": "https://japoniacentralna.pl/en_US/p/Suntory-Boss-Manzoku-Cafe-coffee-banana-latte%2C-185ml/1504", "kind": "retailer-label", "supports": "Independent Polish-market 185ml product identity and ingredient corroboration." }
+      ]
+    },
+    "ADG-001265": {
+      "patch": {
+        "storageZone": "AMBIENT",
+        "nutritionFacts": {
+          "calories": 54,
+          "fat": 0,
+          "carbs": 13.5,
+          "protein": 0,
+          "salt": 0.01,
+          "servingSize": "w 100ml"
+        }
+      },
+      "reason": "Official Suntory exact-JAN data supplies the per-100ml nutrition panel and confirms an unopened shelf-stable 210ml Dekavita C; royal jelly is not an EU top-14 allergen.",
+      "evidence": [
+        { "url": "https://products.suntory.co.jp/d/4901777077416/", "kind": "manufacturer-label", "supports": "Official exact JAN 4901777077416 formula, nutrition, pack, and storage." },
+        { "url": "https://japoniacentralna.pl/en_US/p/Suntory-Dekavita-C%2C-210ml/582?currency=PLN", "kind": "retailer-label", "supports": "Independent Polish-market 210ml product identity and ingredient corroboration." }
+      ]
+    },
+    "ADG-001287": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Tian Hu Shan green tea 100g is ambient; a separate lot-specific pesticide recall requires a physical lot/DDM sale-safety check and is not silently treated as metadata approval.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-5063.html", "kind": "supplier-label", "supports": "Historical exact product identity, 100g pack, and 100% green-tea composition." },
+        { "url": "https://www.aasiamarket.fi/en/product/green-tea-in-bag/", "kind": "retailer-label", "supports": "Exact EAN 6922163624012 and pack corroboration." },
+        { "url": "https://rappel.conso.gouv.fr/fiche-rappel/20804/Interne", "kind": "regulatory-recall", "supports": "Official exact-GTIN notice confirms ambient storage and recalls only lot 17042028 / DDM 17-04-2028, requiring separate physical-lot verification." }
+      ]
+    },
+    "ADG-001650": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Official and exact-JAN listings identify Lipton Sakura 15×1.6g as dry shelf-stable tea; no misleading per-100g nutrition is generated.",
+      "evidence": [
+        { "url": "https://www.lipton.jp/ja/products/lipton-sakura-tea/", "kind": "manufacturer-label", "supports": "Official current product identity and pack format." },
+        { "url": "https://item.rakuten.co.jp/rakuten24/4902203526454/", "kind": "retailer-label", "supports": "Exact JAN 4902203526454, 15×1.6g pack, and storage guidance." },
+        { "url": "https://www.japanesegreenteashops.com/products/lipton-sakura-tea-japan-limited-blend", "kind": "retailer-label", "supports": "Independent exact product and shelf-stable format." }
+      ]
+    },
+    "ADG-000457": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Ottogi brown-rice green tea is shelf-stable; buckwheat trace text cannot be mapped to the EU gluten-cereal code and suspect nutrition remains unchanged.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-2333-Hyunmi-Nokcha-zielona-herbata-z-brazowym-ryzem-50-saszetek-Ottogi.html", "kind": "supplier-label", "supports": "Exact historical product, formula, trace statement, and pack identity." },
+        { "url": "https://www.y-mart.de/en/category/beverages/coffee-tea/ottogi-brown-rice-green-tea.8801045071039-1110755936.html", "kind": "retailer-label", "supports": "Exact EAN 8801045071039, formula, origin, and ambient storage." },
+        { "url": "https://www.otokimall.com/front/product/1193", "kind": "manufacturer-store", "supports": "Official product identity corroboration." }
+      ]
+    },
+    "ADG-000131": {
+      "hold": true,
+      "reason": "Exact 340g Sang Tao 4 sources conflict between coffee-only and soy/milk additive formulas; the physical production lot is not pinned tightly enough for a legal composition rewrite.",
+      "evidence": [
+        { "url": "https://trungnguyenlegend.com/files/HO-SO-TU-CONG-BO-SAN-PHAM/CPRX-SANGTAO4.pdf", "kind": "manufacturer-declaration", "supports": "Official 2026 exact 340g Sang Tao 4 formula, allergens, origin, and storage." },
+        { "url": "https://cafe.net.vn/ca-phe-sang-tao-4-340gr.html", "kind": "manufacturer-store", "supports": "Official exact 340g product formula and explicit soy/milk declaration." },
+        { "url": "https://kimchi.pl/product-pol-506-Kawa-mielona-Trung-Nguyen-Sang-Tao-4-340g.html", "kind": "supplier-label", "supports": "Historical mapped product identity and pack size; its older formula is superseded." }
+      ]
+    },
+    "ADG-000189": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Allgroo Aloe Tea 400g is shelf-stable before opening; existing composition, nutrition, origin, and empty allergen declaration are retained.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-789-Herbata-aloesowa-400g-All-Gr.html", "kind": "supplier-label", "supports": "Exact EAN 8805957017611 historical EU label and pack identity." },
+        { "url": "https://www.yoaxia.de/tee/aufgussgetraenke/allgroo-aloe-vera-tea-zubereitung-fuer-erfrischungsgetraenke-und-tee-400g-mit-50-aloe-vera_10098_6367", "kind": "retailer-label", "supports": "Independent exact-EAN 400g product and unopened storage guidance." },
+        { "url": "https://www.piccantino.com/allgroo/aloe-vera-tea", "kind": "retailer-label", "supports": "Independent exact pack and shelf-stable format." }
+      ]
+    },
+    "ADG-000239": {
+      "patch": { "storageZone": "AMBIENT" },
+      "reason": "Exact-EAN Allgroo Yuzu Tea 400g is shelf-stable before opening; a conflicting nutrition generation is not copied.",
+      "evidence": [
+        { "url": "https://kimchi.pl/product-pol-1004-Herbata-z-yuzu-400g-All-Gr.html", "kind": "supplier-label", "supports": "Exact EAN 8805957017598 historical EU label and pack identity." },
+        { "url": "https://www.spar.at/produktwelt/allgroo-yuzu-tee-p2020005787261", "kind": "retailer-label", "supports": "Independent exact pack and unopened storage guidance." },
+        { "url": "https://asiashoponline.de/yuzu-tea-allgroo-400g", "kind": "retailer-label", "supports": "Exact-EAN product and shelf-stable format corroboration." }
+      ]
+    },
+    "ADG-000291": {
+      "hold": true,
+      "reason": "Official Espresso Specialist 500g data confirms the current pure-coffee, Vietnam-origin, ambient row but provides no nutrition or positive allergen value to add.",
+      "evidence": [
+        { "url": "https://trungnguyenlegend.com/wp-content/uploads/2021/04/65.-CPHR-ESPRESSO-COFFEE-SPECIALIST.pdf", "kind": "manufacturer-declaration", "supports": "Official exact 500g product composition, origin, and storage." },
+        { "url": "https://kimchi.pl/product-pol-1184-Kawa-ziarnista-Trung-Nguyen-Espresso-Specialist-500g.html", "kind": "supplier-label", "supports": "Exact historical product identity and current catalog-equivalent metadata." }
+      ]
+    },
+    "ADG-000294": {
+      "hold": true,
+      "reason": "Exact-EAN Creative 4 250g sources disagree between possible milk traces and dairy-free or coffee-only declarations, while production has no barcode; no safe transition is emitted.",
+      "evidence": [
+        { "url": "https://www.cremashop.eu/en/products/trung-nguyen/creative-4", "kind": "retailer-label", "supports": "Exact EAN 8935024142059, 250g export pack, and may-contain-milk declaration." },
+        { "url": "https://kimchi.pl/product-pol-1187-Kawa-wietnamska-mielona-Creative-4-Arabica-Robusta-250g-Trung-Nguyen.html", "kind": "supplier-label", "supports": "Mapped production-source pack conflicts with the trace declaration." },
+        { "url": "https://img.zira.pl/asiandeligo/products/KIMCHI-1187/1.webp", "kind": "public-pack-image", "supports": "Current storefront image identifies the reviewed Creative 4 export pack but does not resolve its label generation." }
+      ]
+    },
+    "ADG-000296": {
+      "hold": true,
+      "reason": "Exact-EAN Creative 5 250g sources disagree between possible milk traces and dairy-free or coffee-only declarations, while production has no barcode; no safe transition is emitted.",
+      "evidence": [
+        { "url": "https://www.cremashop.eu/en/products/trung-nguyen/creative-5", "kind": "retailer-label", "supports": "Exact EAN 8935024142066, 250g export pack, and may-contain-milk declaration." },
+        { "url": "https://kimchi.pl/product-pol-1189-Kawa-mielona-Trung-Nguyen-Creative-5-250g.html", "kind": "supplier-label", "supports": "Mapped production-source pack conflicts with the trace declaration." },
+        { "url": "https://img.zira.pl/asiandeligo/products/KIMCHI-1189/1.webp", "kind": "public-pack-image", "supports": "Current storefront image identifies the reviewed Creative 5 export pack but does not resolve its label generation." }
+      ]
+    },
+    "ADG-000470": {
+      "hold": true,
+      "reason": "Sang Tao 5 340g sources conflict between coffee-only and soy/milk additive formulas, and production has no barcode to pin the physical label generation; no legal metadata is rewritten.",
+      "evidence": [
+        { "url": "https://trungnguyenlegend.com/files/HO-SO-TU-CONG-BO-SAN-PHAM/CPRX-SANGTAO5.pdf", "kind": "manufacturer-declaration", "supports": "Official 2026 exact 340g Sang Tao 5 formula, allergens, origin, and storage." },
+        { "url": "https://cafe.net.vn/ca-phe/ca-phe-rang-xay/ca-phe-sang-tao-5-340gr.html", "kind": "manufacturer-store", "supports": "Official exact 340g product formula and explicit soy/milk declaration." },
+        { "url": "https://kimchi.pl/product-pol-2390-Kawa-mielona-Trung-Nguyen-Sang-Tao-5-340g.html", "kind": "supplier-label", "supports": "Historical mapped product identity and pack size; its older formula is superseded." }
+      ]
+    },
+    "ADG-000482": {
+      "patch": { "countryOfOrigin": "Wielka Brytania" },
+      "reason": "The current exact 2L Old Jamaica Original product is produced in the United Kingdom; older nutrition and formula fields remain unchanged.",
+      "evidence": [
+        { "url": "https://www.tesco.com/shop/en-GB/products/313966081", "kind": "retailer-label", "supports": "Current exact 2L product, UK production, storage, and changed 2026 label generation." },
+        { "url": "https://media.thomasridley.co.uk/Products/SPECS/05905.pdf", "kind": "supplier-sheet", "supports": "Independent exact-brand product and allergen-free declaration; older nutrition generation is held." }
+      ]
+    }
+  }
+}
