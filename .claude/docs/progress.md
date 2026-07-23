@@ -21,7 +21,7 @@
   both PM2 services are online, and direct Internet access to ports
   3022/4100 stays blocked by UFW.
 
-## 2026-07-23 Asia Deli Go PM2 Loopback Migration Preparation
+## 2026-07-23 Asia Deli Go PM2 Loopback Migration
 
 - Audited the storefront PM2 topology ahead of the separate reviewed
   migration: Nginx already proxies via `127.0.0.1:3022`, the protected
@@ -33,9 +33,16 @@
   require an empty runtime keyset in PM2 metadata (no
   `CUSTOMER_AUTH_BFF_SECRET`) and a loopback dotenv.
 - Full preflight/execution/verification/rollback runbook:
-  `deploy/ASIANDELIGO_PM2_LOOPBACK_MIGRATION.md`. Production is unchanged;
-  host execution waits for owner confirmation and must land this commit on
-  `main` first.
+  `deploy/ASIANDELIGO_PM2_LOOPBACK_MIGRATION.md`.
+- Executed on Contabo at 2026-07-23T16:13Z after owner confirmation: the
+  listener moved to `127.0.0.1:3022` behind the unchanged Nginx vhost, PM2
+  metadata and the saved dump now carry zero runtime values (secret grep: 0
+  hits), the admin service and release symlinks were untouched, the committed
+  dual-shape verifier passes against the live migrated state, and the service
+  stayed online with zero restarts through a two-minute watch with the public
+  root at 200 throughout. Rollback artifacts kept as
+  `*.pre-loopback-20260723T161306Z` copies of `dump.pm2`, the jlist snapshot,
+  and `shared/.env.runtime`.
 
 ## 2026-07-22 Asia Deli Go Private Route SEO Hygiene Candidate
 
@@ -462,7 +469,6 @@
 | Kamito checkout backend methods are not wired in production | High | 2026-06-06 backend audit: `availablePaymentMethods(channel:"kamito")=[]` and `availableShippingMethods(channel:"kamito")=[]`, so checkout cannot complete. Frontend must not fake `bank_transfer` or `PICKUP`; backend must link/create the channel methods and prove guest/auth test orders. |
 | Kamito backend ops notifications are not wired | High | 2026-05-24: backend confirmed `ORDER_CREATED` webhook/subscription is not configured and checkout completion emits no event. Storefront must not promise automated email/SMS; launch needs backend webhook/event wiring or manual ops order monitoring. |
 | Kamito product media contains duplicate CDN assets | Medium | 2026-05-25: live CDN bytes confirm duplicate image files under different URLs on multi-image products, e.g. `KIMCHI-5216` sort orders 2/4 and 3/5 are exact SHA-256 matches, and `KIMCHI-5215` sort orders 2/4 match. Frontend URL de-dupe cannot catch this because URLs differ; backend importer/data cleanup needs to remove duplicate assets. |
-| Asia Deli Go storefront PM2 topology is legacy | Low | 2026-07-18: port 3022 is bound to `0.0.0.0` and storefront runtime values remain in root-only PM2 metadata/dump. UFW blocks direct Internet access and `/root` is mode 0700. Purging the metadata and moving the listener to loopback must be a separate reviewed PM2-definition migration, not bundled into a code release. 2026-07-23: migration prepared — audit confirmed Nginx already targets `127.0.0.1:3022`, `shared/.env.runtime` matches the live runtime, both guarded deploy scripts now accept the migrated wrapper shape, and the runbook lives at `deploy/ASIANDELIGO_PM2_LOOPBACK_MIGRATION.md`. Host execution awaits owner confirmation. |
 
 ---
 
