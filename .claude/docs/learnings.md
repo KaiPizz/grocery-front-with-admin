@@ -726,3 +726,9 @@
 - **Cause:** Both arrow buttons used `hidden ... md:flex`; swipe was implemented as an alternative interaction but gave no visible affordance.
 - **Fix:** Made smaller edge arrows visible on mobile, retained the 44px desktop controls, and moved a tighter 4px indicator set close to the banner bottom.
 - **Rule:** If navigation is expected visually at every breakpoint, do not substitute an undiscoverable gesture below a CSS breakpoint; keep a compact visible control and treat swipe as an enhancement.
+
+### PM2 topology migration is gated by two shape verifiers in the deploy lane
+- **Error:** Treating the storefront loopback/env-file PM2 migration as a host-only change would have silently frozen the release lane: the next guarded release fails its PM2 checks.
+- **Cause:** Both `deploy/deploy-asiandeligo-contabo.sh` (Contabo preflight) and `deploy/activate-asiandeligo-release.sh` (`verify_pm2_metadata`) hard-assert the legacy storefront shape (`pm_exec_path = current/server.js`, inline runtime keys mirroring the protected dotenv).
+- **Fix:** Made both verifiers dual-shape (legacy inline-env OR migrated bash wrapper) with stricter no-secret/loopback assertions for the migrated shape, and ordered the rollout so this script change lands on `main` before the host migration runs.
+- **Rule:** Before changing any production process definition, grep the deploy lane for assertions about that definition (`pm_exec_path`, `HOSTNAME`, keysets) — infrastructure shape is contract-tested there, and every copy of the check must move together.

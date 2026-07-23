@@ -313,14 +313,8 @@ const runtimeKey = (key) => key === 'NODE_ENV' || key.startsWith('CUSTOMER_') ||
   key.startsWith('NEXT_PUBLIC_');
 const expectedKeys = Object.keys(runtime).filter(runtimeKey).sort();
 const actualKeys = Object.keys(store).filter(runtimeKey).sort();
-if (runtime.NODE_ENV !== 'production' || store.NODE_ENV !== 'production' ||
-    JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) {
-  throw new Error('Storefront PM2 runtime keyset differs from protected dotenv');
-}
-for (const key of expectedKeys) {
-  if (String(store[key] ?? '') !== runtime[key]) {
-    throw new Error(`Storefront PM2 runtime differs from protected dotenv at ${key}`);
-  }
+if (runtime.NODE_ENV !== 'production') {
+  throw new Error('Storefront protected dotenv must pin NODE_ENV=production');
 }
 if (admin.ADMIN_PASSWORD_HASH || admin.ADMIN_SESSION_SECRET || admin.ADMIN_PASSWORD) {
   throw new Error('Admin credential material leaked into PM2 metadata');
@@ -330,13 +324,39 @@ if (admin.pm_exec_path !== '/bin/bash' || !Array.isArray(admin.args) ||
     !admin.args.join(' ').includes('/var/www/kenmito-admin/current')) {
   throw new Error('Admin PM2 wrapper changed unexpectedly');
 }
-if (!['127.0.0.1', '0.0.0.0'].includes(store.HOSTNAME) ||
-    String(store.PORT) !== '3022' || store.NODE_ENV !== 'production') {
-  throw new Error('Storefront PM2 listener/runtime metadata is invalid');
-}
-if (store.pm_exec_path !== `${storeBase}/current/server.js` ||
-    store.pm_cwd !== `${storeBase}/current`) {
-  throw new Error('Storefront PM2 code pointer changed unexpectedly');
+if (store.pm_exec_path === '/bin/bash') {
+  // Migrated storefront definition: the wrapper sources the protected dotenv
+  // at boot, so PM2 metadata/dump must carry no runtime values and the
+  // listener must stay on loopback.
+  if (actualKeys.length > 0 || store.CUSTOMER_AUTH_BFF_SECRET !== undefined) {
+    throw new Error('Storefront runtime material leaked into PM2 metadata');
+  }
+  if (!Array.isArray(store.args) || !store.args.join(' ').includes(storeEnv) ||
+      !store.args.join(' ').includes(`${storeBase}/current`)) {
+    throw new Error('Storefront PM2 wrapper changed unexpectedly');
+  }
+  if (runtime.HOSTNAME !== '127.0.0.1' || String(runtime.PORT) !== '3022') {
+    throw new Error('Storefront protected dotenv must pin the loopback listener');
+  }
+} else {
+  // Legacy pre-migration definition: inline metadata must mirror the dotenv.
+  if (store.NODE_ENV !== 'production' ||
+      JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) {
+    throw new Error('Storefront PM2 runtime keyset differs from protected dotenv');
+  }
+  for (const key of expectedKeys) {
+    if (String(store[key] ?? '') !== runtime[key]) {
+      throw new Error(`Storefront PM2 runtime differs from protected dotenv at ${key}`);
+    }
+  }
+  if (!['127.0.0.1', '0.0.0.0'].includes(store.HOSTNAME) ||
+      String(store.PORT) !== '3022') {
+    throw new Error('Storefront PM2 listener/runtime metadata is invalid');
+  }
+  if (store.pm_exec_path !== `${storeBase}/current/server.js` ||
+      store.pm_cwd !== `${storeBase}/current`) {
+    throw new Error('Storefront PM2 code pointer changed unexpectedly');
+  }
 }
 NODE
 }

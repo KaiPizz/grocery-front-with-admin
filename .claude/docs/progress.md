@@ -1,10 +1,41 @@
 # Feature Progress
 
-> **Last updated:** 2026-07-22
+> **Last updated:** 2026-07-23
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-07-23 Asia Deli Go Private Route SEO Production Release
+
+- Releases `storefront-4989e282ae5f-20260723T084837Z` and
+  `admin-4989e282ae5f-20260723T084837Z` (source commit `4989e28`, the private
+  route SEO hygiene candidate and the current `origin/main` tip) went live
+  through the guarded lane at 2026-07-23T08:48Z; both `current` symlinks point
+  at the new artifacts and no newer commit exists on any branch.
+- Manifest verification for the shipped artifacts: high-severity npm audit,
+  exact-source ESLint, TypeScript, auth/security contracts, catalog audit,
+  dietary-localization Playwright, production build, and standalone smoke.
+- Post-activation verification (2026-07-23): storefront public root returns
+  200 through Nginx, admin root returns its expected 307 login redirect,
+  both PM2 services are online, and direct Internet access to ports
+  3022/4100 stays blocked by UFW.
+
+## 2026-07-23 Asia Deli Go PM2 Loopback Migration Preparation
+
+- Audited the storefront PM2 topology ahead of the separate reviewed
+  migration: Nginx already proxies via `127.0.0.1:3022`, the protected
+  `shared/.env.runtime` matches the live runtime key-for-key (only
+  `HOSTNAME` must flip to `127.0.0.1`), and nothing consumes the `0.0.0.0`
+  bind externally.
+- Both guarded deploy scripts now accept the legacy inline-env definition
+  **or** the migrated loopback env-file wrapper; for the migrated shape they
+  require an empty runtime keyset in PM2 metadata (no
+  `CUSTOMER_AUTH_BFF_SECRET`) and a loopback dotenv.
+- Full preflight/execution/verification/rollback runbook:
+  `deploy/ASIANDELIGO_PM2_LOOPBACK_MIGRATION.md`. Production is unchanged;
+  host execution waits for owner confirmation and must land this commit on
+  `main` first.
 
 ## 2026-07-22 Asia Deli Go Private Route SEO Hygiene Candidate
 
@@ -18,8 +49,8 @@
   from the sitemap.
 - Validation is green: 26 focused SEO/discovery Playwright cases, 60 customer
   account contracts, exact-source ESLint, TypeScript, production build, and
-  standalone production smoke. Production remains unchanged pending the
-  guarded release flow and fresh owner approval.
+  standalone production smoke. Shipped to production on 2026-07-23 via the
+  guarded release flow (see the release entry above).
 
 ## 2026-07-22 Asia Deli Go Patched Image Pipeline Candidate
 
@@ -431,7 +462,7 @@
 | Kamito checkout backend methods are not wired in production | High | 2026-06-06 backend audit: `availablePaymentMethods(channel:"kamito")=[]` and `availableShippingMethods(channel:"kamito")=[]`, so checkout cannot complete. Frontend must not fake `bank_transfer` or `PICKUP`; backend must link/create the channel methods and prove guest/auth test orders. |
 | Kamito backend ops notifications are not wired | High | 2026-05-24: backend confirmed `ORDER_CREATED` webhook/subscription is not configured and checkout completion emits no event. Storefront must not promise automated email/SMS; launch needs backend webhook/event wiring or manual ops order monitoring. |
 | Kamito product media contains duplicate CDN assets | Medium | 2026-05-25: live CDN bytes confirm duplicate image files under different URLs on multi-image products, e.g. `KIMCHI-5216` sort orders 2/4 and 3/5 are exact SHA-256 matches, and `KIMCHI-5215` sort orders 2/4 match. Frontend URL de-dupe cannot catch this because URLs differ; backend importer/data cleanup needs to remove duplicate assets. |
-| Asia Deli Go storefront PM2 topology is legacy | Low | 2026-07-18: port 3022 is bound to `0.0.0.0` and storefront runtime values remain in root-only PM2 metadata/dump. UFW blocks direct Internet access and `/root` is mode 0700. Purging the metadata and moving the listener to loopback must be a separate reviewed PM2-definition migration, not bundled into a code release. |
+| Asia Deli Go storefront PM2 topology is legacy | Low | 2026-07-18: port 3022 is bound to `0.0.0.0` and storefront runtime values remain in root-only PM2 metadata/dump. UFW blocks direct Internet access and `/root` is mode 0700. Purging the metadata and moving the listener to loopback must be a separate reviewed PM2-definition migration, not bundled into a code release. 2026-07-23: migration prepared — audit confirmed Nginx already targets `127.0.0.1:3022`, `shared/.env.runtime` matches the live runtime, both guarded deploy scripts now accept the migrated wrapper shape, and the runbook lives at `deploy/ASIANDELIGO_PM2_LOOPBACK_MIGRATION.md`. Host execution awaits owner confirmation. |
 
 ---
 

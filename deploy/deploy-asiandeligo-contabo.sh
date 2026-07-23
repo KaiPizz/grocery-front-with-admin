@@ -487,20 +487,35 @@ const runtimeKey = (key) => key === 'NODE_ENV' || key.startsWith('CUSTOMER_') ||
   key.startsWith('NEXT_PUBLIC_');
 const expectedKeys = Object.keys(runtime).filter(runtimeKey).sort();
 const actualKeys = Object.keys(store).filter(runtimeKey).sort();
-if (runtime.NODE_ENV !== 'production' || store.NODE_ENV !== 'production' ||
-    JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) {
-  throw new Error('Storefront PM2 runtime keyset differs from protected dotenv');
+if (runtime.NODE_ENV !== 'production') {
+  throw new Error('Storefront protected dotenv must pin NODE_ENV=production');
 }
-for (const key of expectedKeys) {
-  if (String(store[key] ?? '') !== runtime[key]) {
-    throw new Error(`Storefront PM2 runtime differs from protected dotenv at ${key}`);
+if (store.pm_exec_path === '/bin/bash') {
+  // Migrated storefront definition: env-file wrapper, loopback listener, and
+  // no runtime values in PM2 metadata/dump.
+  if (actualKeys.length > 0 || store.CUSTOMER_AUTH_BFF_SECRET !== undefined ||
+      !Array.isArray(store.args) || !store.args.join(' ').includes(storeEnv) ||
+      !store.args.join(' ').includes(`${storeBase}/current`) ||
+      runtime.HOSTNAME !== '127.0.0.1' || String(runtime.PORT) !== '3022') {
+    throw new Error('Storefront PM2 definition is not the reviewed loopback wrapper');
   }
-}
-if (store.pm_exec_path !== `${storeBase}/current/server.js` ||
-    store.pm_cwd !== `${storeBase}/current` ||
-    !['127.0.0.1', '0.0.0.0'].includes(store.HOSTNAME) ||
-    String(store.PORT) !== '3022') {
-  throw new Error('Storefront PM2 definition is not the reviewed production topology');
+} else {
+  // Legacy pre-migration definition: inline metadata must mirror the dotenv.
+  if (store.NODE_ENV !== 'production' ||
+      JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) {
+    throw new Error('Storefront PM2 runtime keyset differs from protected dotenv');
+  }
+  for (const key of expectedKeys) {
+    if (String(store[key] ?? '') !== runtime[key]) {
+      throw new Error(`Storefront PM2 runtime differs from protected dotenv at ${key}`);
+    }
+  }
+  if (store.pm_exec_path !== `${storeBase}/current/server.js` ||
+      store.pm_cwd !== `${storeBase}/current` ||
+      !['127.0.0.1', '0.0.0.0'].includes(store.HOSTNAME) ||
+      String(store.PORT) !== '3022') {
+    throw new Error('Storefront PM2 definition is not the reviewed production topology');
+  }
 }
 if (admin.ADMIN_PASSWORD_HASH || admin.ADMIN_SESSION_SECRET || admin.ADMIN_PASSWORD ||
     admin.pm_exec_path !== '/bin/bash' || !Array.isArray(admin.args) ||
