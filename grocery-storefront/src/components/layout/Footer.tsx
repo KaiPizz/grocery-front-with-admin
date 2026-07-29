@@ -229,11 +229,11 @@ export function Footer() {
                       <li key={label} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                         <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                         {href ? (
-                          <a href={href} className="break-words transition-colors duration-fast hover:text-primary">
+                          <a href={href} className="min-w-0 break-words transition-colors duration-fast hover:text-primary">
                             {label}
                           </a>
                         ) : (
-                          <span className="break-words">{label}</span>
+                          <span className="min-w-0 break-words">{label}</span>
                         )}
                       </li>
                     ))}
@@ -260,11 +260,11 @@ export function Footer() {
                     <li key={label} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                       <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                       {href ? (
-                        <a href={href} className="break-words transition-colors duration-fast hover:text-primary">
+                        <a href={href} className="min-w-0 break-words transition-colors duration-fast hover:text-primary">
                           {label}
                         </a>
                       ) : (
-                        <span className="break-words">{label}</span>
+                        <span className="min-w-0 break-words">{label}</span>
                       )}
                     </li>
                   ))}
