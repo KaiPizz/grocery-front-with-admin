@@ -25,6 +25,7 @@ export function withStorefrontConfigDefaults(config: StorefrontConfig | null): S
     ...config,
     general: {
       ...config.general,
+      openingHours: config.general.openingHours ?? [],
       fulfillment: config.general.fulfillment ?? DEFAULT_FULFILLMENT_CONFIG,
     },
     commercial: commercial

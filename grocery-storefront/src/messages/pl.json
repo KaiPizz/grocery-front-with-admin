@@ -435,7 +435,8 @@
     "privacy": "Polityka prywatności",
     "terms": "Warunki korzystania z usługi",
     "delivery": "Informacje o dostawie",
-    "catalogNote": "Przeglądaj aktualny katalog i zarządzaj zapisanymi produktami z konta."
+    "catalogNote": "Przeglądaj aktualny katalog i zarządzaj zapisanymi produktami z konta.",
+    "closed": "Zamknięte"
   },
   "legal": {
     "privacyTitle": "Polityka prywatności",

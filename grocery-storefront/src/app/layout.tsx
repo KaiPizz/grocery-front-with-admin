@@ -10,6 +10,7 @@ import { TrackingScripts } from '@/components/TrackingScripts';
 import { SensitiveRouteBoundary } from '@/components/SensitiveRouteBoundary';
 import { localizeConfiguredStorefront } from '@/lib/configured-content-localization';
 import {
+  buildLocalBusinessJsonLd,
   buildPublicPageMetadata,
   buildWebsiteJsonLd,
   fetchSeoStorefrontConfig,
@@ -64,6 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     fetchSeoStorefrontConfig(),
   ]);
   const websiteJsonLd = buildWebsiteJsonLd({ siteConfig: initialConfig });
+  const localBusinessJsonLd = buildLocalBusinessJsonLd({ siteConfig: initialConfig });
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -73,6 +75,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             id="website-json-ld"
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
+          />
+        )}
+        {localBusinessJsonLd && (
+          <script
+            id="local-business-json-ld"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: serializeJsonLd(localBusinessJsonLd) }}
           />
         )}
         <ConfigProvider initialConfig={initialConfig}>

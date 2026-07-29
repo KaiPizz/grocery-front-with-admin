@@ -353,8 +353,17 @@ const config = {
   },
   general: {
     phone: '',
-    email: '',
-    address: '',
+    email: 'kontakt@example.test',
+    address: 'Testowa 1, 00-001 Warszawa',
+    openingHours: [
+      {
+        label: 'Pon. – Sob.',
+        days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        opens: '7:00',
+        closes: '19:00',
+      },
+      { label: 'Niedziela', days: ['Sunday'], opens: null, closes: null },
+    ],
     socialLinks: [],
     policyLinks: {
       privacy: '/privacy',

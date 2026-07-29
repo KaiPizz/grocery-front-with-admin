@@ -264,6 +264,48 @@ export function buildWebsiteJsonLd({ siteConfig }: WebsiteJsonLdInput) {
   };
 }
 
+interface LocalBusinessJsonLdInput {
+  siteConfig: StorefrontConfig | null;
+}
+
+function toSchemaTime(value: string): string {
+  // Schema.org wants zero-padded HH:MM while the config keeps the display
+  // form the owner writes (e.g. "7:00").
+  return value.length === 4 ? `0${value}` : value;
+}
+
+export function buildLocalBusinessJsonLd({ siteConfig }: LocalBusinessJsonLdInput) {
+  const general = siteConfig?.general;
+  if (!general) return null;
+
+  const email = getConfigString(general.email);
+  const address = getConfigString(general.address);
+  const telephone = getConfigString(general.phone);
+  if (!email && !address) return null;
+
+  const storeName = getConfigString(siteConfig?.branding.storeName) ?? DEFAULT_STORE_NAME;
+  const origin = getSeoOrigin(siteConfig?.seo.canonical);
+  const openHoursSpecs = (general.openingHours ?? [])
+    .filter((entry) => entry.opens && entry.closes && entry.days.length > 0)
+    .map((entry) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: entry.days,
+      opens: toSchemaTime(entry.opens as string),
+      closes: toSchemaTime(entry.closes as string),
+    }));
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'GroceryStore',
+    name: storeName,
+    ...(origin ? { url: origin, '@id': `${origin}/#store` } : {}),
+    ...(address ? { address } : {}),
+    ...(email ? { email } : {}),
+    ...(telephone ? { telephone } : {}),
+    ...(openHoursSpecs.length > 0 ? { openingHoursSpecification: openHoursSpecs } : {}),
+  };
+}
+
 export function buildCollectionPageJsonLd({
   locale,
   pathname,

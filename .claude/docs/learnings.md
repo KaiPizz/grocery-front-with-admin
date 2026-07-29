@@ -732,3 +732,9 @@
 - **Cause:** Both `deploy/deploy-asiandeligo-contabo.sh` (Contabo preflight) and `deploy/activate-asiandeligo-release.sh` (`verify_pm2_metadata`) hard-assert the legacy storefront shape (`pm_exec_path = current/server.js`, inline runtime keys mirroring the protected dotenv).
 - **Fix:** Made both verifiers dual-shape (legacy inline-env OR migrated bash wrapper) with stricter no-secret/loopback assertions for the migrated shape, and ordered the rollout so this script change lands on `main` before the host migration runs.
 - **Rule:** Before changing any production process definition, grep the deploy lane for assertions about that definition (`pm_exec_path`, `HOSTNAME`, keysets) — infrastructure shape is contract-tested there, and every copy of the check must move together.
+
+### Turbopack rejects out-of-tree node_modules symlinks
+- **Error:** `next dev` (Next 16 preview / Turbopack) died with "Symlink [project]/node_modules is invalid, it points out of the filesystem root" when the worktree borrowed another checkout's node_modules via symlink.
+- **Cause:** Turbopack resolves packages relative to the project root and refuses a node_modules that is a symlink pointing outside it, unlike webpack-era Next.
+- **Fix:** Ran a real `npm ci` in the worktree (fast with warm npm cache) instead of symlinking.
+- **Rule:** Fresh worktrees of this repo need their own `npm ci` per app; do not symlink node_modules across checkouts for anything that boots Next.

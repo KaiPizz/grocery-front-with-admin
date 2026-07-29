@@ -435,7 +435,8 @@
     "privacy": "Privacy policy",
     "terms": "Terms of service",
     "delivery": "Delivery info",
-    "catalogNote": "Browse the live catalog and manage saved products from your account."
+    "catalogNote": "Browse the live catalog and manage saved products from your account.",
+    "closed": "Closed"
   },
   "legal": {
     "privacyTitle": "Privacy Policy",

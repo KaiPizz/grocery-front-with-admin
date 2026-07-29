@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Runtime-configured storefront logos can use arbitrary URLs until the production media loader policy is defined. */
 
 import { useLocale, useTranslations } from 'next-intl';
-import { Banknote, CheckCircle2, Leaf, Mail, MapPin, Phone } from 'lucide-react';
+import { Banknote, CheckCircle2, Clock, Leaf, Mail, MapPin, Phone } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { SocialBar } from '@/components/layout/SocialBar';
 import { Link } from '@/i18n/navigation';
@@ -126,6 +126,13 @@ export function Footer() {
     address
       ? { label: address, icon: MapPin }
       : null,
+    ...(siteConfig?.general?.openingHours ?? []).map((entry) => ({
+      label:
+        entry.opens && entry.closes
+          ? `${entry.label}: ${entry.opens} – ${entry.closes}`
+          : `${entry.label}: ${t('closed')}`,
+      icon: Clock,
+    })),
   ].filter((item): item is FooterContactItem => item !== null);
   const fallbackInfoLinks = [
     policyLinks?.about

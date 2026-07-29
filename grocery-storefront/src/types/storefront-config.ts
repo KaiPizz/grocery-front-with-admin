@@ -231,10 +231,21 @@ export interface SocialLink {
   url: string;
 }
 
+export interface OpeningHoursEntry {
+  /** Display label for the covered days, e.g. "Pon. – Sob." */
+  label: string;
+  /** Schema.org day names ("Monday"…"Sunday") for structured data */
+  days: string[];
+  /** Local "H:MM" opening time; null marks the entry as closed */
+  opens: string | null;
+  closes: string | null;
+}
+
 export interface GeneralConfig {
   phone: string;
   email: string;
   address: string;
+  openingHours: OpeningHoursEntry[];
   socialLinks: SocialLink[];
   policyLinks: {
     privacy: string;

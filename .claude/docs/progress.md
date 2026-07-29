@@ -1,12 +1,31 @@
 # Feature Progress
 
-> **Last updated:** 2026-07-23
+> **Last updated:** 2026-07-29
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
 
-## 2026-07-23 Asia Deli Go Private Route SEO Production Release
+## 2026-07-29 Asia Deli Go Owner Contact And Opening Hours
+
+- The owner supplied provisional real contact data (email
+  `asiadelionline@gmail.com`, address "Zamieniecka 80/12, 04-158 Warszawa
+  (Centrum Handlowe Szembeka)", hours Mon–Sat 7:00–19:00 with Sunday closed;
+  phone and final email still pending). Live config `general.email/address`
+  was updated the same day with `.before-owner-contact-*` backups; the phone
+  stays empty so the footer hides its row.
+- `GeneralConfig` gained an `openingHours` entry list (label, schema.org day
+  names, nullable opens/closes) in both apps' type files; the storefront
+  normalizer defaults it to `[]`, and the admin panel passes it through
+  unchanged (spread-based draft updates) — a dedicated admin editor remains a
+  follow-up.
+- The footer renders hours rows inside the contact column (Clock icon,
+  localized "Zamknięte"/"Closed" for closed days), and the root layout now
+  publishes a LocalBusiness (`GroceryStore`) JSON-LD with a zero-padded
+  `openingHoursSpecification` next to the existing WebSite graph.
+- Validation: 4 new Playwright cases (hours rows, localized closed label, no
+  phone row, JSON-LD shape) green on desktop and Pixel-7 projects against the
+  deterministic SSR config fixture; storefront `tsc` clean.
 
 - Releases `storefront-4989e282ae5f-20260723T084837Z` and
   `admin-4989e282ae5f-20260723T084837Z` (source commit `4989e28`, the private
