@@ -2,9 +2,38 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-07-22
+> **Last updated:** 2026-08-06
 
 ---
+
+### A full storefront release can overwrite production-only visual assets
+- **Error:** The canonical standalone storefront repository still contained
+  the older category artwork even though production and the eNail canonical
+  source already carried the owner-approved real-product replacements.
+- **Cause:** Earlier asset-only releases updated the live immutable release and
+  eNail production snapshot, but the separate storefront repository remained
+  at its pre-asset baseline; the guarded Asia Deli Go lane rebuilds the full
+  storefront from that separate repository.
+- **Fix:** Reconciled all ten category assets by exact SHA-256 before changing
+  the homepage fit config, visually compared and re-encoded the one asset that
+  exceeded the repository's 120 KB contract, then included the complete set in
+  the reviewed storefront commit so a full guarded release preserves the live
+  visuals.
+- **Rule:** Before a full release from a separate source repository, compare
+  every previously overlaid production asset with the candidate tree and
+  reconcile approved differences into source before building.
+
+### Asia Deli Go tenant aliases are exact config mirrors
+- **Error:** Updating only `config-asiandeligo.json` and the matching static
+  file made the static-config contract fail even though both edited JSON files
+  were syntactically and semantically valid.
+- **Cause:** The production tenant retains `kenmito` compatibility aliases in
+  both apps, and the release contract requires each alias to be byte-identical
+  to its Asia Deli Go counterpart.
+- **Fix:** Applied the same ID-scoped `imageFit` change to all four tracked
+  static/admin config files and reran the exact-mirror contract.
+- **Rule:** Every Asia Deli Go config change must update and compare the
+  `asiandeligo` and `kenmito` aliases in both apps before release.
 
 ### robots.txt blocking prevents crawlers from observing page-level noindex
 - **Error:** Personal and transactional routes were disallowed in `robots.txt`;

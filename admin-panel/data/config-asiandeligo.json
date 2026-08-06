@@ -116,6 +116,7 @@
           "enabled": true,
           "order": 1,
           "columns": 3,
+          "imageFit": "cover",
           "items": [
             {
               "id": "asiandeligo-grid-korean-pantry",
@@ -146,6 +147,7 @@
           "enabled": true,
           "order": 2,
           "columns": 3,
+          "imageFit": "cover",
           "items": [
             {
               "id": "asiandeligo-grid-kimchi",
@@ -556,6 +558,7 @@
           "enabled": true,
           "order": 1,
           "columns": 3,
+          "imageFit": "cover",
           "items": [
             {
               "id": "asiandeligo-grid-korean-pantry",
@@ -586,6 +589,7 @@
           "enabled": true,
           "order": 2,
           "columns": 3,
+          "imageFit": "cover",
           "items": [
             {
               "id": "asiandeligo-grid-kimchi",

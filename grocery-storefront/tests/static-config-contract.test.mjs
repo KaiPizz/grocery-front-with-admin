@@ -76,6 +76,8 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   const koreanPantryBanner = config.homepage.promoBanners.find((banner) => banner.id === 'banner-korean-pantry');
   const koreanPantryCollection = config.commercial.collections.find((collection) => collection.slug === 'korean-pantry');
   const heroBlock = config.homepage.blocks.find((block) => block.type === 'hero');
+  const categoryGridBlocks = config.homepage.blocks.filter((block) => block.type === 'grid');
+  const roundCategoryBlock = config.homepage.blocks.find((block) => block.type === 'round_grid');
   const footerLinks = config.layout.footer.columns.flatMap((column) => column.links);
 
   assert.equal(config.branding.storeName, 'Asia Deli Go');
@@ -110,6 +112,10 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.ok(heroBlock);
   assert.equal(heroBlock.id, 'asiandeligo-drive-hero-20260713');
   assert.equal(heroBlock.slides.length, 6);
+  assert.equal(categoryGridBlocks.length, 2);
+  assert.deepEqual(categoryGridBlocks.map((block) => block.imageFit), ['cover', 'cover']);
+  assert.ok(roundCategoryBlock);
+  assert.equal(roundCategoryBlock.imageFit, undefined);
 
   const categoryImageUrls = config.homepage.blocks
     .filter((block) => block.type === 'grid' || block.type === 'round_grid')

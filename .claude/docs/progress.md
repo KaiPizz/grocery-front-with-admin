@@ -1,10 +1,27 @@
 # Feature Progress
 
-> **Last updated:** 2026-07-29
+> **Last updated:** 2026-08-06
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-08-06 Asia Deli Go Homepage Category Image Consistency
+
+- The two rectangular homepage category grids now opt into the existing
+  full-frame `cover` contract across both static/admin tenant aliases,
+  matching the three owner-approved category tiles that already filled their
+  cards without an inset frame.
+- Reconciled the ten owner-approved real-product category images from the
+  canonical eNail source into this storefront repository so a guarded full
+  release cannot restore the older generated artwork. The noodles/rice asset
+  was re-encoded from 133,006 to 113,270 bytes with no visible comparison
+  difference, satisfying the existing 120 KB category-media release contract.
+- Kept the category hub and product-detail package-image behavior unchanged;
+  this is scoped to the two homepage grid blocks and their six tiles.
+- Validation: static config/mirror/media contract 3/3, admin image-fit schema
+  contract 3/3, and responsive landing Playwright 14/14 across iPhone 12 and
+  Pixel 7 projects.
 
 ## 2026-07-29 Asia Deli Go Owner Contact And Opening Hours
 
