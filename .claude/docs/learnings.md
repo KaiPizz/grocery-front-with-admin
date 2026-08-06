@@ -46,6 +46,29 @@
 - **Rule:** Feed release and push commands only SHAs returned by
   `git rev-parse`; never type or infer the undisplayed suffix of a short hash.
 
+### Curl request bodies do not imply the API's required update method
+- **Error:** The guarded config publisher sent the complete draft body without
+  an explicit method, so curl used `POST` and the admin route returned `405`.
+- **Cause:** `--data-binary` changes curl's default from GET to POST, while the
+  full config replacement endpoint accepts only `PUT`.
+- **Fix:** The controller proved the live draft still matched its backup, then
+  added explicit `-X PUT` to both the forward save and automatic rollback.
+- **Rule:** Every operational curl mutation must state the route's exact HTTP
+  method explicitly; never rely on the implicit method selected by body flags.
+
+### Typed config fields can still be stripped by the admin save schema
+- **Error:** Publishing the two category fit values removed the existing
+  `general.openingHours` field, and an API rollback could not restore it.
+- **Cause:** Both apps' TypeScript types and storefront rendering supported
+  opening hours, but the admin Zod schema omitted the field. Zod therefore
+  stripped it from forward and rollback PUT payloads.
+- **Fix:** The guard detected the unrelated diff, retained the exact pre-change
+  backup, and added an optional bounded opening-hours schema plus preservation
+  and rejection tests before any recovery release.
+- **Rule:** A config field is not safely publishable until it exists in the
+  admin validation schema as well as both app types; test full round-trip
+  preservation of existing owner data, not only the field being edited.
+
 ### robots.txt blocking prevents crawlers from observing page-level noindex
 - **Error:** Personal and transactional routes were disallowed in `robots.txt`;
   adding a `noindex` meta tag alone would therefore leave compliant crawlers

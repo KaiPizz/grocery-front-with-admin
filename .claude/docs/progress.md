@@ -22,6 +22,12 @@
 - Validation: static config/mirror/media contract 3/3, admin image-fit schema
   contract 3/3, and responsive landing Playwright 14/14 across iPhone 12 and
   Pixel 7 projects.
+- Recovery hardening: the admin validation schema now preserves the existing
+  owner opening-hours entries during config saves and rejects invalid day/time
+  shapes, closing the compatibility gap exposed by the guarded live publish.
+- Admin validation: full unit suite 91/91, TypeScript clean, and exact changed
+  files pass ESLint with zero warnings (the repository-wide lint command still
+  reports its six documented runtime-image warnings).
 
 ## 2026-07-29 Asia Deli Go Owner Contact And Opening Hours
 

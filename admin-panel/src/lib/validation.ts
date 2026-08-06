@@ -357,6 +357,34 @@ const socialLinkSchema = z.object({
   url: optionalExternalUrl,
 });
 
+const openingHoursTimeSchema = z.string().regex(
+  /^([01]?\d|2[0-3]):[0-5]\d$/,
+  'Must be H:MM or HH:MM'
+).nullable();
+
+const openingHoursEntrySchema = z.object({
+  label: z.string().trim().min(1).max(100),
+  days: z.array(z.enum([
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ])).min(1).max(7),
+  opens: openingHoursTimeSchema,
+  closes: openingHoursTimeSchema,
+}).superRefine((entry, ctx) => {
+  if ((entry.opens === null) !== (entry.closes === null)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Opening and closing times must both be set or both be null',
+      path: ['closes'],
+    });
+  }
+});
+
 const fulfillmentSchema = z.object({
   mode: z.enum(['delivery', 'pickup']),
   paymentPromise: z.enum(['backend', 'bank_transfer']),
@@ -369,6 +397,7 @@ const generalSchema = z.object({
   phone: z.string().max(50),
   email: z.string().max(200),
   address: z.string().max(500),
+  openingHours: z.array(openingHoursEntrySchema).max(14).optional(),
   socialLinks: z.array(socialLinkSchema),
   policyLinks: z.object({
     privacy: optionalNavigationUrl,
