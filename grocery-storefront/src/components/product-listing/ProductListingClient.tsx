@@ -312,6 +312,8 @@ export function ProductListingClient({
   const normalizedSearch = search.trim();
   const sortOptions = getSortOptions(Boolean(normalizedSearch));
   const sortOption = sortOptions.find((option) => option.value === sort) || sortOptions[0];
+  const listingDisplayKey = `${normalizedSearch}\u0000${sortOption.value}`;
+  const listingDisplayKeyRef = useRef(listingDisplayKey);
   const activeCategoryIds = useMemo(() => (
     categoryIds.length > 0 ? categoryIds : categoryId ? [categoryId] : []
   ), [categoryId, categoryIds]);
@@ -530,14 +532,18 @@ export function ProductListingClient({
       return;
     }
 
-    // Do not keep the previous query's products/count visible while a new
-    // search or sort request is in flight.
-    setLoadedProducts([]);
-    setVisibleTotalCount(0);
+    // Do not keep a previous search/sort result visible while its replacement
+    // is in flight. Category navigation may reuse server-provided products, so
+    // it must not be cleared by this client-side reset.
+    if (listingDisplayKeyRef.current !== listingDisplayKey) {
+      listingDisplayKeyRef.current = listingDisplayKey;
+      setLoadedProducts([]);
+      setVisibleTotalCount(0);
+    }
     setCurrentPage(1);
     setPageAfterCursors({ 1: null });
     setPageSnapshots({});
-  }, [queryFilter, sortOption.value]);
+  }, [listingDisplayKey, queryFilter, sortOption.value]);
 
   useEffect(() => {
     if (result.data?.products) {
