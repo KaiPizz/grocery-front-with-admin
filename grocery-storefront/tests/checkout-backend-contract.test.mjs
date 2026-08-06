@@ -32,6 +32,15 @@ test('available payment methods query matches the backend id-based contract', ()
   assert.match(block, /fee\s*\{\s*amount\s+currency\s*\}/);
 });
 
+test('checkout creation queries line totals using the backend Money contract', () => {
+  const block = exportedConstantBlock('CHECKOUT_CREATE_MUTATION');
+  const linesBlock = block.slice(block.indexOf('lines {'), block.indexOf('subtotalPrice'));
+
+  assert.match(linesBlock, /totalPrice\s*\{\s*amount\s+currency\s*\}/);
+  assert.doesNotMatch(linesBlock, /totalPrice\s*\{\s*gross\s*\{/);
+  assert.match(block, /subtotalPrice\s*\{\s*gross\s*\{\s*amount\s+currency\s*\}\s*\}/);
+});
+
 test('checkout page pays with payment method id and does not use cart discount mutation', () => {
   assert.match(checkoutPageSource, /CHECKOUT_PROMO_CODE_ADD/);
   assert.match(checkoutPageSource, /gateway:\s*method\.id/);

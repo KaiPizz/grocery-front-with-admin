@@ -69,7 +69,7 @@
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",
-              "enabled": true
+              "enabled": false
             },
             {
               "id": "asiandeligo-drive-hero-slide-3",
@@ -362,6 +362,12 @@
         "mode": "pickup",
         "paymentPromise": "backend",
         "stockDisplayMode": "availability_only",
+        "pickupAddress": {
+          "streetAddress1": "Zamieniecka 80/12",
+          "city": "Warszawa",
+          "postalCode": "04-158",
+          "country": "PL"
+        },
         "pickupInstructions": null,
         "bankTransferInstructions": null
       }

@@ -306,6 +306,18 @@ function translatePaymentMethodName(locale: string, method: PaymentMethod): stri
   return method.name;
 }
 
+function translatePaymentMethodDescription(locale: string, method: PaymentMethod): string | null {
+  const code = `${method.id} ${method.provider ?? ''} ${method.name}`.toLowerCase();
+
+  if (code.includes('cod') || code.includes('cash')) {
+    return locale === 'pl'
+      ? 'Zapłać w sklepie podczas odbioru zamówienia.'
+      : 'Pay in store when collecting your order.';
+  }
+
+  return method.description?.trim() || method.provider?.trim() || null;
+}
+
 function focusDeliveryField(field: keyof DeliveryFormState) {
   if (typeof window === 'undefined') return;
 
@@ -328,6 +340,7 @@ export default function CheckoutPage() {
   const fulfillment = getFulfillmentConfig(siteConfig);
   const pickupMode = isPickupFulfillment(siteConfig);
   const bankTransferMode = usesBankTransferPromise(siteConfig);
+  const pickupAddress = fulfillment.pickupAddress;
   const checkoutPickupNotice = getConfiguredText(fulfillment.pickupInstructions, tFulfillment('checkoutPickupNotice'));
   const checkoutBankTransferNotice = getConfiguredText(fulfillment.bankTransferInstructions, tFulfillment('checkoutBankTransferNotice'));
 
@@ -408,6 +421,10 @@ export default function CheckoutPage() {
         locale === 'pl'
           ? 'Nie udało się załadować zapisanych adresów.'
           : 'Failed to load saved addresses.',
+      pickupAddressMissing:
+        locale === 'pl'
+          ? 'Sklep musi uzupełnić adres odbioru przed przyjęciem zamówień.'
+          : 'The store must configure its pickup address before accepting orders.',
     }),
     [locale, pickupMode]
   );
@@ -666,9 +683,17 @@ export default function CheckoutPage() {
 
       <div className="border-t pt-4 mt-5 space-y-2.5" style={{ borderColor: 'var(--color-border)' }}>
         {[
-          { icon: ShieldCheck, label: t('trustSecure') },
-          { icon: Truck, label: t('trustFast') },
-          { icon: RefreshCw, label: t('trustReturns') },
+          ...(pickupMode
+            ? [
+                { icon: MapPin, label: t('trustPickup') },
+                { icon: ShieldCheck, label: t('trustManualConfirmation') },
+                { icon: RefreshCw, label: t('trustContact') },
+              ]
+            : [
+                { icon: ShieldCheck, label: t('trustSecure') },
+                { icon: Truck, label: t('trustFast') },
+                { icon: RefreshCw, label: t('trustReturns') },
+              ]),
         ].map(({ icon: Icon, label }) => (
           <div key={label} className="flex items-center gap-2 text-[11px]" style={{ color: 'var(--color-muted-foreground)' }}>
             <Icon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -734,10 +759,12 @@ export default function CheckoutPage() {
       errors.email = t('invalidEmail');
     }
 
-    if (!f.streetAddress1.trim()) errors.streetAddress1 = t('required');
-    if (!f.city.trim()) errors.city = t('required');
-    if (!f.postalCode.trim()) errors.postalCode = t('required');
-    if (!f.country.trim()) errors.country = t('required');
+    if (!pickupMode) {
+      if (!f.streetAddress1.trim()) errors.streetAddress1 = t('required');
+      if (!f.city.trim()) errors.city = t('required');
+      if (!f.postalCode.trim()) errors.postalCode = t('required');
+      if (!f.country.trim()) errors.country = t('required');
+    }
 
     const firstErrorField = DELIVERY_FIELD_ORDER.find((field) => Boolean(errors[field]));
 
@@ -757,6 +784,12 @@ export default function CheckoutPage() {
     const f = formOverride ?? form;
     const effectiveEmail = isAuthenticated ? authEmail : f.email.trim();
 
+    if (pickupMode && !pickupAddress) {
+      setErrorBanner(uiText.pickupAddressMissing);
+      toast.error(uiText.pickupAddressMissing);
+      return;
+    }
+
     setBusy(true);
     setErrorBanner(null);
 
@@ -764,7 +797,7 @@ export default function CheckoutPage() {
       const buyerUpdated = await updateBuyerIdentity({
         email: effectiveEmail,
         phone: f.phone.trim() || null,
-        countryCode: normalizeCountryCode(f.country),
+        countryCode: normalizeCountryCode(pickupMode ? pickupAddress?.country ?? 'PL' : f.country),
       });
 
       if (!buyerUpdated) {
@@ -863,7 +896,7 @@ export default function CheckoutPage() {
       const checkoutCreate = await graphqlRequest<CheckoutCreateResponse>(CHECKOUT_CREATE_MUTATION, {
         input: {
           channel,
-          email: form.email.trim(),
+          email: isAuthenticated ? authEmail : form.email.trim(),
           lines: items.map((item) => ({
             variantId: item.variantId,
             quantity: item.quantity,
@@ -886,6 +919,14 @@ export default function CheckoutPage() {
       const nextCheckoutId = createPayload.checkout.id;
       setCheckoutId(nextCheckoutId);
 
+      const effectiveAddress = pickupMode && pickupAddress
+        ? pickupAddress
+        : {
+            streetAddress1: form.streetAddress1,
+            city: form.city,
+            postalCode: form.postalCode,
+            country: form.country,
+          };
       const shippingAddressResponse = await graphqlRequest<CheckoutShippingAddressResponse>(
         CHECKOUT_SHIPPING_ADDRESS_UPDATE,
         {
@@ -894,10 +935,10 @@ export default function CheckoutPage() {
             shippingAddress: {
               firstName: form.firstName.trim(),
               lastName: form.lastName.trim(),
-              streetAddress1: form.streetAddress1.trim(),
-              city: form.city.trim(),
-              postalCode: form.postalCode.trim(),
-              country: normalizeCountryCode(form.country),
+              streetAddress1: effectiveAddress.streetAddress1.trim(),
+              city: effectiveAddress.city.trim(),
+              postalCode: effectiveAddress.postalCode.trim(),
+              country: normalizeCountryCode(effectiveAddress.country),
               phone: form.phone.trim(),
             },
           },
@@ -1228,22 +1269,25 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-3">
+      <div className="grid min-w-0 gap-8 lg:grid-cols-3">
+        <div className="min-w-0 space-y-3 lg:col-span-2">
           {/* ── Step 1: Delivery ── */}
           <CheckoutSection
             step="delivery"
             currentStep={step}
             completedSteps={completedSteps}
             onToggle={setStep}
+            pickupMode={pickupMode}
             summaryContent={
               form.firstName
-                ? `${form.firstName} ${form.lastName} · ${form.streetAddress1}, ${form.city}`
+                ? pickupMode
+                  ? `${form.firstName} ${form.lastName} · ${form.email || authEmail}`
+                  : `${form.firstName} ${form.lastName} · ${form.streetAddress1}, ${form.city}`
                 : undefined
             }
           >
               {/* ── Saved address selector ── */}
-              {savedAddresses.length > 0 && (
+              {!pickupMode && savedAddresses.length > 0 && (
                 <div className="mb-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.14em] mb-2.5" style={{ color: 'var(--color-muted-foreground)' }}>
                     {locale === 'pl' ? 'Użyj zapisanego adresu' : 'Use a saved address'}
@@ -1319,10 +1363,12 @@ export default function CheckoutPage() {
                   { key: 'lastName',       label: t('lastName'),    autoComplete: 'family-name',           type: 'text',  inputMode: 'text'    as const },
                   ...(!isAuthenticated ? [{ key: 'email' as const, label: t('email'), autoComplete: 'email', type: 'email', inputMode: 'email' as const }] : []),
                   { key: 'phone',          label: t('phone'),       autoComplete: 'tel',                   type: 'tel',   inputMode: 'tel'     as const },
-                  { key: 'streetAddress1', label: t('address'),     autoComplete: 'street-address',        type: 'text',  inputMode: 'text'    as const },
-                  { key: 'city',           label: t('city'),        autoComplete: 'address-level2',        type: 'text',  inputMode: 'text'    as const },
-                  { key: 'postalCode',     label: t('postalCode'),  autoComplete: 'postal-code',           type: 'text',  inputMode: 'text'    as const },
-                  { key: 'country',        label: t('country'),     autoComplete: 'country',               type: 'text',  inputMode: 'text'    as const },
+                  ...(!pickupMode ? [
+                    { key: 'streetAddress1' as const, label: t('address'), autoComplete: 'street-address', type: 'text', inputMode: 'text' as const },
+                    { key: 'city' as const, label: t('city'), autoComplete: 'address-level2', type: 'text', inputMode: 'text' as const },
+                    { key: 'postalCode' as const, label: t('postalCode'), autoComplete: 'postal-code', type: 'text', inputMode: 'text' as const },
+                    { key: 'country' as const, label: t('country'), autoComplete: 'country', type: 'text', inputMode: 'text' as const },
+                  ] : []),
                 ] as const).map(({ key, label, autoComplete, type, inputMode }) => {
                   const field = key as keyof DeliveryFormState;
                   const isWide = field === 'streetAddress1' || field === 'email';
@@ -1393,6 +1439,7 @@ export default function CheckoutPage() {
             currentStep={step}
             completedSteps={completedSteps}
             onToggle={setStep}
+            pickupMode={pickupMode}
             summaryContent={
               selectedDeliveryOption
                 ? `${translateDeliveryOptionName(locale, selectedDeliveryOption)} · ${
@@ -1448,13 +1495,14 @@ export default function CheckoutPage() {
             currentStep={step}
             completedSteps={completedSteps}
             onToggle={setStep}
+            pickupMode={pickupMode}
             summaryContent={
               selectedPaymentMethod
                 ? translatePaymentMethodName(locale, selectedPaymentMethod)
                 : undefined
             }
           >
-              <div className="flex items-center justify-between gap-3 mb-4">
+              <div className="mb-4 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                   {t('selectPayment')}
                 </p>
@@ -1481,7 +1529,7 @@ export default function CheckoutPage() {
                   {paymentMethods.map((method) => {
                     const selected = selectedPaymentMethod?.id === method.id;
                     const Icon = getPaymentIcon(method);
-                    const paymentDetail = method.description?.trim() || method.provider?.trim() || null;
+                    const paymentDetail = translatePaymentMethodDescription(locale, method);
 
                     return (
                       <button
@@ -1522,26 +1570,37 @@ export default function CheckoutPage() {
             currentStep={step}
             completedSteps={completedSteps}
             onToggle={setStep}
+            pickupMode={pickupMode}
           >
-              {(pickupMode || bankTransferMode) && renderCheckoutNotice(tFulfillment('checkoutReviewNotice'))}
+              {bankTransferMode && renderCheckoutNotice(tFulfillment('checkoutReviewNotice'))}
+              {pickupMode && renderCheckoutNotice(tFulfillment('checkoutPickupReviewNotice'))}
 
               <div className="grid gap-5 md:grid-cols-2 mb-5">
                   <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--color-border)' }}>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {t('delivery')}
+                      {pickupMode ? t('stepPickupContact') : t('delivery')}
                     </p>
                     <p className="mt-2 text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
                       {form.firstName} {form.lastName}
                     </p>
-                    <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {form.streetAddress1}
-                    </p>
-                    <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {form.postalCode} {form.city}, {form.country.toUpperCase()}
-                    </p>
+                    {!pickupMode && (
+                      <>
+                        <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
+                          {form.streetAddress1}
+                        </p>
+                        <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                          {form.postalCode} {form.city}, {form.country.toUpperCase()}
+                        </p>
+                      </>
+                    )}
                     <p className="text-sm mt-2" style={{ color: 'var(--color-muted-foreground)' }}>
                       {form.email}
                     </p>
+                    {pickupMode && pickupAddress && (
+                      <p className="mt-3 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                        {pickupAddress.streetAddress1}, {pickupAddress.postalCode} {pickupAddress.city}
+                      </p>
+                    )}
                   </div>
 
                   <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--color-border)' }}>

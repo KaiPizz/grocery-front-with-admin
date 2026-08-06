@@ -78,6 +78,12 @@ function pickupConfigEnvelope() {
           mode: 'pickup',
           paymentPromise: 'bank_transfer',
           stockDisplayMode: 'availability_only',
+          pickupAddress: {
+            streetAddress1: 'Zamieniecka 80/12',
+            city: 'Warszawa',
+            postalCode: '04-158',
+            country: 'PL',
+          },
           pickupInstructions: null,
           bankTransferInstructions: null,
         },
@@ -130,10 +136,6 @@ async function fillDeliveryForm(page: Page) {
   await page.getByLabel(/last name/i).fill('Nowak');
   await page.getByLabel(/^email/i).fill('marta@example.com');
   await page.getByLabel(/phone/i).fill('+48123123123');
-  await page.getByLabel(/address/i).fill('Marszalkowska 1');
-  await page.getByLabel(/city/i).fill('Warsaw');
-  await page.getByLabel(/postal code/i).fill('00-001');
-  await page.getByLabel(/country/i).fill('PL');
 }
 
 async function completePickupBankTransferSelection(page: Page) {
@@ -215,6 +217,7 @@ test.describe('Kenmito launch truth copy', () => {
     await mockMobileStorefront(page, { cart: 'single-item', checkoutProfile: 'pickup-bank-transfer' });
     await page.goto('/en/checkout');
 
+    await expect(page.getByLabel(/^street address$|^postal code$|^country$/i)).toHaveCount(0);
     await fillDeliveryForm(page);
     await page.getByRole('button', { name: /continue/i }).click();
 
@@ -235,6 +238,8 @@ test.describe('Kenmito launch truth copy', () => {
     const reviewSection = page.getByTestId('checkout-section-review');
     await expect(reviewSection).toContainText(/complete the bank transfer/i);
     await expect(reviewSection).toContainText(/pickup confirmation/i);
+    await expect(reviewSection).toContainText(/Zamieniecka 80\/12/i);
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
   test('checkout blocks honestly when backend exposes no pickup method for the channel', async ({ page }) => {

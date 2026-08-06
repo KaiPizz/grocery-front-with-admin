@@ -530,6 +530,10 @@ export function ProductListingClient({
       return;
     }
 
+    // Do not keep the previous query's products/count visible while a new
+    // search or sort request is in flight.
+    setLoadedProducts([]);
+    setVisibleTotalCount(0);
     setCurrentPage(1);
     setPageAfterCursors({ 1: null });
     setPageSnapshots({});

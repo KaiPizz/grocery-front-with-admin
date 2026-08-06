@@ -12,6 +12,7 @@ interface CheckoutSectionProps {
   completedSteps: Set<CheckoutStep>;
   onToggle: (step: CheckoutStep) => void;
   summaryContent?: React.ReactNode;
+  pickupMode?: boolean;
   children: React.ReactNode;
 }
 
@@ -21,13 +22,14 @@ export function CheckoutSection({
   completedSteps,
   onToggle,
   summaryContent,
+  pickupMode = false,
   children,
 }: CheckoutSectionProps) {
   const t = useTranslations('checkout');
 
   const stepLabels: Record<CheckoutStep, string> = {
-    delivery: t('stepDelivery'),
-    shipping: t('stepShipping'),
+    delivery: pickupMode ? t('stepPickupContact') : t('stepDelivery'),
+    shipping: pickupMode ? t('stepPickupMethod') : t('stepShipping'),
     payment: t('stepPayment'),
     review: t('stepReview'),
   };
@@ -41,7 +43,7 @@ export function CheckoutSection({
 
   return (
     <section
-      className="rounded-2xl border overflow-hidden transition-all duration-300"
+      className="min-w-0 overflow-hidden rounded-2xl border transition-all duration-300"
       style={{
         borderColor: isActive
           ? 'var(--color-primary)'
@@ -56,7 +58,7 @@ export function CheckoutSection({
         type="button"
         onClick={() => isClickable && onToggle(step)}
         disabled={isLocked}
-        className="w-full flex items-center gap-3 px-4 sm:px-5 md:px-6 py-4 text-left transition-colors duration-200 disabled:cursor-not-allowed"
+        className="flex w-full min-w-0 items-center gap-3 px-4 py-4 text-left transition-colors duration-200 disabled:cursor-not-allowed sm:px-5 md:px-6"
         style={{
           backgroundColor: isActive
             ? 'color-mix(in srgb, var(--color-primary) 5%, transparent)'
@@ -160,6 +162,7 @@ interface CheckoutProgressBarProps {
 }
 
 export function CheckoutProgressBar({ currentStep, completedSteps }: CheckoutProgressBarProps) {
+  const t = useTranslations('checkout');
   const currentIndex = STEPS.indexOf(currentStep);
   const completedCount = Array.from(completedSteps).length;
   const progressPercent = ((currentIndex + 1) / STEPS.length) * 100;
@@ -171,13 +174,13 @@ export function CheckoutProgressBar({ currentStep, completedSteps }: CheckoutPro
           className="font-medium"
           style={{ color: 'var(--color-muted-foreground)' }}
         >
-          Step {currentIndex + 1} of {STEPS.length}
+          {t('progressStep', { current: currentIndex + 1, total: STEPS.length })}
         </span>
         <span
           className="font-medium"
           style={{ color: 'var(--color-muted-foreground)' }}
         >
-          {completedCount} completed
+          {t('progressCompleted', { count: completedCount })}
         </span>
       </div>
       <div

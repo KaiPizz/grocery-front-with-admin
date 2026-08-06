@@ -6,7 +6,7 @@ import { FormCard } from '@/components/FormCard';
 import { FieldLabel } from '@/components/FieldLabel';
 import { SaveBar } from '@/components/SaveBar';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
-import type { FulfillmentConfig, GeneralConfig, SocialLink } from '@/types/config';
+import type { FulfillmentConfig, GeneralConfig, PickupAddressConfig, SocialLink } from '@/types/config';
 import { useLanguage } from '@/i18n';
 
 const PLATFORM_OPTIONS = ['Facebook', 'Instagram', 'Twitter/X', 'TikTok', 'YouTube', 'LINE', 'WhatsApp', 'Telegram', 'LinkedIn', 'Pinterest'];
@@ -49,6 +49,19 @@ export default function GeneralPage() {
 
   function updateFulfillment(partial: Partial<FulfillmentConfig>) {
     updateGeneral({ fulfillment: { ...general.fulfillment, ...partial } });
+  }
+
+  function updatePickupAddress(partial: Partial<PickupAddressConfig>) {
+    updateFulfillment({
+      pickupAddress: {
+        streetAddress1: '',
+        city: '',
+        postalCode: '',
+        country: 'PL',
+        ...general.fulfillment.pickupAddress,
+        ...partial,
+      },
+    });
   }
 
   return (
@@ -124,6 +137,47 @@ export default function GeneralPage() {
               </select>
             </FieldLabel>
           </div>
+          {general.fulfillment.mode === 'pickup' && (
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+              <p className="mb-3 text-sm font-semibold text-gray-800">{t('general.pickupAddress')}</p>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FieldLabel label={t('general.pickupStreet')}>
+                  <input
+                    type="text"
+                    value={general.fulfillment.pickupAddress?.streetAddress1 ?? ''}
+                    onChange={(e) => updatePickupAddress({ streetAddress1: e.target.value })}
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                  />
+                </FieldLabel>
+                <FieldLabel label={t('general.pickupCity')}>
+                  <input
+                    type="text"
+                    value={general.fulfillment.pickupAddress?.city ?? ''}
+                    onChange={(e) => updatePickupAddress({ city: e.target.value })}
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                  />
+                </FieldLabel>
+                <FieldLabel label={t('general.pickupPostalCode')}>
+                  <input
+                    type="text"
+                    value={general.fulfillment.pickupAddress?.postalCode ?? ''}
+                    onChange={(e) => updatePickupAddress({ postalCode: e.target.value })}
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                  />
+                </FieldLabel>
+                <FieldLabel label={t('general.pickupCountry')}>
+                  <input
+                    type="text"
+                    maxLength={2}
+                    value={general.fulfillment.pickupAddress?.country ?? 'PL'}
+                    onChange={(e) => updatePickupAddress({ country: e.target.value.toUpperCase() })}
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm uppercase outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                  />
+                </FieldLabel>
+              </div>
+              <p className="mt-3 text-xs text-gray-500">{t('general.pickupAddressHint')}</p>
+            </div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FieldLabel label={t('general.pickupInstructions')}>
               <textarea

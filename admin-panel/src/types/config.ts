@@ -283,10 +283,18 @@ export type FulfillmentMode = 'delivery' | 'pickup';
 export type PaymentPromise = 'backend' | 'bank_transfer';
 export type StockDisplayMode = 'exact_when_low' | 'availability_only';
 
+export interface PickupAddressConfig {
+  streetAddress1: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}
+
 export interface FulfillmentConfig {
   mode: FulfillmentMode;
   paymentPromise: PaymentPromise;
   stockDisplayMode: StockDisplayMode;
+  pickupAddress: PickupAddressConfig | null;
   pickupInstructions: string | null;
   bankTransferInstructions: string | null;
 }

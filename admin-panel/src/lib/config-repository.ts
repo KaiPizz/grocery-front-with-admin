@@ -28,7 +28,10 @@ export function withConfigDefaults(config: StorefrontConfig): StorefrontConfig {
     ...config,
     general: {
       ...config.general,
-      fulfillment: config.general.fulfillment ?? DEFAULT_CONFIG.general.fulfillment,
+      fulfillment: {
+        ...DEFAULT_CONFIG.general.fulfillment,
+        ...(config.general.fulfillment ?? {}),
+      },
     },
     commercial: {
       ...DEFAULT_CONFIG.commercial,

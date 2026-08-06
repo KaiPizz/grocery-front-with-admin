@@ -220,8 +220,8 @@ export default function CartPage() {
         </span>
       </h1>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid min-w-0 gap-8 lg:grid-cols-3">
+        <div className="min-w-0 lg:col-span-2">
           {hasZones ? (
             <StorageZoneGroup itemsByZone={itemsByZone} renderItem={renderCartItem} />
           ) : (
@@ -247,9 +247,11 @@ export default function CartPage() {
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span style={{ color: 'var(--color-muted-foreground)' }}>{t('shipping')}</span>
+                <span style={{ color: 'var(--color-muted-foreground)' }}>
+                  {pickupMode ? tFulfillment('pickupCostLabel') : t('shipping')}
+                </span>
                 <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                  Calculated at checkout
+                  {pickupMode ? tFulfillment('pickupCostFree') : t('calculatedAtCheckout')}
                 </span>
               </div>
             </div>

@@ -389,6 +389,12 @@ const fulfillmentSchema = z.object({
   mode: z.enum(['delivery', 'pickup']),
   paymentPromise: z.enum(['backend', 'bank_transfer']),
   stockDisplayMode: z.enum(['exact_when_low', 'availability_only']),
+  pickupAddress: z.object({
+    streetAddress1: z.string().trim().min(1).max(200),
+    city: z.string().trim().min(1).max(100),
+    postalCode: z.string().trim().min(1).max(20),
+    country: z.string().trim().regex(/^[A-Za-z]{2}$/, 'Must be a two-letter country code'),
+  }).nullable(),
   pickupInstructions: z.string().max(1000).nullable(),
   bankTransferInstructions: z.string().max(1000).nullable(),
 });
@@ -411,6 +417,7 @@ const generalSchema = z.object({
     mode: 'delivery',
     paymentPromise: 'backend',
     stockDisplayMode: 'exact_when_low',
+    pickupAddress: null,
     pickupInstructions: null,
     bankTransferInstructions: null,
   }),

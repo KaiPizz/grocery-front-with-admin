@@ -698,7 +698,7 @@ export const CHECKOUT_CREATE_MUTATION = `
           id
           quantity
           variant { id name sku }
-          totalPrice { gross { amount currency } }
+          totalPrice { amount currency }
         }
         subtotalPrice { gross { amount currency } }
         totalPrice { gross { amount currency } }

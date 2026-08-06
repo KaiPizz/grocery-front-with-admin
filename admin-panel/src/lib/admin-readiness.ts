@@ -49,6 +49,7 @@ const PUBLISH_BLOCKER_MESSAGES: Record<string, string> = {
   'tracking.google-analytics-id-missing': 'Cannot publish: Google Analytics is enabled but has no Measurement ID.',
   'tracking.google-tag-manager-id-missing': 'Cannot publish: Google Tag Manager is enabled but has no Container ID.',
   'tracking.hotjar-id-missing': 'Cannot publish: Hotjar is enabled but has no Site ID.',
+  'general.pickup-address-missing': 'Cannot publish: pickup mode requires a complete store pickup address.',
 };
 
 function makeIssue(id: string, sectionId: SetupSectionId, severity: ReadinessSeverity): ReadinessIssue {
@@ -165,6 +166,22 @@ function collectRecommendedIssues(config: StorefrontConfig): ReadinessIssue[] {
   return issues;
 }
 
+function collectFulfillmentIssues(config: StorefrontConfig): ReadinessIssue[] {
+  if (config.general.fulfillment.mode !== 'pickup') return [];
+
+  const address = config.general.fulfillment.pickupAddress;
+  if (
+    !address?.streetAddress1.trim()
+    || !address.city.trim()
+    || !address.postalCode.trim()
+    || !/^[A-Za-z]{2}$/.test(address.country.trim())
+  ) {
+    return [makeIssue('general.pickup-address-missing', 'general', 'blocking')];
+  }
+
+  return [];
+}
+
 function getSectionState(issues: ReadinessIssue[]): SetupSectionState {
   if (issues.some((issue) => issue.severity === 'blocking')) return 'blocking';
   if (issues.some((issue) => issue.severity === 'recommended')) return 'recommended';
@@ -176,6 +193,7 @@ export function getAdminReadiness(config: StorefrontConfig): AdminReadiness {
   const issues = [
     ...collectBannerBlockIssues(config.homepage.blocks),
     ...collectTrackingIssues(config),
+    ...collectFulfillmentIssues(config),
     ...collectRecommendedIssues(config),
   ];
   const blockingIssues = issues.filter((issue) => issue.severity === 'blocking');

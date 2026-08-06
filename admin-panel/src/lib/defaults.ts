@@ -183,6 +183,7 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
       mode: 'delivery',
       paymentPromise: 'backend',
       stockDisplayMode: 'exact_when_low',
+      pickupAddress: null,
       pickupInstructions: null,
       bankTransferInstructions: null,
     },

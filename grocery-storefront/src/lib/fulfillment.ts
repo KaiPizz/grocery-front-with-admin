@@ -4,12 +4,16 @@ export const DEFAULT_FULFILLMENT_CONFIG: FulfillmentConfig = {
   mode: 'delivery',
   paymentPromise: 'backend',
   stockDisplayMode: 'exact_when_low',
+  pickupAddress: null,
   pickupInstructions: null,
   bankTransferInstructions: null,
 };
 
 export function getFulfillmentConfig(config: StorefrontConfig | null): FulfillmentConfig {
-  return config?.general?.fulfillment ?? DEFAULT_FULFILLMENT_CONFIG;
+  return {
+    ...DEFAULT_FULFILLMENT_CONFIG,
+    ...(config?.general?.fulfillment ?? {}),
+  };
 }
 
 export function isPickupFulfillment(config: StorefrontConfig | null): boolean {

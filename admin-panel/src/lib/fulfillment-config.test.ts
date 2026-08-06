@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import { DEFAULT_CONFIG } from './defaults';
 import { auditKenmitoConfig } from './kenmito-config-audit';
+import { getAdminReadiness } from './admin-readiness';
 import { withConfigDefaults } from './config-repository';
 import { storefrontConfigSchema } from './validation';
 
@@ -25,6 +26,7 @@ test('default config keeps delivery/backend fulfillment behavior', () => {
     mode: 'delivery',
     paymentPromise: 'backend',
     stockDisplayMode: 'exact_when_low',
+    pickupAddress: null,
     pickupInstructions: null,
     bankTransferInstructions: null,
   });
@@ -37,6 +39,12 @@ test('validation accepts pickup and bank transfer fulfillment config', () => {
     mode: 'pickup',
     paymentPromise: 'bank_transfer',
     stockDisplayMode: 'availability_only',
+    pickupAddress: {
+      streetAddress1: 'Zamieniecka 80/12',
+      city: 'Warszawa',
+      postalCode: '04-158',
+      country: 'PL',
+    },
     pickupInstructions: null,
     bankTransferInstructions: null,
   };
@@ -44,6 +52,17 @@ test('validation accepts pickup and bank transfer fulfillment config', () => {
   const result = storefrontConfigSchema.safeParse(config);
 
   assert.equal(result.success, true);
+});
+
+test('admin readiness blocks pickup publishing without a structured store address', () => {
+  const config = makeSchemaValidConfig();
+  config.general.fulfillment.mode = 'pickup';
+  config.general.fulfillment.pickupAddress = null;
+
+  const readiness = getAdminReadiness(config);
+
+  assert.equal(readiness.canPublish, false);
+  assert.ok(readiness.blockingIssues.some((issue) => issue.id === 'general.pickup-address-missing'));
 });
 
 test('normalizes older stored configs without fulfillment config', () => {
@@ -58,6 +77,7 @@ test('normalizes older stored configs without fulfillment config', () => {
   assert.equal(normalized.general.fulfillment.mode, 'delivery');
   assert.equal(normalized.general.fulfillment.paymentPromise, 'backend');
   assert.equal(normalized.general.fulfillment.stockDisplayMode, 'exact_when_low');
+  assert.equal(normalized.general.fulfillment.pickupAddress, null);
 });
 
 test('Kenmito launch audit reports localhost media and missing owner details', () => {
