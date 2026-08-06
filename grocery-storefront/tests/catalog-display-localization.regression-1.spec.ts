@@ -293,7 +293,7 @@ test.describe('catalog display localization', () => {
     const body = page.locator('body');
     await expect(body).toContainText('Sauces and pastes');
     await expect(page.locator('h1.sr-only')).toHaveText('Asian groceries for everyday shopping');
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(5);
     await expect(page.locator('[data-testid="desktop-home-hero"] img').first()).toHaveAttribute(
       'alt',
       /Asian groceries for everyday shopping/i,
@@ -351,7 +351,7 @@ test.describe('catalog display localization', () => {
 
     await page.setViewportSize({ width: 412, height: 915 });
     await expect(page.locator('[data-testid="mobile-home-hero"]')).toBeVisible();
-    await expect(page.locator('[data-testid="mobile-home-hero"] img')).toHaveCount(6);
+    await expect(page.locator('[data-testid="mobile-home-hero"] img')).toHaveCount(5);
     await expect.poll(async () => (
       page.locator('[data-testid="mobile-home-hero"] img').first().evaluate((image) => (
         (image as HTMLImageElement).currentSrc
@@ -387,21 +387,21 @@ test.describe('catalog display localization', () => {
     }).first();
     await expect(readyMealsLink).toBeVisible();
 
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(5);
     await page.getByRole('button', { name: /przejdź do slajdu 2/i }).click();
     await page.locator('button[aria-haspopup="listbox"]:visible').click();
     await page.getByRole('option', { name: /English/ }).click();
     await expect(page).toHaveURL(/\/en$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.locator('h1.sr-only')).toHaveText('Asian groceries for everyday shopping');
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(5);
 
     await page.locator('button[aria-haspopup="listbox"]:visible').click();
     await page.getByRole('option', { name: /Polski/ }).click();
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'pl');
     await expect(page.locator('h1.sr-only')).toHaveText('Azjatyckie produkty spożywcze na co dzień');
-    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(6);
+    await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(5);
   });
 
   test('shows English catalog labels while keeping the raw Polish country filter value', async ({ page }) => {
