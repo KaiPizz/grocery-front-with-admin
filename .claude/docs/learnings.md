@@ -35,6 +35,17 @@
 - **Rule:** Every Asia Deli Go config change must update and compare the
   `asiandeligo` and `kenmito` aliases in both apps before release.
 
+### Never expand a displayed short commit hash by hand
+- **Error:** A fast-forward push used a manually completed 40-character value
+  based on Git's seven-character commit display, and Git correctly rejected it
+  because that object did not exist.
+- **Cause:** The command did not resolve the full commit ID from the repository
+  immediately before using it as the push source.
+- **Fix:** Kept `origin/main` unchanged, resolved the exact object with
+  `git rev-parse HEAD`, and used the verified ref for the retry.
+- **Rule:** Feed release and push commands only SHAs returned by
+  `git rev-parse`; never type or infer the undisplayed suffix of a short hash.
+
 ### robots.txt blocking prevents crawlers from observing page-level noindex
 - **Error:** Personal and transactional routes were disallowed in `robots.txt`;
   adding a `noindex` meta tag alone would therefore leave compliant crawlers
