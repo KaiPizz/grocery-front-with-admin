@@ -18,6 +18,8 @@
     "closeSearch": "Zamknij wyszukiwarkę",
     "openMenu": "Otwórz menu",
     "closeMenu": "Zamknij menu",
+    "mobileNavigation": "Nawigacja mobilna",
+    "mobileMenuDescription": "Przeglądaj linki sklepu i konta {storeName}.",
     "itemCount": "{count, plural, one {# pozycja} few {# pozycje} many {# pozycji} other {# pozycji}}",
     "viewAllProducts": "Zobacz wszystkie produkty",
     "viewAllRecipes": "Zobacz wszystkie przepisy",

@@ -161,6 +161,36 @@ test.describe('landing responsive contracts', () => {
     await expect(header.getByRole('button', { name: /otwórz menu|open menu/i })).toBeVisible();
   });
 
+  test('isolates the mobile navigation as one keyboard-contained modal', async ({ page }) => {
+    await mockAsiaDeliGoConfig(page);
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/pl/products');
+
+    const trigger = page.getByTestId('mobile-sticky-header').getByRole('button', {
+      name: /otwórz menu/i,
+    });
+    await trigger.click();
+
+    const dialog = page.getByRole('dialog', { name: /menu.*asia deli go/i });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole('button', { name: /zamknij menu/i })).toHaveCount(1);
+    await expect(page.getByRole('main')).toHaveCount(0);
+    await expect(page.getByRole('contentinfo')).toHaveCount(0);
+    await expect.poll(() => page.evaluate(() => (
+      document.activeElement?.closest('[role="dialog"]') !== null
+    ))).toBe(true);
+
+    await page.keyboard.press('Shift+Tab');
+    await expect.poll(() => page.evaluate(() => (
+      document.activeElement?.closest('[role="dialog"]') !== null
+    ))).toBe(true);
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+
   for (const imageFit of ['contain', 'cover'] as const) {
     test(`renders configured category artwork with ${imageFit} fit`, async ({ page }) => {
       await mockAsiaDeliGoConfig(page, imageFit);

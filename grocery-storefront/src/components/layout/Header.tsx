@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Runtime-configured storefront logos can use arbitrary URLs until the production media loader policy is defined. */
 
 import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ShoppingCart, Search, Menu, X, Leaf, Heart, LogIn, LogOut, UserRound, ChevronDown, Package, MapPin, Shield } from 'lucide-react';
@@ -222,27 +223,6 @@ export function Header() {
   }, [isMounted]);
 
   useEffect(() => {
-    if (!menuOpen || !isMounted) return;
-    if (typeof window === 'undefined' || window.innerWidth >= 1280) return;
-
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    function handleDocumentKeyDown(event: globalThis.KeyboardEvent) {
-      if (event.key === 'Escape') {
-        setMenuOpen(false);
-      }
-    }
-
-    document.addEventListener('keydown', handleDocumentKeyDown);
-
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      document.removeEventListener('keydown', handleDocumentKeyDown);
-    };
-  }, [menuOpen, isMounted]);
-
-  useEffect(() => {
     return () => {
       if (categoryMenuCloseTimeoutRef.current) {
         clearTimeout(categoryMenuCloseTimeoutRef.current);
@@ -377,17 +357,18 @@ export function Header() {
   ];
 
   return (
-    <header
-      className="sticky top-0 z-50 border-b backdrop-blur-md transition-transform duration-normal ease-out md:translate-y-0"
-      style={{
-        height: 'var(--header-height)',
-        borderColor: 'var(--color-border)',
-        backgroundColor: 'color-mix(in srgb, var(--color-background) 92%, transparent)',
-        transform: isMounted && typeof window !== 'undefined' && window.innerWidth < 768 && !mobileHeaderVisible ? 'translateY(calc(-1 * var(--header-height)))' : undefined,
-      }}
-      role="banner"
-      data-testid="mobile-sticky-header"
-    >
+    <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
+      <header
+        className="sticky top-0 z-50 border-b backdrop-blur-md transition-transform duration-normal ease-out md:translate-y-0"
+        style={{
+          height: 'var(--header-height)',
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'color-mix(in srgb, var(--color-background) 92%, transparent)',
+          transform: isMounted && typeof window !== 'undefined' && window.innerWidth < 768 && !mobileHeaderVisible ? 'translateY(calc(-1 * var(--header-height)))' : undefined,
+        }}
+        role="banner"
+        data-testid="mobile-sticky-header"
+      >
       <ServiceStrip />
 
       <div
@@ -641,20 +622,16 @@ export function Header() {
             </Link>
           )}
 
-          <button
-            type="button"
-            className="xl:hidden p-2.5 rounded-xl hover-surface"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? tCommon('closeMenu') : tCommon('openMenu')}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav"
-          >
-            {menuOpen ? (
-              <X className="w-5 h-5" style={{ color: 'var(--color-foreground)' }} />
-            ) : (
+          <Dialog.Trigger asChild>
+            <button
+              type="button"
+              className="xl:hidden p-2.5 rounded-xl hover-surface"
+              aria-label={tCommon('openMenu')}
+              aria-controls="mobile-nav"
+            >
               <Menu className="w-5 h-5" style={{ color: 'var(--color-foreground)' }} />
-            )}
-          </button>
+            </button>
+          </Dialog.Trigger>
         </div>
       </div>
 
@@ -676,39 +653,43 @@ export function Header() {
         </div>
       )}
 
-      {menuOpen && (
-        <div className="fixed inset-0 z-[70] xl:hidden" role="presentation">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/35 backdrop-blur-[1px]"
-            aria-label={tCommon('closeMenu')}
-            onClick={() => setMenuOpen(false)}
-          />
+      </header>
+
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[70] bg-black/35 backdrop-blur-[1px] xl:hidden" />
+        <Dialog.Content
+          id="mobile-nav"
+          className="fixed right-0 top-0 z-[71] h-[100dvh] w-[min(88vw,360px)] max-w-full animate-slide-in-right border-l shadow-2xl xl:hidden"
+          style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+        >
           <nav
-            id="mobile-nav"
-            className="absolute right-0 top-0 flex h-[100dvh] w-[min(88vw,360px)] max-w-full animate-slide-in-right flex-col border-l shadow-2xl"
-            style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
-            aria-label="Mobile navigation"
+            className="flex h-full flex-col"
+            aria-label={tCommon('mobileNavigation')}
           >
             <div className="flex items-center justify-between border-b px-4 py-3" style={{ borderColor: 'var(--color-border)' }}>
-              <div className="min-w-0">
+              <Dialog.Title className="min-w-0">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: 'var(--color-muted-foreground)' }}>
                   Menu
                 </p>
                 <p className="truncate font-display text-lg font-bold" style={{ color: 'var(--color-foreground)' }}>
                   {storeName}
                 </p>
-              </div>
-              <button
-                type="button"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors duration-fast hover-surface"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                aria-label={tCommon('closeMenu')}
-                onClick={() => setMenuOpen(false)}
-              >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </button>
+              </Dialog.Title>
+              <Dialog.Close asChild>
+                <button
+                  type="button"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors duration-fast hover-surface"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                  aria-label={tCommon('closeMenu')}
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </Dialog.Close>
             </div>
+
+            <Dialog.Description className="sr-only">
+              {tCommon('mobileMenuDescription', { storeName })}
+            </Dialog.Description>
 
             <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
               <div className="grid grid-cols-2 gap-2">
@@ -828,8 +809,8 @@ export function Header() {
               )}
             </div>
           </nav>
-        </div>
-      )}
-    </header>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

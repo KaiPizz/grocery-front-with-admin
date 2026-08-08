@@ -817,3 +817,9 @@
 - **Cause:** Turbopack resolves packages relative to the project root and refuses a node_modules that is a symlink pointing outside it, unlike webpack-era Next.
 - **Fix:** Ran a real `npm ci` in the worktree (fast with warm npm cache) instead of symlinking.
 - **Rule:** Fresh worktrees of this repo need their own `npm ci` per app; do not symlink node_modules across checkouts for anything that boots Next.
+
+### A visual drawer is not automatically an accessible modal
+- **Error:** The mobile navigation looked like a modal drawer and locked body scrolling, but page landmarks stayed exposed to assistive technology, focus could leave the drawer, and three controls shared the same close-menu name.
+- **Cause:** The implementation used fixed-position CSS plus bespoke Escape and scroll-lock effects without dialog semantics, modal isolation, focus containment, or focus restoration.
+- **Fix:** Reused the installed Radix dialog primitive for the portal, overlay, content, title, description, and single close control while preserving the existing drawer presentation and breakpoint state cleanup.
+- **Rule:** When a drawer blocks the page, implement it with a proven modal-dialog primitive and regression-test background isolation, focus containment, Escape, and trigger-focus restoration; CSS overlay and scroll lock alone are insufficient.

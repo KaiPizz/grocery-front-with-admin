@@ -18,6 +18,8 @@
     "closeSearch": "Close search",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
+    "mobileNavigation": "Mobile navigation",
+    "mobileMenuDescription": "Browse {storeName} shopping and account links.",
     "itemCount": "{count, plural, one {# item} other {# items}}",
     "viewAllProducts": "View all products",
     "viewAllRecipes": "View all recipes",
