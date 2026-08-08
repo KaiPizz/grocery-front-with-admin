@@ -135,6 +135,20 @@ test.describe('mobile products page', () => {
     await expect(page.getByRole('link', { name: /organic gala apples/i })).toHaveCount(0);
   });
 
+  test('localizes Polish allergen exclusion actions for assistive technology', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    const nutsButton = filterPanel.getByRole('button', { name: /^wyklucz orzechy$/i });
+    await expect(nutsButton).toBeEnabled();
+    await nutsButton.click();
+    await expect(filterPanel.getByRole('button', {
+      name: /^usuń wykluczenie orzechy$/i,
+    })).toHaveAttribute('aria-pressed', 'true');
+  });
+
   test('compresses the mobile catalog layout to prioritize product images', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 390, height: 844 });

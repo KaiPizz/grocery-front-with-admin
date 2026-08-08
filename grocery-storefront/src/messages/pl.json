@@ -144,6 +144,8 @@
     "categoryFilter": "Kategorie",
     "countryOriginFilter": "Kraj pochodzenia",
     "allergenFilter": "Wyklucz alergeny",
+    "excludeAllergen": "Wyklucz {name}",
+    "removeAllergenExclusion": "Usuń wykluczenie {name}",
     "dietaryFilter": "Preferencje żywieniowe",
     "zoneFilter": "Strefa przechowywania",
     "certFilter": "Certyfikaty",

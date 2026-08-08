@@ -65,7 +65,9 @@ export function AllergenFilter({ selected, onChange, options, disabled = false }
                 color: isActive ? 'var(--color-allergen)' : 'var(--color-muted-foreground)',
               }}
               aria-pressed={isActive}
-              aria-label={`${isActive ? 'Remove' : 'Exclude'} ${t(code)}`}
+              aria-label={isActive
+                ? tProducts('removeAllergenExclusion', { name: t(code) })
+                : tProducts('excludeAllergen', { name: t(code) })}
             >
               {isActive && <X className="w-3 h-3" />}
               {t(code)}

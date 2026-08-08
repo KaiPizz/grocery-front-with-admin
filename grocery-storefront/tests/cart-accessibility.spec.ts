@@ -44,6 +44,20 @@ test.describe('cart accessibility', () => {
     await expect(cartItem).not.toContainText(/tree_nuts|\bnuts\b|\bmilk\b/i);
   });
 
+  test('localizes repeated cart quantity actions for Polish assistive technology', async ({ page }) => {
+    await seedCartStorage(page);
+    await mockMobileStorefront(page, { cart: 'single-item' });
+    await page.goto('/pl/cart');
+
+    const cartItem = page.getByTestId('cart-item').first();
+    await expect(cartItem.getByRole('button', {
+      name: /zmniejsz ilość produktu organic gala apples family value pack/i,
+    })).toBeVisible();
+    await expect(cartItem.getByRole('button', {
+      name: /zwiększ ilość produktu organic gala apples family value pack/i,
+    })).toBeVisible();
+  });
+
   test('persists active cart metadata so reload does not scan the product catalog', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.goto('/en/products/organic-gala-apples');

@@ -144,6 +144,8 @@
     "categoryFilter": "Categories",
     "countryOriginFilter": "Country of origin",
     "allergenFilter": "Exclude allergens",
+    "excludeAllergen": "Exclude {name}",
+    "removeAllergenExclusion": "Remove {name} exclusion",
     "dietaryFilter": "Dietary preferences",
     "zoneFilter": "Storage zone",
     "certFilter": "Certifications",

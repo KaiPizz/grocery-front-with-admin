@@ -26,6 +26,7 @@ export default function CartPage() {
   const tCommon = useTranslations('common');
   const tWishlist = useTranslations('wishlist');
   const tAllergens = useTranslations('allergens');
+  const tProduct = useTranslations('product');
   const isHydrated = useHydrated();
   const initialized = useCartStore((state) => state.initialized);
   const itemCount = useCartStore((state) => state.getItemCount());
@@ -132,7 +133,7 @@ export default function CartPage() {
               type="button"
               onClick={() => updateQuantity(item.id, item.quantity - 1)}
               className="flex h-11 w-11 items-center justify-center transition-colors duration-fast hover-surface"
-              aria-label={`Decrease ${item.name} quantity`}
+              aria-label={tProduct('decreaseQuantity', { name: item.name })}
             >
               <Minus className="w-4 h-4" style={{ color: 'var(--color-foreground)' }} aria-hidden="true" />
             </button>
@@ -143,7 +144,7 @@ export default function CartPage() {
               type="button"
               onClick={() => updateQuantity(item.id, item.quantity + 1)}
               className="flex h-11 w-11 items-center justify-center transition-colors duration-fast hover-surface"
-              aria-label={`Increase ${item.name} quantity`}
+              aria-label={tProduct('increaseQuantity', { name: item.name })}
             >
               <Plus className="w-4 h-4" style={{ color: 'var(--color-foreground)' }} aria-hidden="true" />
             </button>
