@@ -1061,8 +1061,16 @@ export function ProductListingClient({
   }
 
   function getPaginationItems(): Array<number | 'ellipsis'> {
+    const cursorBackedPages = new Set<number>([
+      currentPage,
+      ...Object.keys(pageAfterCursors).map(Number),
+      ...Object.keys(pageSnapshots).map(Number),
+    ]);
+
     if (totalPages <= 5) {
-      return Array.from({ length: totalPages }, (_, index) => index + 1);
+      return Array.from(cursorBackedPages)
+        .filter((page) => page >= 1 && page <= totalPages)
+        .sort((left, right) => left - right);
     }
 
     const pages = new Set<number>([1, currentPage]);
@@ -1070,7 +1078,7 @@ export function ProductListingClient({
     if (currentPage < totalPages) pages.add(currentPage + 1);
 
     return Array.from(pages)
-      .filter((page) => page >= 1 && page <= totalPages)
+      .filter((page) => page >= 1 && page <= totalPages && cursorBackedPages.has(page))
       .sort((a, b) => a - b)
       .reduce<Array<number | 'ellipsis'>>((items, page) => {
         const previous = items[items.length - 1];
@@ -1357,8 +1365,6 @@ export function ProductListingClient({
               }
 
               const canSelectPage = item === currentPage
-                || (item === currentPage + 1 && canGoNext)
-                || (item === currentPage - 1 && canGoPrevious)
                 || Boolean(pageSnapshots[item])
                 || Object.prototype.hasOwnProperty.call(pageAfterCursors, item);
               const isCurrentPage = item === currentPage;

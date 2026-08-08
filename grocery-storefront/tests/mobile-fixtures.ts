@@ -1001,6 +1001,7 @@ interface MockMobileStorefrontOptions {
   catalogLabels?: 'default' | 'polish-source';
   facets?: 'populated' | 'empty';
   listingProductLimit?: number;
+  listingPaginationTotalCount?: number;
   filterCatalogProductLimit?: number;
   homepageShelfSources?: 'shared' | 'distinct';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
@@ -1153,11 +1154,29 @@ export async function mockMobileStorefront(
         ? matchingProducts.slice(0, options.filterCatalogProductLimit)
         : matchingProducts;
 
+      const paginationTotalCount = isProductListingQuery
+        ? options.listingPaginationTotalCount
+        : undefined;
+      const afterCursor = typeof body.variables?.after === 'string'
+        ? body.variables.after
+        : null;
+      const previousPageNumber = afterCursor?.match(/^listing-page-(\d+)$/)?.[1];
+      const pageNumber = previousPageNumber ? Number(previousPageNumber) + 1 : 1;
+      const requestedPageSize = Number(body.variables?.first) || 24;
+      const paginationPageCount = paginationTotalCount
+        ? Math.ceil(paginationTotalCount / requestedPageSize)
+        : 1;
+
       await fulfill(route, {
         products: {
           edges: filteredProducts.map(buildProductEdge),
-          pageInfo: { hasNextPage: false, endCursor: null },
-          totalCount: matchingProducts.length,
+          pageInfo: {
+            hasNextPage: pageNumber < paginationPageCount,
+            hasPreviousPage: pageNumber > 1,
+            startCursor: paginationTotalCount ? `listing-page-${pageNumber}-start` : null,
+            endCursor: paginationTotalCount ? `listing-page-${pageNumber}` : null,
+          },
+          totalCount: paginationTotalCount ?? matchingProducts.length,
         },
       });
       return;

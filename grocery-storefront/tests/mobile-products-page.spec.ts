@@ -149,6 +149,28 @@ test.describe('mobile products page', () => {
     })).toHaveAttribute('aria-pressed', 'true');
   });
 
+  test('never presents cursor-unknown page numbers as disabled navigation choices', async ({ page }) => {
+    await mockMobileStorefront(page, { listingPaginationTotalCount: 92 });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products');
+
+    const pagination = page.getByTestId('product-pagination');
+    await expect(pagination.locator('[aria-label="Strona 1 / 4"]')).toBeVisible();
+    await expect(pagination.getByRole('button', { name: '2', exact: true })).toBeEnabled();
+    await expect(pagination.getByRole('button', { name: '3', exact: true })).toHaveCount(0);
+    await expect(pagination.getByRole('button', { name: '4', exact: true })).toHaveCount(0);
+
+    await pagination.getByRole('button', { name: 'Następna', exact: true }).click();
+    await expect(pagination.locator('[aria-label="Strona 2 / 4"]')).toBeVisible();
+    await expect(pagination.getByRole('button', { name: '1', exact: true })).toBeEnabled();
+    await expect(pagination.getByRole('button', { name: '3', exact: true })).toBeEnabled();
+    await expect(pagination.getByRole('button', { name: '4', exact: true })).toHaveCount(0);
+
+    await pagination.getByRole('button', { name: 'Następna', exact: true }).click();
+    await expect(pagination.locator('[aria-label="Strona 3 / 4"]')).toBeVisible();
+    await expect(pagination.getByRole('button', { name: '4', exact: true })).toBeEnabled();
+  });
+
   test('compresses the mobile catalog layout to prioritize product images', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 390, height: 844 });
