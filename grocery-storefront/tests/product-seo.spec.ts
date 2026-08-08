@@ -80,6 +80,33 @@ test.describe('product SEO', () => {
     expect(productJsonLd.url).toBe('https://store.example.test/products/organic-gala-apples');
   });
 
+  test('bounds long metadata descriptions without truncating Product structured data', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.goto('/en/products/spinach-ravioli-family-pack');
+
+    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    const openGraphDescription = await page.locator('meta[property="og:description"]').getAttribute('content');
+    const twitterDescription = await page.locator('meta[name="twitter:description"]').getAttribute('content');
+
+    expect(description).toBeTruthy();
+    expect(openGraphDescription).toBe(description);
+    expect(twitterDescription).toBe(description);
+    expect(Array.from(description ?? '').length).toBeLessThanOrEqual(160);
+    expect(Array.from(description ?? '').length).toBeGreaterThan(100);
+    expect(description).toMatch(/…$/);
+    expect(description).not.toMatch(/\s{2,}|�/);
+    expect(description).not.toContain('Końcowa informacja');
+
+    const productJsonLd = await page.locator('script#product-json-ld').evaluate((element) => {
+      return JSON.parse(element.textContent ?? '{}');
+    });
+    expect(Array.from(productJsonLd.description).length).toBeGreaterThan(160);
+    expect(productJsonLd.description).not.toContain('�');
+    expect(productJsonLd.description).toContain(
+      'Końcowa informacja pozostaje wyłącznie w pełnym opisie produktu.',
+    );
+  });
+
   test('permanently redirects old renamed-product slugs', async ({ request }) => {
     const redirects = [
       ['/products/chipsy-z-alg-morskich-z-sezamem-50g-sempio?source=test', '/products/sempio-seasoned-laver-gim-jaban-70g?source=test'],

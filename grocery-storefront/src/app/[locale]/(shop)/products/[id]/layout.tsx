@@ -57,6 +57,8 @@ interface ProductRouteParams {
   id: string;
 }
 
+const PRODUCT_META_DESCRIPTION_MAX_CODE_POINTS = 160;
+
 const getProductForSeo = cache(async (slug: string): Promise<ProductSeoData | null> => {
   const result = await serverGraphqlRequest<ProductQueryData>(
     PRODUCT_BY_SLUG_QUERY,
@@ -69,6 +71,27 @@ const getProductForSeo = cache(async (slug: string): Promise<ProductSeoData | nu
 function cleanText(value: string | null | undefined): string | undefined {
   const cleaned = value?.replace(/\s+/g, ' ').trim();
   return cleaned || undefined;
+}
+
+function normalizeProductMetaDescription(value: string | null | undefined): string | undefined {
+  const cleaned = cleanText(value);
+  if (!cleaned) return undefined;
+
+  const codePoints = Array.from(cleaned);
+  if (codePoints.length <= PRODUCT_META_DESCRIPTION_MAX_CODE_POINTS) {
+    return cleaned;
+  }
+
+  const prefix = codePoints
+    .slice(0, PRODUCT_META_DESCRIPTION_MAX_CODE_POINTS - 1)
+    .join('');
+  const lastWordBoundary = prefix.lastIndexOf(' ');
+  const minimumWordBoundary = Math.floor(PRODUCT_META_DESCRIPTION_MAX_CODE_POINTS * 0.75);
+  const truncated = lastWordBoundary >= minimumWordBoundary
+    ? prefix.slice(0, lastWordBoundary)
+    : prefix;
+
+  return `${truncated.trimEnd()}…`;
 }
 
 function getProductName(product: ProductSeoData, locale: string): string {
@@ -266,8 +289,10 @@ export async function generateMetadata({
   const origin = getStoreOrigin(configuredCanonical);
   const canonical = getProductUrl(origin, resolvedParams.locale, product.slug);
   const name = getProductSeoTitle(product, resolvedParams.locale);
-  const description = getProductSeoDescription(product, resolvedParams.locale)
-    ?? getConfigString(siteConfig?.seo?.defaultDescription);
+  const description = normalizeProductMetaDescription(
+    getProductSeoDescription(product, resolvedParams.locale)
+      ?? getConfigString(siteConfig?.seo?.defaultDescription),
+  );
   const images = getAbsoluteImageUrls(product, origin);
 
   return {

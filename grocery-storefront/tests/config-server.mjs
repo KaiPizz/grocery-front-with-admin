@@ -209,6 +209,14 @@ const publicTaxonomyProducts = [
 // Product detail routes render on the Next.js server before Playwright's
 // browser-side GraphQL interception is active. Keep detail-only fixtures here
 // without changing catalog/category listing counts used by other tests.
+const longDetailDescription = `
+  Family-size spinach ravioli for quick freezer meals, prepared with spinach,
+  wheat flour, eggs, ricotta and a small amount of しょうゆ seasoning. Keep frozen
+  until cooking and follow the preparation guidance printed on the package.
+  This deliberately long catalog description must remain available to shoppers
+  and structured data. Końcowa informacja pozostaje wyłącznie w pełnym opisie produktu.
+`;
+
 const detailProducts = [
   ...products,
   {
@@ -216,9 +224,9 @@ const detailProducts = [
     id: 'prod-ravioli',
     name: 'Spinach Ravioli Family Pack',
     slug: 'spinach-ravioli-family-pack',
-    description: 'Family-size spinach ravioli for quick freezer meals.',
+    description: longDetailDescription,
     seoTitle: 'Spinach Ravioli Family Pack | Configured Test Grocery',
-    seoDescription: 'Spinach ravioli family pack. Check the current price and availability.',
+    seoDescription: null,
     translation: null,
     allergens: ['gluten', 'eggs'],
     dietaryTags: ['vegetarian'],

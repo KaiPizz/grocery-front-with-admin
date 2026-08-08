@@ -823,3 +823,9 @@
 - **Cause:** The implementation used fixed-position CSS plus bespoke Escape and scroll-lock effects without dialog semantics, modal isolation, focus containment, or focus restoration.
 - **Fix:** Reused the installed Radix dialog primitive for the portal, overlay, content, title, description, and single close control while preserving the existing drawer presentation and breakpoint state cleanup.
 - **Rule:** When a drawer blocks the page, implement it with a proven modal-dialog primitive and regression-test background isolation, focus containment, Escape, and trigger-focus restoration; CSS overlay and scroll lock alone are insufficient.
+
+### Full catalog copy is not safe SEO metadata by default
+- **Error:** Product descriptions as long as 2,001 characters were copied directly into description, Open Graph, and Twitter metadata, producing noisy search/share snippets.
+- **Cause:** The metadata fallback collapsed whitespace but had no bounded presentation contract, while the same helper fed both metadata and full Product structured data.
+- **Fix:** Added a metadata-only, word-aware 160-code-point normalizer and kept the full cleaned description for visible product content and Product JSON-LD.
+- **Rule:** Normalize metadata at its output boundary. Never shorten the source catalog field or structured-data description merely to satisfy search-snippet presentation limits.
