@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
-import { imageSize } from 'image-size';
+import { readAllowlistedImageDimensions } from './media-validation';
 
 const configFiles = ['config-asiandeligo.json', 'config-kenmito.json'];
 
@@ -25,7 +25,7 @@ test('Asia Deli Go hero mobile artwork uses the full-frame 768x240 contract', ()
           '../grocery-storefront/public',
           expectedUrl.slice(1)
         );
-        const dimensions = imageSize(readFileSync(assetPath));
+        const dimensions = readAllowlistedImageDimensions(readFileSync(assetPath));
         assert.equal(dimensions.width, 768);
         assert.equal(dimensions.height, 240);
       }

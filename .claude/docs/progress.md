@@ -23,6 +23,12 @@
   identity and final Polish terms/privacy review; missing English product
   translations remain catalog-data work rather than a UI machine-translation
   fallback.
+- The guarded release dependency audit newly failed on PostCSS/nanoid plus an
+  unpatched generic `image-size` parser in the admin upload path. Both apps now
+  pin patched PostCSS 8.5.26/nanoid 3.3.18; admin image dimensions are read by a
+  bounded internal parser for the existing JPEG/PNG/WebP/GIF/ICO allowlist.
+  Production-only audits now report zero vulnerabilities; production remains
+  unchanged.
 
 ## 2026-08-06 Asia Deli Go Homepage Category Image Consistency
 
@@ -520,6 +526,7 @@
 | Asia Deli Go legal pages need final seller/controller data | High | 2026-08-08: live terms/privacy identify the store, address, and email but still need the owner's exact legal seller/data-controller identity plus Polish consumer/privacy review. Do not invent NIP/REGON/KRS, legal bases, retention, complaint/ADR, or food-withdrawal terms. |
 | Asia Deli Go English catalog and product-title metadata are incomplete | Medium | 2026-08-08: 40/1,779 live products have no English translation object; a 100-product sample also found 35 titles over 60 characters and 15 descriptions repeating the title. Description length is now bounded in code, but translation and title quality require catalog-owner remediation rather than UI machine translation or blind title truncation. |
 | Asia Deli Go lacks an aggregate catalog-facet contract | Medium | 2026-08-08: the backend caps facet catalog pages at 100 while the live channel has 1,779 products. The storefront now fails open (no sampled price clamp, all finite options available, no global search counts), but exact scoped counts/bounds still require a backend aggregate API. |
+| Build-only lint dependencies retain two High advisory chains | Low | 2026-08-08: full npm audit still reports `brace-expansion` and `js-yaml` through ESLint tooling. They are omitted from production installs/artifacts and the guarded `--omit=dev --audit-level=high` gate is clean in both apps. Track upstream/scoped dev-tool upgrades separately instead of forcing unrelated runtime upgrades one week before launch. |
 | 5 admin block editors are stubs | Low | `CircularGridEditor`, `GradientPicker`, `ImageSizeHint`, `LongBannerEditor`, `SliderBlockEditor` — all 45-byte placeholder files. |
 | Checkout page is 1492 lines | Low | Functional but large. Could be split if more features are added. |
 | Some E2E tests are implementation-shaped | Medium | Several mobile tests still assert exact DOM/CSS geometry (`getComputedStyle`, `boundingBox`, pixel thresholds) without an explicit PRD/spec anchor. 2026-05-12: repaired PD sticky tests to use the accessibility contract (`aria-hidden`) and an explicit short viewport for the out-of-view scenario, but broader audit remains. |

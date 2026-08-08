@@ -829,3 +829,9 @@
 - **Cause:** The metadata fallback collapsed whitespace but had no bounded presentation contract, while the same helper fed both metadata and full Product structured data.
 - **Fix:** Added a metadata-only, word-aware 160-code-point normalizer and kept the full cleaned description for visible product content and Product JSON-LD.
 - **Rule:** Normalize metadata at its output boundary. Never shorten the source catalog field or structured-data description merely to satisfy search-snippet presentation limits.
+
+### Reachability mitigation does not clear a package-level release gate
+- **Error:** The guarded release began failing after new High advisories marked every published `image-size` version vulnerable, even though the upload route rejected the affected ICNS/JXL/HEIF signatures before calling the package.
+- **Cause:** Runtime reachability and lockfile auditability are separate contracts: npm audits installed package versions, while the release lane intentionally fails closed on any production High advisory.
+- **Fix:** Removed the generic parser and implemented bounded header readers only for the five already-supported raster formats; patched PostCSS in both apps also moved its nanoid dependency beyond the new advisory range. Production-only audits now return zero findings without upgrading Next.js.
+- **Rule:** For security-gated releases, first prove exploit reachability, then remove or patch the dependency itself. Never weaken the audit gate merely because application code currently filters the known payload format.
