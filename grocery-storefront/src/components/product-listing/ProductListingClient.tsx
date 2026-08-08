@@ -364,12 +364,14 @@ export function ProductListingClient({
     catalogResult.data?.products?.edges?.map((edge) => edge.node) ?? []
   ), [catalogResult.data]);
   const filterSourceProducts = catalogProducts.length > 0 ? catalogProducts : loadedProducts;
-  const catalogPriceBoundsReady = !catalogResult.fetching
+  const catalogMetadataReady = !catalogResult.fetching
     && !catalogResult.error
     && catalogResult.data?.products != null;
+  const catalogMetadataExhaustive = catalogMetadataReady
+    && catalogProducts.length >= (catalogResult.data?.products?.totalCount ?? 0);
 
   const priceBounds = useMemo(() => {
-    if (!catalogPriceBoundsReady) {
+    if (!catalogMetadataExhaustive) {
       return null;
     }
 
@@ -385,9 +387,13 @@ export function ProductListingClient({
       min: Math.min(...prices),
       max: Math.max(...prices),
     };
-  }, [catalogPriceBoundsReady, catalogProducts]);
+  }, [catalogMetadataExhaustive, catalogProducts]);
 
   const availableAllergens = useMemo(() => {
+    if (catalogMetadataReady && !catalogMetadataExhaustive) {
+      return [...ALLERGEN_OPTIONS];
+    }
+
     const allergenCodes = new Set<string>();
 
     for (const product of filterSourceProducts) {
@@ -404,7 +410,7 @@ export function ProductListingClient({
     }
 
     return ALLERGEN_OPTIONS.filter((allergen) => allergenCodes.has(allergen));
-  }, [filterSourceProducts]);
+  }, [catalogMetadataExhaustive, catalogMetadataReady, filterSourceProducts]);
 
   const dietaryAvailabilityKnown = !dietaryAvailabilityResult.fetching
     && !dietaryAvailabilityResult.error
@@ -421,12 +427,16 @@ export function ProductListingClient({
   }, [dietaryAvailabilityKnown, dietaryAvailabilityResult.data]);
 
   const availableStorageZones = useMemo(() => (
-    ZONE_OPTIONS.filter((zone) => filterSourceProducts.some((product) => product?.storageZone === zone))
-  ), [filterSourceProducts]);
+    catalogMetadataReady && !catalogMetadataExhaustive
+      ? [...ZONE_OPTIONS]
+      : ZONE_OPTIONS.filter((zone) => filterSourceProducts.some((product) => product?.storageZone === zone))
+  ), [catalogMetadataExhaustive, catalogMetadataReady, filterSourceProducts]);
 
   const availableCertifications = useMemo(() => (
-    CERT_OPTIONS.filter((certification) => filterSourceProducts.some((product) => extractProductCertifications(product as GroceryProduct & Record<string, any>).includes(certification)))
-  ), [filterSourceProducts]);
+    catalogMetadataReady && !catalogMetadataExhaustive
+      ? [...CERT_OPTIONS]
+      : CERT_OPTIONS.filter((certification) => filterSourceProducts.some((product) => extractProductCertifications(product as GroceryProduct & Record<string, any>).includes(certification)))
+  ), [catalogMetadataExhaustive, catalogMetadataReady, filterSourceProducts]);
   const availableCountryOrigins = useMemo(() => {
     const origins = countryOriginsResult.data?.productCountryOrigins ?? [];
 
@@ -667,9 +677,11 @@ export function ProductListingClient({
                   aria-pressed={normalizedFilters.countryOfOrigin.includes(origin.value)}
                 >
                   {origin.label}
-                  <span className="ml-1 tabular-nums" aria-hidden="true">
-                    {origin.count}
-                  </span>
+                  {!normalizedSearch && (
+                    <span className="ml-1 tabular-nums" aria-hidden="true">
+                      {origin.count}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>

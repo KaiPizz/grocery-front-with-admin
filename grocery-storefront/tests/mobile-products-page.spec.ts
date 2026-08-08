@@ -388,6 +388,47 @@ test.describe('mobile products page', () => {
     await expect(page.getByTestId('product-card')).toHaveCount(4);
   });
 
+  test('fails open when a capped metadata page cannot prove catalog facet bounds', async ({ page }) => {
+    const operations: string[] = [];
+    const productQueries: Array<Record<string, any>> = [];
+
+    await mockMobileStorefront(page, {
+      filterCatalogProductLimit: 1,
+      onGraphqlOperation: (operationName) => operations.push(operationName),
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
+
+    // A partial metadata page can safely prove presence, never absence or a
+    // complete min/max range for the PRD's large-catalog filtering workflow.
+    await expect(filterPanel.getByRole('button', { name: /^mrożone$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^chłodzone$/i })).toBeEnabled();
+    await expect(filterPanel.getByText(/dostępny zakres:/i)).toHaveCount(0);
+
+    await filterPanel.getByLabel(/cena minimalna/i).fill('999');
+    await expect.poll(() => productQueries.some((variables) => {
+      const filter = variables.filter as Record<string, any> | undefined;
+      return filter?.price?.gte === 999;
+    })).toBe(true);
+  });
+
+  test('omits global origin counts when the listing is scoped by search', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products?search=apple');
+
+    const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    const polandOrigin = filterPanel.getByRole('button', { name: /^poland$/i });
+    await expect(polandOrigin).toBeEnabled();
+    await expect(polandOrigin).toHaveText(/^Poland$/);
+  });
+
   test('restores dietary deep links and keeps the URL in sync with desktop filters', async ({ page }) => {
     const productQueries: Array<Record<string, any>> = [];
 

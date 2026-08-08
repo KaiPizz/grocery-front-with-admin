@@ -402,6 +402,22 @@
 
 ## Zyra API Errors
 
+### A capped product page cannot prove facet absence or price extrema
+- **Error:** Asia Deli Go hid `CHILLED` and `FROZEN` filters and silently
+  clamped a shopper's 350 PLN minimum to 344 PLN even though the full live
+  catalog reaches 390 PLN and contains both omitted storage zones.
+- **Cause:** `GroceryProductFilterCatalog(first: 100)` returns a bounded page
+  plus the full `totalCount`, but the listing treated those 100 rows as an
+  exhaustive facet dataset across 1,779 products.
+- **Fix:** Detect when `edges.length < totalCount`; in that state omit the
+  unproven price bounds, preserve the shopper's entered price, and fail open
+  with every finite allergen/storage/certification option. Search-scoped
+  origin filters also omit global counts until the backend can aggregate them
+  against the search term.
+- **Rule:** A paginated sample may prove that a facet value exists, never that
+  another value is absent or that its observed min/max is global. Use backend
+  aggregates when available; otherwise fail open without invented bounds.
+
 ### Reused UI `GroceryProduct` type for raw GraphQL variant pricing
 - **Error:** After extracting shared listing helpers, `npx tsc --noEmit` failed because `ProductVariant` in `src/types/index.ts` does not expose nested `variant.pricing`, even though live GraphQL product fragments do.
 - **Cause:** `GroceryProduct` is an older UI-facing shape, while raw Zyra GraphQL products still carry Saleor-style nested pricing objects in several listing paths.
