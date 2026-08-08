@@ -668,12 +668,12 @@ export function Header() {
           >
             <div className="flex items-center justify-between border-b px-4 py-3" style={{ borderColor: 'var(--color-border)' }}>
               <Dialog.Title className="min-w-0">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: 'var(--color-muted-foreground)' }}>
+                <span className="block text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: 'var(--color-muted-foreground)' }}>
                   Menu
-                </p>
-                <p className="truncate font-display text-lg font-bold" style={{ color: 'var(--color-foreground)' }}>
+                </span>
+                <span className="block truncate font-display text-lg font-bold" style={{ color: 'var(--color-foreground)' }}>
                   {storeName}
-                </p>
+                </span>
               </Dialog.Title>
               <Dialog.Close asChild>
                 <button

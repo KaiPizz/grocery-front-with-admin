@@ -167,6 +167,8 @@
     "priceTo": "Do {price}",
     "priceBetween": "{min}-{max} {currency}",
     "filterUnavailable": "Niedostępne dla bieżącego katalogu",
+    "filterAvailabilityLoading": "Sprawdzamy dostępność filtrów…",
+    "filterAvailabilityError": "Nie udało się sprawdzić dostępności filtrów. Niektóre opcje mogą nie zwrócić produktów.",
     "applyFilters": "Zastosuj filtry",
     "emptyTitle": "Brak produktów",
     "emptyDescription": "Produkty pojawią się tutaj, gdy katalog będzie dostępny.",

@@ -2,7 +2,7 @@
 
 > This is an error log. Every entry records a mistake that was made during development, what caused it, and how it was fixed. Before starting any task, read this file to avoid repeating past mistakes.
 >
-> **Last updated:** 2026-08-06
+> **Last updated:** 2026-08-08
 
 ---
 
@@ -410,13 +410,120 @@
   plus the full `totalCount`, but the listing treated those 100 rows as an
   exhaustive facet dataset across 1,779 products.
 - **Fix:** Detect when `edges.length < totalCount`; in that state omit the
-  unproven price bounds, preserve the shopper's entered price, and fail open
-  with every finite allergen/storage/certification option. Search-scoped
-  origin filters also omit global counts until the backend can aggregate them
-  against the search term.
+  unproven price bounds and preserve the shopper's entered price. Resolve all
+  known dietary/storage/certification options with one dedicated tenant/category
+  aggregate scan, while allergen metadata and transient failures fail open.
+  Hide origin counts whenever search or another active filter is outside that
+  endpoint's scope.
 - **Rule:** A paginated sample may prove that a facet value exists, never that
   another value is absent or that its observed min/max is global. Use backend
   aggregates when available; otherwise fail open without invented bounds.
+
+### Sibling GraphQL aliases can multiply expensive resolver work
+- **Error:** An exactness prototype queried the regular `products` resolver once
+  for each of 11 finite filter options. It returned correct totals but took
+  about 2.3 seconds on the live 1,779-product channel.
+- **Cause:** Every alias independently resolved the channel and ran both
+  `getCount()` and `getMany()`, turning one browser request into roughly 22
+  product SQL statements. The mock hid another mismatch by lowercasing
+  certifications even though production JSONB containment is case-sensitive.
+- **Fix:** Added one fixed allowlist aggregate using `COUNT(*) FILTER` over a
+  single tenant/public/category-scoped query, preserved database casing in the
+  fixture, and included zero values explicitly in the response.
+- **Rule:** GraphQL aliases reduce network round trips, not resolver or database
+  work. For related facet totals, aggregate at the service/database boundary
+  and make mocks reproduce production comparison semantics.
+
+### SSR pagination cursors must seed the client navigation map
+- **Error:** After removing dead numeric pagination controls, a category page
+  with 48 server-rendered products no longer showed page 2 on first render,
+  even though its Next control still worked.
+- **Cause:** The server supplied `initialHasMore` and `initialEndCursor`, but
+  client state initialized its cursor map with page 1 only; the truthful UI
+  therefore had no recorded proof that page 2 was selectable.
+- **Fix:** Seed page 2 from the server's end cursor whenever the initial page
+  declares a next page, and cover the first category render in Playwright.
+- **Rule:** When SSR already fetched a Relay page, hydrate both its rows and
+  its navigation evidence. Do not discard a known cursor and rediscover it
+  after client refetch.
+
+### React hydration resets need semantic keys, not a mounted boolean
+- **Error:** The SSR-provided page-2 cursor briefly appeared, then disappeared
+  after filter metadata settled under React Strict Mode.
+- **Cause:** A reset effect depended on a newly allocated filter object, and a
+  boolean “mounted” guard was consumed by Strict Mode's development effect
+  replay rather than by a real search/sort/filter transition.
+- **Fix:** Compute a stable semantic listing key and reset cursor/snapshot state
+  only when that key changes. The category regression now waits for facet
+  metadata before asserting that page 2 is still selectable.
+- **Rule:** Effects that preserve hydrated server state must compare the meaning
+  of a query, not object identity or a one-shot mount flag.
+
+### Manual cursor requests need query-generation guards
+- **Error:** A shopper could request page 2, change a filter while that request
+  was in flight, and then have the old page response overwrite the newly
+  filtered page. The old cursor also left Next temporarily enabled while the
+  new page 1 was still loading.
+- **Cause:** Imperative `client.query()` pagination requests were not tied to
+  the semantic search/sort/filter generation that launched them, and reset
+  logic cleared snapshots without clearing cursor navigation state.
+- **Fix:** Tag manual requests with the current semantic listing key and a
+  monotonic request id; ignore results from older generations, reset all cursor
+  flags immediately, and only let the latest request clear loading state.
+- **Rule:** Every async result that mutates shared listing state must prove it
+  still belongs to the current query. Reset both cached data and navigation
+  capabilities when the query generation changes.
+
+### Listing generations include their data source, not only visible filters
+- **Error:** A dynamic channel change could retain products and cursor evidence
+  from the previous tenant until the replacement query completed.
+- **Cause:** The semantic reset/display key covered search, sort, and filters,
+  but omitted `channel` and `pageSize`, even though both change the query result
+  and cursor boundaries.
+- **Fix:** Include the source channel and page size in both the display and
+  request-generation keys, suppress old rows immediately when that source key
+  changes, and never apply retained query data while the replacement request is
+  fetching.
+- **Rule:** A cache or race guard must include every variable that determines
+  result identity. Cross-tenant data should be hidden synchronously, not only
+  cleared later by an effect.
+
+### Fail-open metadata still needs an explicit uncertainty state
+- **Error:** Missing finite-facet values and `productFilterFacets: null` kept
+  options usable, but the UI did not tell shoppers that availability could not
+  be verified.
+- **Cause:** Only transport/GraphQL errors set the availability warning; a
+  syntactically successful partial or null payload was treated as healthy.
+- **Fix:** Validate the fixed response allowlist and non-negative integer
+  counts. Preserve known zero counts, fail open only missing/invalid values,
+  and display the localized warning for partial, null, or errored responses.
+- **Rule:** Fail-open is a safety behavior, not proof of availability. Surface
+  uncertainty whenever the authoritative metadata contract is incomplete.
+
+### A failed replacement query must not legitimize stale products
+- **Error:** After a filter was selected, an errored replacement request left
+  the previous unfiltered products visible under the active filter with no
+  retry state.
+- **Cause:** Query errors were hidden whenever any previously loaded rows still
+  existed.
+- **Fix:** Treat the current query error as authoritative, hide stale rows,
+  counts, and pagination, and show the localized retry action. Retained rows
+  remain a loading optimization only while a valid replacement is pending.
+- **Rule:** Stale-while-revalidate data must never be presented as the result of
+  a query that is known to have failed.
+
+### Facet counts are truthful only inside the query scope that produced them
+- **Error:** Country-origin chips kept showing base/category-wide counts after
+  price, storage, allergen, dietary, or certification filters narrowed the
+  listing, making the numbers look like counts for the visible result set.
+- **Cause:** The country-origin endpoint accepts category scope but not the
+  other listing filters; the UI hid its counts only for text search.
+- **Fix:** Keep the origin choices usable, but suppress their numbers whenever
+  any unsupported committed filter is active. Unfiltered and category-route
+  counts remain visible because those scopes are supported.
+- **Rule:** Every displayed facet count must declare the filters it represents.
+  If the backend cannot reproduce the current scope, hide the number instead
+  of presenting a broader count as if it were contextual.
 
 ### Reused UI `GroceryProduct` type for raw GraphQL variant pricing
 - **Error:** After extracting shared listing helpers, `npx tsc --noEmit` failed because `ProductVariant` in `src/types/index.ts` does not expose nested `variant.pricing`, even though live GraphQL product fragments do.

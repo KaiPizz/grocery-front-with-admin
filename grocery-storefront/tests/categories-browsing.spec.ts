@@ -409,6 +409,25 @@ test.describe('B1 category browsing', () => {
     await expect(page.getByText(/sourdough sandwich bread/i)).toHaveCount(0);
   });
 
+  test('exposes the server-provided second-page cursor on first category render', async ({ page }) => {
+    const operations: string[] = [];
+    await mockMobileStorefront(page, {
+      listingPaginationTotalCount: 48,
+      onGraphqlOperation: (operationName) => operations.push(operationName),
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+
+    await page.goto('/en/categories/fruit');
+
+    await expect.poll(() => operations.includes('ProductFilterFacets')).toBe(true);
+    await expect(page.getByRole('button', { name: /^kosher$/i })).toBeDisabled();
+
+    const pagination = page.getByRole('navigation', { name: /product pagination/i });
+    const pageTwo = pagination.getByRole('button', { name: '2', exact: true });
+    await expect(pageTwo).toBeVisible();
+    await expect(pageTwo).toBeEnabled();
+  });
+
   test('keeps empty categories visible with a clear empty state', async ({ page }) => {
     await mockMobileStorefront(page);
 
@@ -542,8 +561,16 @@ test.describe('desktop category navigation', () => {
 
     const mainNavigation = page.getByRole('navigation', { name: 'Main navigation' });
     const categoriesLink = mainNavigation.getByRole('link', { name: /^categories$/i });
+    const homeLink = mainNavigation.getByRole('link', { name: /^home$/i });
 
-    await categoriesLink.focus();
+    await expect.poll(async () => {
+      // WebKit can expose the server-rendered link before React has attached
+      // delegated focus handlers. Move focus away and back until hydration is
+      // complete so the test exercises keyboard behavior, not hydration speed.
+      await homeLink.focus();
+      await categoriesLink.focus();
+      return categoriesLink.getAttribute('aria-expanded');
+    }, { timeout: 15_000 }).toBe('true');
 
     const megaMenu = page.getByRole('navigation', { name: /category mega menu/i });
     await expect(megaMenu).toBeVisible();

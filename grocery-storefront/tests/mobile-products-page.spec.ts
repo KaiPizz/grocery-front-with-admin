@@ -3,9 +3,8 @@ import { expect, test } from '@playwright/test';
 import { mockMobileStorefront } from './mobile-fixtures';
 
 const PRODUCT_FILTER_METADATA_OPERATIONS = [
-  'GroceryProductFilterCatalog',
   'ProductCountryOrigins',
-  'ProductDietaryAvailability',
+  'ProductFilterFacets',
 ];
 
 async function openFilters(page: Page, panel: Locator) {
@@ -60,17 +59,15 @@ test.describe('mobile products page', () => {
     await expect.poll(() => operations.includes('GroceryProductListing')).toBe(true);
     await expect.poll(() => operations.includes('PublicCategoryNavigation')).toBe(true);
     expect(operationQueries.get('PublicCategoryNavigation')).not.toMatch(/\bproducts\s*\(/);
-    expect(operations).not.toContain('GroceryProductFilterCatalog');
     expect(operations).not.toContain('ProductCountryOrigins');
-    expect(operations).not.toContain('ProductDietaryAvailability');
+    expect(operations).not.toContain('ProductFilterFacets');
     await expect(page.getByTestId('product-card')).toHaveCount(0);
 
     releaseListing();
 
     await expect(page.getByTestId('product-card')).toHaveCount(4);
-    await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
     await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
-    await expect.poll(() => operations.includes('ProductDietaryAvailability')).toBe(true);
+    await expect.poll(() => operations.includes('ProductFilterFacets')).toBe(true);
     expect(metadataStartedBeforeListingResponse).toBe(false);
   });
 
@@ -98,16 +95,14 @@ test.describe('mobile products page', () => {
     await page.evaluate(() => new Promise<void>((resolve) => {
       requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
     }));
-    expect(operations).not.toContain('GroceryProductFilterCatalog');
     expect(operations).not.toContain('ProductCountryOrigins');
-    expect(operations).not.toContain('ProductDietaryAvailability');
+    expect(operations).not.toContain('ProductFilterFacets');
     expect(metadataStartedBeforeUserIntent).toBe(false);
 
     userOpenedFilters = true;
     await page.getByRole('button', { name: /filters/i }).click();
-    await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
     await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
-    await expect.poll(() => operations.includes('ProductDietaryAvailability')).toBe(true);
+    await expect.poll(() => operations.includes('ProductFilterFacets')).toBe(true);
   });
 
   test('excludes both legacy and canonical tree-nut allergen codes', async ({ page }) => {
@@ -133,6 +128,21 @@ test.describe('mobile products page', () => {
         && allergens.includes('tree_nuts');
     })).toBe(true);
     await expect(page.getByRole('link', { name: /organic gala apples/i })).toHaveCount(0);
+  });
+
+  test('replaces stale products with an error when a filtered listing request fails', async ({ page }) => {
+    await mockMobileStorefront(page, { products: 'filter-error' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    await expect(page.getByTestId('product-card')).toHaveCount(4);
+    await filterPanel.getByRole('button', { name: /^wegańskie$/i }).click();
+
+    await expect(page.getByRole('button', { name: /^spróbuj ponownie$/i })).toBeVisible();
+    await expect(page.getByTestId('product-card')).toHaveCount(0);
+    await expect(page.getByTestId('product-pagination')).toHaveCount(0);
+    await expect(page.getByTestId('mobile-products-title-count')).toHaveCount(0);
   });
 
   test('localizes Polish allergen exclusion actions for assistive technology', async ({ page }) => {
@@ -162,13 +172,92 @@ test.describe('mobile products page', () => {
 
     await pagination.getByRole('button', { name: 'Następna', exact: true }).click();
     await expect(pagination.locator('[aria-label="Strona 2 / 4"]')).toBeVisible();
+    await expect(page.getByTestId('product-card').first()).toContainText('(Page 2)');
     await expect(pagination.getByRole('button', { name: '1', exact: true })).toBeEnabled();
     await expect(pagination.getByRole('button', { name: '3', exact: true })).toBeEnabled();
     await expect(pagination.getByRole('button', { name: '4', exact: true })).toHaveCount(0);
 
     await pagination.getByRole('button', { name: 'Następna', exact: true }).click();
     await expect(pagination.locator('[aria-label="Strona 3 / 4"]')).toBeVisible();
+    await expect(page.getByTestId('product-card').first()).toContainText('(Page 3)');
     await expect(pagination.getByRole('button', { name: '4', exact: true })).toBeEnabled();
+
+    await pagination.getByRole('button', { name: 'Poprzednia', exact: true }).click();
+    await expect(pagination.locator('[aria-label="Strona 2 / 4"]')).toBeVisible();
+    await expect(page.getByTestId('product-card').first()).toContainText('(Page 2)');
+
+    await pagination.getByRole('button', { name: '1', exact: true }).click();
+    await expect(pagination.locator('[aria-label="Strona 1 / 4"]')).toBeVisible();
+    await expect(page.getByTestId('product-card').first()).not.toContainText('(Page');
+  });
+
+  test('ignores an old page response after the listing filters change', async ({ page }) => {
+    let releasePageTwo!: () => void;
+    let notifyPageTwoRequested!: () => void;
+    let releaseFilteredPageOne!: () => void;
+    let notifyFilteredPageOneRequested!: () => void;
+    let holdNextListingResponse = false;
+    let holdFilteredListingResponse = false;
+    const pageTwoGate = new Promise<void>((resolve) => {
+      releasePageTwo = resolve;
+    });
+    const pageTwoRequested = new Promise<void>((resolve) => {
+      notifyPageTwoRequested = resolve;
+    });
+    const filteredPageOneGate = new Promise<void>((resolve) => {
+      releaseFilteredPageOne = resolve;
+    });
+    const filteredPageOneRequested = new Promise<void>((resolve) => {
+      notifyFilteredPageOneRequested = resolve;
+    });
+
+    await mockMobileStorefront(page, {
+      listingPaginationTotalCount: 92,
+      onProductsQuery: (variables) => {
+        if (typeof variables.after === 'string') {
+          holdNextListingResponse = true;
+          notifyPageTwoRequested();
+          return;
+        }
+
+        const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
+        if (Array.isArray(dietaryTags) && dietaryTags.includes('vegan')) {
+          holdFilteredListingResponse = true;
+          notifyFilteredPageOneRequested();
+        }
+      },
+      beforeProductListingResponse: async () => {
+        if (holdNextListingResponse) {
+          holdNextListingResponse = false;
+          await pageTwoGate;
+          return;
+        }
+        if (holdFilteredListingResponse) {
+          holdFilteredListingResponse = false;
+          await filteredPageOneGate;
+        }
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products');
+
+    const pagination = page.getByTestId('product-pagination');
+    await pagination.getByRole('button', { name: 'Następna', exact: true }).click();
+    await pageTwoRequested;
+
+    const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    await filterPanel.getByRole('button', { name: /^wegańskie$/i }).click();
+    await filteredPageOneRequested;
+    await expect(pagination.getByRole('button', { name: 'Następna', exact: true })).toBeDisabled();
+
+    releaseFilteredPageOne();
+    await expect(page.getByRole('link', { name: /sourdough sandwich bread/i })).toHaveCount(0);
+
+    releasePageTwo();
+
+    await expect(pagination.locator('[aria-label="Strona 1 / 4"]')).toBeVisible();
+    await expect(page.getByRole('link', { name: /sourdough sandwich bread/i })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /organic gala apples/i }).first()).toBeVisible();
   });
 
   test('compresses the mobile catalog layout to prioritize product images', async ({ page }) => {
@@ -337,17 +426,16 @@ test.describe('mobile products page', () => {
     await expect(filterPanel.getByRole('button', { name: /organic/i })).toBeDisabled();
   });
 
-  test('keeps dietary filters usable when the metadata page is not exhaustive', async ({ page }) => {
-    let releaseDietaryAvailability!: () => void;
-    const dietaryAvailabilityGate = new Promise<void>((resolve) => {
-      releaseDietaryAvailability = resolve;
+  test('keeps finite filters usable while the exact facet aggregate is pending', async ({ page }) => {
+    let releaseFilterFacets!: () => void;
+    const filterFacetsGate = new Promise<void>((resolve) => {
+      releaseFilterFacets = resolve;
     });
     const productQueries: Array<Record<string, any>> = [];
 
     await mockMobileStorefront(page, {
-      filterCatalogProductLimit: 1,
-      beforeProductDietaryAvailabilityResponse: async () => {
-        await dietaryAvailabilityGate;
+      beforeProductFilterFacetsResponse: async () => {
+        await filterFacetsGate;
       },
       onProductsQuery: (variables) => {
         productQueries.push(JSON.parse(JSON.stringify(variables)));
@@ -359,21 +447,19 @@ test.describe('mobile products page', () => {
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
     await expect(filterPanel).toBeVisible();
 
-    // The one-item metadata page contains only the vegan tag. Waiting until
-    // Bakery disappears proves the partial metadata response has settled.
-    await expect(filterPanel.getByRole('button', { name: /bakery/i })).toHaveCount(0);
-
     const glutenFreeButton = filterPanel.getByRole('button', { name: /bez glutenu/i });
     const vegetarianButton = filterPanel.getByRole('button', { name: /wegetariańskie/i });
-    await expect(glutenFreeButton).toBeDisabled();
-    await expect(vegetarianButton).toBeDisabled();
+    await expect(glutenFreeButton).toBeEnabled();
+    await expect(vegetarianButton).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /bez laktozy/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /bez cukru/i })).toBeEnabled();
 
-    releaseDietaryAvailability();
+    releaseFilterFacets();
 
     await expect(glutenFreeButton).toBeEnabled();
     await expect(vegetarianButton).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /bez laktozy/i })).toHaveCount(0);
-    await expect(filterPanel.getByRole('button', { name: /bez cukru/i })).toHaveCount(0);
+    await expect(filterPanel.getByRole('button', { name: /bez laktozy/i })).toBeDisabled();
+    await expect(filterPanel.getByRole('button', { name: /bez cukru/i })).toBeDisabled();
 
     await glutenFreeButton.click();
     await expect.poll(() => productQueries.some((variables) => {
@@ -388,12 +474,11 @@ test.describe('mobile products page', () => {
     await expect(page.getByTestId('product-card')).toHaveCount(4);
   });
 
-  test('fails open when a capped metadata page cannot prove catalog facet bounds', async ({ page }) => {
+  test('uses exact aggregate availability without inventing sampled price bounds', async ({ page }) => {
     const operations: string[] = [];
     const productQueries: Array<Record<string, any>> = [];
 
     await mockMobileStorefront(page, {
-      filterCatalogProductLimit: 1,
       onGraphqlOperation: (operationName) => operations.push(operationName),
       onProductsQuery: (variables) => {
         productQueries.push(JSON.parse(JSON.stringify(variables)));
@@ -403,12 +488,13 @@ test.describe('mobile products page', () => {
     await page.goto('/pl/products');
 
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
-    await expect.poll(() => operations.includes('GroceryProductFilterCatalog')).toBe(true);
+    await expect.poll(() => operations.includes('ProductFilterFacets')).toBe(true);
 
-    // A partial metadata page can safely prove presence, never absence or a
-    // complete min/max range for the PRD's large-catalog filtering workflow.
     await expect(filterPanel.getByRole('button', { name: /^mrożone$/i })).toBeEnabled();
     await expect(filterPanel.getByRole('button', { name: /^chłodzone$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^ekologiczne$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^halal$/i })).toBeDisabled();
+    await expect(filterPanel.getByRole('button', { name: /^koszerne$/i })).toBeDisabled();
     await expect(filterPanel.getByText(/dostępny zakres:/i)).toHaveCount(0);
 
     await filterPanel.getByLabel(/cena minimalna/i).fill('999');
@@ -416,6 +502,71 @@ test.describe('mobile products page', () => {
       const filter = variables.filter as Record<string, any> | undefined;
       return filter?.price?.gte === 999;
     })).toBe(true);
+  });
+
+  test('keeps finite filters usable when secondary metadata requests fail', async ({ page }) => {
+    await mockMobileStorefront(page, {
+      filterAvailability: 'error',
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    await expect(filterPanel.getByRole('button', { name: /mustard/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^frozen$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^sugar free$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^organic$/i })).toBeEnabled();
+    await expect(filterPanel.getByText(/filter availability could not be checked/i)).toBeVisible();
+    await expect(filterPanel.getByText(/available range:/i)).toHaveCount(0);
+  });
+
+  test('fails open only the individual facet values omitted by a partial aggregate', async ({ page }) => {
+    await mockMobileStorefront(page, { filterAvailability: 'partial' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    await expect(filterPanel.getByRole('button', { name: /^frozen$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^chilled$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^halal$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^kosher$/i })).toBeDisabled();
+    await expect(filterPanel.getByText(/filter availability could not be checked/i)).toBeVisible();
+  });
+
+  test('warns and fails open when the facet aggregate returns null without an error', async ({ page }) => {
+    await mockMobileStorefront(page, { filterAvailability: 'null' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    await expect(filterPanel.getByRole('button', { name: /^frozen$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^sugar free$/i })).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^organic$/i })).toBeEnabled();
+    await expect(filterPanel.getByText(/filter availability could not be checked/i)).toBeVisible();
+  });
+
+  test('keeps a selected zero-count storage zone available to toggle off', async ({ page }) => {
+    const productQueries: Array<Record<string, any>> = [];
+    await mockMobileStorefront(page, {
+      facets: 'empty',
+      onProductsQuery: (variables) => {
+        productQueries.push(JSON.parse(JSON.stringify(variables)));
+      },
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products?zone=FROZEN');
+
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    const frozen = filterPanel.getByRole('button', { name: /^frozen$/i });
+    await expect(frozen).toHaveAttribute('aria-pressed', 'true');
+    await expect(frozen).toBeEnabled();
+    await expect(filterPanel.getByRole('button', { name: /^ambient$/i })).toBeDisabled();
+
+    await frozen.click();
+    await expect(frozen).toHaveAttribute('aria-pressed', 'false');
+    await expect.poll(() => productQueries.some((variables) => (
+      !(variables.filter as Record<string, any> | undefined)?.storageZone
+    ))).toBe(true);
   });
 
   test('omits global origin counts when the listing is scoped by search', async ({ page }) => {
@@ -426,6 +577,19 @@ test.describe('mobile products page', () => {
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
     const polandOrigin = filterPanel.getByRole('button', { name: /^poland$/i });
     await expect(polandOrigin).toBeEnabled();
+    await expect(polandOrigin).toHaveText(/^Poland$/);
+  });
+
+  test('omits base origin counts when another unsupported facet scopes the listing', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/products');
+
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    const polandOrigin = filterPanel.getByRole('button', { name: /^poland$/i });
+    await expect(polandOrigin).toHaveText(/^Poland4$/);
+
+    await filterPanel.getByLabel(/minimum price/i).fill('10');
     await expect(polandOrigin).toHaveText(/^Poland$/);
   });
 
@@ -681,17 +845,17 @@ test.describe('mobile products page', () => {
     await expect(page.getByTestId('mobile-product-card')).toHaveCount(4);
   });
 
-  test('preserves a mobile price filter while full catalog metadata is still loading', async ({ page }) => {
-    let releaseCatalogMetadata!: () => void;
-    const catalogMetadataGate = new Promise<void>((resolve) => {
-      releaseCatalogMetadata = resolve;
+  test('preserves a mobile price filter while exact facet metadata is still loading', async ({ page }) => {
+    let releaseFilterFacets!: () => void;
+    const filterFacetsGate = new Promise<void>((resolve) => {
+      releaseFilterFacets = resolve;
     });
     const productQueries: Array<Record<string, any>> = [];
 
     await mockMobileStorefront(page, {
       listingProductLimit: 3,
-      beforeProductFilterCatalogResponse: async () => {
-        await catalogMetadataGate;
+      beforeProductFilterFacetsResponse: async () => {
+        await filterFacetsGate;
       },
       onProductsQuery: (variables) => {
         productQueries.push(JSON.parse(JSON.stringify(variables)));
@@ -714,10 +878,10 @@ test.describe('mobile products page', () => {
       return filter?.price?.gte === 17;
     })).toBe(true);
 
-    releaseCatalogMetadata();
+    releaseFilterFacets();
 
     await openFilters(page, filterSheet);
-    await expect(filterSheet).toContainText('Available range: 6.79-18.49 PLN');
+    await expect(filterSheet.getByText(/available range:/i)).toHaveCount(0);
     await expect(filterSheet.getByLabel(/minimum price/i)).toHaveValue('17');
     expect(productQueries.some((variables) => {
       const filter = variables.filter as Record<string, any> | undefined;

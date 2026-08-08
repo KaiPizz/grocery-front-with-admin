@@ -167,6 +167,8 @@
     "priceTo": "Up to {price}",
     "priceBetween": "{min}-{max} {currency}",
     "filterUnavailable": "Unavailable for current catalog",
+    "filterAvailabilityLoading": "Checking filter availability…",
+    "filterAvailabilityError": "Filter availability could not be checked. Some options may return no products.",
     "applyFilters": "Apply filters",
     "emptyTitle": "No products yet",
     "emptyDescription": "Products will appear here when this catalog is available.",

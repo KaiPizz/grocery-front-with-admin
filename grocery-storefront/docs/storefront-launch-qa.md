@@ -1,5 +1,41 @@
 # Asia Deli Go Storefront Launch QA
 
+## 2026-08-08 Coordinated Pre-Launch Candidate
+
+Production remains unchanged at standalone source `c2798971`. The prepared
+storefront branch `codex/asiandeligo-prelaunch-20260808` includes localized
+accessibility actions, cursor-honest pagination, stale pagination-response
+invalidation, modal mobile navigation, bounded SEO descriptions, and patched
+production dependencies.
+
+The catalog-facet fix is coordinated across repositories: the eNail backend
+candidate adds one public `productFilterFacets` aggregate scoped by tenant and
+optional category IDs; the standalone storefront consumes that result for the
+known dietary, storage, and certification options. It does not derive price
+extrema from the backend's capped 100-product page. Missing/error facet values
+fail open with a visible status, selected zero-count values remain removable,
+and country-origin numbers are hidden whenever active filters exceed that
+endpoint's scope.
+
+The listing query also treats channel and page size as part of result identity.
+Rows from an old source are suppressed immediately, manual cursor responses are
+generation-guarded, and a failed replacement query shows retry UI instead of
+presenting stale products under the new filter.
+
+The aggregate was exercised through a real Nest/Apollo HTTP schema contract
+and through the production service on a disposable PostgreSQL 16 schema. The
+database test covers tenant isolation, category UUID scope, public/active/
+soft-delete predicates, case-sensitive JSONB/storage matching, and all eleven
+explicit zero-count values. Browser regressions cover pending/error/partial
+metadata, selected-zero recovery, SSR cursor hydration, and an in-flight old
+page response arriving after a filter change.
+
+Release dependency and order are explicit: reconcile the currently divergent
+eNail production source first, promote and probe the backend field, observe at
+least 15 minutes of stable backend uptime, then run the standalone guarded
+admin+storefront transaction. No push or deployment is part of this candidate
+preparation.
+
 Generated: 2026-07-08T09:52:00Z
 Environment: production storefront, `https://asiandeligo.eshoper.pro`
 Browser path: Playwright fallback; Browser plugin was not available in this session.

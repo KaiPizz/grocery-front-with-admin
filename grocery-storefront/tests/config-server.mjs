@@ -36,7 +36,7 @@ const products = [
     storageZone: 'AMBIENT',
     ingredients: 'Apples',
     nutritionFacts: null,
-    certifications: ['Organic'],
+    certifications: ['organic'],
     freshness: 'FRESH',
     nearestExpiry: '2026-03-25',
     category: { id: 'cat-fruit', name: 'Fruit', slug: 'fruit' },
@@ -1019,35 +1019,45 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     };
   }
 
-  if (query.includes('query ProductDietaryAvailability')) {
-    const availabilityFields = [
-      ['vegan', 'veganFilter'],
-      ['vegetarian', 'vegetarianFilter'],
-      ['glutenFree', 'glutenFreeFilter'],
-      ['lactoseFree', 'lactoseFreeFilter'],
-      ['sugarFree', 'sugarFreeFilter'],
-    ];
-    const availability = Object.fromEntries(availabilityFields.map(([field, filterVariable]) => {
-      const filter = variables[filterVariable] ?? {};
-      const categoryKeys = Array.isArray(filter.categories) ? filter.categories.map(String) : [];
-      const sourceProducts = categoryKeys.length > 0 ? [...products, ...publicTaxonomyProducts] : products;
-      const dietaryTags = Array.isArray(filter.dietaryTags) ? filter.dietaryTags.map(String) : [];
-      const totalCount = sourceProducts.filter((product) => (
-        (categoryKeys.length === 0
-          || categoryKeys.includes(product.category.id)
-          || categoryKeys.includes(product.category.slug))
-        && dietaryTags.every((tag) => product.dietaryTags.includes(tag))
-      )).length;
-      return [field, { totalCount }];
+  if (query.includes('query ProductFilterFacets')) {
+    const categoryKeys = Array.isArray(variables.categoryIds)
+      ? variables.categoryIds.map(String)
+      : [];
+    const sourceProducts = categoryKeys.length > 0
+      ? [...products, ...publicTaxonomyProducts]
+      : products;
+    const scopedProducts = sourceProducts.filter((product) => (
+      categoryKeys.length === 0
+      || categoryKeys.includes(product.category.id)
+      || categoryKeys.includes(product.category.slug)
+    ));
+    const buildCounts = (values, matches) => values.map((value) => ({
+      value,
+      count: scopedProducts.filter((product) => matches(product, value)).length,
     }));
 
-    return { data: availability };
+    return {
+      data: {
+        productFilterFacets: {
+          totalCount: scopedProducts.length,
+          dietaryTags: buildCounts(
+            ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'sugar-free'],
+            (product, value) => product.dietaryTags.includes(value),
+          ),
+          storageZones: buildCounts(
+            ['FROZEN', 'CHILLED', 'AMBIENT'],
+            (product, value) => product.storageZone === value,
+          ),
+          certifications: buildCounts(
+            ['organic', 'halal', 'kosher'],
+            (product, value) => product.certifications.includes(value),
+          ),
+        },
+      },
+    };
   }
 
-  if (
-    query.includes('query GroceryProductListing')
-    || query.includes('query GroceryProductFilterCatalog')
-  ) {
+  if (query.includes('query GroceryProductListing')) {
     const categoryKeys = Array.isArray(variables.filter?.categories)
       ? variables.filter.categories.map(String)
       : [];
@@ -1083,6 +1093,7 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
   if (query.includes('query CategoryBySlug')) {
     const matchedCategory = categories.find((category) => category.slug === variables.slug) ?? null;
     const categoryProducts = matchedCategory ? getProductsForCategory(matchedCategory.id) : [];
+    const hasPaginationFixture = variables.slug === 'fruit';
 
     return {
       data: {
@@ -1091,8 +1102,11 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
             ...buildCategoryNode(matchedCategory),
             products: {
               edges: categoryProducts.map(buildProductEdge),
-              pageInfo: { hasNextPage: false, endCursor: null },
-              totalCount: categoryProducts.length,
+              pageInfo: {
+                hasNextPage: hasPaginationFixture,
+                endCursor: hasPaginationFixture ? 'listing-page-1' : null,
+              },
+              totalCount: hasPaginationFixture ? 48 : categoryProducts.length,
             },
           }
           : null,

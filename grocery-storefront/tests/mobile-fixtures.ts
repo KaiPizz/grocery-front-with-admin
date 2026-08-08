@@ -113,7 +113,7 @@ const PRIMARY_PRODUCT = {
     salt: 0,
     servingSize: '100g',
   },
-  certifications: ['Organic'],
+  certifications: ['organic'],
   freshness: 'FRESH',
   nearestExpiry: '2026-03-25',
   category: {
@@ -773,6 +773,28 @@ function buildProductEdge(product: (typeof PRODUCTS)[number], index: number) {
   };
 }
 
+function buildListingPageProduct(product: ProductFixture, pageNumber: number): ProductFixture {
+  if (pageNumber === 1) return product;
+
+  return {
+    ...product,
+    id: `${product.id}-page-${pageNumber}`,
+    name: `${product.name} (Page ${pageNumber})`,
+    slug: `${product.slug}-page-${pageNumber}`,
+    thumbnail: product.thumbnail
+      ? {
+          ...product.thumbnail,
+          id: `${product.thumbnail.id}-page-${pageNumber}`,
+        }
+      : product.thumbnail,
+    variants: product.variants.map((variant) => ({
+      ...variant,
+      id: `${variant.id}-page-${pageNumber}`,
+      sku: `${variant.sku}-PAGE-${pageNumber}`,
+    })),
+  } as ProductFixture;
+}
+
 function getProductPrice(product: (typeof PRODUCTS)[number]) {
   return product.variants[0]?.pricing?.price?.gross?.amount
     ?? product.pricing.priceRange.start.gross.amount;
@@ -823,10 +845,10 @@ function matchesProductsFilter(product: (typeof PRODUCTS)[number], filter: Recor
 
   if (Array.isArray(filter.certifications) && filter.certifications.length > 0) {
     const certifications = Array.isArray(product.certifications)
-      ? product.certifications.map((value: string) => value.toLowerCase())
+      ? product.certifications
       : [];
 
-    if (!filter.certifications.every((certification: string) => certifications.includes(String(certification).toLowerCase()))) {
+    if (!filter.certifications.every((certification: string) => certifications.includes(String(certification)))) {
       return false;
     }
   }
@@ -993,7 +1015,7 @@ interface MockMobileStorefrontOptions {
   cartCosts?: 'priced' | 'zero';
   checkoutProfile?: 'delivery' | 'pickup-bank-transfer' | 'pickup-no-payment' | 'unconfigured';
   checkoutComplete?: 'success' | 'insufficient-stock';
-  products?: 'ok' | 'error';
+  products?: 'ok' | 'error' | 'filter-error';
   productPromotions?: 'mixed' | 'none';
   productDetailImages?: ProductDetailImageMode;
   productDetailLabels?: ProductDetailLabelMode;
@@ -1002,12 +1024,11 @@ interface MockMobileStorefrontOptions {
   facets?: 'populated' | 'empty';
   listingProductLimit?: number;
   listingPaginationTotalCount?: number;
-  filterCatalogProductLimit?: number;
+  filterAvailability?: 'ok' | 'error' | 'partial' | 'null';
   homepageShelfSources?: 'shared' | 'distinct';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   beforeProductListingResponse?: () => Promise<void>;
-  beforeProductFilterCatalogResponse?: () => Promise<void>;
-  beforeProductDietaryAvailabilityResponse?: () => Promise<void>;
+  beforeProductFilterFacetsResponse?: () => Promise<void>;
   onGraphqlOperation?: (operationName: string, query: string) => void;
   onProductsQuery?: (variables: Record<string, unknown>) => void;
   onProductDetailQuery?: (query: string, variables: Record<string, unknown>) => void;
@@ -1073,42 +1094,81 @@ export async function mockMobileStorefront(
       || operationName === 'GroceryProductListing'
       || query.includes('query GroceryProducts')
       || query.includes('query GroceryProductListing');
-    const isProductFilterCatalogQuery = operationName === 'GroceryProductFilterCatalog'
-      || query.includes('query GroceryProductFilterCatalog');
-    const isProductDietaryAvailabilityQuery = operationName === 'ProductDietaryAvailability'
-      || query.includes('query ProductDietaryAvailability');
+    const isProductFilterFacetsQuery = operationName === 'ProductFilterFacets'
+      || query.includes('query ProductFilterFacets');
 
-    if (isProductDietaryAvailabilityQuery) {
-      await options.beforeProductDietaryAvailabilityResponse?.();
+    if (isProductFilterFacetsQuery) {
+      await options.beforeProductFilterFacetsResponse?.();
 
-      const availabilityFields = [
-        ['vegan', 'veganFilter'],
-        ['vegetarian', 'vegetarianFilter'],
-        ['glutenFree', 'glutenFreeFilter'],
-        ['lactoseFree', 'lactoseFreeFilter'],
-        ['sugarFree', 'sugarFreeFilter'],
-      ] as const;
-      const availability = Object.fromEntries(availabilityFields.map(([field, filterVariable]) => {
-        const filter = body.variables?.[filterVariable] as Record<string, any> | undefined;
-        const categoryKeys = Array.isArray(filter?.categories) ? filter.categories : [];
-        const sourceProducts = categoryKeys.length > 0 ? categoryProducts : products;
-        const totalCount = sourceProducts.filter((product) => matchesProductsFilter(product, filter)).length;
-        return [field, { totalCount }];
+      if (options.filterAvailability === 'error') {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            data: { productFilterFacets: null },
+            errors: [{ message: 'Filter availability is temporarily unavailable' }],
+          }),
+        });
+        return;
+      }
+
+      if (options.filterAvailability === 'null') {
+        await fulfill(route, { productFilterFacets: null });
+        return;
+      }
+
+      const categoryKeys = Array.isArray(body.variables?.categoryIds)
+        ? body.variables.categoryIds.map(String)
+        : [];
+      const sourceProducts = categoryKeys.length > 0 ? categoryProducts : products;
+      const scopedProducts = sourceProducts.filter((product) => (
+        categoryKeys.length === 0
+        || categoryKeys.includes(product.category.id)
+        || categoryKeys.includes(product.category.slug)
+      ));
+      const buildCounts = (
+        values: readonly string[],
+        matches: (product: (typeof PRODUCTS)[number], value: string) => boolean,
+      ) => values.map((value) => ({
+        value,
+        count: scopedProducts.filter((product) => matches(product, value)).length,
       }));
+      const facets = {
+        totalCount: scopedProducts.length,
+        dietaryTags: buildCounts(
+          ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'sugar-free'],
+          (product, value) => product.dietaryTags.includes(value),
+        ),
+        storageZones: buildCounts(
+          ['FROZEN', 'CHILLED', 'AMBIENT'],
+          (product, value) => product.storageZone === value,
+        ),
+        certifications: buildCounts(
+          ['organic', 'halal', 'kosher'],
+          (product, value) => product.certifications.includes(value),
+        ),
+      };
 
-      await fulfill(route, availability);
+      if (options.filterAvailability === 'partial') {
+        facets.storageZones = facets.storageZones.filter(({ value }) => value !== 'FROZEN');
+        facets.certifications = facets.certifications.filter(({ value }) => value !== 'halal');
+      }
+
+      await fulfill(route, { productFilterFacets: facets });
       return;
     }
 
-    if (isProductListingQuery || isProductFilterCatalogQuery) {
-      if (isProductListingQuery) {
-        options.onProductsQuery?.(body.variables ?? {});
-        await options.beforeProductListingResponse?.();
-      } else {
-        await options.beforeProductFilterCatalogResponse?.();
-      }
+    if (isProductListingQuery) {
+      options.onProductsQuery?.(body.variables ?? {});
+      await options.beforeProductListingResponse?.();
 
-      if (options.products === 'error') {
+      const dietaryTags = Array.isArray(body.variables?.filter?.dietaryTags)
+        ? body.variables.filter.dietaryTags
+        : [];
+      if (
+        options.products === 'error'
+        || (options.products === 'filter-error' && dietaryTags.length > 0)
+      ) {
         await route.fulfill({
           status: 404,
           contentType: 'application/json',
@@ -1146,30 +1206,45 @@ export async function mockMobileStorefront(
               : product.id === 'prod-apples' || product.id === 'prod-bread'
           ))
         : defaultListingProducts;
-      const listingProducts = isProductListingQuery && options.listingProductLimit !== undefined
+      const listingProducts = options.listingProductLimit !== undefined
         ? unpaginatedProducts.slice(0, options.listingProductLimit)
         : unpaginatedProducts;
       const matchingProducts = listingProducts.filter((product) => matchesProductsFilter(product, body.variables?.filter));
-      const filteredProducts = isProductFilterCatalogQuery && options.filterCatalogProductLimit !== undefined
-        ? matchingProducts.slice(0, options.filterCatalogProductLimit)
-        : matchingProducts;
 
-      const paginationTotalCount = isProductListingQuery
-        ? options.listingPaginationTotalCount
-        : undefined;
+      const paginationTotalCount = options.listingPaginationTotalCount;
       const afterCursor = typeof body.variables?.after === 'string'
         ? body.variables.after
         : null;
+      const beforeCursor = typeof body.variables?.before === 'string'
+        ? body.variables.before
+        : null;
       const previousPageNumber = afterCursor?.match(/^listing-page-(\d+)$/)?.[1];
-      const pageNumber = previousPageNumber ? Number(previousPageNumber) + 1 : 1;
-      const requestedPageSize = Number(body.variables?.first) || 24;
+      const followingPageNumber = beforeCursor?.match(/^listing-page-(\d+)-start$/)?.[1];
+      const requestedPageNumber = previousPageNumber
+        ? Number(previousPageNumber) + 1
+        : followingPageNumber
+          ? Number(followingPageNumber) - 1
+          : 1;
+      const requestedPageSize = Number(body.variables?.first)
+        || Number(body.variables?.last)
+        || 24;
       const paginationPageCount = paginationTotalCount
         ? Math.ceil(paginationTotalCount / requestedPageSize)
         : 1;
+      const pageNumber = Math.min(
+        paginationPageCount,
+        Math.max(1, requestedPageNumber),
+      );
+      const pageProducts = paginationTotalCount
+        ? matchingProducts.map((product) => buildListingPageProduct(product, pageNumber))
+        : matchingProducts;
 
       await fulfill(route, {
         products: {
-          edges: filteredProducts.map(buildProductEdge),
+          edges: pageProducts.map((product, index) => ({
+            ...buildProductEdge(product, index),
+            cursor: `listing-page-${pageNumber}-item-${index + 1}`,
+          })),
           pageInfo: {
             hasNextPage: pageNumber < paginationPageCount,
             hasPreviousPage: pageNumber > 1,

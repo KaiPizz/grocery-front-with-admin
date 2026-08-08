@@ -18,8 +18,7 @@ import {
 } from '@/lib/catalog-display-localization';
 import {
   PRODUCT_COUNTRY_ORIGINS_QUERY,
-  PRODUCT_DIETARY_AVAILABILITY_QUERY,
-  PRODUCT_FILTER_CATALOG_QUERY,
+  PRODUCT_FILTER_FACETS_QUERY,
   PRODUCT_LISTING_QUERY,
 } from '@/lib/graphql/operations/grocery';
 import type { GroceryProduct, StorageZone } from '@/types';
@@ -32,9 +31,6 @@ import {
   areFiltersEqual,
   buildProductFilter,
   countActiveFilters,
-  extractProductCertifications,
-  formatPriceInput,
-  getProductPrice,
   normalizeAllergenCode,
   normalizeFiltersState,
   parseDietaryQueryParams,
@@ -113,12 +109,18 @@ interface ProductCountryOriginsQueryResponse {
   productCountryOrigins: ProductCountryOriginNode[] | null;
 }
 
-interface ProductDietaryAvailabilityQueryResponse {
-  vegan: { totalCount: number } | null;
-  vegetarian: { totalCount: number } | null;
-  glutenFree: { totalCount: number } | null;
-  lactoseFree: { totalCount: number } | null;
-  sugarFree: { totalCount: number } | null;
+interface ProductFacetCountNode {
+  value: string;
+  count: number;
+}
+
+interface ProductFilterFacetsQueryResponse {
+  productFilterFacets: {
+    totalCount: number;
+    dietaryTags: ProductFacetCountNode[];
+    storageZones: ProductFacetCountNode[];
+    certifications: ProductFacetCountNode[];
+  } | null;
 }
 
 interface CategoryNavigationItem {
@@ -135,14 +137,43 @@ interface ActiveFilterChip {
 }
 
 const EMPTY_CATEGORY_IDS: string[] = [];
-type DietaryOption = (typeof DIETARY_OPTIONS)[number];
-const DIETARY_AVAILABILITY_KEYS = {
-  vegan: 'vegan',
-  vegetarian: 'vegetarian',
-  'gluten-free': 'glutenFree',
-  'lactose-free': 'lactoseFree',
-  'sugar-free': 'sugarFree',
-} satisfies Record<DietaryOption, keyof ProductDietaryAvailabilityQueryResponse>;
+function getAvailableFacetOptions<Option extends string>(
+  options: readonly Option[],
+  facets: ProductFacetCountNode[] | null | undefined,
+  aggregateKnown: boolean,
+): Option[] {
+  if (!aggregateKnown) return [...options];
+
+  const counts = new Map(facets?.map(({ value, count }) => [value, Number(count)]));
+
+  return options.filter((option) => {
+    const count = counts.get(option);
+    return count === undefined || !Number.isFinite(count) || count > 0;
+  });
+}
+
+function hasCompleteFacetCounts<Option extends string>(
+  options: readonly Option[],
+  facets: ProductFacetCountNode[] | null | undefined,
+): boolean {
+  if (!facets) return false;
+
+  const counts = new Map(facets.map(({ value, count }) => [value, Number(count)]));
+
+  return options.every((option) => {
+    const count = counts.get(option);
+    return typeof count === 'number' && Number.isInteger(count) && count >= 0;
+  });
+}
+
+function hasUnsupportedOriginCountScope(filters: ProductFiltersState): boolean {
+  return filters.categoryIds.length > 0
+    || filters.excludeAllergens.length > 0
+    || filters.dietaryTags.length > 0
+    || filters.certifications.length > 0
+    || Boolean(filters.storageZone)
+    || Boolean(filters.priceMin || filters.priceMax);
+}
 
 function getProductsErrorMessage(error: CombinedError | undefined | null, fallbackMessage: string) {
   if (!error) return null;
@@ -250,7 +281,15 @@ export function ProductListingClient({
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [hasPreviousPage, setHasPreviousPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageAfterCursors, setPageAfterCursors] = useState<Record<number, string | null>>({ 1: null });
+  const [pageAfterCursors, setPageAfterCursors] = useState<Record<number, string | null>>(() => {
+    const initialCursors: Record<number, string | null> = { 1: null };
+
+    if (initialHasMore && initialEndCursor) {
+      initialCursors[2] = initialEndCursor;
+    }
+
+    return initialCursors;
+  });
   const [pageSnapshots, setPageSnapshots] = useState<Record<number, ProductPageSnapshot>>(() => ({
     1: {
       products: initialProducts,
@@ -263,10 +302,10 @@ export function ProductListingClient({
     },
   }));
   const [loadingPage, setLoadingPage] = useState(false);
+  const pageRequestIdRef = useRef(0);
   const [filterMetadataRequested, setFilterMetadataRequested] = useState(initialProducts.length > 0);
   const [isMobileLayout, setIsMobileLayout] = useState<boolean | null>(layoutMode === 'adaptive' ? null : false);
   const [initialListingReusable, setInitialListingReusable] = useState(initialProducts.length > 0);
-  const listingQueryResetMountedRef = useRef(false);
 
   useEffect(() => {
     const urlSearch = (searchParams.get('search') || '').trim();
@@ -312,39 +351,16 @@ export function ProductListingClient({
   const normalizedSearch = search.trim();
   const sortOptions = getSortOptions(Boolean(normalizedSearch));
   const sortOption = sortOptions.find((option) => option.value === sort) || sortOptions[0];
-  const listingDisplayKey = `${normalizedSearch}\u0000${sortOption.value}`;
+  const listingSourceKey = `${channel}\u0000${pageSize}`;
+  const listingDisplayKey = `${listingSourceKey}\u0000${normalizedSearch}\u0000${sortOption.value}`;
   const listingDisplayKeyRef = useRef(listingDisplayKey);
+  const initialListingSourceKeyRef = useRef(listingSourceKey);
+  const listingDisplayChanged = listingDisplayKeyRef.current !== listingDisplayKey;
+  const displayedProducts = listingDisplayChanged ? [] : loadedProducts;
   const activeCategoryIds = useMemo(() => (
     categoryIds.length > 0 ? categoryIds : categoryId ? [categoryId] : []
   ), [categoryId, categoryIds]);
-  const catalogFilter = useMemo(() => (
-    activeCategoryIds.length > 0 ? { categories: activeCategoryIds } : undefined
-  ), [activeCategoryIds]);
   const countryOriginCategoryIds = activeCategoryIds.length > 0 ? activeCategoryIds : null;
-  const dietaryAvailabilityVariables = useMemo(() => {
-    const buildFilter = (dietaryTag: string) => ({
-      ...(activeCategoryIds.length > 0 ? { categories: activeCategoryIds } : {}),
-      dietaryTags: [dietaryTag],
-    });
-
-    return {
-      channel,
-      veganFilter: buildFilter('vegan'),
-      vegetarianFilter: buildFilter('vegetarian'),
-      glutenFreeFilter: buildFilter('gluten-free'),
-      lactoseFreeFilter: buildFilter('lactose-free'),
-      sugarFreeFilter: buildFilter('sugar-free'),
-    };
-  }, [activeCategoryIds, channel]);
-  const [catalogResult] = useQuery<ProductsQueryResponse>({
-    query: PRODUCT_FILTER_CATALOG_QUERY,
-    pause: !filterMetadataRequested,
-    variables: {
-      channel,
-      first: 100,
-      filter: catalogFilter,
-    },
-  });
   const [countryOriginsResult] = useQuery<ProductCountryOriginsQueryResponse>({
     query: PRODUCT_COUNTRY_ORIGINS_QUERY,
     pause: !filterMetadataRequested,
@@ -354,89 +370,53 @@ export function ProductListingClient({
       categoryIds: countryOriginCategoryIds,
     },
   });
-  const [dietaryAvailabilityResult] = useQuery<ProductDietaryAvailabilityQueryResponse>({
-    query: PRODUCT_DIETARY_AVAILABILITY_QUERY,
+  const [filterFacetsResult] = useQuery<ProductFilterFacetsQueryResponse>({
+    query: PRODUCT_FILTER_FACETS_QUERY,
     pause: !filterMetadataRequested,
-    variables: dietaryAvailabilityVariables,
+    variables: {
+      channel,
+      categoryIds: countryOriginCategoryIds,
+    },
   });
 
-  const catalogProducts = useMemo(() => (
-    catalogResult.data?.products?.edges?.map((edge) => edge.node) ?? []
-  ), [catalogResult.data]);
-  const filterSourceProducts = catalogProducts.length > 0 ? catalogProducts : loadedProducts;
-  const catalogMetadataReady = !catalogResult.fetching
-    && !catalogResult.error
-    && catalogResult.data?.products != null;
-  const catalogMetadataExhaustive = catalogMetadataReady
-    && catalogProducts.length >= (catalogResult.data?.products?.totalCount ?? 0);
-
-  const priceBounds = useMemo(() => {
-    if (!catalogMetadataExhaustive) {
-      return null;
-    }
-
-    const prices = catalogProducts
-      .map((product) => getProductPrice(product as GroceryProduct & Record<string, any>))
-      .filter((amount: number | null): amount is number => typeof amount === 'number' && Number.isFinite(amount));
-
-    if (prices.length === 0) {
-      return null;
-    }
-
-    return {
-      min: Math.min(...prices),
-      max: Math.max(...prices),
-    };
-  }, [catalogMetadataExhaustive, catalogProducts]);
-
-  const availableAllergens = useMemo(() => {
-    if (catalogMetadataReady && !catalogMetadataExhaustive) {
-      return [...ALLERGEN_OPTIONS];
-    }
-
-    const allergenCodes = new Set<string>();
-
-    for (const product of filterSourceProducts) {
-      const productAllergens = Array.isArray(product?.allergens)
-        ? product.allergens.map((code) => normalizeAllergenCode(code))
-        : [];
-      const productMayContainAllergens = Array.isArray(product?.mayContainAllergens)
-        ? product.mayContainAllergens.map((code) => normalizeAllergenCode(code))
-        : [];
-
-      for (const allergen of [...productAllergens, ...productMayContainAllergens]) {
-        allergenCodes.add(allergen);
-      }
-    }
-
-    return ALLERGEN_OPTIONS.filter((allergen) => allergenCodes.has(allergen));
-  }, [catalogMetadataExhaustive, catalogMetadataReady, filterSourceProducts]);
-
-  const dietaryAvailabilityKnown = !dietaryAvailabilityResult.fetching
-    && !dietaryAvailabilityResult.error
-    && dietaryAvailabilityResult.data != null;
-  const availableDietaryTags = useMemo(() => {
-    if (!dietaryAvailabilityKnown) {
-      return [];
-    }
-
-    return DIETARY_OPTIONS.filter((tag) => {
-      const responseKey = DIETARY_AVAILABILITY_KEYS[tag];
-      return Number(dietaryAvailabilityResult.data?.[responseKey]?.totalCount ?? 0) > 0;
-    });
-  }, [dietaryAvailabilityKnown, dietaryAvailabilityResult.data]);
-
-  const availableStorageZones = useMemo(() => (
-    catalogMetadataReady && !catalogMetadataExhaustive
-      ? [...ZONE_OPTIONS]
-      : ZONE_OPTIONS.filter((zone) => filterSourceProducts.some((product) => product?.storageZone === zone))
-  ), [catalogMetadataExhaustive, catalogMetadataReady, filterSourceProducts]);
-
-  const availableCertifications = useMemo(() => (
-    catalogMetadataReady && !catalogMetadataExhaustive
-      ? [...CERT_OPTIONS]
-      : CERT_OPTIONS.filter((certification) => filterSourceProducts.some((product) => extractProductCertifications(product as GroceryProduct & Record<string, any>).includes(certification)))
-  ), [catalogMetadataExhaustive, catalogMetadataReady, filterSourceProducts]);
+  const filterSourceProducts = displayedProducts;
+  const availableAllergens: readonly string[] = ALLERGEN_OPTIONS;
+  const filterFacets = filterFacetsResult.data?.productFilterFacets;
+  const filterAvailabilityKnown = !filterFacetsResult.fetching
+    && !filterFacetsResult.error
+    && filterFacets != null;
+  const filterAvailabilityLoading = filterMetadataRequested && filterFacetsResult.fetching;
+  const filterAvailabilityIncomplete = filterAvailabilityKnown && (
+    !Number.isInteger(Number(filterFacets.totalCount))
+    || Number(filterFacets.totalCount) < 0
+    || !hasCompleteFacetCounts(DIETARY_OPTIONS, filterFacets.dietaryTags)
+    || !hasCompleteFacetCounts(ZONE_OPTIONS, filterFacets.storageZones)
+    || !hasCompleteFacetCounts(CERT_OPTIONS, filterFacets.certifications)
+  );
+  const filterAvailabilityMissing = filterFacetsResult.data !== undefined
+    && filterFacets == null;
+  const filterAvailabilityFailed = filterMetadataRequested
+    && !filterFacetsResult.fetching
+    && (
+      Boolean(filterFacetsResult.error)
+      || filterAvailabilityMissing
+      || filterAvailabilityIncomplete
+    );
+  const availableDietaryTags = useMemo(() => getAvailableFacetOptions(
+    DIETARY_OPTIONS,
+    filterFacets?.dietaryTags,
+    filterAvailabilityKnown,
+  ), [filterAvailabilityKnown, filterFacets?.dietaryTags]);
+  const availableStorageZones = useMemo(() => getAvailableFacetOptions(
+    ZONE_OPTIONS,
+    filterFacets?.storageZones,
+    filterAvailabilityKnown,
+  ), [filterAvailabilityKnown, filterFacets?.storageZones]);
+  const availableCertifications = useMemo(() => getAvailableFacetOptions(
+    CERT_OPTIONS,
+    filterFacets?.certifications,
+    filterAvailabilityKnown,
+  ), [filterAvailabilityKnown, filterFacets?.certifications]);
   const availableCountryOrigins = useMemo(() => {
     const origins = countryOriginsResult.data?.productCountryOrigins ?? [];
 
@@ -481,20 +461,20 @@ export function ProductListingClient({
   const countryOriginByValue = useMemo(() => new Map(availableCountryOrigins.map((origin) => [origin.value, origin.label])), [availableCountryOrigins]);
 
   const normalizedCommittedFilters = useMemo(
-    () => normalizeFiltersState(committedFilters, priceBounds),
-    [committedFilters, priceBounds],
+    () => normalizeFiltersState(committedFilters, null),
+    [committedFilters],
   );
   const normalizedDraftFilters = useMemo(
-    () => normalizeFiltersState(draftFilters, priceBounds),
-    [draftFilters, priceBounds],
+    () => normalizeFiltersState(draftFilters, null),
+    [draftFilters],
   );
   const initialFilters = useMemo<ProductFiltersState>(() => ({
     ...DEFAULT_FILTERS,
     storageZone: initialZone || '',
   }), [initialZone]);
   const normalizedInitialFilters = useMemo(
-    () => normalizeFiltersState(initialFilters, priceBounds),
-    [initialFilters, priceBounds],
+    () => normalizeFiltersState(initialFilters, null),
+    [initialFilters],
   );
 
   const filter = useMemo(
@@ -502,7 +482,13 @@ export function ProductListingClient({
     [activeCategoryIds, normalizedCommittedFilters, search],
   );
   const queryFilter = Object.keys(filter).length > 0 ? filter : undefined;
+  const queryFilterKey = JSON.stringify(queryFilter ?? null);
+  const listingQueryResetKey = `${listingDisplayKey}\u0000${queryFilterKey}`;
+  const listingQueryResetKeyRef = useRef(listingQueryResetKey);
+  const latestListingQueryKeyRef = useRef(listingQueryResetKey);
+  latestListingQueryKeyRef.current = listingQueryResetKey;
   const initialListingMatchesCurrentState = initialProducts.length > 0
+    && listingSourceKey === initialListingSourceKeyRef.current
     && search === initialSearch
     && sort === initialSort
     && areFiltersEqual(normalizedCommittedFilters, normalizedInitialFilters);
@@ -537,26 +523,32 @@ export function ProductListingClient({
   }, [filterMetadataRequested, filtersOpen, result.data, result.fetching]);
 
   useEffect(() => {
-    if (!listingQueryResetMountedRef.current) {
-      listingQueryResetMountedRef.current = true;
+    if (listingQueryResetKeyRef.current === listingQueryResetKey) {
       return;
     }
+    listingQueryResetKeyRef.current = listingQueryResetKey;
 
-    // Do not keep a previous search/sort result visible while its replacement
-    // is in flight. Category navigation may reuse server-provided products, so
-    // it must not be cleared by this client-side reset.
+    // Do not keep products from a previous channel, page-size, search, or sort
+    // visible while their replacement is in flight. Category navigation may
+    // reuse server-provided products, so filters alone do not clear the grid.
     if (listingDisplayKeyRef.current !== listingDisplayKey) {
       listingDisplayKeyRef.current = listingDisplayKey;
       setLoadedProducts([]);
       setVisibleTotalCount(0);
     }
     setCurrentPage(1);
+    setStartCursor(null);
+    setEndCursor(null);
+    setHasMore(false);
+    setHasPreviousPage(false);
     setPageAfterCursors({ 1: null });
     setPageSnapshots({});
-  }, [listingDisplayKey, queryFilter, sortOption.value]);
+    pageRequestIdRef.current += 1;
+    setLoadingPage(false);
+  }, [listingDisplayKey, listingQueryResetKey]);
 
   useEffect(() => {
-    if (result.data?.products) {
+    if (!result.fetching && result.data?.products) {
       const products = result.data.products.edges?.map((edge) => edge.node) || [];
       setLoadedProducts(products);
       setVisibleTotalCount(result.data.products.totalCount ?? 0);
@@ -581,17 +573,17 @@ export function ProductListingClient({
         },
       });
     }
-  }, [result.data]);
+  }, [result.data, result.fetching]);
 
-  const totalCount = visibleTotalCount;
+  const productsErrorMessage = getProductsErrorMessage(result.error, tCommon('error'));
+  const hasProductsError = Boolean(productsErrorMessage);
+  const totalCount = hasProductsError || listingDisplayChanged ? 0 : visibleTotalCount;
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
-  const currentRangeStart = loadedProducts.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0;
-  const currentRangeEnd = loadedProducts.length > 0 ? Math.min(totalCount, currentRangeStart + loadedProducts.length - 1) : 0;
+  const currentRangeStart = displayedProducts.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0;
+  const currentRangeEnd = displayedProducts.length > 0 ? Math.min(totalCount, currentRangeStart + displayedProducts.length - 1) : 0;
   const activeFilterCount = countActiveFilters(normalizedCommittedFilters);
   const draftFilterCount = countActiveFilters(normalizedDraftFilters);
-  const productsErrorMessage = getProductsErrorMessage(result.error, tCommon('error'));
-  const hasProductsError = Boolean(productsErrorMessage) && loadedProducts.length === 0;
-  const isInitialLoading = result.fetching && loadedProducts.length === 0 && !hasProductsError;
+  const isInitialLoading = result.fetching && displayedProducts.length === 0 && !hasProductsError;
   const hasCategoryNavigation = categoryNavigation.length > 0;
   const hasDesktopSidebar = hasCategoryNavigation;
 
@@ -603,21 +595,19 @@ export function ProductListingClient({
     syncDietaryUrl = false,
   ) {
     const allergenFilterUnavailable = availableAllergens.length === 0;
-    const dietaryFilterUnavailable = !dietaryAvailabilityKnown || availableDietaryTags.length === 0;
+    const dietaryFilterUnavailable = availableDietaryTags.length === 0;
     const zoneFilterUnavailable = availableStorageZones.length === 0;
     const certificationFilterUnavailable = availableCertifications.length === 0;
     const categoryFilterUnavailable = availableCategories.length === 0;
     const countryFilterUnavailable = availableCountryOrigins.length === 0;
     const localActiveFilterCount = countActiveFilters(normalizedFilters);
+    const showOriginCounts = !normalizedSearch
+      && !hasUnsupportedOriginCountScope(normalizedFilters);
     const unavailableMessage = t('filterUnavailable');
     const visibleAllergens = allergenFilterUnavailable ? ALLERGEN_OPTIONS : availableAllergens;
-    const visibleDietaryTags = dietaryFilterUnavailable
-      ? DIETARY_OPTIONS
-      : DIETARY_OPTIONS.filter((tag) => (
-        availableDietaryTags.includes(tag) || normalizedFilters.dietaryTags.includes(tag)
-      ));
-    const visibleStorageZones = zoneFilterUnavailable ? ZONE_OPTIONS : availableStorageZones;
-    const visibleCertifications = certificationFilterUnavailable ? CERT_OPTIONS : availableCertifications;
+    const visibleDietaryTags = DIETARY_OPTIONS;
+    const visibleStorageZones = ZONE_OPTIONS;
+    const visibleCertifications = CERT_OPTIONS;
 
     return (
       <>
@@ -677,7 +667,7 @@ export function ProductListingClient({
                   aria-pressed={normalizedFilters.countryOfOrigin.includes(origin.value)}
                 >
                   {origin.label}
-                  {!normalizedSearch && (
+                  {showOriginCounts && (
                     <span className="ml-1 tabular-nums" aria-hidden="true">
                       {origin.count}
                     </span>
@@ -717,15 +707,6 @@ export function ProductListingClient({
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
             />
           </div>
-          {priceBounds && (
-            <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-              {t('priceBounds', {
-                min: formatPriceInput(priceBounds.min),
-                max: formatPriceInput(priceBounds.max),
-                currency: tCommon('currency'),
-              })}
-            </p>
-          )}
         </fieldset>
 
         <div className="space-y-3">
@@ -739,6 +720,18 @@ export function ProductListingClient({
             disabled={allergenFilterUnavailable}
           />
         </div>
+
+        {(filterAvailabilityLoading || filterAvailabilityFailed) && (
+          <p
+            className="text-xs"
+            style={{ color: 'var(--color-muted-foreground)' }}
+            role="status"
+          >
+            {t(filterAvailabilityFailed
+              ? 'filterAvailabilityError'
+              : 'filterAvailabilityLoading')}
+          </p>
+        )}
 
         <fieldset className="space-y-3">
           <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
@@ -757,7 +750,10 @@ export function ProductListingClient({
                   }));
                   if (syncDietaryUrl) pushDietaryQuery(nextDietaryTags);
                 }}
-                disabled={dietaryFilterUnavailable && !normalizedFilters.dietaryTags.includes(tag)}
+                disabled={
+                  !availableDietaryTags.includes(tag)
+                  && !normalizedFilters.dietaryTags.includes(tag)
+                }
                 className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
                   borderColor: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-primary)' : 'var(--color-border)',
@@ -785,7 +781,10 @@ export function ProductListingClient({
                   ...prev,
                   storageZone: prev.storageZone === zone ? '' : zone,
                 }))}
-                disabled={zoneFilterUnavailable}
+                disabled={
+                  !availableStorageZones.includes(zone)
+                  && normalizedFilters.storageZone !== zone
+                }
                 className={`rounded-full px-3 py-1.5 text-xs font-medium text-white transition-opacity duration-fast disabled:cursor-not-allowed disabled:opacity-35 ${normalizedFilters.storageZone === zone ? 'opacity-100' : 'opacity-55 hover:opacity-80'}`}
                 style={{ backgroundColor: `var(--color-${zone.toLowerCase()})` }}
                 aria-pressed={normalizedFilters.storageZone === zone}
@@ -809,7 +808,10 @@ export function ProductListingClient({
                   ...prev,
                   certifications: toggleMultiValue(prev.certifications, certification),
                 }))}
-                disabled={certificationFilterUnavailable}
+                disabled={
+                  !availableCertifications.includes(certification)
+                  && !normalizedFilters.certifications.includes(certification)
+                }
                 className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
                   borderColor: normalizedFilters.certifications.includes(certification) ? 'var(--color-primary)' : 'var(--color-border)',
@@ -986,6 +988,8 @@ export function ProductListingClient({
   }
 
   async function fetchPageByCursor(targetPage: number, afterCursorForPage: string | null) {
+    const requestId = ++pageRequestIdRef.current;
+    const requestListingQueryKey = listingQueryResetKey;
     setLoadingPage(true);
 
     try {
@@ -999,11 +1003,16 @@ export function ProductListingClient({
         sortBy: { field: sortOption.field, direction: sortOption.direction },
       }).toPromise();
 
-      if (result2.data?.products) {
+      if (
+        result2.data?.products
+        && latestListingQueryKeyRef.current === requestListingQueryKey
+      ) {
         applyPageResult(result2.data.products, targetPage, afterCursorForPage);
       }
     } finally {
-      setLoadingPage(false);
+      if (pageRequestIdRef.current === requestId) {
+        setLoadingPage(false);
+      }
     }
   }
 
@@ -1024,6 +1033,8 @@ export function ProductListingClient({
       return;
     }
 
+    const requestId = ++pageRequestIdRef.current;
+    const requestListingQueryKey = listingQueryResetKey;
     setLoadingPage(true);
 
     try {
@@ -1040,11 +1051,16 @@ export function ProductListingClient({
         sortBy: { field: sortOption.field, direction: sortOption.direction },
       }).toPromise();
 
-      if (result2.data?.products) {
+      if (
+        result2.data?.products
+        && latestListingQueryKeyRef.current === requestListingQueryKey
+      ) {
         applyPageResult(result2.data.products, nextPage, afterCursorForPage);
       }
     } finally {
-      setLoadingPage(false);
+      if (pageRequestIdRef.current === requestId) {
+        setLoadingPage(false);
+      }
     }
   }
 
@@ -1261,7 +1277,7 @@ export function ProductListingClient({
         aria-label={t('activeFilters')}
       >
         <p className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-          {t('showing', { count: loadedProducts.length, total: totalCount })}
+          {t('showing', { count: displayedProducts.length, total: totalCount })}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           {chips.map((chip) => (
@@ -1329,7 +1345,7 @@ export function ProductListingClient({
   }
 
   function renderPaginationControls(isCompact = false) {
-    if (totalCount <= pageSize || loadedProducts.length === 0) {
+    if (totalCount <= pageSize || displayedProducts.length === 0) {
       return null;
     }
 
@@ -1449,11 +1465,11 @@ export function ProductListingClient({
       );
     }
 
-    if (loadedProducts.length > 0) {
+    if (displayedProducts.length > 0) {
       return (
         <>
           <div data-testid="mobile-products-grid" className="grid grid-cols-2 gap-3">
-            {loadedProducts.map((product, index) => (
+            {displayedProducts.map((product, index) => (
               <MobileProductCard key={product.id} product={product} imagePriority={index < 8} showCatalogFacts />
             ))}
           </div>
@@ -1505,11 +1521,11 @@ export function ProductListingClient({
       );
     }
 
-    if (loadedProducts.length > 0) {
+    if (displayedProducts.length > 0) {
       return (
         <>
           <div className={gridClassName}>
-            {loadedProducts.map((product, index) => (
+            {displayedProducts.map((product, index) => (
               <ProductCard key={product.id} product={product} imagePriority={index < 8} showCatalogFacts />
             ))}
           </div>

@@ -110,28 +110,6 @@ const GROCERY_PRODUCT_LISTING_FIELDS = `
   }
 `;
 
-const GROCERY_PRODUCT_FILTER_FIELDS = `
-  fragment GroceryProductFilterFields on Product {
-    id
-    allergens
-    mayContainAllergens
-    dietaryTags
-    certifications
-    countryOfOrigin
-    storageZone
-    category { id name slug }
-    pricing {
-      priceRange {
-        start { gross { amount currency } }
-      }
-    }
-    variants {
-      id
-      pricing { price { gross { amount currency } } }
-    }
-  }
-`;
-
 export const PRODUCTS_QUERY = `
   ${GROCERY_PRODUCT_FIELDS}
   query GroceryProducts(
@@ -192,44 +170,20 @@ export const PRODUCT_LISTING_QUERY = `
   }
 `;
 
-export const PRODUCT_FILTER_CATALOG_QUERY = `
-  ${GROCERY_PRODUCT_FILTER_FIELDS}
-  query GroceryProductFilterCatalog(
+// Resolve the known finite filters in one backend aggregate instead of
+// treating a bounded product page as exhaustive or invoking the full products
+// resolver once per option.
+export const PRODUCT_FILTER_FACETS_QUERY = `
+  query ProductFilterFacets(
     $channel: String!
-    $first: Int
-    $filter: ProductFilterInput
+    $categoryIds: [ID!]
   ) {
-    products(
-      channel: $channel
-      first: $first
-      filter: $filter
-    ) {
-      edges {
-        node { ...GroceryProductFilterFields }
-      }
+    productFilterFacets(channel: $channel, categoryIds: $categoryIds) {
       totalCount
+      dietaryTags { value count }
+      storageZones { value count }
+      certifications { value count }
     }
-  }
-`;
-
-// A bounded product page cannot prove that a dietary tag is absent from the
-// catalog. Resolve each known option by totalCount instead, in one lightweight
-// request, so availability remains accurate for large and category-scoped
-// catalogs.
-export const PRODUCT_DIETARY_AVAILABILITY_QUERY = `
-  query ProductDietaryAvailability(
-    $channel: String!
-    $veganFilter: ProductFilterInput!
-    $vegetarianFilter: ProductFilterInput!
-    $glutenFreeFilter: ProductFilterInput!
-    $lactoseFreeFilter: ProductFilterInput!
-    $sugarFreeFilter: ProductFilterInput!
-  ) {
-    vegan: products(channel: $channel, first: 1, filter: $veganFilter) { totalCount }
-    vegetarian: products(channel: $channel, first: 1, filter: $vegetarianFilter) { totalCount }
-    glutenFree: products(channel: $channel, first: 1, filter: $glutenFreeFilter) { totalCount }
-    lactoseFree: products(channel: $channel, first: 1, filter: $lactoseFreeFilter) { totalCount }
-    sugarFree: products(channel: $channel, first: 1, filter: $sugarFreeFilter) { totalCount }
   }
 `;
 
