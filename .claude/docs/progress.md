@@ -1,8 +1,32 @@
 # Feature Progress
 
-> **Last updated:** 2026-08-08
+> **Last updated:** 2026-08-18
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
+
+---
+
+## 2026-08-18 Catalog Category SEO + Merge Redirects
+
+- Catalog cleanup ran directly on production data the same evening: 31
+  products moved out of misfiled categories, 6 duplicate category pairs merged,
+  9 emptied source categories plus `pozostałe-produkty` deactivated, the
+  cosmetics category renamed "Kosmetyki i pielęgnacja", 2 Polish name typos
+  fixed, and the expired Paldo ADG-001408 product unpublished.
+- `/categories/[slug]` metadata now resolves real catalog categories through
+  the shared `PublicCategories` query: categories with ≥3 published products
+  (`CATEGORY_MIN_PRODUCTS_FOR_INDEX` in `src/lib/category-seo.ts`) are
+  indexable with their catalog name as title and a 160-code-point bounded
+  description; smaller ones stay `noindex, follow`; unknown slugs keep the
+  `noindex, nofollow` fallback. Indexable catalog categories also emit
+  CollectionPage JSON-LD and join the sitemap next to the curated hub entries.
+- The 9 merged category slugs 308-redirect to their surviving category in both
+  locales (`MERGED_CATEGORY_REDIRECTS` in `src/lib/category-seo.ts`).
+- Verified against a local production build wired to live GraphQL: indexable,
+  below-threshold, merged (pl+en), hub, and unknown slugs all behave as
+  designed; sitemap gained exactly the ≥3-product catalog categories.
+- This re-implements and extends the 2026-08-10 fix that was deployed-planned
+  as `1a5f8de` but never pushed; that commit is gone with its worktree.
 
 ---
 

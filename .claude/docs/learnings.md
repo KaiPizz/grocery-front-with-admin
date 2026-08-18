@@ -942,3 +942,15 @@
 - **Cause:** Runtime reachability and lockfile auditability are separate contracts: npm audits installed package versions, while the release lane intentionally fails closed on any production High advisory.
 - **Fix:** Removed the generic parser and implemented bounded header readers only for the five already-supported raster formats; patched PostCSS in both apps also moved its nanoid dependency beyond the new advisory range. Production-only audits now return zero findings without upgrading Next.js.
 - **Rule:** For security-gated releases, first prove exploit reachability, then remove or patch the dependency itself. Never weaken the audit gate merely because application code currently filters the known payload format.
+
+### A commit that only exists in a deleted worktree is lost work
+- **Error:** The 2026-08-10 category SEO fix (`1a5f8de`) was written and audited, but on 2026-08-18 it existed neither on `origin/main` nor in any release — the worktree holding it had been cleaned up, so the whole fix had to be re-implemented from the audit notes.
+- **Cause:** The commit was created in a local worktree and never pushed; repo cleanup later deleted the worktree together with its only copy.
+- **Fix:** Re-implemented the behavior as `src/lib/category-seo.ts` + layout/sitemap changes and pushed to `origin/main` the same session it was written.
+- **Rule:** Push every commit to `origin` in the same session that creates it — an unpushed commit in a worktree is one cleanup away from disappearing.
+
+### Category URLs must be redirected, not just emptied, when merging categories
+- **Error:** Merging duplicate catalog categories deactivates the source category, which turns its URL into a soft-404 while old links and search snippets keep pointing at it.
+- **Cause:** The backend storefront API filters `isActive: true` everywhere, so a deactivated category silently returns null.
+- **Fix:** `MERGED_CATEGORY_REDIRECTS` in `src/lib/category-seo.ts` 308-redirects each merged slug to its surviving category in both locales, in `generateMetadata` and the layout render.
+- **Rule:** Every catalog merge that retires a public slug ships with a permanent redirect from the retired slug in the same release.

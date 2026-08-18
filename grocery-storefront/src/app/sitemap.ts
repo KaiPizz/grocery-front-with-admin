@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { CATEGORY_MIN_PRODUCTS_FOR_INDEX, isPublicHubSlug } from '@/lib/category-seo';
 import { resolveChannel } from '@/lib/channel';
 import { getEnabledCommercialCollections } from '@/lib/commercial-config';
+import { PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { PUBLIC_CATEGORY_DEFINITIONS } from '@/lib/public-taxonomy';
 import { getStorefrontOriginForSeo, getStorefrontUrl } from '@/lib/seo-discovery';
@@ -98,11 +100,48 @@ async function getProductSlugs(): Promise<string[]> {
   return [...slugs];
 }
 
+interface SitemapCategoriesData {
+  categories?: {
+    edges?: Array<{
+      node?: {
+        slug?: string | null;
+        products?: {
+          totalCount?: number | null;
+        } | null;
+      } | null;
+    } | null> | null;
+  } | null;
+}
+
+// Real catalog categories are indexable once they hold enough products (the
+// category layout mirrors this rule), so they belong in the sitemap next to
+// the curated hub categories.
+async function getIndexableDbCategorySlugs(): Promise<string[]> {
+  const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
+  const result = await serverGraphqlRequest<SitemapCategoriesData>(
+    PUBLIC_CATEGORIES_QUERY,
+    { channel },
+    { next: { revalidate: 3600 } },
+  );
+  if (result.errorMessage) return [];
+
+  const slugs: string[] = [];
+  for (const edge of result.data?.categories?.edges ?? []) {
+    const node = edge?.node;
+    const slug = node?.slug?.trim();
+    if (!slug || isPublicHubSlug(slug)) continue;
+    if ((node?.products?.totalCount ?? 0) < CATEGORY_MIN_PRODUCTS_FOR_INDEX) continue;
+    slugs.push(slug);
+  }
+  return slugs;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [origin, siteConfig, productSlugs] = await Promise.all([
+  const [origin, siteConfig, productSlugs, dbCategorySlugs] = await Promise.all([
     getStorefrontOriginForSeo(),
     fetchServerConfig({ next: { revalidate } }),
     getProductSlugs(),
+    getIndexableDbCategorySlugs(),
   ]);
   if (!origin) return [];
 
@@ -128,6 +167,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         localizedPath(localePrefix, `/categories/${encodeURIComponent(category.slug)}`),
         'weekly',
         0.8,
+      ));
+    }
+
+    for (const slug of dbCategorySlugs) {
+      entries.push(sitemapEntry(
+        origin,
+        localizedPath(localePrefix, `/categories/${encodeURIComponent(slug)}`),
+        'weekly',
+        0.7,
       ));
     }
 
