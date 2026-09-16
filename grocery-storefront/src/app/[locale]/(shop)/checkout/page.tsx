@@ -370,6 +370,7 @@ export default function CheckoutPage() {
   const [appliedPromoCode, setAppliedPromoCode] = useState<string | null>(null);
   const [checkoutId, setCheckoutId] = useState<string | null>(searchParams.get('checkoutId'));
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [paymentMethodsLoaded, setPaymentMethodsLoaded] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
   const [paymentSession, setPaymentSession] = useState<PaymentSessionState | null>(null);
   const [shippingCost, setShippingCost] = useState<number>(selectedDeliveryOption?.price.amount ?? 0);
@@ -403,16 +404,25 @@ export default function CheckoutPage() {
         locale === 'pl'
           ? 'Najpierw wybierz metodę dostawy.'
           : 'Select a delivery option before continuing to payment.',
-      retryHandoff: locale === 'pl' ? 'Ponów przekazanie checkoutu' : 'Retry handoff',
+      retryHandoff: locale === 'pl' ? 'Odśwież metody płatności' : 'Refresh payment methods',
       noPaymentMethods:
         locale === 'pl'
           ? 'Metody płatności nie są jeszcze dostępne dla tego sklepu. Sklep musi dokończyć konfigurację płatności przed przyjęciem zamówień.'
           : 'Payment methods are not available for this store yet. The store must finish payment setup before accepting orders.',
+      paymentAfterDelivery:
+        pickupMode
+          ? locale === 'pl'
+            ? 'Metody płatności pojawią się po potwierdzeniu odbioru w sklepie w kroku 2.'
+            : 'Payment methods will appear after you confirm store pickup in step 2.'
+          : locale === 'pl'
+            ? 'Metody płatności pojawią się po wyborze metody dostawy w kroku 2.'
+            : 'Payment methods will appear after you choose a delivery method in step 2.',
+      loadingPaymentMethods: locale === 'pl' ? 'Ładowanie metod płatności…' : 'Loading payment methods…',
       calculatedNext: locale === 'pl' ? 'Wyliczymy dalej' : 'Calculated next',
       discountLabel: locale === 'pl' ? 'Rabat' : 'Discount',
       noneLabel: locale === 'pl' ? 'Brak' : 'None',
       notSelected: locale === 'pl' ? 'Nie wybrano' : 'Not selected',
-      paymentNotInitialized: locale === 'pl' ? 'Płatność nie została zainicjalizowana' : 'Payment not initialized',
+      paymentNotInitialized: locale === 'pl' ? 'Nie wybrano' : 'Not selected',
       insufficientStock:
         locale === 'pl'
           ? 'Nie ma wystarczającego stanu magazynowego, aby złożyć to zamówienie. Sprawdź koszyk i zmień ilości przed ponowną próbą.'
@@ -453,6 +463,7 @@ export default function CheckoutPage() {
       }));
 
     setPaymentMethods(mappedMethods);
+    setPaymentMethodsLoaded(true);
     return true;
   }, [channel]);
 
@@ -1506,23 +1517,29 @@ export default function CheckoutPage() {
                 <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                   {t('selectPayment')}
                 </p>
-                <button
-                  type="button"
-                  onClick={() => void initializeCheckoutHandoff()}
-                  disabled={busy}
-                  className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium disabled:opacity-60"
-                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                >
-                  <RefreshCw className="h-4 w-4" aria-hidden="true" />
-                  {uiText.retryHandoff}
-                </button>
+                {selectedDeliveryOption && paymentMethodsLoaded && paymentMethods.length === 0 && (
+                  <button
+                    type="button"
+                    onClick={() => void initializeCheckoutHandoff()}
+                    disabled={busy}
+                    className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium disabled:opacity-60"
+                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                  >
+                    <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                    {uiText.retryHandoff}
+                  </button>
+                )}
               </div>
 
               {bankTransferMode && renderCheckoutNotice(checkoutBankTransferNotice)}
 
               {paymentMethods.length === 0 ? (
                 <div className="rounded-2xl border px-4 py-4 text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
-                  {uiText.noPaymentMethods}
+                  {!selectedDeliveryOption
+                    ? uiText.paymentAfterDelivery
+                    : paymentMethodsLoaded
+                      ? uiText.noPaymentMethods
+                      : uiText.loadingPaymentMethods}
                 </div>
               ) : (
                 <div className="space-y-3">
