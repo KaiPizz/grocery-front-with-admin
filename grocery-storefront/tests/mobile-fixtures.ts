@@ -338,7 +338,7 @@ const PRODUCTS_WITHOUT_SALES = PRODUCTS.map((product) => ({
 }));
 
 type ProductDetailImageMode = 'default' | 'multi-media' | 'unordered-media' | 'crowded-media' | 'thumbnail-only' | 'no-image';
-type ProductDetailLabelMode = 'complete' | 'missing';
+type ProductDetailLabelMode = 'complete' | 'missing' | 'non-food' | 'no-allergens';
 type ProductDetailCategoryMode = 'present' | 'missing';
 type ProductFixture = (typeof PRODUCTS)[number];
 
@@ -578,7 +578,26 @@ function buildProductDetailFixture(
       countryOfOrigin: null,
       certifications: [],
     }
-    : product;
+    : labelMode === 'non-food'
+      ? {
+        // Kitchenware / tableware: nothing that belongs on a food label.
+        ...product,
+        allergens: [],
+        dietaryTags: [],
+        ingredients: null,
+        nutritionFacts: null,
+        storageZone: null,
+        isAlcohol: false,
+        spiceLevel: null,
+        certifications: [],
+      }
+      : labelMode === 'no-allergens'
+        ? {
+          // Food with a full producer ingredient list that names no Annex II allergen.
+          ...product,
+          allergens: [],
+        }
+        : product;
   const detailProduct = categoryMode === 'missing'
     ? {
       ...labelProduct,

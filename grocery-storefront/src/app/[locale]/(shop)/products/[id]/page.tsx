@@ -333,6 +333,21 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
     && (hasIngredients || Boolean(nutrition?.servingSize?.trim()));
   const missingCatalogLabels: string[] = [];
   const attributeChips: string[] = [];
+  // Kitchenware, tableware and cosmetics carry no food label at all. Showing them empty
+  // "missing ingredients / allergens / nutrition" panels reads as broken data, not as caution.
+  const isFoodProduct = hasIngredients
+    || hasNutrition
+    || allergens.length > 0
+    || mayContainAllergens.length > 0
+    || dietaryTags.length > 0
+    || Boolean(product.storageZone)
+    || Boolean(product.isAlcohol)
+    || product.spiceLevel != null;
+  // A full producer ingredient list with no Annex II allergen in it is an answer, not a gap.
+  const allergensCheckedAndNoneFound = isFoodProduct
+    && hasIngredients
+    && allergens.length === 0
+    && mayContainAllergens.length === 0;
 
   const calories = formatNutritionAmount(nutrition?.calories, 'kcal');
   if (calories) nutritionRows.push({ label: t('product.calories'), value: calories });
@@ -376,16 +391,18 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
   detailFacts.push({ label: t('product.netWeight'), value: t('product.checkPackageLabel') });
   detailFacts.push({ label: t('product.origin'), value: displayCountryOfOrigin ?? t('product.catalogMissing'), isMissing: !displayCountryOfOrigin });
 
-  detailFacts.push({
-    label: t('product.storage'),
-    value: product.storageZone ? t(`cart.zoneNote.${product.storageZone}` as any) : t('product.catalogMissing'),
-    isMissing: !product.storageZone,
-  });
+  if (isFoodProduct) {
+    detailFacts.push({
+      label: t('product.storage'),
+      value: product.storageZone ? t(`cart.zoneNote.${product.storageZone}` as any) : t('product.catalogMissing'),
+      isMissing: !product.storageZone,
+    });
 
-  detailFacts.push({
-    label: t('product.bestBefore'),
-    value: formatProductDate(product.nearestExpiry, locale) ?? t('product.bestBeforeOnPackage'),
-  });
+    detailFacts.push({
+      label: t('product.bestBefore'),
+      value: formatProductDate(product.nearestExpiry, locale) ?? t('product.bestBeforeOnPackage'),
+    });
+  }
 
   if (localizedDietaryTags.length > 0) {
     detailFacts.push({ label: t('product.dietary'), value: localizedDietaryTags.join(', ') });
@@ -407,9 +424,13 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
     attributeChips.push(...certifications);
   }
 
-  if (!hasIngredients) missingCatalogLabels.push(t('product.ingredients'));
-  if (allergens.length === 0 && mayContainAllergens.length === 0) missingCatalogLabels.push(t('product.allergens'));
-  if (!hasNutrition) missingCatalogLabels.push(t('product.nutrition'));
+  if (isFoodProduct) {
+    if (!hasIngredients) missingCatalogLabels.push(t('product.ingredients'));
+    if (!hasIngredients && allergens.length === 0 && mayContainAllergens.length === 0) {
+      missingCatalogLabels.push(t('product.allergens'));
+    }
+    if (!hasNutrition) missingCatalogLabels.push(t('product.nutrition'));
+  }
   if (!product.countryOfOrigin) missingCatalogLabels.push(t('product.origin'));
   if (!hasUnitPrice) missingCatalogLabels.push(t('product.unitPrice'));
 
@@ -486,6 +507,7 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
             </section>
           )}
 
+          {isFoodProduct && (
           <details
             className="group rounded-lg border p-4"
             style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
@@ -507,7 +529,9 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
               {hasIngredients ? product.ingredients : t('product.ingredientsMissing')}
             </p>
           </details>
+          )}
 
+          {isFoodProduct && (
           <section>
             <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
               {t('product.allergens')}
@@ -554,12 +578,18 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
                 )}
               </div>
             ) : (
-              <p className="rounded-lg border p-4 text-sm leading-relaxed" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
-                {t('product.allergensMissing')}
+              <p
+                className="rounded-lg border p-4 text-sm leading-relaxed"
+                style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}
+                data-testid={allergensCheckedAndNoneFound ? 'pdp-allergens-none-declared' : 'pdp-allergens-missing'}
+              >
+                {allergensCheckedAndNoneFound ? t('product.allergensNoneDeclared') : t('product.allergensMissing')}
               </p>
             )}
           </section>
+          )}
 
+          {isFoodProduct && (
           <section>
             <div className="mb-3">
               <h2 className="heading-section text-xl" style={{ color: 'var(--color-foreground)' }}>
@@ -592,6 +622,7 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
               </p>
             )}
           </section>
+          )}
         </div>
 
         <aside

@@ -413,6 +413,34 @@ test.describe('PDP food-label sections', () => {
     await expect(sections).toContainText(/Ingredients are missing from the catalog/i);
     await expect(sections).toContainText(/Nutrition data is missing from the catalog/i);
   });
+
+  test('states that no Annex II allergen is declared when the producer ingredient list is complete', async ({ page }) => {
+    await mockMobileStorefront(page, { productDetailLabels: 'no-allergens' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const sections = page.getByTestId('pdp-food-label-sections');
+    await expect(sections.getByRole('heading', { name: /allergens/i })).toBeVisible();
+    await expect(sections.getByTestId('pdp-allergens-none-declared'))
+      .toContainText(/contains none of the allergens listed in Annex II/i);
+    await expect(sections.getByTestId('pdp-allergens-missing')).toHaveCount(0);
+    // The catalog is not incomplete here, so allergens must not be listed as a gap.
+    await expect(sections.getByTestId('pdp-missing-catalog-data')).toHaveCount(0);
+  });
+
+  test('drops ingredients, allergens and nutrition entirely for non-food products', async ({ page }) => {
+    await mockMobileStorefront(page, { productDetailLabels: 'non-food' });
+    await page.goto('/en/products/organic-gala-apples');
+
+    const sections = page.getByTestId('pdp-food-label-sections');
+    await expect(sections).toBeVisible();
+    await expect(sections.getByRole('heading', { name: /allergens/i })).toHaveCount(0);
+    await expect(sections.getByRole('heading', { name: /nutrition facts/i })).toHaveCount(0);
+    await expect(sections.getByText(/^ingredients$/i)).toHaveCount(0);
+    await expect(sections.getByTestId('pdp-allergens-missing')).toHaveCount(0);
+    // Storage zone and best-before belong to food only; the rest of the detail table stays.
+    await expect(sections.getByTestId('pdp-compliance-summary')).toBeVisible();
+    await expect(sections.getByTestId('pdp-compliance-summary')).not.toContainText(/best before/i);
+  });
 });
 
 test.describe('PDP related product rail', () => {

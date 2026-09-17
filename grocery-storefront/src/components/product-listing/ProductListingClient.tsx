@@ -719,6 +719,16 @@ export function ProductListingClient({
             options={visibleAllergens}
             disabled={allergenFilterUnavailable}
           />
+          {filters.excludeAllergens.length > 0 && (
+            <p
+              className="text-xs leading-relaxed"
+              style={{ color: 'var(--color-muted-foreground)' }}
+              data-testid="allergen-filter-catalog-notice"
+              role="note"
+            >
+              {t('allergenFilterCatalogNotice')}
+            </p>
+          )}
         </div>
 
         {(filterAvailabilityLoading || filterAvailabilityFailed) && (
