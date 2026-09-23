@@ -374,7 +374,7 @@
     "delivery": "Dane dostawy",
     "payment": "Metoda płatności",
     "summary": "Podsumowanie zamówienia",
-    "placeOrder": "Złóż zamówienie",
+    "placeOrder": "Zamówienie z obowiązkiem zapłaty",
     "firstName": "Imię",
     "lastName": "Nazwisko",
     "email": "E-mail",

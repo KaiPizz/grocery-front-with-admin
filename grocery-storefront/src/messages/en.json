@@ -374,7 +374,7 @@
     "delivery": "Delivery details",
     "payment": "Payment method",
     "summary": "Order summary",
-    "placeOrder": "Place order",
+    "placeOrder": "Order with obligation to pay",
     "firstName": "First name",
     "lastName": "Last name",
     "email": "Email",

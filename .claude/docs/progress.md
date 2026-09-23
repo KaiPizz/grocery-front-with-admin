@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-09-23 Checkout Payment-Obligation Copy
+
+- The final checkout action now states the payment obligation explicitly in
+  Polish and English (`Zamówienie z obowiązkiem zapłaty` / `Order with
+  obligation to pay`) while keeping the existing order and payment flow
+  unchanged.
+
+---
+
 ## 2026-09-23 Asia Deli Go Public Domain Candidate
 
 - The tracked Asia Deli Go published, draft, and storefront fallback configs
