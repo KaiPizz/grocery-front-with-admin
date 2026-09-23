@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 
 const DEFAULT_ENDPOINT = 'https://zira-ai.com/graphql/storefront';
 const DEFAULT_CHANNEL = 'kenmito';
-const DEFAULT_SITE_URL = 'https://asiandeligo.eshoper.pro';
+const DEFAULT_SITE_URL = 'https://asiadeligo.com';
 const PAGE_SIZE = 100;
 const DEFAULT_IMAGE_CONCURRENCY = 12;
 

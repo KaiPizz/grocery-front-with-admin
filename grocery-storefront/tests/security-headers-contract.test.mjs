@@ -50,7 +50,7 @@ test('CSP retains the storefront integrations that are explicitly supported', ()
     nodeEnv: 'production',
     env: {
       NEXT_PUBLIC_CONFIG_API_URL: 'https://asiandeligo-admin.eshoper.pro/admin-path',
-      NEXT_PUBLIC_STATIC_CONFIG_URL: 'https://asiandeligo.eshoper.pro/config/asiandeligo.json',
+      NEXT_PUBLIC_STATIC_CONFIG_URL: 'https://asiadeligo.com/config/asiandeligo.json',
       NEXT_PUBLIC_GRAPHQL_URL: 'https://zira-ai.com/graphql/storefront',
     },
   });
@@ -63,7 +63,7 @@ test('CSP retains the storefront integrations that are explicitly supported', ()
   assert.match(policy, /font-src[^;]*https:\/\/fonts\.gstatic\.com/);
   assert.match(policy, /img-src 'self' data: blob: https:/);
   assert.match(policy, /connect-src[^;]*https:\/\/asiandeligo-admin\.eshoper\.pro/);
-  assert.match(policy, /connect-src[^;]*https:\/\/asiandeligo\.eshoper\.pro/);
+  assert.match(policy, /connect-src[^;]*https:\/\/asiadeligo\.com/);
   assert.match(policy, /connect-src[^;]*https:\/\/zira-ai\.com/);
 });
 

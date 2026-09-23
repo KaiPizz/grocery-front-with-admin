@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 
 const DEFAULT_MANIFEST = 'docs/asiandeligo-search-keyword-contract-20260722.json';
 const DEFAULT_DIRECT_ENDPOINT = 'https://zira-ai.com/graphql/storefront';
-const DEFAULT_PROXY_ENDPOINT = 'https://asiandeligo.eshoper.pro/api/graphql';
+const DEFAULT_PROXY_ENDPOINT = 'https://asiadeligo.com/api/graphql';
 const DEFAULT_TIMEOUT_MS = 30_000;
 const DEFAULT_BATCH_SIZE = 6;
 const MAX_BATCH_SIZE = 6;

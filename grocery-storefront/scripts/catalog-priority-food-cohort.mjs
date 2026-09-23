@@ -13,7 +13,7 @@ const DEFAULT_MAPPING = 'docs/asiandeligo-sku-slug-source-20260708.json';
 const DEFAULT_MARKDOWN = 'docs/asiandeligo-priority-food-cohort.md';
 const DEFAULT_CSV = 'docs/asiandeligo-priority-food-cohort.csv';
 const DEFAULT_JSON = 'docs/asiandeligo-priority-food-cohort.json';
-const DEFAULT_SITE_URL = 'https://asiandeligo.eshoper.pro';
+const DEFAULT_SITE_URL = 'https://asiadeligo.com';
 const KIMCHI_SOURCE_BASE = 'https://kimchi.pl/product-pol-';
 
 const PRODUCTS_QUERY = `

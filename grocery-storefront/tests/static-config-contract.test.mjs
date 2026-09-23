@@ -109,9 +109,9 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.equal(footerLinks.some((link) => link.label === 'Kontakt' && link.href === '/privacy'), false);
   assert.equal(footerLinks.some((link) => link.label === 'Dostawa' && link.href === '/terms'), false);
   assert.equal(legacyStaticEnvelope.slug, envelope.slug);
-  assert.equal(legacyStaticEnvelope.config.seo.canonical, 'https://asiandeligo.eshoper.pro');
-  assert.equal(legacyAdminEnvelope.published.seo.canonical, 'https://asiandeligo.eshoper.pro');
-  assert.equal(legacyAdminEnvelope.draft.seo.canonical, 'https://asiandeligo.eshoper.pro');
+  assert.equal(legacyStaticEnvelope.config.seo.canonical, 'https://asiadeligo.com');
+  assert.equal(legacyAdminEnvelope.published.seo.canonical, 'https://asiadeligo.com');
+  assert.equal(legacyAdminEnvelope.draft.seo.canonical, 'https://asiadeligo.com');
   for (const legacyConfig of [
     legacyStaticEnvelope.config,
     legacyAdminEnvelope.published,
