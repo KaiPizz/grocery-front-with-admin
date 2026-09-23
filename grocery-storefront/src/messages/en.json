@@ -460,6 +460,9 @@
   "legal": {
     "privacyTitle": "Privacy Policy",
     "privacyIntro": "This policy explains how we collect, use, and protect data when you use the online store and place orders for in-store pickup.",
+    "privacyControllerTitle": "Data controller",
+    "privacyControllerIntro": "The controller of personal data is",
+    "privacyControllerUnavailable": "The data controller's identity is currently being completed. We do not use the store brand as an unverified legal name.",
     "privacyDataTitle": "Data We Collect",
     "privacyDataContent": "We collect information you provide directly, including your name, email address, optional phone number, delivery or pickup details, saved addresses, and order details. We also process account, session, and security data needed to operate and protect the service.",
     "privacySocialTitle": "Google and Facebook sign-in",
@@ -479,6 +482,8 @@
     "termsIntro": "These terms govern use of the online store and orders placed for in-store pickup. By placing an order, you agree to these terms.",
     "termsSellerTitle": "Store details and contact",
     "termsSellerEmail": "Email:",
+    "registeredAddressLabel": "Registered address:",
+    "complaintAddressLabel": "Complaints address:",
     "termsSellerUnavailable": "The seller details are being completed. Before sales begin, the store will publish its legal name, address, and contact details.",
     "termsOrdersTitle": "Orders",
     "termsOrdersContent": "Orders are subject to availability confirmation by the store. A price shown and accepted when the order is placed will not change for that order. The store may refuse an order only for a justified reason and will inform the customer.",

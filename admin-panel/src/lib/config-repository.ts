@@ -28,6 +28,10 @@ export function withConfigDefaults(config: StorefrontConfig): StorefrontConfig {
     ...config,
     general: {
       ...config.general,
+      legalIdentity: {
+        ...DEFAULT_CONFIG.general.legalIdentity,
+        ...(config.general.legalIdentity ?? {}),
+      },
       fulfillment: {
         ...DEFAULT_CONFIG.general.fulfillment,
         ...(config.general.fulfillment ?? {}),
@@ -240,6 +244,7 @@ export async function patchDraftConfig(
       general: partial.general ? {
         ...currentDraft.general,
         ...partial.general,
+        legalIdentity: partial.general?.legalIdentity ? { ...currentDraft.general.legalIdentity, ...partial.general.legalIdentity } : currentDraft.general.legalIdentity,
         policyLinks: partial.general?.policyLinks ? { ...currentDraft.general.policyLinks, ...partial.general.policyLinks } : currentDraft.general.policyLinks,
         fulfillment: partial.general?.fulfillment ? { ...currentDraft.general.fulfillment, ...partial.general.fulfillment } : currentDraft.general.fulfillment,
       } : currentDraft.general,

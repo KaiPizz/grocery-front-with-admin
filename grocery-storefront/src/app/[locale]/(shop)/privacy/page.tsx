@@ -3,12 +3,20 @@
 import { useTranslations } from 'next-intl';
 
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
 
 export default function PrivacyPage() {
   const t = useTranslations('legal');
   const siteConfig = useStorefrontConfig();
+  const legalIdentity = getPublicLegalIdentity(siteConfig);
   const contactEmail = siteConfig?.general.email?.trim() ?? '';
   const hasContactEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail);
+  const controllerDetails = legalIdentity ? [
+    legalIdentity.registeredAddress,
+    legalIdentity.nip ? `NIP: ${legalIdentity.nip}` : '',
+    legalIdentity.regon ? `REGON: ${legalIdentity.regon}` : '',
+    legalIdentity.registrationType === 'krs' && legalIdentity.krs ? `KRS: ${legalIdentity.krs}` : '',
+  ].filter(Boolean) : [];
 
   return (
     <div className="container-grocery py-8 md:py-12">
@@ -17,6 +25,15 @@ export default function PrivacyPage() {
       </h1>
       <div className="max-w-prose space-y-4 text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
         <p>{t('privacyIntro')}</p>
+        <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyControllerTitle')}</h2>
+        {legalIdentity ? (
+          <p>
+            {t('privacyControllerIntro')} <strong>{legalIdentity.legalName}</strong>
+            {controllerDetails.length > 0 ? `, ${controllerDetails.join(' · ')}` : ''}.
+          </p>
+        ) : (
+          <p>{t('privacyControllerUnavailable')}</p>
+        )}
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyDataTitle')}</h2>
         <p>{t('privacyDataContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacySocialTitle')}</h2>

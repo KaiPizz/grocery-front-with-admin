@@ -2,14 +2,18 @@
 
 import { useTranslations } from 'next-intl';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
 
 export default function TermsPage() {
   const t = useTranslations('legal');
   const siteConfig = useStorefrontConfig();
-  const storeName = siteConfig?.branding.storeName?.trim() ?? '';
-  const address = siteConfig?.general.address?.trim() ?? '';
+  const legalIdentity = getPublicLegalIdentity(siteConfig);
   const email = siteConfig?.general.email?.trim() ?? '';
-  const hasSellerContact = Boolean(storeName && address && email);
+  const registrationDetails = legalIdentity ? [
+    legalIdentity.nip ? `NIP: ${legalIdentity.nip}` : null,
+    legalIdentity.regon ? `REGON: ${legalIdentity.regon}` : null,
+    legalIdentity.registrationType === 'krs' && legalIdentity.krs ? `KRS: ${legalIdentity.krs}` : null,
+  ].filter((value): value is string => value !== null) : [];
 
   return (
     <div className="container-grocery py-8 md:py-12">
@@ -19,13 +23,21 @@ export default function TermsPage() {
       <div className="max-w-prose text-sm leading-relaxed space-y-4" style={{ color: 'var(--color-muted-foreground)' }}>
         <p>{t('termsIntro')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsSellerTitle')}</h2>
-        {hasSellerContact ? (
-          <p>
-            {storeName}, {address}. {t('termsSellerEmail')}{' '}
-            <a href={`mailto:${email}`} className="font-semibold underline underline-offset-4" style={{ color: 'var(--color-primary)' }}>
-              {email}
-            </a>.
-          </p>
+        {legalIdentity ? (
+          <div className="space-y-2">
+            <p className="font-semibold" style={{ color: 'var(--color-foreground)' }}>{legalIdentity.legalName}</p>
+            {legalIdentity.registeredAddress && <p>{t('registeredAddressLabel')} {legalIdentity.registeredAddress}</p>}
+            {legalIdentity.complaintAddress && <p>{t('complaintAddressLabel')} {legalIdentity.complaintAddress}</p>}
+            {registrationDetails.length > 0 && <p>{registrationDetails.join(' · ')}</p>}
+            {email && (
+              <p>
+                {t('termsSellerEmail')}{' '}
+                <a href={`mailto:${email}`} className="font-semibold underline underline-offset-4" style={{ color: 'var(--color-primary)' }}>
+                  {email}
+                </a>.
+              </p>
+            )}
+          </div>
         ) : (
           <p>{t('termsSellerUnavailable')}</p>
         )}

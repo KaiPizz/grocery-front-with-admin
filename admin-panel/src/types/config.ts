@@ -262,10 +262,21 @@ export interface OpeningHoursEntry {
   closes: string | null;
 }
 
+export interface LegalIdentityConfig {
+  legalName: string;
+  registrationType: '' | 'ceidg' | 'krs';
+  nip: string;
+  regon: string;
+  krs: string;
+  registeredAddress: string;
+  complaintAddress: string;
+}
+
 export interface GeneralConfig {
   phone: string;
   email: string;
   address: string;
+  legalIdentity: LegalIdentityConfig;
   openingHours?: OpeningHoursEntry[];
   socialLinks: SocialLink[];
   policyLinks: {

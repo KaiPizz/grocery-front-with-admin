@@ -170,6 +170,15 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
     phone: '',
     email: '',
     address: '',
+    legalIdentity: {
+      legalName: '',
+      registrationType: '',
+      nip: '',
+      regon: '',
+      krs: '',
+      registeredAddress: '',
+      complaintAddress: '',
+    },
     socialLinks: [],
     policyLinks: {
       privacy: '/privacy',

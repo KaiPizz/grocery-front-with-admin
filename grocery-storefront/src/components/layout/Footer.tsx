@@ -15,6 +15,7 @@ import {
   usesAvailabilityOnlyStock,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
+import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
 
 interface FooterServiceNote {
   label: string;
@@ -33,6 +34,7 @@ export function Footer() {
   const t = useTranslations('footer');
   const tFulfillment = useTranslations('fulfillment');
   const siteConfig = useStorefrontConfig();
+  const legalIdentity = getPublicLegalIdentity(siteConfig);
 
   const storeName = siteConfig?.branding?.storeName || 'Grocery';
   const logoUrl = siteConfig?.branding?.logoUrl;
@@ -51,6 +53,11 @@ export function Footer() {
   const availabilityOnlyStock = usesAvailabilityOnlyStock(siteConfig);
   const policyLinks = siteConfig?.general?.policyLinks;
   const copyrightText = (footerCfg?.copyrightText || `\u00A9 {year} ${storeName}. Powered by Zira AI.`).replace('{year}', String(new Date().getFullYear()));
+  const legalRegistrationDetails = legalIdentity ? [
+    legalIdentity.nip ? `NIP: ${legalIdentity.nip}` : null,
+    legalIdentity.registrationType === 'krs' && legalIdentity.krs ? `KRS: ${legalIdentity.krs}` : null,
+    legalIdentity.regon ? `REGON: ${legalIdentity.regon}` : null,
+  ].filter((value): value is string => value !== null) : [];
 
   // Map known footer labels to i18n translations so config doesn't force English
   const footerI18n: Record<string, string> = {
@@ -204,6 +211,12 @@ export function Footer() {
             <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-muted-foreground)' }}>
               {tagline}
             </p>
+            {legalIdentity && (
+              <div className="mt-4 space-y-1 text-xs" style={{ color: 'var(--color-muted-foreground)' }} data-testid="footer-legal-identity">
+                <p className="font-semibold" style={{ color: 'var(--color-foreground)' }}>{legalIdentity.legalName}</p>
+                {legalRegistrationDetails.length > 0 && <p>{legalRegistrationDetails.join(' · ')}</p>}
+              </div>
+            )}
             <SocialBar links={socialLinks} />
           </div>
 

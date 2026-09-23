@@ -6,7 +6,7 @@ import { FormCard } from '@/components/FormCard';
 import { FieldLabel } from '@/components/FieldLabel';
 import { SaveBar } from '@/components/SaveBar';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
-import type { FulfillmentConfig, GeneralConfig, PickupAddressConfig, SocialLink } from '@/types/config';
+import type { FulfillmentConfig, GeneralConfig, LegalIdentityConfig, PickupAddressConfig, SocialLink } from '@/types/config';
 import { useLanguage } from '@/i18n';
 
 const PLATFORM_OPTIONS = ['Facebook', 'Instagram', 'Twitter/X', 'TikTok', 'YouTube', 'LINE', 'WhatsApp', 'Telegram', 'LinkedIn', 'Pinterest'];
@@ -45,6 +45,10 @@ export default function GeneralPage() {
 
   function updatePolicyLink(key: 'privacy' | 'terms' | 'about', value: string) {
     updateGeneral({ policyLinks: { ...general.policyLinks, [key]: value } });
+  }
+
+  function updateLegalIdentity(partial: Partial<LegalIdentityConfig>) {
+    updateGeneral({ legalIdentity: { ...general.legalIdentity, ...partial } });
   }
 
   function updateFulfillment(partial: Partial<FulfillmentConfig>) {
@@ -99,6 +103,86 @@ export default function GeneralPage() {
               placeholder="123 Main St, Bangkok, Thailand"
             />
           </FieldLabel>
+        </FormCard>
+
+        <FormCard
+          title={t('general.legalIdentityTitle')}
+          description={t('general.legalIdentityDescription')}
+        >
+          <FieldLabel label={t('general.legalName')}>
+            <input
+              type="text"
+              maxLength={255}
+              value={general.legalIdentity.legalName}
+              onChange={(e) => updateLegalIdentity({ legalName: e.target.value })}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
+            />
+            <p className="mt-1 text-xs text-gray-500">{t('general.legalNameHint')}</p>
+          </FieldLabel>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <FieldLabel label={t('general.registrationType')}>
+              <select
+                value={general.legalIdentity.registrationType}
+                onChange={(e) => updateLegalIdentity({ registrationType: e.target.value as LegalIdentityConfig['registrationType'] })}
+                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+              >
+                <option value="">{t('general.registrationNone')}</option>
+                <option value="ceidg">{t('general.registrationCeidg')}</option>
+                <option value="krs">{t('general.registrationKrs')}</option>
+              </select>
+            </FieldLabel>
+            <FieldLabel label={t('general.nip')}>
+              <input
+                type="text"
+                maxLength={20}
+                value={general.legalIdentity.nip}
+                onChange={(e) => updateLegalIdentity({ nip: e.target.value })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+              />
+            </FieldLabel>
+            <FieldLabel label={t('general.regon')}>
+              <input
+                type="text"
+                maxLength={20}
+                value={general.legalIdentity.regon}
+                onChange={(e) => updateLegalIdentity({ regon: e.target.value })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+              />
+            </FieldLabel>
+          </div>
+          {general.legalIdentity.registrationType === 'krs' && (
+            <FieldLabel label={t('general.krs')}>
+              <input
+                type="text"
+                maxLength={20}
+                value={general.legalIdentity.krs}
+                onChange={(e) => updateLegalIdentity({ krs: e.target.value })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+              />
+            </FieldLabel>
+          )}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FieldLabel label={t('general.registeredAddress')}>
+              <textarea
+                maxLength={500}
+                rows={3}
+                value={general.legalIdentity.registeredAddress}
+                onChange={(e) => updateLegalIdentity({ registeredAddress: e.target.value })}
+                className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+              />
+              <p className="mt-1 text-xs text-gray-500">{t('general.registeredAddressHint')}</p>
+            </FieldLabel>
+            <FieldLabel label={t('general.complaintAddress')}>
+              <textarea
+                maxLength={500}
+                rows={3}
+                value={general.legalIdentity.complaintAddress}
+                onChange={(e) => updateLegalIdentity({ complaintAddress: e.target.value })}
+                className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+              />
+              <p className="mt-1 text-xs text-gray-500">{t('general.complaintAddressHint')}</p>
+            </FieldLabel>
+          </div>
         </FormCard>
 
         <FormCard

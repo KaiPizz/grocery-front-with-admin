@@ -460,6 +460,9 @@
   "legal": {
     "privacyTitle": "Polityka prywatności",
     "privacyIntro": "Niniejsza polityka wyjaśnia, w jaki sposób zbieramy, wykorzystujemy i chronimy dane podczas korzystania ze sklepu internetowego oraz składania zamówień z odbiorem osobistym.",
+    "privacyControllerTitle": "Administrator danych",
+    "privacyControllerIntro": "Administratorem danych osobowych jest",
+    "privacyControllerUnavailable": "Dane administratora danych są obecnie uzupełniane. Nie używamy nazwy sklepu jako niepotwierdzonej nazwy prawnej.",
     "privacyDataTitle": "Dane, które zbieramy",
     "privacyDataContent": "Zbieramy informacje podawane bezpośrednio przez użytkownika, w tym imię i nazwisko, adres e-mail, opcjonalny numer telefonu, dane dostawy lub odbioru, zapisane adresy oraz szczegóły zamówień. Przetwarzamy również dane konta, sesji i bezpieczeństwa niezbędne do działania i ochrony usługi.",
     "privacySocialTitle": "Logowanie przez Google i Facebook",
@@ -479,6 +482,8 @@
     "termsIntro": "Niniejsze warunki regulują korzystanie ze sklepu internetowego i składanie zamówień z odbiorem osobistym. Składając zamówienie, akceptujesz niniejsze warunki.",
     "termsSellerTitle": "Dane sklepu i kontakt",
     "termsSellerEmail": "E-mail:",
+    "registeredAddressLabel": "Adres rejestrowy:",
+    "complaintAddressLabel": "Adres do reklamacji:",
     "termsSellerUnavailable": "Pełne dane sprzedawcy są uzupełniane. Przed uruchomieniem sprzedaży sklep opublikuje nazwę prawną, adres i dane kontaktowe.",
     "termsOrdersTitle": "Zamówienia",
     "termsOrdersContent": "Zamówienia podlegają potwierdzeniu dostępności przez sklep. Cena pokazana i zatwierdzona przy składaniu zamówienia nie zmienia się dla tego zamówienia. Sklep może odmówić realizacji wyłącznie z uzasadnionej przyczyny, o czym poinformuje klienta.",

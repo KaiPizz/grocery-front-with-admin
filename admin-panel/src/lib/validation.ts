@@ -399,10 +399,29 @@ const fulfillmentSchema = z.object({
   bankTransferInstructions: z.string().max(1000).nullable(),
 });
 
+const legalIdentitySchema = z.object({
+  legalName: z.string().trim().max(255),
+  registrationType: z.enum(['', 'ceidg', 'krs']),
+  nip: z.string().trim().max(20),
+  regon: z.string().trim().max(20),
+  krs: z.string().trim().max(20),
+  registeredAddress: z.string().trim().max(500),
+  complaintAddress: z.string().trim().max(500),
+});
+
 const generalSchema = z.object({
   phone: z.string().max(50),
   email: z.string().max(200),
   address: z.string().max(500),
+  legalIdentity: legalIdentitySchema.default({
+    legalName: '',
+    registrationType: '',
+    nip: '',
+    regon: '',
+    krs: '',
+    registeredAddress: '',
+    complaintAddress: '',
+  }),
   openingHours: z.array(openingHoursEntrySchema).max(14).optional(),
   socialLinks: z.array(socialLinkSchema),
   policyLinks: z.object({
@@ -574,7 +593,12 @@ const partialCommercialCategoryHubSchema = z.object({
   items: commercialCategoryHubItemsSchema.optional(),
 });
 
+const partialGeneralSchema = generalSchema.deepPartial().extend({
+  legalIdentity: legalIdentitySchema.partial().optional(),
+});
+
 export const partialStorefrontConfigSchema = storefrontConfigSchema.deepPartial().extend({
+  general: partialGeneralSchema.optional(),
   commercial: commercialObjectSchema.deepPartial().extend({
     categoryHub: partialCommercialCategoryHubSchema.optional(),
   }).optional(),

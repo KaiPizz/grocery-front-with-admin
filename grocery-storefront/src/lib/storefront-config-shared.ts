@@ -1,5 +1,15 @@
-import type { StorefrontConfig } from '@/types/storefront-config';
+import type { LegalIdentityConfig, StorefrontConfig } from '@/types/storefront-config';
 import { DEFAULT_FULFILLMENT_CONFIG } from '@/lib/fulfillment';
+
+const DEFAULT_LEGAL_IDENTITY: LegalIdentityConfig = {
+  legalName: '',
+  registrationType: '',
+  nip: '',
+  regon: '',
+  krs: '',
+  registeredAddress: '',
+  complaintAddress: '',
+};
 
 const DEFAULT_COMMERCIAL_CONFIG: StorefrontConfig['commercial'] = {
   enabled: false,
@@ -26,6 +36,10 @@ export function withStorefrontConfigDefaults(config: StorefrontConfig | null): S
     general: {
       ...config.general,
       openingHours: config.general.openingHours ?? [],
+      legalIdentity: {
+        ...DEFAULT_LEGAL_IDENTITY,
+        ...(config.general.legalIdentity ?? {}),
+      },
       fulfillment: {
         ...DEFAULT_FULFILLMENT_CONFIG,
         ...(config.general.fulfillment ?? {}),
@@ -37,6 +51,23 @@ export function withStorefrontConfigDefaults(config: StorefrontConfig | null): S
         categoryHub: commercial.categoryHub ?? DEFAULT_COMMERCIAL_CONFIG.categoryHub,
       }
       : DEFAULT_COMMERCIAL_CONFIG,
+  };
+}
+
+export function getPublicLegalIdentity(config: StorefrontConfig | null): LegalIdentityConfig | null {
+  const identity = config?.general?.legalIdentity;
+  const legalName = identity?.legalName?.trim() ?? '';
+  if (!identity || !legalName) return null;
+
+  return {
+    ...DEFAULT_LEGAL_IDENTITY,
+    ...identity,
+    legalName,
+    nip: identity.nip.trim(),
+    regon: identity.regon.trim(),
+    krs: identity.krs.trim(),
+    registeredAddress: identity.registeredAddress.trim(),
+    complaintAddress: identity.complaintAddress.trim(),
   };
 }
 
