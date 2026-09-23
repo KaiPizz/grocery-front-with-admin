@@ -65,12 +65,14 @@ test('storefront can load a static config source when no admin config API is con
 test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.equal(existsSync(staticConfigUrl), true, 'Missing public/config/kenmito.json');
 
-  const raw = readFileSync(staticConfigUrl, 'utf8');
+  const raw = readFileSync(asiaDeliGoConfigUrl, 'utf8');
   assert.doesNotMatch(raw, /localhost|alo123|Chesaigon|BasenGreen/i);
 
   const envelope = JSON.parse(raw);
   const config = envelope.config;
   const adminEnvelope = JSON.parse(readFileSync(adminConfigUrl, 'utf8'));
+  const legacyStaticEnvelope = JSON.parse(readFileSync(staticConfigUrl, 'utf8'));
+  const legacyAdminEnvelope = JSON.parse(readFileSync(adminAliasConfigUrl, 'utf8'));
   const dealsSection = config.homepage.sections.find((section) => section.id === 'deals');
   const categorySection = config.homepage.sections.find((section) => section.id === 'shopByZone');
   const koreanPantryBanner = config.homepage.promoBanners.find((banner) => banner.id === 'banner-korean-pantry');
@@ -87,6 +89,7 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.equal(config.general.fulfillment.paymentPromise, 'backend');
   assert.equal(config.general.fulfillment.stockDisplayMode, 'availability_only');
   assert.match(config.seo.defaultTitle, /^Asia Deli Go\b/);
+  assert.equal(config.seo.canonical, 'https://asiadeligo.com');
   assert.equal(categorySection?.enabled, true);
   assert.equal(dealsSection?.enabled, false);
   assert.equal(koreanPantryBanner?.enabled, false);
@@ -105,8 +108,20 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   );
   assert.equal(footerLinks.some((link) => link.label === 'Kontakt' && link.href === '/privacy'), false);
   assert.equal(footerLinks.some((link) => link.label === 'Dostawa' && link.href === '/terms'), false);
-  assert.equal(readFileSync(asiaDeliGoConfigUrl, 'utf8'), raw);
-  assert.equal(readFileSync(adminAliasConfigUrl, 'utf8'), readFileSync(adminConfigUrl, 'utf8'));
+  assert.equal(legacyStaticEnvelope.slug, envelope.slug);
+  assert.equal(legacyStaticEnvelope.config.seo.canonical, 'https://asiandeligo.eshoper.pro');
+  assert.equal(legacyAdminEnvelope.published.seo.canonical, 'https://asiandeligo.eshoper.pro');
+  assert.equal(legacyAdminEnvelope.draft.seo.canonical, 'https://asiandeligo.eshoper.pro');
+  for (const legacyConfig of [
+    legacyStaticEnvelope.config,
+    legacyAdminEnvelope.published,
+    legacyAdminEnvelope.draft,
+  ]) {
+    assert.deepEqual(
+      { ...legacyConfig, seo: { ...legacyConfig.seo, canonical: config.seo.canonical } },
+      config,
+    );
+  }
   assert.deepEqual(adminEnvelope.published, config);
   assert.deepEqual(adminEnvelope.draft, config);
   assert.ok(heroBlock);

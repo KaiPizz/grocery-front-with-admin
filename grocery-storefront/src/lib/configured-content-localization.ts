@@ -130,8 +130,8 @@ const SEO_COPY = {
     english: 'Asia Deli Go: kimchi, rice, sauces, noodles, drinks, snacks, and ready meals for in-store collection.',
   },
   canonical: {
-    source: 'https://asiandeligo.eshoper.pro',
-    english: 'https://asiandeligo.eshoper.pro/en',
+    source: 'https://asiadeligo.com',
+    english: 'https://asiadeligo.com/en',
   },
 } satisfies Record<string, ExactTranslation>;
 

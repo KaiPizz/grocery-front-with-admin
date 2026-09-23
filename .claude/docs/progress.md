@@ -1,10 +1,18 @@
 # Feature Progress
 
-> **Last updated:** 2026-08-18
+> **Last updated:** 2026-09-23
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
 ---
+
+## 2026-09-23 Asia Deli Go Public Domain Candidate
+
+- The tracked Asia Deli Go published, draft, and storefront fallback configs
+  now use `https://asiadeligo.com` as the canonical public origin; English
+  metadata uses `https://asiadeligo.com/en`.
+- The guarded release coordinator now validates the new public origin. This is
+  a source candidate only; no production application release is recorded here.
 
 ## 2026-08-18 Catalog Category SEO + Merge Redirects
 

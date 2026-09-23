@@ -172,7 +172,7 @@ test.describe('catalog display localization', () => {
     expect(english?.seo).toMatchObject({
       defaultTitle: 'Asia Deli Go - Asian groceries',
       defaultDescription: 'Asia Deli Go: kimchi, rice, sauces, noodles, drinks, snacks, and ready meals for in-store collection.',
-      canonical: 'https://asiandeligo.eshoper.pro/en',
+      canonical: 'https://asiadeligo.com/en',
     });
 
     const englishGridItems = english?.homepage.blocks.flatMap((block) => (
