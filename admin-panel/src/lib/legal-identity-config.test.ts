@@ -24,7 +24,7 @@ const LEGAL_IDENTITY = {
 
 test('legacy configs receive an empty legal identity without inventing a legal name', () => {
   const legacy = structuredClone(DEFAULT_CONFIG) as StorefrontConfig;
-  delete (legacy.general as StorefrontConfig['general'] & { legalIdentity?: unknown }).legalIdentity;
+  delete (legacy.general as unknown as { legalIdentity?: unknown }).legalIdentity;
 
   const normalized = withConfigDefaults(legacy);
 

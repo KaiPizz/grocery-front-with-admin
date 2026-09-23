@@ -14,7 +14,7 @@ function liveConfig(): StorefrontConfig {
 
 test('legacy storefront config receives empty legal identity defaults', () => {
   const config = liveConfig();
-  delete (config.general as StorefrontConfig['general'] & { legalIdentity?: unknown }).legalIdentity;
+  delete (config.general as unknown as { legalIdentity?: unknown }).legalIdentity;
 
   const normalized = shared.withStorefrontConfigDefaults(config);
 
