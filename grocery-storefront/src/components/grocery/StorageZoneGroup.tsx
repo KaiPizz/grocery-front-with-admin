@@ -59,9 +59,11 @@ export function StorageZoneGroup({ itemsByZone, renderItem }: StorageZoneGroupPr
               {items.map(renderItem)}
             </div>
 
-            <div className="px-4 py-2 text-xs" style={{ backgroundColor: 'var(--color-muted)', color: 'var(--color-muted-foreground)' }}>
-              {t(`zoneNote.${zone}` as any)}
-            </div>
+            {zone !== 'OTHER' && (
+              <div className="px-4 py-2 text-xs" style={{ backgroundColor: 'var(--color-muted)', color: 'var(--color-muted-foreground)' }}>
+                {t(`zoneNote.${zone}` as any)}
+              </div>
+            )}
           </section>
         );
       })}

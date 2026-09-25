@@ -81,7 +81,7 @@ export default function WishlistPage() {
 
   return (
     <div className="container-grocery py-8 pb-24 md:py-12 md:pb-12">
-      <div className="flex items-end justify-between gap-3 mb-6 flex-wrap">
+      <div className="mb-6 space-y-1">
         <h1 className="heading-display text-2xl md:text-3xl" style={{ color: 'var(--color-foreground)' }}>
           {t('title')}
           <span className="text-base font-normal ml-2 tabular-nums" style={{ color: 'var(--color-muted-foreground)' }}>
@@ -93,26 +93,27 @@ export default function WishlistPage() {
         </p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+      <div className="product-grid-fluid">
         {displayItems.map((item) => {
           const imageUrl = getImageSrc(item.thumbnail);
 
           return (
             <div
               key={item.productId}
+              data-testid="wishlist-item"
               className="flex overflow-hidden rounded-2xl border p-3 sm:block sm:p-0"
               style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
             >
               {item.slug ? (
                 <Link href={`/products/${item.slug}`} className="block shrink-0" aria-hidden="true" tabIndex={-1}>
-                  <div className="relative h-28 w-28 overflow-hidden rounded-xl sm:aspect-[4/3] sm:h-auto sm:w-full sm:rounded-none" style={{ backgroundColor: 'var(--color-muted)' }}>
+                  <div className="relative h-28 w-28 overflow-hidden rounded-xl sm:aspect-square sm:h-auto sm:w-full sm:rounded-none" style={{ backgroundColor: 'var(--color-muted)' }}>
                     {imageUrl ? (
                       <Image
                         src={imageUrl}
                         alt=""
                         fill
-                        className="object-contain sm:object-cover"
-                        sizes="(max-width: 640px) 112px, (max-width: 768px) 50vw, 33vw"
+                        className="object-contain sm:p-2"
+                        sizes="(max-width: 640px) 112px, 336px"
                         unoptimized={isImageProxySrc(imageUrl)}
                       />
                     ) : (
@@ -123,14 +124,14 @@ export default function WishlistPage() {
                   </div>
                 </Link>
               ) : (
-                <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl sm:aspect-[4/3] sm:h-auto sm:w-full sm:rounded-none" style={{ backgroundColor: 'var(--color-muted)' }}>
+                <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl sm:aspect-square sm:h-auto sm:w-full sm:rounded-none" style={{ backgroundColor: 'var(--color-muted)' }}>
                   {imageUrl ? (
                     <Image
                       src={imageUrl}
                       alt=""
                       fill
-                      className="object-contain sm:object-cover"
-                      sizes="(max-width: 640px) 112px, (max-width: 768px) 50vw, 33vw"
+                      className="object-contain sm:p-2"
+                      sizes="(max-width: 640px) 112px, 336px"
                       unoptimized={isImageProxySrc(imageUrl)}
                     />
                   ) : (
@@ -141,21 +142,21 @@ export default function WishlistPage() {
                 </div>
               )}
 
-              <div className="flex min-w-0 flex-1 flex-col pl-3 sm:block sm:p-4">
+              <div className="flex min-w-0 flex-1 flex-col pl-3 sm:block sm:p-3.5">
                 {item.slug ? (
                   <Link href={`/products/${item.slug}`} className="block">
-                    <h2 className="line-clamp-2 text-sm font-semibold leading-snug sm:text-base" style={{ color: 'var(--color-foreground)' }}>
+                    <h2 className="line-clamp-2 text-sm font-semibold leading-snug" style={{ color: 'var(--color-foreground)' }}>
                       {item.name}
                     </h2>
                   </Link>
                 ) : (
-                  <h2 className="line-clamp-2 text-sm font-semibold leading-snug sm:text-base" style={{ color: 'var(--color-foreground)' }}>
+                  <h2 className="line-clamp-2 text-sm font-semibold leading-snug" style={{ color: 'var(--color-foreground)' }}>
                     {item.name}
                   </h2>
                 )}
 
                 <div className="mt-2 flex items-center justify-between gap-3 sm:mt-3">
-                  <span className="text-base font-bold tabular-nums sm:text-lg" style={{ color: 'var(--color-foreground)' }}>
+                  <span className="text-base font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
                     {formatPrice(item.price, item.currency)}
                   </span>
                   <span
@@ -170,7 +171,7 @@ export default function WishlistPage() {
                   <button
                     type="button"
                     onClick={() => handleAddToCart(item.productId)}
-                    className="checkout-btn flex h-10 items-center justify-center gap-2 rounded-xl px-3 text-sm font-semibold transition-all duration-fast active:scale-[0.98] sm:h-11 sm:px-4 sm:text-base"
+                    className="checkout-btn flex h-10 items-center justify-center gap-2 rounded-xl px-3 text-sm font-semibold transition-all duration-fast active:scale-[0.98] sm:h-11 sm:px-4"
                     style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}
                     aria-label={t('addToCartItem', { name: item.name })}
                   >

@@ -313,6 +313,7 @@
     "addToCartItem": "Add {name} to cart"
   },
   "recipes": {
+    "empty": "No recipes available yet.",
     "title": "Recipes",
     "servings": "{count} servings",
     "prepTime": "Prep: {min} min",

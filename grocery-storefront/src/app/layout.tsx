@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { DM_Sans, Fraunces } from 'next/font/google';
 import { getLocale } from 'next-intl/server';
 import { GraphQLProvider } from '@/lib/graphql/provider';
 import { CartBootstrap } from '@/components/CartBootstrap';
@@ -18,6 +19,12 @@ import {
 } from '@/lib/seo-metadata';
 import { getConfigString } from '@/lib/storefront-config';
 import './globals.css';
+
+// Self-hosted at build time. The old `@import url(fonts.googleapis.com)` in
+// globals.css was dropped by the CSS pipeline, so the site fell back to Georgia
+// and system fonts. latin-ext carries the Polish diacritics.
+const bodyFont = DM_Sans({ subsets: ['latin', 'latin-ext'], axes: ['opsz'], variable: '--font-dm-sans', display: 'swap' });
+const displayFont = Fraunces({ subsets: ['latin', 'latin-ext'], axes: ['opsz'], variable: '--font-fraunces', display: 'swap' });
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -68,7 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const localBusinessJsonLd = buildLocalBusinessJsonLd({ siteConfig: initialConfig });
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} className={`${bodyFont.variable} ${displayFont.variable}`} suppressHydrationWarning>
       <body suppressHydrationWarning>
         {websiteJsonLd && (
           <script

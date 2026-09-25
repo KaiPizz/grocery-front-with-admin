@@ -1493,9 +1493,7 @@ export function ProductListingClient({
   }
 
   function renderDesktopProductsContent() {
-    const gridClassName = hasDesktopSidebar
-      ? 'product-grid grid grid-cols-2 gap-5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 2xl:grid-cols-4'
-      : 'product-grid grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4';
+    const gridClassName = 'product-grid product-grid-fluid';
 
     if (isInitialLoading) {
       return (

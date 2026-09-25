@@ -67,7 +67,7 @@ export default function RecipesPage() {
         <div className="text-center py-16">
           <ChefHat className="w-12 h-12 mx-auto mb-3 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
           <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            No recipes available yet.
+            {t('empty')}
           </p>
         </div>
       )}

@@ -463,7 +463,7 @@ export function Header() {
           ))}
         </nav>
 
-        {showSearch && <div className="hidden max-w-md flex-1 md:flex md:min-w-[10.5rem] lg:min-w-[12rem] xl:min-w-[14rem] 2xl:min-w-[18rem]">
+        {showSearch && <div className="hidden min-w-0 max-w-md flex-1 md:flex">
           <SearchAutocomplete
             inputId="desktop-search"
             value={searchValue}

@@ -313,6 +313,7 @@
     "addToCartItem": "Dodaj {name} do koszyka"
   },
   "recipes": {
+    "empty": "Nie ma jeszcze przepisów.",
     "title": "Przepisy",
     "servings": "{count} porcji",
     "prepTime": "Przygotowanie: {min} min",

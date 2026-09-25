@@ -638,8 +638,8 @@ export function ProductCard({
               </div>
             )}
 
-            <div className="relative z-20 mt-3 sm:grid sm:grid-cols-[92px,minmax(0,1fr)] sm:items-start sm:gap-2">
-              <div className={`group/quantity transition-[opacity,transform] duration-fast ${cartActionClass}`} data-testid="product-card-quantity" data-in-cart={isInCart ? 'true' : 'false'}>
+            <div className="relative z-20 mt-3 sm:flex sm:flex-wrap sm:items-start sm:gap-2">
+              <div className={`group/quantity transition-[opacity,transform] duration-fast sm:w-[92px] sm:shrink-0 ${cartActionClass}`} data-testid="product-card-quantity" data-in-cart={isInCart ? 'true' : 'false'}>
                 <div
                   className="grid h-11 grid-cols-3 overflow-hidden rounded-full border"
                   style={{
@@ -680,7 +680,7 @@ export function ProductCard({
                 type="button"
                 onClick={handleAddToCart}
                 disabled={!inStock || busy || (isInCart && cartQuantity >= maxQuantity)}
-                className={`hidden h-11 w-full items-center justify-center gap-2 rounded-full px-3 font-semibold transition-[opacity,transform,box-shadow] duration-fast disabled:opacity-40 active:scale-[0.98] sm:flex checkout-btn ${cartActionClass}`}
+                className={`hidden h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full px-3 font-semibold sm:w-auto sm:flex-1 sm:basis-[7.75rem] transition-[opacity,transform,box-shadow] duration-fast disabled:opacity-40 active:scale-[0.98] sm:flex checkout-btn ${cartActionClass}`}
                 style={{
                   backgroundColor: justAdded ? 'var(--color-fresh)' : inStock ? 'var(--color-primary)' : 'var(--color-muted)',
                   color: inStock ? 'white' : 'var(--color-muted-foreground)',
