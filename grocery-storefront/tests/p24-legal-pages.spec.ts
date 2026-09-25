@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { mockMobileStorefront } from './mobile-fixtures';
+import { TEST_LEGAL_IDENTITY, mockMobileStorefront, mockStorefrontConfigWithLegalIdentity } from './mobile-fixtures';
 
 // SPEC SOURCES:
 // - Przelewy24 store verification checklist: a Contact page with legal name, NIP,
@@ -8,30 +8,9 @@ import { mockMobileStorefront } from './mobile-fixtures';
 //   Privacy naming the data controller; all reachable from every page.
 // - mockLegalConfig() adds a seller identity + phone on top of tests/config-server.mjs.
 
-const LEGAL_NAME = 'Green Food Test Anna Kowalska';
-const CONFIG_API = 'http://127.0.0.1:4199';
-
-// Serve the shared fixture config with a seller identity and phone added, so the
-// other footer specs (which assert no phone) keep their own fixture untouched.
+const LEGAL_NAME = TEST_LEGAL_IDENTITY.legalName;
 async function mockLegalConfig(page: Page) {
-  const response = await page.request.get(`${CONFIG_API}/api/config/test`);
-  const envelope = await response.json();
-  envelope.config.general = {
-    ...envelope.config.general,
-    phone: '+48 500 600 700',
-    legalIdentity: {
-      legalName: LEGAL_NAME,
-      registrationType: 'ceidg',
-      nip: '1234563218',
-      regon: '123456785',
-      krs: '',
-      registeredAddress: 'Rejestrowa 5/8, 00-005 Warszawa',
-      complaintAddress: 'Reklamacyjna 2, 00-002 Warszawa',
-    },
-  };
-  await page.route('**/api/config/**', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(envelope) })
-  );
+  await mockStorefrontConfigWithLegalIdentity(page);
   await mockMobileStorefront(page, {});
 }
 

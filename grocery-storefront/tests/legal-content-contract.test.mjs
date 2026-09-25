@@ -35,7 +35,9 @@ for (const locale of ['pl', 'en']) {
     assert.match(legal.termsPaymentsContent, /PayPro S\.A\./);
     assert.match(legal.termsWithdrawalContent, /14/);
     assert.match(legal.termsComplaintsContent, /14/);
-    assert.match(legal.termsDisputesContent, /ec\.europa\.eu\/consumers\/odr/);
+    // The EU ODR platform was discontinued on 2025-07-20 (Regulation (EU) 2024/3228); never link it.
+    assert.doesNotMatch(legal.termsDisputesContent, /consumers\/odr|platform(?:y|a) ODR/i);
+    assert.match(legal.termsDisputesContent, /uokik\.gov\.pl/);
   });
 
   test(`${locale}: privacy names legal bases, the payment operator as recipient, retention and the supervisory authority`, () => {

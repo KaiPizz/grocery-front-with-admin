@@ -440,8 +440,11 @@
       "stillPending": "Nadal czekamy na potwierdzenie. Jeśli zapłaciłeś, potwierdzenie dotrze e-mailem — nie płać ponownie.",
       "invalid": "Brak identyfikatora płatności.",
       "checkFailed": "Nie udało się sprawdzić statusu płatności.",
-      "checkAgain": "Sprawdź ponownie"
-    }
+      "checkAgain": "Sprawdź ponownie",
+      "backToP24": "Wróć do Przelewy24 i dokończ płatność"
+    },
+    "paymentPendingLocked": "To zamówienie czeka na płatność Przelewy24 — dokończ ją lub ponów płatność.",
+    "sellerIdentityMissing": "Sklep nie opublikował jeszcze pełnych danych sprzedawcy, dlatego płatność online jest tymczasowo niedostępna."
   },
   "allergens": {
     "cereals": "Zboża (gluten)",
@@ -519,11 +522,11 @@
     "termsComplaintsTitle": "Reklamacje",
     "termsComplaintsContent": "Sklep odpowiada za brak zgodności towaru z umową na zasadach określonych w rozdziale 5a ustawy o prawach konsumenta. Reklamację można złożyć e-mailem lub pisemnie na adres do reklamacji, podając numer zamówienia, opis niezgodności i żądanie (naprawa, wymiana, obniżenie ceny lub odstąpienie od umowy). Sklep odpowiada na reklamację w terminie 14 dni od jej otrzymania. Produkty spożywcze o krótkim terminie przydatności prosimy reklamować niezwłocznie po stwierdzeniu wady, najlepiej w dniu odbioru.",
     "termsDisputesTitle": "Pozasądowe rozwiązywanie sporów",
-    "termsDisputesContent": "Konsument może skorzystać z pozasądowych sposobów rozpatrywania reklamacji i dochodzenia roszczeń, m.in. z pomocy powiatowego (miejskiego) rzecznika konsumentów, wojewódzkiego inspektoratu Inspekcji Handlowej oraz platformy ODR Komisji Europejskiej (ec.europa.eu/consumers/odr). Szczegółowe informacje udostępnia Urząd Ochrony Konkurencji i Konsumentów (uokik.gov.pl).",
+    "termsDisputesContent": "Konsument może skorzystać z pozasądowych sposobów rozpatrywania reklamacji i dochodzenia roszczeń, m.in. z pomocy powiatowego (miejskiego) rzecznika konsumentów oraz wojewódzkiego inspektoratu Inspekcji Handlowej. Szczegółowe informacje udostępnia Urząd Ochrony Konkurencji i Konsumentów (uokik.gov.pl).",
     "privacyLegalBasisTitle": "Cele i podstawy prawne przetwarzania",
     "privacyLegalBasisContent": "Dane przetwarzamy w celu zawarcia i wykonania umowy sprzedaży oraz prowadzenia konta klienta (art. 6 ust. 1 lit. b RODO), wypełnienia obowiązków prawnych, w szczególności podatkowych i rachunkowych (art. 6 ust. 1 lit. c RODO), realizacji prawnie uzasadnionych interesów, takich jak bezpieczeństwo usługi, obsługa reklamacji, ustalenie i dochodzenie roszczeń (art. 6 ust. 1 lit. f RODO), a w zakresie komunikacji marketingowej — na podstawie zgody (art. 6 ust. 1 lit. a RODO), którą można w każdej chwili wycofać.",
     "privacyRecipientsTitle": "Odbiorcy danych",
-    "privacyRecipientsContent": "Dane mogą być przekazywane podmiotom przetwarzającym je na nasze zlecenie: operatorowi płatności Przelewy24 (PayPro S.A., ul. Pastelowa 8, 60-198 Poznań) w zakresie niezbędnym do obsługi płatności online, dostawcom hostingu, poczty e-mail i platformy sklepu, biuru rachunkowemu oraz — gdy korzystasz z logowania społecznościowego — Google lub Facebookowi. Nie sprzedajemy danych osobowych.",
+    "privacyRecipientsContent": "Dane mogą być przekazywane podmiotom przetwarzającym je na nasze zlecenie: dostawcom hostingu, poczty e-mail i platformy sklepu, biuru rachunkowemu oraz — gdy korzystasz z logowania społecznościowego — Google lub Facebookowi. Operator płatności Przelewy24 (PayPro S.A., ul. Pastelowa 8, 60-198 Poznań) przetwarza dane niezbędne do realizacji płatności jako odrębny administrator, zgodnie z własną polityką prywatności. Nie sprzedajemy danych osobowych.",
     "privacyRetentionTitle": "Okres przechowywania",
     "privacyRetentionContent": "Dane zamówień i płatności przechowujemy przez okres wymagany przepisami podatkowymi i rachunkowymi (co do zasady 5 lat od końca roku, w którym zrealizowano zamówienie). Dane konta przechowujemy do czasu jego usunięcia, a dane techniczne i logi bezpieczeństwa nie dłużej niż 12 miesięcy, chyba że dłuższy okres wynika z konieczności ustalenia lub obrony roszczeń."
   },

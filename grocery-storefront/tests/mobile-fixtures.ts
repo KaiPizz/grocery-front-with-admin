@@ -1047,6 +1047,7 @@ interface MockMobileStorefrontOptions {
   cartCosts?: 'priced' | 'zero';
   checkoutProfile?: 'delivery' | 'delivery-p24' | 'pickup-bank-transfer' | 'pickup-no-payment' | 'unconfigured';
   checkoutComplete?: 'success' | 'insufficient-stock';
+  p24PaymentCreate?: 'ok' | 'fail-once';
   products?: 'ok' | 'error' | 'filter-error';
   productPromotions?: 'mixed' | 'none';
   productDetailImages?: ProductDetailImageMode;
@@ -1097,6 +1098,7 @@ export async function mockMobileStorefront(
       : options.checkoutProfile === 'delivery-p24'
         ? P24_PAYMENT_METHODS
         : PAYMENT_METHODS;
+  let p24CreateCalls = 0;
   let cart = buildCart(options.cart === 'single-item' ? [buildCartLine(1, cartCostMode)] : []);
   let checkout = buildCheckoutState(deliveryOptions);
   let wishlistItems = (() => {
@@ -1704,6 +1706,16 @@ export async function mockMobileStorefront(
 
     if (operationName === 'CheckoutPaymentCreate' || query.includes('mutation CheckoutPaymentCreate')) {
       if (body.variables?.input?.gateway === 'p24') {
+        p24CreateCalls += 1;
+        if (options.p24PaymentCreate === 'fail-once' && p24CreateCalls === 1) {
+          await fulfill(route, {
+            checkoutPaymentCreate: {
+              payment: null,
+              errors: [{ field: null, message: 'P24 registration failed; please retry', code: 'PAYMENT_ERROR' }],
+            },
+          });
+          return;
+        }
         // Backend contract: a P24 session is only registered for an existing order.
         if (!body.variables?.input?.orderId) {
           await fulfill(route, {
@@ -1825,4 +1837,30 @@ export async function mockMobileStorefront(
       }),
     });
   });
+}
+
+export const TEST_LEGAL_IDENTITY = {
+  legalName: 'Green Food Test Anna Kowalska',
+  registrationType: 'ceidg',
+  nip: '1234563218',
+  regon: '123456785',
+  krs: '',
+  registeredAddress: 'Rejestrowa 5/8, 00-005 Warszawa',
+  complaintAddress: 'Reklamacyjna 2, 00-002 Warszawa',
+};
+
+// Serves the shared config-server fixture with a seller identity and phone added.
+// Checkout refuses online payment without a published seller identity, and the
+// footer specs assert "no phone", so this stays opt-in instead of changing the fixture.
+export async function mockStorefrontConfigWithLegalIdentity(page: Page) {
+  const response = await page.request.get('http://127.0.0.1:4199/api/config/test');
+  const envelope = await response.json();
+  envelope.config.general = {
+    ...envelope.config.general,
+    phone: '+48 500 600 700',
+    legalIdentity: { ...TEST_LEGAL_IDENTITY },
+  };
+  await page.route('**/api/config/**', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(envelope) })
+  );
 }

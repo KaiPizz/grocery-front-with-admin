@@ -23,7 +23,13 @@ const MAX_POLL_MS = 10 * 60 * 1000;
 interface PendingRecord {
   paymentId?: string;
   orderNumber?: string;
+  actionUrl?: string;
+  registeredAt?: string;
 }
+
+// The P24 session registered by checkout stays valid for 15 minutes.
+const SESSION_TTL_MS = 15 * 60 * 1000;
+const MAX_CONSECUTIVE_FAILURES = 3;
 
 export default function PaymentReturnPage() {
   const t = useTranslations('checkout');
@@ -34,17 +40,28 @@ export default function PaymentReturnPage() {
 
   const [state, setState] = useState<PaymentState>(validId ? 'loading' : 'invalid');
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
   const startedAt = useRef(Date.now());
+  const failures = useRef(0);
 
   useEffect(() => {
     if (!validId || typeof window === 'undefined') return;
     try {
       const raw = window.sessionStorage.getItem(PENDING_KEY);
       const record = raw ? (JSON.parse(raw) as PendingRecord) : null;
-      if (record?.paymentId === paymentId && record.orderNumber) {
-        setOrderNumber(record.orderNumber);
+      if (record?.paymentId === paymentId) {
+        if (record.orderNumber) setOrderNumber(record.orderNumber);
+        const registeredAt = Date.parse(record.registeredAt ?? '');
+        if (
+          record.actionUrl &&
+          /^https:\/\//.test(record.actionUrl) &&
+          Number.isFinite(registeredAt) &&
+          Date.now() - registeredAt < SESSION_TTL_MS
+        ) {
+          setResumeUrl(record.actionUrl);
+        }
       }
     } catch {
       // Display-only convenience; ignore unreadable storage.
@@ -68,6 +85,7 @@ export default function PaymentReturnPage() {
         }
         const data = (await response.json()) as { status?: string };
         if (cancelled) return;
+        failures.current = 0;
 
         const next: PaymentState =
           data.status === 'paid' ? 'paid' : data.status === 'failed' ? 'failed' : 'pending';
@@ -91,7 +109,14 @@ export default function PaymentReturnPage() {
           timer = setTimeout(() => setAttempt((count) => count + 1), delay);
         }
       } catch {
-        if (!cancelled) setState('error');
+        if (cancelled) return;
+        // A single 429/5xx or a network drop must not end polling for good.
+        failures.current += 1;
+        if (failures.current >= MAX_CONSECUTIVE_FAILURES) {
+          setState('error');
+          return;
+        }
+        timer = setTimeout(() => setAttempt((count) => count + 1), STEADY_DELAY_MS);
       }
     };
 
@@ -141,6 +166,7 @@ export default function PaymentReturnPage() {
   }
 
   const showCheckAgain = state === 'error' || (state === 'pending' && timedOut);
+  const showResume = state === 'pending' && resumeUrl !== null;
 
   return (
     <div className="container-grocery py-16 md:py-24 text-center max-w-lg mx-auto">
@@ -160,12 +186,24 @@ export default function PaymentReturnPage() {
         </p>
       )}
 
+      {showResume && (
+        <a
+          href={resumeUrl ?? undefined}
+          data-testid="payment-return-resume"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white transition-all duration-fast active:scale-95 mb-6"
+          style={{ backgroundColor: 'var(--color-primary)' }}
+        >
+          {t('paymentReturn.backToP24')}
+        </a>
+      )}
+
       {showCheckAgain && (
         <button
           type="button"
           onClick={() => {
             setState('loading');
             setTimedOut(false);
+            failures.current = 0;
             startedAt.current = Date.now();
             setAttempt((count) => count + 1);
           }}

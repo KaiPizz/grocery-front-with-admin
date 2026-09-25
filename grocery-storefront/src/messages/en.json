@@ -440,8 +440,11 @@
       "stillPending": "Still waiting for confirmation. If you paid, the confirmation will arrive by email — do not pay again.",
       "invalid": "Missing payment identifier.",
       "checkFailed": "Could not check the payment status.",
-      "checkAgain": "Check again"
-    }
+      "checkAgain": "Check again",
+      "backToP24": "Return to Przelewy24 and finish the payment"
+    },
+    "paymentPendingLocked": "This order is awaiting Przelewy24 payment — finish it or retry the payment.",
+    "sellerIdentityMissing": "The store has not yet published its full seller details, so online payment is temporarily unavailable."
   },
   "allergens": {
     "cereals": "Cereals (gluten)",
@@ -519,11 +522,11 @@
     "termsComplaintsTitle": "Complaints",
     "termsComplaintsContent": "The store is liable for the goods' lack of conformity with the contract under Chapter 5a of the Polish Consumer Rights Act. A complaint can be submitted by email or in writing to the complaints address, stating the order number, a description of the non-conformity and the requested remedy (repair, replacement, price reduction or withdrawal). The store responds to a complaint within 14 days of receiving it. Please report defects in short-shelf-life food without delay, ideally on the day of pickup.",
     "termsDisputesTitle": "Out-of-court dispute resolution",
-    "termsDisputesContent": "A consumer may use out-of-court complaint and redress procedures, including the municipal consumer ombudsman, the regional Trade Inspection office and the European Commission's ODR platform (ec.europa.eu/consumers/odr). Details are published by the Polish Office of Competition and Consumer Protection (uokik.gov.pl).",
+    "termsDisputesContent": "A consumer may use out-of-court complaint and redress procedures, including the municipal consumer ombudsman and the regional Trade Inspection office. Details are published by the Polish Office of Competition and Consumer Protection (uokik.gov.pl).",
     "privacyLegalBasisTitle": "Purposes and legal bases",
     "privacyLegalBasisContent": "We process data to conclude and perform the sales contract and run your customer account (Article 6(1)(b) GDPR), to meet legal obligations, in particular tax and accounting ones (Article 6(1)(c) GDPR), to pursue legitimate interests such as service security, complaint handling and establishing or defending claims (Article 6(1)(f) GDPR), and for marketing communication on the basis of consent (Article 6(1)(a) GDPR), which you can withdraw at any time.",
     "privacyRecipientsTitle": "Recipients of data",
-    "privacyRecipientsContent": "Data may be passed to processors acting on our behalf: the payment operator Przelewy24 (PayPro S.A., ul. Pastelowa 8, 60-198 Poznań) to the extent needed to handle online payments, hosting, email and storefront platform providers, our accounting office and, when you use social login, Google or Facebook. We do not sell personal data.",
+    "privacyRecipientsContent": "Data may be passed to processors acting on our behalf: hosting, email and storefront platform providers, our accounting office and, when you use social login, Google or Facebook. The payment operator Przelewy24 (PayPro S.A., ul. Pastelowa 8, 60-198 Poznań) processes the data needed to execute payments as an independent controller under its own privacy policy. We do not sell personal data.",
     "privacyRetentionTitle": "Retention period",
     "privacyRetentionContent": "Order and payment data is kept for the period required by tax and accounting law (as a rule 5 years from the end of the year in which the order was fulfilled). Account data is kept until the account is deleted, and technical data and security logs for no longer than 12 months unless a longer period is needed to establish or defend claims."
   },

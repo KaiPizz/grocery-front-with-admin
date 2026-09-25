@@ -40,6 +40,7 @@ import { useHydrated } from '@/hooks/use-hydrated';
 import { useCartStore } from '@/stores/cart-store';
 import { useAuthStore } from '@/stores/auth-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
 import {
   getConfiguredText,
   getFulfillmentConfig,
@@ -351,6 +352,8 @@ export default function CheckoutPage() {
   const fulfillment = getFulfillmentConfig(siteConfig);
   const pickupMode = isPickupFulfillment(siteConfig);
   const bankTransferMode = usesBankTransferPromise(siteConfig);
+  // Consumer law requires the seller's identity before a contract is concluded.
+  const sellerIdentityMissing = getPublicLegalIdentity(siteConfig) === null;
   const pickupAddress = fulfillment.pickupAddress;
   const checkoutPickupNotice = getConfiguredText(fulfillment.pickupInstructions, tFulfillment('checkoutPickupNotice'));
   const checkoutBankTransferNotice = getConfiguredText(fulfillment.bankTransferInstructions, tFulfillment('checkoutBankTransferNotice'));
@@ -1040,6 +1043,12 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (pendingP24Order && !isP24Method(method)) {
+      // The checkout is already completed as a P24 order; only that payment can proceed.
+      toast.error(t('paymentPendingLocked'));
+      return;
+    }
+
     if (isP24Method(method)) {
       // Local selection only: the payment is registered after the order exists.
       setSelectedPaymentMethod(method);
@@ -1208,6 +1217,9 @@ export default function CheckoutPage() {
             orderId: order.id,
             orderNumber: order.number,
             email: form.email.trim(),
+            // Lets the return page offer "back to Przelewy24" while the session is valid.
+            actionUrl: payload.payment.actionUrl,
+            registeredAt: new Date().toISOString(),
           })
         );
         window.sessionStorage.removeItem(CHECKOUT_DRAFT_KEY);
@@ -1236,6 +1248,11 @@ export default function CheckoutPage() {
       if (typeof document !== 'undefined') {
         document.getElementById('checkout-terms')?.focus();
       }
+      return;
+    }
+
+    if (isP24Method(selectedPaymentMethod) && sellerIdentityMissing) {
+      setErrorBanner(t('sellerIdentityMissing'));
       return;
     }
 
@@ -1690,6 +1707,7 @@ export default function CheckoutPage() {
           >
               {bankTransferMode && renderCheckoutNotice(tFulfillment('checkoutReviewNotice'))}
               {pickupMode && renderCheckoutNotice(tFulfillment('checkoutPickupReviewNotice'))}
+              {isP24Method(selectedPaymentMethod) && sellerIdentityMissing && renderCheckoutNotice(t('sellerIdentityMissing'))}
 
               <div className="grid gap-5 md:grid-cols-2 mb-5">
                   <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--color-border)' }}>
@@ -1803,7 +1821,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => void handlePlaceOrder()}
-                  disabled={busy || !checkoutId}
+                  disabled={busy || !checkoutId || (isP24Method(selectedPaymentMethod) && sellerIdentityMissing)}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-all duration-fast disabled:opacity-60 sm:w-auto"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                 >
