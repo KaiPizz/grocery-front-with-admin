@@ -130,14 +130,18 @@ export function ProductCard({
   const addToCartLabel = t('common.addToCart');
   const displayCategory = getCatalogCategoryDisplay(product.category, locale);
   const displayCountryOfOrigin = getLocalizedCountryOrigin(product.countryOfOrigin, locale);
-  const storageZoneSymbol = product.storageZone
-    ? product.storageZone === 'FROZEN'
-      ? '\u2744'
-      : product.storageZone === 'CHILLED'
-        ? '\u2603'
-        : '\u2600'
-    : null;
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
+  // Only cold chain needs a signal on the photo; shelf-stable storage is already in the facts line.
+  const storageBadge = product.storageZone === 'FROZEN' || product.storageZone === 'CHILLED' ? (
+    <span
+      role="img"
+      className={`px-2 py-0.5 rounded-md text-[10px] font-bold text-white zone-${product.storageZone.toLowerCase()}`}
+      aria-label={t('product.storageAria', { zone: storageLabel ?? '' })}
+      title={storageLabel ?? undefined}
+    >
+      {product.storageZone === 'FROZEN' ? '\u2744' : '\u2603'}
+    </span>
+  ) : null;
   const scanFacts = [displayCategory?.name, displayCountryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
   const revealIdleActions = actionVisibility === 'reveal';
   const hiddenActionClass = 'invisible pointer-events-none translate-y-1 opacity-0 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100';
@@ -476,14 +480,7 @@ export function ProductCard({
               <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} aria-hidden="true" />
             </button>
 
-            {product.storageZone && (
-              <span
-                className={`px-2 py-0.5 rounded-md text-[10px] font-bold text-white zone-${product.storageZone.toLowerCase()}`}
-                aria-label={t('product.storageAria', { zone: t(`cart.zoneGroup.${product.storageZone}` as any) })}
-              >
-                {storageZoneSymbol}
-              </span>
-            )}
+            {storageBadge}
           </div>
 
           {product.nutritionFacts && (
@@ -508,20 +505,13 @@ export function ProductCard({
         </div>
 
         <div className="flex flex-1 flex-col p-3.5 sm:bg-[var(--color-card)]">
-          {(product.freshness || product.storageZone || product.nutritionFacts) && (
+          {(product.freshness || storageBadge || product.nutritionFacts) && (
             <div className="mb-2 flex items-start justify-between gap-2 sm:hidden">
               <div className="flex min-w-0 flex-wrap items-center gap-1">
                 {product.freshness && (
                   <FreshnessBadge freshness={product.freshness} nearestExpiry={product.nearestExpiry} compact />
                 )}
-                {product.storageZone && (
-                  <span
-                    className={`px-2 py-0.5 rounded-md text-[10px] font-bold text-white zone-${product.storageZone.toLowerCase()}`}
-                    aria-label={t('product.storageAria', { zone: t(`cart.zoneGroup.${product.storageZone}` as any) })}
-                  >
-                    {storageZoneSymbol}
-                  </span>
-                )}
+                {storageBadge}
               </div>
 
               {product.nutritionFacts && (

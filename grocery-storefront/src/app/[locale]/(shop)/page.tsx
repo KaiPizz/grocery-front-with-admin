@@ -942,7 +942,7 @@ export default function HomePage() {
                         {t('onSale')}
                       </h2>
                     </div>
-                    <Link href="/products?sort=price_asc" className="text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                    <Link href="/products?sort=price_asc" className="inline-flex min-h-10 shrink-0 items-center whitespace-nowrap text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
                       {t('seeAllDeals')}
                     </Link>
                   </div>
@@ -980,7 +980,7 @@ export default function HomePage() {
                     <h2 className="text-2xl font-semibold tracking-tight" style={{ color: 'var(--color-foreground)' }}>
                       {t('newArrivals')}
                     </h2>
-                    <Link href="/products" className="text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                    <Link href="/products" className="inline-flex min-h-10 shrink-0 items-center whitespace-nowrap text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
                       {t('seeAllProducts')}
                     </Link>
                   </div>
@@ -1019,7 +1019,7 @@ export default function HomePage() {
                     <h2 className="text-2xl font-semibold tracking-tight" style={{ color: 'var(--color-foreground)' }}>
                       {t('featuredRecipes')}
                     </h2>
-                    <Link href="/recipes" className="text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                    <Link href="/recipes" className="inline-flex min-h-10 shrink-0 items-center whitespace-nowrap text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
                       {t('seeAllRecipes')}
                     </Link>
                   </div>
@@ -1178,7 +1178,7 @@ export default function HomePage() {
                     </div>
                     <Link
                       href="/products?sort=price_asc"
-                      className="flex items-center gap-1 text-sm font-medium transition-colors duration-fast hover:opacity-80"
+                      className="inline-flex min-h-10 shrink-0 items-center gap-1 whitespace-nowrap text-sm font-medium transition-colors duration-fast hover:opacity-80"
                       style={{ color: 'var(--color-primary)' }}
                     >
                       {t('seeAllDeals')}
@@ -1226,7 +1226,7 @@ export default function HomePage() {
                     </h2>
                     <Link
                       href="/products"
-                      className="flex items-center gap-1 text-sm font-medium transition-colors duration-fast hover:opacity-80"
+                      className="inline-flex min-h-10 shrink-0 items-center gap-1 whitespace-nowrap text-sm font-medium transition-colors duration-fast hover:opacity-80"
                       style={{ color: 'var(--color-primary)' }}
                       aria-label={tCommon('viewAllProducts')}
                     >
@@ -1273,7 +1273,7 @@ export default function HomePage() {
                       </h2>
                       <Link
                         href="/recipes"
-                        className="flex items-center gap-1 text-sm font-medium transition-colors duration-fast hover:opacity-80"
+                        className="inline-flex min-h-10 shrink-0 items-center gap-1 whitespace-nowrap text-sm font-medium transition-colors duration-fast hover:opacity-80"
                         style={{ color: 'var(--color-primary)' }}
                         aria-label={tCommon('viewAllRecipes')}
                       >

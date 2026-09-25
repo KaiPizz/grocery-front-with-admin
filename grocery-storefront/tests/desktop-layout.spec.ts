@@ -90,6 +90,25 @@ test.describe('desktop layout', () => {
     expect(columns).toBeGreaterThanOrEqual(3);
   });
 
+  test('storage badges only flag cold products and name the zone on hover', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1366, height: 900 });
+    await page.goto('/pl/products');
+    await settle(page);
+
+    const badges = await page.locator('[data-testid="product-card"] [class*="zone-"]').evaluateAll((elements) =>
+      elements
+        .filter((element) => element.getBoundingClientRect().width > 0)
+        .map((element) => ({
+          zone: [...element.classList].find((name) => name.startsWith('zone-')),
+          title: element.getAttribute('title'),
+        }))
+    );
+    expect(badges.map((badge) => badge.zone)).not.toContain('zone-ambient');
+    expect(badges.some((badge) => badge.zone === 'zone-frozen' || badge.zone === 'zone-chilled')).toBe(true);
+    expect(badges.filter((badge) => !badge.title)).toEqual([]);
+  });
+
   for (const width of [1366, 1920]) {
     test(`wishlist shows whole product photos in listing-sized cards at ${width}px`, async ({ page }) => {
       await seedAuthSession(page);

@@ -45,6 +45,41 @@ test.describe('mobile layout', () => {
     expect(emailBox!.height).toBeLessThan(30);
   });
 
+  test('tablet footer gives contact a full column so the e-mail stays on one line', async ({ page }) => {
+    await mockAsiaDeliGoConfig(page);
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.goto('/pl');
+
+    const contact = page.locator('footer').getByRole('navigation', { name: 'Kontakt' });
+    await contact.scrollIntoViewIfNeeded();
+    await page.waitForLoadState('networkidle');
+    const contactBox = await contact.boundingBox();
+    expect(contactBox!.width).toBeGreaterThanOrEqual(280);
+
+    const emailBox = await contact.locator('a[href^="mailto:"]').first().boundingBox();
+    expect(emailBox!.height).toBeLessThan(30);
+  });
+
+  test('home "see all" section links meet the 24px target size', async ({ page }) => {
+    await mockAsiaDeliGoConfig(page);
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/pl');
+    await page.waitForLoadState('networkidle');
+
+    const links = await page.locator('main a').evaluateAll((anchors) =>
+      anchors
+        .filter((anchor) => anchor.getBoundingClientRect().width > 0 && /^Zobacz/.test(anchor.textContent?.trim() ?? ''))
+        .map((anchor) => ({
+          href: anchor.getAttribute('href'),
+          height: Math.round(anchor.getBoundingClientRect().height),
+        }))
+    );
+    expect(links.filter((link) => link.href !== '/categories').length).toBeGreaterThan(0);
+    expect(links.filter((link) => link.height < MIN_TARGET)).toEqual([]);
+  });
+
   test('footer navigation links meet the 24px target size', async ({ page }) => {
     await mockAsiaDeliGoConfig(page);
     await mockMobileStorefront(page);

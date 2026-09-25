@@ -24,6 +24,7 @@ import {
   isEnglishLocale,
 } from '@/lib/catalog-display-localization';
 import { getLocalizedProductDescription, getLocalizedProductName } from '@/lib/localization';
+import { getDescriptionBeyondTitle } from '@/lib/product-description';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import {
   getConfiguredText,
@@ -818,7 +819,7 @@ export default function ProductDetailPage() {
   const displayProduct = {
     ...product,
     name: productName,
-    description: productDescription,
+    description: getDescriptionBeyondTitle(productDescription, productName) ?? undefined,
   };
   const displayCategory = getCatalogCategoryDisplay(product.category, locale);
   const displayCountryOfOrigin = getLocalizedCountryOrigin(product.countryOfOrigin, locale);

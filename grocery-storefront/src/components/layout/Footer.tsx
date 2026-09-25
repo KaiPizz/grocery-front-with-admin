@@ -156,7 +156,8 @@ export function Footer() {
     ? 'md:grid-cols-2'
     : footerColumnCount === 3
       ? 'md:grid-cols-3'
-      : 'md:grid-cols-4';
+      // Four columns squeeze contact to ~144px on tablets; stay 2×2 until lg.
+      : 'md:grid-cols-2 lg:grid-cols-4';
   const serviceGridColumns = serviceNotes.length === 2
     ? 'sm:grid-cols-2'
     : serviceNotes.length >= 3
