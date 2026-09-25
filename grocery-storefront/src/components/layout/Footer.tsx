@@ -81,6 +81,7 @@ export function Footer() {
     '/collections/korean-pantry': tNav('koreanPantry'),
     '/privacy': t('privacy'),
     '/terms': t('terms'),
+    '/contact': t('contact'),
   };
 
   const columns = footerCfg?.columns?.length ? footerCfg.columns.map(col => ({
@@ -150,7 +151,7 @@ export function Footer() {
       : null,
   ].filter((link): link is { href: string; label: string } => link !== null);
   const footerColumnCount = columns
-    ? 1 + columns.length + (contactItems.length > 0 ? 1 : 0)
+    ? 1 + columns.length + 1
     : 4;
   const footerGridColumns = footerColumnCount <= 2
     ? 'md:grid-cols-2'
@@ -237,10 +238,10 @@ export function Footer() {
                   </ul>
                 </nav>
               ))}
-              {contactItems.length > 0 && (
-                <nav aria-label={t('contact')} className="col-span-2 md:col-span-1">
+              <nav aria-label={t('contact')} className="col-span-2 md:col-span-1">
                   <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{t('contact')}</h3>
                   <ul className="space-y-2.5" role="list">
+                    <li>{renderFooterLink('/contact', t('contact'))}</li>
                     {contactItems.map(({ label, href, icon: Icon }) => (
                       <li key={label} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                         <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
@@ -255,7 +256,6 @@ export function Footer() {
                     ))}
                   </ul>
                 </nav>
-              )}
             </>
           ) : (
             <>
@@ -296,6 +296,7 @@ export function Footer() {
                 <ul className="space-y-2.5" role="list">
                   <li><Link href="/privacy" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('privacy')}</Link></li>
                   <li><Link href="/terms" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('terms')}</Link></li>
+                  <li><Link href="/contact" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('contact')}</Link></li>
                 </ul>
               </nav>
             </>

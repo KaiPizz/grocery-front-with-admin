@@ -12,7 +12,8 @@ export type PublicSeoRoute =
   | 'categories'
   | 'recipes'
   | 'privacy'
-  | 'terms';
+  | 'terms'
+  | 'contact';
 
 const DEFAULT_STORE_NAME = 'Asia Deli Go';
 const DEFAULT_OG_IMAGE_PATH = '/brand/hero/asia-deli-go-hero-01.webp';
@@ -51,6 +52,10 @@ const PUBLIC_ROUTE_COPY: Record<
       title: 'Regulamin sklepu',
       description: 'Zapoznaj się z zasadami korzystania ze sklepu internetowego {storeName}.',
     },
+    contact: {
+      title: 'Kontakt',
+      description: 'Dane sprzedawcy, adres sklepu, godziny otwarcia i kontakt do {storeName}.',
+    },
   },
   en: {
     products: {
@@ -72,6 +77,10 @@ const PUBLIC_ROUTE_COPY: Record<
     terms: {
       title: 'Store terms',
       description: 'Read the terms for using the {storeName} online storefront.',
+    },
+    contact: {
+      title: 'Contact',
+      description: 'Seller details, store address, opening hours and contact for {storeName}.',
     },
   },
 };

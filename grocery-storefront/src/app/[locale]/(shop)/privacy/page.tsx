@@ -36,6 +36,12 @@ export default function PrivacyPage() {
         )}
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyDataTitle')}</h2>
         <p>{t('privacyDataContent')}</p>
+        <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyLegalBasisTitle')}</h2>
+        <p>{t('privacyLegalBasisContent')}</p>
+        <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyRecipientsTitle')}</h2>
+        <p>{t('privacyRecipientsContent')}</p>
+        <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyRetentionTitle')}</h2>
+        <p>{t('privacyRetentionContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacySocialTitle')}</h2>
         <p>{t('privacySocialContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyCookiesTitle')}</h2>

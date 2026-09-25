@@ -937,6 +937,19 @@ const PICKUP_ONLY_DELIVERY_OPTIONS = [
   },
 ];
 
+const P24_PAYMENT_METHODS = [
+  {
+    id: 'p24',
+    name: 'Przelewy24',
+    description: 'Bank transfer, BLIK or card via Przelewy24',
+    provider: 'p24',
+    isActive: true,
+    fee: { amount: 0, currency: 'PLN' },
+  },
+];
+
+export const P24_ACTION_URL = 'https://p24.test/trnRequest/token-1';
+
 const BANK_TRANSFER_PAYMENT_METHODS = [
   {
     id: 'bank_transfer',
@@ -1032,7 +1045,7 @@ export async function seedAuthSession(page: Page, fullName = 'Mobile Shopper') {
 interface MockMobileStorefrontOptions {
   cart?: 'empty' | 'single-item';
   cartCosts?: 'priced' | 'zero';
-  checkoutProfile?: 'delivery' | 'pickup-bank-transfer' | 'pickup-no-payment' | 'unconfigured';
+  checkoutProfile?: 'delivery' | 'delivery-p24' | 'pickup-bank-transfer' | 'pickup-no-payment' | 'unconfigured';
   checkoutComplete?: 'success' | 'insufficient-stock';
   products?: 'ok' | 'error' | 'filter-error';
   productPromotions?: 'mixed' | 'none';
@@ -1048,7 +1061,7 @@ interface MockMobileStorefrontOptions {
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   beforeProductListingResponse?: () => Promise<void>;
   beforeProductFilterFacetsResponse?: () => Promise<void>;
-  onGraphqlOperation?: (operationName: string, query: string) => void;
+  onGraphqlOperation?: (operationName: string, query: string, variables?: Record<string, any>) => void;
   onProductsQuery?: (variables: Record<string, unknown>) => void;
   onProductDetailQuery?: (query: string, variables: Record<string, unknown>) => void;
   onSearchProductsIndexQuery?: (variables: Record<string, unknown>) => void;
@@ -1081,7 +1094,9 @@ export async function mockMobileStorefront(
     ? []
     : options.checkoutProfile === 'pickup-bank-transfer'
       ? BANK_TRANSFER_PAYMENT_METHODS
-      : PAYMENT_METHODS;
+      : options.checkoutProfile === 'delivery-p24'
+        ? P24_PAYMENT_METHODS
+        : PAYMENT_METHODS;
   let cart = buildCart(options.cart === 'single-item' ? [buildCartLine(1, cartCostMode)] : []);
   let checkout = buildCheckoutState(deliveryOptions);
   let wishlistItems = (() => {
@@ -1107,7 +1122,7 @@ export async function mockMobileStorefront(
     const query = body.query ?? '';
     const operationName = body.operationName ?? '';
 
-    options.onGraphqlOperation?.(operationName, query);
+    options.onGraphqlOperation?.(operationName, query, body.variables ?? {});
 
     const isProductListingQuery = operationName === 'GroceryProducts'
       || operationName === 'GroceryProductListing'
@@ -1688,6 +1703,32 @@ export async function mockMobileStorefront(
     }
 
     if (operationName === 'CheckoutPaymentCreate' || query.includes('mutation CheckoutPaymentCreate')) {
+      if (body.variables?.input?.gateway === 'p24') {
+        // Backend contract: a P24 session is only registered for an existing order.
+        if (!body.variables?.input?.orderId) {
+          await fulfill(route, {
+            checkoutPaymentCreate: {
+              payment: null,
+              errors: [{ field: 'orderId', message: 'Complete checkout before creating a P24 payment', code: 'ORDER_REQUIRED' }],
+            },
+          });
+          return;
+        }
+        await fulfill(route, {
+          checkoutPaymentCreate: {
+            payment: {
+              id: '11111111-1111-4111-8111-111111111111',
+              gateway: 'p24',
+              status: 'PENDING',
+              clientSecret: null,
+              actionUrl: P24_ACTION_URL,
+              total: checkout.totalPrice.gross,
+            },
+            errors: [],
+          },
+        });
+        return;
+      }
       await fulfill(route, {
         checkoutPaymentCreate: {
           payment: {

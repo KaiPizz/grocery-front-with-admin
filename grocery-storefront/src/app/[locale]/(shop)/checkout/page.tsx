@@ -318,6 +318,17 @@ function translatePaymentMethodDescription(locale: string, method: PaymentMethod
   return method.description?.trim() || method.provider?.trim() || null;
 }
 
+// Przelewy24 is the only gateway that completes the order first and only then
+// registers the payment (order → payment → redirect); legacy gateways keep the
+// pre-order payment session.
+function isP24Method(method: PaymentMethod | null): boolean {
+  if (!method) return false;
+  const code = `${method.id} ${method.provider ?? ''}`.toLowerCase();
+  return code.includes('p24') || code.includes('przelewy24');
+}
+
+const P24_PENDING_KEY = 'adg-p24-pending';
+
 function focusDeliveryField(field: keyof DeliveryFormState) {
   if (typeof window === 'undefined') return;
 
@@ -377,6 +388,11 @@ export default function CheckoutPage() {
   const [serverTotal, setServerTotal] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [errorBanner, setErrorBanner] = useState<string | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsError, setTermsError] = useState<string | null>(null);
+  // Set once a P24 order exists but its payment session could not be started;
+  // lets the shopper retry against the same unpaid order instead of re-ordering.
+  const [pendingP24Order, setPendingP24Order] = useState<{ id: string; number: string } | null>(null);
   const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
   const authSession = useAuthStore((s) => s.session);
@@ -1024,6 +1040,17 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (isP24Method(method)) {
+      // Local selection only: the payment is registered after the order exists.
+      setSelectedPaymentMethod(method);
+      setPaymentSession(null);
+      setPendingP24Order(null);
+      setErrorBanner(null);
+      markCompleted('payment');
+      setStep('review');
+      return;
+    }
+
     setBusy(true);
     setErrorBanner(null);
 
@@ -1145,11 +1172,75 @@ export default function CheckoutPage() {
     }
   }
 
+  // Registers the Przelewy24 session for an order that already exists, then hands
+  // the shopper to P24. Only identifiers go to sessionStorage; the return page
+  // asks the backend for the real status.
+  async function startP24Payment(order: { id: string; number: string }) {
+    if (!checkoutId) return;
+
+    setPendingP24Order(order);
+    setBusy(true);
+    setErrorBanner(null);
+
+    try {
+      const response = await graphqlRequest<PaymentCreateResponse>(CHECKOUT_PAYMENT_CREATE, {
+        checkoutId,
+        input: {
+          gateway: 'p24',
+          orderId: order.id,
+        },
+      });
+      const payload = response.data?.checkoutPaymentCreate;
+      const rawMessage = getRequestMessage(response.errors, payload?.errors, t('paymentInitFailed'));
+
+      if (getGraphqlErrorMessage(response.errors) || getPayloadMessage(payload?.errors) || !payload?.payment?.actionUrl) {
+        const message = /expired|wygas/i.test(rawMessage) ? t('paymentSessionExpired') : t('paymentInitFailed');
+        setErrorBanner(message);
+        toast.error(message);
+        return;
+      }
+
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.setItem(
+          P24_PENDING_KEY,
+          JSON.stringify({
+            paymentId: payload.payment.id,
+            orderId: order.id,
+            orderNumber: order.number,
+            email: form.email.trim(),
+          })
+        );
+        window.sessionStorage.removeItem(CHECKOUT_DRAFT_KEY);
+        window.sessionStorage.removeItem('oms-pending-checkout');
+      }
+      clearCart();
+      toast.success(t('paymentRedirecting'));
+      window.location.assign(payload.payment.actionUrl);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function handlePlaceOrder() {
     if (!checkoutId) {
       const message = 'Checkout is not ready yet.';
       setErrorBanner(message);
       toast.error(message);
+      return;
+    }
+
+    if (!termsAccepted) {
+      setTermsError(t('termsRequired'));
+      // The checkbox is already mounted; move focus synchronously so the
+      // announcement and the error association land together.
+      if (typeof document !== 'undefined') {
+        document.getElementById('checkout-terms')?.focus();
+      }
+      return;
+    }
+
+    if (pendingP24Order) {
+      await startP24Payment(pendingP24Order);
       return;
     }
 
@@ -1176,9 +1267,12 @@ export default function CheckoutPage() {
         }
       }
 
+      const payWithP24 = isP24Method(selectedPaymentMethod);
       const response = await graphqlRequest<CheckoutCompleteResponse>(CHECKOUT_COMPLETE_MUTATION, {
         input: {
           checkoutId,
+          termsAccepted: true,
+          ...(payWithP24 ? { paymentData: 'p24' } : {}),
         },
       });
       const payload = response.data?.checkoutComplete;
@@ -1193,6 +1287,11 @@ export default function CheckoutPage() {
         }
         setErrorBanner(message);
         toast.error(message);
+        return;
+      }
+
+      if (payWithP24) {
+        await startP24Payment({ id: payload.order.id, number: payload.order.number });
         return;
       }
 
@@ -1663,6 +1762,43 @@ export default function CheckoutPage() {
                   />
               </div>
 
+              <div className="mb-5">
+                <label htmlFor="checkout-terms" className="flex cursor-pointer items-start gap-3 text-sm" style={{ color: 'var(--color-foreground)' }}>
+                  <input
+                    id="checkout-terms"
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(event) => {
+                      setTermsAccepted(event.target.checked);
+                      if (event.target.checked) setTermsError(null);
+                    }}
+                    aria-required="true"
+                    aria-invalid={termsError ? 'true' : undefined}
+                    aria-describedby={termsError ? 'checkout-terms-error' : undefined}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-primary)]"
+                  />
+                  <span>
+                    {t.rich('termsAccept', {
+                      terms: (chunks) => (
+                        <Link href="/terms" target="_blank" rel="noopener" className="underline underline-offset-2">
+                          {chunks}
+                        </Link>
+                      ),
+                      privacy: (chunks) => (
+                        <Link href="/privacy" target="_blank" rel="noopener" className="underline underline-offset-2">
+                          {chunks}
+                        </Link>
+                      ),
+                    })}
+                  </span>
+                </label>
+                {termsError && (
+                  <p id="checkout-terms-error" role="alert" className="mt-2 text-sm" style={{ color: 'var(--color-destructive)' }}>
+                    {termsError}
+                  </p>
+                )}
+              </div>
+
               <div className="flex justify-end">
                 <button
                   type="button"
@@ -1672,7 +1808,7 @@ export default function CheckoutPage() {
                   style={{ backgroundColor: 'var(--color-primary)' }}
                 >
                   {busy ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> : <ShieldCheck className="h-5 w-5" aria-hidden="true" />}
-                  {busy ? t('processing') : t('placeOrder')}
+                  {busy ? t('processing') : pendingP24Order ? t('paymentRetry') : t('placeOrder')}
                 </button>
               </div>
           </CheckoutSection>
