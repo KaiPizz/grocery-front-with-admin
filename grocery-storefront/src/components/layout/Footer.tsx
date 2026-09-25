@@ -163,6 +163,8 @@ export function Footer() {
       ? 'sm:grid-cols-2 lg:grid-cols-3'
       : '';
 
+  const footerLinkClassName = 'inline-block py-1 text-sm transition-colors duration-fast hover:text-primary';
+
   function renderFooterLink(href: string, label: string) {
     if (!href || href === '#') {
       return (
@@ -173,7 +175,7 @@ export function Footer() {
     }
 
     return (
-      <Link href={href} className="text-sm transition-colors duration-fast hover:text-primary" style={{ color: 'var(--color-muted-foreground)' }}>
+      <Link href={href} className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>
         {label}
       </Link>
     );
@@ -224,8 +226,8 @@ export function Footer() {
             <>
               {columns.map((col) => (
                 <nav key={col.title} aria-label={col.title}>
-                  <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{col.title}</h3>
-                  <ul className="space-y-2.5" role="list">
+                  <h3 className="heading-section text-sm mb-3" style={{ color: 'var(--color-foreground)' }}>{col.title}</h3>
+                  <ul className="space-y-1" role="list">
                     {col.links.map((link) => (
                       <li key={`${link.label}-${link.href}`}>
                         {renderFooterLink(link.href, link.label)}
@@ -235,7 +237,7 @@ export function Footer() {
                 </nav>
               ))}
               {contactItems.length > 0 && (
-                <nav aria-label={t('contact')}>
+                <nav aria-label={t('contact')} className="col-span-2 md:col-span-1">
                   <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{t('contact')}</h3>
                   <ul className="space-y-2.5" role="list">
                     {contactItems.map(({ label, href, icon: Icon }) => (
@@ -259,8 +261,8 @@ export function Footer() {
               <nav aria-label={t('shop')}>
                 <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{t('shop')}</h3>
                 <ul className="space-y-2.5" role="list">
-                  <li><Link href="/products" className="text-sm transition-colors duration-fast hover:text-primary" style={{ color: 'var(--color-muted-foreground)' }}>{tNav('products')}</Link></li>
-                  <li><Link href="/recipes" className="text-sm transition-colors duration-fast hover:text-primary" style={{ color: 'var(--color-muted-foreground)' }}>{tNav('recipes')}</Link></li>
+                  <li><Link href="/products" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{tNav('products')}</Link></li>
+                  <li><Link href="/recipes" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{tNav('recipes')}</Link></li>
                 </ul>
               </nav>
               <nav aria-label={t('info')}>
@@ -291,8 +293,8 @@ export function Footer() {
               <nav aria-label={t('legal')}>
                 <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{t('legal')}</h3>
                 <ul className="space-y-2.5" role="list">
-                  <li><Link href="/privacy" className="text-sm transition-colors duration-fast hover:text-primary" style={{ color: 'var(--color-muted-foreground)' }}>{t('privacy')}</Link></li>
-                  <li><Link href="/terms" className="text-sm transition-colors duration-fast hover:text-primary" style={{ color: 'var(--color-muted-foreground)' }}>{t('terms')}</Link></li>
+                  <li><Link href="/privacy" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('privacy')}</Link></li>
+                  <li><Link href="/terms" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('terms')}</Link></li>
                 </ul>
               </nav>
             </>

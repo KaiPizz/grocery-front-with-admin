@@ -371,6 +371,7 @@
     "zoneSectionAria": "{zone}, {countLabel}"
   },
   "checkout": {
+    "amountDue": "Total due",
     "title": "Checkout",
     "delivery": "Delivery details",
     "payment": "Payment method",

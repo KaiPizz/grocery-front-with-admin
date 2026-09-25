@@ -737,8 +737,9 @@ export default function ProductDetailPage() {
     setShipPromise(isBeforeShippingCutoff(new Date(), cutoffStr) ? 'today' : 'tomorrow');
   }, [cutoffStr]);
 
-  // Show the mobile sticky add-to-cart bar exactly when the inline CTA row
-  // has scrolled out of view. rootMargin compensates for the sticky header.
+  // Show the mobile sticky add-to-cart bar whenever the inline CTA row is off
+  // screen: scrolled past (under the sticky header) or still below the fold
+  // (behind the bottom nav). rootMargin compensates for the sticky header.
   // Using a state-backed ref ensures the observer re-attaches when the inline
   // actions div mounts — guarding against the DetailSkeleton → full-UI swap
   // not triggering a useEffect keyed on a stable param like `slug`.
@@ -747,7 +748,8 @@ export default function ProductDetailPage() {
 
     const updateStickyAdd = () => {
       const actionsRect = inlineActionsNode.getBoundingClientRect();
-      setShowStickyAdd(actionsRect.bottom <= 80);
+      const bottomNavTop = window.innerHeight - 56;
+      setShowStickyAdd(actionsRect.bottom <= 80 || actionsRect.top >= bottomNavTop);
     };
     const observer = new IntersectionObserver(updateStickyAdd, {
       rootMargin: '-80px 0px 0px 0px',

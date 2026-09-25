@@ -158,13 +158,11 @@ export function CheckoutSection({
  */
 interface CheckoutProgressBarProps {
   currentStep: CheckoutStep;
-  completedSteps: Set<CheckoutStep>;
 }
 
-export function CheckoutProgressBar({ currentStep, completedSteps }: CheckoutProgressBarProps) {
+export function CheckoutProgressBar({ currentStep }: CheckoutProgressBarProps) {
   const t = useTranslations('checkout');
   const currentIndex = STEPS.indexOf(currentStep);
-  const completedCount = Array.from(completedSteps).length;
   const progressPercent = ((currentIndex + 1) / STEPS.length) * 100;
 
   return (
@@ -175,12 +173,6 @@ export function CheckoutProgressBar({ currentStep, completedSteps }: CheckoutPro
           style={{ color: 'var(--color-muted-foreground)' }}
         >
           {t('progressStep', { current: currentIndex + 1, total: STEPS.length })}
-        </span>
-        <span
-          className="font-medium"
-          style={{ color: 'var(--color-muted-foreground)' }}
-        >
-          {t('progressCompleted', { count: completedCount })}
         </span>
       </div>
       <div

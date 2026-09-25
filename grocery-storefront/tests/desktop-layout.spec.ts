@@ -77,6 +77,19 @@ test.describe('desktop layout', () => {
     });
   }
 
+  test('tablet listing fits three columns instead of two oversized cards at 768px', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.goto('/en/products');
+    await settle(page);
+
+    const columns = await page.evaluate(() => {
+      const grid = document.querySelector('.product-grid-fluid');
+      return grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 0;
+    });
+    expect(columns).toBeGreaterThanOrEqual(3);
+  });
+
   for (const width of [1366, 1920]) {
     test(`wishlist shows whole product photos in listing-sized cards at ${width}px`, async ({ page }) => {
       await seedAuthSession(page);

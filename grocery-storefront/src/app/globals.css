@@ -320,11 +320,11 @@ body::before {
 }
 
 /* Fluid product grid: as many columns as fit, never narrower than one card.
-   Cards stay ~15-21rem on every screen instead of shrinking when a breakpoint
+   Cards stay ~14-20rem on every screen instead of shrinking when a breakpoint
    adds a column. */
 .product-grid-fluid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
   gap: 1rem;
 }
 

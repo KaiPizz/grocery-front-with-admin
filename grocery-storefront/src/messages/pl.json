@@ -371,7 +371,8 @@
     "zoneSectionAria": "{zone}, {countLabel}"
   },
   "checkout": {
-    "title": "Podsumowanie zamówienia",
+    "amountDue": "Do zapłaty",
+    "title": "Finalizacja zamówienia",
     "delivery": "Dane dostawy",
     "payment": "Metoda płatności",
     "summary": "Podsumowanie zamówienia",

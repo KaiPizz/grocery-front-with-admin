@@ -38,7 +38,7 @@ export function ConfiguredCategoryGrid({ blocks }: ConfiguredCategoryGridProps) 
         </h2>
         <Link
           href="/categories"
-          className="inline-flex min-h-11 items-center gap-1 rounded-full border px-3 text-sm font-semibold transition-colors duration-fast hover:opacity-80"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-3 text-sm font-semibold transition-colors duration-fast hover:opacity-80"
           style={{ borderColor: 'var(--color-border)', color: 'var(--color-primary)' }}
         >
           {t('seeAllCategories')}

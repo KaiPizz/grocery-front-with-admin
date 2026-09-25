@@ -34,7 +34,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
               ) : (
                 <Link
                   href={item.href}
-                  className="transition-colors duration-fast hover:opacity-80"
+                  className="inline-block py-1 transition-colors duration-fast hover:opacity-80"
                   style={{ color: 'var(--color-muted-foreground)' }}
                 >
                   {item.label}

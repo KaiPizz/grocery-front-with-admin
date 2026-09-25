@@ -442,7 +442,7 @@ function HomeCategoryShortcuts({
         </h2>
         <Link
           href="/categories"
-          className="inline-flex min-h-10 items-center gap-1 rounded-full border px-3 text-sm font-semibold transition-colors duration-fast hover:opacity-80"
+          className="inline-flex min-h-10 shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-3 text-sm font-semibold transition-colors duration-fast hover:opacity-80"
           style={{ borderColor: 'var(--color-border)', color: 'var(--color-primary)' }}
         >
           {t('seeAllCategories')}
@@ -652,7 +652,7 @@ function HomeFulfillmentTrust({
           >
             {t('pickupGuideTitle')}
           </h2>
-          <ol className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-3 md:px-0 [&::-webkit-scrollbar]:hidden">
+          <ol className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-3 md:px-0 [&::-webkit-scrollbar]:hidden">
             {steps.map(({ title, description, icon: Icon }, index) => (
               <li
                 key={title}

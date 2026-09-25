@@ -1263,7 +1263,7 @@ export default function CheckoutPage() {
         }}
         data-testid="checkout-sticky-progress"
       >
-        <CheckoutProgressBar currentStep={step} completedSteps={completedSteps} />
+        <CheckoutProgressBar currentStep={step} />
       </div>
 
       {(errorBanner || cartError) && (
@@ -1731,7 +1731,7 @@ export default function CheckoutPage() {
           <div className="container-grocery flex items-center justify-between gap-3 py-3">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                {t('summary')}
+                {t('amountDue')}
               </p>
               <p className="text-lg font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
                 {formatPrice(displayTotal, displayCurrency)}

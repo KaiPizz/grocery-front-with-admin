@@ -95,7 +95,7 @@ export default function CartPage() {
             </p>
             {item.allergens && item.allergens.length > 0 && (
               <div className="mt-0.5 flex flex-wrap gap-1">
-                {item.allergens.slice(0, 2).map((allergen) => {
+                {item.allergens.map((allergen) => {
                   const normalizedAllergen = normalizeAllergenCode(allergen);
                   return (
                     <span key={allergen} className="allergen-chip text-[10px]">
@@ -113,7 +113,7 @@ export default function CartPage() {
             <button
               type="button"
               onClick={() => void handleSaveForLater(item)}
-              className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-medium transition-opacity duration-fast hover:opacity-80"
+              className="mt-0.5 inline-flex min-h-8 items-center gap-1.5 text-xs font-medium transition-opacity duration-fast hover:opacity-80"
               style={{ color: 'var(--color-primary)' }}
               aria-label={t('saveForLaterItem', { name: item.name })}
             >
