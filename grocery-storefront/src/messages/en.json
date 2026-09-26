@@ -639,6 +639,9 @@
       "BANK_TRANSFER": "Bank transfer",
       "CARD": "Card",
       "unknown": "{code}"
+    },
+    "shippingMethod": {
+      "PICKUP": "Store pickup"
     }
   },
   "trackOrder": {

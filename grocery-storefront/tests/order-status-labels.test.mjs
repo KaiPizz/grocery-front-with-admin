@@ -30,6 +30,9 @@ for (const [locale, messages] of [['pl', pl], ['en', en]]) {
   test(`${locale}: orders.paymentMethod has every method`, () => {
     for (const code of METHOD) assert.equal(typeof messages.orders?.paymentMethod?.[code], 'string', `${locale} orders.paymentMethod.${code}`);
   });
+  test(`${locale}: orders.shippingMethod translates the pickup snapshot`, () => {
+    assert.equal(typeof messages.orders?.shippingMethod?.PICKUP, 'string', `${locale} orders.shippingMethod.PICKUP`);
+  });
   test(`${locale}: trackOrder namespace is complete`, () => {
     for (const key of TRACK) assert.equal(typeof messages.trackOrder?.[key], 'string', `${locale} trackOrder.${key}`);
   });

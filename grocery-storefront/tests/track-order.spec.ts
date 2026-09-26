@@ -16,7 +16,7 @@ const FOUND = {
     paymentStatus: 'FULLY_CHARGED',
     paymentMethod: 'P24',
     isPaid: true,
-    shippingMethodName: 'Odbiór osobisty',
+    shippingMethodName: 'Store pickup',
     total: { gross: { amount: 4.6, currency: 'PLN' } },
     lines: [{ productName: 'Chipsy Nori Kimchi 4,5g', quantity: 1, totalPrice: { gross: { amount: 4.6, currency: 'PLN' } } }],
   },
@@ -53,6 +53,9 @@ test.describe('Track order (guest)', () => {
     await expect(result).toContainText('Opłacone');
     await expect(result).toContainText('Przelewy24');
     await expect(result).toContainText('Chipsy Nori Kimchi 4,5g');
+    // The backend snapshots in-store pickup as the English marker; the page must translate it.
+    await expect(result).toContainText('Odbiór osobisty');
+    await expect(result).not.toContainText('Store pickup');
     await expect(result).not.toContainText('FULLY_CHARGED');
     await expect(result).not.toContainText('UNCONFIRMED');
     expect(seen[0].input).toEqual({ orderNumber: 'ord-2026-00033', email: 'paulviet.dinh@gmail.com' });

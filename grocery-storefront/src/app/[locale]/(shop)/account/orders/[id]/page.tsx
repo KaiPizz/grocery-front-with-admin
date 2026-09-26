@@ -9,7 +9,7 @@ import { useChannel } from '@/hooks/use-channel';
 import { Link } from '@/i18n/navigation';
 import { ORDER_DETAIL_QUERY } from '@/lib/graphql/operations/grocery';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
-import { orderStatusLabel, paymentMethodLabel, paymentStatusLabel } from '@/lib/orders/status-labels';
+import { orderStatusLabel, paymentMethodLabel, paymentStatusLabel, shippingMethodLabel } from '@/lib/orders/status-labels';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { CustomerOrderDetail } from '@/types';
 
@@ -274,9 +274,9 @@ export default function OrderDetailPage() {
               </div>
             </div>
 
-            {order.shippingMethodName && (
+            {shippingMethodLabel(tOrders, order.shippingMethodName) && (
               <p className="text-sm mt-4" style={{ color: 'var(--color-muted-foreground)' }}>
-                {tAccount('shippingMethod', { method: order.shippingMethodName })}
+                {tAccount('shippingMethod', { method: shippingMethodLabel(tOrders, order.shippingMethodName) ?? '' })}
               </p>
             )}
           </section>

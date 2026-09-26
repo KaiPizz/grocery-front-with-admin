@@ -7,7 +7,7 @@ import { useChannel } from '@/hooks/use-channel';
 import { GUEST_ORDER_QUERY } from '@/lib/graphql/operations/grocery';
 import { graphqlRequest } from '@/lib/graphql/request';
 import { formatOrderDate } from '@/lib/orders/format';
-import { orderStatusLabel, paymentMethodLabel, paymentStatusLabel } from '@/lib/orders/status-labels';
+import { orderStatusLabel, paymentMethodLabel, paymentStatusLabel, shippingMethodLabel } from '@/lib/orders/status-labels';
 import { formatPrice } from '@/lib/utils';
 
 interface GuestOrderLine {
@@ -225,7 +225,9 @@ export function TrackOrderForm({
           </div>
 
           <p className="mt-4 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {order.shippingMethodName ? `${order.shippingMethodName} · ` : ''}
+            {shippingMethodLabel(tOrders, order.shippingMethodName)
+              ? `${shippingMethodLabel(tOrders, order.shippingMethodName)} · `
+              : ''}
             {t('pickupHint')}
           </p>
         </section>

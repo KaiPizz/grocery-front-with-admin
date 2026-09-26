@@ -639,6 +639,9 @@
       "BANK_TRANSFER": "Przelew bankowy",
       "CARD": "Karta",
       "unknown": "{code}"
+    },
+    "shippingMethod": {
+      "PICKUP": "Odbiór osobisty"
     }
   },
   "trackOrder": {

@@ -48,3 +48,15 @@ export function paymentStatusLabel(t: OrdersTranslate, code?: string | null): st
 export function paymentMethodLabel(t: OrdersTranslate, code?: string | null): string {
   return label(t, 'paymentMethod', PAYMENT_METHOD_CODES, code);
 }
+
+/**
+ * Shipping method names are stored on the order as the tenant's own label,
+ * except in-store pickup, which the backend snapshots as the English marker
+ * "Store pickup" — translate that one, pass everything else through.
+ */
+export function shippingMethodLabel(t: OrdersTranslate, name?: string | null): string | null {
+  const value = (name ?? '').trim();
+  if (!value) return null;
+  if (/^store pickup$/i.test(value)) return t('shippingMethod.PICKUP');
+  return value;
+}
