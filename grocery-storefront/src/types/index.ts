@@ -301,6 +301,10 @@ export interface CustomerOrderSummary {
   id: string;
   number: string;
   status: string;
+  /** PaymentChargeStatusEnum code, e.g. FULLY_CHARGED */
+  paymentStatus?: string | null;
+  /** Payment method code, e.g. P24, CASH */
+  paymentMethod?: string | null;
   created: string;
   total: {
     gross: {
@@ -322,7 +326,6 @@ export interface CustomerOrderDetail extends CustomerOrderSummary {
     };
   } | null;
   shippingPrice?: CartMoney | null;
-  paymentStatus?: string | null;
   trackingNumber?: string | null;
 }
 

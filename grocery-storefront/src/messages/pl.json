@@ -609,6 +609,60 @@
     "verifyEmailInvalid": "Brakuje prawidłowego linku weryfikacyjnego.",
     "verifyEmailFailed": "Nie udało się potwierdzić adresu e-mail. Link może być nieprawidłowy lub wygasł."
   },
+  "orders": {
+    "status": {
+      "UNCONFIRMED": "Przyjęte, czeka na potwierdzenie",
+      "UNFULFILLED": "Potwierdzone, w przygotowaniu",
+      "PARTIALLY_FULFILLED": "Częściowo zrealizowane",
+      "FULFILLED": "Zrealizowane",
+      "CANCELED": "Anulowane",
+      "RETURNED": "Zwrócone",
+      "PARTIALLY_RETURNED": "Częściowo zwrócone",
+      "DRAFT": "Szkic",
+      "EXPIRED": "Wygasłe",
+      "unknown": "Status: {code}"
+    },
+    "paymentStatus": {
+      "PENDING": "Oczekuje na płatność",
+      "NOT_CHARGED": "Nieopłacone",
+      "PARTIALLY_CHARGED": "Częściowo opłacone",
+      "FULLY_CHARGED": "Opłacone",
+      "PARTIALLY_REFUNDED": "Częściowo zwrócona",
+      "FULLY_REFUNDED": "Zwrócona",
+      "REFUSED": "Płatność odrzucona",
+      "CANCELLED": "Płatność anulowana",
+      "unknown": "Płatność: {code}"
+    },
+    "paymentMethod": {
+      "P24": "Przelewy24",
+      "CASH": "Płatność przy odbiorze",
+      "BANK_TRANSFER": "Przelew bankowy",
+      "CARD": "Karta",
+      "unknown": "{code}"
+    }
+  },
+  "trackOrder": {
+    "title": "Sprawdź zamówienie",
+    "intro": "Podaj numer zamówienia z e-maila potwierdzającego oraz adres e-mail użyty przy składaniu zamówienia.",
+    "orderNumber": "Numer zamówienia",
+    "orderNumberPlaceholder": "ORD-2026-00033",
+    "email": "E-mail",
+    "submit": "Sprawdź",
+    "checking": "Sprawdzamy…",
+    "notFound": "Nie znaleźliśmy zamówienia o tym numerze i adresie e-mail. Sprawdź dane i spróbuj ponownie.",
+    "tooManyAttempts": "Zbyt wiele prób. Odczekaj minutę i spróbuj ponownie.",
+    "error": "Nie udało się sprawdzić zamówienia. Spróbuj ponownie za chwilę.",
+    "resultTitle": "Zamówienie #{number}",
+    "placedOn": "Złożone {date}",
+    "total": "Razem",
+    "items": "Produkty",
+    "paymentLabel": "Płatność",
+    "statusLabel": "Status",
+    "methodLabel": "Metoda",
+    "pickupHint": "Odbiór osobisty w sklepie po potwierdzeniu przez sklep.",
+    "footerLink": "Sprawdź zamówienie",
+    "confirmationLink": "Sprawdź status zamówienia"
+  },
   "account": {
     "greeting": "Witaj",
     "menuAccount": "Moje konto",

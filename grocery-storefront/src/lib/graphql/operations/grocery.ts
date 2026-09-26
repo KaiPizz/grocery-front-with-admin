@@ -900,6 +900,8 @@ export const CUSTOMER_ORDERS_QUERY = `
           id
           number
           status
+          paymentStatus
+          paymentMethod
           created
           total {
             gross { amount currency }
@@ -911,6 +913,28 @@ export const CUSTOMER_ORDERS_QUERY = `
             thumbnail { url }
           }
         }
+      }
+    }
+  }
+`;
+
+// Guest lookup: exact order number + checkout e-mail, no session. The backend
+// returns null for every mismatch and throttles the query per IP.
+export const GUEST_ORDER_QUERY = `
+  query GuestOrder($channel: String!, $input: GuestOrderLookupInput!) {
+    guestOrder(channel: $channel, input: $input) {
+      number
+      created
+      status
+      paymentStatus
+      paymentMethod
+      isPaid
+      shippingMethodName
+      total { gross { amount currency } }
+      lines {
+        productName
+        quantity
+        totalPrice { gross { amount currency } }
       }
     }
   }
@@ -938,6 +962,7 @@ export const ORDER_DETAIL_QUERY = `
       shippingPrice { amount currency }
       total { gross { amount currency } }
       paymentStatus
+      paymentMethod
       trackingNumber
     }
   }

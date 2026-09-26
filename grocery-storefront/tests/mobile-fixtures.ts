@@ -1063,6 +1063,8 @@ interface MockMobileStorefrontOptions {
   beforeProductListingResponse?: () => Promise<void>;
   beforeProductFilterFacetsResponse?: () => Promise<void>;
   onGraphqlOperation?: (operationName: string, query: string, variables?: Record<string, any>) => void;
+  /** Per-operation canned `data` payloads (keyed by operation name) that win over the built-in handlers. */
+  graphqlResponses?: Record<string, unknown>;
   onProductsQuery?: (variables: Record<string, unknown>) => void;
   onProductDetailQuery?: (query: string, variables: Record<string, unknown>) => void;
   onSearchProductsIndexQuery?: (variables: Record<string, unknown>) => void;
@@ -1125,6 +1127,13 @@ export async function mockMobileStorefront(
     const operationName = body.operationName ?? '';
 
     options.onGraphqlOperation?.(operationName, query, body.variables ?? {});
+
+    const resolvedOperationName =
+      operationName || query.match(/\b(?:query|mutation)\s+([A-Za-z_][A-Za-z0-9_]*)/)?.[1] || '';
+    if (options.graphqlResponses && resolvedOperationName in options.graphqlResponses) {
+      await fulfill(route, options.graphqlResponses[resolvedOperationName]);
+      return;
+    }
 
     const isProductListingQuery = operationName === 'GroceryProducts'
       || operationName === 'GroceryProductListing'

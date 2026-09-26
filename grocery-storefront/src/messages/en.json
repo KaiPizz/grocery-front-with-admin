@@ -609,6 +609,60 @@
     "verifyEmailInvalid": "This verification link is missing or invalid.",
     "verifyEmailFailed": "We could not verify this email. The link may be invalid or expired."
   },
+  "orders": {
+    "status": {
+      "UNCONFIRMED": "Received, awaiting confirmation",
+      "UNFULFILLED": "Confirmed, being prepared",
+      "PARTIALLY_FULFILLED": "Partially fulfilled",
+      "FULFILLED": "Fulfilled",
+      "CANCELED": "Cancelled",
+      "RETURNED": "Returned",
+      "PARTIALLY_RETURNED": "Partially returned",
+      "DRAFT": "Draft",
+      "EXPIRED": "Expired",
+      "unknown": "Status: {code}"
+    },
+    "paymentStatus": {
+      "PENDING": "Awaiting payment",
+      "NOT_CHARGED": "Unpaid",
+      "PARTIALLY_CHARGED": "Partially paid",
+      "FULLY_CHARGED": "Paid",
+      "PARTIALLY_REFUNDED": "Partially refunded",
+      "FULLY_REFUNDED": "Refunded",
+      "REFUSED": "Payment refused",
+      "CANCELLED": "Payment cancelled",
+      "unknown": "Payment: {code}"
+    },
+    "paymentMethod": {
+      "P24": "Przelewy24",
+      "CASH": "Pay on pickup",
+      "BANK_TRANSFER": "Bank transfer",
+      "CARD": "Card",
+      "unknown": "{code}"
+    }
+  },
+  "trackOrder": {
+    "title": "Track your order",
+    "intro": "Enter the order number from your confirmation e-mail and the e-mail address you used at checkout.",
+    "orderNumber": "Order number",
+    "orderNumberPlaceholder": "ORD-2026-00033",
+    "email": "E-mail",
+    "submit": "Check",
+    "checking": "Checking…",
+    "notFound": "We could not find an order with this number and e-mail. Check the details and try again.",
+    "tooManyAttempts": "Too many attempts. Wait a minute and try again.",
+    "error": "We could not check the order right now. Please try again in a moment.",
+    "resultTitle": "Order #{number}",
+    "placedOn": "Placed {date}",
+    "total": "Total",
+    "items": "Items",
+    "paymentLabel": "Payment",
+    "statusLabel": "Status",
+    "methodLabel": "Method",
+    "pickupHint": "Pickup in store once the shop confirms your order.",
+    "footerLink": "Track order",
+    "confirmationLink": "Check order status"
+  },
   "account": {
     "greeting": "Hello",
     "menuAccount": "My account",
