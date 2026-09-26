@@ -13,6 +13,7 @@ These files are NOT auto-loaded. Read them only when the trigger condition appli
 | `.claude/docs/PRD.md` | Product vision, goals, user stories, feature phases, design principles, open questions. **This is the north star for the entire project.** | When you need to understand *why* a feature exists, what the product goals are, what's planned for Phase 2/3, or when making design/UX decisions that need product context. |
 | `.claude/docs/progress.md` | Feature completion status for every page, component, store, and API route. | **Read at the start of every task** to know what's done and what's not. Update it as you work. |
 | `.claude/docs/learnings.md` | Error log — past mistakes, what caused them, how they were fixed. | **Read at the start of every task** to avoid repeating past errors. Update it when you make or fix mistakes. |
+| `docs/DEV_ENVIRONMENT.md` | Asia Deli Go DEV on Netcup (`adg-dev.159.195.47.45.sslip.io`): `deploy/adg-dev.sh --from <worktree>`, data refresh from the prod dump, rollback. | **Before any ADG change reaches Contabo**: preview it on dev first; never deploy `deploy/deploy-asiandeligo-contabo.sh` for something that was not seen on dev. |
 
 ### While implementing
 - **Update `progress.md`** whenever you finish a feature, add a new one, or change the status of an existing one. Don't wait until the end — update it as you go.
