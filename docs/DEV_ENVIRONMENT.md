@@ -31,6 +31,14 @@ ln -sfn "$(readlink /var/www/adg-dev/storefront/previous)" /var/www/adg-dev/stor
 
 Env runtime (không commit): `/var/www/adg-dev/<comp>/shared/.env.runtime` — cùng bộ biến với Contabo nhưng URL trỏ host dev; `NEXT_PUBLIC_*` là build-time nên `adg-dev.sh` tự tạo `.env.local` (bỏ secret) từ file này trước khi build.
 
+Ba thứ phải khớp giữa các thành phần (đã cài 26/09, ghi lại để dựng lại được):
+
+- `CUSTOMER_AUTH_BFF_SECRET` của storefront phải có **cùng giá trị** trong `backend/.env` của eNail dev (guard `customer-auth-bff.guard.ts`), không thì đăng nhập khách trả "Authentication service returned an invalid response".
+- Storefront SSR gọi `NEXT_PUBLIC_GRAPHQL_URL` (qua chính host dev) nên vhost để `/graphql` và `/api/v1` **không Basic Auth** (như prod, hai đường này vốn công khai); chỉ trang HTML mới hỏi mật khẩu.
+- Admin cần file trạng thái `shared/auth/admin-auth-state.json` (0600, cùng uid tiến trình) `{"passwordHash":"<ADMIN_PASSWORD_HASH>","schemaVersion":1,"sessionGeneration":1,"updatedAt":"<ISO>"}`; thiếu là login trả 503 "Admin credentials are not configured securely". Đổi mật khẩu admin dev: tạo hash scrypt mới vào `.env.runtime` **và** file này, rồi `pm2 restart adg-dev-admin --update-env`.
+
+Tài khoản thử trên storefront dev: khách `paulviet.dinh@gmail.com` (bảng `customers`, toàn cục, bcrypt cost 12, `email_verified=true`) — đặt lại bằng `update customers set password_hash=... where email=...`.
+
 ## Làm mới dữ liệu salon ADG từ production
 
 Repo eNail (`/var/www/www/enail`, chạy trong worktree hoặc cây deploy vì chỉ đọc script):
