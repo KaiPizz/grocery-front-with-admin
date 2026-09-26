@@ -4,8 +4,8 @@ Bản chạy thử của storefront + admin, tách hẳn production (Contabo). M
 
 | | DEV (Netcup 159.195.47.45) | PRODUCTION (Contabo) |
 |---|---|---|
-| Storefront | `https://adg-dev.159.195.47.45.sslip.io` (Basic Auth `~/.enail-dev-preview-creds`) | `https://asiadeligo.com` |
-| Admin | `https://adg-dev-admin.159.195.47.45.sslip.io/admin` (Basic Auth + tài khoản trong `~/.adg-dev-admin-creds`) | `https://asiandeligo-admin.eshoper.pro/admin` |
+| Storefront | `https://adg-dev.159.195.47.45.sslip.io` (Basic Auth riêng `/etc/nginx/.htpasswd-adg-dev` (user `dev`)) | `https://asiadeligo.com` |
+| Admin | `https://adg-dev-admin.159.195.47.45.sslip.io/admin` (cùng Basic Auth + tài khoản `admin`, mật khẩu trong `~/.adg-dev-admin-creds`) | `https://asiandeligo-admin.eshoper.pro/admin` |
 | Backend | eNail dev `127.0.0.1:3003`, DB Docker `enail` :5433 (bản sao) | eNail prod, DB thật |
 | Tiến trình | pm2 `adg-dev-storefront` :3022, `adg-dev-admin` :4100 | pm2 `enail-grocery-kenmito`, `enail-asiandeligo-admin` |
 | Cây file | `/var/www/adg-dev/{storefront,admin}/{releases,current,previous,shared}` | `/var/www/kenmito-{storefront,admin}` |
