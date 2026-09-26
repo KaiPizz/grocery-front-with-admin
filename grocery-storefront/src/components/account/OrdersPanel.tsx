@@ -7,6 +7,8 @@ import { useChannel } from '@/hooks/use-channel';
 import { Link } from '@/i18n/navigation';
 import { CUSTOMER_ORDERS_QUERY } from '@/lib/graphql/operations/grocery';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
+import { formatOrderDate } from '@/lib/orders/format';
+import { orderStatusLabel, paymentMethodLabel, paymentStatusLabel } from '@/lib/orders/status-labels';
 import { formatPrice } from '@/lib/utils';
 import type { CustomerOrderSummary } from '@/types';
 
@@ -23,17 +25,11 @@ interface OrdersResponse {
   } | null;
 }
 
-function formatOrderDate(value: string, locale: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date);
-}
-
 export function OrdersPanel() {
   const locale = useLocale();
   const tAccount = useTranslations('account');
   const tCommon = useTranslations('common');
+  const tOrders = useTranslations('orders');
   const channel = useChannel();
   const [orders, setOrders] = useState<CustomerOrderSummary[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -88,6 +84,7 @@ export function OrdersPanel() {
   return (
     <section
       id="orders"
+      data-testid="orders-panel"
       className="scroll-mt-32 rounded-2xl border p-5 md:p-6"
       style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
     >
@@ -163,8 +160,18 @@ export function OrdersPanel() {
 
                 <div className="text-left md:text-right">
                   <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                    {order.status}
+                    {orderStatusLabel(tOrders, order.status)}
                   </p>
+                  {(order.paymentStatus || order.paymentMethod) && (
+                    <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
+                      {[
+                        order.paymentStatus ? paymentStatusLabel(tOrders, order.paymentStatus) : null,
+                        order.paymentMethod ? paymentMethodLabel(tOrders, order.paymentMethod) : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </p>
+                  )}
                   <p className="text-lg font-bold tabular-nums mt-1" style={{ color: 'var(--color-foreground)' }}>
                     {formatPrice(order.total.gross.amount, order.total.gross.currency)}
                   </p>

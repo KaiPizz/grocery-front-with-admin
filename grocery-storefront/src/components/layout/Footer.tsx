@@ -33,6 +33,7 @@ export function Footer() {
   const tNav = useTranslations('nav');
   const t = useTranslations('footer');
   const tFulfillment = useTranslations('fulfillment');
+  const tTrackOrder = useTranslations('trackOrder');
   const siteConfig = useStorefrontConfig();
   const legalIdentity = getPublicLegalIdentity(siteConfig);
 
@@ -297,6 +298,7 @@ export function Footer() {
                   <li><Link href="/privacy" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('privacy')}</Link></li>
                   <li><Link href="/terms" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('terms')}</Link></li>
                   <li><Link href="/contact" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('contact')}</Link></li>
+                  <li><Link href="/track-order" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{tTrackOrder('footerLink')}</Link></li>
                 </ul>
               </nav>
             </>

@@ -15,6 +15,7 @@ import {
 export default function CheckoutConfirmationPage() {
   const t = useTranslations('checkout');
   const tFulfillment = useTranslations('fulfillment');
+  const tTrackOrder = useTranslations('trackOrder');
   const locale = useLocale();
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('order');
@@ -81,6 +82,15 @@ export default function CheckoutConfirmationPage() {
         >
           {tFulfillment('orderHistory')}
         </Link>
+        {orderNumber && (
+          <Link
+            href={{ pathname: '/track-order', query: { order: orderNumber, ...(email ? { email } : {}) } }}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold border transition-all duration-fast active:scale-95"
+            style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+          >
+            {tTrackOrder('confirmationLink')}
+          </Link>
+        )}
         <Link
           href="/products"
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-fast active:scale-95"

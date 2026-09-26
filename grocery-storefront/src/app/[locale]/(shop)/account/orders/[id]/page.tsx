@@ -9,6 +9,7 @@ import { useChannel } from '@/hooks/use-channel';
 import { Link } from '@/i18n/navigation';
 import { ORDER_DETAIL_QUERY } from '@/lib/graphql/operations/grocery';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
+import { orderStatusLabel, paymentMethodLabel, paymentStatusLabel } from '@/lib/orders/status-labels';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { CustomerOrderDetail } from '@/types';
 
@@ -62,6 +63,7 @@ export default function OrderDetailPage() {
   const tCommon = useTranslations('common');
   const tCart = useTranslations('cart');
   const tAccount = useTranslations('account');
+  const tOrders = useTranslations('orders');
   const failedToLoadOrder = tAccount('failedToLoadOrder');
   const [order, setOrder] = useState<CustomerOrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -160,9 +162,20 @@ export default function OrderDetailPage() {
           #{order.number}
         </h1>
         <div className="mt-4 flex flex-wrap gap-4 text-sm">
-          <span style={{ color: 'var(--color-foreground)' }}>{order.status}</span>
+          <span style={{ color: 'var(--color-foreground)' }}>{orderStatusLabel(tOrders, order.status)}</span>
           <span style={{ color: 'var(--color-muted-foreground)' }}>{formatOrderDateTime(order.created, locale)}</span>
-          {order.paymentStatus && <span style={{ color: 'var(--color-muted-foreground)' }}>{tAccount('paymentStatus', { status: order.paymentStatus })}</span>}
+          {order.paymentStatus && (
+            <span style={{ color: 'var(--color-muted-foreground)' }}>
+              {tAccount('paymentStatus', {
+                status: [
+                  paymentStatusLabel(tOrders, order.paymentStatus),
+                  order.paymentMethod ? paymentMethodLabel(tOrders, order.paymentMethod) : null,
+                ]
+                  .filter(Boolean)
+                  .join(' · '),
+              })}
+            </span>
+          )}
           {order.trackingNumber && <span style={{ color: 'var(--color-muted-foreground)' }}>{tAccount('trackingNumber', { number: order.trackingNumber })}</span>}
         </div>
       </div>

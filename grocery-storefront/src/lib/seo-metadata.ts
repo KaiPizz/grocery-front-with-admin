@@ -13,7 +13,8 @@ export type PublicSeoRoute =
   | 'recipes'
   | 'privacy'
   | 'terms'
-  | 'contact';
+  | 'contact'
+  | 'track-order';
 
 const DEFAULT_STORE_NAME = 'Asia Deli Go';
 const DEFAULT_OG_IMAGE_PATH = '/brand/hero/asia-deli-go-hero-01.webp';
@@ -56,6 +57,10 @@ const PUBLIC_ROUTE_COPY: Record<
       title: 'Kontakt',
       description: 'Dane sprzedawcy, adres sklepu, godziny otwarcia i kontakt do {storeName}.',
     },
+    'track-order': {
+      title: 'Sprawdź zamówienie',
+      description: 'Sprawdź status zamówienia w {storeName} po numerze zamówienia i adresie e-mail.',
+    },
   },
   en: {
     products: {
@@ -81,6 +86,10 @@ const PUBLIC_ROUTE_COPY: Record<
     contact: {
       title: 'Contact',
       description: 'Seller details, store address, opening hours and contact for {storeName}.',
+    },
+    'track-order': {
+      title: 'Track your order',
+      description: 'Check your {storeName} order status by order number and e-mail.',
     },
   },
 };
