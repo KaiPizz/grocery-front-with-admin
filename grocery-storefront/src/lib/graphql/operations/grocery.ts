@@ -902,6 +902,7 @@ export const CUSTOMER_ORDERS_QUERY = `
           status
           paymentStatus
           paymentMethod
+          paymentChannelName
           created
           total {
             gross { amount currency }
@@ -928,6 +929,7 @@ export const GUEST_ORDER_QUERY = `
       status
       paymentStatus
       paymentMethod
+      paymentChannelName
       isPaid
       shippingMethodName
       total { gross { amount currency } }
@@ -963,6 +965,7 @@ export const ORDER_DETAIL_QUERY = `
       total { gross { amount currency } }
       paymentStatus
       paymentMethod
+      paymentChannelName
       trackingNumber
     }
   }

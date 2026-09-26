@@ -18,6 +18,7 @@ const ORDERS = {
           status: 'UNCONFIRMED',
           paymentStatus: 'FULLY_CHARGED',
           paymentMethod: 'P24',
+          paymentChannelName: 'BLIK',
           created: '2026-09-26T11:01:00Z',
           total: { gross: { amount: 4.6, currency: 'PLN' } },
           lines: [{ productName: 'Chipsy Nori Kimchi 4,5g', quantity: 1, totalPrice: { gross: { amount: 4.6, currency: 'PLN' } }, thumbnail: null }],
@@ -63,7 +64,7 @@ test('orders panel shows translated order and payment labels instead of enum cod
   await expect(panel).toContainText('#ORD-2026-00033');
   await expect(panel).toContainText('Przyjęte, czeka na potwierdzenie');
   await expect(panel).toContainText('Opłacone');
-  await expect(panel).toContainText('Przelewy24');
+  await expect(panel).toContainText('Przelewy24 · BLIK');
   await expect(panel).not.toContainText('UNCONFIRMED');
   await expect(panel).not.toContainText('FULLY_CHARGED');
 });

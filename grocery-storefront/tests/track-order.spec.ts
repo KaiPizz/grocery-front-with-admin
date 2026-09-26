@@ -15,6 +15,7 @@ const FOUND = {
     status: 'UNCONFIRMED',
     paymentStatus: 'FULLY_CHARGED',
     paymentMethod: 'P24',
+    paymentChannelName: 'BLIK',
     isPaid: true,
     shippingMethodName: 'Store pickup',
     total: { gross: { amount: 4.6, currency: 'PLN' } },
@@ -51,7 +52,8 @@ test.describe('Track order (guest)', () => {
     await expect(result).toContainText('Zamówienie #ORD-2026-00033');
     await expect(result).toContainText('Przyjęte, czeka na potwierdzenie');
     await expect(result).toContainText('Opłacone');
-    await expect(result).toContainText('Przelewy24');
+    // Gateway plus the channel the customer actually used (from the P24 webhook).
+    await expect(result).toContainText('Przelewy24 · BLIK');
     await expect(result).toContainText('Chipsy Nori Kimchi 4,5g');
     // The backend snapshots in-store pickup as the English marker; the page must translate it.
     await expect(result).toContainText('Odbiór osobisty');
@@ -81,6 +83,22 @@ test.describe('Track order (guest)', () => {
     await page.getByLabel('E-mail').fill('a@b.pl');
     await page.getByRole('button', { name: 'Sprawdź' }).click();
     await expect(page.getByTestId('track-order-alert')).toContainText('Zbyt wiele prób');
+  });
+
+  test('a packed pickup order reads as ready for pickup, and an unknown channel shows the gateway alone', async ({ page }) => {
+    await mockGuestOrder(page, () => ({
+      body: { data: { guestOrder: { ...FOUND.guestOrder, status: 'READY_FOR_PICKUP', paymentChannelName: null } } },
+    }));
+    await page.goto('/pl/track-order');
+    await expect(page.getByTestId('track-order-form')).toHaveAttribute('data-ready', 'true');
+    await page.getByLabel('Numer zamówienia').fill('ORD-2026-00033');
+    await page.getByLabel('E-mail').fill('a@b.pl');
+    await page.getByRole('button', { name: 'Sprawdź' }).click();
+    const result = page.getByTestId('track-order-result');
+    await expect(result).toContainText('Gotowe do odbioru w sklepie');
+    await expect(result).toContainText('Przelewy24');
+    await expect(result).not.toContainText('Przelewy24 ·');
+    await expect(result).not.toContainText('READY_FOR_PICKUP');
   });
 
   test('unknown status codes fall back to a label with the raw code instead of breaking', async ({ page }) => {

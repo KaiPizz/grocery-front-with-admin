@@ -22,6 +22,7 @@ interface GuestOrder {
   status: string;
   paymentStatus?: string | null;
   paymentMethod?: string | null;
+  paymentChannelName?: string | null;
   isPaid: boolean;
   shippingMethodName?: string | null;
   total: { gross: { amount: number; currency: string } };
@@ -195,7 +196,7 @@ export function TrackOrderForm({
                   {t('methodLabel')}
                 </dt>
                 <dd className="mt-1 font-medium" style={{ color: 'var(--color-foreground)' }}>
-                  {paymentMethodLabel(tOrders, order.paymentMethod)}
+                  {paymentMethodLabel(tOrders, order.paymentMethod, order.paymentChannelName)}
                 </dd>
               </div>
             )}

@@ -305,6 +305,7 @@ export interface CustomerOrderSummary {
   paymentStatus?: string | null;
   /** Payment method code, e.g. P24, CASH */
   paymentMethod?: string | null;
+  paymentChannelName?: string | null;
   created: string;
   total: {
     gross: {

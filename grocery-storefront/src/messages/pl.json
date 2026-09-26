@@ -618,6 +618,7 @@
       "CANCELED": "Anulowane",
       "RETURNED": "Zwrócone",
       "PARTIALLY_RETURNED": "Częściowo zwrócone",
+      "READY_FOR_PICKUP": "Gotowe do odbioru w sklepie",
       "DRAFT": "Szkic",
       "EXPIRED": "Wygasłe",
       "unknown": "Status: {code}"

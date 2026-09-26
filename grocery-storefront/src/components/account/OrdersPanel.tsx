@@ -166,7 +166,7 @@ export function OrdersPanel() {
                     <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
                       {[
                         order.paymentStatus ? paymentStatusLabel(tOrders, order.paymentStatus) : null,
-                        order.paymentMethod ? paymentMethodLabel(tOrders, order.paymentMethod) : null,
+                        order.paymentMethod ? paymentMethodLabel(tOrders, order.paymentMethod, order.paymentChannelName) : null,
                       ]
                         .filter(Boolean)
                         .join(' · ')}

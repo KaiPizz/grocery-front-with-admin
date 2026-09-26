@@ -169,7 +169,7 @@ export default function OrderDetailPage() {
               {tAccount('paymentStatus', {
                 status: [
                   paymentStatusLabel(tOrders, order.paymentStatus),
-                  order.paymentMethod ? paymentMethodLabel(tOrders, order.paymentMethod) : null,
+                  order.paymentMethod ? paymentMethodLabel(tOrders, order.paymentMethod, order.paymentChannelName) : null,
                 ]
                   .filter(Boolean)
                   .join(' · '),

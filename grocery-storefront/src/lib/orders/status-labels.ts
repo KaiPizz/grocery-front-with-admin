@@ -11,6 +11,7 @@ export const ORDER_STATUS_CODES = [
   'CANCELED',
   'RETURNED',
   'PARTIALLY_RETURNED',
+  'READY_FOR_PICKUP',
   'DRAFT',
   'EXPIRED',
 ] as const;
@@ -45,8 +46,16 @@ export function paymentStatusLabel(t: OrdersTranslate, code?: string | null): st
   return label(t, 'paymentStatus', PAYMENT_STATUS_CODES, code);
 }
 
-export function paymentMethodLabel(t: OrdersTranslate, code?: string | null): string {
-  return label(t, 'paymentMethod', PAYMENT_METHOD_CODES, code);
+/**
+ * Gateway label plus the concrete channel the customer used when the backend
+ * knows it ("Przelewy24 · BLIK", "Przelewy24 · mBank"). The channel name comes
+ * from Przelewy24 itself, so it is shown as-is in every locale.
+ */
+export function paymentMethodLabel(t: OrdersTranslate, code?: string | null, channelName?: string | null): string {
+  const base = label(t, 'paymentMethod', PAYMENT_METHOD_CODES, code);
+  const channel = (channelName ?? '').trim();
+  if (!channel || channel.toLowerCase() === base.toLowerCase()) return base;
+  return `${base} · ${channel}`;
 }
 
 /**

@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
 const pl = JSON.parse(readFileSync(new URL('../src/messages/pl.json', import.meta.url), 'utf8'));
 const en = JSON.parse(readFileSync(new URL('../src/messages/en.json', import.meta.url), 'utf8'));
 
-const ORDER = ['UNCONFIRMED', 'UNFULFILLED', 'PARTIALLY_FULFILLED', 'FULFILLED', 'CANCELED', 'RETURNED', 'PARTIALLY_RETURNED', 'DRAFT', 'EXPIRED', 'unknown'];
+const ORDER = ['UNCONFIRMED', 'UNFULFILLED', 'PARTIALLY_FULFILLED', 'FULFILLED', 'CANCELED', 'RETURNED', 'PARTIALLY_RETURNED', 'READY_FOR_PICKUP', 'DRAFT', 'EXPIRED', 'unknown'];
 const PAYMENT = ['PENDING', 'NOT_CHARGED', 'PARTIALLY_CHARGED', 'FULLY_CHARGED', 'PARTIALLY_REFUNDED', 'FULLY_REFUNDED', 'REFUSED', 'CANCELLED', 'unknown'];
 const METHOD = ['P24', 'CASH', 'BANK_TRANSFER', 'CARD', 'unknown'];
 const TRACK = [

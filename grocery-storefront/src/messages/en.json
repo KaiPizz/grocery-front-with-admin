@@ -618,6 +618,7 @@
       "CANCELED": "Cancelled",
       "RETURNED": "Returned",
       "PARTIALLY_RETURNED": "Partially returned",
+      "READY_FOR_PICKUP": "Ready for pickup in store",
       "DRAFT": "Draft",
       "EXPIRED": "Expired",
       "unknown": "Status: {code}"
