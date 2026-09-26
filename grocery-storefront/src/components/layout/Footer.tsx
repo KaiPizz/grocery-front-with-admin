@@ -83,6 +83,7 @@ export function Footer() {
     '/privacy': t('privacy'),
     '/terms': t('terms'),
     '/contact': t('contact'),
+    '/track-order': tTrackOrder('footerLink'),
   };
 
   const columns = footerCfg?.columns?.length ? footerCfg.columns.map(col => ({
@@ -243,6 +244,7 @@ export function Footer() {
                   <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{t('contact')}</h3>
                   <ul className="space-y-2.5" role="list">
                     <li>{renderFooterLink('/contact', t('contact'))}</li>
+                    <li>{renderFooterLink('/track-order', tTrackOrder('footerLink'))}</li>
                     {contactItems.map(({ label, href, icon: Icon }) => (
                       <li key={label} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                         <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
