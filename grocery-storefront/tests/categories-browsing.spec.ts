@@ -392,7 +392,7 @@ test.describe('desktop category navigation', () => {
     hasTouch: false,
   });
 
-  test('opens a Kimchi-style category mega menu with taxonomy columns and a visual feature tile', async ({ page }) => {
+  test('opens a category mega menu with one block per group and its leaves', async ({ page }) => {
     await mockMobileStorefront(page);
 
     await page.goto('/en');
@@ -407,11 +407,16 @@ test.describe('desktop category navigation', () => {
     const megaMenu = page.getByRole('navigation', { name: /category mega menu/i });
     await expect(megaMenu).toBeVisible();
     await expect(megaMenu.getByRole('link', { name: /browse all categories/i })).toBeVisible();
-    await expect(megaMenu.getByRole('link', { name: /^kimchi and pickles$/i })).toBeVisible();
-    await expect(megaMenu.getByRole('link', { name: /^noodles and rice$/i })).toBeVisible();
-    await expect(megaMenu.getByTestId('category-mega-menu-promo')).toBeVisible();
+    await expect(megaMenu.getByTestId('category-mega-menu-promo')).toHaveCount(0);
 
-    await megaMenu.getByRole('link', { name: /^kimchi and pickles$/i }).click();
+    const groups = megaMenu.getByTestId('category-mega-menu-group');
+    await expect(groups.filter({ hasText: 'Kimchi and pickles' })).toHaveCount(1);
+    await expect(groups.filter({ hasText: 'Noodles and rice' })).toHaveCount(1);
+
+    const kimchiGroup = groups.filter({ hasText: 'Kimchi and pickles' });
+    await expect(kimchiGroup.getByTestId('category-mega-menu-leaf')).toHaveCount(2);
+
+    await kimchiGroup.getByTestId('category-mega-menu-group-link').click();
     await expect(page).toHaveURL(/\/en\/categories\/kimchi-i-kiszonki$/);
   });
 

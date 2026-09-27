@@ -224,7 +224,8 @@
     "subcategories": "{count, plural, one {# podkategoria} few {# podkategorie} many {# podkategorii} other {# podkategorii}}",
     "breadcrumb": "Ścieżka",
     "leafTiles": "Podkategorie",
-    "moreLeaves": "+{count} więcej"
+    "moreLeaves": "+{count} więcej",
+    "groupToggle": "Rozwiń {name}"
   },
   "product": {
     "nutrition": "Wartości odżywcze",

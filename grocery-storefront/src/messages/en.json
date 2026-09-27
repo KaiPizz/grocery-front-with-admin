@@ -224,7 +224,8 @@
     "subcategories": "{count, plural, one {# subcategory} other {# subcategories}}",
     "breadcrumb": "Breadcrumb",
     "leafTiles": "Subcategories",
-    "moreLeaves": "+{count} more"
+    "moreLeaves": "+{count} more",
+    "groupToggle": "Expand {name}"
   },
   "product": {
     "nutrition": "Nutrition facts",

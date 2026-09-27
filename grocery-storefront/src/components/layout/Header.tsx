@@ -21,6 +21,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { ServiceStrip } from './ServiceStrip';
 import { CategoryMegaMenu } from './CategoryMegaMenu';
 import { CuisineMenu } from './CuisineMenu';
+import { MobileCategoryAccordion } from './MobileCategoryAccordion';
 import { CUISINE_LINKS, buildCuisineHref } from '@/lib/cuisines';
 import { parseCountryQueryParams } from '@/components/product-listing/listing-filters';
 
@@ -752,6 +753,8 @@ export function Header() {
                   </Link>
                 ))}
               </div>
+
+              <MobileCategoryAccordion open={menuOpen} onNavigate={() => setMenuOpen(false)} />
 
               <div className="mt-4 overflow-hidden rounded-2xl border" style={{ borderColor: 'var(--color-border)' }} data-testid="mobile-cuisine-links">
                 <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>

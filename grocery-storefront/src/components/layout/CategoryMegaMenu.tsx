@@ -8,23 +8,18 @@ import { useQuery } from 'urql';
 import { Link } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
 import { PUBLIC_CATEGORY_NAVIGATION_QUERY } from '@/lib/graphql/operations/grocery';
-import { buildPublicCategories, type PublicCategory } from '@/lib/public-taxonomy';
+import { buildCategoryTree, type PublicTaxonomyRawCategory } from '@/lib/public-taxonomy';
 
-const COLUMN_COUNT = 4;
+// Leaves shown per group before the "+N more" link back to the group page.
+const MAX_LEAVES_PER_GROUP = 8;
 
-interface CategoryNode {
-  id: string;
-  slug: string;
-  name: string;
-  description: string | null;
-  products?: {
-    totalCount: number;
-  } | null;
-}
+// The menu shows the same tree as the /categories hub: every group and every
+// leaf, including the ones that are empty right now.
+const TREE_OPTIONS = { requireProductCount: false, includeEmpty: true } as const;
 
 interface CategoriesResponse {
   categories: {
-    edges: Array<{ node: CategoryNode }>;
+    edges: Array<{ node: PublicTaxonomyRawCategory }>;
     totalCount: number;
   } | null;
 }
@@ -34,33 +29,6 @@ interface CategoryMegaMenuProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   onNavigate: () => void;
-}
-
-function formatProductCount(locale: string, count: number) {
-  if (locale === 'pl') {
-    if (count === 1) return '1 produkt';
-    if (count > 1 && count < 5) return `${count} produkty`;
-    return `${count} produktów`;
-  }
-
-  return count === 1 ? '1 product' : `${count} products`;
-}
-
-function getProductCount(category: PublicCategory) {
-  return category.products?.totalCount ?? null;
-}
-
-function getCategoryInitial(category: PublicCategory) {
-  return category.name.trim().charAt(0).toUpperCase() || '#';
-}
-
-function splitIntoColumns(categories: PublicCategory[]) {
-  const columnSize = Math.ceil(categories.length / COLUMN_COUNT);
-
-  return Array.from({ length: COLUMN_COUNT }, (_, index) => {
-    const start = index * columnSize;
-    return categories.slice(start, start + columnSize);
-  }).filter((column) => column.length > 0);
 }
 
 export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate }: CategoryMegaMenuProps) {
@@ -81,19 +49,10 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
     pause: !requested,
   });
 
-  const categories = useMemo(() => {
-    const rawCategories = result.data?.categories?.edges
-      .map((edge) => edge.node)
-      .filter((category) => category.slug && category.name) ?? [];
-
-    return buildPublicCategories(rawCategories, locale, { requireProductCount: false });
-  }, [locale, result.data]);
-
-  const columns = useMemo(() => splitIntoColumns(categories), [categories]);
-  const featuredCategory = categories.find((category) => {
-    const count = getProductCount(category);
-    return typeof count === 'number' && count > 0;
-  }) ?? categories[0] ?? null;
+  const groups = useMemo(
+    () => buildCategoryTree(result.data?.categories?.edges.map((edge) => edge.node) ?? [], locale, TREE_OPTIONS),
+    [locale, result.data],
+  );
 
   if (!open) {
     return null;
@@ -133,113 +92,81 @@ export function CategoryMegaMenu({ open, onMouseEnter, onMouseLeave, onNavigate 
           </Link>
         </div>
 
-        {result.fetching && categories.length === 0 && (
+        {result.fetching && groups.length === 0 && (
           <p className="py-8 text-center text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
             {t('loading')}
           </p>
         )}
 
-        {!result.fetching && categories.length === 0 && (
+        {!result.fetching && groups.length === 0 && (
           <p className="py-8 text-center text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
             {t('empty')}
           </p>
         )}
 
-        {categories.length > 0 && (
-          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
-            <div className="grid gap-5 md:grid-cols-4">
-              {columns.map((column, columnIndex) => (
-                <div key={`category-column-${columnIndex}`} className="space-y-4">
-                  {column.map((category) => {
-                    const count = getProductCount(category);
-                    const countLabel = typeof count === 'number' && count > 0 ? formatProductCount(locale, count) : null;
-                    return (
-                      <div key={category.id} className="min-w-0">
-                        <Link
-                          href={`/categories/${category.slug}`}
-                          aria-label={countLabel ? `${category.name}, ${countLabel}` : category.name}
-                          className="group block rounded-lg px-2.5 py-2 transition-colors duration-fast hover-surface"
-                          style={{ color: 'var(--color-foreground)' }}
-                          onClick={onNavigate}
-                        >
-                          <span className="flex items-start justify-between gap-2">
-                            <span className="min-w-0 text-sm font-semibold leading-snug">
-                              {category.name}
-                            </span>
-                            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-0 transition-opacity duration-fast group-hover:opacity-100" aria-hidden="true" />
-                          </span>
-                          {countLabel && (
-                            <span className="mt-1 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                              {countLabel}
-                            </span>
-                          )}
-                        </Link>
+        {groups.length > 0 && (
+          <div className="grid gap-6 md:grid-cols-5">
+            {groups.map((group) => {
+              const count = group.products.totalCount;
+              const visibleLeaves = group.children.slice(0, MAX_LEAVES_PER_GROUP);
+              const hiddenLeafCount = group.children.length - visibleLeaves.length;
 
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-
-            {featuredCategory && (
-              <Link
-                href={`/categories/${featuredCategory.slug}`}
-                data-testid="category-mega-menu-promo"
-                aria-label={`${t('featured')}: ${featuredCategory.name}`}
-                className="group flex min-h-64 flex-col overflow-hidden rounded-lg border transition-transform duration-fast hover:-translate-y-0.5"
-                style={{
-                  borderColor: 'var(--color-border)',
-                  backgroundColor: 'color-mix(in srgb, var(--color-primary) 8%, var(--color-card))',
-                }}
-                onClick={onNavigate}
-              >
-                <span
-                  className="flex h-36 w-full items-center justify-center border-b"
-                  style={{
-                    borderColor: 'var(--color-border)',
-                    background:
-                      'linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 16%, white), color-mix(in srgb, var(--color-primary) 5%, var(--color-card)))',
-                  }}
-                >
-                  <span
-                    className="flex h-16 w-16 items-center justify-center rounded-full border text-3xl font-semibold"
-                    style={{
-                      borderColor: 'color-mix(in srgb, var(--color-primary) 22%, transparent)',
-                      color: 'var(--color-primary)',
-                      backgroundColor: 'color-mix(in srgb, var(--color-card) 80%, transparent)',
-                    }}
-                    aria-hidden="true"
+              return (
+                <div key={group.id} className="min-w-0" data-testid="category-mega-menu-group">
+                  <Link
+                    href={`/categories/${group.slug}`}
+                    data-testid="category-mega-menu-group-link"
+                    className="group block rounded-lg px-2.5 py-2 transition-colors duration-fast hover-surface"
+                    style={{ color: 'var(--color-foreground)' }}
+                    onClick={onNavigate}
                   >
-                    {getCategoryInitial(featuredCategory)}
-                  </span>
-                </span>
-                <span className="flex flex-1 flex-col justify-between p-4">
-                  <span>
-                    <span className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {t('featured')}
+                    <span className="flex items-start justify-between gap-2">
+                      <span className="min-w-0 text-sm font-semibold leading-snug">{group.name}</span>
+                      <ArrowRight
+                        className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-0 transition-opacity duration-fast group-hover:opacity-100"
+                        aria-hidden="true"
+                      />
                     </span>
-                    <span className="mt-2 block text-xl font-semibold leading-tight" style={{ color: 'var(--color-foreground)' }}>
-                      {featuredCategory.name}
-                    </span>
-                    {featuredCategory.description && (
-                      <span className="mt-2 line-clamp-2 block text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                        {featuredCategory.description}
+                    {typeof count === 'number' && (
+                      <span className="mt-0.5 block text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                        {t('productCount', { count })}
                       </span>
                     )}
-                    {typeof getProductCount(featuredCategory) === 'number' && (
-                      <span className="mt-3 inline-flex rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, transparent)', color: 'var(--color-primary)' }}>
-                        {formatProductCount(locale, getProductCount(featuredCategory) ?? 0)}
-                      </span>
-                    )}
-                  </span>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
-                    {t('shopCategory')}
-                    <ArrowRight className="h-4 w-4 transition-transform duration-fast group-hover:translate-x-0.5" aria-hidden="true" />
-                  </span>
-                </span>
-              </Link>
-            )}
+                  </Link>
+
+                  {visibleLeaves.length > 0 && (
+                    <ul className="mt-1 space-y-0.5">
+                      {visibleLeaves.map((leaf) => (
+                        <li key={leaf.id}>
+                          <Link
+                            href={`/categories/${leaf.slug}`}
+                            data-testid="category-mega-menu-leaf"
+                            className="block rounded-md px-2.5 py-1.5 text-sm transition-colors duration-fast hover-surface"
+                            style={{ color: 'var(--color-muted-foreground)' }}
+                            onClick={onNavigate}
+                          >
+                            <span className="line-clamp-1">{leaf.name}</span>
+                          </Link>
+                        </li>
+                      ))}
+                      {hiddenLeafCount > 0 && (
+                        <li>
+                          <Link
+                            href={`/categories/${group.slug}`}
+                            data-testid="category-mega-menu-more"
+                            className="block rounded-md px-2.5 py-1.5 text-sm font-semibold transition-colors duration-fast hover-surface"
+                            style={{ color: 'var(--color-primary)' }}
+                            onClick={onNavigate}
+                          >
+                            {t('moreLeaves', { count: hiddenLeafCount })}
+                          </Link>
+                        </li>
+                      )}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
