@@ -37,7 +37,16 @@
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
-    "koreanPantry": "Korean pantry"
+    "koreanPantry": "Korean pantry",
+    "cuisines": "Cuisines",
+    "cuisinesMenuLabel": "Cuisines menu",
+    "cuisine": {
+      "japanese": "Japanese cuisine",
+      "korean": "Korean cuisine",
+      "chinese": "Chinese cuisine",
+      "thai": "Thai cuisine",
+      "vietnamese": "Vietnamese cuisine"
+    }
   },
   "shippingCountdown": {
     "static": "Order before {time} for same-day shipping",

@@ -20,6 +20,9 @@ import { MiniCart } from './MiniCart';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ServiceStrip } from './ServiceStrip';
 import { CategoryMegaMenu } from './CategoryMegaMenu';
+import { CuisineMenu } from './CuisineMenu';
+import { CUISINE_LINKS, buildCuisineHref } from '@/lib/cuisines';
+import { parseCountryQueryParams } from '@/components/product-listing/listing-filters';
 
 export function Header() {
   const t = useTranslations('nav');
@@ -355,6 +358,7 @@ export function Header() {
     ...navItems,
     ...commercialQuickLinks.map(({ href, label, order }) => ({ href, label, enabled: true, order })),
   ];
+  const activeCuisineCountries = isProductsRoute ? parseCountryQueryParams(searchParams) : [];
 
   return (
     <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
@@ -377,14 +381,17 @@ export function Header() {
       >
         <Link
           href="/"
-          className="flex min-w-[6.5rem] shrink-0 items-center gap-2.5 group sm:min-w-[8rem] lg:min-w-[9rem]"
+          // The logo yields before the row overflows: the image keeps its size, the
+          // store name truncates. Without this a wide nav pushes the header past the
+          // container and the page gets a horizontal scrollbar (desktop-layout spec).
+          className="group flex min-w-[6.5rem] items-center gap-2.5 sm:min-w-[8rem] lg:min-w-[9rem]"
           aria-label={`${storeName} Home`}
         >
           {logoUrl ? (
             <img
               src={logoUrl}
               alt={storeName}
-              className="h-12 max-h-[3.25rem] max-w-[8rem] w-auto object-contain transition-transform duration-fast group-hover:scale-105 sm:max-w-[9.5rem] lg:h-14 lg:max-w-[10.5rem]"
+              className="h-12 max-h-[3.25rem] max-w-[8rem] w-auto shrink-0 object-contain transition-transform duration-fast group-hover:scale-105 sm:max-w-[9.5rem] lg:h-14 lg:max-w-[10.5rem]"
             />
           ) : (
             <div
@@ -396,7 +403,7 @@ export function Header() {
           )}
           {logoText && (
             <span
-              className="block max-w-[6.75rem] truncate font-display text-base font-bold tracking-tight sm:max-w-none sm:text-lg"
+              className="block min-w-0 max-w-[6.75rem] truncate font-display text-base font-bold tracking-tight sm:max-w-none sm:text-lg"
               style={{ color: 'var(--color-foreground)' }}
             >
               {logoText}
@@ -450,6 +457,7 @@ export function Header() {
               </Link>
             );
           })}
+          <CuisineMenu />
           {commercialQuickLinks.map(({ id, href, label }) => (
             <Link
               key={`commercial-${id}`}
@@ -743,6 +751,32 @@ export function Header() {
                     <ChevronDown className="-rotate-90 h-4 w-4 shrink-0 opacity-60" aria-hidden="true" />
                   </Link>
                 ))}
+              </div>
+
+              <div className="mt-4 overflow-hidden rounded-2xl border" style={{ borderColor: 'var(--color-border)' }} data-testid="mobile-cuisine-links">
+                <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                  {t('cuisines')}
+                </div>
+                {CUISINE_LINKS.map(({ key, country }) => {
+                  const isCurrentCuisine = activeCuisineCountries.includes(country);
+
+                  return (
+                    <Link
+                      key={`cuisine-${key}`}
+                      href={buildCuisineHref(country)}
+                      className="flex min-h-[48px] items-center justify-between gap-3 border-b px-3 py-3 text-sm font-medium last:border-b-0 hover-surface"
+                      style={{
+                        borderColor: 'var(--color-border)',
+                        color: isCurrentCuisine ? 'var(--color-primary)' : 'var(--color-foreground)',
+                      }}
+                      aria-current={isCurrentCuisine ? 'page' : undefined}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <span className="truncate">{t(`cuisine.${key}`)}</span>
+                      <ChevronDown className="-rotate-90 h-4 w-4 shrink-0 opacity-60" aria-hidden="true" />
+                    </Link>
+                  );
+                })}
               </div>
 
               <div className="mt-4 overflow-hidden rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>

@@ -237,10 +237,9 @@ test.describe('landing responsive contracts', () => {
       'aria-current',
       'page',
     );
-    await expect(desktopNavigation.getByRole('link', { name: 'Koreańska spiżarnia' })).not.toHaveAttribute(
-      'aria-current',
-      'page',
-    );
+    // The Korean pantry quick link is retired; the "Kuchnie" menu takes its slot.
+    await expect(desktopNavigation.getByTestId('cuisine-menu-trigger')).toBeVisible();
+    await expect(desktopNavigation.getByRole('link', { name: 'Koreańska spiżarnia' })).toHaveCount(0);
 
     const positions = await Promise.all(
       [hero, pickupGuide, categories, products, promotion].map((locator) =>

@@ -37,7 +37,16 @@
     "login": "Zaloguj się",
     "register": "Zarejestruj się",
     "logout": "Wyloguj",
-    "koreanPantry": "Koreańska spiżarnia"
+    "koreanPantry": "Koreańska spiżarnia",
+    "cuisines": "Kuchnie",
+    "cuisinesMenuLabel": "Menu kuchni",
+    "cuisine": {
+      "japanese": "Kuchnia japońska",
+      "korean": "Kuchnia koreańska",
+      "chinese": "Kuchnia chińska",
+      "thai": "Kuchnia tajska",
+      "vietnamese": "Kuchnia wietnamska"
+    }
   },
   "shippingCountdown": {
     "static": "Zamów przed {time}, a wyślemy dziś",
