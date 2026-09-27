@@ -233,7 +233,6 @@ const DELIVERY_FIELD_ORDER: Array<keyof DeliveryFormState> = [
   'streetAddress1',
   'city',
   'postalCode',
-  'country',
 ];
 
 function getPayloadMessage(errors?: CheckoutMutationError[] | null): string | null {
@@ -793,7 +792,6 @@ export default function CheckoutPage() {
       if (!f.streetAddress1.trim()) errors.streetAddress1 = t('required');
       if (!f.city.trim()) errors.city = t('required');
       if (!f.postalCode.trim()) errors.postalCode = t('required');
-      if (!f.country.trim()) errors.country = t('required');
     }
 
     const firstErrorField = DELIVERY_FIELD_ORDER.find((field) => Boolean(errors[field]));
@@ -1494,7 +1492,7 @@ export default function CheckoutPage() {
                     { key: 'streetAddress1' as const, label: t('address'), autoComplete: 'street-address', type: 'text', inputMode: 'text' as const },
                     { key: 'city' as const, label: t('city'), autoComplete: 'address-level2', type: 'text', inputMode: 'text' as const },
                     { key: 'postalCode' as const, label: t('postalCode'), autoComplete: 'postal-code', type: 'text', inputMode: 'text' as const },
-                    { key: 'country' as const, label: t('country'), autoComplete: 'country', type: 'text', inputMode: 'text' as const },
+                    // Poland-only delivery: the country is fixed to PL and never asked for.
                   ] : []),
                 ] as const).map(({ key, label, autoComplete, type, inputMode }) => {
                   const field = key as keyof DeliveryFormState;
@@ -1723,7 +1721,7 @@ export default function CheckoutPage() {
                           {form.streetAddress1}
                         </p>
                         <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                          {form.postalCode} {form.city}, {form.country.toUpperCase()}
+                          {form.postalCode} {form.city}
                         </p>
                       </>
                     )}

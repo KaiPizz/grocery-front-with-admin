@@ -230,7 +230,7 @@ export default function PaymentReturnPage() {
 
       <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4">
         <Link
-          href="/account#orders"
+          href="/account?tab=orders"
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold border transition-all duration-fast active:scale-95"
           style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
         >

@@ -384,7 +384,7 @@ export function AddressesPanel() {
                 {addr.street}
               </p>
               <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                {addr.postalCode} {addr.city}, {addr.country}
+                {addr.postalCode} {addr.city}
               </p>
               {addr.phone && (
                 <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
@@ -477,7 +477,7 @@ function AddressForm({ form, setForm, saving, error, isEdit, onSubmit, onCancel 
     { key: 'street', label: tAccount('streetLabel'), required: true, placeholder: tAccount('streetPlaceholder'), colSpan: 2, autoComplete: 'street-address' },
     { key: 'city', label: tAccount('cityLabel'), required: true, placeholder: tAccount('cityPlaceholder'), colSpan: 1, autoComplete: 'address-level2' },
     { key: 'postalCode', label: tAccount('postalCodeLabel'), required: true, placeholder: tAccount('postalCodePlaceholder'), colSpan: 1, autoComplete: 'postal-code' },
-    { key: 'country', label: tAccount('countryLabel'), required: true, placeholder: tAccount('countryPlaceholder'), colSpan: 2, autoComplete: 'country', maxLength: 2 },
+    // The shop delivers within Poland only, so the country stays PL and is not asked for.
   ];
 
   return (

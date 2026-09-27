@@ -57,7 +57,7 @@ export default defineConfig({
   projects: [
     {
       name: 'iphone-12',
-      testIgnore: /(?:customer-account-p0|account-login-methods|account-deletion|password-flows|google-auth|facebook-auth|resend-verification|graphql-bff-method|desktop-layout)\.spec\.ts/,
+      testIgnore: /(?:customer-account-p0|account-tabs-navigation|account-login-methods|account-deletion|password-flows|google-auth|facebook-auth|resend-verification|graphql-bff-method|desktop-layout)\.spec\.ts/,
       use: {
         ...devices['iPhone 12'],
       },
@@ -79,7 +79,7 @@ export default defineConfig({
     },
     {
       name: 'customer-account-desktop',
-      testMatch: /(?:customer-account-p0|account-login-methods|account-deletion|password-flows|google-auth|facebook-auth|resend-verification|graphql-bff-method)\.spec\.ts/,
+      testMatch: /(?:customer-account-p0|account-tabs-navigation|account-login-methods|account-deletion|password-flows|google-auth|facebook-auth|resend-verification|graphql-bff-method)\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 1000 },

@@ -22,7 +22,6 @@ async function fillDeliveryForm(page: Page) {
   await page.getByLabel(/address/i).fill('Marszalkowska 1');
   await page.getByLabel(/city/i).fill('Warsaw');
   await page.getByLabel(/postal code/i).fill('00-001');
-  await page.getByLabel(/country/i).fill('PL');
 }
 
 test.describe('checkout accessibility', () => {

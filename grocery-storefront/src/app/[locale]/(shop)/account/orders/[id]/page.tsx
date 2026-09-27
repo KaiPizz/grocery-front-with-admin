@@ -139,7 +139,7 @@ export default function OrderDetailPage() {
   return (
     <div className="container-grocery py-8 md:py-12">
       <Link
-        href="/account#orders"
+        href="/account?tab=orders"
         className="inline-flex items-center gap-1.5 text-sm mb-6 transition-opacity duration-fast hover:opacity-80"
         style={{ color: 'var(--color-muted-foreground)' }}
       >

@@ -590,7 +590,7 @@ for (const scenario of SCENARIOS) {
     await page.getByRole('tab', { name: scenario.labels.addressesTab }).click();
     await expect(page.getByText('Marszałkowska 10')).toBeVisible();
     await page.getByRole('button', { name: scenario.labels.addAddress }).click();
-    await expect(page.locator('#addr-country')).toHaveValue('PL');
+    await expect(page.locator('#addr-country')).toHaveCount(0);
     await expect(page.locator('#addr-phone')).toHaveAttribute('required', '');
     await page.locator('#addr-label').fill(scenario.locale === 'pl' ? 'Biuro' : 'Office');
     await page.locator('#addr-fullName').fill('Office Shopper');

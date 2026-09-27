@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { UserRound, Package, MapPin, Shield } from 'lucide-react';
 import { ProfilePanel } from '@/components/account/ProfilePanel';
@@ -17,27 +18,44 @@ const TABS: { id: AccountTab; icon: typeof UserRound }[] = [
   { id: 'security', icon: Shield },
 ];
 
-function getHashTab(): AccountTab {
-  const hash = window.location.hash.replace('#', '') as AccountTab;
-  return TABS.some((t) => t.id === hash) ? hash : 'profile';
+export const ACCOUNT_TAB_PARAM = 'tab';
+
+function resolveTab(value: string | null | undefined): AccountTab | null {
+  return TABS.some((t) => t.id === value) ? (value as AccountTab) : null;
 }
 
+/**
+ * The active tab lives in `?tab=` so the Next router re-renders on every
+ * navigation: header links are soft navigations that never fire `hashchange`,
+ * which is why a hash-only URL left the panel stuck. `#orders`-style links from
+ * older e-mails and bookmarks still resolve as a fallback.
+ */
 export function AccountTabs() {
   const tAccount = useTranslations('account');
-  const [activeTab, setActiveTab] = useState<AccountTab>('profile');
+  const searchParams = useSearchParams();
+  const requestedTab = resolveTab(searchParams.get(ACCOUNT_TAB_PARAM));
+  const [hashTab, setHashTab] = useState<AccountTab | null>(null);
+  const [clickedTab, setClickedTab] = useState<AccountTab | null>(null);
 
   useEffect(() => {
-    setActiveTab(getHashTab());
-    function onHashChange() {
-      setActiveTab(getHashTab());
+    function readHash() {
+      setHashTab(resolveTab(window.location.hash.replace('#', '')));
     }
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    readHash();
+    window.addEventListener('hashchange', readHash);
+    return () => window.removeEventListener('hashchange', readHash);
   }, []);
 
+  // A navigation (header menu, back button) always wins over the last tab click.
+  useEffect(() => {
+    setClickedTab(null);
+  }, [requestedTab]);
+
+  const activeTab: AccountTab = clickedTab ?? requestedTab ?? hashTab ?? 'profile';
+
   const switchTab = useCallback((tab: AccountTab) => {
-    setActiveTab(tab);
-    window.history.replaceState(null, '', `#${tab}`);
+    setClickedTab(tab);
+    window.history.replaceState(null, '', `${window.location.pathname}?${ACCOUNT_TAB_PARAM}=${tab}`);
   }, []);
 
   const tabLabelKey: Record<AccountTab, string> = {

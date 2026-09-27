@@ -336,10 +336,10 @@ export function Header() {
 
   const isAuthenticated = isMounted && session.status === 'authenticated';
   const accountMenuItems = [
-    { href: '/account#profile', label: tAccount('menuAccount'), icon: UserRound },
-    { href: '/account#orders', label: tAccount('menuOrders'), icon: Package },
-    { href: '/account#addresses', label: tAccount('menuAddresses'), icon: MapPin },
-    { href: '/account#security', label: tAccount('menuSecurity'), icon: Shield },
+    { href: '/account?tab=profile', label: tAccount('menuAccount'), icon: UserRound },
+    { href: '/account?tab=orders', label: tAccount('menuOrders'), icon: Package },
+    { href: '/account?tab=addresses', label: tAccount('menuAddresses'), icon: MapPin },
+    { href: '/account?tab=security', label: tAccount('menuSecurity'), icon: Shield },
     { href: '/wishlist', label: t('wishlist'), icon: Heart },
     { href: '/cart', label: t('cart'), icon: ShoppingCart },
   ];
