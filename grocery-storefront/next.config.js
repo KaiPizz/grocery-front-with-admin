@@ -13,6 +13,14 @@ const productSlugRedirects = [
   },
 ];
 
+// Public category groups retired by the 2026-09-27 tree (leaf renames redirect
+// in the category layout, from src/lib/category-seo.ts).
+const categorySlugRedirects = [
+  { oldSlug: 'sosy-pasty-i-przyprawy', newSlug: 'sosy-i-oleje' },
+  { oldSlug: 'sushi-i-algi', newSlug: 'do-gotowania-i-sushi' },
+  { oldSlug: 'grzyby-warzywa-i-tofu', newSlug: 'do-gotowania-i-sushi' },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
@@ -27,23 +35,42 @@ const nextConfig = {
     root: __dirname,
   },
   async redirects() {
-    return productSlugRedirects.flatMap(({ oldSlug, newSlug }) => [
-      {
-        source: `/products/${oldSlug}`,
-        destination: `/products/${newSlug}`,
-        statusCode: 301,
-      },
-      {
-        source: `/pl/products/${oldSlug}`,
-        destination: `/products/${newSlug}`,
-        statusCode: 301,
-      },
-      {
-        source: `/en/products/${oldSlug}`,
-        destination: `/en/products/${newSlug}`,
-        statusCode: 301,
-      },
-    ]);
+    return [
+      ...productSlugRedirects.flatMap(({ oldSlug, newSlug }) => [
+        {
+          source: `/products/${oldSlug}`,
+          destination: `/products/${newSlug}`,
+          statusCode: 301,
+        },
+        {
+          source: `/pl/products/${oldSlug}`,
+          destination: `/products/${newSlug}`,
+          statusCode: 301,
+        },
+        {
+          source: `/en/products/${oldSlug}`,
+          destination: `/en/products/${newSlug}`,
+          statusCode: 301,
+        },
+      ]),
+      ...categorySlugRedirects.flatMap(({ oldSlug, newSlug }) => [
+        {
+          source: `/categories/${oldSlug}`,
+          destination: `/categories/${newSlug}`,
+          statusCode: 301,
+        },
+        {
+          source: `/pl/categories/${oldSlug}`,
+          destination: `/categories/${newSlug}`,
+          statusCode: 301,
+        },
+        {
+          source: `/en/categories/${oldSlug}`,
+          destination: `/en/categories/${newSlug}`,
+          statusCode: 301,
+        },
+      ]),
+    ];
   },
   images: {
     formats: ['image/avif', 'image/webp'],

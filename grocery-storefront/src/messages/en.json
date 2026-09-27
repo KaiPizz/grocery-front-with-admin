@@ -221,7 +221,10 @@
     "notFound": "Category not found.",
     "emptyCategory": "Products for this category will appear here when they are available.",
     "loadMore": "Load more",
-    "subcategories": "{count, plural, one {# subcategory} other {# subcategories}}"
+    "subcategories": "{count, plural, one {# subcategory} other {# subcategories}}",
+    "breadcrumb": "Breadcrumb",
+    "leafTiles": "Subcategories",
+    "moreLeaves": "+{count} more"
   },
   "product": {
     "nutrition": "Nutrition facts",

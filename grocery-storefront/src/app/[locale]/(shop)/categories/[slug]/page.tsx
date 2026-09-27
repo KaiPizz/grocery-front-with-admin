@@ -1,18 +1,21 @@
 import { getLocale, getTranslations } from 'next-intl/server';
-import { ArrowLeft, PackageOpen, RefreshCw } from 'lucide-react';
+import { ChevronRight, PackageOpen, RefreshCw } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { Link } from '@/i18n/navigation';
-import { CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY, PUBLIC_CATEGORY_NAVIGATION_QUERY } from '@/lib/graphql/operations/grocery';
+import { CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY, PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
-import { buildPublicCategories, findPublicCategory } from '@/lib/public-taxonomy';
+import { buildCategoryTree, findPublicCategory, type PublicTaxonomyRawCategory } from '@/lib/public-taxonomy';
 import type { GroceryProduct } from '@/types';
 
 const PAGE_SIZE = 24;
 const CATEGORY_METADATA_REVALIDATE_SECONDS = 300;
 const CATEGORY_PRODUCTS_REVALIDATE_SECONDS = 60;
+// The tree is the navigation: empty groups and leaves stay visible so a
+// category that reached zero products keeps its URL and its place.
+const TREE_OPTIONS = { requireProductCount: false, includeEmpty: true } as const;
 
 interface CategoryChildNode {
   id: string;
@@ -64,17 +67,7 @@ interface ProductsResponse {
 
 interface CategoriesResponse {
   categories: {
-    edges: Array<{
-      node: {
-        id: string;
-        slug: string;
-        name: string;
-        description: string | null;
-        products?: {
-          totalCount: number;
-        } | null;
-      };
-    }>;
+    edges: Array<{ node: PublicTaxonomyRawCategory }>;
   } | null;
 }
 
@@ -102,6 +95,45 @@ function decodeRouteSlug(slug: string) {
   }
 }
 
+function CategoryBreadcrumb({
+  label,
+  allCategoriesLabel,
+  group,
+  current,
+}: {
+  label: string;
+  allCategoriesLabel: string;
+  group: { slug: string; name: string } | null;
+  current: string;
+}) {
+  const crumbClassName = 'font-medium transition-opacity duration-fast hover:opacity-80';
+
+  return (
+    <nav
+      aria-label={label}
+      className="mb-6 flex flex-wrap items-center gap-1.5 text-sm"
+      style={{ color: 'var(--color-muted-foreground)' }}
+      data-testid="category-breadcrumb"
+    >
+      <Link href="/categories" className={crumbClassName}>
+        {allCategoriesLabel}
+      </Link>
+      {group && (
+        <>
+          <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <Link href={`/categories/${group.slug}`} className={crumbClassName}>
+            {group.name}
+          </Link>
+        </>
+      )}
+      <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+      <span aria-current="page" style={{ color: 'var(--color-foreground)' }}>
+        {current}
+      </span>
+    </nav>
+  );
+}
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params;
   const [locale, t, tCommon] = await Promise.all([
@@ -112,7 +144,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
   const categorySlug = decodeRouteSlug(slug);
   const categoriesResult = await serverGraphqlRequest<CategoriesResponse>(
-    PUBLIC_CATEGORY_NAVIGATION_QUERY,
+    PUBLIC_CATEGORIES_QUERY,
     { channel },
     {
       next: {
@@ -122,11 +154,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     },
   );
   const rawCategories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  const publicCategories = buildPublicCategories(rawCategories, locale, { requireProductCount: false });
-  const publicCategory = findPublicCategory(rawCategories, categorySlug, locale, {
-    requireProductCount: false,
-    includeEmpty: true,
-  });
+  const tree = buildCategoryTree(rawCategories, locale, TREE_OPTIONS);
+  const publicCategory = findPublicCategory(rawCategories, categorySlug, locale, TREE_OPTIONS);
   const publicProductsResult = publicCategory
     ? await serverGraphqlRequest<ProductsResponse>(PRODUCT_LISTING_QUERY, {
       channel,
@@ -139,6 +168,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       },
     })
     : null;
+  // Slugs outside the tree (hidden categories) still resolve straight from the catalog.
   const result = publicCategory
     ? { data: { category: null }, errorMessage: publicProductsResult?.errorMessage }
     : await serverGraphqlRequest<CategoryBySlugResponse>(CATEGORY_BY_SLUG_QUERY, {
@@ -164,31 +194,33 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const publicTotalCount = publicProducts?.totalCount ?? 0;
   const publicPageInfo = publicProducts?.pageInfo ?? { hasNextPage: false, endCursor: null };
   const publicProductItems = publicProducts?.edges.map((edge) => edge.node) ?? [];
-  const categoryNavigation = publicCategories
-    .map((publicNavigationCategory) => ({
-      id: publicNavigationCategory.id,
-      slug: publicNavigationCategory.slug,
-      name: publicNavigationCategory.name,
-      count: publicNavigationCategory.slug === publicCategory?.slug
-        ? publicTotalCount
-        : publicNavigationCategory.products.totalCount,
-    }))
-    .sort((left, right) => {
-      if (left.slug === categorySlug) return -1;
-      if (right.slug === categorySlug) return 1;
-      return 0;
-    });
+  const expandedGroupSlug = publicCategory
+    ? (publicCategory.kind === 'leaf' ? publicCategory.parent?.slug ?? publicCategory.slug : publicCategory.slug)
+    : null;
+  const categoryNavigation = tree.map((group) => ({
+    id: group.id,
+    slug: group.slug,
+    name: group.name,
+    count: group.slug === publicCategory?.slug ? publicTotalCount : group.products.totalCount,
+    expanded: group.slug === expandedGroupSlug,
+    children: group.children.map((leaf) => ({
+      id: leaf.id,
+      slug: leaf.slug,
+      name: leaf.name,
+      count: leaf.slug === publicCategory?.slug ? publicTotalCount : leaf.products.totalCount,
+    })),
+  }));
+  const breadcrumbGroup = publicCategory?.kind === 'leaf' ? publicCategory.parent : null;
+  const currentName = publicCategory?.name ?? category?.name ?? categorySlug;
 
   return (
     <div className="container-grocery py-8 md:py-12">
-      <Link
-        href="/categories"
-        className="mb-6 inline-flex items-center gap-2 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
-        style={{ color: 'var(--color-muted-foreground)' }}
-      >
-        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        {t('allCategories')}
-      </Link>
+      <CategoryBreadcrumb
+        label={t('breadcrumb')}
+        allCategoriesLabel={t('allCategories')}
+        group={breadcrumbGroup}
+        current={currentName}
+      />
 
       {publicCategory && (
         <>
@@ -200,9 +232,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <h1 className="heading-display text-2xl md:text-3xl" style={{ color: 'var(--color-foreground)' }}>
                 {publicCategory.name}
               </h1>
-              <p className="mt-3 max-w-2xl text-sm md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
-                {publicCategory.description}
-              </p>
+              {publicCategory.description && (
+                <p className="mt-3 max-w-2xl text-sm md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {publicCategory.description}
+                </p>
+              )}
             </div>
             <div
               className="inline-flex w-fit rounded-full px-3 py-1 text-sm font-semibold"
@@ -216,6 +250,46 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               {publicTotalCount > 0 ? formatProductCount(locale, publicTotalCount) : t('comingSoon')}
             </div>
           </div>
+
+          {publicCategory.kind === 'group' && publicCategory.children.length > 0 && (
+            <section className="mb-8" aria-labelledby="category-leaf-tiles-heading">
+              <h2
+                id="category-leaf-tiles-heading"
+                className="mb-3 text-xs font-semibold uppercase tracking-[0.18em]"
+                style={{ color: 'var(--color-muted-foreground)' }}
+              >
+                {t('leafTiles')}
+              </h2>
+              <ul className="flex flex-wrap gap-2" data-testid="category-leaf-tiles">
+                {publicCategory.children.map((leaf) => (
+                  <li key={leaf.id}>
+                    <Link
+                      href={`/categories/${leaf.slug}`}
+                      className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors duration-fast hover-surface"
+                      style={{
+                        borderColor: 'var(--color-border)',
+                        backgroundColor: 'var(--color-card)',
+                        color: 'var(--color-foreground)',
+                      }}
+                    >
+                      <span>{leaf.name}</span>
+                      {typeof leaf.products.totalCount === 'number' && (
+                        <span
+                          className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums"
+                          style={{
+                            backgroundColor: 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
+                            color: 'var(--color-muted-foreground)',
+                          }}
+                        >
+                          {t('productCount', { count: leaf.products.totalCount })}
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {result.errorMessage && publicProductItems.length === 0 && (
             <div className="rounded-lg border px-5 py-8 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
@@ -340,10 +414,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           )}
 
           {products.length > 0 ? (
-              <ProductListingClient
-                channel={channel}
-                basePath={`/categories/${category?.slug ?? categorySlug}`}
-                title={category.name}
+            <ProductListingClient
+              channel={channel}
+              basePath={`/categories/${category.slug}`}
+              title={category.name}
               categoryId={category.id}
               initialProducts={products}
               initialEndCursor={pageInfo.endCursor}

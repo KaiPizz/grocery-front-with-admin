@@ -134,6 +134,18 @@ export function CategoryHubClient({ categories }: CategoryHubClientProps) {
                 >
                   {category.description}
                 </span>
+                {category.children.length > 0 && (
+                  <span
+                    className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed md:text-xs"
+                    style={{ color: 'var(--color-muted-foreground)' }}
+                    data-testid="category-hub-leaves"
+                  >
+                    {category.children.slice(0, 4).map((leaf) => leaf.name).join(' · ')}
+                    {category.children.length > 4
+                      ? ` ${t('moreLeaves', { count: category.children.length - 4 })}`
+                      : ''}
+                  </span>
+                )}
                 <span
                   className="mt-auto inline-flex min-h-11 items-end gap-1 pt-3 text-xs font-semibold md:text-sm"
                   style={{ color: 'var(--color-primary)' }}

@@ -221,7 +221,10 @@
     "notFound": "Nie znaleziono kategorii.",
     "emptyCategory": "Produkty z tej kategorii pojawią się tutaj, gdy będą dostępne.",
     "loadMore": "Załaduj więcej",
-    "subcategories": "{count, plural, one {# podkategoria} few {# podkategorie} many {# podkategorii} other {# podkategorii}}"
+    "subcategories": "{count, plural, one {# podkategoria} few {# podkategorie} many {# podkategorii} other {# podkategorii}}",
+    "breadcrumb": "Ścieżka",
+    "leafTiles": "Podkategorie",
+    "moreLeaves": "+{count} więcej"
   },
   "product": {
     "nutrition": "Wartości odżywcze",

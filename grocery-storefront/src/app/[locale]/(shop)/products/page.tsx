@@ -52,6 +52,12 @@ export default function ProductsPage() {
       slug: category.slug,
       name: category.name,
       count: category.products.totalCount,
+      children: category.children.map((leaf) => ({
+        id: leaf.id,
+        slug: leaf.slug,
+        name: leaf.name,
+        count: leaf.products.totalCount,
+      })),
     }))
   ), [categoriesResult.data, locale]);
 

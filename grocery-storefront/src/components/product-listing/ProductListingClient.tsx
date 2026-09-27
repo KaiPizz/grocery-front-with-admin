@@ -107,11 +107,17 @@ interface ProductBrandsQueryResponse {
   productBrands: ProductFacetCountNode[] | null;
 }
 
-interface CategoryNavigationItem {
+interface CategoryNavigationLeaf {
   id: string;
   slug: string;
   name: string;
   count: number | null;
+}
+
+interface CategoryNavigationItem extends CategoryNavigationLeaf {
+  /** Leaves of this group; rendered only while the group is `expanded`. */
+  children?: CategoryNavigationLeaf[];
+  expanded?: boolean;
 }
 
 interface ActiveFilterChip {
@@ -1367,35 +1373,71 @@ export function ProductListingClient({
             {t('categoryFilter')}
           </h2>
           <nav className="max-h-[30rem] space-y-1.5 overflow-y-auto pr-1">
-            {categoryNavigation.map((category) => {
-              const isActive = currentCategorySlug === category.slug;
+            {categoryNavigation.map((item) => {
+              const isActive = currentCategorySlug === item.slug;
 
               return (
-                <Link
-                  key={category.id}
-                  href={`/categories/${category.slug}`}
-                  className="flex min-h-[2.75rem] items-center justify-between gap-3 rounded-[0.9rem] px-3 py-2 text-sm font-semibold transition-colors duration-fast hover-surface"
-                  style={{
-                    backgroundColor: isActive ? 'var(--color-accent)' : 'transparent',
-                    color: isActive ? 'var(--color-primary)' : 'var(--color-foreground)',
-                  }}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  <span className="min-w-0 leading-snug">{category.name}</span>
-                  {typeof category.count === 'number' && (
-                    <span
-                      className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
-                      style={{
-                        backgroundColor: isActive
-                          ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
-                          : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
-                        color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                      }}
+                <div key={item.id}>
+                  <Link
+                    href={`/categories/${item.slug}`}
+                    className="flex min-h-[2.75rem] items-center justify-between gap-3 rounded-[0.9rem] px-3 py-2 text-sm font-semibold transition-colors duration-fast hover-surface"
+                    style={{
+                      backgroundColor: isActive ? 'var(--color-accent)' : 'transparent',
+                      color: isActive ? 'var(--color-primary)' : 'var(--color-foreground)',
+                    }}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    <span className="min-w-0 leading-snug">{item.name}</span>
+                    {typeof item.count === 'number' && (
+                      <span
+                        className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
+                        style={{
+                          backgroundColor: isActive
+                            ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
+                            : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
+                          color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                        }}
+                      >
+                        {item.count}
+                      </span>
+                    )}
+                  </Link>
+                  {item.expanded && item.children && item.children.length > 0 && (
+                    <ul
+                      className="ml-3 mt-1 space-y-1 border-l pl-2"
+                      style={{ borderColor: 'var(--color-border)' }}
+                      data-testid="category-tree-leaves"
                     >
-                      {category.count}
-                    </span>
+                      {item.children.map((leaf) => {
+                        const isLeafActive = currentCategorySlug === leaf.slug;
+
+                        return (
+                          <li key={leaf.id}>
+                            <Link
+                              href={`/categories/${leaf.slug}`}
+                              className="flex min-h-[2.4rem] items-center justify-between gap-2 rounded-[0.8rem] px-2.5 py-1.5 text-sm transition-colors duration-fast hover-surface"
+                              style={{
+                                backgroundColor: isLeafActive ? 'var(--color-accent)' : 'transparent',
+                                color: isLeafActive ? 'var(--color-primary)' : 'var(--color-foreground)',
+                              }}
+                              aria-current={isLeafActive ? 'page' : undefined}
+                            >
+                              <span className="min-w-0 line-clamp-1">{leaf.name}</span>
+                              {typeof leaf.count === 'number' && (
+                                <span
+                                  className="shrink-0 text-[11px] tabular-nums"
+                                  style={{ color: 'var(--color-muted-foreground)' }}
+                                >
+                                  {leaf.count}
+                                </span>
+                              )}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   )}
-                </Link>
+                </div>
               );
             })}
           </nav>
@@ -1438,7 +1480,9 @@ export function ProductListingClient({
           </p>
         </div>
         <div className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {categoryNavigation.map((category) => {
+          {categoryNavigation.flatMap((item) => (
+            item.expanded && item.children ? [item, ...item.children] : [item]
+          )).map((category) => {
             const isActive = currentCategorySlug === category.slug;
 
             return (
