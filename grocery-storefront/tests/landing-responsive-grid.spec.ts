@@ -198,7 +198,7 @@ test.describe('landing responsive contracts', () => {
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto('/pl');
 
-      const image = page.locator('img[alt="Sosy i pasty"]:visible').first();
+      const image = page.locator('img[alt="Sosy i oleje"]:visible').first();
       await expect(image).toBeVisible();
       await expect.poll(() => image.evaluate((element) => {
         const styles = getComputedStyle(element);
@@ -208,8 +208,8 @@ test.describe('landing responsive contracts', () => {
         paddingTop: imageFit === 'cover' ? '0px' : '12px',
       });
 
-      const tile = page.getByRole('link', { name: /Sosy i pasty/i }).first();
-      await expect(tile).toHaveAttribute('href', '/categories/sosy-pasty-i-przyprawy');
+      const tile = page.getByRole('link', { name: /Sosy i oleje/i }).first();
+      await expect(tile).toHaveAttribute('href', '/categories/sosy-i-oleje');
     });
   }
 
@@ -220,13 +220,13 @@ test.describe('landing responsive contracts', () => {
     await page.goto('/pl');
 
     const hero = page.getByTestId('desktop-home-hero');
-    const pickupGuide = page.locator('[data-testid="home-pickup-guide"]:visible');
+    const trustRow = page.locator('[data-testid="home-trust-row"]:visible');
     const categories = page.locator('[data-testid="home-configured-category-grid"]:visible');
     const products = page.getByTestId('desktop-home-fresh-picks');
     const promotion = page.locator('[data-testid="home-configured-promo"]:visible');
 
     await expect(hero).toBeVisible();
-    await expect(pickupGuide).toContainText('Jak odebrać zamówienie');
+    await expect(trustRow).toContainText('Odbiór osobisty w Warszawie');
     await expect(categories.getByTestId('home-configured-category-link')).toHaveCount(9);
     await expect(products).toBeVisible();
     await expect(promotion).toHaveCount(1);
@@ -242,7 +242,7 @@ test.describe('landing responsive contracts', () => {
     await expect(desktopNavigation.getByRole('link', { name: 'Koreańska spiżarnia' })).toHaveCount(0);
 
     const positions = await Promise.all(
-      [hero, pickupGuide, categories, products, promotion].map((locator) =>
+      [hero, trustRow, categories, products, promotion].map((locator) =>
         locator.evaluate((element) => element.getBoundingClientRect().top + window.scrollY)
       )
     );

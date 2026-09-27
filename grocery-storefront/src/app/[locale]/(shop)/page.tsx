@@ -1,11 +1,13 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useQuery } from 'urql';
 import {
   Banknote,
   CheckCircle2,
   ChevronRight,
+  CreditCard,
   Heart,
   MapPin,
   Package,
@@ -25,14 +27,17 @@ import { RecipeCard } from '@/components/grocery/RecipeCard';
 import { Link } from '@/i18n/navigation';
 import { useChannel } from '@/hooks/use-channel';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { isEnglishLocale } from '@/lib/catalog-display-localization';
 import { getEnabledCommercialQuickLinks } from '@/lib/commercial-config';
 import {
   isPickupFulfillment,
   usesAvailabilityOnlyStock,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
+import { ADG_DEFAULT_FEATURED_LEAVES, resolveFeaturedLeafIds } from '@/lib/home-featured';
 import { getLocalizedProductName } from '@/lib/localization';
 import {
+  buildCategoryTree,
   buildPublicCategories,
   type PublicCategory,
   type PublicTaxonomyRawCategory,
@@ -41,8 +46,10 @@ import { getImageSrc } from '@/lib/utils';
 import type { ProductTranslation } from '@/types';
 import type {
   CommercialQuickLink,
+  CommercialTrustRowConfig,
   GridBannerBlock,
   HomepageSectionId,
+  HomepageSeoTextConfig,
   RoundGridBannerBlock,
 } from '@/types/storefront-config';
 
@@ -608,88 +615,112 @@ function HomeCategoryShortcuts({
   );
 }
 
+const TRUST_ICONS = {
+  'map-pin': MapPin,
+  'check-circle': CheckCircle2,
+  'credit-card': CreditCard,
+  package: Package,
+} as const;
+
+// Owner-written SEO block at the bottom of the landing page; EN falls back to PL.
+function HomeSeoText({ seoText, english }: { seoText: HomepageSeoTextConfig | undefined; english: boolean }) {
+  if (!seoText?.enabled) return null;
+  const paragraphs = (english && seoText.paragraphsEn.length > 0 ? seoText.paragraphsEn : seoText.paragraphs)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+  if (paragraphs.length === 0) return null;
+  const headline = (english ? seoText.headlineEn || seoText.headline : seoText.headline).trim();
+
+  return (
+    <section className="container-grocery py-8" data-testid="home-seo-text">
+      <div className="max-w-3xl">
+        {headline && (
+          <h2 className="heading-section mb-3 text-lg md:text-xl" style={{ color: 'var(--color-foreground)' }}>
+            {headline}
+          </h2>
+        )}
+        <div className="space-y-3">
+          {paragraphs.map((paragraph, index) => (
+            <p key={index} className="text-sm leading-6" style={{ color: 'var(--color-muted-foreground)' }}>
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HomeFulfillmentTrust({
   pickup,
   bankTransfer,
   manualConfirmation,
   guidedPickup = false,
+  trustRow,
+  english,
 }: {
   pickup: boolean;
   bankTransfer: boolean;
   manualConfirmation: boolean;
   guidedPickup?: boolean;
+  trustRow: CommercialTrustRowConfig | undefined;
+  english: boolean;
 }) {
   const t = useTranslations('fulfillment');
 
   if (pickup && guidedPickup) {
-    const steps = [
-      {
-        title: t('pickupGuideStep1Title'),
-        description: t('pickupGuideStep1Description'),
-        icon: ShoppingCart,
-      },
-      {
-        title: t('pickupGuideStep2Title'),
-        description: t('pickupGuideStep2Description'),
-        icon: CheckCircle2,
-      },
-      {
-        title: t('pickupGuideStep3Title'),
-        description: t('pickupGuideStep3Description'),
-        icon: MapPin,
-      },
-    ];
+    // Storefronts with a configured category grid (Asia Deli Go) show the
+    // owner-editable trust row instead of the generic service strip.
+    if (!trustRow?.enabled) return null;
+    const items = trustRow.items
+      .filter((item) => item.enabled)
+      .sort((left, right) => left.order - right.order);
+    if (items.length === 0) return null;
 
     return (
       <section
         className="container-grocery py-4 md:py-6"
         data-testid="home-fulfillment-trust"
+        aria-label={t('trustLabel')}
       >
-        <div data-testid="home-pickup-guide">
-          <h2
-            className="heading-section mb-3 text-lg md:mb-4 md:text-xl"
-            style={{ color: 'var(--color-foreground)' }}
-          >
-            {t('pickupGuideTitle')}
-          </h2>
-          <ol className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-3 md:px-0 [&::-webkit-scrollbar]:hidden">
-            {steps.map(({ title, description, icon: Icon }, index) => (
+        <ul data-testid="home-trust-row" className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {items.map((item) => {
+            const Icon = TRUST_ICONS[item.icon] ?? Package;
+            const title = english ? item.titleEn || item.title : item.title;
+            const description = english ? item.descriptionEn || item.description : item.description;
+            return (
               <li
-                key={title}
-                className="flex min-w-[250px] snap-start items-start gap-3 rounded-[18px] border p-4 md:min-w-0"
+                key={item.id}
+                data-testid="home-trust-row-item"
+                className="flex items-start gap-3 rounded-[18px] border p-3 md:p-4"
                 style={{
                   borderColor: 'color-mix(in srgb, var(--color-primary) 14%, var(--color-border))',
                   backgroundColor: 'color-mix(in srgb, var(--color-card) 94%, var(--color-accent))',
                 }}
               >
                 <span
-                  className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
                   style={{
                     backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)',
                     color: 'var(--color-primary)',
                   }}
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
-                  <span
-                    className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                    style={{ backgroundColor: 'var(--color-primary)' }}
-                    aria-hidden="true"
-                  >
-                    {index + 1}
-                  </span>
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                  <span className="block text-sm font-semibold leading-5" style={{ color: 'var(--color-foreground)' }}>
                     {title}
                   </span>
-                  <span className="mt-1 block text-xs leading-5" style={{ color: 'var(--color-muted-foreground)' }}>
-                    {description}
-                  </span>
+                  {description && (
+                    <span className="mt-1 block text-xs leading-5" style={{ color: 'var(--color-muted-foreground)' }}>
+                      {description}
+                    </span>
+                  )}
                 </span>
               </li>
-            ))}
-          </ol>
-        </div>
+            );
+          })}
+        </ul>
       </section>
     );
   }
@@ -756,6 +787,17 @@ export default function HomePage() {
   const bankTransferPromise = usesBankTransferPromise(siteConfig);
   const commercialQuickLinks = getEnabledCommercialQuickLinks(siteConfig);
   const isAsiaDeliGo = siteConfig?.branding?.storeName.trim().toLowerCase() === 'asia deli go';
+  const locale = useLocale();
+  const english = isEnglishLocale(locale);
+  const trustRow = siteConfig?.commercial?.trustRow;
+  const seoText = siteConfig?.homepage?.seoText;
+  const configuredFeaturedSlugs = useMemo(
+    () => siteConfig?.homepage?.featured?.categorySlugs ?? [],
+    [siteConfig?.homepage?.featured?.categorySlugs],
+  );
+  const featuredSlugs = configuredFeaturedSlugs.length > 0
+    ? configuredFeaturedSlugs
+    : isAsiaDeliGo ? [...ADG_DEFAULT_FEATURED_LEAVES] : [];
 
   const homepageHero = siteConfig?.homepage?.hero;
   const homepageBlocks = siteConfig?.homepage?.blocks ?? [];
@@ -811,7 +853,27 @@ export default function HomePage() {
     variables: { channel },
   });
 
+  // "Polecane": products from the configured (or default ADG) leaves. The
+  // query waits for the category list so its first request already carries
+  // the leaf ids; urql caches by variables, so stable config = one request.
+  const featuredIds = useMemo(() => resolveFeaturedLeafIds(
+    buildCategoryTree(
+      categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [],
+      locale,
+      { requireProductCount: false, includeEmpty: true },
+    ),
+    configuredFeaturedSlugs,
+    isAsiaDeliGo,
+  ), [categoriesResult.data, locale, configuredFeaturedSlugs, isAsiaDeliGo]);
+  const isRecommended = featuredIds.length > 0;
+  const [featuredResult] = useQuery({
+    query: PRODUCT_LISTING_QUERY,
+    pause: !isRecommended,
+    variables: { channel, first: 8, filter: { categories: featuredIds } },
+  });
+
   const products = (productsResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
+  const featuredProducts = (featuredResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
   const dealCandidates = (dealsResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
   const recipes = (recipesResult.data?.recipes?.edges?.map((edge: { node: HomeRecipe }) => edge.node) ?? []) as HomeRecipe[];
   const categories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
@@ -826,8 +888,16 @@ export default function HomePage() {
   const productsForDeals = saleProducts;
   const highlightedProductIds = new Set(productsForDeals.map((product) => product.id));
   const freshPicks = products.filter((product) => !highlightedProductIds.has(product.id));
-  const productsForFreshPicks = freshPicks.length > 0 ? freshPicks : products;
-  const freshPicksLoading = productsResult.fetching || (dealsEnabled && dealsResult.fetching);
+  const productsForFreshPicks = isRecommended
+    ? featuredProducts
+    : freshPicks.length > 0 ? freshPicks : products;
+  const freshPicksLoading = isRecommended
+    ? featuredResult.fetching
+    : productsResult.fetching || (dealsEnabled && dealsResult.fetching);
+  const freshPicksHeading = isRecommended ? t('recommended') : t('newArrivals');
+  const freshPicksLink = isRecommended
+    ? { href: `/categories/${featuredSlugs[0]}`, label: t('seeAllRecommended') }
+    : { href: '/products', label: t('seeAllProducts') };
   return (
     <div className="pb-24 md:pb-12">
       {heroBlock ? <h1 className="sr-only">{heroHeadline}</h1> : null}
@@ -871,6 +941,8 @@ export default function HomePage() {
           bankTransfer={bankTransferPromise}
           manualConfirmation={availabilityOnlyStock}
           guidedPickup={hasConfiguredCategoryNavigation}
+          trustRow={trustRow}
+          english={english}
         />
 
         {hasConfiguredCategoryNavigation ? (
@@ -978,10 +1050,10 @@ export default function HomePage() {
                 <section key="freshPicks" id="home-fresh-picks" className="container-grocery py-5" data-testid="mobile-home-fresh-picks">
                   <div className="mb-4 flex items-end justify-between gap-3">
                     <h2 className="text-2xl font-semibold tracking-tight" style={{ color: 'var(--color-foreground)' }}>
-                      {t('newArrivals')}
+                      {freshPicksHeading}
                     </h2>
-                    <Link href="/products" className="inline-flex min-h-10 shrink-0 items-center whitespace-nowrap text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
-                      {t('seeAllProducts')}
+                    <Link href={freshPicksLink.href} className="inline-flex min-h-10 shrink-0 items-center whitespace-nowrap text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                      {freshPicksLink.label}
                     </Link>
                   </div>
                   {freshPicksLoading ? (
@@ -1105,6 +1177,8 @@ export default function HomePage() {
           bankTransfer={bankTransferPromise}
           manualConfirmation={availabilityOnlyStock}
           guidedPickup={hasConfiguredCategoryNavigation}
+          trustRow={trustRow}
+          english={english}
         />
 
         {hasConfiguredCategoryNavigation ? (
@@ -1222,15 +1296,15 @@ export default function HomePage() {
                 >
                   <div className="mb-8 flex items-center justify-between">
                     <h2 className="heading-section text-xl md:text-2xl" style={{ color: 'var(--color-foreground)' }}>
-                      {t('newArrivals')}
+                      {freshPicksHeading}
                     </h2>
                     <Link
-                      href="/products"
+                      href={freshPicksLink.href}
                       className="inline-flex min-h-10 shrink-0 items-center gap-1 whitespace-nowrap text-sm font-medium transition-colors duration-fast hover:opacity-80"
                       style={{ color: 'var(--color-primary)' }}
-                      aria-label={tCommon('viewAllProducts')}
+                      aria-label={isRecommended ? undefined : tCommon('viewAllProducts')}
                     >
-                      {t('seeAllProducts')}
+                      {freshPicksLink.label}
                       <ChevronRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
                   </div>
@@ -1317,6 +1391,8 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      <HomeSeoText seoText={seoText} english={english} />
     </div>
   );
 }

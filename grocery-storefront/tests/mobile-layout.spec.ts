@@ -98,16 +98,18 @@ test.describe('mobile layout', () => {
     expect(heights.filter((link) => link.height < MIN_TARGET)).toEqual([]);
   });
 
-  test('pickup guide keeps the page gutter before its first card', async ({ page }) => {
+  test('trust row keeps the page gutter before its first card', async ({ page }) => {
     await mockAsiaDeliGoConfig(page);
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 360, height: 780 });
     await page.goto('/pl');
 
-    const firstStep = page.locator('[data-testid="home-pickup-guide"]:visible li').first();
-    await expect(firstStep).toBeVisible();
+    const trustRow = page.locator('[data-testid="home-trust-row"]:visible').first();
+    await expect(trustRow.getByTestId('home-trust-row-item')).toHaveCount(4);
+    const firstItem = trustRow.getByTestId('home-trust-row-item').first();
+    await expect(firstItem).toBeVisible();
     await page.waitForTimeout(300);
-    const box = await firstStep.boundingBox();
+    const box = await firstItem.boundingBox();
     expect(box!.x).toBeGreaterThanOrEqual(12);
   });
 
