@@ -93,8 +93,12 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.equal(categorySection?.enabled, true);
   assert.equal(dealsSection?.enabled, false);
   assert.equal(koreanPantryBanner?.enabled, false);
-  assert.equal(koreanPantryCollection?.enabled, true);
+  // Asia Deli Go is not a Korean shop: the pantry collection, its quick link and
+  // its footer link are retired in favour of the "Kuchnie" menu by country of origin.
+  assert.equal(koreanPantryCollection?.enabled, false);
   assert.equal(koreanPantryCollection?.heroImageUrl, '/brand/hero/korean-pantry-hero.webp');
+  assert.equal(config.commercial.quickLinks.some((link) => link.enabled), false);
+  assert.equal(footerLinks.some((link) => link.href === '/collections/korean-pantry'), false);
   assert.equal(config.commercial.outlet.enabled, false);
   assert.equal(config.commercial.outlet.collectionSlug, null);
   assert.equal(config.commercial.quickLinks.some((link) => link.kind === 'outlet' && link.enabled), false);

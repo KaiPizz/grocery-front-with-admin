@@ -319,7 +319,7 @@ test.describe('catalog display localization', () => {
       'Sushi and seaweed',
       'Mushrooms and tofu',
       'Kitchen accessories',
-      'Korean pantry',
+      'Cuisines',
     ];
     const visibleText = await body.innerText();
     for (const copy of englishCopy) {
@@ -337,8 +337,12 @@ test.describe('catalog display localization', () => {
       'Sushi i algi',
       'Grzyby i tofu',
       'Akcesoria kuchenne',
+      'Kuchnie',
+      // Retired with the "Kuchnie" menu (2026-09-27): the Korean pantry quick link
+      // and collection are disabled in the shipped config, in every locale.
       'Koreańska spiżarnia',
       'Podstawy kuchni koreańskiej',
+      'Korean pantry',
     ];
     for (const copy of polishCopy) {
       expect(visibleText).not.toContain(copy);
@@ -379,7 +383,9 @@ test.describe('catalog display localization', () => {
     await expect(body).toContainText('Sosy i pasty');
     await expect(page.locator('h1.sr-only')).toHaveText('Azjatyckie produkty spożywcze na co dzień');
     await expect(body).toContainText('Ramen i gotowe dania na szybki obiad');
-    await expect(body).toContainText('Koreańska spiżarnia');
+    await expect(body).toContainText('Kuchnie');
+    // Retired with the "Kuchnie" menu (2026-09-27).
+    await expect(body).not.toContainText('Koreańska spiżarnia');
     await expect(body).not.toContainText('Asian groceries for everyday shopping');
 
     const readyMealsLink = page.locator('a[href="/categories/dania-gotowe"]:visible').filter({

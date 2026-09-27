@@ -291,10 +291,6 @@
               {
                 "label": "Produkty",
                 "href": "/products"
-              },
-              {
-                "label": "Koreańska spiżarnia",
-                "href": "/collections/korean-pantry"
               }
             ]
           },
@@ -457,7 +453,7 @@
           "kind": "collection",
           "description": "Podstawy kuchni koreańskiej",
           "imageUrl": null,
-          "enabled": true,
+          "enabled": false,
           "order": 0
         }
       ],
@@ -467,7 +463,7 @@
           "title": "Koreańska spiżarnia",
           "subtitle": "Ryż, sosy, makarony i podstawowe składniki do kuchni koreańskiej.",
           "heroImageUrl": "/brand/hero/korean-pantry-hero.webp",
-          "enabled": true,
+          "enabled": false,
           "order": 0,
           "tiles": [
             {
