@@ -21,6 +21,10 @@ export function CuisineMenu() {
   const panelId = useId();
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // True while the menu is open only because the pointer hovered in. A mouse
+  // user hovers first and then clicks the button; that click must keep the
+  // menu open (the pointer is still inside, so nothing would reopen it).
+  const openedByHoverRef = useRef(false);
 
   const activeCountries = pathname === '/products' ? parseCountryQueryParams(searchParams) : [];
   const isCurrentCuisine = (country: string) => activeCountries.includes(country);
@@ -35,12 +39,28 @@ export function CuisineMenu() {
 
   function openMenu() {
     cancelScheduledClose();
+    openedByHoverRef.current = false;
+    setOpen(true);
+  }
+
+  function openMenuFromHover() {
+    cancelScheduledClose();
+    if (!open) openedByHoverRef.current = true;
     setOpen(true);
   }
 
   function closeMenu() {
     cancelScheduledClose();
+    openedByHoverRef.current = false;
     setOpen(false);
+  }
+
+  function toggleMenu() {
+    if (!open || openedByHoverRef.current) {
+      openMenu();
+      return;
+    }
+    closeMenu();
   }
 
   function scheduleClose() {
@@ -72,7 +92,7 @@ export function CuisineMenu() {
   return (
     <div
       className="relative"
-      onMouseEnter={openMenu}
+      onMouseEnter={openMenuFromHover}
       onMouseLeave={scheduleClose}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
@@ -86,7 +106,7 @@ export function CuisineMenu() {
         aria-expanded={open}
         aria-controls={open ? panelId : undefined}
         data-testid="cuisine-menu-trigger"
-        onClick={() => (open ? closeMenu() : openMenu())}
+        onClick={toggleMenu}
       >
         {t('cuisines')}
         <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-fast ${open ? 'rotate-180' : ''}`} aria-hidden="true" />

@@ -329,6 +329,12 @@ export function ProductListingClient({
       categoryIds: countryOriginCategoryIds,
     },
   });
+  // The brand list is scoped to the selected countries (the "Kuchnie" landing
+  // sets one): a channel-wide list would offer brands with no product in the
+  // country and most chips would lead to an empty listing.
+  const brandFacetCountries = committedFilters.countryOfOrigin
+    .map((country) => country.trim())
+    .filter(Boolean);
   const [brandsResult] = useQuery<ProductBrandsQueryResponse>({
     query: PRODUCT_BRANDS_QUERY,
     pause: !filterMetadataRequested,
@@ -336,6 +342,7 @@ export function ProductListingClient({
       channel,
       first: 30,
       categoryIds: countryOriginCategoryIds,
+      countryOfOrigin: brandFacetCountries.length > 0 ? brandFacetCountries : null,
     },
   });
 

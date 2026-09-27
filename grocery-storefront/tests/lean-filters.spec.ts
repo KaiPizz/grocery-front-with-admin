@@ -160,6 +160,36 @@ test.describe('lean listing filters', () => {
     await expect(page.getByTestId('product-card')).toHaveCount(4);
   });
 
+  test('a country deep link narrows the brand list to brands sold within that country', async ({ page }) => {
+    const productQueries: ProductVariables[] = [];
+    const brandQueries: ProductVariables[] = [];
+    const filterPanel = await openDesktopListing(page, '/pl/products?country=Japonia', productQueries, {
+      catalogLabels: 'polish-source',
+      onGraphqlOperation: (operationName, _query, variables) => {
+        if (operationName === 'ProductBrands') brandQueries.push(JSON.parse(JSON.stringify(variables ?? {})));
+      },
+    });
+
+    await expect(page.getByTestId('product-card')).toHaveCount(1);
+    // The brand facet is requested within the country, not channel-wide…
+    await expect.poll(() => brandQueries.some((variables) => (
+      Array.isArray(variables.countryOfOrigin)
+      && variables.countryOfOrigin.length === 1
+      && variables.countryOfOrigin[0] === 'Japonia'
+    ))).toBe(true);
+    // …so only the brand of the Japanese product is offered (the fixture's
+    // channel-wide list would put Samyang first, and Samyang has no Japanese product).
+    const brandGroup = filterPanel.getByTestId('filter-brand');
+    await expect(brandGroup.getByRole('button', { name: /^s&b$/i })).toBeVisible();
+    await expect(brandGroup.getByRole('button', { name: /^samyang$/i })).toHaveCount(0);
+    await expect(brandGroup.getByRole('button')).toHaveCount(1);
+
+    // Removing the country widens the brand list again.
+    await page.getByTestId('product-filter-summary').getByRole('button', { name: /usuń filtr japonia/i }).click();
+    await expect(page.getByTestId('product-card')).toHaveCount(4);
+    await expect(brandGroup.getByRole('button', { name: /^samyang$/i })).toBeVisible();
+  });
+
   test('accepts several countries in one query parameter', async ({ page }) => {
     const productQueries: ProductVariables[] = [];
     const filterPanel = await openDesktopListing(

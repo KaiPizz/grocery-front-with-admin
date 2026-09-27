@@ -56,6 +56,30 @@ test.describe('cuisines menu', () => {
       .toHaveAttribute('aria-pressed', 'true');
   });
 
+  test('desktop: clicking the hovered trigger keeps the menu open; the next click closes it', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl');
+
+    const trigger = page.getByTestId('cuisine-menu-trigger');
+    const menu = page.getByTestId('cuisine-menu');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    await trigger.hover();
+    await expect(menu).toBeVisible();
+
+    // A mouse user hovers first and then clicks the button; the click must not
+    // close what the hover just opened (the pointer is still inside, so no
+    // mouseenter would ever reopen it).
+    await trigger.click();
+    await expect(menu).toBeVisible();
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+    await trigger.click();
+    await expect(menu).toHaveCount(0);
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  });
+
   test('desktop: switching cuisine on the listing replaces the country', async ({ page }) => {
     const productQueries: ProductVariables[] = [];
     await mockMobileStorefront(page, {

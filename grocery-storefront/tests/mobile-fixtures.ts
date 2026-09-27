@@ -819,6 +819,23 @@ function getProductPrice(product: (typeof PRODUCTS)[number]) {
     ?? product.pricing.priceRange.start.gross.amount;
 }
 
+// Brand facet the backend would return within the given countries: one row per
+// brand of a matching product, most products first, then by name.
+function brandFacetsWithin(
+  products: Array<{ id: string; countryOfOrigin?: string | null }>,
+  countries: string[],
+): Array<{ value: string; count: number }> {
+  const counts = new Map<string, number>();
+  for (const product of products) {
+    const brand = FIXTURE_BRAND_BY_PRODUCT_ID[product.id];
+    if (!brand || !countries.includes(product.countryOfOrigin ?? '')) continue;
+    counts.set(brand, (counts.get(brand) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([value, count]) => ({ value, count }))
+    .sort((left, right) => right.count - left.count || left.value.localeCompare(right.value));
+}
+
 function matchesProductsFilter(product: (typeof PRODUCTS)[number], filter: Record<string, any> | undefined) {
   if (!filter) {
     return true;
@@ -1183,8 +1200,17 @@ export async function mockMobileStorefront(
         return;
       }
 
+      // Within a country the backend groups only that country's products; the
+      // channel-wide list is the fixed ten-brand fixture.
+      const brandCountries: string[] = Array.isArray(body.variables?.countryOfOrigin)
+        ? body.variables.countryOfOrigin.filter((value: unknown) => typeof value === 'string' && value.trim())
+        : [];
+      const scopedBrands = brandCountries.length > 0
+        ? brandFacetsWithin(products, brandCountries)
+        : PRODUCT_BRAND_FACETS;
+
       await fulfill(route, {
-        productBrands: options.brands === 'empty' ? [] : PRODUCT_BRAND_FACETS,
+        productBrands: options.brands === 'empty' ? [] : scopedBrands,
       });
       return;
     }

@@ -174,8 +174,8 @@ export const PRODUCT_LISTING_QUERY = `
 // purpose: a backend that does not know the field yet fails only this query,
 // and the listing hides the brand section instead of losing every filter.
 export const PRODUCT_BRANDS_QUERY = `
-  query ProductBrands($channel: String!, $first: Int, $categoryIds: [ID!]) {
-    productBrands(channel: $channel, first: $first, categoryIds: $categoryIds) {
+  query ProductBrands($channel: String!, $first: Int, $categoryIds: [ID!], $countryOfOrigin: [String!]) {
+    productBrands(channel: $channel, first: $first, categoryIds: $categoryIds, countryOfOrigin: $countryOfOrigin) {
       value
       count
     }
