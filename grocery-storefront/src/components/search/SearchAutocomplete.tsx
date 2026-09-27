@@ -122,6 +122,7 @@ export function SearchAutocomplete({
       const searchableText = normalizeSearchTerm([
         category.name,
         category.description,
+        ...category.children.map((leaf) => leaf.name),
         ...category.rawCategorySlugs,
       ].join(' '));
 

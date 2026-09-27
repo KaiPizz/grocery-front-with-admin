@@ -243,6 +243,9 @@ export const CATEGORIES_QUERY = `
           slug
           name
           level
+          displayOrder
+          parent { id }
+          translation(languageCode: "en") { name }
           description
           backgroundImage { url alt }
           children(first: 10) {
@@ -268,6 +271,11 @@ export const PUBLIC_CATEGORIES_QUERY = `
           slug
           name
           description
+          level
+          displayOrder
+          parent { id }
+          translation(languageCode: "en") { name }
+          backgroundImage { url alt }
           products(channel: $channel, first: 0) { totalCount }
         }
       }
@@ -288,6 +296,10 @@ export const PUBLIC_CATEGORY_NAVIGATION_QUERY = `
           slug
           name
           description
+          level
+          displayOrder
+          parent { id }
+          translation(languageCode: "en") { name }
         }
       }
       totalCount

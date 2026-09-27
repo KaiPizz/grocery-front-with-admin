@@ -254,7 +254,26 @@ const detailProducts = [
   },
 ];
 
+// Two-level public tree: the four group rows are level 0 parents of the leaves
+// named in LEAF_PARENT_ID; every other row stays a leafless level-0 group.
+const CATEGORY_GROUPS = [
+  { id: 'cat-group-noodles', name: 'Makaron i ryż', slug: 'makaron-i-ryz', translation: null },
+  { id: 'cat-group-kimchi', name: 'Kimchi i kiszonki', slug: 'kimchi-i-kiszonki', translation: { name: 'Kimchi and pickles' } },
+  { id: 'cat-group-cooking', name: 'Do gotowania i sushi', slug: 'do-gotowania-i-sushi', translation: null },
+  { id: 'cat-group-cosmetics', name: 'Kosmetyki koreańskie', slug: 'kosmetyki-koreanskie', translation: null },
+];
+
+const LEAF_PARENT_ID = {
+  'cat-kimchi': 'cat-group-kimchi',
+  'cat-pickled-vegetables': 'cat-group-kimchi',
+  'cat-ramen': 'cat-group-noodles',
+  'cat-rice-empty': 'cat-group-noodles',
+  'cat-tofu-empty': 'cat-group-cooking',
+  'cat-korean-cosmetics-empty': 'cat-group-cosmetics',
+};
+
 const categories = [
+  ...CATEGORY_GROUPS,
   { id: 'cat-fruit', name: 'Fruit', slug: 'fruit' },
   { id: 'cat-bakery', name: 'Bakery', slug: 'bakery' },
   { id: 'cat-kimchi', name: 'Kimchi', slug: 'kimchi' },
@@ -483,13 +502,18 @@ function getProductsForCategory(categoryId) {
     .filter((product) => product.category.id === categoryId);
 }
 
-function buildCategoryNode(category) {
+function buildCategoryNode(category, index = 0) {
+  const parentId = LEAF_PARENT_ID[category.id] ?? null;
   return {
-    ...category,
-    level: 0,
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    level: parentId ? 1 : 0,
+    displayOrder: index,
     description: null,
     backgroundImage: null,
-    parent: null,
+    parent: parentId ? { id: parentId, slug: parentId, name: parentId } : null,
+    translation: category.translation ?? null,
     children: { edges: [] },
     products: {
       totalCount: getProductsForCategory(category.id).length,
@@ -976,7 +1000,7 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
       data: {
         categories: {
           edges: categories.map((category, index) => {
-            const node = buildCategoryNode(category);
+            const node = buildCategoryNode(category, index);
             return {
               cursor: `category-${index + 1}`,
               node: isSlimNavigationQuery
@@ -985,6 +1009,10 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
                   slug: node.slug,
                   name: node.name,
                   description: node.description,
+                  level: node.level,
+                  displayOrder: node.displayOrder,
+                  parent: node.parent,
+                  translation: node.translation,
                 }
                 : node,
             };
@@ -1047,18 +1075,23 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
         categoryKeys.includes(product.category.id)
         || categoryKeys.includes(product.category.slug)
       ));
+    // The fruit category is the server-side pagination fixture: like the
+    // CategoryBySlug branch below, its first page advertises a second page.
+    const hasPaginationFixture = categoryKeys.includes('cat-fruit');
 
     return {
       data: {
         products: {
           edges: matchingProducts.map(buildProductEdge),
           pageInfo: {
-            hasNextPage: false,
+            hasNextPage: hasPaginationFixture,
             hasPreviousPage: false,
             startCursor: matchingProducts.length > 0 ? 'cursor-1' : null,
-            endCursor: matchingProducts.length > 0 ? `cursor-${matchingProducts.length}` : null,
+            endCursor: hasPaginationFixture
+              ? 'listing-page-1'
+              : (matchingProducts.length > 0 ? `cursor-${matchingProducts.length}` : null),
           },
-          totalCount: matchingProducts.length,
+          totalCount: hasPaginationFixture ? 48 : matchingProducts.length,
         },
       },
     };

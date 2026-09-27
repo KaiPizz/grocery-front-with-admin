@@ -708,8 +708,33 @@ const PAYMENT_METHODS = [
   },
 ];
 
-function buildCategoryFixtures(products: Array<(typeof PRODUCTS)[number]>) {
-  const categories = new Map<string, (typeof PRODUCTS)[number]['category']>();
+// The public tree is two levels: these groups are level 0, the product
+// categories listed in LEAF_PARENT_ID hang under them; every other category
+// stays level 0 as a leafless group (dania-gotowe, household, fruit, bakery).
+const CATEGORY_GROUPS = [
+  { id: 'cat-group-noodles', name: 'Makaron i ryż', slug: 'makaron-i-ryz', translation: null },
+  { id: 'cat-group-kimchi', name: 'Kimchi i kiszonki', slug: 'kimchi-i-kiszonki', translation: { name: 'Kimchi and pickles' } },
+  { id: 'cat-group-cooking', name: 'Do gotowania i sushi', slug: 'do-gotowania-i-sushi', translation: null },
+  { id: 'cat-group-cosmetics', name: 'Kosmetyki koreańskie', slug: 'kosmetyki-koreanskie', translation: null },
+] as const;
+
+const LEAF_PARENT_ID: Record<string, string> = {
+  'cat-kimchi': 'cat-group-kimchi',
+  'cat-pickled-vegetables': 'cat-group-kimchi',
+  'cat-ramen': 'cat-group-noodles',
+  'cat-rice-empty': 'cat-group-noodles',
+  'cat-tofu-empty': 'cat-group-cooking',
+  'cat-korean-cosmetics-empty': 'cat-group-cosmetics',
+};
+
+type CategoryFixture = (typeof PRODUCTS)[number]['category'] & { translation?: { name: string } | null };
+
+function buildCategoryFixtures(products: Array<(typeof PRODUCTS)[number]>): CategoryFixture[] {
+  const categories = new Map<string, CategoryFixture>();
+
+  for (const group of CATEGORY_GROUPS) {
+    categories.set(group.id, { ...group });
+  }
 
   for (const product of products) {
     categories.set(product.category.id, product.category);
@@ -758,15 +783,21 @@ function getCategoryBackgroundImage(category: (typeof PRODUCTS)[number]['categor
 }
 
 function buildCategoryNode(
-  category: (typeof PRODUCTS)[number]['category'],
-  products: Array<(typeof PRODUCTS)[number]>
+  category: CategoryFixture,
+  products: Array<(typeof PRODUCTS)[number]>,
+  index = 0
 ) {
+  const parentId = LEAF_PARENT_ID[category.id] ?? null;
   return {
-    ...category,
-    level: 0,
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    level: parentId ? 1 : 0,
+    displayOrder: index,
     description: null,
     backgroundImage: getCategoryBackgroundImage(category),
-    parent: null,
+    parent: parentId ? { id: parentId, slug: parentId, name: parentId } : null,
+    translation: category.translation ?? null,
     children: { edges: [] },
     products: {
       totalCount: getProductsForCategory(products, category.id).length,
@@ -775,13 +806,13 @@ function buildCategoryNode(
 }
 
 function buildCategoryEdge(
-  category: (typeof PRODUCTS)[number]['category'],
+  category: CategoryFixture,
   products: Array<(typeof PRODUCTS)[number]>,
   index: number
 ) {
   return {
     cursor: `category-${index + 1}`,
-    node: buildCategoryNode(category, products),
+    node: buildCategoryNode(category, products, index),
   };
 }
 
@@ -1388,6 +1419,10 @@ export async function mockMobileStorefront(
                   slug: edge.node.slug,
                   name: edge.node.name,
                   description: edge.node.description,
+                  level: edge.node.level,
+                  displayOrder: edge.node.displayOrder,
+                  parent: edge.node.parent,
+                  translation: edge.node.translation,
                 },
               }
               : edge;
