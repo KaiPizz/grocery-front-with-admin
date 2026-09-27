@@ -213,11 +213,11 @@ test('homepage campaign copy uses Asia Deli Go branding', () => {
   assert.doesNotMatch(enMessages, /Kenmito picks/);
 });
 
-// Wave 2: the category tree (10 groups) lives in the backend repo; the ADG
-// config must point its hub tiles and grid links at live group slugs only.
+// Wave 2: the category tree (10 groups) is applied by the backend repo; the
+// committed copy under tests/fixtures is what the ADG config must point at
+// (hub tiles, grid links, collections). A missing fixture fails, never skips.
 const RETIRED_GROUP_SLUGS = ['sosy-pasty-i-przyprawy', 'sushi-i-algi', 'grzyby-warzywa-i-tofu'];
-const CATEGORY_TREE_JSON = process.env.ADG_CATEGORY_TREE_JSON
-  ?? '/var/www/www/enail/.worktrees/adg-category-tree/backend/src/scripts/adg/category-tree.json';
+const CATEGORY_TREE_JSON = new URL('./fixtures/adg-category-tree.json', import.meta.url);
 
 function readAdgConfigs() {
   const envelope = JSON.parse(readFileSync(asiaDeliGoConfigUrl, 'utf8'));
@@ -225,7 +225,7 @@ function readAdgConfigs() {
   return { envelope, adminEnvelope };
 }
 
-test('ADG category hub points only at live group slugs', { skip: existsSync(CATEGORY_TREE_JSON) ? false : `category tree not found at ${CATEGORY_TREE_JSON}` }, () => {
+test('ADG category hub points only at live group slugs', () => {
   const { envelope } = readAdgConfigs();
   const groupSlugs = new Set(JSON.parse(readFileSync(CATEGORY_TREE_JSON, 'utf8')).groups.map((group) => group.slug));
   for (const item of envelope.config.commercial.categoryHub.items) {
@@ -253,7 +253,7 @@ function collectCategoryLinks(value, path = '$', out = []) {
   return out;
 }
 
-test('every ADG category link points at a live tree slug', { skip: existsSync(CATEGORY_TREE_JSON) ? false : `category tree not found at ${CATEGORY_TREE_JSON}` }, () => {
+test('every ADG category link points at a live tree slug', () => {
   const tree = JSON.parse(readFileSync(CATEGORY_TREE_JSON, 'utf8'));
   const liveSlugs = new Set(tree.groups.flatMap((group) => [group.slug, ...(group.leaves ?? []).map((leaf) => leaf.slug)]));
   const { envelope, adminEnvelope } = readAdgConfigs();

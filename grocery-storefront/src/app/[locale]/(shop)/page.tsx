@@ -34,7 +34,7 @@ import {
   usesAvailabilityOnlyStock,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
-import { ADG_DEFAULT_FEATURED_LEAVES, resolveFeaturedLeafIds } from '@/lib/home-featured';
+import { interleaveFeaturedProducts, resolveFeaturedLeaves } from '@/lib/home-featured';
 import { getLocalizedProductName } from '@/lib/localization';
 import {
   buildCategoryTree,
@@ -57,6 +57,7 @@ interface HomeProduct {
   id: string;
   name: string;
   slug: string;
+  category?: { id: string } | null;
   translation?: ProductTranslation | null;
   thumbnail?: { url?: string | null } | null;
   unitOfMeasure?: string | null;
@@ -122,6 +123,10 @@ interface HomeCategoriesResponse {
     edges: Array<{ node: HomeCategory }>;
   } | null;
 }
+
+// "Polecane" shows 8 cards; it fetches more so every featured leaf gets a turn.
+const FEATURED_SHELF_SIZE = 8;
+const FEATURED_FETCH_SIZE = 24;
 
 const DESKTOP_ZONE_CARDS = [
   { zone: 'FROZEN', icon: Snowflake, colorVar: 'var(--color-frozen)' },
@@ -795,9 +800,6 @@ export default function HomePage() {
     () => siteConfig?.homepage?.featured?.categorySlugs ?? [],
     [siteConfig?.homepage?.featured?.categorySlugs],
   );
-  const featuredSlugs = configuredFeaturedSlugs.length > 0
-    ? configuredFeaturedSlugs
-    : isAsiaDeliGo ? [...ADG_DEFAULT_FEATURED_LEAVES] : [];
 
   const homepageHero = siteConfig?.homepage?.hero;
   const homepageBlocks = siteConfig?.homepage?.blocks ?? [];
@@ -856,7 +858,9 @@ export default function HomePage() {
   // "Polecane": products from the configured (or default ADG) leaves. The
   // query waits for the category list so its first request already carries
   // the leaf ids; urql caches by variables, so stable config = one request.
-  const featuredIds = useMemo(() => resolveFeaturedLeafIds(
+  // It over-fetches so the shelf can alternate the featured leaves instead
+  // of showing the first rows of the biggest one.
+  const featured = useMemo(() => resolveFeaturedLeaves(
     buildCategoryTree(
       categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [],
       locale,
@@ -865,15 +869,20 @@ export default function HomePage() {
     configuredFeaturedSlugs,
     isAsiaDeliGo,
   ), [categoriesResult.data, locale, configuredFeaturedSlugs, isAsiaDeliGo]);
+  const featuredIds = featured.ids;
   const isRecommended = featuredIds.length > 0;
   const [featuredResult] = useQuery({
     query: PRODUCT_LISTING_QUERY,
     pause: !isRecommended,
-    variables: { channel, first: 8, filter: { categories: featuredIds } },
+    variables: { channel, first: FEATURED_FETCH_SIZE, filter: { categories: featuredIds } },
   });
 
   const products = (productsResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
-  const featuredProducts = (featuredResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
+  const featuredProducts = interleaveFeaturedProducts(
+    (featuredResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[],
+    featuredIds,
+    FEATURED_SHELF_SIZE,
+  );
   const dealCandidates = (dealsResult.data?.products?.edges?.map((edge: { node: HomeProduct }) => edge.node) ?? []) as HomeProduct[];
   const recipes = (recipesResult.data?.recipes?.edges?.map((edge: { node: HomeRecipe }) => edge.node) ?? []) as HomeRecipe[];
   const categories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
@@ -896,7 +905,7 @@ export default function HomePage() {
     : productsResult.fetching || (dealsEnabled && dealsResult.fetching);
   const freshPicksHeading = isRecommended ? t('recommended') : t('newArrivals');
   const freshPicksLink = isRecommended
-    ? { href: `/categories/${featuredSlugs[0]}`, label: t('seeAllRecommended') }
+    ? { href: `/categories/${featured.slugs[0]}`, label: t('seeAllRecommended') }
     : { href: '/products', label: t('seeAllProducts') };
   return (
     <div className="pb-24 md:pb-12">

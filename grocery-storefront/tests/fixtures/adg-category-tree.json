@@ -1,0 +1,79 @@
+{
+  "salonId": "e73271a9-53e3-4a20-a02e-791726b452aa",
+  "groups": [
+    { "slug": "makaron-i-ryz", "name": "Makaron i ryż", "nameEn": "Noodles and rice", "displayOrder": 0, "leaves": [
+      { "slug": "ramyun-w-paczce", "name": "Ramyun w paczce", "nameEn": "Ramyun in a pack", "displayOrder": 0, "from": "ramyun-ramen" },
+      { "slug": "ramyun-w-kubku-i-misce", "name": "Ramyun w kubku i misce", "nameEn": "Cup and bowl ramyun", "displayOrder": 1, "from": "duża-micha" },
+      { "slug": "buldak-i-ramyun-ostre", "name": "Buldak i ramyun ostre", "nameEn": "Buldak and spicy ramyun", "displayOrder": 2 },
+      { "slug": "makaron-pszenny-udon-i-soba", "name": "Makaron pszenny, udon i soba", "nameEn": "Wheat noodles, udon and soba", "displayOrder": 3, "from": "makaron-pszenny", "mergeFrom": ["makaron-gryczany", "makarony"] },
+      { "slug": "makaron-ryzowy-i-szklisty", "name": "Makaron ryżowy i szklisty", "nameEn": "Rice and glass noodles", "displayOrder": 4, "from": "makaron-ryżowy", "mergeFrom": ["makaron-szklisty"] },
+      { "slug": "makaron-konjac", "name": "Makaron konjac", "nameEn": "Konjac noodles", "displayOrder": 5, "from": "makaron-konjac" },
+      { "slug": "kluski-tteok-i-mochi-ryzowe", "name": "Kluski tteok i mochi ryżowe", "nameEn": "Tteok rice cakes and mochi", "displayOrder": 6, "from": "kluski-tteok-do-dań", "mergeFrom": ["japońskie-ciasto-ryżowe"] },
+      { "slug": "ryz-i-ziarna", "name": "Ryż i ziarna", "nameEn": "Rice and grains", "displayOrder": 7, "from": "ryż-i-inne-ziarna" }
+    ] },
+    { "slug": "sosy-i-oleje", "name": "Sosy i oleje", "nameEn": "Sauces and oils", "displayOrder": 1, "leaves": [
+      { "slug": "sos-sojowy", "name": "Sos sojowy", "nameEn": "Soy sauce", "displayOrder": 0, "from": "sos-sojowy" },
+      { "slug": "sosy-rybne-i-ostrygowe", "name": "Sosy rybne i ostrygowe", "nameEn": "Fish and oyster sauces", "displayOrder": 1 },
+      { "slug": "sosy-ostre-i-chili", "name": "Sosy ostre i chili", "nameEn": "Hot and chili sauces", "displayOrder": 2 },
+      { "slug": "sosy-do-sushi-teriyaki-i-ponzu", "name": "Sosy do sushi, teriyaki i ponzu", "nameEn": "Sushi, teriyaki and ponzu sauces", "displayOrder": 3 },
+      { "slug": "majonez-ketchup-i-inne-sosy", "name": "Majonez, ketchup i inne sosy", "nameEn": "Mayonnaise, ketchup and other sauces", "displayOrder": 4, "from": "sosy-marynaty", "mergeFrom": ["sosy-marynaty-oleje"] },
+      { "slug": "oleje", "name": "Oleje", "nameEn": "Oils", "displayOrder": 5, "from": "oleje" }
+    ] },
+    { "slug": "pasty-przyprawy-i-buliony", "name": "Pasty, przyprawy i buliony", "nameEn": "Pastes, spices and stocks", "displayOrder": 2, "leaves": [
+      { "slug": "pasty-gochujang-curry-hot-pot", "name": "Pasty: gochujang, curry, hot pot", "nameEn": "Pastes: gochujang, curry, hot pot", "displayOrder": 0, "from": "pasty-smakowe" },
+      { "slug": "pasta-miso", "name": "Pasta miso", "nameEn": "Miso paste", "displayOrder": 1, "from": "pasta-miso" },
+      { "slug": "przyprawy-i-furikake", "name": "Przyprawy i furikake", "nameEn": "Spices and furikake", "displayOrder": 2, "from": "przyprawy", "mergeFrom": ["przyprawy-jednoskładnikowe"] },
+      { "slug": "octy", "name": "Octy", "nameEn": "Vinegars", "displayOrder": 3, "from": "octy-i-winne-przyprawy", "mergeFrom": ["ocet-ryżowy-do-sushi"] },
+      { "slug": "buliony-i-dashi", "name": "Buliony i dashi", "nameEn": "Stocks and dashi", "displayOrder": 4, "from": "buliony" },
+      { "slug": "wasabi-sezam-i-sol", "name": "Wasabi, sezam i sól", "nameEn": "Wasabi, sesame and salt", "displayOrder": 5, "from": "wasabi", "mergeFrom": ["sezam", "sól"] }
+    ] },
+    { "slug": "kimchi-i-kiszonki", "name": "Kimchi i kiszonki", "nameEn": "Kimchi and pickles", "displayOrder": 3, "leaves": [
+      { "slug": "kimchi", "name": "Kimchi", "nameEn": "Kimchi", "displayOrder": 0, "from": "kimchi" },
+      { "slug": "marynowane-warzywa-i-owoce", "name": "Marynowane warzywa i owoce", "nameEn": "Pickled vegetables and fruit", "displayOrder": 1, "from": "owoce-marynowane-warzywa" },
+      { "slug": "imbir-marynowany", "name": "Imbir marynowany", "nameEn": "Pickled ginger", "displayOrder": 2, "from": "imbir-marynowany" }
+    ] },
+    { "slug": "przekaski-i-slodycze", "name": "Przekąski i słodycze", "nameEn": "Snacks and sweets", "displayOrder": 4, "leaves": [
+      { "slug": "chipsy-i-krakersy", "name": "Chipsy i krakersy", "nameEn": "Chips and crackers", "displayOrder": 0 },
+      { "slug": "ciastka-wafle-i-choco-pie", "name": "Ciastka, wafle i Choco Pie", "nameEn": "Cookies, wafers and Choco Pie", "displayOrder": 1, "from": "słodycze-przekąski" },
+      { "slug": "pocky-pepero-i-czekolada", "name": "Pocky, Pepero i czekolada", "nameEn": "Pocky, Pepero and chocolate", "displayOrder": 2 },
+      { "slug": "zelki-i-cukierki", "name": "Żelki i cukierki", "nameEn": "Gummies and candy", "displayOrder": 3 },
+      { "slug": "mochi-orzechy-i-suszone-owoce", "name": "Mochi, orzechy i suszone owoce", "nameEn": "Mochi, nuts and dried fruit", "displayOrder": 4 },
+      { "slug": "przekaski-z-alg", "name": "Przekąski z alg", "nameEn": "Seaweed snacks", "displayOrder": 5 },
+      { "slug": "przekaski-slone-azjatyckie", "name": "Przekąski słone azjatyckie", "nameEn": "Savory Asian snacks", "displayOrder": 6 }
+    ] },
+    { "slug": "napoje-herbaty-i-kawy", "name": "Napoje, herbaty i kawy", "nameEn": "Drinks, tea and coffee", "displayOrder": 5, "leaves": [
+      { "slug": "herbaty", "name": "Herbaty", "nameEn": "Teas", "displayOrder": 0, "from": "herbaty" },
+      { "slug": "kawy-i-syropy", "name": "Kawy i syropy", "nameEn": "Coffee and syrups", "displayOrder": 1, "from": "kawy", "mergeFrom": ["syropy"] },
+      { "slug": "napoje-gazowane", "name": "Napoje gazowane", "nameEn": "Soft drinks", "displayOrder": 2 },
+      { "slug": "soki-herbaty-gotowe-i-napoje-owocowe", "name": "Soki, herbaty gotowe i napoje owocowe", "nameEn": "Juices, ready teas and fruit drinks", "displayOrder": 3, "from": "napoje" },
+      { "slug": "napoje-mleczne-i-probiotyczne", "name": "Napoje mleczne i probiotyczne", "nameEn": "Milk and probiotic drinks", "displayOrder": 4 }
+    ] },
+    { "slug": "dania-gotowe", "name": "Dania gotowe i zupy instant", "nameEn": "Ready meals and instant soups", "displayOrder": 6, "leaves": [
+      { "slug": "dania-gotowe-i-curry", "name": "Dania gotowe i curry", "nameEn": "Ready meals and curry", "displayOrder": 0, "from": "dania-gotowe" },
+      { "slug": "zupy-instant", "name": "Zupy instant: pho, tom yum, pad thai", "nameEn": "Instant soups: pho, tom yum, pad thai", "displayOrder": 1 }
+    ] },
+    { "slug": "do-gotowania-i-sushi", "name": "Do gotowania i sushi", "nameEn": "Cooking and sushi essentials", "displayOrder": 7, "leaves": [
+      { "slug": "algi-nori-wakame-kombu", "name": "Algi: nori, wakame, kombu", "nameEn": "Seaweed: nori, wakame, kombu", "displayOrder": 0, "from": "arkusze-nori-gim", "mergeFrom": ["wakame-miyeok", "kombu-dasima"] },
+      { "slug": "grzyby-suszone", "name": "Grzyby suszone", "nameEn": "Dried mushrooms", "displayOrder": 1, "from": "grzyby-shiitake", "mergeFrom": ["grzyby-mun", "inne-grzyby-azjatyckie"] },
+      { "slug": "tofu", "name": "Tofu", "nameEn": "Tofu", "displayOrder": 2, "from": "tofu" },
+      { "slug": "maki-panierki-i-tapioka", "name": "Mąki, panierki i tapioka", "nameEn": "Flours, breading and tapioca", "displayOrder": 3, "from": "mąki-panierki-tapioka" },
+      { "slug": "mleczko-kokosowe", "name": "Mleczko kokosowe", "nameEn": "Coconut milk", "displayOrder": 4, "from": "mleczko-kokosowe" },
+      { "slug": "papier-ryzowy", "name": "Papier ryżowy", "nameEn": "Rice paper", "displayOrder": 5, "from": "papier-ryżowy" }
+    ] },
+    { "slug": "akcesoria-kuchenne", "name": "Akcesoria kuchenne", "nameEn": "Kitchen accessories", "displayOrder": 8, "leaves": [
+      { "slug": "paleczki-i-sztucce", "name": "Pałeczki i sztućce", "nameEn": "Chopsticks and cutlery", "displayOrder": 0, "from": "pałeczki-i-sztućce" },
+      { "slug": "noze", "name": "Noże", "nameEn": "Knives", "displayOrder": 1, "from": "noże" },
+      { "slug": "patelnie-wok-i-grill", "name": "Patelnie wok i grill", "nameEn": "Woks and grill pans", "displayOrder": 2, "from": "patelnie-wok-grill" },
+      { "slug": "patelnie-tamago", "name": "Patelnie tamago", "nameEn": "Tamago pans", "displayOrder": 3, "from": "patelnie-tamago" },
+      { "slug": "miski-kubki-i-naczynia", "name": "Miski, kubki i naczynia", "nameEn": "Bowls, cups and tableware", "displayOrder": 4, "from": "komplety-do-sushi-i-herbaty", "mergeFrom": ["miski", "naczynia", "zaparzacze-do-kawy"] },
+      { "slug": "parowary-maty-foremki-i-zestawy-do-sushi", "name": "Parowary, maty, foremki i zestawy do sushi", "nameEn": "Steamers, mats, molds and sushi kits", "displayOrder": 5, "from": "parowary-bambusowe", "mergeFrom": ["maty-do-zwijania", "foremki", "zestawy-do-sushi", "moździerze"] },
+      { "slug": "prezenty-i-gadzety", "name": "Prezenty i gadżety", "nameEn": "Gifts and gadgets", "displayOrder": 6, "from": "koty-szczęścia-i-inne-gadżety", "mergeFrom": ["prezenty"] }
+    ] },
+    { "slug": "kosmetyki-koreanskie", "name": "Kosmetyki koreańskie", "nameEn": "Korean cosmetics", "displayOrder": 9, "leaves": [
+      { "slug": "maseczki", "name": "Maseczki", "nameEn": "Sheet masks", "displayOrder": 0 },
+      { "slug": "kremy-i-serum", "name": "Kremy i serum", "nameEn": "Creams and serums", "displayOrder": 1, "from": "koreańskie-kosmetyki" },
+      { "slug": "oczyszczanie", "name": "Oczyszczanie", "nameEn": "Cleansing", "displayOrder": 2 },
+      { "slug": "filtry-uv-i-zele-aloesowe", "name": "Filtry UV i żele aloesowe", "nameEn": "Sunscreens and aloe gels", "displayOrder": 3 }
+    ] }
+  ]
+}

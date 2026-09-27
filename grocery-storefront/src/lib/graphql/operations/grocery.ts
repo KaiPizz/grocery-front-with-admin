@@ -274,7 +274,7 @@ export const PUBLIC_CATEGORIES_QUERY = `
           level
           displayOrder
           parent { id }
-          translation(languageCode: "en") { name }
+          translation(languageCode: "en") { name description }
           backgroundImage { url alt }
           products(channel: $channel, first: 0) { totalCount }
         }

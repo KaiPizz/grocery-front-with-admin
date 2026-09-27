@@ -278,7 +278,7 @@ const categories = [
   { id: 'cat-bakery', name: 'Bakery', slug: 'bakery' },
   { id: 'cat-kimchi', name: 'Kimchi', slug: 'kimchi' },
   { id: 'cat-pickled-vegetables', name: 'Pickled vegetables', slug: 'owoce-marynowane-warzywa' },
-  { id: 'cat-ramen', name: 'Ramen', slug: 'ramyun-ramen' },
+  { id: 'cat-ramen', name: 'Ramen', slug: 'ramyun-ramen', translation: { name: 'Ramyun and ramen', description: 'Korean instant noodles in packs and cups.' } },
   { id: 'cat-household', name: 'Household', slug: 'household' },
   { id: 'cat-tofu-empty', name: 'Tofu', slug: 'tofu' },
   { id: 'cat-korean-cosmetics-empty', name: 'Korean cosmetics', slug: 'koreańskie-kosmetyki' },

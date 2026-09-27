@@ -6,7 +6,7 @@ export interface PublicTaxonomyRawCategory {
   level?: number | null;
   displayOrder?: number | null;
   parent?: { id: string } | null;
-  translation?: { name?: string | null } | null;
+  translation?: { name?: string | null; description?: string | null } | null;
   backgroundImage?: { url?: string | null; alt?: string | null } | null;
   products?: {
     totalCount: number;
@@ -106,6 +106,10 @@ function localizedName(node: PublicTaxonomyRawCategory, locale: string) {
 }
 
 function localizedDescription(node: PublicTaxonomyRawCategory, locale: string) {
+  if (locale === 'en') {
+    const translated = node.translation?.description?.trim();
+    if (translated) return translated;
+  }
   const own = node.description?.trim();
   if (own) return own;
   const definition = definitionFor(node.slug);

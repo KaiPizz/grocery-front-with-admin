@@ -4,15 +4,21 @@ import { permanentRedirect } from 'next/navigation';
 
 import {
   boundCategoryMetaDescription,
+  categorySeoFromTree,
   decodeCategorySlug,
   getCategoryPathForLocale,
   isDbCategoryIndexable,
-  resolveMergedCategoryTarget,
+  resolveCategoryRedirect,
+  type CategorySeoCopy,
 } from '@/lib/category-seo';
 import { resolveChannel } from '@/lib/channel';
 import { PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
-import { PUBLIC_CATEGORY_DEFINITIONS } from '@/lib/public-taxonomy';
+import {
+  PUBLIC_CATEGORY_DEFINITIONS,
+  findPublicCategory,
+  type PublicTaxonomyRawCategory,
+} from '@/lib/public-taxonomy';
 import {
   buildCollectionPageJsonLd,
   buildPublicPageMetadata,
@@ -22,32 +28,18 @@ import {
 } from '@/lib/seo-metadata';
 
 const CATEGORY_METADATA_REVALIDATE_SECONDS = 300;
+// Same tree options as the category page: empty groups and leaves keep their URL.
+const TREE_OPTIONS = { requireProductCount: false, includeEmpty: true } as const;
 
 interface CategoryRouteParams {
   locale: string;
   slug: string;
 }
 
-interface DbCategoryNode {
-  id: string;
-  slug: string;
-  name: string;
-  description: string | null;
-  products?: {
-    totalCount: number;
-  } | null;
-}
-
 interface PublicCategoriesData {
   categories: {
-    edges: Array<{ node: DbCategoryNode }>;
+    edges: Array<{ node: PublicTaxonomyRawCategory }>;
   } | null;
-}
-
-interface CategorySeoCopy {
-  title: string;
-  description: string;
-  robots: Metadata['robots'];
 }
 
 function getCategoryCopy(locale: string, slug: string) {
@@ -65,14 +57,9 @@ function getCategoryPath(slug: string) {
   return `/categories/${encodeURIComponent(slug)}`;
 }
 
-function redirectIfMergedCategory(locale: string, slug: string) {
-  const target = resolveMergedCategoryTarget(slug);
-  if (target) permanentRedirect(getCategoryPathForLocale(locale, target));
-}
-
-async function fetchDbCategory(slug: string): Promise<DbCategoryNode | null> {
+/** The public category list (cached per channel), or null when the catalog is unreachable. */
+async function fetchRawCategories(): Promise<PublicTaxonomyRawCategory[] | null> {
   const channel = resolveChannel(process.env.NEXT_PUBLIC_SALON_SLUG);
-  const decodedSlug = decodeCategorySlug(slug);
   const result = await serverGraphqlRequest<PublicCategoriesData>(
     PUBLIC_CATEGORIES_QUERY,
     { channel },
@@ -83,28 +70,42 @@ async function fetchDbCategory(slug: string): Promise<DbCategoryNode | null> {
       },
     },
   );
-  const nodes = result.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  return nodes.find((node) => node.slug === decodedSlug) ?? null;
+  if (result.errorMessage || !result.data?.categories) return null;
+  return result.data.categories.edges.map((edge) => edge.node);
 }
 
-async function resolveCategorySeo(locale: string, slug: string): Promise<CategorySeoCopy> {
-  const copy = getCategoryCopy(locale, slug);
-  if (copy) {
-    return { title: copy.title, description: copy.description, robots: undefined };
+// A renamed or merged slug redirects only once the catalog no longer serves
+// it; while the old slug is live (tree not applied yet) the page renders as is.
+function redirectIfRetiredCategory(locale: string, slug: string, raw: PublicTaxonomyRawCategory[] | null) {
+  const target = resolveCategoryRedirect(slug, raw ? new Set(raw.map((node) => node.slug)) : null);
+  if (target) permanentRedirect(getCategoryPathForLocale(locale, target));
+}
+
+function resolveCategorySeo(locale: string, slug: string, raw: PublicTaxonomyRawCategory[] | null): CategorySeoCopy {
+  const decodedSlug = decodeCategorySlug(slug);
+  if (raw) {
+    // Tree node: localized name/description, tree-derived count for groups.
+    const publicCategory = findPublicCategory(raw, decodedSlug, locale, TREE_OPTIONS);
+    if (publicCategory) return categorySeoFromTree(publicCategory);
+
+    // Hidden / out-of-tree category: the catalog row itself.
+    const dbCategory = raw.find((node) => node.slug === decodedSlug);
+    if (dbCategory) {
+      return {
+        title: dbCategory.name,
+        description: boundCategoryMetaDescription(dbCategory.description ?? null, dbCategory.name),
+        robots: isDbCategoryIndexable(dbCategory.products?.totalCount ?? null)
+          ? undefined
+          : { index: false, follow: true },
+      };
+    }
+  } else {
+    // Catalog unreachable: the static group copy still gives the 10 groups a real title.
+    const copy = getCategoryCopy(locale, decodedSlug);
+    if (copy) return { title: copy.title, description: copy.description, robots: undefined };
   }
 
-  const dbCategory = await fetchDbCategory(slug);
-  if (dbCategory) {
-    return {
-      title: dbCategory.name,
-      description: boundCategoryMetaDescription(dbCategory.description, dbCategory.name),
-      robots: isDbCategoryIndexable(dbCategory.products?.totalCount ?? null)
-        ? undefined
-        : { index: false, follow: true },
-    };
-  }
-
-  const fallbackTitle = decodeCategorySlug(slug).replace(/[-_]+/g, ' ');
+  const fallbackTitle = decodedSlug.replace(/[-_]+/g, ' ');
   return {
     title: fallbackTitle,
     description: fallbackTitle,
@@ -118,12 +119,9 @@ export async function generateMetadata({
   params: Promise<CategoryRouteParams>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  redirectIfMergedCategory(locale, slug);
-
-  const [siteConfig, seoCopy] = await Promise.all([
-    fetchSeoStorefrontConfig(),
-    resolveCategorySeo(locale, slug),
-  ]);
+  const [siteConfig, raw] = await Promise.all([fetchSeoStorefrontConfig(), fetchRawCategories()]);
+  redirectIfRetiredCategory(locale, slug, raw);
+  const seoCopy = resolveCategorySeo(locale, slug, raw);
 
   return buildPublicPageMetadata({
     locale,
@@ -143,12 +141,9 @@ export default async function CategoryDetailLayout({
   params: Promise<CategoryRouteParams>;
 }) {
   const { locale, slug } = await params;
-  redirectIfMergedCategory(locale, slug);
-
-  const [siteConfig, seoCopy] = await Promise.all([
-    fetchSeoStorefrontConfig(),
-    resolveCategorySeo(locale, slug),
-  ]);
+  const [siteConfig, raw] = await Promise.all([fetchSeoStorefrontConfig(), fetchRawCategories()]);
+  redirectIfRetiredCategory(locale, slug, raw);
+  const seoCopy = resolveCategorySeo(locale, slug, raw);
   const jsonLd = seoCopy.robots === undefined
     ? buildCollectionPageJsonLd({
       locale,

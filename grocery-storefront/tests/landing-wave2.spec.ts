@@ -37,6 +37,9 @@ test.describe('landing wave 2', () => {
       Array.isArray(variables.filter?.categories)
       && (variables.filter!.categories as string[]).includes('cat-kimchi')
     ))).toBe(true);
+    // Of the three ADG default leaves only kimchi exists in this catalog, so
+    // "see all" must point there, not at the missing first default.
+    await expect(shelf.getByRole('link', { name: 'Zobacz polecane' })).toHaveAttribute('href', '/categories/kimchi');
 
     const seo = page.getByTestId('home-seo-text');
     await expect(seo.getByRole('heading', { level: 2 })).toContainText('Asia Deli Go');

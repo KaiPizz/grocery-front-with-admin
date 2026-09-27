@@ -53,6 +53,16 @@ test('english names come from translation, then the group fallback table, then t
   assert.equal(tree.find((g) => g.slug === 'dania-gotowe').name, 'Ready meals and instant soups');
 });
 
+test('english descriptions come from the translation before the Polish text or the group table', () => {
+  const translated = raw.map((node) => (
+    node.id === 'l-kimchi' ? { ...node, translation: { name: 'Kimchi', description: 'Cabbage kimchi' } } : node
+  ));
+  const kimchi = findPublicCategory(translated, 'kimchi', 'en');
+  assert.equal(kimchi.description, 'Cabbage kimchi');
+  assert.equal(findPublicCategory(translated, 'kimchi', 'pl').description, 'Kimchi z kapusty');
+  assert.equal(findPublicCategory(translated, 'kimchi-i-kiszonki', 'en').description, 'Kimchi, pickled vegetables and fruit, pickled ginger.');
+});
+
 test('a node whose parent is unknown does not disappear', () => {
   const orphan = { id: 'x', slug: 'orphan', name: 'Orphan', description: null, level: 1, displayOrder: 5, parent: { id: 'gone' }, translation: null, products: { totalCount: 2 } };
   assert.equal(buildCategoryTree([...raw, orphan], 'pl').some((g) => g.slug === 'orphan'), true);

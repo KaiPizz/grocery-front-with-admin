@@ -56,9 +56,27 @@ test.describe('category tree pages', () => {
       expect(response.status(), from).toBe(301);
       expect(response.headers()['location'], from).toBe(to);
     }
-    const renamedLeaf = await page.request.get('/categories/ramyun-ramen', { maxRedirects: 0 });
-    expect([301, 307, 308]).toContain(renamedLeaf.status());
-    expect(renamedLeaf.headers()['location']).toMatch(/\/categories\/ramyun-w-paczce$/);
+    // ramyun-ramen is renamed by the tree but still live in this catalog (the
+    // data apply has not happened yet): it must keep serving, never redirect.
+    const liveOldLeaf = await page.request.get('/categories/ramyun-ramen', { maxRedirects: 0 });
+    expect(liveOldLeaf.status()).toBe(200);
+    for (const [from, to] of [
+      ['/categories/du%C5%BCa-micha', /\/categories\/ramyun-w-kubku-i-misce$/],
+      ['/en/categories/sosy-sojowe', /\/en\/categories\/sos-sojowy$/],
+    ] as const) {
+      const renamedLeaf = await page.request.get(from, { maxRedirects: 0 });
+      expect([301, 307, 308], from).toContain(renamedLeaf.status());
+      expect(renamedLeaf.headers()['location'], from).toMatch(to);
+    }
+  });
+
+  test('english leaf metadata uses the catalog translation, not the Polish name', async ({ page }) => {
+    await page.goto('/en/categories/ramyun-ramen');
+    await expect(page).toHaveTitle('Ramyun and ramen | Configured Test Grocery');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Korean instant noodles in packs and cups.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ramyun and ramen');
+    // Two fixture products: below the index threshold, so noindex but crawlable.
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
   });
 
   test('sitemap lists groups and only leaves above the index threshold', async ({ page }) => {

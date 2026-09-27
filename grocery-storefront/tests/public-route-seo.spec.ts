@@ -26,7 +26,8 @@ const ROUTES = [
     path: '/en/categories/kimchi-i-kiszonki',
     canonical: 'https://store.example.test/en/categories/kimchi-i-kiszonki',
     title: 'Kimchi and pickles | Configured Test Grocery',
-    description: 'Kimchi, pickled vegetables, and fermented side dishes.',
+    // Group copy from the 2026-09-27 tree (src/lib/public-taxonomy.ts).
+    description: 'Kimchi, pickled vegetables and fruit, pickled ginger.',
     ogImage: 'https://cdn.example.test/og-image.jpg',
   },
   {
