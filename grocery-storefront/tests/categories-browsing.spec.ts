@@ -419,8 +419,8 @@ test.describe('B1 category browsing', () => {
 
     await page.goto('/en/categories/fruit');
 
-    await expect.poll(() => operations.includes('ProductFilterFacets')).toBe(true);
-    await expect(page.getByRole('button', { name: /^kosher$/i })).toBeDisabled();
+    await expect.poll(() => operations.includes('ProductBrands')).toBe(true);
+    await expect(page.getByRole('button', { name: 'Samyang', exact: true })).toBeVisible();
 
     const pagination = page.getByRole('navigation', { name: /product pagination/i });
     const pageTwo = pagination.getByRole('button', { name: '2', exact: true });

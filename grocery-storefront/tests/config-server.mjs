@@ -1019,40 +1019,14 @@ function buildGraphqlResponse(requestBody, requestHeaders = {}) {
     };
   }
 
-  if (query.includes('query ProductFilterFacets')) {
-    const categoryKeys = Array.isArray(variables.categoryIds)
-      ? variables.categoryIds.map(String)
-      : [];
-    const sourceProducts = categoryKeys.length > 0
-      ? [...products, ...publicTaxonomyProducts]
-      : products;
-    const scopedProducts = sourceProducts.filter((product) => (
-      categoryKeys.length === 0
-      || categoryKeys.includes(product.category.id)
-      || categoryKeys.includes(product.category.slug)
-    ));
-    const buildCounts = (values, matches) => values.map((value) => ({
-      value,
-      count: scopedProducts.filter((product) => matches(product, value)).length,
-    }));
-
+  if (query.includes('query ProductBrands')) {
     return {
       data: {
-        productFilterFacets: {
-          totalCount: scopedProducts.length,
-          dietaryTags: buildCounts(
-            ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'sugar-free'],
-            (product, value) => product.dietaryTags.includes(value),
-          ),
-          storageZones: buildCounts(
-            ['FROZEN', 'CHILLED', 'AMBIENT'],
-            (product, value) => product.storageZone === value,
-          ),
-          certifications: buildCounts(
-            ['organic', 'halal', 'kosher'],
-            (product, value) => product.certifications.includes(value),
-          ),
-        },
+        productBrands: [
+          { value: 'Samyang', count: 3 },
+          { value: 'OTTOGI', count: 2 },
+          { value: 'S&B', count: 1 },
+        ],
       },
     };
   }

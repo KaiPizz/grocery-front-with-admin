@@ -844,30 +844,28 @@ function matchesProductsFilter(product: (typeof PRODUCTS)[number], filter: Recor
     }
   }
 
-  if (Array.isArray(filter.excludeAllergens) && filter.excludeAllergens.length > 0) {
-    if (filter.excludeAllergens.some((allergen: string) => product.allergens.includes(allergen))) {
+  if (Array.isArray(filter.brands) && filter.brands.length > 0) {
+    const brand = FIXTURE_BRAND_BY_PRODUCT_ID[product.id];
+
+    if (!brand || !filter.brands.includes(brand)) {
       return false;
     }
   }
 
-  if (Array.isArray(filter.dietaryTags) && filter.dietaryTags.length > 0) {
-    if (!filter.dietaryTags.every((tag: string) => product.dietaryTags.includes(tag))) {
+  if (Array.isArray(filter.countryOfOrigin) && filter.countryOfOrigin.length > 0) {
+    if (!filter.countryOfOrigin.includes(product.countryOfOrigin)) {
+      return false;
+    }
+  }
+
+  if (filter.stockAvailability === 'IN_STOCK') {
+    if (!product.variants.some((variant) => (variant.quantityAvailable ?? 0) > 0)) {
       return false;
     }
   }
 
   if (typeof filter.storageZone === 'string' && filter.storageZone.length > 0) {
     if (product.storageZone !== filter.storageZone) {
-      return false;
-    }
-  }
-
-  if (Array.isArray(filter.certifications) && filter.certifications.length > 0) {
-    const certifications = Array.isArray(product.certifications)
-      ? product.certifications
-      : [];
-
-    if (!filter.certifications.every((certification: string) => certifications.includes(String(certification)))) {
       return false;
     }
   }
@@ -1057,11 +1055,12 @@ interface MockMobileStorefrontOptions {
   facets?: 'populated' | 'empty';
   listingProductLimit?: number;
   listingPaginationTotalCount?: number;
-  filterAvailability?: 'ok' | 'error' | 'partial' | 'null';
+  /** `error` answers the ProductBrands query with a GraphQL validation error, like a backend without the field. */
+  brands?: 'populated' | 'empty' | 'error';
   homepageShelfSources?: 'shared' | 'distinct';
   wishlist?: 'empty' | 'single-item' | 'stale-remove';
   beforeProductListingResponse?: () => Promise<void>;
-  beforeProductFilterFacetsResponse?: () => Promise<void>;
+  beforeProductBrandsResponse?: () => Promise<void>;
   onGraphqlOperation?: (operationName: string, query: string, variables?: Record<string, any>) => void;
   /** Per-operation canned `data` payloads (keyed by operation name) that win over the built-in handlers. */
   graphqlResponses?: Record<string, unknown>;
@@ -1070,6 +1069,33 @@ interface MockMobileStorefrontOptions {
   onSearchProductsIndexQuery?: (variables: Record<string, unknown>) => void;
   onWishlistSyncMutation?: (productIds: string[]) => void;
 }
+
+// Ten brands, so the listing shows eight and a "show more (2)" toggle.
+// Values include an ampersand and a diacritic on purpose: the chip must send
+// the stored string unchanged.
+export const PRODUCT_BRAND_FACETS = [
+  { value: 'Samyang', count: 49 },
+  { value: 'OTTOGI', count: 42 },
+  { value: 'SEMPIO', count: 41 },
+  { value: 'SEN SOY', count: 37 },
+  { value: 'Nongshim', count: 36 },
+  { value: 'Edo Japan', count: 35 },
+  { value: 'Holika Holika', count: 34 },
+  { value: 'Chung Jung One', count: 28 },
+  { value: 'Nestlé', count: 27 },
+  { value: 'S&B', count: 16 },
+];
+
+// Brand of each listing product, so a brand chip narrows the listing the way
+// the backend does. The apples (the product every listing test knows by name)
+// carry the first-ranked brand, which is visible without "show more"; the
+// ampersand brand sits tenth, behind the toggle.
+const FIXTURE_BRAND_BY_PRODUCT_ID: Record<string, string> = {
+  'prod-apples': 'Samyang',
+  'prod-berries': 'S&B',
+  'prod-bread': 'OTTOGI',
+  'prod-ravioli': 'Nestlé',
+};
 
 export async function mockMobileStorefront(
   page: Page,
@@ -1139,67 +1165,27 @@ export async function mockMobileStorefront(
       || operationName === 'GroceryProductListing'
       || query.includes('query GroceryProducts')
       || query.includes('query GroceryProductListing');
-    const isProductFilterFacetsQuery = operationName === 'ProductFilterFacets'
-      || query.includes('query ProductFilterFacets');
+    const isProductBrandsQuery = operationName === 'ProductBrands'
+      || query.includes('query ProductBrands');
 
-    if (isProductFilterFacetsQuery) {
-      await options.beforeProductFilterFacetsResponse?.();
+    if (isProductBrandsQuery) {
+      await options.beforeProductBrandsResponse?.();
 
-      if (options.filterAvailability === 'error') {
+      if (options.brands === 'error') {
+        // What a backend without the field answers: a validation error, no data.
         await route.fulfill({
-          status: 200,
+          status: 400,
           contentType: 'application/json',
           body: JSON.stringify({
-            data: { productFilterFacets: null },
-            errors: [{ message: 'Filter availability is temporarily unavailable' }],
+            errors: [{ message: 'Cannot query field "productBrands" on type "Query".' }],
           }),
         });
         return;
       }
 
-      if (options.filterAvailability === 'null') {
-        await fulfill(route, { productFilterFacets: null });
-        return;
-      }
-
-      const categoryKeys = Array.isArray(body.variables?.categoryIds)
-        ? body.variables.categoryIds.map(String)
-        : [];
-      const sourceProducts = categoryKeys.length > 0 ? categoryProducts : products;
-      const scopedProducts = sourceProducts.filter((product) => (
-        categoryKeys.length === 0
-        || categoryKeys.includes(product.category.id)
-        || categoryKeys.includes(product.category.slug)
-      ));
-      const buildCounts = (
-        values: readonly string[],
-        matches: (product: (typeof PRODUCTS)[number], value: string) => boolean,
-      ) => values.map((value) => ({
-        value,
-        count: scopedProducts.filter((product) => matches(product, value)).length,
-      }));
-      const facets = {
-        totalCount: scopedProducts.length,
-        dietaryTags: buildCounts(
-          ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'sugar-free'],
-          (product, value) => product.dietaryTags.includes(value),
-        ),
-        storageZones: buildCounts(
-          ['FROZEN', 'CHILLED', 'AMBIENT'],
-          (product, value) => product.storageZone === value,
-        ),
-        certifications: buildCounts(
-          ['organic', 'halal', 'kosher'],
-          (product, value) => product.certifications.includes(value),
-        ),
-      };
-
-      if (options.filterAvailability === 'partial') {
-        facets.storageZones = facets.storageZones.filter(({ value }) => value !== 'FROZEN');
-        facets.certifications = facets.certifications.filter(({ value }) => value !== 'halal');
-      }
-
-      await fulfill(route, { productFilterFacets: facets });
+      await fulfill(route, {
+        productBrands: options.brands === 'empty' ? [] : PRODUCT_BRAND_FACETS,
+      });
       return;
     }
 
@@ -1207,12 +1193,12 @@ export async function mockMobileStorefront(
       options.onProductsQuery?.(body.variables ?? {});
       await options.beforeProductListingResponse?.();
 
-      const dietaryTags = Array.isArray(body.variables?.filter?.dietaryTags)
-        ? body.variables.filter.dietaryTags
+      const brandFilters = Array.isArray(body.variables?.filter?.brands)
+        ? body.variables.filter.brands
         : [];
       if (
         options.products === 'error'
-        || (options.products === 'filter-error' && dietaryTags.length > 0)
+        || (options.products === 'filter-error' && brandFilters.length > 0)
       ) {
         await route.fulfill({
           status: 404,

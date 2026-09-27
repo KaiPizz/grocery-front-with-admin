@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowDownUp, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { useClient, useQuery, type CombinedError } from 'urql';
 
-import { AllergenFilter } from '@/components/grocery/AllergenFilter';
 import { SortDropdown, getSortOptions } from '@/components/grocery/SortDropdown';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
@@ -17,24 +16,20 @@ import {
   getLocalizedCountryOrigin,
 } from '@/lib/catalog-display-localization';
 import {
+  PRODUCT_BRANDS_QUERY,
   PRODUCT_COUNTRY_ORIGINS_QUERY,
-  PRODUCT_FILTER_FACETS_QUERY,
   PRODUCT_LISTING_QUERY,
 } from '@/lib/graphql/operations/grocery';
 import type { GroceryProduct, StorageZone } from '@/types';
+import { FilterChipGroup, type FilterChipOption } from './FilterChipGroup';
 import {
-  ALLERGEN_OPTIONS,
-  CERT_OPTIONS,
   DEFAULT_FILTERS,
-  DIETARY_OPTIONS,
-  ZONE_OPTIONS,
   areFiltersEqual,
   buildProductFilter,
   countActiveFilters,
-  normalizeAllergenCode,
   normalizeFiltersState,
-  parseDietaryQueryParams,
-  setDietaryQueryParams,
+  parseCountryQueryParams,
+  setCountryQueryParams,
   toggleMultiValue,
   type ProductFiltersState,
 } from './listing-filters';
@@ -94,12 +89,6 @@ interface CategoryFilterOption {
   count: number;
 }
 
-interface CountryOriginFilterOption {
-  value: string;
-  label: string;
-  count: number;
-}
-
 interface ProductCountryOriginNode {
   value: string;
   count: number;
@@ -114,13 +103,8 @@ interface ProductFacetCountNode {
   count: number;
 }
 
-interface ProductFilterFacetsQueryResponse {
-  productFilterFacets: {
-    totalCount: number;
-    dietaryTags: ProductFacetCountNode[];
-    storageZones: ProductFacetCountNode[];
-    certifications: ProductFacetCountNode[];
-  } | null;
+interface ProductBrandsQueryResponse {
+  productBrands: ProductFacetCountNode[] | null;
 }
 
 interface CategoryNavigationItem {
@@ -137,41 +121,14 @@ interface ActiveFilterChip {
 }
 
 const EMPTY_CATEGORY_IDS: string[] = [];
-function getAvailableFacetOptions<Option extends string>(
-  options: readonly Option[],
-  facets: ProductFacetCountNode[] | null | undefined,
-  aggregateKnown: boolean,
-): Option[] {
-  if (!aggregateKnown) return [...options];
 
-  const counts = new Map(facets?.map(({ value, count }) => [value, Number(count)]));
-
-  return options.filter((option) => {
-    const count = counts.get(option);
-    return count === undefined || !Number.isFinite(count) || count > 0;
-  });
-}
-
-function hasCompleteFacetCounts<Option extends string>(
-  options: readonly Option[],
-  facets: ProductFacetCountNode[] | null | undefined,
-): boolean {
-  if (!facets) return false;
-
-  const counts = new Map(facets.map(({ value, count }) => [value, Number(count)]));
-
-  return options.every((option) => {
-    const count = counts.get(option);
-    return typeof count === 'number' && Number.isInteger(count) && count >= 0;
-  });
-}
-
-function hasUnsupportedOriginCountScope(filters: ProductFiltersState): boolean {
+// Facet counts are computed for the page's category scope only; once another
+// filter narrows the listing the counts would overstate, so they are hidden.
+function hasNarrowedFacetScope(filters: ProductFiltersState): boolean {
   return filters.categoryIds.length > 0
-    || filters.excludeAllergens.length > 0
-    || filters.dietaryTags.length > 0
-    || filters.certifications.length > 0
+    || filters.brands.length > 0
     || Boolean(filters.storageZone)
+    || filters.inStockOnly
     || Boolean(filters.priceMin || filters.priceMax);
 }
 
@@ -247,26 +204,28 @@ export function ProductListingClient({
   const t = useTranslations('products');
   const tCommon = useTranslations('common');
   const tHome = useTranslations('home');
-  const tAllergens = useTranslations('allergens');
   const locale = useLocale();
   const searchParams = useSearchParams();
   const router = useRouter();
   const isHydrated = useHydrated();
   const client = useClient();
-  const dietaryTagsFromUrl = useMemo(
-    () => parseDietaryQueryParams(searchParams),
+  // `?country=` is the one filter with external producers (the "Kuchnie"
+  // header menu), so it seeds the state and follows later URL changes — a
+  // soft navigation between two cuisines re-renders this same instance.
+  const countriesFromUrl = useMemo(
+    () => parseCountryQueryParams(searchParams),
     [searchParams],
   );
-  const dietaryQueryKey = dietaryTagsFromUrl.join(',');
+  const countryQueryKey = countriesFromUrl.join('\u0000');
 
   const [committedFilters, setCommittedFilters] = useState<ProductFiltersState>(() => ({
     ...DEFAULT_FILTERS,
-    dietaryTags: dietaryTagsFromUrl,
+    countryOfOrigin: countriesFromUrl,
     storageZone: initialZone || '',
   }));
   const [draftFilters, setDraftFilters] = useState<ProductFiltersState>(() => ({
     ...DEFAULT_FILTERS,
-    dietaryTags: dietaryTagsFromUrl,
+    countryOfOrigin: countriesFromUrl,
     storageZone: initialZone || '',
   }));
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -321,17 +280,17 @@ export function ProductListingClient({
   }, [searchParams]);
 
   useEffect(() => {
-    const nextDietaryTags = dietaryQueryKey ? dietaryQueryKey.split(',') : [];
-    const syncDietaryTags = (previous: ProductFiltersState) => (
-      previous.dietaryTags.length === nextDietaryTags.length
-      && previous.dietaryTags.every((tag, index) => tag === nextDietaryTags[index])
+    const nextCountries = countryQueryKey ? countryQueryKey.split('\u0000') : [];
+    const syncCountries = (previous: ProductFiltersState) => (
+      previous.countryOfOrigin.length === nextCountries.length
+      && previous.countryOfOrigin.every((country, index) => country === nextCountries[index])
         ? previous
-        : { ...previous, dietaryTags: nextDietaryTags }
+        : { ...previous, countryOfOrigin: nextCountries }
     );
 
-    setCommittedFilters(syncDietaryTags);
-    setDraftFilters(syncDietaryTags);
-  }, [dietaryQueryKey]);
+    setCommittedFilters(syncCountries);
+    setDraftFilters(syncCountries);
+  }, [countryQueryKey]);
 
   useEffect(() => {
     if (layoutMode !== 'adaptive' || !isHydrated) return;
@@ -370,53 +329,30 @@ export function ProductListingClient({
       categoryIds: countryOriginCategoryIds,
     },
   });
-  const [filterFacetsResult] = useQuery<ProductFilterFacetsQueryResponse>({
-    query: PRODUCT_FILTER_FACETS_QUERY,
+  const [brandsResult] = useQuery<ProductBrandsQueryResponse>({
+    query: PRODUCT_BRANDS_QUERY,
     pause: !filterMetadataRequested,
     variables: {
       channel,
+      first: 30,
       categoryIds: countryOriginCategoryIds,
     },
   });
 
   const filterSourceProducts = displayedProducts;
-  const availableAllergens: readonly string[] = ALLERGEN_OPTIONS;
-  const filterFacets = filterFacetsResult.data?.productFilterFacets;
-  const filterAvailabilityKnown = !filterFacetsResult.fetching
-    && !filterFacetsResult.error
-    && filterFacets != null;
-  const filterAvailabilityLoading = filterMetadataRequested && filterFacetsResult.fetching;
-  const filterAvailabilityIncomplete = filterAvailabilityKnown && (
-    !Number.isInteger(Number(filterFacets.totalCount))
-    || Number(filterFacets.totalCount) < 0
-    || !hasCompleteFacetCounts(DIETARY_OPTIONS, filterFacets.dietaryTags)
-    || !hasCompleteFacetCounts(ZONE_OPTIONS, filterFacets.storageZones)
-    || !hasCompleteFacetCounts(CERT_OPTIONS, filterFacets.certifications)
-  );
-  const filterAvailabilityMissing = filterFacetsResult.data !== undefined
-    && filterFacets == null;
-  const filterAvailabilityFailed = filterMetadataRequested
-    && !filterFacetsResult.fetching
-    && (
-      Boolean(filterFacetsResult.error)
-      || filterAvailabilityMissing
-      || filterAvailabilityIncomplete
-    );
-  const availableDietaryTags = useMemo(() => getAvailableFacetOptions(
-    DIETARY_OPTIONS,
-    filterFacets?.dietaryTags,
-    filterAvailabilityKnown,
-  ), [filterAvailabilityKnown, filterFacets?.dietaryTags]);
-  const availableStorageZones = useMemo(() => getAvailableFacetOptions(
-    ZONE_OPTIONS,
-    filterFacets?.storageZones,
-    filterAvailabilityKnown,
-  ), [filterAvailabilityKnown, filterFacets?.storageZones]);
-  const availableCertifications = useMemo(() => getAvailableFacetOptions(
-    CERT_OPTIONS,
-    filterFacets?.certifications,
-    filterAvailabilityKnown,
-  ), [filterAvailabilityKnown, filterFacets?.certifications]);
+  // A backend without `productBrands` answers with a validation error; that
+  // only hides the brand section, every other filter keeps working.
+  const availableBrands = useMemo<FilterChipOption[]>(() => {
+    if (brandsResult.error) return [];
+
+    return (brandsResult.data?.productBrands ?? [])
+      .filter((brand) => brand?.value?.trim())
+      .map((brand) => ({
+        value: brand.value.trim(),
+        label: brand.value.trim(),
+        count: Number(brand.count) || 0,
+      }));
+  }, [brandsResult.data, brandsResult.error]);
   const availableCountryOrigins = useMemo(() => {
     const origins = countryOriginsResult.data?.productCountryOrigins ?? [];
 
@@ -592,25 +528,31 @@ export function ProductListingClient({
     normalizedFilters: ProductFiltersState,
     setFilters: Dispatch<SetStateAction<ProductFiltersState>>,
     onClear: () => void,
-    syncDietaryUrl = false,
+    syncCountryUrl = false,
   ) {
-    const allergenFilterUnavailable = availableAllergens.length === 0;
-    const dietaryFilterUnavailable = availableDietaryTags.length === 0;
-    const zoneFilterUnavailable = availableStorageZones.length === 0;
-    const certificationFilterUnavailable = availableCertifications.length === 0;
     const categoryFilterUnavailable = availableCategories.length === 0;
+    const brandFilterUnavailable = availableBrands.length === 0;
     const countryFilterUnavailable = availableCountryOrigins.length === 0;
     const localActiveFilterCount = countActiveFilters(normalizedFilters);
-    const showOriginCounts = !normalizedSearch
-      && !hasUnsupportedOriginCountScope(normalizedFilters);
-    const unavailableMessage = t('filterUnavailable');
-    const visibleAllergens = allergenFilterUnavailable ? ALLERGEN_OPTIONS : availableAllergens;
-    const visibleDietaryTags = DIETARY_OPTIONS;
-    const visibleStorageZones = ZONE_OPTIONS;
-    const visibleCertifications = CERT_OPTIONS;
+    const showFacetCounts = !normalizedSearch && !hasNarrowedFacetScope(normalizedFilters);
 
     return (
       <>
+        <label
+          className="flex cursor-pointer items-center gap-3 text-sm font-medium"
+          style={{ color: 'var(--color-foreground)' }}
+        >
+          <input
+            type="checkbox"
+            checked={filters.inStockOnly}
+            onChange={(event) => setFilters((prev) => ({ ...prev, inStockOnly: event.target.checked }))}
+            className="h-4 w-4 rounded border"
+            style={{ accentColor: 'var(--color-primary)' }}
+            data-testid="filter-in-stock-only"
+          />
+          {t('inStockOnly')}
+        </label>
+
         {!hasCategoryNavigation && activeCategoryIds.length === 0 && !categoryFilterUnavailable && (
           <fieldset className="space-y-3">
             <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
@@ -644,38 +586,42 @@ export function ProductListingClient({
           </fieldset>
         )}
 
+        {!brandFilterUnavailable && (
+          <FilterChipGroup
+            legend={t('brandFilter')}
+            options={availableBrands}
+            selected={normalizedFilters.brands}
+            onToggle={(brand) => setFilters((prev) => ({
+              ...prev,
+              brands: toggleMultiValue(prev.brands, brand),
+            }))}
+            showCounts={showFacetCounts}
+            initialLimit={8}
+            moreLabel={(hiddenCount) => t('showMoreOptions', { count: hiddenCount })}
+            lessLabel={t('showLessOptions')}
+            testId="filter-brand"
+          />
+        )}
+
         {!countryFilterUnavailable && (
-          <fieldset className="space-y-3">
-            <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-              {t('countryOriginFilter')}
-            </legend>
-            <div className="flex flex-wrap gap-2" role="group">
-              {availableCountryOrigins.map((origin) => (
-                <button
-                  key={origin.value}
-                  type="button"
-                  onClick={() => setFilters((prev) => ({
-                    ...prev,
-                    countryOfOrigin: toggleMultiValue(prev.countryOfOrigin, origin.value),
-                  }))}
-                  className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast"
-                  style={{
-                    borderColor: normalizedFilters.countryOfOrigin.includes(origin.value) ? 'var(--color-primary)' : 'var(--color-border)',
-                    backgroundColor: normalizedFilters.countryOfOrigin.includes(origin.value) ? 'var(--color-accent)' : 'transparent',
-                    color: normalizedFilters.countryOfOrigin.includes(origin.value) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                  }}
-                  aria-pressed={normalizedFilters.countryOfOrigin.includes(origin.value)}
-                >
-                  {origin.label}
-                  {showOriginCounts && (
-                    <span className="ml-1 tabular-nums" aria-hidden="true">
-                      {origin.count}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </fieldset>
+          <FilterChipGroup
+            legend={t('countryOriginFilter')}
+            options={availableCountryOrigins}
+            selected={normalizedFilters.countryOfOrigin}
+            onToggle={(origin) => {
+              const nextCountries = toggleMultiValue(normalizedFilters.countryOfOrigin, origin);
+              setFilters((prev) => ({
+                ...prev,
+                countryOfOrigin: toggleMultiValue(prev.countryOfOrigin, origin),
+              }));
+              if (syncCountryUrl) syncCountryQuery(nextCountries);
+            }}
+            showCounts={showFacetCounts}
+            initialLimit={6}
+            moreLabel={(hiddenCount) => t('showMoreOptions', { count: hiddenCount })}
+            lessLabel={t('showLessOptions')}
+            testId="filter-country"
+          />
         )}
 
         <fieldset className="space-y-3">
@@ -709,143 +655,11 @@ export function ProductListingClient({
           </div>
         </fieldset>
 
-        <div className="space-y-3">
-          <AllergenFilter
-            selected={filters.excludeAllergens}
-            onChange={(nextAllergens) => setFilters((prev) => ({
-              ...prev,
-              excludeAllergens: nextAllergens.map(normalizeAllergenCode),
-            }))}
-            options={visibleAllergens}
-            disabled={allergenFilterUnavailable}
-          />
-          {filters.excludeAllergens.length > 0 && (
-            <p
-              className="text-xs leading-relaxed"
-              style={{ color: 'var(--color-muted-foreground)' }}
-              data-testid="allergen-filter-catalog-notice"
-              role="note"
-            >
-              {t('allergenFilterCatalogNotice')}
-            </p>
-          )}
-        </div>
-
-        {(filterAvailabilityLoading || filterAvailabilityFailed) && (
-          <p
-            className="text-xs"
-            style={{ color: 'var(--color-muted-foreground)' }}
-            role="status"
-          >
-            {t(filterAvailabilityFailed
-              ? 'filterAvailabilityError'
-              : 'filterAvailabilityLoading')}
+        {categoryFilterUnavailable && brandFilterUnavailable && countryFilterUnavailable && (
+          <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+            {t('filterUnavailable')}
           </p>
         )}
-
-        <fieldset className="space-y-3">
-          <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-            {t('dietaryFilter')}
-          </legend>
-          <div className="flex flex-wrap gap-2" role="group">
-            {visibleDietaryTags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => {
-                  const nextDietaryTags = toggleMultiValue(normalizedFilters.dietaryTags, tag);
-                  setFilters((prev) => ({
-                    ...prev,
-                    dietaryTags: nextDietaryTags,
-                  }));
-                  if (syncDietaryUrl) pushDietaryQuery(nextDietaryTags);
-                }}
-                disabled={
-                  !availableDietaryTags.includes(tag)
-                  && !normalizedFilters.dietaryTags.includes(tag)
-                }
-                className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
-                style={{
-                  borderColor: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-primary)' : 'var(--color-border)',
-                  backgroundColor: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-accent)' : 'transparent',
-                  color: normalizedFilters.dietaryTags.includes(tag) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                }}
-                aria-pressed={normalizedFilters.dietaryTags.includes(tag)}
-              >
-                {t(tag as any)}
-              </button>
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset className="space-y-3">
-          <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-            {t('zoneFilter')}
-          </legend>
-          <div className="flex flex-wrap gap-2" role="group">
-            {visibleStorageZones.map((zone) => (
-              <button
-                key={zone}
-                type="button"
-                onClick={() => setFilters((prev) => ({
-                  ...prev,
-                  storageZone: prev.storageZone === zone ? '' : zone,
-                }))}
-                disabled={
-                  !availableStorageZones.includes(zone)
-                  && normalizedFilters.storageZone !== zone
-                }
-                className={`rounded-full px-3 py-1.5 text-xs font-medium text-white transition-opacity duration-fast disabled:cursor-not-allowed disabled:opacity-35 ${normalizedFilters.storageZone === zone ? 'opacity-100' : 'opacity-55 hover:opacity-80'}`}
-                style={{ backgroundColor: `var(--color-${zone.toLowerCase()})` }}
-                aria-pressed={normalizedFilters.storageZone === zone}
-              >
-                {tHome(zone.toLowerCase() as any)}
-              </button>
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset className="space-y-3">
-          <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-            {t('certFilter')}
-          </legend>
-          <div className="flex flex-wrap gap-2" role="group">
-            {visibleCertifications.map((certification) => (
-              <button
-                key={certification}
-                type="button"
-                onClick={() => setFilters((prev) => ({
-                  ...prev,
-                  certifications: toggleMultiValue(prev.certifications, certification),
-                }))}
-                disabled={
-                  !availableCertifications.includes(certification)
-                  && !normalizedFilters.certifications.includes(certification)
-                }
-                className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50"
-                style={{
-                  borderColor: normalizedFilters.certifications.includes(certification) ? 'var(--color-primary)' : 'var(--color-border)',
-                  backgroundColor: normalizedFilters.certifications.includes(certification) ? 'var(--color-accent)' : 'transparent',
-                  color: normalizedFilters.certifications.includes(certification) ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                }}
-                aria-pressed={normalizedFilters.certifications.includes(certification)}
-              >
-                {t(certification as any)}
-              </button>
-            ))}
-          </div>
-        </fieldset>
-
-        {categoryFilterUnavailable
-          && allergenFilterUnavailable
-          && dietaryFilterUnavailable
-          && zoneFilterUnavailable
-          && countryFilterUnavailable
-          && certificationFilterUnavailable && (
-            <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-              {unavailableMessage}
-            </p>
-          )}
 
         {localActiveFilterCount > 0 && (
           <button
@@ -865,7 +679,7 @@ export function ProductListingClient({
   function buildListingUrl(
     nextSort: string,
     nextSearch: string,
-    nextDietaryTags?: string[],
+    nextCountries?: string[],
   ) {
     const params = new URLSearchParams(searchParams.toString());
     const trimmedSearch = nextSearch.trim();
@@ -883,24 +697,25 @@ export function ProductListingClient({
       params.delete('search');
     }
 
-    if (nextDietaryTags) {
-      setDietaryQueryParams(params, nextDietaryTags);
+    if (nextCountries) {
+      setCountryQueryParams(params, nextCountries);
     }
 
     const nextParams = params.toString();
     return `${basePath}${nextParams ? `?${nextParams}` : ''}`;
   }
 
-  function pushDietaryQuery(nextDietaryTags: string[]) {
-    setInitialListingReusable(false);
+  // Keep `?country=` truthful after the user changes the country filter, so a
+  // reload or a shared link reproduces what is on screen.
+  function syncCountryQuery(nextCountries: string[]) {
     const currentParams = window.location.search.replace(/^\?/, '');
     const params = new URLSearchParams(currentParams);
-    setDietaryQueryParams(params, nextDietaryTags);
+    setCountryQueryParams(params, nextCountries);
     const nextParams = params.toString();
     const nextUrl = `${window.location.pathname}${nextParams ? `?${nextParams}` : ''}${window.location.hash}`;
 
     if (nextParams !== currentParams) {
-      window.history.pushState(null, '', nextUrl);
+      window.history.replaceState(null, '', nextUrl);
     }
   }
 
@@ -1130,7 +945,7 @@ export function ProductListingClient({
 
   function clearCommittedFilters() {
     setCommittedFilters(DEFAULT_FILTERS);
-    pushDietaryQuery([]);
+    syncCountryQuery([]);
   }
 
   function clearAllDiscovery() {
@@ -1154,7 +969,7 @@ export function ProductListingClient({
     }
 
     setCommittedFilters(normalizedDraftFilters);
-    pushDietaryQuery(normalizedDraftFilters.dietaryTags);
+    syncCountryQuery(normalizedDraftFilters.countryOfOrigin);
     setFiltersOpen(false);
   }
 
@@ -1204,30 +1019,22 @@ export function ProductListingClient({
       });
     }
 
-    for (const allergen of normalizedCommittedFilters.excludeAllergens) {
-      const label = t('withoutFilter', { value: tAllergens(allergen as any) });
+    if (normalizedCommittedFilters.inStockOnly) {
       chips.push({
-        key: `allergen-${allergen}`,
-        label,
-        onRemove: () => setCommittedFilters((prev) => ({
-          ...prev,
-          excludeAllergens: prev.excludeAllergens.filter((allergenValue) => allergenValue !== allergen),
-        })),
+        key: 'in-stock',
+        label: t('inStockOnly'),
+        onRemove: () => setCommittedFilters((prev) => ({ ...prev, inStockOnly: false })),
       });
     }
 
-    for (const tag of normalizedCommittedFilters.dietaryTags) {
-      const nextDietaryTags = normalizedCommittedFilters.dietaryTags.filter((tagValue) => tagValue !== tag);
+    for (const brand of normalizedCommittedFilters.brands) {
       chips.push({
-        key: `dietary-${tag}`,
-        label: t(tag as any),
-        onRemove: () => {
-          setCommittedFilters((prev) => ({
-            ...prev,
-            dietaryTags: nextDietaryTags,
-          }));
-          pushDietaryQuery(nextDietaryTags);
-        },
+        key: `brand-${brand}`,
+        label: brand,
+        onRemove: () => setCommittedFilters((prev) => ({
+          ...prev,
+          brands: prev.brands.filter((brandValue) => brandValue !== brand),
+        })),
       });
     }
 
@@ -1245,24 +1052,17 @@ export function ProductListingClient({
 
     for (const origin of normalizedCommittedFilters.countryOfOrigin) {
       const label = countryOriginByValue.get(origin) ?? origin;
+      const nextCountries = normalizedCommittedFilters.countryOfOrigin.filter((countryValue) => countryValue !== origin);
       chips.push({
         key: `origin-${origin}`,
         label,
-        onRemove: () => setCommittedFilters((prev) => ({
-          ...prev,
-          countryOfOrigin: prev.countryOfOrigin.filter((countryValue) => countryValue !== origin),
-        })),
-      });
-    }
-
-    for (const certification of normalizedCommittedFilters.certifications) {
-      chips.push({
-        key: `certification-${certification}`,
-        label: t(certification as any),
-        onRemove: () => setCommittedFilters((prev) => ({
-          ...prev,
-          certifications: prev.certifications.filter((certificationValue) => certificationValue !== certification),
-        })),
+        onRemove: () => {
+          setCommittedFilters((prev) => ({
+            ...prev,
+            countryOfOrigin: prev.countryOfOrigin.filter((countryValue) => countryValue !== origin),
+          }));
+          syncCountryQuery(nextCountries);
+        },
       });
     }
 

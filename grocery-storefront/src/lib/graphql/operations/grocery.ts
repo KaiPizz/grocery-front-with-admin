@@ -170,19 +170,14 @@ export const PRODUCT_LISTING_QUERY = `
   }
 `;
 
-// Resolve the known finite filters in one backend aggregate instead of
-// treating a bounded product page as exhaustive or invoking the full products
-// resolver once per option.
-export const PRODUCT_FILTER_FACETS_QUERY = `
-  query ProductFilterFacets(
-    $channel: String!
-    $categoryIds: [ID!]
-  ) {
-    productFilterFacets(channel: $channel, categoryIds: $categoryIds) {
-      totalCount
-      dietaryTags { value count }
-      storageZones { value count }
-      certifications { value count }
+// Top brands by product count for the "brand" filter. Its own operation on
+// purpose: a backend that does not know the field yet fails only this query,
+// and the listing hides the brand section instead of losing every filter.
+export const PRODUCT_BRANDS_QUERY = `
+  query ProductBrands($channel: String!, $first: Int, $categoryIds: [ID!]) {
+    productBrands(channel: $channel, first: $first, categoryIds: $categoryIds) {
+      value
+      count
     }
   }
 `;

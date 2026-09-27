@@ -1,8 +1,5 @@
 import type { GroceryProduct, StorageZone } from '@/types';
 
-export const ALLERGEN_OPTIONS = ['cereals', 'crustaceans', 'eggs', 'fish', 'peanuts', 'soybeans', 'milk', 'nuts', 'celery', 'mustard', 'sesame', 'sulphites', 'lupin', 'molluscs'] as const;
-export const DIETARY_OPTIONS = ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'sugar-free'] as const;
-export const CERT_OPTIONS = ['organic', 'halal', 'kosher'] as const;
 export const ZONE_OPTIONS: StorageZone[] = ['FROZEN', 'CHILLED', 'AMBIENT'];
 
 type SearchParamsReader = Pick<URLSearchParams, 'getAll'>;
@@ -12,68 +9,56 @@ const ALLERGEN_ALIASES: Record<string, string> = {
   tree_nuts: 'nuts',
 };
 
-const ALLERGEN_QUERY_EQUIVALENTS: Record<string, string[]> = {
-  cereals: ['cereals', 'gluten'],
-  nuts: ['nuts', 'tree_nuts'],
-};
-
+// Wave 1 (27/09/2026): the listing filters are category, brand, country of
+// origin, storage zone (reachable only through `?zone=` links), in-stock and
+// price. Allergen, dietary and certification filters were removed — the
+// catalog carries no certification data and dietary tags on ~5% of products,
+// so those filters silently dropped most of the range.
 export interface ProductFiltersState {
   categoryIds: string[];
-  excludeAllergens: string[];
-  dietaryTags: string[];
-  certifications: string[];
+  brands: string[];
   countryOfOrigin: string[];
   storageZone: StorageZone | '';
+  inStockOnly: boolean;
   priceMin: string;
   priceMax: string;
 }
 
 export const DEFAULT_FILTERS: ProductFiltersState = {
   categoryIds: [],
-  excludeAllergens: [],
-  dietaryTags: [],
-  certifications: [],
+  brands: [],
   countryOfOrigin: [],
   storageZone: '',
+  inStockOnly: false,
   priceMin: '',
   priceMax: '',
 };
 
-export function parseDietaryQueryParams(searchParams: SearchParamsReader) {
-  const requestedTags = new Set(
+/**
+ * `?country=Japonia&country=Chiny` or `?country=Japonia,Chiny`. Values are the
+ * Polish country names stored in `products.country_of_origin`, matched as-is.
+ */
+export function parseCountryQueryParams(searchParams: SearchParamsReader) {
+  return Array.from(new Set(
     searchParams
-      .getAll('dietary')
+      .getAll('country')
       .flatMap((value) => value.split(','))
-      .map((value) => value.trim().toLowerCase())
+      .map((value) => value.trim())
       .filter(Boolean),
-  );
-
-  return DIETARY_OPTIONS.filter((tag) => requestedTags.has(tag));
+  ));
 }
 
-export function setDietaryQueryParams(searchParams: URLSearchParams, dietaryTags: string[]) {
-  const requestedTags = new Set(
-    dietaryTags
-      .map((value) => value.trim().toLowerCase())
-      .filter(Boolean),
-  );
-  const normalizedTags = DIETARY_OPTIONS.filter((tag) => requestedTags.has(tag));
+export function setCountryQueryParams(searchParams: URLSearchParams, countries: string[]) {
+  const normalizedCountries = Array.from(new Set(countries.map((value) => value.trim()).filter(Boolean)));
 
-  searchParams.delete('dietary');
-  for (const tag of normalizedTags) {
-    searchParams.append('dietary', tag);
+  searchParams.delete('country');
+  for (const country of normalizedCountries) {
+    searchParams.append('country', country);
   }
 }
 
 export function normalizeAllergenCode(code: string) {
   return ALLERGEN_ALIASES[code] ?? code;
-}
-
-export function expandAllergenFilterCodes(codes: string[]) {
-  return Array.from(new Set(codes.flatMap((code) => {
-    const normalizedCode = normalizeAllergenCode(code);
-    return ALLERGEN_QUERY_EQUIVALENTS[normalizedCode] ?? [normalizedCode];
-  })));
 }
 
 export function parsePriceInput(value: string) {
@@ -122,11 +107,10 @@ export function normalizeFiltersState(
 
   return {
     categoryIds: Array.from(new Set(filters.categoryIds.filter(Boolean))),
-    excludeAllergens: Array.from(new Set(filters.excludeAllergens.map(normalizeAllergenCode).filter(Boolean))),
-    dietaryTags: Array.from(new Set(filters.dietaryTags.filter(Boolean))),
-    certifications: Array.from(new Set(filters.certifications.filter(Boolean))),
+    brands: Array.from(new Set(filters.brands.map((brand) => brand.trim()).filter(Boolean))),
     countryOfOrigin: Array.from(new Set(filters.countryOfOrigin.map((country) => country.trim()).filter(Boolean))),
     storageZone: filters.storageZone,
+    inStockOnly: Boolean(filters.inStockOnly),
     priceMin: formatPriceInput(minPrice),
     priceMax: formatPriceInput(maxPrice),
   };
@@ -135,30 +119,27 @@ export function normalizeFiltersState(
 export function countActiveFilters(filters: ProductFiltersState) {
   return (
     filters.categoryIds.length
-    + filters.excludeAllergens.length
-    + filters.dietaryTags.length
-    + filters.certifications.length
+    + filters.brands.length
     + filters.countryOfOrigin.length
     + (filters.storageZone ? 1 : 0)
+    + (filters.inStockOnly ? 1 : 0)
     + (filters.priceMin || filters.priceMax ? 1 : 0)
   );
+}
+
+function sameList(left: string[], right: string[]) {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
 export function areFiltersEqual(left: ProductFiltersState, right: ProductFiltersState) {
   return (
     left.storageZone === right.storageZone
+    && left.inStockOnly === right.inStockOnly
     && left.priceMin === right.priceMin
     && left.priceMax === right.priceMax
-    && left.categoryIds.length === right.categoryIds.length
-    && left.categoryIds.every((value, index) => value === right.categoryIds[index])
-    && left.excludeAllergens.length === right.excludeAllergens.length
-    && left.excludeAllergens.every((value, index) => value === right.excludeAllergens[index])
-    && left.dietaryTags.length === right.dietaryTags.length
-    && left.dietaryTags.every((value, index) => value === right.dietaryTags[index])
-    && left.certifications.length === right.certifications.length
-    && left.certifications.every((value, index) => value === right.certifications[index])
-    && left.countryOfOrigin.length === right.countryOfOrigin.length
-    && left.countryOfOrigin.every((value, index) => value === right.countryOfOrigin[index])
+    && sameList(left.categoryIds, right.categoryIds)
+    && sameList(left.brands, right.brands)
+    && sameList(left.countryOfOrigin, right.countryOfOrigin)
   );
 }
 
@@ -175,13 +156,10 @@ export function buildProductFilter(
   } else if (filters.categoryIds.length > 0) {
     nextFilter.categories = filters.categoryIds;
   }
-  if (filters.excludeAllergens.length > 0) {
-    nextFilter.excludeAllergens = expandAllergenFilterCodes(filters.excludeAllergens);
-  }
-  if (filters.dietaryTags.length > 0) nextFilter.dietaryTags = filters.dietaryTags;
-  if (filters.certifications.length > 0) nextFilter.certifications = filters.certifications;
+  if (filters.brands.length > 0) nextFilter.brands = filters.brands;
   if (filters.countryOfOrigin.length > 0) nextFilter.countryOfOrigin = filters.countryOfOrigin;
   if (filters.storageZone) nextFilter.storageZone = filters.storageZone;
+  if (filters.inStockOnly) nextFilter.stockAvailability = 'IN_STOCK';
 
   const minimumPrice = parsePriceInput(filters.priceMin);
   const maximumPrice = parsePriceInput(filters.priceMax);
@@ -202,35 +180,6 @@ export function toggleMultiValue(values: string[], value: string) {
   return values.includes(value)
     ? values.filter((entry) => entry !== value)
     : [...values, value];
-}
-
-export function extractProductCertifications(product: GroceryProduct & Record<string, any>) {
-  const certifications = new Set<string>();
-  const directCertifications = Array.isArray(product?.certifications)
-    ? product.certifications.map((value: string) => String(value).toLowerCase())
-    : [];
-  const attributes = Array.isArray(product?.attributes) ? product.attributes : [];
-
-  for (const certification of directCertifications) {
-    if ((CERT_OPTIONS as readonly string[]).includes(certification)) {
-      certifications.add(certification);
-    }
-  }
-
-  for (const attribute of attributes) {
-    const slug = String(attribute?.attribute?.slug ?? '').toLowerCase();
-    const values = Array.isArray(attribute?.values)
-      ? attribute.values.map((value: any) => String(value?.value ?? value?.name ?? '').toLowerCase())
-      : [];
-
-    for (const certification of CERT_OPTIONS) {
-      if (slug.includes(certification) || values.includes(certification)) {
-        certifications.add(certification);
-      }
-    }
-  }
-
-  return Array.from(certifications);
 }
 
 export function getProductPrice(product: GroceryProduct & Record<string, any>) {

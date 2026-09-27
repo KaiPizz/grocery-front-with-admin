@@ -4,8 +4,13 @@ import { mockMobileStorefront } from './mobile-fixtures';
 
 const PRODUCT_FILTER_METADATA_OPERATIONS = [
   'ProductCountryOrigins',
-  'ProductFilterFacets',
+  'ProductBrands',
 ];
+
+function hasPolandCountryFilter(variables: Record<string, any>) {
+  const countries = (variables.filter as Record<string, any> | undefined)?.countryOfOrigin;
+  return Array.isArray(countries) && countries.includes('Poland');
+}
 
 async function openFilters(page: Page, panel: Locator) {
   const trigger = page.getByRole('button', { name: /^filters(?:,.*)?$/i });
@@ -60,14 +65,14 @@ test.describe('mobile products page', () => {
     await expect.poll(() => operations.includes('PublicCategoryNavigation')).toBe(true);
     expect(operationQueries.get('PublicCategoryNavigation')).not.toMatch(/\bproducts\s*\(/);
     expect(operations).not.toContain('ProductCountryOrigins');
-    expect(operations).not.toContain('ProductFilterFacets');
+    expect(operations).not.toContain('ProductBrands');
     await expect(page.getByTestId('product-card')).toHaveCount(0);
 
     releaseListing();
 
     await expect(page.getByTestId('product-card')).toHaveCount(4);
     await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
-    await expect.poll(() => operations.includes('ProductFilterFacets')).toBe(true);
+    await expect.poll(() => operations.includes('ProductBrands')).toBe(true);
     expect(metadataStartedBeforeListingResponse).toBe(false);
   });
 
@@ -96,38 +101,13 @@ test.describe('mobile products page', () => {
       requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
     }));
     expect(operations).not.toContain('ProductCountryOrigins');
-    expect(operations).not.toContain('ProductFilterFacets');
+    expect(operations).not.toContain('ProductBrands');
     expect(metadataStartedBeforeUserIntent).toBe(false);
 
     userOpenedFilters = true;
     await page.getByRole('button', { name: /filters/i }).click();
     await expect.poll(() => operations.includes('ProductCountryOrigins')).toBe(true);
-    await expect.poll(() => operations.includes('ProductFilterFacets')).toBe(true);
-  });
-
-  test('excludes both legacy and canonical tree-nut allergen codes', async ({ page }) => {
-    const productQueries: Array<Record<string, any>> = [];
-
-    await mockMobileStorefront(page, {
-      onProductsQuery: (variables) => {
-        productQueries.push(JSON.parse(JSON.stringify(variables)));
-      },
-    });
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/products');
-
-    const filterPanel = page.getByRole('region', { name: /^filters$/i });
-    const treeNutsButton = filterPanel.getByRole('button', { name: /tree nuts/i });
-    await expect(treeNutsButton).toBeEnabled();
-    await treeNutsButton.click();
-
-    await expect.poll(() => productQueries.some((variables) => {
-      const allergens = (variables.filter as Record<string, any> | undefined)?.excludeAllergens;
-      return Array.isArray(allergens)
-        && allergens.includes('nuts')
-        && allergens.includes('tree_nuts');
-    })).toBe(true);
-    await expect(page.getByRole('link', { name: /organic gala apples/i })).toHaveCount(0);
+    await expect.poll(() => operations.includes('ProductBrands')).toBe(true);
   });
 
   test('replaces stale products with an error when a filtered listing request fails', async ({ page }) => {
@@ -137,26 +117,12 @@ test.describe('mobile products page', () => {
 
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
     await expect(page.getByTestId('product-card')).toHaveCount(4);
-    await filterPanel.getByRole('button', { name: /^wegańskie$/i }).click();
+    await filterPanel.getByRole('button', { name: 'Samyang', exact: true }).click();
 
     await expect(page.getByRole('button', { name: /^spróbuj ponownie$/i })).toBeVisible();
     await expect(page.getByTestId('product-card')).toHaveCount(0);
     await expect(page.getByTestId('product-pagination')).toHaveCount(0);
     await expect(page.getByTestId('mobile-products-title-count')).toHaveCount(0);
-  });
-
-  test('localizes Polish allergen exclusion actions for assistive technology', async ({ page }) => {
-    await mockMobileStorefront(page);
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/pl/products');
-
-    const filterPanel = page.getByRole('region', { name: /^filtry$/i });
-    const nutsButton = filterPanel.getByRole('button', { name: /^wyklucz orzechy$/i });
-    await expect(nutsButton).toBeEnabled();
-    await nutsButton.click();
-    await expect(filterPanel.getByRole('button', {
-      name: /^usuń wykluczenie orzechy$/i,
-    })).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('never presents cursor-unknown page numbers as disabled navigation choices', async ({ page }) => {
@@ -220,8 +186,8 @@ test.describe('mobile products page', () => {
           return;
         }
 
-        const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
-        if (Array.isArray(dietaryTags) && dietaryTags.includes('vegan')) {
+        const brands = (variables.filter as Record<string, any> | undefined)?.brands;
+        if (Array.isArray(brands) && brands.includes('Samyang')) {
           holdFilteredListingResponse = true;
           notifyFilteredPageOneRequested();
         }
@@ -246,7 +212,7 @@ test.describe('mobile products page', () => {
     await pageTwoRequested;
 
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
-    await filterPanel.getByRole('button', { name: /^wegańskie$/i }).click();
+    await filterPanel.getByRole('button', { name: 'Samyang', exact: true }).click();
     await filteredPageOneRequested;
     await expect(pagination.getByRole('button', { name: 'Następna', exact: true })).toBeDisabled();
 
@@ -324,8 +290,7 @@ test.describe('mobile products page', () => {
     await expect(firstTitle).toBeVisible();
     await expect(addButton).toBeVisible();
     await expect(firstCard.getByTestId('mobile-product-card-stepper')).toHaveCount(0);
-    await expect(firstCard.getByTestId('mobile-product-card-scan-facts')).toContainText(/fruit/i);
-    await expect(firstCard.getByTestId('mobile-product-card-scan-facts')).toContainText(/poland/i);
+    await expect(firstCard.getByTestId('mobile-product-card-scan-facts')).toHaveCount(0);
     await expect(firstCard.getByTestId('mobile-product-card-availability')).toContainText(/in stock/i);
     await expect(firstCard).not.toContainText(/soybeans|milk|nutrition/i);
 
@@ -408,34 +373,31 @@ test.describe('mobile products page', () => {
     await expect(page.getByTestId('product-card').first()).toBeVisible();
   });
 
-  test('keeps preset filter groups visible on desktop even when catalog metadata is empty', async ({ page }) => {
-    await mockMobileStorefront(page, { facets: 'empty' });
+  test('keeps the lean filter groups visible on desktop even when catalog metadata is empty', async ({ page }) => {
+    await mockMobileStorefront(page, { facets: 'empty', brands: 'empty' });
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/en/products');
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
 
     await expect(filterPanel).toBeVisible();
-    await expect(filterPanel.getByText(/exclude allergens/i)).toBeVisible();
-    await expect(filterPanel.getByText(/dietary preferences/i)).toBeVisible();
-    await expect(filterPanel.getByText(/storage zone/i)).toBeVisible();
-    await expect(filterPanel.getByText(/certifications/i)).toBeVisible();
-    await expect(filterPanel.getByText(/price range/i)).toBeVisible();
-    await expect(filterPanel.getByRole('button', { name: /vegan/i })).toBeDisabled();
-    await expect(filterPanel.getByRole('button', { name: /ambient/i })).toBeDisabled();
-    await expect(filterPanel.getByRole('button', { name: /organic/i })).toBeDisabled();
+    await expect(filterPanel.getByTestId('filter-in-stock-only')).toBeVisible();
+    await expect(filterPanel.getByText(/^country of origin$/i)).toBeVisible();
+    await expect(filterPanel.getByText(/^price range$/i)).toBeVisible();
+    await expect(filterPanel.getByTestId('filter-brand')).toHaveCount(0);
+    await expect(filterPanel.getByText(/exclude allergens|dietary preferences|storage zone|certifications/i)).toHaveCount(0);
   });
 
-  test('keeps finite filters usable while the exact facet aggregate is pending', async ({ page }) => {
-    let releaseFilterFacets!: () => void;
-    const filterFacetsGate = new Promise<void>((resolve) => {
-      releaseFilterFacets = resolve;
+  test('keeps country and price usable while the brand facet is pending', async ({ page }) => {
+    let releaseBrands!: () => void;
+    const brandsGate = new Promise<void>((resolve) => {
+      releaseBrands = resolve;
     });
     const productQueries: Array<Record<string, any>> = [];
 
     await mockMobileStorefront(page, {
-      beforeProductFilterFacetsResponse: async () => {
-        await filterFacetsGate;
+      beforeProductBrandsResponse: async () => {
+        await brandsGate;
       },
       onProductsQuery: (variables) => {
         productQueries.push(JSON.parse(JSON.stringify(variables)));
@@ -447,126 +409,26 @@ test.describe('mobile products page', () => {
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
     await expect(filterPanel).toBeVisible();
 
-    const glutenFreeButton = filterPanel.getByRole('button', { name: /bez glutenu/i });
-    const vegetarianButton = filterPanel.getByRole('button', { name: /wegetariańskie/i });
-    await expect(glutenFreeButton).toBeEnabled();
-    await expect(vegetarianButton).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /bez laktozy/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /bez cukru/i })).toBeEnabled();
+    const polandButton = filterPanel.getByRole('button', { name: /^poland$/i });
+    await expect(polandButton).toBeEnabled();
+    await expect(filterPanel.getByTestId('filter-brand')).toHaveCount(0);
 
-    releaseFilterFacets();
-
-    await expect(glutenFreeButton).toBeEnabled();
-    await expect(vegetarianButton).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /bez laktozy/i })).toBeDisabled();
-    await expect(filterPanel.getByRole('button', { name: /bez cukru/i })).toBeDisabled();
-
-    await glutenFreeButton.click();
-    await expect.poll(() => productQueries.some((variables) => {
-      const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
-      return Array.isArray(dietaryTags) && dietaryTags.includes('gluten-free');
-    })).toBe(true);
-
-    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
-    await glutenFreeButton.click();
-    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'false');
-    await expect.poll(() => new URL(page.url()).pathname).toBe('/products');
-    await expect(page.getByTestId('product-card')).toHaveCount(4);
-  });
-
-  test('uses exact aggregate availability without inventing sampled price bounds', async ({ page }) => {
-    const operations: string[] = [];
-    const productQueries: Array<Record<string, any>> = [];
-
-    await mockMobileStorefront(page, {
-      onGraphqlOperation: (operationName) => operations.push(operationName),
-      onProductsQuery: (variables) => {
-        productQueries.push(JSON.parse(JSON.stringify(variables)));
-      },
-    });
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/pl/products');
-
-    const filterPanel = page.getByRole('region', { name: /^filtry$/i });
-    await expect.poll(() => operations.includes('ProductFilterFacets')).toBe(true);
-
-    await expect(filterPanel.getByRole('button', { name: /^mrożone$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^chłodzone$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^ekologiczne$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^halal$/i })).toBeDisabled();
-    await expect(filterPanel.getByRole('button', { name: /^koszerne$/i })).toBeDisabled();
-    await expect(filterPanel.getByText(/dostępny zakres:/i)).toHaveCount(0);
+    await polandButton.click();
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => productQueries.some(hasPolandCountryFilter)).toBe(true);
 
     await filterPanel.getByLabel(/cena minimalna/i).fill('999');
     await expect.poll(() => productQueries.some((variables) => {
       const filter = variables.filter as Record<string, any> | undefined;
       return filter?.price?.gte === 999;
     })).toBe(true);
-  });
+    await expect(filterPanel.getByText(/dostępny zakres:/i)).toHaveCount(0);
 
-  test('keeps finite filters usable when secondary metadata requests fail', async ({ page }) => {
-    await mockMobileStorefront(page, {
-      filterAvailability: 'error',
-    });
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/products');
+    releaseBrands();
 
-    const filterPanel = page.getByRole('region', { name: /^filters$/i });
-    await expect(filterPanel.getByRole('button', { name: /mustard/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^frozen$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^sugar free$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^organic$/i })).toBeEnabled();
-    await expect(filterPanel.getByText(/filter availability could not be checked/i)).toBeVisible();
-    await expect(filterPanel.getByText(/available range:/i)).toHaveCount(0);
-  });
-
-  test('fails open only the individual facet values omitted by a partial aggregate', async ({ page }) => {
-    await mockMobileStorefront(page, { filterAvailability: 'partial' });
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/products');
-
-    const filterPanel = page.getByRole('region', { name: /^filters$/i });
-    await expect(filterPanel.getByRole('button', { name: /^frozen$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^chilled$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^halal$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^kosher$/i })).toBeDisabled();
-    await expect(filterPanel.getByText(/filter availability could not be checked/i)).toBeVisible();
-  });
-
-  test('warns and fails open when the facet aggregate returns null without an error', async ({ page }) => {
-    await mockMobileStorefront(page, { filterAvailability: 'null' });
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/products');
-
-    const filterPanel = page.getByRole('region', { name: /^filters$/i });
-    await expect(filterPanel.getByRole('button', { name: /^frozen$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^sugar free$/i })).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^organic$/i })).toBeEnabled();
-    await expect(filterPanel.getByText(/filter availability could not be checked/i)).toBeVisible();
-  });
-
-  test('keeps a selected zero-count storage zone available to toggle off', async ({ page }) => {
-    const productQueries: Array<Record<string, any>> = [];
-    await mockMobileStorefront(page, {
-      facets: 'empty',
-      onProductsQuery: (variables) => {
-        productQueries.push(JSON.parse(JSON.stringify(variables)));
-      },
-    });
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/products?zone=FROZEN');
-
-    const filterPanel = page.getByRole('region', { name: /^filters$/i });
-    const frozen = filterPanel.getByRole('button', { name: /^frozen$/i });
-    await expect(frozen).toHaveAttribute('aria-pressed', 'true');
-    await expect(frozen).toBeEnabled();
-    await expect(filterPanel.getByRole('button', { name: /^ambient$/i })).toBeDisabled();
-
-    await frozen.click();
-    await expect(frozen).toHaveAttribute('aria-pressed', 'false');
-    await expect.poll(() => productQueries.some((variables) => (
-      !(variables.filter as Record<string, any> | undefined)?.storageZone
-    ))).toBe(true);
+    await expect(filterPanel.getByRole('button', { name: 'Samyang', exact: true })).toBeEnabled();
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(filterPanel.getByLabel(/cena minimalna/i)).toHaveValue('999');
   });
 
   test('omits global origin counts when the listing is scoped by search', async ({ page }) => {
@@ -593,7 +455,7 @@ test.describe('mobile products page', () => {
     await expect(polandOrigin).toHaveText(/^Poland$/);
   });
 
-  test('restores dietary deep links and keeps the URL in sync with desktop filters', async ({ page }) => {
+  test('restores country deep links and keeps the URL in sync with desktop filters', async ({ page }) => {
     const productQueries: Array<Record<string, any>> = [];
 
     await mockMobileStorefront(page, {
@@ -602,80 +464,66 @@ test.describe('mobile products page', () => {
       },
     });
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/products?ref=campaign&dietary=vegetarian');
+    await page.goto('/en/products?ref=campaign&country=Poland');
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
-    const vegetarianButton = filterPanel.getByRole('button', { name: /^vegetarian$/i });
-    const glutenFreeButton = filterPanel.getByRole('button', { name: /^gluten free$/i });
+    const polandButton = filterPanel.getByRole('button', { name: /^poland$/i });
 
-    await expect(vegetarianButton).toBeEnabled();
-    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'true');
-    await expect.poll(() => productQueries.some((variables) => {
-      const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
-      return Array.isArray(dietaryTags)
-        && dietaryTags.length === 1
-        && dietaryTags[0] === 'vegetarian';
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'true');
+    expect(productQueries.length).toBeGreaterThan(0);
+    // The very first listing request is already scoped; nothing flashes the full catalog first.
+    expect(productQueries.every((variables) => {
+      const countries = (variables.filter as Record<string, any> | undefined)?.countryOfOrigin;
+      return Array.isArray(countries) && countries.length === 1 && countries[0] === 'Poland';
     })).toBe(true);
 
-    await glutenFreeButton.click();
-    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
+    await polandButton.click();
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'false');
     await expect.poll(() => {
       const url = new URL(page.url());
       return {
         pathname: url.pathname,
         ref: url.searchParams.get('ref'),
-        dietary: url.searchParams.getAll('dietary'),
+        country: url.searchParams.getAll('country'),
       };
     }).toEqual({
       pathname: '/en/products',
       ref: 'campaign',
-      dietary: ['vegetarian', 'gluten-free'],
+      country: [],
     });
+    await expect.poll(() => productQueries.some((variables) => {
+      const countries = (variables.filter as Record<string, any> | undefined)?.countryOfOrigin;
+      return !Array.isArray(countries) || countries.length === 0;
+    })).toBe(true);
 
-    await vegetarianButton.click();
-    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'false');
-    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual(['gluten-free']);
+    await polandButton.click();
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => new URL(page.url()).searchParams.getAll('country')).toEqual(['Poland']);
 
     const filterSummary = page.getByTestId('product-filter-summary');
-    await filterSummary.getByRole('button', { name: /remove gluten free filter/i }).click();
+    await filterSummary.getByRole('button', { name: /remove Poland filter/i }).click();
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'false');
     await expect.poll(() => {
       const url = new URL(page.url());
       return {
         ref: url.searchParams.get('ref'),
-        dietary: url.searchParams.get('dietary'),
+        country: url.searchParams.get('country'),
       };
-    }).toEqual({ ref: 'campaign', dietary: null });
-
-    await page.goBack();
-    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
-    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'false');
-    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual(['gluten-free']);
-
-    await page.goBack();
-    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'true');
-    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
-    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual([
-      'vegetarian',
-      'gluten-free',
-    ]);
-
-    await page.goForward();
-    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'false');
-    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'true');
+    }).toEqual({ ref: 'campaign', country: null });
   });
 
-  test('clears search and dietary discovery state in one URL update', async ({ page }) => {
+  test('clears search and country discovery state in one URL update', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/products?ref=campaign&search=kimchi&dietary=vegetarian');
+    await page.goto('/en/products?ref=campaign&search=kimchi&country=Poland');
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
-    const vegetarianButton = filterPanel.getByRole('button', { name: /^vegetarian$/i });
+    const polandButton = filterPanel.getByRole('button', { name: /^poland$/i });
     const filterSummary = page.getByTestId('product-filter-summary');
 
-    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'true');
     await expect(filterSummary.getByRole('button', { name: /remove search: kimchi filter/i })).toBeVisible();
-    await expect(filterSummary.getByRole('button', { name: /remove vegetarian filter/i })).toBeVisible();
+    await expect(filterSummary.getByRole('button', { name: /remove Poland filter/i })).toBeVisible();
 
     await filterSummary.getByRole('button', { name: /^clear all$/i }).click();
 
@@ -684,41 +532,18 @@ test.describe('mobile products page', () => {
       return {
         ref: url.searchParams.get('ref'),
         search: url.searchParams.get('search'),
-        dietary: url.searchParams.getAll('dietary'),
+        country: url.searchParams.getAll('country'),
         sort: url.searchParams.get('sort'),
       };
     }).toEqual({
       ref: 'campaign',
       search: null,
-      dietary: [],
+      country: [],
       sort: null,
     });
-    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'false');
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'false');
     await expect(filterSummary).toHaveCount(0);
     await expect(page.getByTestId('product-card')).toHaveCount(4);
-  });
-
-  test('restores the initial category listing when Back removes a dietary filter', async ({ page }) => {
-    await mockMobileStorefront(page);
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/categories/kimchi-i-kiszonki');
-
-    await expect(page.getByTestId('product-card')).toHaveCount(2);
-    const filterPanel = page.getByRole('region', { name: /^filters$/i });
-    const glutenFreeButton = filterPanel.getByRole('button', { name: /^gluten free$/i });
-    await expect(glutenFreeButton).toBeEnabled();
-
-    await glutenFreeButton.click();
-    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual(['gluten-free']);
-    await expect(page.getByTestId('product-card')).toHaveCount(1);
-    await expect(page.getByRole('link', { name: /pickled daikon radish/i })).toBeVisible();
-
-    await page.goBack();
-    await expect.poll(() => new URL(page.url()).searchParams.get('dietary')).toBeNull();
-    await expect(glutenFreeButton).toHaveAttribute('aria-pressed', 'false');
-    await expect(page.getByTestId('product-card')).toHaveCount(2);
-    await expect(page.getByRole('link', { name: /napa cabbage kimchi/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /pickled daikon radish/i })).toBeVisible();
   });
 
   test('uses curated desktop category navigation instead of duplicate raw category filters', async ({ page }) => {
@@ -749,17 +574,17 @@ test.describe('mobile products page', () => {
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
     await expect(filterPanel).toBeVisible();
-    await filterPanel.getByRole('button', { name: /^frozen/i }).click();
+    await filterPanel.getByRole('button', { name: 'Samyang', exact: true }).click();
 
     const filterSummary = page.getByTestId('product-filter-summary');
     await expect(filterSummary).toBeVisible();
     await expect(filterSummary).toContainText(/showing 1 of 1/i);
-    await expect(filterSummary.getByRole('button', { name: /remove frozen filter/i })).toBeVisible();
+    await expect(filterSummary.getByRole('button', { name: /remove Samyang filter/i })).toBeVisible();
 
-    await filterSummary.getByRole('button', { name: /remove frozen filter/i }).click();
+    await filterSummary.getByRole('button', { name: /remove Samyang filter/i }).click();
 
     await expect(page.getByTestId('product-card')).toHaveCount(4);
-    await expect(filterSummary.getByRole('button', { name: /remove frozen filter/i })).toHaveCount(0);
+    await expect(filterSummary.getByRole('button', { name: /remove Samyang filter/i })).toHaveCount(0);
   });
 
   test('applies mobile filters only after save', async ({ page }) => {
@@ -778,14 +603,9 @@ test.describe('mobile products page', () => {
 
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await openFilters(page, filterSheet);
-    await expect(filterSheet.getByText(/certifications/i)).toBeVisible();
+    await expect(filterSheet.getByText(/^brand$/i)).toBeVisible();
 
     const minPriceInput = filterSheet.getByLabel(/minimum price/i);
-    const minPriceBox = await minPriceInput.boundingBox();
-    const allergenHeadingBox = await filterSheet.getByText(/exclude allergens/i).boundingBox();
-    expect(minPriceBox).not.toBeNull();
-    expect(allergenHeadingBox).not.toBeNull();
-    expect(minPriceBox!.y).toBeLessThan(allergenHeadingBox!.y);
     await expect(minPriceInput).toBeVisible();
     await minPriceInput.fill('10');
 
@@ -808,7 +628,7 @@ test.describe('mobile products page', () => {
     ).toBe(true);
   });
 
-  test('publishes a mobile dietary filter only after apply and restores it with Back', async ({ page }) => {
+  test('publishes a mobile country filter only after apply', async ({ page }) => {
     const productQueries: Array<Record<string, any>> = [];
 
     await mockMobileStorefront(page, {
@@ -821,28 +641,19 @@ test.describe('mobile products page', () => {
 
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await openFilters(page, filterSheet);
-    const vegetarianButton = filterSheet.getByRole('button', { name: /^vegetarian$/i });
-    await expect(vegetarianButton).toBeEnabled();
+    const polandButton = filterSheet.getByRole('button', { name: /^poland$/i });
+    await expect(polandButton).toBeEnabled();
 
-    await vegetarianButton.click();
-    await expect(vegetarianButton).toHaveAttribute('aria-pressed', 'true');
-    expect(new URL(page.url()).searchParams.get('dietary')).toBeNull();
-    expect(productQueries.some((variables) => {
-      const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
-      return Array.isArray(dietaryTags) && dietaryTags.includes('vegetarian');
-    })).toBe(false);
+    await polandButton.click();
+    await expect(polandButton).toHaveAttribute('aria-pressed', 'true');
+    expect(new URL(page.url()).searchParams.get('country')).toBeNull();
+    expect(productQueries.some(hasPolandCountryFilter)).toBe(false);
 
     await filterSheet.getByRole('button', { name: /apply filters/i }).click();
-    await expect.poll(() => new URL(page.url()).searchParams.getAll('dietary')).toEqual(['vegetarian']);
-    await expect.poll(() => productQueries.some((variables) => {
-      const dietaryTags = (variables.filter as Record<string, any> | undefined)?.dietaryTags;
-      return Array.isArray(dietaryTags) && dietaryTags.includes('vegetarian');
-    })).toBe(true);
-
-    await page.goBack();
-    await expect.poll(() => new URL(page.url()).searchParams.get('dietary')).toBeNull();
-    await expect(page.getByTestId('product-filter-summary')).toHaveCount(0);
-    await expect(page.getByTestId('mobile-product-card')).toHaveCount(4);
+    await expect.poll(() => new URL(page.url()).searchParams.getAll('country')).toEqual(['Poland']);
+    expect(new URL(page.url()).searchParams.get('ref')).toBe('mobile');
+    await expect.poll(() => productQueries.some(hasPolandCountryFilter)).toBe(true);
+    await expect(page.getByTestId('product-filter-summary').getByRole('button', { name: /remove Poland filter/i })).toBeVisible();
   });
 
   test('preserves a mobile price filter while exact facet metadata is still loading', async ({ page }) => {
@@ -854,7 +665,7 @@ test.describe('mobile products page', () => {
 
     await mockMobileStorefront(page, {
       listingProductLimit: 3,
-      beforeProductFilterFacetsResponse: async () => {
+      beforeProductBrandsResponse: async () => {
         await filterFacetsGate;
       },
       onProductsQuery: (variables) => {
@@ -922,14 +733,14 @@ test.describe('mobile products page', () => {
 
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await openFilters(page, filterSheet);
-    await filterSheet.getByRole('button', { name: /^frozen/i }).click();
+    await filterSheet.getByRole('button', { name: 'Samyang', exact: true }).click();
     await filterSheet.getByLabel(/maximum price/i).fill('10');
     await filterSheet.getByRole('button', { name: /apply filters/i }).click();
 
     const filterSummary = page.getByTestId('product-filter-summary');
     await expect(filterSummary).toBeVisible();
     await expect(filterSummary).toContainText(/showing 0 of 0/i);
-    await expect(filterSummary.getByRole('button', { name: /remove frozen filter/i })).toBeVisible();
+    await expect(filterSummary.getByRole('button', { name: /remove Samyang filter/i })).toBeVisible();
     await expect(filterSummary.getByRole('button', { name: /remove up to 10 PLN filter/i })).toBeVisible();
     await expect(page.getByText(/no matching products/i)).toBeVisible();
     await expect(page.getByText(/try clearing filters or widening your price range/i)).toBeVisible();
