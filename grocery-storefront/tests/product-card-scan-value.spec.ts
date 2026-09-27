@@ -121,10 +121,10 @@ test.describe('listing product card scan value', () => {
     await expect(card.getByTestId('product-card-promo')).toContainText(/promo/i);
     await expect(card.getByTestId('product-card-availability')).toContainText(/in stock/i);
 
-    const facts = card.getByTestId('product-card-facts');
-    await expect(facts).toContainText(/fruit/i);
-    await expect(facts).toContainText(/poland/i);
-    await expect(facts).toContainText(/shelf-stable/i);
+    // The lean card keeps price, promo and availability; category, origin and
+    // storage moved to the filters, allergens to the product page and cart.
+    await expect(card.getByTestId('product-card-facts')).toHaveCount(0);
+    await expect(card.locator('.allergen-chip')).toHaveCount(0);
 
     await expect(card.getByTestId('product-card-fulfillment')).toHaveCount(0);
 
@@ -210,10 +210,7 @@ test.describe('listing product card scan value', () => {
     await expect(card.getByTestId('mobile-product-card-promo')).toContainText(/promo/i);
     await expect(card.getByTestId('mobile-product-card-availability')).toContainText(/in stock/i);
 
-    const scanFacts = card.getByTestId('mobile-product-card-scan-facts');
-    await expect(scanFacts).toContainText(/fruit/i);
-    await expect(scanFacts).toContainText(/poland/i);
-    await expect(scanFacts).toContainText(/shelf-stable/i);
+    await expect(card.getByTestId('mobile-product-card-scan-facts')).toHaveCount(0);
 
     await expect(card.getByTestId('mobile-product-card-add')).toBeVisible();
     await expect(card.getByTestId('mobile-product-card-wishlist')).toBeVisible();

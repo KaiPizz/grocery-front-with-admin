@@ -417,9 +417,8 @@ test.describe('catalog display localization', () => {
     await page.goto('/en/products');
 
     const appleCard = page.getByTestId('product-card').filter({ hasText: /organic gala apples/i });
-    await expect(appleCard.getByTestId('product-card-facts')).toContainText('Ready meals');
-    await expect(appleCard.getByTestId('product-card-facts')).toContainText('Poland');
-    await expect(appleCard.getByTestId('product-card-facts')).not.toContainText(/Dania gotowe|Polska/);
+    await expect(appleCard).toBeVisible();
+    await expect(appleCard.getByTestId('product-card-facts')).toHaveCount(0);
 
     const breadCard = page.getByTestId('product-card').filter({ hasText: /sourdough sandwich bread/i });
     await expect(breadCard.getByTestId('unit-price')).toContainText(/\/ pcs$/);
@@ -472,8 +471,8 @@ test.describe('catalog display localization', () => {
     await page.goto('/pl/products');
 
     const appleCard = page.getByTestId('product-card').filter({ hasText: /organic gala apples/i });
-    await expect(appleCard.getByTestId('product-card-facts')).toContainText('Dania gotowe');
-    await expect(appleCard.getByTestId('product-card-facts')).toContainText('Polska');
+    await expect(appleCard).toBeVisible();
+    await expect(appleCard.getByTestId('product-card-facts')).toHaveCount(0);
 
     const breadCard = page.getByTestId('product-card').filter({ hasText: /sourdough sandwich bread/i });
     await expect(breadCard.getByTestId('unit-price')).toContainText(/\/ szt\.$/);

@@ -11,10 +11,6 @@ import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { Link } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
-import {
-  getCatalogCategoryDisplay,
-  getLocalizedCountryOrigin,
-} from '@/lib/catalog-display-localization';
 import { getLocalizedProductName } from '@/lib/localization';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
@@ -128,10 +124,9 @@ export function ProductCard({
   const isInCart = cartQuantity > 0;
   const displayedQuantity = isInCart ? cartQuantity : quantity;
   const addToCartLabel = t('common.addToCart');
-  const displayCategory = getCatalogCategoryDisplay(product.category, locale);
-  const displayCountryOfOrigin = getLocalizedCountryOrigin(product.countryOfOrigin, locale);
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
-  // Only cold chain needs a signal on the photo; shelf-stable storage is already in the facts line.
+  // Only cold chain needs a signal on the photo; category, origin and storage
+  // live in the listing filters, allergens on the product page and in the cart.
   const storageBadge = product.storageZone === 'FROZEN' || product.storageZone === 'CHILLED' ? (
     <span
       role="img"
@@ -142,7 +137,6 @@ export function ProductCard({
       {product.storageZone === 'FROZEN' ? '\u2744' : '\u2603'}
     </span>
   ) : null;
-  const scanFacts = [displayCategory?.name, displayCountryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
   const revealIdleActions = actionVisibility === 'reveal';
   const hiddenActionClass = 'invisible pointer-events-none translate-y-1 opacity-0 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100';
   const wishlistActionClass = revealIdleActions && !isWishlisted ? hiddenActionClass : 'translate-y-0 opacity-100';
@@ -531,17 +525,6 @@ export function ProductCard({
             </div>
           )}
 
-          {product.allergens && product.allergens.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-2" role="list" aria-label={t('product.allergens')}>
-              {product.allergens.slice(0, 3).map((a) => (
-                <span key={a} className="allergen-chip text-[10px]" role="listitem">{t(`allergens.${a}` as any)}</span>
-              ))}
-              {product.allergens.length > 3 && (
-                <span className="allergen-chip text-[10px]" role="listitem">+{product.allergens.length - 3}</span>
-              )}
-            </div>
-          )}
-
           {product.dietaryTags && product.dietaryTags.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-2">
               {product.dietaryTags.map((tag) => (
@@ -607,11 +590,6 @@ export function ProductCard({
                   >
                     {inStock ? t('product.inStock') : t('product.outOfStock')}
                   </span>
-                  {scanFacts.length > 0 && (
-                    <span className="min-w-0 truncate" data-testid="product-card-facts">
-                      {scanFacts.join(' · ')}
-                    </span>
-                  )}
                   {isWishlisted && (
                     <span
                       className="rounded-full px-2 py-0.5 font-semibold"

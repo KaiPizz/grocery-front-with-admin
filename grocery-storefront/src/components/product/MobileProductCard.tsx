@@ -9,10 +9,6 @@ import { Link } from '@/i18n/navigation';
 import { UnitPrice } from '@/components/grocery/UnitPrice';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
-import {
-  getCatalogCategoryDisplay,
-  getLocalizedCountryOrigin,
-} from '@/lib/catalog-display-localization';
 import { getLocalizedProductName } from '@/lib/localization';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
@@ -86,10 +82,7 @@ export function MobileProductCard({
   const cartQuantity = cartItem?.quantity ?? 0;
   const isInCart = cartQuantity > 0;
   const displayedQuantity = isInCart ? cartQuantity : quantity;
-  const displayCategory = getCatalogCategoryDisplay(product.category, locale);
-  const displayCountryOfOrigin = getLocalizedCountryOrigin(product.countryOfOrigin, locale);
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
-  const scanFacts = [displayCategory?.name, displayCountryOfOrigin, storageLabel].filter((value): value is string => Boolean(value));
   const showIdleQuickActions = quickActions === 'always';
   const showAddAction = showIdleQuickActions;
   const showWishlistAction = showIdleQuickActions || isWishlisted;
@@ -365,11 +358,6 @@ export function MobileProductCard({
               >
                 {inStock ? t('product.inStock') : t('product.outOfStock')}
               </span>
-              {scanFacts.length > 0 && (
-                <span className="min-w-0 truncate" data-testid="mobile-product-card-scan-facts">
-                  {scanFacts.join(' · ')}
-                </span>
-              )}
               {isWishlisted && (
                 <span
                   className="rounded-full px-2 py-0.5 font-semibold"
