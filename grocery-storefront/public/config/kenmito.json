@@ -120,8 +120,8 @@
             {
               "id": "asiandeligo-grid-korean-pantry",
               "imageUrl": "/brand/categories/sauces-pastes.webp",
-              "title": "Sosy i pasty",
-              "href": "/pl/categories/sosy-pasty-i-przyprawy",
+              "title": "Sosy i oleje",
+              "href": "/pl/categories/sosy-i-oleje",
               "enabled": true
             },
             {
@@ -204,14 +204,14 @@
               "id": "asiandeligo-round-sushi-algae",
               "imageUrl": "/brand/categories/sushi-seaweed.webp",
               "title": "Sushi i algi",
-              "href": "/pl/categories/sushi-i-algi",
+              "href": "/pl/categories/do-gotowania-i-sushi",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-mushrooms-tofu",
               "imageUrl": "/brand/categories/mushrooms-tofu.webp",
               "title": "Grzyby i tofu",
-              "href": "/pl/categories/grzyby-warzywa-i-tofu",
+              "href": "/pl/categories/do-gotowania-i-sushi",
               "enabled": true
             },
             {
@@ -245,7 +245,27 @@
           "enabled": false,
           "order": 3
         }
-      ]
+      ],
+      "featured": {
+        "categorySlugs": [
+          "buldak-i-ramyun-ostre",
+          "kimchi",
+          "pocky-pepero-i-czekolada"
+        ]
+      },
+      "seoText": {
+        "enabled": true,
+        "headline": "Asia Deli Go — azjatyckie produkty spożywcze w Warszawie",
+        "paragraphs": [
+          "Asia Deli Go to sklep z azjatyckimi produktami spożywczymi w Warszawie: koreański ramyun i kimchi, japońskie makarony, sosy i przyprawy, wietnamski papier ryżowy, tajskie pasty curry oraz słodycze i napoje z całej Azji. Zamawiasz online, my potwierdzamy dostępność i przygotowujemy odbiór w sklepie.",
+          "W ofercie znajdziesz ponad 1 700 produktów pogrupowanych w przejrzyste kategorie — od makaronów i ryżu, przez kimchi i kiszonki, po akcesoria kuchenne i koreańskie kosmetyki. Płatność online przez Przelewy24 i BLIK albo przy odbiorze."
+        ],
+        "headlineEn": "Asia Deli Go — Asian grocery store in Warsaw",
+        "paragraphsEn": [
+          "Asia Deli Go is an Asian grocery store in Warsaw: Korean ramyun and kimchi, Japanese noodles, sauces and seasonings, Vietnamese rice paper, Thai curry pastes plus sweets and drinks from all over Asia. Order online, we confirm availability and prepare your pickup in store.",
+          "Browse over 1,700 products in clear categories — from noodles and rice, through kimchi and pickles, to kitchenware and Korean cosmetics. Pay online with Przelewy24 or BLIK, or on pickup."
+        ]
+      }
     },
     "layout": {
       "header": {
@@ -389,7 +409,7 @@
           },
           {
             "id": "category-hub-sauces-pastes",
-            "categorySlug": "sosy-pasty-i-przyprawy",
+            "categorySlug": "sosy-i-oleje",
             "imageUrl": "/brand/categories/sauces-pastes.webp",
             "enabled": true,
             "order": 2
@@ -417,14 +437,14 @@
           },
           {
             "id": "category-hub-sushi-seaweed",
-            "categorySlug": "sushi-i-algi",
+            "categorySlug": "do-gotowania-i-sushi",
             "imageUrl": "/brand/categories/sushi-seaweed.webp",
             "enabled": true,
             "order": 6
           },
           {
             "id": "category-hub-mushrooms-tofu",
-            "categorySlug": "grzyby-warzywa-i-tofu",
+            "categorySlug": "pasty-przyprawy-i-buliony",
             "imageUrl": "/brand/categories/mushrooms-tofu.webp",
             "enabled": true,
             "order": 7
@@ -477,8 +497,8 @@
             },
             {
               "id": "tile-sauces",
-              "title": "Sosy i pasty",
-              "href": "/categories/sosy-pasty-i-przyprawy",
+              "title": "Sosy i oleje",
+              "href": "/categories/sosy-i-oleje",
               "description": "Gochujang, sojowe, sezamowe i ostre bazy smaku.",
               "imageUrl": "/brand/categories/sauces-pastes.webp",
               "enabled": true,
@@ -500,6 +520,51 @@
         "enabled": false,
         "label": "Outlet",
         "collectionSlug": null
+      },
+      "trustRow": {
+        "enabled": true,
+        "items": [
+          {
+            "id": "trust-pickup",
+            "icon": "map-pin",
+            "title": "Odbiór osobisty w Warszawie",
+            "description": "Zamów online, odbierz w sklepie",
+            "titleEn": "Pickup in Warsaw",
+            "descriptionEn": "Order online, collect in store",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "id": "trust-confirmation",
+            "icon": "check-circle",
+            "title": "Potwierdzenie ręczne w godzinach otwarcia",
+            "description": "Sklep potwierdza dostępność i termin odbioru",
+            "titleEn": "Confirmed by hand during opening hours",
+            "descriptionEn": "The shop confirms availability and pickup time",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "id": "trust-payment",
+            "icon": "credit-card",
+            "title": "Płatność online (Przelewy24, BLIK) lub przy odbiorze",
+            "description": "Wybierz wygodną formę płatności",
+            "titleEn": "Pay online (Przelewy24, BLIK) or on pickup",
+            "descriptionEn": "Choose the payment that suits you",
+            "enabled": true,
+            "order": 2
+          },
+          {
+            "id": "trust-catalog",
+            "icon": "package",
+            "title": "Ponad 1 700 produktów z Azji",
+            "description": "Korea, Japonia, Wietnam, Tajlandia i więcej",
+            "titleEn": "Over 1,700 products from Asia",
+            "descriptionEn": "Korea, Japan, Vietnam, Thailand and more",
+            "enabled": true,
+            "order": 3
+          }
+        ]
       }
     }
   },

@@ -153,11 +153,28 @@ export interface HomepageSectionItem {
   order: number;
 }
 
+// Leaf (or group) category slugs whose products fill the "Polecane" shelf on
+// the storefront landing page; empty = the storefront's own default.
+export interface HomepageFeaturedConfig {
+  categorySlugs: string[];
+}
+
+// Owner-written SEO paragraph block at the bottom of the landing page.
+export interface HomepageSeoTextConfig {
+  enabled: boolean;
+  headline: string;
+  paragraphs: string[];
+  headlineEn: string;
+  paragraphsEn: string[];
+}
+
 export interface HomepageConfig {
   hero: HeroBannerConfig;
   promoBanners: PromoBannerItem[];
   blocks: BannerBlock[];
   sections: HomepageSectionItem[];
+  featured: HomepageFeaturedConfig;
+  seoText: HomepageSeoTextConfig;
 }
 
 export interface NavItem {
@@ -362,9 +379,29 @@ export interface CommercialCategoryHubConfig {
   items: CommercialCategoryHubItem[];
 }
 
+export type TrustRowIcon = 'map-pin' | 'check-circle' | 'credit-card' | 'package';
+
+// One promise in the trust row under the storefront hero.
+export interface CommercialTrustRowItem {
+  id: string;
+  icon: TrustRowIcon;
+  title: string;
+  description: string;
+  titleEn: string;
+  descriptionEn: string;
+  enabled: boolean;
+  order: number;
+}
+
+export interface CommercialTrustRowConfig {
+  enabled: boolean;
+  items: CommercialTrustRowItem[];
+}
+
 export interface CommercialConfig {
   enabled: boolean;
   categoryHub: CommercialCategoryHubConfig;
+  trustRow: CommercialTrustRowConfig;
   quickLinks: CommercialQuickLink[];
   collections: CommercialCollection[];
   outlet: CommercialOutletConfig;

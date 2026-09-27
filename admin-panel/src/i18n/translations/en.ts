@@ -259,6 +259,19 @@ export const en = {
   homepage: {
     title: 'Homepage',
     description: 'Hero banner, promo banners, and section ordering',
+    featured: {
+      title: 'Featured on the homepage',
+      slugs: 'Leaf category slugs (comma separated)',
+      hint: 'Empty = the storefront uses its default leaves.',
+    },
+    seoText: {
+      title: 'SEO text',
+      enable: 'Show SEO text at the bottom of the homepage',
+      headlinePl: 'Headline (PL)',
+      headlineEn: 'Headline (EN)',
+      paragraphsPl: 'Paragraphs (PL) — separate with a blank line',
+      paragraphsEn: 'Paragraphs (EN) — separate with a blank line',
+    },
     hero: {
       title: 'Hero Banner',
       headline: 'Headline',
@@ -423,6 +436,17 @@ export const en = {
         moveUp: 'Move category up',
         moveDown: 'Move category down',
         removeItem: 'Remove category configuration',
+      },
+      trustRow: {
+        title: 'Trust row',
+        hint: 'Four short promises under the hero.',
+        enable: 'Show trust row',
+        addItem: 'Add item',
+        icon: 'Icon',
+        titlePl: 'Title (PL)',
+        descriptionPl: 'Description (PL)',
+        titleEn: 'Title (EN)',
+        descriptionEn: 'Description (EN)',
       },
       collections: 'Collections',
       collectionsHint: 'Config-backed landing pages such as seasonal picks or Korean pantry',

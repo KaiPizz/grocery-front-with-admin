@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
 
-import { DEFAULT_CONFIG } from './defaults';
+import { DEFAULT_CONFIG, DEFAULT_TRUST_ROW } from './defaults';
 import { partialStorefrontConfigSchema, storefrontConfigSchema } from './validation';
 
 import type { BannerBlock, StorefrontConfig } from '../types/config';
@@ -94,6 +94,7 @@ function securityFixture(): StorefrontConfig {
   config.general.socialLinks = [{ platform: 'Facebook', url: 'https://facebook.com/example' }];
   config.commercial = {
     enabled: true,
+    trustRow: structuredClone(DEFAULT_TRUST_ROW),
     categoryHub: {
       enabled: true,
       items: [{

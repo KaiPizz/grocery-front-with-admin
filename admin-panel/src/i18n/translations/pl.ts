@@ -261,6 +261,19 @@ export const pl: Translations = {
   homepage: {
     title: 'Strona główna',
     description: 'Baner główny, banery promocyjne i kolejność sekcji',
+    featured: {
+      title: 'Polecane na stronie głównej',
+      slugs: 'Slugi podkategorii (po przecinku)',
+      hint: 'Puste = sklep użyje domyślnych podkategorii.',
+    },
+    seoText: {
+      title: 'Tekst SEO',
+      enable: 'Pokaż tekst SEO na dole strony głównej',
+      headlinePl: 'Nagłówek (PL)',
+      headlineEn: 'Nagłówek (EN)',
+      paragraphsPl: 'Akapity (PL) — oddziel pustą linią',
+      paragraphsEn: 'Akapity (EN) — oddziel pustą linią',
+    },
     hero: {
       title: 'Baner główny',
       headline: 'Nagłówek',
@@ -425,6 +438,17 @@ export const pl: Translations = {
         moveUp: 'Przenieś kategorię wyżej',
         moveDown: 'Przenieś kategorię niżej',
         removeItem: 'Usuń konfigurację kategorii',
+      },
+      trustRow: {
+        title: 'Pasek zaufania',
+        hint: 'Cztery krótkie obietnice pod bannerem na stronie głównej.',
+        enable: 'Pokaż pasek zaufania',
+        addItem: 'Dodaj pozycję',
+        icon: 'Ikona',
+        titlePl: 'Tytuł (PL)',
+        descriptionPl: 'Opis (PL)',
+        titleEn: 'Tytuł (EN)',
+        descriptionEn: 'Opis (EN)',
       },
       collections: 'Kolekcje',
       collectionsHint: 'Strony konfigurowane, np. sezonowe typy albo Korean pantry',

@@ -25,6 +25,9 @@ export default function HomepagePage() {
   }
 
   const homepage = config.homepage;
+  const seoText = homepage.seoText ?? { enabled: false, headline: '', paragraphs: [], headlineEn: '', paragraphsEn: [] };
+  // One paragraph per blank-line-separated block; a single newline stays inside its paragraph.
+  const splitParagraphs = (value: string) => value.split(/\n[ \t]*\n/);
   const SECTION_LABELS: {[key: string]: string} = {
     deals: t('homepage.sections.deals'),
     freshPicks: t('homepage.sections.freshPicks'),
@@ -233,6 +236,74 @@ export default function HomepagePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </FormCard>
+
+        {/* "Polecane" shelf: leaf category slugs */}
+        <FormCard title={t('homepage.featured.title')} description={t('homepage.featured.hint')}>
+          <FieldLabel label={t('homepage.featured.slugs')} htmlFor="homepage-featured-slugs">
+            <input
+              id="homepage-featured-slugs"
+              type="text"
+              value={(homepage.featured?.categorySlugs ?? []).join(', ')}
+              onChange={(e) => updateHomepage({
+                featured: { categorySlugs: e.target.value.split(',').map((slug) => slug.trim()) },
+              })}
+              className="w-full min-h-11 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-mono text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="buldak-i-ramyun-ostre, kimchi, pocky-pepero-i-czekolada"
+              autoComplete="off"
+            />
+          </FieldLabel>
+        </FormCard>
+
+        {/* SEO text at the bottom of the landing page */}
+        <FormCard title={t('homepage.seoText.title')}>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={homepage.seoText?.enabled ?? false}
+              onChange={(e) => updateHomepage({ seoText: { ...seoText, enabled: e.target.checked } })}
+              className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <span className="text-sm text-gray-700">{t('homepage.seoText.enable')}</span>
+          </label>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <FieldLabel label={t('homepage.seoText.headlinePl')} htmlFor="homepage-seo-headline-pl">
+              <input
+                id="homepage-seo-headline-pl"
+                type="text"
+                value={seoText.headline}
+                onChange={(e) => updateHomepage({ seoText: { ...seoText, headline: e.target.value } })}
+                className="w-full min-h-11 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              />
+            </FieldLabel>
+            <FieldLabel label={t('homepage.seoText.headlineEn')} htmlFor="homepage-seo-headline-en">
+              <input
+                id="homepage-seo-headline-en"
+                type="text"
+                value={seoText.headlineEn}
+                onChange={(e) => updateHomepage({ seoText: { ...seoText, headlineEn: e.target.value } })}
+                className="w-full min-h-11 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              />
+            </FieldLabel>
+            <FieldLabel label={t('homepage.seoText.paragraphsPl')} htmlFor="homepage-seo-paragraphs-pl">
+              <textarea
+                id="homepage-seo-paragraphs-pl"
+                rows={8}
+                value={seoText.paragraphs.join('\n\n')}
+                onChange={(e) => updateHomepage({ seoText: { ...seoText, paragraphs: splitParagraphs(e.target.value) } })}
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              />
+            </FieldLabel>
+            <FieldLabel label={t('homepage.seoText.paragraphsEn')} htmlFor="homepage-seo-paragraphs-en">
+              <textarea
+                id="homepage-seo-paragraphs-en"
+                rows={8}
+                value={seoText.paragraphsEn.join('\n\n')}
+                onChange={(e) => updateHomepage({ seoText: { ...seoText, paragraphsEn: splitParagraphs(e.target.value) } })}
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              />
+            </FieldLabel>
           </div>
         </FormCard>
       </div>

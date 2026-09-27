@@ -1,4 +1,52 @@
-import type { StorefrontConfig } from '@/types/config';
+import type { CommercialTrustRowConfig, StorefrontConfig } from '@/types/config';
+
+// Mirrors grocery-storefront/src/lib/storefront-config-shared.ts DEFAULT_TRUST_ROW:
+// what the storefront shows when a stored config carries no trust row.
+export const DEFAULT_TRUST_ROW: CommercialTrustRowConfig = {
+  enabled: true,
+  items: [
+    {
+      id: 'trust-pickup',
+      icon: 'map-pin',
+      title: 'Odbiór osobisty w Warszawie',
+      description: 'Zamów online, odbierz w sklepie',
+      titleEn: 'Pickup in Warsaw',
+      descriptionEn: 'Order online, collect in store',
+      enabled: true,
+      order: 0,
+    },
+    {
+      id: 'trust-confirmation',
+      icon: 'check-circle',
+      title: 'Potwierdzenie ręczne w godzinach otwarcia',
+      description: 'Sklep potwierdza dostępność i termin odbioru',
+      titleEn: 'Confirmed by hand during opening hours',
+      descriptionEn: 'The shop confirms availability and pickup time',
+      enabled: true,
+      order: 1,
+    },
+    {
+      id: 'trust-payment',
+      icon: 'credit-card',
+      title: 'Płatność online (Przelewy24, BLIK) lub przy odbiorze',
+      description: 'Wybierz wygodną formę płatności',
+      titleEn: 'Pay online (Przelewy24, BLIK) or on pickup',
+      descriptionEn: 'Choose the payment that suits you',
+      enabled: true,
+      order: 2,
+    },
+    {
+      id: 'trust-catalog',
+      icon: 'package',
+      title: 'Ponad 1 700 produktów z Azji',
+      description: 'Korea, Japonia, Wietnam, Tajlandia i więcej',
+      titleEn: 'Over 1,700 products from Asia',
+      descriptionEn: 'Korea, Japan, Vietnam, Thailand and more',
+      enabled: true,
+      order: 3,
+    },
+  ],
+};
 
 /**
  * Default config that mirrors the current grocery-storefront hard-coded values.
@@ -100,6 +148,8 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
       { id: 'freshPicks', enabled: true, order: 2 },
       { id: 'recipes', enabled: true, order: 3 },
     ],
+    featured: { categorySlugs: [] },
+    seoText: { enabled: false, headline: '', paragraphs: [], headlineEn: '', paragraphsEn: [] },
   },
 
   layout: {
@@ -204,6 +254,7 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
       enabled: true,
       items: [],
     },
+    trustRow: DEFAULT_TRUST_ROW,
     quickLinks: [],
     collections: [],
     outlet: {

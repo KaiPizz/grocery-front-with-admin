@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { DEFAULT_CONFIG } from './defaults';
+import { DEFAULT_CONFIG, DEFAULT_TRUST_ROW } from './defaults';
 import { storefrontConfigSchema } from './validation';
 
 import type { StorefrontConfig } from '../types/config';
@@ -21,6 +21,7 @@ function cloneConfig(): StorefrontConfig {
 function addCommercialFixture(config: StorefrontConfig): StorefrontConfig {
   config.commercial = {
     enabled: true,
+    trustRow: structuredClone(DEFAULT_TRUST_ROW),
     categoryHub: {
       enabled: true,
       items: [
@@ -187,4 +188,33 @@ test('allows disabled outlet config without a collection slug', () => {
   const result = storefrontConfigSchema.safeParse(config);
 
   assert.equal(result.success, true);
+});
+
+test('schema keeps trust row, featured leaves and seo text, and fills them for configs saved before wave 2', () => {
+  const config = cloneConfig();
+  config.commercial.trustRow = {
+    enabled: true,
+    items: [{
+      id: 'trust-x', icon: 'map-pin', title: 'T', description: 'D', titleEn: 'TE', descriptionEn: 'DE', enabled: true, order: 0,
+    }],
+  };
+  config.homepage.featured = { categorySlugs: ['kimchi', ' buldak-i-ramyun-ostre '] };
+  config.homepage.seoText = { enabled: true, headline: 'H', paragraphs: ['P1', '  ', 'P2'], headlineEn: 'HE', paragraphsEn: [] };
+
+  const parsed = storefrontConfigSchema.safeParse(config);
+  assert.equal(parsed.success, true, JSON.stringify(parsed.success ? null : parsed.error.flatten()));
+  assert.deepEqual(parsed.data?.commercial.trustRow, config.commercial.trustRow);
+  assert.deepEqual(parsed.data?.homepage.featured, { categorySlugs: ['kimchi', 'buldak-i-ramyun-ostre'] });
+  assert.deepEqual(parsed.data?.homepage.seoText, { ...config.homepage.seoText, paragraphs: ['P1', 'P2'] });
+
+  const legacy = cloneConfig();
+  delete (legacy.commercial as Partial<StorefrontConfig['commercial']>).trustRow;
+  delete (legacy.homepage as Partial<StorefrontConfig['homepage']>).featured;
+  delete (legacy.homepage as Partial<StorefrontConfig['homepage']>).seoText;
+  const legacyParsed = storefrontConfigSchema.safeParse(legacy);
+  assert.equal(legacyParsed.success, true);
+  assert.equal(legacyParsed.data?.commercial.trustRow.enabled, true);
+  assert.equal(legacyParsed.data?.commercial.trustRow.items.length, 4);
+  assert.deepEqual(legacyParsed.data?.homepage.featured, { categorySlugs: [] });
+  assert.equal(legacyParsed.data?.homepage.seoText.enabled, false);
 });

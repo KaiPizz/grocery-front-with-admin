@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp, GripVertical, Plus, Trash2 } from 'lucide-react
 import { FieldLabel } from '@/components/FieldLabel';
 import { FormCard } from '@/components/FormCard';
 import { CategoryHubConfigEditor } from '@/components/CategoryHubConfigEditor';
+import { TrustRowConfigEditor } from '@/components/TrustRowConfigEditor';
 import { useLanguage } from '@/i18n';
 
 import type {
@@ -166,6 +167,11 @@ export function CommercialConfigEditor({ commercial, onChange }: CommercialConfi
       <CategoryHubConfigEditor
         categoryHub={commercial.categoryHub}
         onChange={(categoryHub) => updateCommercial({ categoryHub })}
+      />
+
+      <TrustRowConfigEditor
+        trustRow={commercial.trustRow}
+        onChange={(trustRow) => updateCommercial({ trustRow })}
       />
 
       <section className="space-y-2 border-t border-gray-100 pt-4">

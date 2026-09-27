@@ -121,8 +121,8 @@
             {
               "id": "asiandeligo-grid-korean-pantry",
               "imageUrl": "/brand/categories/sauces-pastes.webp",
-              "title": "Sosy i pasty",
-              "href": "/pl/categories/sosy-pasty-i-przyprawy",
+              "title": "Sosy i oleje",
+              "href": "/pl/categories/sosy-i-oleje",
               "enabled": true
             },
             {
@@ -205,14 +205,14 @@
               "id": "asiandeligo-round-sushi-algae",
               "imageUrl": "/brand/categories/sushi-seaweed.webp",
               "title": "Sushi i algi",
-              "href": "/pl/categories/sushi-i-algi",
+              "href": "/pl/categories/do-gotowania-i-sushi",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-mushrooms-tofu",
               "imageUrl": "/brand/categories/mushrooms-tofu.webp",
               "title": "Grzyby i tofu",
-              "href": "/pl/categories/grzyby-warzywa-i-tofu",
+              "href": "/pl/categories/do-gotowania-i-sushi",
               "enabled": true
             },
             {
@@ -246,7 +246,27 @@
           "enabled": false,
           "order": 3
         }
-      ]
+      ],
+      "featured": {
+        "categorySlugs": [
+          "buldak-i-ramyun-ostre",
+          "kimchi",
+          "pocky-pepero-i-czekolada"
+        ]
+      },
+      "seoText": {
+        "enabled": true,
+        "headline": "Asia Deli Go — azjatyckie produkty spożywcze w Warszawie",
+        "paragraphs": [
+          "Asia Deli Go to sklep z azjatyckimi produktami spożywczymi w Warszawie: koreański ramyun i kimchi, japońskie makarony, sosy i przyprawy, wietnamski papier ryżowy, tajskie pasty curry oraz słodycze i napoje z całej Azji. Zamawiasz online, my potwierdzamy dostępność i przygotowujemy odbiór w sklepie.",
+          "W ofercie znajdziesz ponad 1 700 produktów pogrupowanych w przejrzyste kategorie — od makaronów i ryżu, przez kimchi i kiszonki, po akcesoria kuchenne i koreańskie kosmetyki. Płatność online przez Przelewy24 i BLIK albo przy odbiorze."
+        ],
+        "headlineEn": "Asia Deli Go — Asian grocery store in Warsaw",
+        "paragraphsEn": [
+          "Asia Deli Go is an Asian grocery store in Warsaw: Korean ramyun and kimchi, Japanese noodles, sauces and seasonings, Vietnamese rice paper, Thai curry pastes plus sweets and drinks from all over Asia. Order online, we confirm availability and prepare your pickup in store.",
+          "Browse over 1,700 products in clear categories — from noodles and rice, through kimchi and pickles, to kitchenware and Korean cosmetics. Pay online with Przelewy24 or BLIK, or on pickup."
+        ]
+      }
     },
     "layout": {
       "header": {
@@ -374,16 +394,76 @@
       "categoryHub": {
         "enabled": true,
         "items": [
-          { "id": "category-hub-kimchi-pickles", "categorySlug": "kimchi-i-kiszonki", "imageUrl": "/brand/categories/kimchi-pickles.webp", "enabled": true, "order": 0 },
-          { "id": "category-hub-noodles-rice", "categorySlug": "makaron-i-ryz", "imageUrl": "/brand/categories/noodles-rice.webp", "enabled": true, "order": 1 },
-          { "id": "category-hub-sauces-pastes", "categorySlug": "sosy-pasty-i-przyprawy", "imageUrl": "/brand/categories/sauces-pastes.webp", "enabled": true, "order": 2 },
-          { "id": "category-hub-snacks-sweets", "categorySlug": "przekaski-i-slodycze", "imageUrl": "/brand/categories/snacks-sweets.webp", "enabled": true, "order": 3 },
-          { "id": "category-hub-drinks", "categorySlug": "napoje-herbaty-i-kawy", "imageUrl": "/brand/categories/drinks.webp", "enabled": true, "order": 4 },
-          { "id": "category-hub-ready-meals", "categorySlug": "dania-gotowe", "imageUrl": "/brand/categories/ready-meals.webp", "enabled": true, "order": 5 },
-          { "id": "category-hub-sushi-seaweed", "categorySlug": "sushi-i-algi", "imageUrl": "/brand/categories/sushi-seaweed.webp", "enabled": true, "order": 6 },
-          { "id": "category-hub-mushrooms-tofu", "categorySlug": "grzyby-warzywa-i-tofu", "imageUrl": "/brand/categories/mushrooms-tofu.webp", "enabled": true, "order": 7 },
-          { "id": "category-hub-kitchen-tools", "categorySlug": "akcesoria-kuchenne", "imageUrl": "/brand/categories/kitchen-tools.webp", "enabled": true, "order": 8 },
-          { "id": "category-hub-korean-cosmetics", "categorySlug": "kosmetyki-koreanskie", "imageUrl": "/brand/categories/korean-cosmetics.webp", "enabled": true, "order": 9 }
+          {
+            "id": "category-hub-kimchi-pickles",
+            "categorySlug": "kimchi-i-kiszonki",
+            "imageUrl": "/brand/categories/kimchi-pickles.webp",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "id": "category-hub-noodles-rice",
+            "categorySlug": "makaron-i-ryz",
+            "imageUrl": "/brand/categories/noodles-rice.webp",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "id": "category-hub-sauces-pastes",
+            "categorySlug": "sosy-i-oleje",
+            "imageUrl": "/brand/categories/sauces-pastes.webp",
+            "enabled": true,
+            "order": 2
+          },
+          {
+            "id": "category-hub-snacks-sweets",
+            "categorySlug": "przekaski-i-slodycze",
+            "imageUrl": "/brand/categories/snacks-sweets.webp",
+            "enabled": true,
+            "order": 3
+          },
+          {
+            "id": "category-hub-drinks",
+            "categorySlug": "napoje-herbaty-i-kawy",
+            "imageUrl": "/brand/categories/drinks.webp",
+            "enabled": true,
+            "order": 4
+          },
+          {
+            "id": "category-hub-ready-meals",
+            "categorySlug": "dania-gotowe",
+            "imageUrl": "/brand/categories/ready-meals.webp",
+            "enabled": true,
+            "order": 5
+          },
+          {
+            "id": "category-hub-sushi-seaweed",
+            "categorySlug": "do-gotowania-i-sushi",
+            "imageUrl": "/brand/categories/sushi-seaweed.webp",
+            "enabled": true,
+            "order": 6
+          },
+          {
+            "id": "category-hub-mushrooms-tofu",
+            "categorySlug": "pasty-przyprawy-i-buliony",
+            "imageUrl": "/brand/categories/mushrooms-tofu.webp",
+            "enabled": true,
+            "order": 7
+          },
+          {
+            "id": "category-hub-kitchen-tools",
+            "categorySlug": "akcesoria-kuchenne",
+            "imageUrl": "/brand/categories/kitchen-tools.webp",
+            "enabled": true,
+            "order": 8
+          },
+          {
+            "id": "category-hub-korean-cosmetics",
+            "categorySlug": "kosmetyki-koreanskie",
+            "imageUrl": "/brand/categories/korean-cosmetics.webp",
+            "enabled": true,
+            "order": 9
+          }
         ]
       },
       "quickLinks": [
@@ -418,8 +498,8 @@
             },
             {
               "id": "tile-sauces",
-              "title": "Sosy i pasty",
-              "href": "/categories/sosy-pasty-i-przyprawy",
+              "title": "Sosy i oleje",
+              "href": "/categories/sosy-i-oleje",
               "description": "Gochujang, sojowe, sezamowe i ostre bazy smaku.",
               "imageUrl": "/brand/categories/sauces-pastes.webp",
               "enabled": true,
@@ -441,6 +521,51 @@
         "enabled": false,
         "label": "Outlet",
         "collectionSlug": null
+      },
+      "trustRow": {
+        "enabled": true,
+        "items": [
+          {
+            "id": "trust-pickup",
+            "icon": "map-pin",
+            "title": "Odbiór osobisty w Warszawie",
+            "description": "Zamów online, odbierz w sklepie",
+            "titleEn": "Pickup in Warsaw",
+            "descriptionEn": "Order online, collect in store",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "id": "trust-confirmation",
+            "icon": "check-circle",
+            "title": "Potwierdzenie ręczne w godzinach otwarcia",
+            "description": "Sklep potwierdza dostępność i termin odbioru",
+            "titleEn": "Confirmed by hand during opening hours",
+            "descriptionEn": "The shop confirms availability and pickup time",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "id": "trust-payment",
+            "icon": "credit-card",
+            "title": "Płatność online (Przelewy24, BLIK) lub przy odbiorze",
+            "description": "Wybierz wygodną formę płatności",
+            "titleEn": "Pay online (Przelewy24, BLIK) or on pickup",
+            "descriptionEn": "Choose the payment that suits you",
+            "enabled": true,
+            "order": 2
+          },
+          {
+            "id": "trust-catalog",
+            "icon": "package",
+            "title": "Ponad 1 700 produktów z Azji",
+            "description": "Korea, Japonia, Wietnam, Tajlandia i więcej",
+            "titleEn": "Over 1,700 products from Asia",
+            "descriptionEn": "Korea, Japan, Vietnam, Thailand and more",
+            "enabled": true,
+            "order": 3
+          }
+        ]
       }
     }
   },
@@ -565,8 +690,8 @@
             {
               "id": "asiandeligo-grid-korean-pantry",
               "imageUrl": "/brand/categories/sauces-pastes.webp",
-              "title": "Sosy i pasty",
-              "href": "/pl/categories/sosy-pasty-i-przyprawy",
+              "title": "Sosy i oleje",
+              "href": "/pl/categories/sosy-i-oleje",
               "enabled": true
             },
             {
@@ -649,14 +774,14 @@
               "id": "asiandeligo-round-sushi-algae",
               "imageUrl": "/brand/categories/sushi-seaweed.webp",
               "title": "Sushi i algi",
-              "href": "/pl/categories/sushi-i-algi",
+              "href": "/pl/categories/do-gotowania-i-sushi",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-mushrooms-tofu",
               "imageUrl": "/brand/categories/mushrooms-tofu.webp",
               "title": "Grzyby i tofu",
-              "href": "/pl/categories/grzyby-warzywa-i-tofu",
+              "href": "/pl/categories/do-gotowania-i-sushi",
               "enabled": true
             },
             {
@@ -690,7 +815,27 @@
           "enabled": false,
           "order": 3
         }
-      ]
+      ],
+      "featured": {
+        "categorySlugs": [
+          "buldak-i-ramyun-ostre",
+          "kimchi",
+          "pocky-pepero-i-czekolada"
+        ]
+      },
+      "seoText": {
+        "enabled": true,
+        "headline": "Asia Deli Go — azjatyckie produkty spożywcze w Warszawie",
+        "paragraphs": [
+          "Asia Deli Go to sklep z azjatyckimi produktami spożywczymi w Warszawie: koreański ramyun i kimchi, japońskie makarony, sosy i przyprawy, wietnamski papier ryżowy, tajskie pasty curry oraz słodycze i napoje z całej Azji. Zamawiasz online, my potwierdzamy dostępność i przygotowujemy odbiór w sklepie.",
+          "W ofercie znajdziesz ponad 1 700 produktów pogrupowanych w przejrzyste kategorie — od makaronów i ryżu, przez kimchi i kiszonki, po akcesoria kuchenne i koreańskie kosmetyki. Płatność online przez Przelewy24 i BLIK albo przy odbiorze."
+        ],
+        "headlineEn": "Asia Deli Go — Asian grocery store in Warsaw",
+        "paragraphsEn": [
+          "Asia Deli Go is an Asian grocery store in Warsaw: Korean ramyun and kimchi, Japanese noodles, sauces and seasonings, Vietnamese rice paper, Thai curry pastes plus sweets and drinks from all over Asia. Order online, we confirm availability and prepare your pickup in store.",
+          "Browse over 1,700 products in clear categories — from noodles and rice, through kimchi and pickles, to kitchenware and Korean cosmetics. Pay online with Przelewy24 or BLIK, or on pickup."
+        ]
+      }
     },
     "layout": {
       "header": {
@@ -818,16 +963,76 @@
       "categoryHub": {
         "enabled": true,
         "items": [
-          { "id": "category-hub-kimchi-pickles", "categorySlug": "kimchi-i-kiszonki", "imageUrl": "/brand/categories/kimchi-pickles.webp", "enabled": true, "order": 0 },
-          { "id": "category-hub-noodles-rice", "categorySlug": "makaron-i-ryz", "imageUrl": "/brand/categories/noodles-rice.webp", "enabled": true, "order": 1 },
-          { "id": "category-hub-sauces-pastes", "categorySlug": "sosy-pasty-i-przyprawy", "imageUrl": "/brand/categories/sauces-pastes.webp", "enabled": true, "order": 2 },
-          { "id": "category-hub-snacks-sweets", "categorySlug": "przekaski-i-slodycze", "imageUrl": "/brand/categories/snacks-sweets.webp", "enabled": true, "order": 3 },
-          { "id": "category-hub-drinks", "categorySlug": "napoje-herbaty-i-kawy", "imageUrl": "/brand/categories/drinks.webp", "enabled": true, "order": 4 },
-          { "id": "category-hub-ready-meals", "categorySlug": "dania-gotowe", "imageUrl": "/brand/categories/ready-meals.webp", "enabled": true, "order": 5 },
-          { "id": "category-hub-sushi-seaweed", "categorySlug": "sushi-i-algi", "imageUrl": "/brand/categories/sushi-seaweed.webp", "enabled": true, "order": 6 },
-          { "id": "category-hub-mushrooms-tofu", "categorySlug": "grzyby-warzywa-i-tofu", "imageUrl": "/brand/categories/mushrooms-tofu.webp", "enabled": true, "order": 7 },
-          { "id": "category-hub-kitchen-tools", "categorySlug": "akcesoria-kuchenne", "imageUrl": "/brand/categories/kitchen-tools.webp", "enabled": true, "order": 8 },
-          { "id": "category-hub-korean-cosmetics", "categorySlug": "kosmetyki-koreanskie", "imageUrl": "/brand/categories/korean-cosmetics.webp", "enabled": true, "order": 9 }
+          {
+            "id": "category-hub-kimchi-pickles",
+            "categorySlug": "kimchi-i-kiszonki",
+            "imageUrl": "/brand/categories/kimchi-pickles.webp",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "id": "category-hub-noodles-rice",
+            "categorySlug": "makaron-i-ryz",
+            "imageUrl": "/brand/categories/noodles-rice.webp",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "id": "category-hub-sauces-pastes",
+            "categorySlug": "sosy-i-oleje",
+            "imageUrl": "/brand/categories/sauces-pastes.webp",
+            "enabled": true,
+            "order": 2
+          },
+          {
+            "id": "category-hub-snacks-sweets",
+            "categorySlug": "przekaski-i-slodycze",
+            "imageUrl": "/brand/categories/snacks-sweets.webp",
+            "enabled": true,
+            "order": 3
+          },
+          {
+            "id": "category-hub-drinks",
+            "categorySlug": "napoje-herbaty-i-kawy",
+            "imageUrl": "/brand/categories/drinks.webp",
+            "enabled": true,
+            "order": 4
+          },
+          {
+            "id": "category-hub-ready-meals",
+            "categorySlug": "dania-gotowe",
+            "imageUrl": "/brand/categories/ready-meals.webp",
+            "enabled": true,
+            "order": 5
+          },
+          {
+            "id": "category-hub-sushi-seaweed",
+            "categorySlug": "do-gotowania-i-sushi",
+            "imageUrl": "/brand/categories/sushi-seaweed.webp",
+            "enabled": true,
+            "order": 6
+          },
+          {
+            "id": "category-hub-mushrooms-tofu",
+            "categorySlug": "pasty-przyprawy-i-buliony",
+            "imageUrl": "/brand/categories/mushrooms-tofu.webp",
+            "enabled": true,
+            "order": 7
+          },
+          {
+            "id": "category-hub-kitchen-tools",
+            "categorySlug": "akcesoria-kuchenne",
+            "imageUrl": "/brand/categories/kitchen-tools.webp",
+            "enabled": true,
+            "order": 8
+          },
+          {
+            "id": "category-hub-korean-cosmetics",
+            "categorySlug": "kosmetyki-koreanskie",
+            "imageUrl": "/brand/categories/korean-cosmetics.webp",
+            "enabled": true,
+            "order": 9
+          }
         ]
       },
       "quickLinks": [
@@ -862,8 +1067,8 @@
             },
             {
               "id": "tile-sauces",
-              "title": "Sosy i pasty",
-              "href": "/categories/sosy-pasty-i-przyprawy",
+              "title": "Sosy i oleje",
+              "href": "/categories/sosy-i-oleje",
               "description": "Gochujang, sojowe, sezamowe i ostre bazy smaku.",
               "imageUrl": "/brand/categories/sauces-pastes.webp",
               "enabled": true,
@@ -885,10 +1090,55 @@
         "enabled": false,
         "label": "Outlet",
         "collectionSlug": null
+      },
+      "trustRow": {
+        "enabled": true,
+        "items": [
+          {
+            "id": "trust-pickup",
+            "icon": "map-pin",
+            "title": "Odbiór osobisty w Warszawie",
+            "description": "Zamów online, odbierz w sklepie",
+            "titleEn": "Pickup in Warsaw",
+            "descriptionEn": "Order online, collect in store",
+            "enabled": true,
+            "order": 0
+          },
+          {
+            "id": "trust-confirmation",
+            "icon": "check-circle",
+            "title": "Potwierdzenie ręczne w godzinach otwarcia",
+            "description": "Sklep potwierdza dostępność i termin odbioru",
+            "titleEn": "Confirmed by hand during opening hours",
+            "descriptionEn": "The shop confirms availability and pickup time",
+            "enabled": true,
+            "order": 1
+          },
+          {
+            "id": "trust-payment",
+            "icon": "credit-card",
+            "title": "Płatność online (Przelewy24, BLIK) lub przy odbiorze",
+            "description": "Wybierz wygodną formę płatności",
+            "titleEn": "Pay online (Przelewy24, BLIK) or on pickup",
+            "descriptionEn": "Choose the payment that suits you",
+            "enabled": true,
+            "order": 2
+          },
+          {
+            "id": "trust-catalog",
+            "icon": "package",
+            "title": "Ponad 1 700 produktów z Azji",
+            "description": "Korea, Japonia, Wietnam, Tajlandia i więcej",
+            "titleEn": "Over 1,700 products from Asia",
+            "descriptionEn": "Korea, Japan, Vietnam, Thailand and more",
+            "enabled": true,
+            "order": 3
+          }
+        ]
       }
     }
   },
-  "version": 26,
+  "version": 27,
   "updatedAt": "2026-06-25T05:51:45.255Z",
   "publishedAt": "2026-06-18T11:35:41.982Z"
 }

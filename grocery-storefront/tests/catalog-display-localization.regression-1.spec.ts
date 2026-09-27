@@ -131,7 +131,8 @@ test.describe('catalog display localization', () => {
       name: 'Dania gotowe',
       slug: 'dania-gotowe',
     }, 'en-GB')).toMatchObject({
-      name: 'Ready meals',
+      // Wave 2 tree name (category-tree.json group "dania-gotowe").
+      name: 'Ready meals and instant soups',
       slug: 'dania-gotowe',
       isCurated: true,
     });
@@ -142,7 +143,9 @@ test.describe('catalog display localization', () => {
     }, 'en')).toMatchObject({
       name: 'Nieznana kategoria',
       slug: 'nieznana-kategoria',
-      isCurated: false,
+      // Wave 2: the tree adapter keeps every category (a parentless one is a
+      // leafless group), so nothing the API returns is dropped as "uncurated".
+      isCurated: true,
     });
 
     expect(getLocalizedUnitLabel('PIECE', 'en')).toBe('pcs');
@@ -179,7 +182,7 @@ test.describe('catalog display localization', () => {
       block.type === 'grid' || block.type === 'round_grid' ? block.items : []
     ));
     expect(englishGridItems).toEqual(expect.arrayContaining([
-      expect.objectContaining({ id: 'asiandeligo-grid-korean-pantry', title: 'Sauces and pastes' }),
+      expect.objectContaining({ id: 'asiandeligo-grid-korean-pantry', title: 'Sauces and oils' }),
       expect.objectContaining({ id: 'asiandeligo-grid-drinks', title: 'Drinks' }),
       expect.objectContaining({ id: 'asiandeligo-grid-ready-meals', title: 'Ready meals' }),
       expect.objectContaining({ id: 'asiandeligo-grid-kimchi', title: 'Kimchi and pickles' }),
@@ -214,7 +217,7 @@ test.describe('catalog display localization', () => {
         title: 'Korean pantry',
         subtitle: 'Rice, sauces, noodles, and Korean cooking essentials.',
         tiles: expect.arrayContaining([
-          expect.objectContaining({ id: 'tile-sauces', title: 'Sauces and pastes' }),
+          expect.objectContaining({ id: 'tile-sauces', title: 'Sauces and oils' }),
           expect.objectContaining({ id: 'tile-noodles', title: 'Noodles and rice' }),
         ]),
       }),
@@ -291,7 +294,7 @@ test.describe('catalog display localization', () => {
     await page.goto('/en');
 
     const body = page.locator('body');
-    await expect(body).toContainText('Sauces and pastes');
+    await expect(body).toContainText('Sauces and oils');
     await expect(page.locator('h1.sr-only')).toHaveText('Asian groceries for everyday shopping');
     await expect(page.locator('[data-testid="desktop-home-hero"] img')).toHaveCount(5);
     await expect(page.locator('[data-testid="desktop-home-hero"] img').first()).toHaveAttribute(
@@ -327,7 +330,7 @@ test.describe('catalog display localization', () => {
     }
 
     const polishCopy = [
-      'Sosy i pasty',
+      'Sosy i oleje',
       'Napoje',
       'Dania gotowe',
       'Kimchi i kiszonki',
@@ -380,7 +383,7 @@ test.describe('catalog display localization', () => {
     await page.goto('/');
 
     const body = page.locator('body');
-    await expect(body).toContainText('Sosy i pasty');
+    await expect(body).toContainText('Sosy i oleje');
     await expect(page.locator('h1.sr-only')).toHaveText('Azjatyckie produkty spożywcze na co dzień');
     await expect(body).toContainText('Ramen i gotowe dania na szybki obiad');
     await expect(body).toContainText('Kuchnie');

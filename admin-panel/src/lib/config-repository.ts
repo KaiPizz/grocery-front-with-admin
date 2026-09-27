@@ -23,9 +23,24 @@ async function ensureDataDir(): Promise<void> {
 
 export function withConfigDefaults(config: StorefrontConfig): StorefrontConfig {
   const commercial = config.commercial ?? DEFAULT_CONFIG.commercial;
+  const homepage = config.homepage ?? DEFAULT_CONFIG.homepage;
+  const trustRowInput = commercial.trustRow;
 
   return {
     ...config,
+    homepage: {
+      ...DEFAULT_CONFIG.homepage,
+      ...homepage,
+      featured: {
+        categorySlugs: (homepage.featured?.categorySlugs ?? [])
+          .map((slug) => slug.trim())
+          .filter(Boolean),
+      },
+      seoText: {
+        ...DEFAULT_CONFIG.homepage.seoText,
+        ...(homepage.seoText ?? {}),
+      },
+    },
     general: {
       ...config.general,
       legalIdentity: {
@@ -44,6 +59,10 @@ export function withConfigDefaults(config: StorefrontConfig): StorefrontConfig {
         ...DEFAULT_CONFIG.commercial.categoryHub,
         ...commercial.categoryHub,
         items: commercial.categoryHub?.items ?? DEFAULT_CONFIG.commercial.categoryHub.items,
+      },
+      trustRow: {
+        enabled: trustRowInput?.enabled ?? DEFAULT_CONFIG.commercial.trustRow.enabled,
+        items: trustRowInput?.items?.length ? trustRowInput.items : DEFAULT_CONFIG.commercial.trustRow.items,
       },
       outlet: {
         ...DEFAULT_CONFIG.commercial.outlet,

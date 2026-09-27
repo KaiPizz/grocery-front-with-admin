@@ -261,6 +261,19 @@ export const vi: Translations = {
   homepage: {
     title: 'Trang chủ',
     description: 'Banner chính, banner quảng cáo và thứ tự mục',
+    featured: {
+      title: 'Nổi bật trên trang chủ',
+      slugs: 'Slug danh mục con (phân cách bằng dấu phẩy)',
+      hint: 'Trống = cửa hàng dùng danh mục mặc định.',
+    },
+    seoText: {
+      title: 'Văn bản SEO',
+      enable: 'Hiện văn bản SEO ở cuối trang chủ',
+      headlinePl: 'Tiêu đề (PL)',
+      headlineEn: 'Tiêu đề (EN)',
+      paragraphsPl: 'Đoạn văn (PL) — cách nhau bằng dòng trống',
+      paragraphsEn: 'Đoạn văn (EN) — cách nhau bằng dòng trống',
+    },
     hero: {
       title: 'Banner chính',
       headline: 'Tiêu đề',
@@ -425,6 +438,17 @@ export const vi: Translations = {
         moveUp: 'Đưa danh mục lên',
         moveDown: 'Đưa danh mục xuống',
         removeItem: 'Xóa cấu hình danh mục',
+      },
+      trustRow: {
+        title: 'Thanh tin cậy',
+        hint: 'Bốn cam kết ngắn dưới banner.',
+        enable: 'Hiện thanh tin cậy',
+        addItem: 'Thêm mục',
+        icon: 'Biểu tượng',
+        titlePl: 'Tiêu đề (PL)',
+        descriptionPl: 'Mô tả (PL)',
+        titleEn: 'Tiêu đề (EN)',
+        descriptionEn: 'Mô tả (EN)',
       },
       collections: 'Bo suu tap',
       collectionsHint: 'Trang cau hinh san, vi du chon loc theo mua hoac Korean pantry',

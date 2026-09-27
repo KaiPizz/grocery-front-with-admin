@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { DEFAULT_TRUST_ROW } from './defaults';
+
 // --- Primitives ---
 
 const hexColor = z.string().regex(/^#[0-9a-fA-F]{6,8}$/, 'Must be a valid hex color');
@@ -243,6 +245,23 @@ const bannerBlockSchema = z.discriminatedUnion('type', [
 
 const VALID_BLOCK_TYPES = new Set(['hero', 'horizontal', 'grid', 'round_grid', 'sidebar', 'small_sticky']);
 
+// Wave 2 landing: leaf slugs for the "Polecane" shelf and the owner's SEO text.
+// Both default so drafts saved before wave 2 still validate; blank entries the
+// editors produce (trailing comma, extra blank line) are dropped here.
+const homepageFeaturedSchema = z.object({
+  categorySlugs: z.array(z.string().trim().max(120)).transform((slugs) => slugs.filter(Boolean)),
+}).default({ categorySlugs: [] });
+
+const seoParagraphsSchema = z.array(z.string().trim().max(2000)).transform((list) => list.filter(Boolean));
+
+const homepageSeoTextSchema = z.object({
+  enabled: z.boolean(),
+  headline: z.string().trim().max(200),
+  paragraphs: seoParagraphsSchema,
+  headlineEn: z.string().trim().max(200),
+  paragraphsEn: seoParagraphsSchema,
+}).default({ enabled: false, headline: '', paragraphs: [], headlineEn: '', paragraphsEn: [] });
+
 const homepageSchema = z.object({
   hero: heroBannerSchema,
   promoBanners: z.array(promoBannerItemSchema),
@@ -257,6 +276,8 @@ const homepageSchema = z.object({
     z.array(bannerBlockSchema)
   ).default([]),
   sections: z.array(homepageSectionSchema),
+  featured: homepageFeaturedSchema,
+  seoText: homepageSeoTextSchema,
 });
 
 // --- Layout ---
@@ -530,9 +551,27 @@ const commercialOutletSchema = z.object({
   collectionSlug: collectionSlugSchema.nullable(),
 });
 
+const commercialTrustRowItemSchema = z.object({
+  id: z.string().min(1),
+  icon: z.enum(['map-pin', 'check-circle', 'credit-card', 'package']),
+  title: z.string().trim().max(120),
+  description: z.string().trim().max(200),
+  titleEn: z.string().trim().max(120),
+  descriptionEn: z.string().trim().max(200),
+  enabled: z.boolean(),
+  order: z.number().int().min(0),
+});
+
+// Defaults to the storefront's built-in four promises for configs saved before wave 2.
+const commercialTrustRowSchema = z.object({
+  enabled: z.boolean(),
+  items: z.array(commercialTrustRowItemSchema),
+}).default(DEFAULT_TRUST_ROW);
+
 const commercialObjectSchema = z.object({
   enabled: z.boolean(),
   categoryHub: commercialCategoryHubSchema,
+  trustRow: commercialTrustRowSchema,
   quickLinks: z.array(commercialQuickLinkSchema),
   collections: z.array(commercialCollectionSchema),
   outlet: commercialOutletSchema,
@@ -567,6 +606,7 @@ const commercialSchema = commercialObjectSchema.superRefine((commercial, ctx) =>
     enabled: true,
     items: [],
   },
+  trustRow: DEFAULT_TRUST_ROW,
   quickLinks: [],
   collections: [],
   outlet: {

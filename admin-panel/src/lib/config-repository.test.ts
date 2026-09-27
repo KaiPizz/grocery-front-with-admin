@@ -72,6 +72,18 @@ test('deeply defaults category hub fields from legacy stored configs', () => {
   });
 });
 
+test('withConfigDefaults fills trustRow items, featured slugs and seoText for old configs', () => {
+  const merged = withConfigDefaults({
+    ...DEFAULT_CONFIG,
+    commercial: { ...DEFAULT_CONFIG.commercial, trustRow: undefined },
+    homepage: { ...DEFAULT_CONFIG.homepage, featured: undefined, seoText: { enabled: true, headline: 'X' } },
+  } as never);
+  assert.equal(merged.commercial.trustRow.items.length, 4);
+  assert.equal(merged.commercial.trustRow.items[0].id, 'trust-pickup');
+  assert.deepEqual(merged.homepage.featured, { categorySlugs: [] });
+  assert.deepEqual(merged.homepage.seoText, { enabled: true, headline: 'X', paragraphs: [], headlineEn: '', paragraphsEn: [] });
+});
+
 test('only treats ENOENT as a missing config', async (context) => {
   const previousDataDir = process.env.ADMIN_DATA_DIR;
   const dataDir = await fs.mkdtemp(path.join(os.tmpdir(), 'admin-config-invalid-'));

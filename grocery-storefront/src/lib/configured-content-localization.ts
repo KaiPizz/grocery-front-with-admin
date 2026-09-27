@@ -44,7 +44,7 @@ const PROMO_COPY: Record<string, {
 };
 
 const GRID_ITEM_TITLES: Record<string, ExactTranslation> = {
-  'asiandeligo-grid-korean-pantry': { source: 'Sosy i pasty', english: 'Sauces and pastes' },
+  'asiandeligo-grid-korean-pantry': { source: 'Sosy i oleje', english: 'Sauces and oils' },
   'asiandeligo-grid-drinks': { source: 'Napoje', english: 'Drinks' },
   'asiandeligo-grid-ready-meals': { source: 'Dania gotowe', english: 'Ready meals' },
   'asiandeligo-grid-kimchi': { source: 'Kimchi i kiszonki', english: 'Kimchi and pickles' },
@@ -104,7 +104,7 @@ const KOREAN_PANTRY_COPY: {
       },
     },
     'tile-sauces': {
-      title: { source: 'Sosy i pasty', english: 'Sauces and pastes' },
+      title: { source: 'Sosy i oleje', english: 'Sauces and oils' },
       description: {
         source: 'Gochujang, sojowe, sezamowe i ostre bazy smaku.',
         english: 'Gochujang, soy sauce, sesame, and spicy flavour bases.',

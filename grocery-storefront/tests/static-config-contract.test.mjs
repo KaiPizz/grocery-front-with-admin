@@ -212,3 +212,93 @@ test('homepage campaign copy uses Asia Deli Go branding', () => {
   assert.doesNotMatch(plMessages, /Wybór Kenmito/);
   assert.doesNotMatch(enMessages, /Kenmito picks/);
 });
+
+// Wave 2: the category tree (10 groups) lives in the backend repo; the ADG
+// config must point its hub tiles and grid links at live group slugs only.
+const RETIRED_GROUP_SLUGS = ['sosy-pasty-i-przyprawy', 'sushi-i-algi', 'grzyby-warzywa-i-tofu'];
+const CATEGORY_TREE_JSON = process.env.ADG_CATEGORY_TREE_JSON
+  ?? '/var/www/www/enail/.worktrees/adg-category-tree/backend/src/scripts/adg/category-tree.json';
+
+function readAdgConfigs() {
+  const envelope = JSON.parse(readFileSync(asiaDeliGoConfigUrl, 'utf8'));
+  const adminEnvelope = JSON.parse(readFileSync(adminConfigUrl, 'utf8'));
+  return { envelope, adminEnvelope };
+}
+
+test('ADG category hub points only at live group slugs', { skip: existsSync(CATEGORY_TREE_JSON) ? false : `category tree not found at ${CATEGORY_TREE_JSON}` }, () => {
+  const { envelope } = readAdgConfigs();
+  const groupSlugs = new Set(JSON.parse(readFileSync(CATEGORY_TREE_JSON, 'utf8')).groups.map((group) => group.slug));
+  for (const item of envelope.config.commercial.categoryHub.items) {
+    assert.ok(!RETIRED_GROUP_SLUGS.includes(item.categorySlug), `retired slug ${item.categorySlug}`);
+    assert.ok(groupSlugs.has(item.categorySlug), `unknown group slug ${item.categorySlug}`);
+  }
+  const json = JSON.stringify(envelope.config.homepage.blocks);
+  for (const slug of RETIRED_GROUP_SLUGS) {
+    assert.equal(json.includes(`/categories/${slug}`), false, `grid still links to ${slug}`);
+  }
+});
+
+// Every "/categories/<slug>" link (hub, grid tiles, nav, collections, quick links)
+// in the ADG configs must resolve to a live group or leaf of the wave 2 tree;
+// a retired slug would 301 at best and 404 for a leaf that no longer exists.
+function collectCategoryLinks(value, path = '$', out = []) {
+  if (typeof value === 'string') {
+    const match = value.match(/^(?:\/(?:pl|en))?\/categories\/([a-z0-9-]+)\/?$/);
+    if (match) out.push({ path, slug: match[1] });
+  } else if (Array.isArray(value)) {
+    value.forEach((item, index) => collectCategoryLinks(item, `${path}[${index}]`, out));
+  } else if (value && typeof value === 'object') {
+    for (const [key, child] of Object.entries(value)) collectCategoryLinks(child, `${path}.${key}`, out);
+  }
+  return out;
+}
+
+test('every ADG category link points at a live tree slug', { skip: existsSync(CATEGORY_TREE_JSON) ? false : `category tree not found at ${CATEGORY_TREE_JSON}` }, () => {
+  const tree = JSON.parse(readFileSync(CATEGORY_TREE_JSON, 'utf8'));
+  const liveSlugs = new Set(tree.groups.flatMap((group) => [group.slug, ...(group.leaves ?? []).map((leaf) => leaf.slug)]));
+  const { envelope, adminEnvelope } = readAdgConfigs();
+  for (const [label, config] of [['storefront', envelope.config], ['admin', adminEnvelope.published]]) {
+    const links = collectCategoryLinks(config);
+    assert.ok(links.length >= 10, `${label}: expected category links in the config, found ${links.length}`);
+    const dead = links.filter((link) => !liveSlugs.has(link.slug));
+    assert.deepEqual(dead, [], `${label}: links to retired category slugs`);
+  }
+});
+
+test('ADG trust row, featured leaves and seo text are configured in both storefront and admin copies', () => {
+  const { envelope, adminEnvelope } = readAdgConfigs();
+  for (const [label, config] of [
+    ['storefront', envelope.config],
+    ['admin published', adminEnvelope.published],
+    ['admin draft', adminEnvelope.draft],
+  ]) {
+    assert.equal(config.commercial.trustRow?.enabled, true, `${label} trustRow.enabled`);
+    assert.deepEqual(
+      config.commercial.trustRow.items.map((item) => item.id),
+      ['trust-pickup', 'trust-confirmation', 'trust-payment', 'trust-catalog'],
+      `${label} trustRow ids`,
+    );
+    for (const item of config.commercial.trustRow.items) {
+      assert.ok(['map-pin', 'check-circle', 'credit-card', 'package'].includes(item.icon), `${label} ${item.id} icon`);
+      assert.ok(item.title && item.titleEn, `${label} ${item.id} titles`);
+    }
+    assert.deepEqual(
+      config.homepage.featured?.categorySlugs,
+      ['buldak-i-ramyun-ostre', 'kimchi', 'pocky-pepero-i-czekolada'],
+      `${label} featured`,
+    );
+    assert.equal(config.homepage.seoText?.enabled, true, `${label} seoText.enabled`);
+    assert.match(config.homepage.seoText.headline, /Asia Deli Go/, `${label} seoText.headline`);
+    assert.equal(config.homepage.seoText.paragraphs.length, 2, `${label} seoText.paragraphs`);
+    assert.equal(config.homepage.seoText.paragraphsEn.length, 2, `${label} seoText.paragraphsEn`);
+  }
+});
+
+test('storefront and admin ADG configs agree on hub, trust row, featured and seo text', () => {
+  const { envelope, adminEnvelope } = readAdgConfigs();
+  for (const key of ['commercial.categoryHub', 'commercial.trustRow', 'homepage.featured', 'homepage.seoText']) {
+    const pick = (config) => key.split('.').reduce((value, part) => value?.[part], config);
+    assert.deepEqual(pick(adminEnvelope.published), pick(envelope.config), `${key} published`);
+    assert.deepEqual(pick(adminEnvelope.draft), pick(envelope.config), `${key} draft`);
+  }
+});
