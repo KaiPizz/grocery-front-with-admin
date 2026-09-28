@@ -17,7 +17,7 @@ export type PublicSeoRoute =
   | 'track-order';
 
 const DEFAULT_STORE_NAME = 'Asia Deli Go';
-const DEFAULT_OG_IMAGE_PATH = '/brand/hero/asia-deli-go-hero-01.webp';
+const DEFAULT_OG_IMAGE_PATH = '/brand/hero/asia-deli-go-hero-03.webp';
 
 export const fetchSeoStorefrontConfig = cache(async () => fetchServerConfig());
 

@@ -6,6 +6,7 @@ const serverConfigSource = readFileSync(new URL('../src/lib/storefront-config.ts
 const sharedConfigSource = readFileSync(new URL('../src/lib/storefront-config-shared.ts', import.meta.url), 'utf8');
 const clientProviderSource = readFileSync(new URL('../src/components/ConfigProvider.tsx', import.meta.url), 'utf8');
 const heroBannerSource = readFileSync(new URL('../src/components/blocks/HeroBanner.tsx', import.meta.url), 'utf8');
+const seoMetadataSource = readFileSync(new URL('../src/lib/seo-metadata.ts', import.meta.url), 'utf8');
 const staticConfigUrl = new URL('../public/config/kenmito.json', import.meta.url);
 const asiaDeliGoConfigUrl = new URL('../public/config/asiandeligo.json', import.meta.url);
 const adminConfigUrl = new URL('../../admin-panel/data/config-asiandeligo.json', import.meta.url);
@@ -136,6 +137,14 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.deepEqual(
     heroBlock.slides.filter((slide) => slide.enabled === false).map((slide) => slide.id),
     ['asiandeligo-drive-hero-slide-1', 'asiandeligo-drive-hero-slide-2'],
+  );
+  // Link previews use the default og:image while seo.ogImageUrl is null: it must be artwork
+  // the shop still shows, not the retired frozen-goods slide.
+  assert.equal(config.seo.ogImageUrl, null);
+  const defaultOgImage = seoMetadataSource.match(/DEFAULT_OG_IMAGE_PATH = '([^']+)'/)?.[1];
+  assert.ok(
+    heroBlock.slides.some((slide) => slide.enabled !== false && slide.imageUrl === defaultOgImage),
+    `Default og:image ${defaultOgImage} is not an enabled hero slide`,
   );
   assert.equal(categoryGridBlocks.length, 2);
   assert.deepEqual(categoryGridBlocks.map((block) => block.imageFit), ['cover', 'cover']);
