@@ -4,6 +4,8 @@ import { expect, test, type Page } from '@playwright/test';
 import { mockMobileStorefront } from './mobile-fixtures';
 
 const ADG_CONFIG = JSON.parse(readFileSync(path.join(process.cwd(), 'public/config/asiandeligo.json'), 'utf8'));
+// Legacy block landing (other tenants still use it); the ADG showcase has its own spec.
+ADG_CONFIG.config.homepage.showcase.enabled = false;
 
 async function mockAsiaDeliGoConfig(page: Page) {
   await page.route('**/api/config/**', (route) => route.fulfill({
@@ -26,7 +28,7 @@ test.describe('landing wave 2', () => {
 
     const trustRow = page.getByTestId('home-trust-row').first();
     await expect(trustRow.getByTestId('home-trust-row-item')).toHaveCount(4);
-    await expect(trustRow).toContainText('Odbiór osobisty w Warszawie');
+    await expect(trustRow).toContainText('Odbiór w Warszawie');
     await expect(page.getByTestId('home-pickup-guide')).toHaveCount(0);
 
     // Product cards inside the shelf render their own h2, so pin the heading by name.

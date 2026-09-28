@@ -89,7 +89,10 @@ async function mockPickupCategoryHomepageConfig(page: Page) {
 }
 
 function cloneAsiaDeliGoConfig(): StorefrontConfig {
-  return JSON.parse(JSON.stringify(asiaDeliGoConfigEnvelope.config)) as StorefrontConfig;
+  const config = JSON.parse(JSON.stringify(asiaDeliGoConfigEnvelope.config)) as StorefrontConfig;
+  // Legacy block landing (other tenants still use it); the ADG showcase has its own spec.
+  if (config.homepage.showcase) config.homepage.showcase.enabled = false;
+  return config;
 }
 
 async function mockAsiaDeliGoProductionConfig(page: Page) {

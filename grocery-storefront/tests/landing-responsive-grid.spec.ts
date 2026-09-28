@@ -13,6 +13,8 @@ type GridImageFit = 'contain' | 'cover';
 
 async function mockAsiaDeliGoConfig(page: Parameters<typeof mockMobileStorefront>[0], imageFit?: GridImageFit) {
   const envelope = structuredClone(asiaDeliGoConfig);
+  // Legacy block landing (other tenants still use it); the ADG showcase has its own spec.
+  envelope.config.homepage.showcase.enabled = false;
   const gridBlocks = envelope.config.homepage.blocks.filter((block) => block.type === 'grid');
 
   for (const block of gridBlocks) {
@@ -226,7 +228,7 @@ test.describe('landing responsive contracts', () => {
     const promotion = page.locator('[data-testid="home-configured-promo"]:visible');
 
     await expect(hero).toBeVisible();
-    await expect(trustRow).toContainText('Odbiór osobisty w Warszawie');
+    await expect(trustRow).toContainText('Odbiór w Warszawie');
     await expect(categories.getByTestId('home-configured-category-link')).toHaveCount(9);
     await expect(products).toBeVisible();
     await expect(promotion).toHaveCount(1);

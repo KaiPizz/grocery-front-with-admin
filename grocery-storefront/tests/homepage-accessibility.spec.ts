@@ -29,6 +29,8 @@ async function mockHeroBlockConfig(
   }
 ) {
   const envelope = structuredClone(asiaDeliGoConfig);
+  // Legacy block landing (other tenants still use it); the ADG showcase has its own spec.
+  envelope.config.homepage.showcase.enabled = false;
   envelope.config.homepage.hero.headline = headline;
   const heroBlock = envelope.config.homepage.blocks.find((block: { type: string }) => block.type === 'hero');
   heroBlock.autoPlay = autoPlay;

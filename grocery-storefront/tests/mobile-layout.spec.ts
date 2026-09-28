@@ -16,6 +16,8 @@ const MIN_TARGET = 24;
 async function mockAsiaDeliGoConfig(page: Page) {
   // Production contact details (the repo config leaves them blank for the admin to fill).
   const envelope = structuredClone(asiaDeliGoConfig);
+  // Legacy block landing (other tenants still use it); the ADG showcase has its own spec.
+  envelope.config.homepage.showcase.enabled = false;
   Object.assign(envelope.config.general, {
     email: 'asiadelionline@gmail.com',
     address: 'Zamieniecka 80/12, 04-158 Warszawa (Centrum Handlowe Szembeka)',
