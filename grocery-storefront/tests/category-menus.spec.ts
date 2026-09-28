@@ -47,10 +47,14 @@ test.describe('category menus (tree) — mobile drawer accordion', () => {
     await page.goto('/en');
 
     // WebKit exposes the SSR trigger before hydration: retry the click until the drawer is open.
-    await expect.poll(async () => {
-      await page.getByRole('button', { name: /open menu/i }).first().click();
-      return page.getByTestId('mobile-category-accordion').isVisible();
-    }, { timeout: 15_000 }).toBe(true);
+    // Click only while the dialog is closed: once open, Radix aria-hides the trigger, so a
+    // second click (drawer open, accordion still painting on a loaded box) waits forever.
+    await expect(async () => {
+      if (!(await page.locator('#mobile-nav').isVisible())) {
+        await page.getByRole('button', { name: /open menu/i }).first().click({ timeout: 2_000 });
+      }
+      await expect(page.getByTestId('mobile-category-accordion')).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 15_000 });
 
     const accordion = page.getByTestId('mobile-category-accordion');
     const toggles = accordion.getByTestId('mobile-category-group');

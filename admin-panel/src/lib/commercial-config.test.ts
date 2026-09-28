@@ -218,3 +218,21 @@ test('schema keeps trust row, featured leaves and seo text, and fills them for c
   assert.deepEqual(legacyParsed.data?.homepage.featured, { categorySlugs: [] });
   assert.equal(legacyParsed.data?.homepage.seoText.enabled, false);
 });
+
+test('schema refuses an enabled trust row item without a title, but lets a disabled one stay blank', () => {
+  const item = {
+    id: 'trust-x', icon: 'map-pin' as const, title: '   ', description: 'D', titleEn: '', descriptionEn: '', enabled: true, order: 0,
+  };
+  const config = cloneConfig();
+  config.commercial.trustRow = { enabled: true, items: [item] };
+
+  const parsed = storefrontConfigSchema.safeParse(config);
+  assert.equal(parsed.success, false);
+  assert.deepEqual(
+    parsed.success ? null : parsed.error.issues.map((issue) => issue.path.join('.')),
+    ['commercial.trustRow.items.0.title'],
+  );
+
+  config.commercial.trustRow = { enabled: true, items: [{ ...item, enabled: false }] };
+  assert.equal(storefrontConfigSchema.safeParse(config).success, true);
+});

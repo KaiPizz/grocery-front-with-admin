@@ -560,6 +560,11 @@ const commercialTrustRowItemSchema = z.object({
   descriptionEn: z.string().trim().max(200),
   enabled: z.boolean(),
   order: z.number().int().min(0),
+}).superRefine((item, ctx) => {
+  // A switched-on promise with no title renders as a bare icon on the storefront.
+  if (item.enabled && !item.title) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['title'], message: 'Enabled trust row item requires a title' });
+  }
 });
 
 // Defaults to the storefront's built-in four promises for configs saved before wave 2.
