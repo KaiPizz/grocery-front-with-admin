@@ -21,7 +21,7 @@ import {
   PRODUCT_LISTING_QUERY,
 } from '@/lib/graphql/operations/grocery';
 import type { GroceryProduct, StorageZone } from '@/types';
-import { FilterChipGroup, type FilterChipOption } from './FilterChipGroup';
+import { FilterChipGroup, FilterSection, type FilterChipOption } from './FilterChipGroup';
 import {
   DEFAULT_FILTERS,
   areFiltersEqual,
@@ -346,7 +346,9 @@ export function ProductListingClient({
     pause: !filterMetadataRequested,
     variables: {
       channel,
-      first: 30,
+      // The backend caps this at 100; the group shows 8 and the search box
+      // reaches the long tail.
+      first: 100,
       categoryIds: countryOriginCategoryIds,
       countryOfOrigin: brandFacetCountries.length > 0 ? brandFacetCountries : null,
     },
@@ -548,6 +550,9 @@ export function ProductListingClient({
     const countryFilterUnavailable = availableCountryOrigins.length === 0;
     const localActiveFilterCount = countActiveFilters(normalizedFilters);
     const showFacetCounts = !normalizedSearch && !hasNarrowedFacetScope(normalizedFilters);
+    const priceSummary = [normalizedFilters.priceMin, normalizedFilters.priceMax].some(Boolean)
+      ? `${normalizedFilters.priceMin || '0'} – ${normalizedFilters.priceMax || '…'}`
+      : '';
 
     return (
       <>
@@ -613,6 +618,8 @@ export function ProductListingClient({
             moreLabel={(hiddenCount) => t('showMoreOptions', { count: hiddenCount })}
             lessLabel={t('showLessOptions')}
             testId="filter-brand"
+            searchLabel={t('searchBrands')}
+            noMatchesLabel={t('noBrandMatches')}
           />
         )}
 
@@ -637,10 +644,12 @@ export function ProductListingClient({
           />
         )}
 
-        <fieldset className="space-y-3">
-          <legend className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
-            {t('priceFilter')}
-          </legend>
+        <FilterSection
+          legend={t('priceFilter')}
+          summary={priceSummary}
+          defaultOpen={Boolean(priceSummary)}
+          testId="filter-price"
+        >
           <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3">
             <input
               type="text"
@@ -666,7 +675,7 @@ export function ProductListingClient({
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
             />
           </div>
-        </fieldset>
+        </FilterSection>
 
         {categoryFilterUnavailable && brandFilterUnavailable && countryFilterUnavailable && (
           <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
@@ -1469,20 +1478,18 @@ export function ProductListingClient({
     );
   }
 
-  function renderMobileCategoryRail() {
+  // One horizontal chip row: inside a group it is the group itself plus its
+  // subcategories (the other nine groups live on /categories); on /products it
+  // is the group list.
+  function renderCategoryRail(testId: string, className: string) {
     if (!hasCategoryNavigation) return null;
+    const expandedGroup = categoryNavigation.find((item) => item.expanded && item.children && item.children.length > 0);
+    const railItems = expandedGroup ? [expandedGroup, ...(expandedGroup.children ?? [])] : categoryNavigation;
 
     return (
-      <section className="-mx-4 space-y-2 overflow-hidden" data-testid="mobile-category-rail" aria-label={t('categoryFilter')}>
-        <div className="px-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: 'var(--color-muted-foreground)' }}>
-            {t('categoryFilter')}
-          </p>
-        </div>
+      <nav className={`overflow-hidden ${className}`} data-testid={testId} aria-label={t('categoryFilter')}>
         <div className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {categoryNavigation.flatMap((item) => (
-            item.expanded && item.children ? [item, ...item.children] : [item]
-          )).map((category) => {
+          {railItems.map((category) => {
             const isActive = currentCategorySlug === category.slug;
 
             return (
@@ -1515,7 +1522,7 @@ export function ProductListingClient({
             );
           })}
         </div>
-      </section>
+      </nav>
     );
   }
 
@@ -1599,7 +1606,7 @@ export function ProductListingClient({
             </button>
           </div>
 
-          {renderMobileCategoryRail()}
+          {renderCategoryRail('mobile-category-rail', '-mx-4')}
 
           <div className="h-px w-full" style={{ backgroundColor: 'color-mix(in srgb, var(--color-border) 88%, transparent)' }} />
         </header>
@@ -1799,36 +1806,37 @@ export function ProductListingClient({
               onChange={handleSortChange}
               showRelevance={Boolean(normalizedSearch)}
             />
-            {!hasDesktopSidebar && (
-              <button
-                type="button"
-                onClick={() => setFiltersOpen(!filtersOpen)}
-                className="inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                aria-expanded={filtersOpen}
-                aria-controls="filter-panel"
-                aria-label={activeFilterCount > 0 ? `${t('filters')}, ${t('activeFilterCount', { count: activeFilterCount })}` : t('filters')}
-              >
-                <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
-                {t('filters')}
-                {activeFilterCount > 0 && (
-                  <span
-                    className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                    style={{ backgroundColor: 'var(--color-primary)' }}
-                    aria-hidden="true"
-                  >
-                    {activeFilterCount}
-                  </span>
-                )}
-              </button>
-            )}
+            {/* The sidebar only shows from lg; tablets keep the filter button. */}
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(!filtersOpen)}
+              className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface ${hasDesktopSidebar ? 'lg:hidden' : ''}`}
+              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+              aria-expanded={filtersOpen}
+              aria-controls="filter-panel"
+              aria-label={activeFilterCount > 0 ? `${t('filters')}, ${t('activeFilterCount', { count: activeFilterCount })}` : t('filters')}
+            >
+              <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
+              {t('filters')}
+              {activeFilterCount > 0 && (
+                <span
+                  className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                  aria-hidden="true"
+                >
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
-        {!hasDesktopSidebar && filtersOpen && (
+        {hasDesktopSidebar && renderCategoryRail('tablet-category-rail', '-mx-4 mb-5 lg:hidden')}
+
+        {filtersOpen && (
           <div
             id="filter-panel"
-            className="mb-6 space-y-5 rounded-xl border p-5 animate-fade-up"
+            className={`mb-6 space-y-5 rounded-xl border p-5 animate-fade-up ${hasDesktopSidebar ? 'lg:hidden' : ''}`}
             style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
             role="region"
             aria-label="Product filters"

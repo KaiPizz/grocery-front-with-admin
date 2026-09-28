@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { getEnabledCategoryHub, mergeCategoryHub } from '../src/lib/category-hub';
 import type { PublicCategory } from '../src/lib/public-taxonomy';
 import { getImageSrc } from '../src/lib/utils';
-import { mockMobileStorefront } from './mobile-fixtures';
+import { mockMobileStorefront, openFilterGroup } from './mobile-fixtures';
 
 const KIMCHI_RAW_CATEGORY_IDS = ['cat-kimchi', 'cat-pickled-vegetables'];
 
@@ -281,7 +281,9 @@ test.describe('B1 category browsing', () => {
     await page.goto('/en/categories/fruit');
 
     await expect.poll(() => operations.includes('ProductBrands')).toBe(true);
-    await expect(page.getByRole('button', { name: 'Samyang', exact: true })).toBeVisible();
+    const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    await openFilterGroup(filterPanel, 'filter-brand');
+    await expect(filterPanel.getByRole('button', { name: 'Samyang', exact: true })).toBeVisible();
 
     const pagination = page.getByRole('navigation', { name: /product pagination/i });
     const pageTwo = pagination.getByRole('button', { name: '2', exact: true });
@@ -331,6 +333,7 @@ test.describe('B1 category browsing', () => {
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
     await expect(filterPanel).toBeVisible({ timeout: 15_000 });
+    await openFilterGroup(filterPanel, 'filter-price');
     const minimumPrice = filterPanel.getByLabel(/minimum price/i);
 
     await expect.poll(async () => {
@@ -365,6 +368,7 @@ test.describe('B1 category browsing', () => {
     await page.getByRole('button', { name: /filters/i }).click();
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await expect(filterSheet).toBeVisible();
+    await openFilterGroup(filterSheet, 'filter-price');
     await filterSheet.getByLabel(/minimum price/i).fill('10');
 
     expect(productQueries.some((variables) => {

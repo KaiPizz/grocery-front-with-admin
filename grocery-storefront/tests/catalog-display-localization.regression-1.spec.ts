@@ -11,7 +11,7 @@ import {
 } from '../src/lib/configured-content-localization';
 import type { StorefrontConfig } from '../src/types/storefront-config';
 import asiaDeliGoConfigEnvelope from '../public/config/asiandeligo.json';
-import { mockMobileStorefront } from './mobile-fixtures';
+import { mockMobileStorefront, openFilterGroup } from './mobile-fixtures';
 
 const POLISH_TO_ENGLISH_COUNTRY_ORIGINS = [
   ['Japonia', 'Japan'],
@@ -445,6 +445,7 @@ test.describe('catalog display localization', () => {
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
     await expect(filterPanel.getByRole('button', { name: /Ready meals/i })).toHaveCount(0);
+    await openFilterGroup(filterPanel, 'filter-country');
     const polandFilter = filterPanel.getByRole('button', { name: /^Poland$/i });
     await expect(polandFilter).toBeVisible({ timeout: 15_000 });
     await expect(filterPanel.getByRole('button', { name: /^Nieznany region$/i })).toBeVisible();
@@ -491,6 +492,7 @@ test.describe('catalog display localization', () => {
     await expect(breadCard.getByTestId('unit-price')).not.toContainText(/\/ pcs$/);
 
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    await openFilterGroup(filterPanel, 'filter-country');
     await expect(filterPanel.getByRole('button', { name: /^Polska$/i })).toBeVisible({ timeout: 15_000 });
     await expect(filterPanel.getByRole('button', { name: /^Nieznany region$/i })).toBeVisible();
 

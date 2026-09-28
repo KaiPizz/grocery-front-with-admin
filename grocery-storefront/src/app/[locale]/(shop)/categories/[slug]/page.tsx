@@ -214,7 +214,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const currentName = publicCategory?.name ?? category?.name ?? categorySlug;
 
   return (
-    <div className="container-grocery py-8 md:py-12">
+    <div className="container-grocery py-5 md:py-12">
       <CategoryBreadcrumb
         label={t('breadcrumb')}
         allCategoriesLabel={t('allCategories')}
@@ -224,16 +224,16 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
       {publicCategory && (
         <>
-          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="mb-4 flex flex-col gap-2 md:mb-8 md:flex-row md:items-end md:justify-between md:gap-4">
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
+              <p className="mb-2 hidden text-xs font-semibold uppercase tracking-[0.18em] md:block" style={{ color: 'var(--color-muted-foreground)' }}>
                 {t('eyebrow')}
               </p>
               <h1 className="heading-display text-2xl md:text-3xl" style={{ color: 'var(--color-foreground)' }}>
                 {publicCategory.name}
               </h1>
               {publicCategory.description && (
-                <p className="mt-3 max-w-2xl text-sm md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
+                <p className="mt-1.5 line-clamp-2 max-w-2xl text-sm md:mt-3 md:line-clamp-none md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
                   {publicCategory.description}
                 </p>
               )}
@@ -250,46 +250,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               {publicTotalCount > 0 ? formatProductCount(locale, publicTotalCount) : t('comingSoon')}
             </div>
           </div>
-
-          {publicCategory.kind === 'group' && publicCategory.children.length > 0 && (
-            <section className="mb-8" aria-labelledby="category-leaf-tiles-heading">
-              <h2
-                id="category-leaf-tiles-heading"
-                className="mb-3 text-xs font-semibold uppercase tracking-[0.18em]"
-                style={{ color: 'var(--color-muted-foreground)' }}
-              >
-                {t('leafTiles')}
-              </h2>
-              <ul className="flex flex-wrap gap-2" data-testid="category-leaf-tiles">
-                {publicCategory.children.map((leaf) => (
-                  <li key={leaf.id}>
-                    <Link
-                      href={`/categories/${leaf.slug}`}
-                      className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors duration-fast hover-surface"
-                      style={{
-                        borderColor: 'var(--color-border)',
-                        backgroundColor: 'var(--color-card)',
-                        color: 'var(--color-foreground)',
-                      }}
-                    >
-                      <span>{leaf.name}</span>
-                      {typeof leaf.products.totalCount === 'number' && (
-                        <span
-                          className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums"
-                          style={{
-                            backgroundColor: 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
-                            color: 'var(--color-muted-foreground)',
-                          }}
-                        >
-                          {t('productCount', { count: leaf.products.totalCount })}
-                        </span>
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
 
           {result.errorMessage && publicProductItems.length === 0 && (
             <div className="rounded-lg border px-5 py-8 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
@@ -371,16 +331,16 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
       {!publicCategory && category && (
         <>
-          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="mb-4 flex flex-col gap-2 md:mb-8 md:flex-row md:items-end md:justify-between md:gap-4">
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
+              <p className="mb-2 hidden text-xs font-semibold uppercase tracking-[0.18em] md:block" style={{ color: 'var(--color-muted-foreground)' }}>
                 {t('eyebrow')}
               </p>
               <h1 className="heading-display text-2xl md:text-3xl" style={{ color: 'var(--color-foreground)' }}>
                 {category.name}
               </h1>
               {category.description && (
-                <p className="mt-3 max-w-2xl text-sm md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
+                <p className="mt-1.5 line-clamp-2 max-w-2xl text-sm md:mt-3 md:line-clamp-none md:text-base" style={{ color: 'var(--color-muted-foreground)' }}>
                   {category.description}
                 </p>
               )}

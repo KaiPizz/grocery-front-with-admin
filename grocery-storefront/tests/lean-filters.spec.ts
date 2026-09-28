@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
-import { mockMobileStorefront, PRODUCT_BRAND_FACETS } from './mobile-fixtures';
+import { mockMobileStorefront, openFilterGroup, PRODUCT_BRAND_FACETS } from './mobile-fixtures';
 
 type ProductVariables = Record<string, any>;
 type MockOptions = NonNullable<Parameters<typeof mockMobileStorefront>[1]>;
@@ -61,6 +61,7 @@ test.describe('lean listing filters', () => {
     const productQueries: ProductVariables[] = [];
     const filterPanel = await openDesktopListing(page, '/pl/products', productQueries);
     const brandGroup = filterPanel.getByTestId('filter-brand');
+    await openFilterGroup(filterPanel, 'filter-brand');
 
     // S&B is the tenth brand, behind the "show more" toggle.
     await brandGroup.getByTestId('filter-brand-toggle').click();
@@ -101,6 +102,7 @@ test.describe('lean listing filters', () => {
     const brandGroup = filterPanel.getByTestId('filter-brand');
     const brandChips = brandGroup.getByRole('group').getByRole('button');
     const toggle = brandGroup.getByTestId('filter-brand-toggle');
+    await openFilterGroup(filterPanel, 'filter-brand');
 
     await expect(brandChips).toHaveCount(8);
     await expect(toggle).toHaveText(/pokaż więcej \(2\)/i);
@@ -114,6 +116,7 @@ test.describe('lean listing filters', () => {
 
     // Four countries in this fixture, below the limit of six: no toggle at all.
     const countryGroup = filterPanel.getByTestId('filter-country');
+    await openFilterGroup(filterPanel, 'filter-country');
     await expect(countryGroup.getByRole('group').getByRole('button')).toHaveCount(4);
     await expect(countryGroup.getByTestId('filter-country-toggle')).toHaveCount(0);
   });
@@ -127,6 +130,7 @@ test.describe('lean listing filters', () => {
     });
 
     await expect(page.getByTestId('product-card')).toHaveCount(4);
+    await openFilterGroup(filterPanel, 'filter-country');
     const polandChip = filterPanel.getByRole('button', { name: /^poland$/i });
     await expect(polandChip).toBeEnabled();
     await expect.poll(() => operations.includes('ProductBrands')).toBe(true);
@@ -180,11 +184,12 @@ test.describe('lean listing filters', () => {
     // …so only the brand of the Japanese product is offered (the fixture's
     // channel-wide list would put Samyang first, and Samyang has no Japanese product).
     const brandGroup = filterPanel.getByTestId('filter-brand');
+    await openFilterGroup(filterPanel, 'filter-brand');
     await expect(brandGroup.getByRole('button', { name: /^s&b$/i })).toBeVisible();
     await expect(brandGroup.getByRole('button', { name: /^samyang$/i })).toHaveCount(0);
-    await expect(brandGroup.getByRole('button')).toHaveCount(1);
+    await expect(brandGroup.getByRole('group').getByRole('button')).toHaveCount(1);
 
-    // Removing the country widens the brand list again.
+    // Removing the country widens the brand list again; the group we opened stays open.
     await page.getByTestId('product-filter-summary').getByRole('button', { name: /usuń filtr japonia/i }).click();
     await expect(page.getByTestId('product-card')).toHaveCount(4);
     await expect(brandGroup.getByRole('button', { name: /^samyang$/i })).toBeVisible();
@@ -233,7 +238,56 @@ test.describe('lean listing filters', () => {
     await expect(sheet.getByTestId('filter-in-stock-only')).toBeVisible();
     await expect(sheet.getByText(/^brand$/i)).toBeVisible();
     await expect(sheet.getByText(/^country of origin$/i)).toBeVisible();
+    await openFilterGroup(sheet, 'filter-price');
     await expect(sheet.getByLabel(/minimum price/i)).toBeVisible();
     await expect(sheet.getByText(/exclude allergens|dietary preferences|storage zone|certifications/i)).toHaveCount(0);
+  });
+
+  test('brand, country and price groups start closed', async ({ page }) => {
+    const filterPanel = await openDesktopListing(page, '/pl/products', [], { catalogLabels: 'polish-source' });
+
+    for (const testId of ['filter-brand', 'filter-country', 'filter-price'] as const) {
+      const heading = filterPanel.getByTestId(`${testId}-heading`);
+      await expect(heading).toHaveAttribute('aria-expanded', 'false');
+    }
+    await expect(filterPanel.getByTestId('filter-brand').getByRole('group').getByRole('button')).toHaveCount(0);
+    await expect(filterPanel.getByTestId('filter-country').getByRole('group').getByRole('button')).toHaveCount(0);
+    await expect(filterPanel.getByLabel(/cena minimalna/i)).toHaveCount(0);
+    await expect(filterPanel.getByTestId('filter-in-stock-only')).toBeVisible();
+  });
+
+  test('brand search narrows the chips', async ({ page }) => {
+    const filterPanel = await openDesktopListing(page, '/pl/products', []);
+    const brandGroup = filterPanel.getByTestId('filter-brand');
+    await openFilterGroup(filterPanel, 'filter-brand');
+
+    const search = brandGroup.getByTestId('filter-brand-search');
+    const chips = brandGroup.getByRole('group').getByRole('button');
+
+    await search.fill('samy');
+    await expect(chips).toHaveCount(1);
+    await expect(brandGroup.getByRole('button', { name: 'Samyang', exact: true })).toBeVisible();
+    await expect(brandGroup.getByTestId('filter-brand-toggle')).toHaveCount(0);
+
+    await search.fill('zzz');
+    await expect(chips).toHaveCount(0);
+    await expect(brandGroup.getByText(/brak marki o tej nazwie/i)).toBeVisible();
+
+    await search.fill('');
+    await expect(chips).toHaveCount(8);
+  });
+
+  test('an active brand keeps its group open and shows it in the closed header', async ({ page }) => {
+    const filterPanel = await openDesktopListing(page, '/pl/products', []);
+    const brandGroup = filterPanel.getByTestId('filter-brand');
+    await openFilterGroup(filterPanel, 'filter-brand');
+    await brandGroup.getByTestId('filter-brand-toggle').click();
+    await brandGroup.getByRole('button', { name: 'S&B', exact: true }).click();
+
+    const heading = brandGroup.getByTestId('filter-brand-heading');
+    await expect(heading).toHaveAttribute('aria-expanded', 'true');
+    await heading.click();
+    await expect(heading).toHaveAttribute('aria-expanded', 'false');
+    await expect(heading).toContainText('S&B');
   });
 });

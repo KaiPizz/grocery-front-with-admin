@@ -1,4 +1,5 @@
-import type { Page, Route } from '@playwright/test';
+import type { Locator, Page, Route } from '@playwright/test';
+import { expect } from '@playwright/test';
 
 type Money = {
   amount: number;
@@ -1144,6 +1145,15 @@ const FIXTURE_BRAND_BY_PRODUCT_ID: Record<string, string> = {
   'prod-bread': 'OTTOGI',
   'prod-ravioli': 'Nestlé',
 };
+
+// Brand, country and price groups start closed (a category page opens on its
+// products); a test that works with their contents opens the group first.
+export async function openFilterGroup(scope: Locator, testId: 'filter-brand' | 'filter-country' | 'filter-price') {
+  const heading = scope.getByTestId(`${testId}-heading`);
+  await expect(heading).toBeVisible();
+  if (await heading.getAttribute('aria-expanded') === 'false') await heading.click();
+  await expect(heading).toHaveAttribute('aria-expanded', 'true');
+}
 
 export async function mockMobileStorefront(
   page: Page,

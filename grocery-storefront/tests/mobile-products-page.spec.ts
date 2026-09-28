@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
-import { mockMobileStorefront } from './mobile-fixtures';
+import { mockMobileStorefront, openFilterGroup } from './mobile-fixtures';
 
 const PRODUCT_FILTER_METADATA_OPERATIONS = [
   'ProductCountryOrigins',
@@ -117,6 +117,7 @@ test.describe('mobile products page', () => {
 
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
     await expect(page.getByTestId('product-card')).toHaveCount(4);
+    await openFilterGroup(filterPanel, 'filter-brand');
     await filterPanel.getByRole('button', { name: 'Samyang', exact: true }).click();
 
     await expect(page.getByRole('button', { name: /^spróbuj ponownie$/i })).toBeVisible();
@@ -212,6 +213,7 @@ test.describe('mobile products page', () => {
     await pageTwoRequested;
 
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    await openFilterGroup(filterPanel, 'filter-brand');
     await filterPanel.getByRole('button', { name: 'Samyang', exact: true }).click();
     await filteredPageOneRequested;
     await expect(pagination.getByRole('button', { name: 'Następna', exact: true })).toBeDisabled();
@@ -409,6 +411,7 @@ test.describe('mobile products page', () => {
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
     await expect(filterPanel).toBeVisible();
 
+    await openFilterGroup(filterPanel, 'filter-country');
     const polandButton = filterPanel.getByRole('button', { name: /^poland$/i });
     await expect(polandButton).toBeEnabled();
     await expect(filterPanel.getByTestId('filter-brand')).toHaveCount(0);
@@ -417,6 +420,7 @@ test.describe('mobile products page', () => {
     await expect(polandButton).toHaveAttribute('aria-pressed', 'true');
     await expect.poll(() => productQueries.some(hasPolandCountryFilter)).toBe(true);
 
+    await openFilterGroup(filterPanel, 'filter-price');
     await filterPanel.getByLabel(/cena minimalna/i).fill('999');
     await expect.poll(() => productQueries.some((variables) => {
       const filter = variables.filter as Record<string, any> | undefined;
@@ -426,6 +430,7 @@ test.describe('mobile products page', () => {
 
     releaseBrands();
 
+    await openFilterGroup(filterPanel, 'filter-brand');
     await expect(filterPanel.getByRole('button', { name: 'Samyang', exact: true })).toBeEnabled();
     await expect(polandButton).toHaveAttribute('aria-pressed', 'true');
     await expect(filterPanel.getByLabel(/cena minimalna/i)).toHaveValue('999');
@@ -437,6 +442,7 @@ test.describe('mobile products page', () => {
     await page.goto('/pl/products?search=apple');
 
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
+    await openFilterGroup(filterPanel, 'filter-country');
     const polandOrigin = filterPanel.getByRole('button', { name: /^poland$/i });
     await expect(polandOrigin).toBeEnabled();
     await expect(polandOrigin).toHaveText(/^Poland$/);
@@ -448,9 +454,11 @@ test.describe('mobile products page', () => {
     await page.goto('/en/products');
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
+    await openFilterGroup(filterPanel, 'filter-country');
     const polandOrigin = filterPanel.getByRole('button', { name: /^poland$/i });
     await expect(polandOrigin).toHaveText(/^Poland4$/);
 
+    await openFilterGroup(filterPanel, 'filter-price');
     await filterPanel.getByLabel(/minimum price/i).fill('10');
     await expect(polandOrigin).toHaveText(/^Poland$/);
   });
@@ -574,6 +582,7 @@ test.describe('mobile products page', () => {
 
     const filterPanel = page.getByRole('region', { name: /^filters$/i });
     await expect(filterPanel).toBeVisible();
+    await openFilterGroup(filterPanel, 'filter-brand');
     await filterPanel.getByRole('button', { name: 'Samyang', exact: true }).click();
 
     const filterSummary = page.getByTestId('product-filter-summary');
@@ -605,6 +614,7 @@ test.describe('mobile products page', () => {
     await openFilters(page, filterSheet);
     await expect(filterSheet.getByText(/^brand$/i)).toBeVisible();
 
+    await openFilterGroup(filterSheet, 'filter-price');
     const minPriceInput = filterSheet.getByLabel(/minimum price/i);
     await expect(minPriceInput).toBeVisible();
     await minPriceInput.fill('10');
@@ -641,6 +651,7 @@ test.describe('mobile products page', () => {
 
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await openFilters(page, filterSheet);
+    await openFilterGroup(filterSheet, 'filter-country');
     const polandButton = filterSheet.getByRole('button', { name: /^poland$/i });
     await expect(polandButton).toBeEnabled();
 
@@ -680,6 +691,7 @@ test.describe('mobile products page', () => {
 
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await openFilters(page, filterSheet);
+    await openFilterGroup(filterSheet, 'filter-price');
     const minPriceInput = filterSheet.getByLabel(/minimum price/i);
     await minPriceInput.fill('17');
     await filterSheet.getByRole('button', { name: /apply filters/i }).click();
@@ -733,7 +745,9 @@ test.describe('mobile products page', () => {
 
     const filterSheet = page.getByTestId('mobile-filter-sheet');
     await openFilters(page, filterSheet);
+    await openFilterGroup(filterSheet, 'filter-brand');
     await filterSheet.getByRole('button', { name: 'Samyang', exact: true }).click();
+    await openFilterGroup(filterSheet, 'filter-price');
     await filterSheet.getByLabel(/maximum price/i).fill('10');
     await filterSheet.getByRole('button', { name: /apply filters/i }).click();
 

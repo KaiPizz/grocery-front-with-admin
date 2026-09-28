@@ -191,6 +191,8 @@
     "inStockOnly": "Tylko dostępne",
     "showMoreOptions": "Pokaż więcej ({count})",
     "showLessOptions": "Pokaż mniej",
+    "searchBrands": "Szukaj marki",
+    "noBrandMatches": "Brak marki o tej nazwie",
     "sortBy": "Sortuj według",
     "sortNewest": "Najnowsze",
     "sortRelevance": "Trafność",

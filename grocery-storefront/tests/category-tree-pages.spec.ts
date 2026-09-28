@@ -13,9 +13,11 @@ test.describe('category tree pages', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/pl/categories/kimchi-i-kiszonki');
 
-    const tiles = page.getByTestId('category-leaf-tiles');
-    await expect(tiles.getByRole('link')).toHaveCount(2);
-    await expect(tiles.getByRole('link', { name: /^kimchi/i })).toHaveAttribute('href', '/categories/kimchi');
+    await expect(page.getByTestId('category-leaf-tiles')).toHaveCount(0);
+    const sidebar = page.getByTestId('desktop-category-sidebar');
+    const leaves = sidebar.getByTestId('category-tree-leaves');
+    await expect(leaves.getByRole('link')).toHaveCount(2);
+    await expect(leaves.getByRole('link', { name: /^kimchi/i })).toHaveAttribute('href', '/categories/kimchi');
     await expect(page.getByTestId('product-card')).toHaveCount(2);
 
     // SSR goes to config-server; the first client request after a filter change must carry both leaf ids and never the group id.
@@ -89,10 +91,29 @@ test.describe('category tree pages', () => {
     expect(xml).not.toContain('sosy-pasty-i-przyprawy');
   });
 
-  test('mobile: group page shows breadcrumb and leaf tiles', async ({ page }) => {
+  test('mobile: group page shows breadcrumb and one chip row', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.goto('/pl/categories/kimchi-i-kiszonki');
-    await expect(page.getByTestId('category-leaf-tiles').getByRole('link')).toHaveCount(2);
+
+    const rail = page.getByTestId('mobile-category-rail');
+    await expect(rail.getByRole('link')).toHaveCount(3);
+    await expect(rail.getByRole('link', { name: /^kimchi i kiszonki/i })).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByTestId('category-leaf-tiles')).toHaveCount(0);
     await expect(page.getByTestId('category-breadcrumb')).toContainText('Kimchi i kiszonki');
+  });
+
+  test('tablet: category chip row and filter button', async ({ page }) => {
+    await mockMobileStorefront(page);
+    await page.setViewportSize({ width: 900, height: 1000 });
+    await page.goto('/pl/categories/kimchi-i-kiszonki');
+
+    const rail = page.getByTestId('tablet-category-rail');
+    await expect(rail).toBeVisible();
+    await expect(rail.getByRole('link')).toHaveCount(3);
+
+    await page.getByRole('button', { name: /^filtry/i }).click();
+    const panel = page.locator('#filter-panel');
+    await expect(panel).toBeVisible();
+    await expect(panel.getByTestId('filter-in-stock-only')).toBeVisible();
   });
 });
