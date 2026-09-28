@@ -131,6 +131,12 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   assert.ok(heroBlock);
   assert.equal(heroBlock.id, 'asiandeligo-drive-hero-20260713');
   assert.equal(heroBlock.slides.length, 6);
+  // The online catalog carries no frozen goods, so the "PRODUKTY MROŻONE" slide (01)
+  // and the "wysyłka 24h" slide (02, pickup-only shop) stay off.
+  assert.deepEqual(
+    heroBlock.slides.filter((slide) => slide.enabled === false).map((slide) => slide.id),
+    ['asiandeligo-drive-hero-slide-1', 'asiandeligo-drive-hero-slide-2'],
+  );
   assert.equal(categoryGridBlocks.length, 2);
   assert.deepEqual(categoryGridBlocks.map((block) => block.imageFit), ['cover', 'cover']);
   assert.ok(roundCategoryBlock);
@@ -141,7 +147,7 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
     .flatMap((block) => block.items)
     .map((item) => item.imageUrl);
   const expectedCategoryImageUrls = [
-    '/brand/categories/sauces-pastes.webp',
+    '/brand/categories/sauces-oils.webp',
     '/brand/categories/drinks.webp',
     '/brand/categories/ready-meals.webp',
     '/brand/categories/kimchi-pickles.webp',
@@ -153,6 +159,13 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
   ];
 
   assert.deepEqual(categoryImageUrls, expectedCategoryImageUrls);
+  // Two tiles on one href read as two shelves but open the same page (2026-09-28 review).
+  const enabledTileHrefs = config.homepage.blocks
+    .filter((block) => block.type === 'grid' || block.type === 'round_grid')
+    .flatMap((block) => block.items)
+    .filter((item) => item.enabled !== false)
+    .map((item) => item.href);
+  assert.equal(new Set(enabledTileHrefs).size, enabledTileHrefs.length, `Duplicate tile href: ${enabledTileHrefs}`);
   for (const imageUrl of categoryImageUrls) {
     const assetUrl = new URL(`../public${imageUrl}`, import.meta.url);
     assert.equal(existsSync(assetUrl), true, `Missing category asset: ${imageUrl}`);

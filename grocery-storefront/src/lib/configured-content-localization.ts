@@ -51,7 +51,7 @@ const GRID_ITEM_TITLES: Record<string, ExactTranslation> = {
   'asiandeligo-grid-noodles-rice': { source: 'Makaron i ryż', english: 'Noodles and rice' },
   'asiandeligo-grid-snacks-sweets': { source: 'Przekąski i słodycze', english: 'Snacks and sweets' },
   'asiandeligo-round-sushi-algae': { source: 'Sushi i algi', english: 'Sushi and seaweed' },
-  'asiandeligo-round-mushrooms-tofu': { source: 'Grzyby i tofu', english: 'Mushrooms and tofu' },
+  'asiandeligo-round-mushrooms-tofu': { source: 'Grzyby suszone', english: 'Dried mushrooms' },
   'asiandeligo-round-kitchen-tools': { source: 'Akcesoria kuchenne', english: 'Kitchen accessories' },
 };
 

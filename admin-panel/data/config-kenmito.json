@@ -61,7 +61,7 @@
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",
-              "enabled": true
+              "enabled": false
             },
             {
               "id": "asiandeligo-drive-hero-slide-2",
@@ -120,7 +120,7 @@
           "items": [
             {
               "id": "asiandeligo-grid-korean-pantry",
-              "imageUrl": "/brand/categories/sauces-pastes.webp",
+              "imageUrl": "/brand/categories/sauces-oils.webp",
               "title": "Sosy i oleje",
               "href": "/pl/categories/sosy-i-oleje",
               "enabled": true
@@ -205,14 +205,14 @@
               "id": "asiandeligo-round-sushi-algae",
               "imageUrl": "/brand/categories/sushi-seaweed.webp",
               "title": "Sushi i algi",
-              "href": "/pl/categories/do-gotowania-i-sushi",
+              "href": "/pl/categories/algi-nori-wakame-kombu",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-mushrooms-tofu",
               "imageUrl": "/brand/categories/mushrooms-tofu.webp",
-              "title": "Grzyby i tofu",
-              "href": "/pl/categories/do-gotowania-i-sushi",
+              "title": "Grzyby suszone",
+              "href": "/pl/categories/grzyby-suszone",
               "enabled": true
             },
             {
@@ -411,7 +411,7 @@
           {
             "id": "category-hub-sauces-pastes",
             "categorySlug": "sosy-i-oleje",
-            "imageUrl": "/brand/categories/sauces-pastes.webp",
+            "imageUrl": "/brand/categories/sauces-oils.webp",
             "enabled": true,
             "order": 2
           },
@@ -446,7 +446,7 @@
           {
             "id": "category-hub-mushrooms-tofu",
             "categorySlug": "pasty-przyprawy-i-buliony",
-            "imageUrl": "/brand/categories/mushrooms-tofu.webp",
+            "imageUrl": "/brand/categories/sauces-pastes.webp",
             "enabled": true,
             "order": 7
           },
@@ -501,7 +501,7 @@
               "title": "Sosy i oleje",
               "href": "/categories/sosy-i-oleje",
               "description": "Gochujang, sojowe, sezamowe i ostre bazy smaku.",
-              "imageUrl": "/brand/categories/sauces-pastes.webp",
+              "imageUrl": "/brand/categories/sauces-oils.webp",
               "enabled": true,
               "order": 1
             },
@@ -630,7 +630,7 @@
               "title": "",
               "ctaText": "",
               "ctaLink": "/products",
-              "enabled": true
+              "enabled": false
             },
             {
               "id": "asiandeligo-drive-hero-slide-2",
@@ -689,7 +689,7 @@
           "items": [
             {
               "id": "asiandeligo-grid-korean-pantry",
-              "imageUrl": "/brand/categories/sauces-pastes.webp",
+              "imageUrl": "/brand/categories/sauces-oils.webp",
               "title": "Sosy i oleje",
               "href": "/pl/categories/sosy-i-oleje",
               "enabled": true
@@ -774,14 +774,14 @@
               "id": "asiandeligo-round-sushi-algae",
               "imageUrl": "/brand/categories/sushi-seaweed.webp",
               "title": "Sushi i algi",
-              "href": "/pl/categories/do-gotowania-i-sushi",
+              "href": "/pl/categories/algi-nori-wakame-kombu",
               "enabled": true
             },
             {
               "id": "asiandeligo-round-mushrooms-tofu",
               "imageUrl": "/brand/categories/mushrooms-tofu.webp",
-              "title": "Grzyby i tofu",
-              "href": "/pl/categories/do-gotowania-i-sushi",
+              "title": "Grzyby suszone",
+              "href": "/pl/categories/grzyby-suszone",
               "enabled": true
             },
             {
@@ -980,7 +980,7 @@
           {
             "id": "category-hub-sauces-pastes",
             "categorySlug": "sosy-i-oleje",
-            "imageUrl": "/brand/categories/sauces-pastes.webp",
+            "imageUrl": "/brand/categories/sauces-oils.webp",
             "enabled": true,
             "order": 2
           },
@@ -1015,7 +1015,7 @@
           {
             "id": "category-hub-mushrooms-tofu",
             "categorySlug": "pasty-przyprawy-i-buliony",
-            "imageUrl": "/brand/categories/mushrooms-tofu.webp",
+            "imageUrl": "/brand/categories/sauces-pastes.webp",
             "enabled": true,
             "order": 7
           },
@@ -1070,7 +1070,7 @@
               "title": "Sosy i oleje",
               "href": "/categories/sosy-i-oleje",
               "description": "Gochujang, sojowe, sezamowe i ostre bazy smaku.",
-              "imageUrl": "/brand/categories/sauces-pastes.webp",
+              "imageUrl": "/brand/categories/sauces-oils.webp",
               "enabled": true,
               "order": 1
             },
