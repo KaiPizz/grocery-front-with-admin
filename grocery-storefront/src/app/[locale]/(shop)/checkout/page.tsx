@@ -1195,6 +1195,9 @@ export default function CheckoutPage() {
         input: {
           gateway: 'p24',
           orderId: order.id,
+          // The backend only reads the locale prefix from this (same origin),
+          // so P24 sends the shopper back to the page in their language.
+          returnUrl: window.location.href,
         },
       });
       const payload = response.data?.checkoutPaymentCreate;
