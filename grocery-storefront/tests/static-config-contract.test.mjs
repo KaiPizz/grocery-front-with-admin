@@ -163,7 +163,7 @@ test('tracked Kenmito static config carries Asia Deli Go launch truth', () => {
     '/brand/categories/noodles-rice.webp',
     '/brand/categories/snacks-sweets.webp',
     '/brand/categories/sushi-seaweed.webp',
-    '/brand/categories/mushrooms-tofu.webp',
+    '/brand/categories/dried-mushrooms.webp',
     '/brand/categories/kitchen-tools.webp',
   ];
 
