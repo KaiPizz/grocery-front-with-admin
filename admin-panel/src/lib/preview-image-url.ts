@@ -2,8 +2,11 @@ function getStorefrontOriginFromAdminHost(): string | null {
   if (typeof window === 'undefined') return null;
 
   const { protocol, host } = window.location;
-  if (host.startsWith('asiandeligo-admin.')) {
-    return `${protocol}//${host.replace('asiandeligo-admin.', 'asiandeligo.')}`;
+  // asiandeligo.eshoper.pro answers 410 since the move to asiadeligo.com, so
+  // /brand/* previews must come from the shop's own domain.
+  if (host.startsWith('asiandeligo-admin.')) return 'https://asiadeligo.com';
+  if (host.startsWith('adg-dev-admin.')) {
+    return `${protocol}//${host.replace('adg-dev-admin.', 'adg-dev.')}`;
   }
 
   return null;
