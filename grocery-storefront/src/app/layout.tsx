@@ -36,6 +36,9 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  // <meta name="color-scheme" content="only light">: keep the shop light even
+  // when the phone is in dark mode (see globals.css).
+  colorScheme: 'only light',
 };
 
 export async function generateMetadata(): Promise<Metadata> {

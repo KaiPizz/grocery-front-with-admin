@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  /* "only" also opts out of browser auto-dark (Chrome Android, Opera);
+     the shop has no dark design, and forced dark made it look broken. */
+  color-scheme: only light;
   /* Typography */
   --font-display: var(--font-fraunces), 'Fraunces', Georgia, serif;
   --font-body: var(--font-dm-sans), 'DM Sans', system-ui, -apple-system, sans-serif;
