@@ -168,6 +168,68 @@ export interface HomepageSeoTextConfig {
   paragraphsEn: string[];
 }
 
+// Curated landing (storefront components/home/showcase). When enabled it
+// replaces the hero/blocks/sections landing; mirrors the storefront type.
+export interface ShowcaseHeroSlide {
+  id: string;
+  imageUrl: string | null;
+  mobileImageUrl: string | null;
+  eyebrow: string;
+  headline: string;
+  subline: string;
+  ctaText: string;
+  ctaLink: string;
+  eyebrowEn?: string;
+  headlineEn?: string;
+  sublineEn?: string;
+  ctaTextEn?: string;
+  enabled: boolean;
+}
+
+export type ShowcaseCuisineKey = 'japanese' | 'korean' | 'chinese' | 'thai' | 'vietnamese';
+
+export interface ShowcaseCuisine {
+  key: ShowcaseCuisineKey;
+  imageUrl: string | null;
+}
+
+export interface ShowcaseRail {
+  id: string;
+  eyebrow: string;
+  eyebrowEn?: string;
+  title: string;
+  titleEn?: string;
+  /** categories: values are category slugs; country: values are countries of origin */
+  source: 'categories' | 'country';
+  values: string[];
+  /** country rails only: narrow the shelf to these category slugs */
+  categories?: string[];
+  href?: string;
+  limit: number;
+  enabled: boolean;
+}
+
+export interface ShowcaseReviews {
+  rating: number;
+  count: number;
+  url: string;
+}
+
+export interface ShowcaseStoreConfig {
+  mapsUrl: string | null;
+  photoUrl: string | null;
+  reviews: ShowcaseReviews | null;
+}
+
+export interface HomepageShowcaseConfig {
+  enabled: boolean;
+  heroSlides: ShowcaseHeroSlide[];
+  cuisines: ShowcaseCuisine[];
+  rails: ShowcaseRail[];
+  brands: string[];
+  store: ShowcaseStoreConfig;
+}
+
 export interface HomepageConfig {
   hero: HeroBannerConfig;
   promoBanners: PromoBannerItem[];
@@ -175,6 +237,7 @@ export interface HomepageConfig {
   sections: HomepageSectionItem[];
   featured: HomepageFeaturedConfig;
   seoText: HomepageSeoTextConfig;
+  showcase?: HomepageShowcaseConfig;
 }
 
 export interface NavItem {

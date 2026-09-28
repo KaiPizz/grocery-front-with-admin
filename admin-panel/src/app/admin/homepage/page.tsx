@@ -7,7 +7,9 @@ import { FieldLabel } from '@/components/FieldLabel';
 import { SaveBar } from '@/components/SaveBar';
 import { ImageUploader } from '@/components/ImageUploader';
 import { BlockBuilder } from '@/components/blocks/BlockBuilder';
-import { Loader2, GripVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import { ShowcaseEditor } from '@/components/ShowcaseEditor';
+import { getShowcaseProblems } from '@/lib/showcase-editor';
+import { Loader2, GripVertical, ChevronDown, ChevronUp, EyeOff } from 'lucide-react';
 import type { HomepageConfig, HomepageSectionItem, BannerBlock } from '@/types/config';
 import { useLanguage } from '@/i18n';
 import { toast } from 'sonner';
@@ -25,6 +27,14 @@ export default function HomepagePage() {
   }
 
   const homepage = config.homepage;
+  const showcaseOn = Boolean(homepage.showcase?.enabled);
+  // With the showcase landing on, these legacy cards (mostly) stop reaching the site.
+  const legacyNotice = (text: string) => showcaseOn ? (
+    <p className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900" data-testid="showcase-legacy-notice">
+      <EyeOff className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+      <span><strong className="font-semibold">{t('homepage.showcase.legacyBadge')}.</strong> {text}</span>
+    </p>
+  ) : null;
   const seoText = homepage.seoText ?? { enabled: false, headline: '', paragraphs: [], headlineEn: '', paragraphsEn: [] };
   // One paragraph per blank-line-separated block; a single newline stays inside its paragraph.
   const splitParagraphs = (value: string) => value.split(/\n[ \t]*\n/);
@@ -94,6 +104,14 @@ export default function HomepagePage() {
   }
 
   async function handleSave() {
+    const problems = getShowcaseProblems(homepage.showcase).map((problem) =>
+      t(`homepage.showcase.problems.${problem.code}`).replace('{n}', String(problem.position ?? '')));
+    if (problems.length > 0) {
+      toast.error(t('homepage.showcase.cannotSave'), {
+        description: problems[0] + (problems.length > 1 ? ` (${t('homepage.showcase.moreErrors').replace('{count}', String(problems.length - 1))})` : ''),
+      });
+      return;
+    }
     const errors = getBlockImageErrors(homepage.blocks ?? []);
     if (errors.length > 0) {
       toast.error(t('homepage.blocks.cannotSaveMissingImages'), {
@@ -123,9 +141,12 @@ export default function HomepagePage() {
       <div className="flex-1 space-y-6 pb-28">
         <PageHeader title={t('homepage.title')} description={t('homepage.description')} />
 
+        <ShowcaseEditor showcase={homepage.showcase} onChange={(showcase) => updateHomepage({ showcase })} />
+
         {/* Hero Banner */}
         <FormCard title={t('homepage.hero.title')}>
-          <div className="flex items-center gap-3 mb-3">
+          {legacyNotice(t('homepage.showcase.legacyHero'))}
+          <div className={`flex items-center gap-3 mb-3${showcaseOn ? ' hidden' : ''}`}>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -138,7 +159,17 @@ export default function HomepagePage() {
             <span className="text-sm text-gray-700">{homepage.hero.enabled ? t('common.enabled') : t('common.disabled')}</span>
           </div>
 
-          {homepage.hero.enabled && (
+          {showcaseOn ? (
+            <FieldLabel label={t('homepage.hero.headline')} htmlFor="homepage-hero-headline">
+              <input
+                id="homepage-hero-headline"
+                type="text"
+                value={homepage.hero.headline}
+                onChange={(e) => updateHero('headline', e.target.value)}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none"
+              />
+            </FieldLabel>
+          ) : homepage.hero.enabled && (
             <div className="space-y-4">
               <FieldLabel label={t('homepage.hero.headline')}>
                 <input
@@ -189,6 +220,7 @@ export default function HomepagePage() {
           description={t('homepage.blocks.description')}
           overflow="visible"
         >
+          {legacyNotice(t('homepage.showcase.legacyBlocks'))}
           <BlockBuilder
             blocks={homepage.blocks ?? []}
             onChange={updateBlocks}
@@ -197,6 +229,7 @@ export default function HomepagePage() {
 
         {/* Homepage Sections */}
         <FormCard title={t('homepage.sections.title')} description={t('homepage.sections.description')}>
+          {legacyNotice(t('homepage.showcase.legacySections'))}
           <div className="space-y-2">
             {homepage.sections.map((section, index) => (
               <div
@@ -241,6 +274,7 @@ export default function HomepagePage() {
 
         {/* "Polecane" shelf: leaf category slugs */}
         <FormCard title={t('homepage.featured.title')} description={t('homepage.featured.hint')}>
+          {legacyNotice(t('homepage.showcase.legacyFeatured'))}
           <FieldLabel label={t('homepage.featured.slugs')} htmlFor="homepage-featured-slugs">
             <input
               id="homepage-featured-slugs"
