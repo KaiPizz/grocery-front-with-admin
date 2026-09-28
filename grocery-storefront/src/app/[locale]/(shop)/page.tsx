@@ -22,6 +22,7 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { PromoBanner } from '@/components/grocery/PromoBanner';
 import { BlockRenderer } from '@/components/blocks/BlockRenderer';
+import { ShowcaseHome } from '@/components/home/showcase/ShowcaseHome';
 import { ConfiguredCategoryGrid } from '@/components/blocks/ConfiguredCategoryGrid';
 import { RecipeCard } from '@/components/grocery/RecipeCard';
 import { Link } from '@/i18n/navigation';
@@ -781,7 +782,19 @@ function HomeFulfillmentTrust({
   );
 }
 
+// Tenants whose config enables homepage.showcase get the curated landing;
+// everyone else keeps the block/section page below.
 export default function HomePage() {
+  const siteConfig = useStorefrontConfig();
+  const channel = useChannel();
+  const showcase = siteConfig?.homepage?.showcase;
+  if (siteConfig && showcase?.enabled) {
+    return <ShowcaseHome config={siteConfig} showcase={showcase} channel={channel} />;
+  }
+  return <LegacyHomePage />;
+}
+
+function LegacyHomePage() {
   const t = useTranslations('home');
   const tNav = useTranslations('nav');
   const tCommon = useTranslations('common');

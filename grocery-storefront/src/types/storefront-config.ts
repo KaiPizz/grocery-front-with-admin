@@ -166,6 +166,78 @@ export interface HomepageSeoTextConfig {
   paragraphsEn: string[];
 }
 
+// ── Showcase landing (opt-in: homepage.showcase.enabled) ──────────────────────
+// A curated landing built from sections instead of banner blocks. Every text
+// has a Polish value and an optional English one (`…En`, falls back to Polish).
+
+export interface ShowcaseHeroSlide {
+  id: string;
+  /** text-free artwork; the headline and button are rendered as HTML */
+  imageUrl: string;
+  mobileImageUrl: string | null;
+  eyebrow: string;
+  headline: string;
+  subline: string;
+  ctaText: string;
+  ctaLink: string;
+  eyebrowEn?: string;
+  headlineEn?: string;
+  sublineEn?: string;
+  ctaTextEn?: string;
+  enabled: boolean;
+}
+
+export type ShowcaseRailSource = 'categories' | 'country';
+
+export interface ShowcaseRail {
+  id: string;
+  /** small red line above the title, e.g. "Polecane" */
+  eyebrow: string;
+  eyebrowEn?: string;
+  title: string;
+  titleEn?: string;
+  /** "categories": leaf/group slugs · "country": products.country_of_origin values */
+  source: ShowcaseRailSource;
+  values: string[];
+  /** optional leaf/group slugs narrowing a "country" rail to its best shelves */
+  categories?: string[];
+  /** "Zobacz wszystkie" target; empty = derived from the source */
+  href?: string;
+  limit: number;
+  enabled: boolean;
+}
+
+export interface ShowcaseCuisine {
+  key: 'japanese' | 'korean' | 'chinese' | 'thai' | 'vietnamese';
+  imageUrl: string | null;
+}
+
+export interface ShowcaseReviews {
+  rating: number;
+  count: number;
+  url: string;
+}
+
+export interface ShowcaseStoreConfig {
+  /** Google Maps (or other) link for "Wyznacz trasę"; null = the address search link */
+  mapsUrl: string | null;
+  /** real storefront photo; null = the card shows no photo */
+  photoUrl: string | null;
+  /** public rating (e.g. Google); null = no rating shown */
+  reviews: ShowcaseReviews | null;
+}
+
+export interface HomepageShowcaseConfig {
+  enabled: boolean;
+  heroSlides: ShowcaseHeroSlide[];
+  cuisines: ShowcaseCuisine[];
+  /** product rails in display order; the first one is the "Polecane" shelf */
+  rails: ShowcaseRail[];
+  /** brand names shown as chips linking to a search */
+  brands: string[];
+  store: ShowcaseStoreConfig;
+}
+
 export interface HomepageConfig {
   hero: HeroBannerConfig;
   promoBanners: PromoBannerItem[];
@@ -173,6 +245,7 @@ export interface HomepageConfig {
   sections: HomepageSectionItem[];
   featured: HomepageFeaturedConfig;
   seoText: HomepageSeoTextConfig;
+  showcase?: HomepageShowcaseConfig;
 }
 
 export interface NavItem {

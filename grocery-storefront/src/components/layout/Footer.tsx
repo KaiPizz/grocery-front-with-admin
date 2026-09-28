@@ -53,6 +53,11 @@ export function Footer() {
   const bankTransferMode = usesBankTransferPromise(siteConfig);
   const availabilityOnlyStock = usesAvailabilityOnlyStock(siteConfig);
   const policyLinks = siteConfig?.general?.policyLinks;
+  // The showcase landing already states the promises; its footer lists payment methods instead.
+  const showcaseLanding = Boolean(siteConfig?.homepage?.showcase?.enabled);
+  const paymentMethods = showcaseLanding && pickupMode && !bankTransferMode
+    ? ['BLIK', 'Przelewy24', t('payOnPickup')]
+    : [];
   const copyrightText = (footerCfg?.copyrightText || `\u00A9 {year} ${storeName}. Powered by Zira AI.`).replace('{year}', String(new Date().getFullYear()));
   const legalRegistrationDetails = legalIdentity ? [
     legalIdentity.nip ? `NIP: ${legalIdentity.nip}` : null,
@@ -307,7 +312,24 @@ export function Footer() {
           )}
         </div>
 
-        {serviceNotes.length > 0 && (
+        {paymentMethods.length > 0 && (
+          <div className="mt-10 flex flex-wrap items-center gap-2" data-testid="footer-payment-methods">
+            <span className="mr-1 text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-muted-foreground)' }}>
+              {t('paymentMethods')}
+            </span>
+            {paymentMethods.map((method) => (
+              <span
+                key={method}
+                className="rounded-md border px-2.5 py-1 text-xs font-semibold"
+                style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)', backgroundColor: 'var(--color-background)' }}
+              >
+                {method}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {!showcaseLanding && serviceNotes.length > 0 && (
           <div
             className={`mt-10 grid gap-px overflow-hidden rounded-[20px] border ${serviceGridColumns}`}
             style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-border)' }}
