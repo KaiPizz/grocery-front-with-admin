@@ -305,9 +305,11 @@ test('ADG showcase landing: text-free art that exists, links and rail slugs on t
   for (const slide of showcase.heroSlides) {
     const desktop = assetSize(slide.imageUrl);
     const mobile = assetSize(slide.mobileImageUrl);
-    assert.equal(desktop.width / desktop.height, 3, `${slide.id}: desktop art is 3:1`);
-    // The old art baked text into a 3.2:1 strip that phones shrank to 768x240.
-    assert.ok(mobile.width / mobile.height <= 1.5, `${slide.id}: mobile art must be a real mobile crop`);
+    // The hero shows 16:10 art beside (desktop) or above (phone) the HTML copy. The old
+    // art baked text into a 3.2:1 strip that phones shrank to 768x240.
+    assert.equal(desktop.width / desktop.height, 1.6, `${slide.id}: desktop art is 16:10`);
+    assert.equal(mobile.width / mobile.height, 1.6, `${slide.id}: mobile art is 16:10`);
+    assert.ok(desktop.width >= 1280 && mobile.width <= desktop.width, `${slide.id}: desktop art sharp enough for retina`);
     assert.ok(slide.headline && slide.ctaText && slide.headlineEn && slide.ctaTextEn, `${slide.id}: copy in both languages`);
     const slug = slide.ctaLink.match(/^\/categories\/([a-z0-9-]+)$/)?.[1];
     assert.ok(slug && liveSlugs.has(slug), `${slide.id}: CTA ${slide.ctaLink} is not a live category`);

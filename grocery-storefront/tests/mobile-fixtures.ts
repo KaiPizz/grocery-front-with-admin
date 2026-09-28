@@ -80,7 +80,7 @@ const LISTING_PRODUCT_MEDIA = [
   },
 ];
 
-const PRIMARY_PRODUCT = {
+export const PRIMARY_PRODUCT = {
   id: 'prod-apples',
   name: 'Organic Gala Apples Family Value Pack',
   slug: 'organic-gala-apples',

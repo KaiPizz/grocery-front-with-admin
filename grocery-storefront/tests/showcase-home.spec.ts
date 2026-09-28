@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import { mockMobileStorefront } from './mobile-fixtures';
+import { mockMobileStorefront, PRIMARY_PRODUCT } from './mobile-fixtures';
 
 // The curated ADG landing (homepage.showcase) as shipped in public/config.
 const ADG_CONFIG = JSON.parse(readFileSync(path.join(process.cwd(), 'public/config/asiandeligo.json'), 'utf8'));
@@ -44,9 +44,9 @@ test.describe('showcase landing', () => {
 
     const hero = page.getByTestId('showcase-hero');
     const firstSlide = hero.getByTestId('showcase-hero-slide').first();
-    await expect(firstSlide).toContainText('Ramen, który rozgrzewa');
-    await expect(firstSlide.getByTestId('showcase-hero-cta')).toHaveAttribute('href', '/categories/ramyun-w-paczce');
-    await expect.poll(() => firstSlide.locator('img').evaluate((img) => (img as HTMLImageElement).currentSrc)).toContain('hero-ramen-mobile.webp');
+    await expect(firstSlide).toContainText('Smak Azji na wyciągnięcie ręki');
+    await expect(firstSlide.getByTestId('showcase-hero-cta')).toHaveAttribute('href', '/categories/makaron-i-ryz');
+    await expect.poll(() => firstSlide.locator('img').evaluate((img) => (img as HTMLImageElement).currentSrc)).toContain('hero-smak-azji-mobile.webp');
 
     const viewport = page.viewportSize()!;
     for (const testId of ['showcase-hero', 'showcase-usp', 'showcase-categories']) {
@@ -93,18 +93,34 @@ test.describe('showcase landing', () => {
     await expect(store.locator('img[alt="Sklep Asia Deli Go"]')).toHaveCount(1);
   });
 
-  test('rails settle: each shown rail has 3+ products, no multipacks, no endless skeleton', async ({ page }) => {
+  test('rails keep one product per line, drop multipacks and never hang on a skeleton', async ({ page }) => {
+    // Shelf as the API returns it for a popular leaf: sizes of one line and bulk packs mixed in.
+    const names = [
+      'Buldak Hot Chicken 140g', 'Buldak Hot Chicken 2x Spicy 140g', 'Buldak Karton 40 szt',
+      'Shin Ramyun 120g', 'Kimchi Jongga 500g', '5 x Shin Ramyun 120g',
+      'Pocky Chocolate 47g', 'Mochi Taro 210g', 'Sos sojowy Kikkoman 150 ml',
+    ];
+    const listing = {
+      products: {
+        edges: names.map((name, index) => ({
+          cursor: `rail-${index}`,
+          node: { ...PRIMARY_PRODUCT, id: `rail-${index}`, slug: `rail-${index}`, name },
+        })),
+        pageInfo: { hasNextPage: false, hasPreviousPage: false, startCursor: null, endCursor: null },
+        totalCount: names.length,
+      },
+    };
     await mockShowcaseConfig(page);
-    await mockMobileStorefront(page);
+    await mockMobileStorefront(page, { graphqlResponses: { GroceryProductListing: listing } });
     await page.goto('/pl');
 
-    await expect(page.getByTestId('showcase-rail').first()).toBeVisible({ timeout: 15_000 });
+    const firstRail = page.getByTestId('showcase-rail').first();
+    await expect(firstRail.getByTestId('showcase-rail-item')).toHaveCount(6, { timeout: 15_000 });
     await expect(page.getByTestId('showcase-rail').locator('.skeleton')).toHaveCount(0);
-    for (const rail of await page.getByTestId('showcase-rail').all()) {
-      const names = await rail.getByTestId('showcase-rail-item').allInnerTexts();
-      expect(names.length).toBeGreaterThanOrEqual(3);
-      expect(names.join('\n')).not.toMatch(/karton|zestaw|\d+\s*x\s*\d/i);
-    }
+    const cards = await firstRail.getByTestId('showcase-rail-item').allInnerTexts();
+    expect(cards.filter((card) => card.includes('Buldak'))).toHaveLength(1);
+    expect(cards.filter((card) => card.includes('Shin Ramyun'))).toHaveLength(1);
+    expect(cards.join('\n')).not.toMatch(/Karton|5 x Shin/);
   });
 
   test('English copy, collapsed about text and payment methods in the footer', async ({ page }) => {
@@ -112,7 +128,7 @@ test.describe('showcase landing', () => {
     await mockMobileStorefront(page);
     await page.goto('/en');
 
-    await expect(page.getByTestId('showcase-hero-slide').first()).toContainText('Ramen that warms you up');
+    await expect(page.getByTestId('showcase-hero-slide').first()).toContainText('Asian flavours within reach');
     await expect(page.getByTestId('showcase-usp')).toContainText('Pickup in Warsaw');
     await expect(page.getByTestId('showcase-steps')).toContainText('Order online, collect in store');
 
@@ -126,7 +142,7 @@ test.describe('showcase landing', () => {
     await expect(page.getByTestId('footer-service-notes')).toHaveCount(0);
   });
 
-  test('desktop: headline over the art, promises in one row', async ({ page }, testInfo) => {
+  test('desktop: headline beside the art, promises in one row', async ({ page }, testInfo) => {
     test.skip(Boolean(testInfo.project.use.isMobile), 'desktop layout');
     await page.setViewportSize({ width: 1366, height: 900 });
     await mockShowcaseConfig(page);
@@ -137,6 +153,8 @@ test.describe('showcase landing', () => {
     const image = await slide.locator('img').boundingBox();
     const cta = await slide.getByTestId('showcase-hero-cta').boundingBox();
     expect(cta!.y + cta!.height).toBeLessThanOrEqual(image!.y + image!.height);
+    // Copy sits beside the product art, never on top of the packaging.
+    expect(cta!.x + cta!.width).toBeLessThanOrEqual(image!.x + 1);
     const tops = await page.getByTestId('showcase-usp-item').evaluateAll((items) => items.map((item) => Math.round(item.getBoundingClientRect().top)));
     expect(new Set(tops).size).toBe(1);
   });

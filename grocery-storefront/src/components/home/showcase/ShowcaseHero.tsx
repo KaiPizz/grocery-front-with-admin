@@ -9,6 +9,8 @@ import type { ShowcaseHeroSlide } from '@/types/storefront-config';
 import { SHOWCASE_ACCENT, showcaseText } from './showcase-ui';
 
 const AUTOPLAY_MS = 6000;
+// Warm white close to the product-banner backgrounds, so the art's faded edge melts into the card.
+const HERO_CARD = '#FBF8F3';
 
 export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[]; english: boolean }) {
   const t = useTranslations('home.showcase');
@@ -49,7 +51,7 @@ export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[];
     >
       <div
         className="relative overflow-hidden rounded-[24px] touch-pan-y"
-        style={{ backgroundColor: '#F6EFE4' }}
+        style={{ backgroundColor: HERO_CARD }}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
       >
@@ -60,30 +62,30 @@ export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[];
             return (
               <div
                 key={slide.id}
-                className="transition-opacity duration-500"
+                className="transition-opacity duration-500 md:grid md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:items-center"
                 style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none' }}
                 aria-hidden={!visible}
                 aria-roledescription="slide"
                 aria-label={t('slideOf', { index: index + 1, count })}
                 data-testid="showcase-hero-slide"
               >
-                <picture>
+                <picture className="block md:order-2">
                   {slide.mobileImageUrl ? <source media="(max-width: 767px)" srcSet={slide.mobileImageUrl} /> : null}
                   <img
                     src={slide.imageUrl}
                     alt=""
-                    className="block aspect-[16/10] w-full object-cover md:aspect-[3/1]"
+                    className="block aspect-[16/10] w-full object-cover md:[mask-image:linear-gradient(to_right,transparent,#000_14%)]"
                     loading={index === 0 ? 'eager' : 'lazy'}
                     fetchPriority={index === 0 ? 'high' : 'auto'}
                     draggable={false}
                   />
                 </picture>
-                <div className="px-5 pb-5 pt-3.5 md:absolute md:inset-y-0 md:left-0 md:flex md:w-[46%] md:flex-col md:justify-center md:px-12 md:pb-0 md:pt-0 lg:px-16">
+                <div className="px-5 pb-4 pt-3 md:order-1 md:flex md:flex-col md:justify-center md:py-10 md:pl-12 md:pr-4 lg:pl-16">
                   <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: SHOWCASE_ACCENT }}>
                     {showcaseText(slide.eyebrow, slide.eyebrowEn, english)}
                   </p>
                   <p
-                    className="mt-1.5 font-display text-[1.55rem] font-bold leading-[1.1] md:text-[2.6rem] lg:text-5xl"
+                    className="mt-1 font-display text-[1.4rem] font-bold leading-[1.1] md:text-[2.1rem] lg:text-[2.5rem]"
                     style={{ color: 'var(--color-foreground)' }}
                   >
                     {showcaseText(slide.headline, slide.headlineEn, english)}
@@ -94,7 +96,7 @@ export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[];
                   <Link
                     href={href}
                     tabIndex={visible ? 0 : -1}
-                    className="mt-3 inline-flex min-h-11 w-fit items-center gap-2 rounded-full px-6 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:mt-6"
+                    className="mt-2.5 inline-flex min-h-11 w-fit items-center gap-2 rounded-full px-6 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:mt-6"
                     style={{ backgroundColor: 'var(--color-primary)' }}
                     data-testid="showcase-hero-cta"
                   >
@@ -109,7 +111,7 @@ export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[];
 
         {count > 1 ? (
           <>
-            <div className="absolute bottom-[38px] right-5 flex gap-2 md:bottom-4 md:left-12 md:right-auto lg:left-16">
+            <div className="absolute right-3 top-3 flex gap-2 rounded-full bg-white/85 px-2.5 py-2 shadow-sm md:bottom-4 md:left-12 md:right-auto md:top-auto md:bg-transparent md:p-0 md:shadow-none lg:left-16">
               {active.map((slide, index) => (
                 <button
                   key={slide.id}
