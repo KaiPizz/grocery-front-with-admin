@@ -287,6 +287,40 @@ test('every ADG category link points at a live tree slug', () => {
   }
 });
 
+test('ADG showcase landing: text-free art that exists, links and rail slugs on the live tree', () => {
+  const tree = JSON.parse(readFileSync(CATEGORY_TREE_JSON, 'utf8'));
+  const liveSlugs = new Set(tree.groups.flatMap((group) => [group.slug, ...(group.leaves ?? []).map((leaf) => leaf.slug)]));
+  const { envelope, adminEnvelope } = readAdgConfigs();
+  const showcase = envelope.config.homepage.showcase;
+  assert.deepEqual(adminEnvelope.published.homepage.showcase, showcase);
+  assert.equal(showcase.enabled, true);
+  assert.ok(showcase.heroSlides.filter((slide) => slide.enabled).length >= 3);
+
+  const assetSize = (path) => {
+    const url = new URL(`../public${path}`, import.meta.url);
+    assert.equal(existsSync(url), true, `Missing showcase asset: ${path}`);
+    assert.ok(statSync(url).size <= 120 * 1024, `Showcase asset exceeds 120 KB: ${path}`);
+    return readWebpDimensions(readFileSync(url));
+  };
+  for (const slide of showcase.heroSlides) {
+    const desktop = assetSize(slide.imageUrl);
+    const mobile = assetSize(slide.mobileImageUrl);
+    assert.equal(desktop.width / desktop.height, 3, `${slide.id}: desktop art is 3:1`);
+    // The old art baked text into a 3.2:1 strip that phones shrank to 768x240.
+    assert.ok(mobile.width / mobile.height <= 1.5, `${slide.id}: mobile art must be a real mobile crop`);
+    assert.ok(slide.headline && slide.ctaText && slide.headlineEn && slide.ctaTextEn, `${slide.id}: copy in both languages`);
+    const slug = slide.ctaLink.match(/^\/categories\/([a-z0-9-]+)$/)?.[1];
+    assert.ok(slug && liveSlugs.has(slug), `${slide.id}: CTA ${slide.ctaLink} is not a live category`);
+  }
+  for (const cuisine of showcase.cuisines) assetSize(cuisine.imageUrl);
+  for (const rail of showcase.rails) {
+    const slugs = rail.source === 'categories' ? rail.values : rail.categories ?? [];
+    assert.deepEqual(slugs.filter((slug) => !liveSlugs.has(slug)), [], `${rail.id}: retired slugs`);
+  }
+  // Placeholders the owner fills later (Google Maps, shop photo, reviews): empty until real.
+  assert.deepEqual(showcase.store, { mapsUrl: null, photoUrl: null, reviews: null });
+});
+
 test('ADG trust row, featured leaves and seo text are configured in both storefront and admin copies', () => {
   const { envelope, adminEnvelope } = readAdgConfigs();
   for (const [label, config] of [
@@ -297,7 +331,7 @@ test('ADG trust row, featured leaves and seo text are configured in both storefr
     assert.equal(config.commercial.trustRow?.enabled, true, `${label} trustRow.enabled`);
     assert.deepEqual(
       config.commercial.trustRow.items.map((item) => item.id),
-      ['trust-pickup', 'trust-confirmation', 'trust-payment', 'trust-catalog'],
+      ['trust-pickup', 'trust-payment', 'trust-catalog', 'trust-confirmation'],
       `${label} trustRow ids`,
     );
     for (const item of config.commercial.trustRow.items) {

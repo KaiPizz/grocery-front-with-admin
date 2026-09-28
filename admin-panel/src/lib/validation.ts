@@ -262,6 +262,61 @@ const homepageSeoTextSchema = z.object({
   paragraphsEn: seoParagraphsSchema,
 }).default({ enabled: false, headline: '', paragraphs: [], headlineEn: '', paragraphsEn: [] });
 
+// Curated "showcase" landing (storefront src/components/home/showcase). Optional:
+// absent = the block/section landing. Every link is validated like the rest.
+const showcaseText = (max: number) => z.string().trim().max(max);
+const showcaseOptionalText = (max: number) => z.string().trim().max(max).optional();
+
+const showcaseHeroSlideSchema = z.object({
+  id: z.string().min(1).max(120),
+  imageUrl: optionalUrl.refine((value) => Boolean(value), 'Slide needs an image'),
+  mobileImageUrl: optionalUrl,
+  eyebrow: showcaseText(60),
+  headline: showcaseText(80).min(1),
+  subline: showcaseText(200),
+  ctaText: showcaseText(40).min(1),
+  ctaLink: requiredNavigationUrl,
+  eyebrowEn: showcaseOptionalText(60),
+  headlineEn: showcaseOptionalText(80),
+  sublineEn: showcaseOptionalText(200),
+  ctaTextEn: showcaseOptionalText(40),
+  enabled: z.boolean(),
+});
+
+const showcaseRailSchema = z.object({
+  id: z.string().min(1).max(60),
+  eyebrow: showcaseText(60),
+  eyebrowEn: showcaseOptionalText(60),
+  title: showcaseText(80).min(1),
+  titleEn: showcaseOptionalText(80),
+  source: z.enum(['categories', 'country']),
+  values: z.array(z.string().trim().min(1).max(120)).min(1).max(20),
+  categories: z.array(z.string().trim().min(1).max(120)).max(20).optional(),
+  href: optionalNavigationUrl.optional(),
+  limit: z.number().int().min(3).max(24),
+  enabled: z.boolean(),
+});
+
+const homepageShowcaseSchema = z.object({
+  enabled: z.boolean(),
+  heroSlides: z.array(showcaseHeroSlideSchema).max(8),
+  cuisines: z.array(z.object({
+    key: z.enum(['japanese', 'korean', 'chinese', 'thai', 'vietnamese']),
+    imageUrl: optionalUrl,
+  })).max(5),
+  rails: z.array(showcaseRailSchema).max(8),
+  brands: z.array(z.string().trim().min(1).max(60)).max(24),
+  store: z.object({
+    mapsUrl: optionalExternalUrl.nullable(),
+    photoUrl: optionalUrl,
+    reviews: z.object({
+      rating: z.number().min(0).max(5),
+      count: z.number().int().min(0),
+      url: optionalExternalUrl.refine((value) => Boolean(value), 'Reviews need a link'),
+    }).nullable(),
+  }),
+}).optional();
+
 const homepageSchema = z.object({
   hero: heroBannerSchema,
   promoBanners: z.array(promoBannerItemSchema),
@@ -278,6 +333,7 @@ const homepageSchema = z.object({
   sections: z.array(homepageSectionSchema),
   featured: homepageFeaturedSchema,
   seoText: homepageSeoTextSchema,
+  showcase: homepageShowcaseSchema,
 });
 
 // --- Layout ---

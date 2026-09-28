@@ -265,6 +265,185 @@
           "Asia Deli Go is an Asian grocery store in Warsaw: Korean ramyun and kimchi, Japanese noodles, sauces and seasonings, Vietnamese rice paper, Thai curry pastes plus sweets and drinks from all over Asia. Order online, we confirm availability and prepare your pickup in store.",
           "Browse over 1,700 products in clear categories — from noodles and rice, through kimchi and pickles, to kitchenware and Korean cosmetics. Pay online with Przelewy24 or BLIK, or on pickup."
         ]
+      },
+      "showcase": {
+        "enabled": true,
+        "heroSlides": [
+          {
+            "id": "asiandeligo-showcase-ramen",
+            "imageUrl": "/brand/showcase/hero-ramen.webp",
+            "mobileImageUrl": "/brand/showcase/hero-ramen-mobile.webp",
+            "eyebrow": "Hity z Korei",
+            "headline": "Ramen, który rozgrzewa",
+            "subline": "Buldak, Shin Ramyun i dziesiątki innych smaków — od łagodnych po bardzo ostre.",
+            "ctaText": "Zobacz ramen",
+            "ctaLink": "/categories/ramyun-w-paczce",
+            "eyebrowEn": "Korean favourites",
+            "headlineEn": "Ramen that warms you up",
+            "sublineEn": "Buldak, Shin Ramyun and dozens more — from mild to fiery.",
+            "ctaTextEn": "Shop ramen",
+            "enabled": true
+          },
+          {
+            "id": "asiandeligo-showcase-sushi",
+            "imageUrl": "/brand/showcase/hero-sushi.webp",
+            "mobileImageUrl": "/brand/showcase/hero-sushi-mobile.webp",
+            "eyebrow": "Kuchnia japońska",
+            "headline": "Sushi w domu",
+            "subline": "Nori, ryż do sushi, sosy i maty — wszystko do domowych rolek w jednym miejscu.",
+            "ctaText": "Skompletuj zestaw",
+            "ctaLink": "/categories/do-gotowania-i-sushi",
+            "eyebrowEn": "Japanese kitchen",
+            "headlineEn": "Sushi at home",
+            "sublineEn": "Nori, sushi rice, sauces and mats — everything for home-made rolls.",
+            "ctaTextEn": "Build your kit",
+            "enabled": true
+          },
+          {
+            "id": "asiandeligo-showcase-kimchi",
+            "imageUrl": "/brand/showcase/hero-kimchi.webp",
+            "mobileImageUrl": "/brand/showcase/hero-kimchi-mobile.webp",
+            "eyebrow": "Fermentowane",
+            "headline": "Kimchi i gochujang",
+            "subline": "Prawdziwy koreański smak: kimchi, pasty i dodatki do domowych dań.",
+            "ctaText": "Poznaj kimchi",
+            "ctaLink": "/categories/kimchi-i-kiszonki",
+            "eyebrowEn": "Fermented",
+            "headlineEn": "Kimchi and gochujang",
+            "sublineEn": "Real Korean flavour: kimchi, pastes and sides for home cooking.",
+            "ctaTextEn": "Discover kimchi",
+            "enabled": true
+          },
+          {
+            "id": "asiandeligo-showcase-snacks",
+            "imageUrl": "/brand/showcase/hero-snacks.webp",
+            "mobileImageUrl": "/brand/showcase/hero-snacks-mobile.webp",
+            "eyebrow": "Na słodko i do picia",
+            "headline": "Przekąski z całej Azji",
+            "subline": "Mochi, Pocky, chipsy krewetkowe i napoje, których nie ma w zwykłym sklepie.",
+            "ctaText": "Zobacz przekąski",
+            "ctaLink": "/categories/przekaski-i-slodycze",
+            "eyebrowEn": "Sweet treats and drinks",
+            "headlineEn": "Snacks from all over Asia",
+            "sublineEn": "Mochi, Pocky, prawn crackers and drinks you won't find in a regular shop.",
+            "ctaTextEn": "Shop snacks",
+            "enabled": true
+          }
+        ],
+        "cuisines": [
+          {
+            "key": "korean",
+            "imageUrl": "/brand/showcase/cuisine-korean.webp"
+          },
+          {
+            "key": "japanese",
+            "imageUrl": "/brand/showcase/cuisine-japanese.webp"
+          },
+          {
+            "key": "chinese",
+            "imageUrl": "/brand/showcase/cuisine-chinese.webp"
+          },
+          {
+            "key": "thai",
+            "imageUrl": "/brand/showcase/cuisine-thai.webp"
+          },
+          {
+            "key": "vietnamese",
+            "imageUrl": "/brand/showcase/cuisine-vietnamese.webp"
+          }
+        ],
+        "rails": [
+          {
+            "id": "picks",
+            "eyebrow": "Polecane",
+            "eyebrowEn": "Our picks",
+            "title": "Warto spróbować",
+            "titleEn": "Worth a try",
+            "source": "categories",
+            "values": [
+              "buldak-i-ramyun-ostre",
+              "kimchi",
+              "pocky-pepero-i-czekolada",
+              "sos-sojowy",
+              "mochi-orzechy-i-suszone-owoce",
+              "napoje-gazowane"
+            ],
+            "limit": 12,
+            "enabled": true
+          },
+          {
+            "id": "korea",
+            "eyebrow": "Kuchnia koreańska",
+            "eyebrowEn": "Korean kitchen",
+            "title": "Hity z Korei",
+            "titleEn": "Korean hits",
+            "source": "country",
+            "values": [
+              "Korea Południowa"
+            ],
+            "categories": [
+              "ramyun-w-paczce",
+              "kimchi",
+              "pasty-gochujang-curry-hot-pot",
+              "ciastka-wafle-i-choco-pie",
+              "napoje-mleczne-i-probiotyczne"
+            ],
+            "limit": 12,
+            "enabled": true
+          },
+          {
+            "id": "japan",
+            "eyebrow": "Kuchnia japońska",
+            "eyebrowEn": "Japanese kitchen",
+            "title": "Smaki Japonii",
+            "titleEn": "Tastes of Japan",
+            "source": "country",
+            "values": [
+              "Japonia"
+            ],
+            "categories": [
+              "makaron-pszenny-udon-i-soba",
+              "sosy-do-sushi-teriyaki-i-ponzu",
+              "pasta-miso",
+              "herbaty",
+              "pocky-pepero-i-czekolada"
+            ],
+            "limit": 12,
+            "enabled": true
+          },
+          {
+            "id": "quick",
+            "eyebrow": "Na szybko",
+            "eyebrowEn": "Quick meals",
+            "title": "Obiad w 5 minut",
+            "titleEn": "Dinner in 5 minutes",
+            "source": "categories",
+            "values": [
+              "dania-gotowe-i-curry",
+              "zupy-instant",
+              "ramyun-w-kubku-i-misce"
+            ],
+            "limit": 12,
+            "enabled": true
+          }
+        ],
+        "brands": [
+          "Samyang",
+          "Nongshim",
+          "Ottogi",
+          "Lotte",
+          "Sempio",
+          "Chung Jung One",
+          "Lee Kum Kee",
+          "Kracie",
+          "Trung Nguyen",
+          "Holika Holika"
+        ],
+        "store": {
+          "mapsUrl": null,
+          "photoUrl": null,
+          "reviews": null
+        }
       }
     },
     "layout": {
@@ -527,40 +706,40 @@
           {
             "id": "trust-pickup",
             "icon": "map-pin",
-            "title": "Odbiór osobisty w Warszawie",
-            "description": "Zamów online, odbierz w sklepie",
+            "title": "Odbiór w Warszawie",
+            "description": "Zamieniecka 80/12",
             "titleEn": "Pickup in Warsaw",
-            "descriptionEn": "Order online, collect in store",
+            "descriptionEn": "Zamieniecka 80/12",
             "enabled": true,
             "order": 0
           },
           {
-            "id": "trust-confirmation",
-            "icon": "check-circle",
-            "title": "Potwierdzenie ręczne w godzinach otwarcia",
-            "description": "Sklep potwierdza dostępność i termin odbioru",
-            "titleEn": "Confirmed by hand during opening hours",
-            "descriptionEn": "The shop confirms availability and pickup time",
+            "id": "trust-payment",
+            "icon": "credit-card",
+            "title": "BLIK i Przelewy24",
+            "description": "lub płatność przy odbiorze",
+            "titleEn": "BLIK & Przelewy24",
+            "descriptionEn": "or pay when you collect",
             "enabled": true,
             "order": 1
           },
           {
-            "id": "trust-payment",
-            "icon": "credit-card",
-            "title": "Płatność online (Przelewy24, BLIK) lub przy odbiorze",
-            "description": "Wybierz wygodną formę płatności",
-            "titleEn": "Pay online (Przelewy24, BLIK) or on pickup",
-            "descriptionEn": "Choose the payment that suits you",
+            "id": "trust-catalog",
+            "icon": "package",
+            "title": "1 700+ produktów",
+            "description": "z pięciu kuchni Azji",
+            "titleEn": "1,700+ products",
+            "descriptionEn": "from five Asian cuisines",
             "enabled": true,
             "order": 2
           },
           {
-            "id": "trust-catalog",
-            "icon": "package",
-            "title": "Ponad 1 700 produktów z Azji",
-            "description": "Korea, Japonia, Wietnam, Tajlandia i więcej",
-            "titleEn": "Over 1,700 products from Asia",
-            "descriptionEn": "Korea, Japan, Vietnam, Thailand and more",
+            "id": "trust-confirmation",
+            "icon": "check-circle",
+            "title": "Potwierdzamy dostępność",
+            "description": "w godzinach otwarcia sklepu",
+            "titleEn": "Availability confirmed",
+            "descriptionEn": "during opening hours",
             "enabled": true,
             "order": 3
           }

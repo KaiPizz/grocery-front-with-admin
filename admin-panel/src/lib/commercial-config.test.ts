@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { DEFAULT_CONFIG, DEFAULT_TRUST_ROW } from './defaults';
@@ -235,4 +236,25 @@ test('schema refuses an enabled trust row item without a title, but lets a disab
 
   config.commercial.trustRow = { enabled: true, items: [{ ...item, enabled: false }] };
   assert.equal(storefrontConfigSchema.safeParse(config).success, true);
+});
+
+test('schema keeps the showcase landing and refuses unsafe links in it', () => {
+  const showcase = JSON.parse(readFileSync(new URL('../../data/config-asiandeligo.json', import.meta.url), 'utf8')).published.homepage.showcase;
+  const config = cloneConfig();
+  (config.homepage as StorefrontConfig['homepage'] & { showcase: unknown }).showcase = showcase;
+
+  const parsed = storefrontConfigSchema.safeParse(config);
+  assert.equal(parsed.success, true, JSON.stringify(parsed.success ? null : parsed.error.issues.slice(0, 3)));
+  assert.deepEqual((parsed.data?.homepage as { showcase?: unknown }).showcase, showcase);
+
+  const hostile = structuredClone(showcase);
+  hostile.heroSlides[0].ctaLink = 'javascript:alert(1)';
+  hostile.store.mapsUrl = 'javascript:alert(1)';
+  (config.homepage as StorefrontConfig['homepage'] & { showcase: unknown }).showcase = hostile;
+  const refused = storefrontConfigSchema.safeParse(config);
+  assert.equal(refused.success, false);
+  assert.deepEqual(
+    refused.success ? [] : refused.error.issues.map((issue) => issue.path.join('.')).sort(),
+    ['homepage.showcase.heroSlides.0.ctaLink', 'homepage.showcase.store.mapsUrl'],
+  );
 });
