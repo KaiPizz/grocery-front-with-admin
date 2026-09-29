@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
-import { mockMobileStorefront, seedCartStorage } from './mobile-fixtures';
+import { mockMobileStorefront, seedAuthSession, seedCartStorage } from './mobile-fixtures';
 
 function pickupConfigEnvelope() {
   return {
@@ -343,6 +343,36 @@ test.describe('Kenmito launch truth copy', () => {
     expect(address?.variables.input.shippingAddress).toMatchObject({ firstName: 'Jan', lastName: 'Kowalski', phone: '+48600600600' });
     const noteUpdate = operations.find((operation) => operation.name === 'CheckoutNoteUpdate');
     expect(noteUpdate?.variables.input.note).toContain('Ordered by: Marta Nowak, +48123123123');
+  });
+
+  test('a signed-in shopper with a complete profile sees a contact card instead of inputs', async ({ page }) => {
+    await mockPickupConfig(page);
+    await seedCartStorage(page);
+    await seedAuthSession(page, 'Anna Maria Kowalska', '+48111222333');
+    await mockMobileStorefront(page, { cart: 'single-item', checkoutProfile: 'pickup-bank-transfer' });
+    await page.goto('/en/checkout');
+
+    const card = page.getByTestId('checkout-contact-card');
+    await expect(card).toContainText('Anna Maria Kowalska');
+    await expect(card).toContainText('+48111222333');
+    await expect(page.locator('#checkout-firstName')).toHaveCount(0);
+    await expect(page.getByLabel(/remember my details/i)).toHaveCount(0);
+
+    await card.getByRole('button', { name: /change/i }).click();
+    await expect(page.locator('#checkout-firstName')).toHaveValue('Anna Maria');
+    await expect(page.locator('#checkout-lastName')).toHaveValue('Kowalska');
+  });
+
+  test('a signed-in shopper without a phone on the profile gets the name prefilled and edits the rest', async ({ page }) => {
+    await mockPickupConfig(page);
+    await seedCartStorage(page);
+    await seedAuthSession(page, 'Anna Kowalska');
+    await mockMobileStorefront(page, { cart: 'single-item', checkoutProfile: 'pickup-bank-transfer' });
+    await page.goto('/en/checkout');
+
+    await expect(page.locator('#checkout-firstName')).toHaveValue('Anna');
+    await expect(page.locator('#checkout-lastName')).toHaveValue('Kowalska');
+    await expect(page.getByLabel(/^email/i)).toHaveCount(0);
   });
 
   test('a guest finds their contact details filled in on the next order', async ({ page }) => {

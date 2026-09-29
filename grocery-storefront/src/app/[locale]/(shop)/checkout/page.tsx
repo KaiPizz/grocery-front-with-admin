@@ -730,7 +730,16 @@ export default function CheckoutPage() {
 
     try {
       const draft = JSON.parse(rawDraft) as CheckoutDraftState;
-      setForm({ ...createInitialFormState(), ...draft.form });
+      // Only filled draft values win: the profile/remembered prefill may run in the same commit.
+      setForm((current) => {
+        const next = { ...createInitialFormState(), ...current };
+        for (const [key, value] of Object.entries(draft.form ?? {})) {
+          if (typeof value === 'string' && value.trim() && key in next) {
+            next[key as keyof DeliveryFormState] = value;
+          }
+        }
+        return next;
+      });
       setPickupByOther(Boolean(draft.pickupByOther));
       setCheckoutId((current) => current ?? draft.checkoutId);
       setCheckoutKey(draft.checkoutKey ?? null);
