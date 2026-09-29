@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Compose the home-page hero and cuisine art from real catalog packshots.
+"""Compose the home-page cuisine-card art from real catalog packshots.
 
-Replaces the AI-generated art (29/09/2026): every item shown is a product the
-shop sells, cut out of its white packshot background and set on a flat colour.
+Replaces the AI-generated food photos (29/09/2026): every item shown is a product
+the shop sells, cut out of its white packshot background and set on a flat colour.
+(The hero slides keep the owner-approved art; see public/brand/showcase/hero-*.)
 
     python3 scripts/showcase-art/build.py            # writes public/brand/showcase/*.webp
     python3 scripts/showcase-art/build.py --out /tmp/x  # preview elsewhere
@@ -123,15 +124,6 @@ def main():
         picks = json.load(handle)
     os.makedirs(args.out, exist_ok=True)
     base = picks['base']
-
-    hero = picks['hero']
-    for name, slide in hero['slides'].items():
-        # Desktop shows the art in the right column with its left edge faded; mobile shows it whole.
-        compose(hero['size'], slide['bg'], slide['items'], base, center_x=0.56, baseline=0.9, grow=1.3).save(
-            os.path.join(args.out, f'{name}.webp'), quality=86)
-        compose(hero['mobileSize'], slide['bg'], slide['items'], base, baseline=0.9, max_width=0.92, grow=1.3).save(
-            os.path.join(args.out, f'{name}-mobile.webp'), quality=86)
-        print('hero', name)
 
     cuisines = picks['cuisines']
     for name, tile in cuisines['tiles'].items():

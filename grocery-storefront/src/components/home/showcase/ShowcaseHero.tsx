@@ -9,7 +9,7 @@ import type { ShowcaseHeroSlide } from '@/types/storefront-config';
 import { SHOWCASE_ACCENT, showcaseText } from './showcase-ui';
 
 const AUTOPLAY_MS = 6000;
-// Warm white close to the product-banner backgrounds, so the art's faded edge melts into the card.
+// Warm white behind the copy column; the art fills its own column edge to edge.
 const HERO_CARD = '#FBF8F3';
 
 export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[]; english: boolean }) {
@@ -100,7 +100,7 @@ export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[];
                   <img
                     src={slide.imageUrl}
                     alt=""
-                    className="block aspect-[16/10] w-full object-cover md:[mask-image:linear-gradient(to_right,transparent,#000_14%)]"
+                    className="block aspect-[16/10] w-full object-cover"
                     loading={index === 0 ? 'eager' : 'lazy'}
                     fetchPriority={index === 0 ? 'high' : 'auto'}
                     draggable={false}
