@@ -64,9 +64,16 @@ test.describe('checkout accessibility', () => {
     await expect(page.getByTestId('checkout-block-payment').getByRole('alert')).toHaveText(/select a payment method/i);
   });
 
-  test('keeps the order summary on the page and the order button in the mobile bar', async ({ page }) => {
+  test('collapses the mobile order summary behind a toggle and keeps the order button in the bar', async ({ page }) => {
     await openCheckout(page);
 
+    const toggle = page.getByTestId('mobile-checkout-summary').getByRole('button');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toContainText(/your order \(1 item\)/i);
+    await expect(page.getByTestId('mobile-checkout-summary-panel')).toHaveCount(0);
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(toggle).toHaveAttribute('aria-controls', 'mobile-checkout-summary-panel');
     await expect(page.getByTestId('mobile-checkout-summary-panel')).toContainText(/organic gala apples/i);
     const barButton = page.getByTestId('mobile-checkout-summary-bar').getByRole('button');
     await expect(barButton).toHaveText(/order and pay · .*\d/i);

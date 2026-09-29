@@ -270,6 +270,7 @@ test.describe('mobile storefront smoke', () => {
     await page.getByRole('radio', { name: /credit\/debit card/i }).click();
 
     await expect(page.getByRole('radio', { name: /credit\/debit card/i })).toHaveAttribute('aria-checked', 'true');
+    await page.getByTestId('mobile-checkout-summary').getByRole('button').click();
     await expect(page.getByTestId('mobile-checkout-summary-panel')).toContainText(/organic gala apples/i);
   });
 });

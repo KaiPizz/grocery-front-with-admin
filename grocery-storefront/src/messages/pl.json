@@ -491,7 +491,21 @@
     "placeOrderPay": "Zamawiam i płacę · {total}",
     "placeOrderPayAtPickup": "Zamawiam i płacę przy odbiorze · {total}",
     "confirmationPayment": "Płatność",
-    "confirmationPickupAt": "Odbiór"
+    "confirmationPickupAt": "Odbiór",
+    "change": "Zmień",
+    "haveAccount": "Masz konto?",
+    "signIn": "Zaloguj się",
+    "phoneHint": "Zadzwonimy tylko w sprawie tego zamówienia.",
+    "pickupByOther": "Odbierze inna osoba",
+    "recipientFirstName": "Imię osoby odbierającej",
+    "recipientLastName": "Nazwisko osoby odbierającej",
+    "recipientPhone": "Telefon osoby odbierającej",
+    "pickupByOtherHint": "Przy odbiorze wystarczy podać numer zamówienia.",
+    "rememberContact": "Zapamiętaj moje dane na tym urządzeniu",
+    "yourOrder": "Twoje zamówienie ({count, plural, one {# produkt} few {# produkty} other {# produktów}})",
+    "havePromo": "Masz kod rabatowy?",
+    "addNote": "Dodaj uwagi do zamówienia",
+    "orderedBy": "Zamawiający"
   },
   "allergens": {
     "cereals": "Zboża (gluten)",

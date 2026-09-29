@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   Banknote,
   Building2,
+  ChevronDown,
   CreditCard,
   Loader2,
   MapPin,
@@ -190,12 +191,17 @@ interface DeliveryFormState {
   postalCode: string;
   country: string;
   note: string;
+  // Someone other than the buyer collects the order ("Odbiera inna osoba").
+  recipientFirstName: string;
+  recipientLastName: string;
+  recipientPhone: string;
 }
 
 type FieldErrors = Partial<Record<keyof DeliveryFormState, string>>;
 
 interface CheckoutDraftState {
   form: DeliveryFormState;
+  pickupByOther?: boolean;
   checkoutId: string | null;
   checkoutKey: string | null;
   promoCode: string;
@@ -220,6 +226,9 @@ const DELIVERY_FIELD_ORDER: Array<keyof DeliveryFormState> = [
   'lastName',
   'email',
   'phone',
+  'recipientFirstName',
+  'recipientLastName',
+  'recipientPhone',
   'streetAddress1',
   'city',
   'postalCode',
@@ -261,7 +270,42 @@ function createInitialFormState(email?: string | null): DeliveryFormState {
     postalCode: '',
     country: 'PL',
     note: '',
+    recipientFirstName: '',
+    recipientLastName: '',
+    recipientPhone: '',
   };
+}
+
+// Guest contact details kept on this device for the next order (opt-out checkbox).
+const REMEMBERED_CONTACT_KEY = 'adg-checkout-contact';
+
+type RememberedContact = Pick<DeliveryFormState, 'firstName' | 'lastName' | 'email' | 'phone'>;
+
+function readRememberedContact(): RememberedContact | null {
+  try {
+    const raw = window.localStorage.getItem(REMEMBERED_CONTACT_KEY);
+    return raw ? (JSON.parse(raw) as RememberedContact) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeRememberedContact(contact: RememberedContact | null) {
+  try {
+    if (contact) {
+      window.localStorage.setItem(REMEMBERED_CONTACT_KEY, JSON.stringify(contact));
+    } else {
+      window.localStorage.removeItem(REMEMBERED_CONTACT_KEY);
+    }
+  } catch {
+    // Convenience only.
+  }
+}
+
+function splitFullName(fullName: string | null | undefined): { firstName: string; lastName: string } {
+  const parts = (fullName ?? '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length < 2) return { firstName: parts[0] ?? '', lastName: '' };
+  return { firstName: parts.slice(0, -1).join(' '), lastName: parts[parts.length - 1] };
 }
 
 function normalizeCountryCode(value: string): string {
@@ -445,9 +489,18 @@ export default function CheckoutPage() {
   // lets the shopper retry against the same unpaid order instead of re-ordering.
   const [pendingP24Order, setPendingP24Order] = useState<{ id: string; number: string } | null>(null);
   const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
+  const [pickupByOther, setPickupByOther] = useState(false);
+  const [rememberContact, setRememberContact] = useState(true);
+  // Signed-in shoppers with a complete profile see a summary card instead of inputs.
+  const [editingContact, setEditingContact] = useState(true);
+  const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
+  const [promoOpen, setPromoOpen] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
   const authSession = useAuthStore((s) => s.session);
   const isAuthenticated = authSession.status === 'authenticated';
   const authEmail = authSession.user?.email ?? '';
+  const authFullName = authSession.user?.fullName ?? '';
+  const authPhone = authSession.user?.phone ?? '';
   const uiText = useMemo(
     () => ({
       paymentReturned:
@@ -478,7 +531,6 @@ export default function CheckoutPage() {
       loadingPaymentMethods: locale === 'pl' ? 'Ładowanie metod płatności…' : 'Loading payment methods…',
       calculatedNext: locale === 'pl' ? 'Wyliczymy dalej' : 'Calculated next',
       discountLabel: locale === 'pl' ? 'Rabat' : 'Discount',
-      noneLabel: locale === 'pl' ? 'Brak' : 'None',
       insufficientStock:
         locale === 'pl'
           ? 'Nie ma wystarczającego stanu magazynowego, aby złożyć to zamówienie. Sprawdź koszyk i zmień ilości przed ponowną próbą.'
@@ -570,6 +622,37 @@ export default function CheckoutPage() {
     }));
   }, [buyerIdentity?.countryCode, buyerIdentity?.phone, note, sessionEmail, isAuthenticated, authEmail]);
 
+  // Signed in: name and phone come from the profile; a complete profile collapses to a card.
+  const profilePrefilled = useRef(false);
+  useEffect(() => {
+    if (!isAuthenticated || profilePrefilled.current) return;
+    profilePrefilled.current = true;
+    const profileName = splitFullName(authFullName);
+    setForm((current) => ({
+      ...current,
+      firstName: current.firstName || profileName.firstName,
+      lastName: current.lastName || profileName.lastName,
+      phone: current.phone || authPhone,
+    }));
+    setEditingContact(!(profileName.firstName && profileName.lastName && authPhone.trim()));
+  }, [authFullName, authPhone, isAuthenticated]);
+
+  // Guest: fill empty fields from the details remembered on this device.
+  const rememberedApplied = useRef(false);
+  useEffect(() => {
+    if (!isHydrated || authSession.status !== 'guest' || rememberedApplied.current) return;
+    rememberedApplied.current = true;
+    const remembered = readRememberedContact();
+    if (!remembered) return;
+    setForm((current) => ({
+      ...current,
+      firstName: current.firstName || remembered.firstName || '',
+      lastName: current.lastName || remembered.lastName || '',
+      email: current.email || remembered.email || '',
+      phone: current.phone || remembered.phone || '',
+    }));
+  }, [authSession.status, isHydrated]);
+
   useEffect(() => {
     if (!selectedDeliveryOption) {
       setShippingCost(0);
@@ -647,7 +730,8 @@ export default function CheckoutPage() {
 
     try {
       const draft = JSON.parse(rawDraft) as CheckoutDraftState;
-      setForm(draft.form);
+      setForm({ ...createInitialFormState(), ...draft.form });
+      setPickupByOther(Boolean(draft.pickupByOther));
       setCheckoutId((current) => current ?? draft.checkoutId);
       setCheckoutKey(draft.checkoutKey ?? null);
       setPromoCode(draft.promoCode);
@@ -664,6 +748,7 @@ export default function CheckoutPage() {
 
     const draft: CheckoutDraftState = {
       form,
+      pickupByOther,
       checkoutId,
       checkoutKey,
       promoCode,
@@ -671,7 +756,7 @@ export default function CheckoutPage() {
     };
 
     window.sessionStorage.setItem(CHECKOUT_DRAFT_KEY, JSON.stringify(draft));
-  }, [appliedPromoCode, checkoutKey, checkoutId, form, isHydrated, promoCode]);
+  }, [appliedPromoCode, checkoutKey, checkoutId, form, isHydrated, pickupByOther, promoCode]);
 
   const displaySubtotal = getSubtotal();
   const displayCurrency =
@@ -684,7 +769,7 @@ export default function CheckoutPage() {
     ? cartTotalAmount
     : displaySubtotal;
   const displayTotal = serverTotal ?? discountedTotal + shippingCost;
-  const summaryContent = (
+  const orderSummary = (
     <>
       <ul className="space-y-3 mb-5" role="list">
         {items.map((item) => (
@@ -716,12 +801,14 @@ export default function CheckoutPage() {
               : uiText.calculatedNext}
           </span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span style={{ color: 'var(--color-muted-foreground)' }}>{uiText.discountLabel}</span>
-          <span className="font-medium" style={{ color: appliedPromoCode ? 'var(--color-fresh)' : 'var(--color-muted-foreground)' }}>
-            {appliedPromoCode ?? uiText.noneLabel}
-          </span>
-        </div>
+        {appliedPromoCode && (
+          <div className="flex justify-between text-sm">
+            <span style={{ color: 'var(--color-muted-foreground)' }}>{uiText.discountLabel}</span>
+            <span className="font-medium" style={{ color: 'var(--color-fresh)' }}>
+              {appliedPromoCode}
+            </span>
+          </div>
+        )}
         <div className="flex justify-between pt-2 font-bold">
           <span style={{ color: 'var(--color-foreground)' }}>{tCart('total')}</span>
           <span className="text-lg tabular-nums" style={{ color: 'var(--color-foreground)' }}>
@@ -730,46 +817,11 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="mt-5">
-        {appliedPromoCode ? (
-          <div className="flex items-center gap-2 rounded-xl border px-3 py-3 text-sm" style={{ borderColor: 'var(--color-border)' }}>
-            <Tag className="h-4 w-4 shrink-0" style={{ color: 'var(--color-fresh)' }} aria-hidden="true" />
-            <span className="flex-1 font-medium" style={{ color: 'var(--color-foreground)' }}>
-              {appliedPromoCode}
-            </span>
-            <button
-              type="button"
-              onClick={() => void handlePromoRemove()}
-              disabled={busy}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full"
-              aria-label="Remove promo code"
-            >
-              <X className="h-4 w-4" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
-            </button>
-          </div>
-        ) : (
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={promoCode}
-              onChange={(event) => setPromoCode(event.target.value)}
-              placeholder={t('promoPlaceholder')}
-              className={INPUT_CLASS}
-              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-            />
-            <button
-              type="button"
-              onClick={() => void handlePromoApply()}
-              disabled={busy || !promoCode.trim()}
-              className="rounded-xl border px-4 py-2 text-sm font-medium disabled:opacity-50"
-              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-            >
-              {t('applyPromo')}
-            </button>
-          </div>
-        )}
-      </div>
+    </>
+  );
 
+  const trustRows = (
+    <>
       <div className="border-t pt-4 mt-5 space-y-2.5" style={{ borderColor: 'var(--color-border)' }}>
         {[
           ...(pickupMode
@@ -790,6 +842,62 @@ export default function CheckoutPage() {
           </div>
         ))}
       </div>
+    </>
+  );
+
+  const promoSection = (
+    <>
+      <div data-testid="checkout-promo">
+        {appliedPromoCode ? (
+          <div className="flex items-center gap-2 rounded-xl border px-3 py-3 text-sm" style={{ borderColor: 'var(--color-border)' }}>
+            <Tag className="h-4 w-4 shrink-0" style={{ color: 'var(--color-fresh)' }} aria-hidden="true" />
+            <span className="flex-1 font-medium" style={{ color: 'var(--color-foreground)' }}>
+              {appliedPromoCode}
+            </span>
+            <button
+              type="button"
+              onClick={() => void handlePromoRemove()}
+              disabled={busy}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full"
+              aria-label="Remove promo code"
+            >
+              <X className="h-4 w-4" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
+            </button>
+          </div>
+        ) : !promoOpen ? (
+          <button
+            type="button"
+            onClick={() => setPromoOpen(true)}
+            className="text-sm font-medium underline underline-offset-4"
+            style={{ color: 'var(--color-primary)' }}
+          >
+            {t('havePromo')}
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={promoCode}
+              onChange={(event) => setPromoCode(event.target.value)}
+              placeholder={t('promoPlaceholder')}
+              aria-label={t('promoPlaceholder')}
+              autoFocus
+              className={INPUT_CLASS}
+              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+            />
+            <button
+              type="button"
+              onClick={() => void handlePromoApply()}
+              disabled={busy || !promoCode.trim()}
+              className="rounded-xl border px-4 py-2 text-sm font-medium disabled:opacity-50"
+              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+            >
+              {t('applyPromo')}
+            </button>
+          </div>
+        )}
+      </div>
+
     </>
   );
 
@@ -828,6 +936,15 @@ export default function CheckoutPage() {
       errors.email = t('invalidEmail');
     }
 
+    // Required: the store calls if something in the order is missing.
+    if (!f.phone.trim()) errors.phone = t('required');
+
+    if (pickupMode && pickupByOther) {
+      if (!f.recipientFirstName.trim()) errors.recipientFirstName = t('required');
+      if (!f.recipientLastName.trim()) errors.recipientLastName = t('required');
+      if (!f.recipientPhone.trim()) errors.recipientPhone = t('required');
+    }
+
     if (!pickupMode) {
       if (!f.streetAddress1.trim()) errors.streetAddress1 = t('required');
       if (!f.city.trim()) errors.city = t('required');
@@ -838,6 +955,9 @@ export default function CheckoutPage() {
 
     setFieldErrors(errors);
     if (firstErrorField) {
+      if (errors.firstName || errors.lastName || errors.email || errors.phone) {
+        setEditingContact(true);
+      }
       focusDeliveryField(firstErrorField);
     }
 
@@ -899,6 +1019,15 @@ export default function CheckoutPage() {
     } finally {
       setBusy(false);
     }
+  }
+
+  // With another collector the pickup name/phone are theirs; the buyer goes into the note
+  // so the store still knows who ordered.
+  function buildOrderNote(): string {
+    const buyerLine = pickupMode && pickupByOther
+      ? `${t('orderedBy')}: ${form.firstName.trim()} ${form.lastName.trim()}, ${form.phone.trim()}`
+      : '';
+    return [buyerLine, form.note.trim()].filter(Boolean).join('\n');
   }
 
   // Creates the backend checkout (again when the e-mail or the basket changed since
@@ -967,6 +1096,7 @@ export default function CheckoutPage() {
       }
     }
 
+    const collectedByOther = pickupMode && pickupByOther;
     const effectiveAddress = pickupMode && pickupAddress
       ? pickupAddress
       : {
@@ -981,13 +1111,13 @@ export default function CheckoutPage() {
         input: {
           checkoutId: nextCheckoutId,
           shippingAddress: {
-            firstName: form.firstName.trim(),
-            lastName: form.lastName.trim(),
+            firstName: (collectedByOther ? form.recipientFirstName : form.firstName).trim(),
+            lastName: (collectedByOther ? form.recipientLastName : form.lastName).trim(),
             streetAddress1: effectiveAddress.streetAddress1.trim(),
             city: effectiveAddress.city.trim(),
             postalCode: effectiveAddress.postalCode.trim(),
             country: normalizeCountryCode(effectiveAddress.country),
-            phone: form.phone.trim(),
+            phone: (collectedByOther ? form.recipientPhone : form.phone).trim(),
           },
         },
       }
@@ -1031,11 +1161,12 @@ export default function CheckoutPage() {
     setShippingCost(shippingMethodPayload?.checkout?.shippingPrice?.amount ?? shippingCost);
     setServerTotal(total);
 
-    if (form.note.trim()) {
+    const orderNote = buildOrderNote();
+    if (orderNote) {
       const noteResponse = await graphqlRequest<CheckoutNoteUpdateResponse>(CHECKOUT_NOTE_UPDATE, {
         input: {
           checkoutId: nextCheckoutId,
-          note: form.note.trim(),
+          note: orderNote,
         },
       });
       const notePayload = noteResponse.data?.checkoutNoteUpdate;
@@ -1284,8 +1415,9 @@ export default function CheckoutPage() {
         return;
       }
 
-      if (form.note !== note) {
-        await updateNote(form.note);
+      const orderNote = buildOrderNote();
+      if (orderNote !== note) {
+        await updateNote(orderNote);
       }
 
       const handoff = await initializeCheckoutHandoff();
@@ -1336,6 +1468,14 @@ export default function CheckoutPage() {
         paymentMethod: translatePaymentMethodName(locale, selectedPaymentMethod),
       });
 
+      if (!isAuthenticated) {
+        writeRememberedContact(
+          rememberContact
+            ? { firstName: form.firstName.trim(), lastName: form.lastName.trim(), email, phone: form.phone.trim() }
+            : null
+        );
+      }
+
       if (payWithP24) {
         await startP24Payment({ id: payload.order.id, number: payload.order.number }, handoff.id);
         return;
@@ -1353,6 +1493,52 @@ export default function CheckoutPage() {
     }
   }
 
+  function renderField(
+    field: keyof DeliveryFormState,
+    label: string,
+    options: { autoComplete: string; type?: string; inputMode?: 'text' | 'email' | 'tel'; wide?: boolean; hint?: string }
+  ) {
+    const error = fieldErrors[field];
+    const hintId = options.hint ? `checkout-${field}-hint` : undefined;
+    const describedBy = [error ? `checkout-${field}-error` : null, hintId].filter(Boolean).join(' ') || undefined;
+    return (
+      <div key={field} className={options.wide ? 'sm:col-span-2' : undefined}>
+        <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-muted-foreground)' }} htmlFor={`checkout-${field}`}>
+          {label}
+        </label>
+        <input
+          id={`checkout-${field}`}
+          name={field}
+          type={options.type ?? 'text'}
+          inputMode={options.inputMode ?? 'text'}
+          autoComplete={options.autoComplete}
+          value={form[field]}
+          onChange={(event) => setFieldValue(field, event.target.value)}
+          aria-invalid={Boolean(error)}
+          aria-describedby={describedBy}
+          className={INPUT_CLASS}
+          style={{
+            borderColor: error ? 'var(--color-destructive)' : 'var(--color-border)',
+            color: 'var(--color-foreground)',
+          }}
+        />
+        {options.hint && (
+          <p id={hintId} className="text-[11px] mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
+            {options.hint}
+          </p>
+        )}
+        {error && (
+          <p id={`checkout-${field}-error`} className="text-xs mt-1" style={{ color: 'var(--color-destructive)' }} role="alert">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  // The only fulfilment option (ADG: store pickup) is a fact, not a choice.
+  const singlePickup = pickupMode && deliveryOptions.length === 1;
   const payAtPickup = pickupMode && isPayOnCollectionMethod(selectedPaymentMethod);
   const formattedTotal = formatPrice(displayTotal, displayCurrency);
   const placeOrderLabel = busy
@@ -1425,6 +1611,40 @@ export default function CheckoutPage() {
         {t('title')}
       </h1>
 
+      <div
+        className="mb-4 rounded-2xl border lg:hidden"
+        style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+        data-testid="mobile-checkout-summary"
+      >
+        <button
+          type="button"
+          onClick={() => setMobileSummaryOpen((open) => !open)}
+          aria-expanded={mobileSummaryOpen}
+          aria-controls="mobile-checkout-summary-panel"
+          className="flex w-full items-center justify-between gap-3 px-4 py-3 text-sm font-semibold"
+          style={{ color: 'var(--color-foreground)' }}
+        >
+          <span>{t('yourOrder', { count: itemCount })}</span>
+          <span className="flex items-center gap-1.5 tabular-nums">
+            {formatPrice(displayTotal, displayCurrency)}
+            <ChevronDown
+              className={`h-4 w-4 transition-transform duration-fast ${mobileSummaryOpen ? 'rotate-180' : ''}`}
+              aria-hidden="true"
+            />
+          </span>
+        </button>
+        {mobileSummaryOpen && (
+          <div
+            id="mobile-checkout-summary-panel"
+            className="border-t px-4 py-4"
+            style={{ borderColor: 'var(--color-border)' }}
+            data-testid="mobile-checkout-summary-panel"
+          >
+            {orderSummary}
+          </div>
+        )}
+      </div>
+
       {(errorBanner || cartError) && (
         <div
           className="mb-6 rounded-2xl border px-4 py-3 text-sm"
@@ -1447,6 +1667,42 @@ export default function CheckoutPage() {
             title={pickupMode ? t('stepPickupContact') : t('delivery')}
             testId="checkout-block-contact"
           >
+              {isAuthenticated && !editingContact ? (
+                <div
+                  className="flex items-start justify-between gap-3 rounded-xl border p-4"
+                  style={{ borderColor: 'var(--color-border)' }}
+                  data-testid="checkout-contact-card"
+                >
+                  <div className="min-w-0 text-sm">
+                    <p className="font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                      {form.firstName} {form.lastName}
+                    </p>
+                    <p className="mt-0.5 truncate" style={{ color: 'var(--color-muted-foreground)' }}>{authEmail}</p>
+                    <p className="mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>{form.phone}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setEditingContact(true)}
+                    className="shrink-0 text-sm font-medium underline underline-offset-4"
+                    style={{ color: 'var(--color-primary)' }}
+                  >
+                    {t('change')}
+                  </button>
+                </div>
+              ) : (
+              <>
+              {!isAuthenticated && (
+                <p className="mb-4 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {t('haveAccount')}{' '}
+                  <Link
+                    href={{ pathname: '/login', query: { returnTo: '/checkout' } }}
+                    className="font-medium underline underline-offset-4"
+                    style={{ color: 'var(--color-primary)' }}
+                  >
+                    {t('signIn')}
+                  </Link>
+                </p>
+              )}
               {/* ── Saved address selector ── */}
               {!pickupMode && savedAddresses.length > 0 && (
                 <div className="mb-5">
@@ -1519,50 +1775,56 @@ export default function CheckoutPage() {
               )}
 
               <div className="grid gap-4 sm:grid-cols-2">
-                {([
-                  { key: 'firstName',      label: t('firstName'),   autoComplete: 'given-name',            type: 'text',  inputMode: 'text'    as const },
-                  { key: 'lastName',       label: t('lastName'),    autoComplete: 'family-name',           type: 'text',  inputMode: 'text'    as const },
-                  ...(!isAuthenticated ? [{ key: 'email' as const, label: t('email'), autoComplete: 'email', type: 'email', inputMode: 'email' as const }] : []),
-                  { key: 'phone',          label: t('phone'),       autoComplete: 'tel',                   type: 'tel',   inputMode: 'tel'     as const },
-                  ...(!pickupMode ? [
-                    { key: 'streetAddress1' as const, label: t('address'), autoComplete: 'street-address', type: 'text', inputMode: 'text' as const },
-                    { key: 'city' as const, label: t('city'), autoComplete: 'address-level2', type: 'text', inputMode: 'text' as const },
-                    { key: 'postalCode' as const, label: t('postalCode'), autoComplete: 'postal-code', type: 'text', inputMode: 'text' as const },
-                    // Poland-only delivery: the country is fixed to PL and never asked for.
-                  ] : []),
-                ] as const).map(({ key, label, autoComplete, type, inputMode }) => {
-                  const field = key as keyof DeliveryFormState;
-                  const isWide = field === 'streetAddress1' || field === 'email';
-                  return (
-                    <div key={field} className={isWide ? 'sm:col-span-2' : undefined}>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-muted-foreground)' }} htmlFor={`checkout-${field}`}>
-                        {label}
-                      </label>
-                      <input
-                        id={`checkout-${field}`}
-                        name={key}
-                        type={type}
-                        inputMode={inputMode}
-                        autoComplete={autoComplete}
-                        value={form[field]}
-                        onChange={(event) => setFieldValue(field, event.target.value)}
-                        aria-invalid={Boolean(fieldErrors[field])}
-                        aria-describedby={fieldErrors[field] ? `checkout-${field}-error` : undefined}
-                        className={INPUT_CLASS}
-                        style={{
-                          borderColor: fieldErrors[field] ? 'var(--color-destructive)' : 'var(--color-border)',
-                          color: 'var(--color-foreground)',
-                        }}
-                      />
-                      {fieldErrors[field] && (
-                        <p id={`checkout-${field}-error`} className="text-xs mt-1" style={{ color: 'var(--color-destructive)' }} role="alert">
-                          {fieldErrors[field]}
-                        </p>
-                      )}
-                    </div>
-                  );
-                })}
+                {renderField('firstName', t('firstName'), { autoComplete: 'given-name' })}
+                {renderField('lastName', t('lastName'), { autoComplete: 'family-name' })}
+                {!isAuthenticated && renderField('email', t('email'), { autoComplete: 'email', type: 'email', inputMode: 'email', wide: true })}
+                {renderField('phone', t('phone'), { autoComplete: 'tel', type: 'tel', inputMode: 'tel', hint: t('phoneHint') })}
+                {!pickupMode && (
+                  <>
+                    {renderField('streetAddress1', t('address'), { autoComplete: 'street-address', wide: true })}
+                    {renderField('city', t('city'), { autoComplete: 'address-level2' })}
+                    {renderField('postalCode', t('postalCode'), { autoComplete: 'postal-code' })}
+                    {/* Poland-only delivery: the country is fixed to PL and never asked for. */}
+                  </>
+                )}
               </div>
+              </>
+              )}
+
+              {pickupMode && (
+                <div className="mt-4">
+                  <label htmlFor="checkout-pickup-by-other" className="flex cursor-pointer items-center gap-3 text-sm" style={{ color: 'var(--color-foreground)' }}>
+                    <input
+                      id="checkout-pickup-by-other"
+                      type="checkbox"
+                      checked={pickupByOther}
+                      onChange={(event) => setPickupByOther(event.target.checked)}
+                      className="h-4 w-4 shrink-0 accent-[var(--color-primary)]"
+                    />
+                    {t('pickupByOther')}
+                  </label>
+                  {pickupByOther && (
+                    <div className="mt-3 grid gap-4 sm:grid-cols-2" data-testid="checkout-recipient">
+                      {renderField('recipientFirstName', t('recipientFirstName'), { autoComplete: 'off' })}
+                      {renderField('recipientLastName', t('recipientLastName'), { autoComplete: 'off' })}
+                      {renderField('recipientPhone', t('recipientPhone'), { autoComplete: 'off', type: 'tel', inputMode: 'tel', hint: t('pickupByOtherHint') })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {!isAuthenticated && (
+                <label htmlFor="checkout-remember" className="mt-3 flex cursor-pointer items-center gap-3 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                  <input
+                    id="checkout-remember"
+                    type="checkbox"
+                    checked={rememberContact}
+                    onChange={(event) => setRememberContact(event.target.checked)}
+                    className="h-4 w-4 shrink-0 accent-[var(--color-primary)]"
+                  />
+                  {t('rememberContact')}
+                </label>
+              )}
           </CheckoutBlock>
 
           {/* ── 2: Pickup / delivery method ── */}
@@ -1589,6 +1851,24 @@ export default function CheckoutPage() {
                         </button>
                       </div>
                     ) : deliveryOptionsRequested ? uiText.noDeliveryOptions : tCommon('loading')}
+                  </div>
+                ) : singlePickup && selectedDeliveryOption ? (
+                  <div className="flex items-start gap-3 text-sm" data-testid="checkout-pickup-single">
+                    <MapPin className="mt-0.5 h-5 w-5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                        {translateDeliveryOptionName(locale, selectedDeliveryOption)}
+                        {' · '}
+                        {selectedDeliveryOption.price.amount === 0
+                          ? t('freeShipping')
+                          : formatPrice(selectedDeliveryOption.price.amount, selectedDeliveryOption.price.currency)}
+                      </p>
+                      {pickupAddress && (
+                        <p className="mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>
+                          {pickupAddress.streetAddress1}, {pickupAddress.postalCode} {pickupAddress.city}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-3" role="radiogroup" aria-label={pickupMode ? t('stepPickupMethod') : t('shippingTitle')}>
@@ -1714,27 +1994,38 @@ export default function CheckoutPage() {
 
           {/* ── 4: Confirm ── */}
           <CheckoutBlock index={4} title={t('confirmTitle')} testId="checkout-section-review">
-              <div className="mb-5 lg:hidden" data-testid="mobile-checkout-summary-panel">
-                {summaryContent}
-              </div>
-
               {bankTransferMode && renderCheckoutNotice(tFulfillment('checkoutReviewNotice'))}
               {pickupMode && renderCheckoutNotice(tFulfillment('checkoutPickupReviewNotice'))}
               {isP24Method(selectedPaymentMethod) && sellerIdentityMissing && renderCheckoutNotice(t('sellerIdentityMissing'))}
 
-              <div className="mb-5">
-                  <label htmlFor="checkout-note" className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
-                    {t('note')}
-                  </label>
-                  <textarea
-                    id="checkout-note"
-                    rows={2}
-                    value={form.note}
-                    onChange={(event) => setFieldValue('note', event.target.value)}
-                    className={`${INPUT_CLASS} resize-none`}
-                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                    placeholder={t('notePlaceholder')}
-                  />
+              <div className="mb-5 space-y-3">
+                {promoSection}
+                {noteOpen || form.note ? (
+                  <div>
+                    <label htmlFor="checkout-note" className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
+                      {t('note')}
+                    </label>
+                    <textarea
+                      id="checkout-note"
+                      rows={2}
+                      value={form.note}
+                      onChange={(event) => setFieldValue('note', event.target.value)}
+                      autoFocus={noteOpen && !form.note}
+                      className={`${INPUT_CLASS} resize-none`}
+                      style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                      placeholder={t('notePlaceholder')}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setNoteOpen(true)}
+                    className="block text-sm font-medium underline underline-offset-4"
+                    style={{ color: 'var(--color-primary)' }}
+                  >
+                    {t('addNote')}
+                  </button>
+                )}
               </div>
 
               <div className="mb-5">
@@ -1785,7 +2076,8 @@ export default function CheckoutPage() {
             <h2 className="heading-section text-lg mb-4" style={{ color: 'var(--color-foreground)' }}>
               {t('summary')}
             </h2>
-            {summaryContent}
+            {orderSummary}
+            {trustRows}
           </div>
         </div>
       </div>

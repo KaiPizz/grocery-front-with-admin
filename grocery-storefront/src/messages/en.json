@@ -491,7 +491,21 @@
     "placeOrderPay": "Order and pay · {total}",
     "placeOrderPayAtPickup": "Order, pay at pickup · {total}",
     "confirmationPayment": "Payment",
-    "confirmationPickupAt": "Pickup"
+    "confirmationPickupAt": "Pickup",
+    "change": "Change",
+    "haveAccount": "Have an account?",
+    "signIn": "Sign in",
+    "phoneHint": "We only call about this order.",
+    "pickupByOther": "Someone else will collect it",
+    "recipientFirstName": "Collector first name",
+    "recipientLastName": "Collector last name",
+    "recipientPhone": "Collector phone",
+    "pickupByOtherHint": "At pickup they only need the order number.",
+    "rememberContact": "Remember my details on this device",
+    "yourOrder": "Your order ({count, plural, one {# item} other {# items}})",
+    "havePromo": "Have a promo code?",
+    "addNote": "Add a note to the order",
+    "orderedBy": "Ordered by"
   },
   "allergens": {
     "cereals": "Cereals (gluten)",

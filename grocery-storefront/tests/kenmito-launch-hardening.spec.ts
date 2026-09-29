@@ -141,10 +141,8 @@ async function fillDeliveryForm(page: Page) {
 async function completePickupBankTransferSelection(page: Page) {
   await fillDeliveryForm(page);
 
-  const shippingPanel = page.getByTestId('checkout-block-delivery');
-  const pickupMethod = shippingPanel.getByRole('radio', { name: /pickup in store/i });
-  await expect(pickupMethod).toBeVisible();
-  await pickupMethod.click();
+  // The only fulfilment option is shown as a fact, already selected.
+  await expect(page.getByTestId('checkout-pickup-single')).toContainText(/pickup in store/i);
 
   const paymentPanel = page.getByTestId('checkout-block-payment');
   const bankTransfer = paymentPanel.getByRole('radio', { name: /bank transfer/i });
@@ -220,10 +218,9 @@ test.describe('Kenmito launch truth copy', () => {
     await fillDeliveryForm(page);
 
     const shippingPanel = page.getByTestId('checkout-block-delivery');
-    const pickupMethod = shippingPanel.getByRole('radio', { name: /pickup in store/i });
-    await expect(pickupMethod).toBeVisible();
-    // The only fulfillment option is chosen for the shopper.
-    await expect(pickupMethod).toHaveAttribute('aria-checked', 'true');
+    // The only fulfillment option is a line of text, not a choice.
+    await expect(shippingPanel.getByTestId('checkout-pickup-single')).toContainText(/pickup in store/i);
+    await expect(shippingPanel.getByRole('radio')).toHaveCount(0);
     await expect(shippingPanel).toContainText(/no delivery address needed/i);
     await expect(shippingPanel.getByRole('radio', { name: /standard courier/i })).toHaveCount(0);
 
@@ -262,8 +259,7 @@ test.describe('Kenmito launch truth copy', () => {
 
     await fillDeliveryForm(page);
 
-    const pickupMethod = page.getByTestId('checkout-block-delivery').getByRole('radio', { name: /pickup in store/i });
-    await expect(pickupMethod).toBeVisible();
+    await expect(page.getByTestId('checkout-pickup-single')).toContainText(/pickup in store/i);
 
     await expect(page.getByTestId('checkout-block-payment')).toContainText(/payment methods are not available for this store yet/i);
   });
@@ -279,7 +275,6 @@ test.describe('Kenmito launch truth copy', () => {
     await page.goto('/en/checkout');
 
     await completePickupBankTransferSelection(page);
-    await expect(page.getByTestId('mobile-checkout-summary-panel')).toBeVisible();
     await page.locator('#checkout-terms').check();
     await page.getByRole('button', { name: /order and pay/i }).click();
 
@@ -308,6 +303,65 @@ test.describe('Kenmito launch truth copy', () => {
     const track = page.getByRole('link', { name: /check order status/i });
     await expect(track).toHaveAttribute('href', /order=/);
     await expect(track).not.toHaveAttribute('href', /email/);
+  });
+
+  test('phone is required and another collector goes on the order with the buyer in the note', async ({ page }) => {
+    const operations: Array<{ name: string; variables: Record<string, any> }> = [];
+    await mockPickupConfig(page);
+    await seedCartStorage(page);
+    await mockMobileStorefront(page, {
+      cart: 'single-item',
+      checkoutProfile: 'pickup-bank-transfer',
+      onGraphqlOperation: (name, query, variables) => {
+        const derived = name || /(?:mutation|query)\s+(\w+)/.exec(query)?.[1] || '';
+        operations.push({ name: derived, variables: variables ?? {} });
+      },
+    });
+    await page.goto('/en/checkout');
+
+    await page.getByLabel(/^first name/i).fill('Marta');
+    await page.getByLabel(/^last name/i).fill('Nowak');
+    await page.getByLabel(/^email/i).fill('marta@example.com');
+    await page.locator('#checkout-phone').fill('');
+    await page.locator('#checkout-terms').check();
+    await page.getByRole('button', { name: /order and pay/i }).click();
+    await expect(page.locator('#checkout-phone')).toHaveAttribute('aria-invalid', 'true');
+
+    await page.locator('#checkout-phone').fill('+48123123123');
+    await page.getByLabel(/someone else will collect it/i).check();
+    await page.getByRole('button', { name: /order and pay/i }).click();
+    await expect(page.locator('#checkout-recipientFirstName')).toBeFocused();
+
+    await page.getByLabel(/collector first name/i).fill('Jan');
+    await page.getByLabel(/collector last name/i).fill('Kowalski');
+    await page.getByLabel(/collector phone/i).fill('+48600600600');
+    await page.getByTestId('checkout-block-payment').getByRole('radio', { name: /bank transfer/i }).click();
+    await page.getByRole('button', { name: /order and pay/i }).click();
+    await page.waitForURL(/\/checkout\/confirmation\?order=/);
+
+    const address = operations.find((operation) => operation.name === 'CheckoutShippingAddressUpdate');
+    expect(address?.variables.input.shippingAddress).toMatchObject({ firstName: 'Jan', lastName: 'Kowalski', phone: '+48600600600' });
+    const noteUpdate = operations.find((operation) => operation.name === 'CheckoutNoteUpdate');
+    expect(noteUpdate?.variables.input.note).toContain('Ordered by: Marta Nowak, +48123123123');
+  });
+
+  test('a guest finds their contact details filled in on the next order', async ({ page }) => {
+    await mockPickupConfig(page);
+    await seedCartStorage(page);
+    await mockMobileStorefront(page, { cart: 'single-item', checkoutProfile: 'pickup-bank-transfer' });
+    await page.goto('/en/checkout');
+
+    await completePickupBankTransferSelection(page);
+    await expect(page.getByLabel(/remember my details/i)).toBeChecked();
+    await page.locator('#checkout-terms').check();
+    await page.getByRole('button', { name: /order and pay/i }).click();
+    await page.waitForURL(/\/checkout\/confirmation\?order=/);
+
+    await seedCartStorage(page);
+    await page.evaluate(() => window.sessionStorage.clear());
+    await page.goto('/en/checkout');
+    await expect(page.getByLabel(/^email/i)).toHaveValue('marta@example.com');
+    await expect(page.locator('#checkout-phone')).toHaveValue('+48123123123');
   });
 
   test('order confirmation explains bank transfer and pickup next steps', async ({ page }) => {
