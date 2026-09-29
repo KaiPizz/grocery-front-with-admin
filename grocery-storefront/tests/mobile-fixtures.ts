@@ -1105,6 +1105,8 @@ interface MockMobileStorefrontOptions {
   facets?: 'populated' | 'empty';
   listingProductLimit?: number;
   listingPaginationTotalCount?: number;
+  /** Hand out the production backend's cursors (base64 `offset:N`) instead of opaque page cursors. */
+  listingOffsetCursors?: boolean;
   /** `error` answers the ProductBrands query with a GraphQL validation error, like a backend without the field. */
   brands?: 'populated' | 'empty' | 'error';
   homepageShelfSources?: 'shared' | 'distinct';
@@ -1317,16 +1319,27 @@ export async function mockMobileStorefront(
       const beforeCursor = typeof body.variables?.before === 'string'
         ? body.variables.before
         : null;
-      const previousPageNumber = afterCursor?.match(/^listing-page-(\d+)$/)?.[1];
-      const followingPageNumber = beforeCursor?.match(/^listing-page-(\d+)-start$/)?.[1];
-      const requestedPageNumber = previousPageNumber
-        ? Number(previousPageNumber) + 1
-        : followingPageNumber
-          ? Number(followingPageNumber) - 1
-          : 1;
       const requestedPageSize = Number(body.variables?.first)
         || Number(body.variables?.last)
         || 24;
+      const useOffsetCursors = options.listingOffsetCursors === true;
+      const decodeOffset = (cursor: string | null) => {
+        const match = cursor ? Buffer.from(cursor, 'base64').toString('utf8').match(/^offset:(\d+)$/) : null;
+        return match ? Number(match[1]) : null;
+      };
+      const afterOffset = useOffsetCursors ? decodeOffset(afterCursor) : null;
+      const beforeOffset = useOffsetCursors ? decodeOffset(beforeCursor) : null;
+      const previousPageNumber = afterCursor?.match(/^listing-page-(\d+)$/)?.[1];
+      const followingPageNumber = beforeCursor?.match(/^listing-page-(\d+)-start$/)?.[1];
+      const requestedPageNumber = afterOffset !== null
+        ? Math.floor((afterOffset + 1) / requestedPageSize) + 1
+        : beforeOffset !== null
+          ? Math.floor(Math.max(0, beforeOffset - requestedPageSize) / requestedPageSize) + 1
+          : previousPageNumber
+            ? Number(previousPageNumber) + 1
+            : followingPageNumber
+              ? Number(followingPageNumber) - 1
+              : 1;
       const paginationPageCount = paginationTotalCount
         ? Math.ceil(paginationTotalCount / requestedPageSize)
         : 1;
@@ -1347,8 +1360,16 @@ export async function mockMobileStorefront(
           pageInfo: {
             hasNextPage: pageNumber < paginationPageCount,
             hasPreviousPage: pageNumber > 1,
-            startCursor: paginationTotalCount ? `listing-page-${pageNumber}-start` : null,
-            endCursor: paginationTotalCount ? `listing-page-${pageNumber}` : null,
+            startCursor: !paginationTotalCount
+              ? null
+              : useOffsetCursors
+                ? Buffer.from(`offset:${(pageNumber - 1) * requestedPageSize}`).toString('base64')
+                : `listing-page-${pageNumber}-start`,
+            endCursor: !paginationTotalCount
+              ? null
+              : useOffsetCursors
+                ? Buffer.from(`offset:${Math.min(pageNumber * requestedPageSize, paginationTotalCount) - 1}`).toString('base64')
+                : `listing-page-${pageNumber}`,
           },
           totalCount: paginationTotalCount ?? matchingProducts.length,
         },

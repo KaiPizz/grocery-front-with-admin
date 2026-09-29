@@ -3,13 +3,14 @@
 import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { ArrowDownUp, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowDownUp, ChevronDown, ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import { useClient, useQuery, type CombinedError } from 'urql';
 
 import { SortDropdown, getSortOptions } from '@/components/grocery/SortDropdown';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useHydrated } from '@/hooks/use-hydrated';
+import { buildPageItems, decodeOffsetCursor, offsetAfterCursorForPage, type PageItem } from '@/lib/listing-pagination';
 import { Link, useRouter } from '@/i18n/navigation';
 import {
   getCatalogCategoryDisplay,
@@ -530,6 +531,7 @@ export function ProductListingClient({
   const hasProductsError = Boolean(productsErrorMessage);
   const totalCount = hasProductsError || listingDisplayChanged ? 0 : visibleTotalCount;
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const canJumpToAnyPage = decodeOffsetCursor(endCursor) !== null || decodeOffsetCursor(startCursor) !== null;
   const currentRangeStart = displayedProducts.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0;
   const currentRangeEnd = displayedProducts.length > 0 ? Math.min(totalCount, currentRangeStart + displayedProducts.length - 1) : 0;
   const activeFilterCount = countActiveFilters(normalizedCommittedFilters);
@@ -932,10 +934,16 @@ export function ProductListingClient({
       await handlePageMove('previous');
       return;
     }
-
+    if (canJumpToAnyPage) {
+      await fetchPageByCursor(targetPage, offsetAfterCursorForPage(targetPage, pageSize));
+    }
   }
 
-  function getPaginationItems(): Array<number | 'ellipsis'> {
+  function getPaginationItems(isCompact: boolean): PageItem[] {
+    if (canJumpToAnyPage) {
+      return buildPageItems(currentPage, totalPages, isCompact ? 0 : 1);
+    }
+
     const cursorBackedPages = new Set<number>([
       currentPage,
       ...Object.keys(pageAfterCursors).map(Number),
@@ -1183,7 +1191,12 @@ export function ProductListingClient({
 
     const canGoPrevious = hasPreviousPage && currentPage > 1;
     const canGoNext = hasMore;
-    const paginationItems = getPaginationItems();
+    const paginationItems = getPaginationItems(isCompact);
+    // Phone: arrow-only Previous/Next so five page slots fit one row without
+    // scrolling; the words stay as the accessible names.
+    const stepButtonClass = isCompact
+      ? 'inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full border transition-colors duration-fast hover-surface disabled:cursor-not-allowed disabled:opacity-45'
+      : 'inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition-colors duration-fast hover-surface disabled:cursor-not-allowed disabled:opacity-45';
 
     return (
       <nav
@@ -1204,12 +1217,13 @@ export function ProductListingClient({
             type="button"
             onClick={() => void handlePageMove('previous')}
             disabled={!canGoPrevious || loadingPage}
-            className="inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition-colors duration-fast hover-surface disabled:cursor-not-allowed disabled:opacity-45"
+            className={stepButtonClass}
             style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+            aria-label={isCompact ? t('previousPage') : undefined}
           >
-            {t('previousPage')}
+            {isCompact ? <ChevronLeft className="h-5 w-5" aria-hidden="true" /> : t('previousPage')}
           </button>
-          <div className="flex min-w-0 flex-1 items-center justify-center gap-1 overflow-x-auto px-1 sm:flex-none" aria-label={t('pageStatus', { current: currentPage, total: totalPages })}>
+          <div className="flex min-w-0 flex-1 items-center justify-center gap-1 sm:flex-none" aria-label={t('pageStatus', { current: currentPage, total: totalPages })}>
             {paginationItems.map((item, index) => {
               if (item === 'ellipsis') {
                 return (
@@ -1225,6 +1239,7 @@ export function ProductListingClient({
               }
 
               const canSelectPage = item === currentPage
+                || canJumpToAnyPage
                 || Boolean(pageSnapshots[item])
                 || Object.prototype.hasOwnProperty.call(pageAfterCursors, item);
               const isCurrentPage = item === currentPage;
@@ -1252,10 +1267,13 @@ export function ProductListingClient({
             type="button"
             onClick={() => void handlePageMove('next')}
             disabled={!canGoNext || loadingPage}
-            className="inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition-colors duration-fast hover-surface disabled:cursor-not-allowed disabled:opacity-45"
+            className={stepButtonClass}
             style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+            aria-label={isCompact ? t('nextPage') : undefined}
           >
-            {loadingPage ? tCommon('loading') : t('nextPage')}
+            {isCompact
+              ? <ChevronRight className="h-5 w-5" aria-hidden="true" />
+              : loadingPage ? tCommon('loading') : t('nextPage')}
           </button>
         </div>
       </nav>
@@ -1486,11 +1504,19 @@ export function ProductListingClient({
     const expandedGroup = categoryNavigation.find((item) => item.expanded && item.children && item.children.length > 0);
     const railItems = expandedGroup ? [expandedGroup, ...(expandedGroup.children ?? [])] : categoryNavigation;
 
+    // Inside a group every subcategory chip is visible at once (wrapped rows,
+    // at most eight leaves per group) and the group chip reads "All"; the
+    // top-level list of groups keeps the single scrolling row.
     return (
       <nav className={`overflow-hidden ${className}`} data-testid={testId} aria-label={t('categoryFilter')}>
-        <div className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          className={expandedGroup
+            ? 'flex flex-wrap gap-2 px-4 pb-1'
+            : 'flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'}
+        >
           {railItems.map((category) => {
             const isActive = currentCategorySlug === category.slug;
+            const isGroupChip = category === expandedGroup;
 
             return (
               <Link
@@ -1504,7 +1530,7 @@ export function ProductListingClient({
                 }}
                 aria-current={isActive ? 'page' : undefined}
               >
-                <span>{category.name}</span>
+                <span>{isGroupChip ? t('allInCategory') : category.name}</span>
                 {typeof category.count === 'number' && (
                   <span
                     className="rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums"

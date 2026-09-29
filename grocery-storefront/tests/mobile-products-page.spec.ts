@@ -158,6 +158,48 @@ test.describe('mobile products page', () => {
     await expect(page.getByTestId('product-card').first()).not.toContainText('(Page');
   });
 
+  test('with offset cursors shows first and last page and jumps straight to any page', async ({ page }) => {
+    await mockMobileStorefront(page, { listingPaginationTotalCount: 240, listingOffsetCursors: true });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/pl/products');
+
+    const pagination = page.getByTestId('product-pagination');
+    const pageButtons = pagination.locator('[aria-label^="Strona"] button');
+    await expect(pagination.locator('[aria-label="Strona 1 / 10"]')).toBeVisible();
+    await expect(pageButtons).toHaveText(['1', '2', '3', '4', '5', '10']);
+
+    await pagination.getByRole('button', { name: '10', exact: true }).click();
+    await expect(pagination.locator('[aria-label="Strona 10 / 10"]')).toBeVisible();
+    await expect(page.getByTestId('product-card').first()).toContainText('(Page 10)');
+    await expect(pageButtons).toHaveText(['1', '6', '7', '8', '9', '10']);
+    await expect(pagination).toContainText('Produkty 217-220 z 240');
+
+    await pagination.getByRole('button', { name: 'Poprzednia', exact: true }).click();
+    await expect(pagination.locator('[aria-label="Strona 9 / 10"]')).toBeVisible();
+    await expect(page.getByTestId('product-card').first()).toContainText('(Page 9)');
+
+    await pagination.getByRole('button', { name: '1', exact: true }).click();
+    await expect(pagination.locator('[aria-label="Strona 1 / 10"]')).toBeVisible();
+    await expect(page.getByTestId('product-card').first()).not.toContainText('(Page');
+  });
+
+  test('phone pager fits one row: arrows plus five page slots', async ({ page }) => {
+    await mockMobileStorefront(page, { listingPaginationTotalCount: 240, listingOffsetCursors: true });
+    await page.setViewportSize({ width: 360, height: 780 });
+    await page.goto('/pl/products');
+
+    const pagination = page.getByTestId('product-pagination');
+    const pageList = pagination.locator('[aria-label^="Strona"]');
+    await expect(pageList.locator('button')).toHaveText(['1', '2', '3', '10']);
+    await expect(pagination.getByRole('button', { name: 'Następna', exact: true })).toBeVisible();
+    const overflow = await pagination.evaluate((nav) => nav.scrollWidth - nav.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+
+    await pageList.getByRole('button', { name: '10', exact: true }).click();
+    await expect(pagination.locator('[aria-label="Strona 10 / 10"]')).toBeVisible();
+    await expect(pageList.locator('button')).toHaveText(['1', '8', '9', '10']);
+  });
+
   test('ignores an old page response after the listing filters change', async ({ page }) => {
     let releasePageTwo!: () => void;
     let notifyPageTwoRequested!: () => void;

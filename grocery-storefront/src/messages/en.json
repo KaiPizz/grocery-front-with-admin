@@ -186,6 +186,7 @@
     "activeFilterCount": "{count, plural, one {# active} other {# active}}",
     "removeFilter": "Remove {filter} filter",
     "categoryFilter": "Categories",
+    "allInCategory": "All",
     "countryOriginFilter": "Country of origin",
     "brandFilter": "Brand",
     "inStockOnly": "In stock only",
