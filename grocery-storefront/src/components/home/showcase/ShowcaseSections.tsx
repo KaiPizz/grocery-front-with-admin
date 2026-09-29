@@ -121,7 +121,7 @@ export function CuisineCards({ cuisines }: { cuisines: ShowcaseCuisine[] }) {
                 ) : null}
                 <CuisineFlag cuisine={link.key} className="absolute left-2.5 top-2.5 h-[18px] w-[27px] rounded-[3px] shadow-sm ring-1 ring-black/10" />
               </span>
-              <span className="flex min-h-11 items-center px-3 py-2 font-display text-base font-bold leading-tight" style={{ color: 'var(--color-foreground)' }}>
+              <span className="flex min-h-14 items-center px-3 py-2 font-display md:min-h-11 text-base font-bold leading-tight" style={{ color: 'var(--color-foreground)' }}>
                 {tNav(`cuisine.${link.key}`)}
               </span>
             </Link>
