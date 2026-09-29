@@ -187,7 +187,7 @@
     "removeFilter": "Remove {filter} filter",
     "categoryFilter": "Categories",
     "allInCategory": "All",
-    "showMoreCategories": "Show more (+{count})",
+    "showMoreCategories": "Show all ({count})",
     "showFewerCategories": "Show less",
     "countryOriginFilter": "Country of origin",
     "brandFilter": "Brand",

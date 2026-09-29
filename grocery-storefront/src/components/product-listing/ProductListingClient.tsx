@@ -167,52 +167,62 @@ function ProductSkeleton() {
   );
 }
 
-// Two rows of wrapped chips (when there would be four or more); the rest
-// open behind "Show more (+N)". Measured
-// on layout, so a wide screen where every chip fits gets no toggle, and a
-// page whose own chip sits in a hidden row opens expanded.
-function ClampedChipRows({ children }: { children: ReactNode }) {
+// Phone subcategory chips: two wrapped rows, the rest behind "Show all (N)".
+// The collapsed state comes from the server render (more than three chips →
+// collapsed, the page's own chip past the third → open), so nothing jumps
+// after hydration or under a tapping finger. After mount a measurement may
+// only relax it: every chip fits in two rows → no toggle.
+function ClampedChipRows({
+  children,
+  itemCount,
+  activeIndex,
+}: {
+  children: ReactNode;
+  itemCount: number;
+  activeIndex: number;
+}) {
   const t = useTranslations('products');
   const rowsRef = useRef<HTMLDivElement>(null);
-  const [expanded, setExpanded] = useState(false);
-  const [hiddenCount, setHiddenCount] = useState(0);
+  const [expanded, setExpanded] = useState(activeIndex >= 3);
+  const [fitsTwoRows, setFitsTwoRows] = useState(itemCount <= 3);
 
   useEffect(() => {
     const rows = rowsRef.current;
-    if (!rows) return;
+    if (!rows || fitsTwoRows) return;
 
     const measure = () => {
       const chips = Array.from(rows.children) as HTMLElement[];
       const rowTops = Array.from(new Set(chips.map((chip) => chip.offsetTop))).sort((a, b) => a - b);
-      const thirdRowTop = rowTops[2];
-      // Three rows stay open: the toggle line would cost as much as the row it hides.
-      if (rowTops.length <= 3) {
-        setHiddenCount(0);
+      if (rowTops.length > 0 && rowTops.length <= 2) {
+        setFitsTwoRows(true);
         return;
       }
-      setHiddenCount(chips.filter((chip) => chip.offsetTop >= thirdRowTop).length);
       const activeChip = chips.find((chip) => chip.getAttribute('aria-current') === 'page');
-      if (activeChip && activeChip.offsetTop >= thirdRowTop) setExpanded(true);
+      if (activeChip && rowTops[2] !== undefined && activeChip.offsetTop >= rowTops[2]) setExpanded(true);
     };
 
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(rows);
     return () => observer.disconnect();
-  }, []);
+  }, [fitsTwoRows]);
 
-  const clamped = hiddenCount > 0 && !expanded;
+  const clamped = !fitsTwoRows && !expanded;
 
   return (
     <>
       <div
         ref={rowsRef}
         className={`flex flex-wrap gap-1.5 px-4 pb-1 ${clamped ? 'max-h-[5.1rem] overflow-hidden' : ''}`}
-        onFocusCapture={() => setExpanded(true)}
+        // Keyboard users tabbing into a hidden row get the rows opened; a tap
+        // (no :focus-visible) must not move the chips under the finger.
+        onFocusCapture={(event) => {
+          if ((event.target as HTMLElement).matches(':focus-visible')) setExpanded(true);
+        }}
       >
         {children}
       </div>
-      {hiddenCount > 0 && (
+      {!fitsTwoRows && (
         <button
           type="button"
           onClick={() => setExpanded((open) => !open)}
@@ -221,7 +231,7 @@ function ClampedChipRows({ children }: { children: ReactNode }) {
           aria-expanded={expanded}
           data-testid="category-rail-toggle"
         >
-          {expanded ? t('showFewerCategories') : t('showMoreCategories', { count: hiddenCount })}
+          {expanded ? t('showFewerCategories') : t('showMoreCategories', { count: itemCount - 1 })}
           <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`} aria-hidden="true" />
         </button>
       )}
@@ -1569,14 +1579,14 @@ export function ProductListingClient({
   // One horizontal chip row: inside a group it is the group itself plus its
   // subcategories (the other nine groups live on /categories); on /products it
   // is the group list.
-  function renderCategoryRail(testId: string, className: string) {
+  function renderCategoryRail(testId: string, className: string, clampRows = false) {
     if (!hasCategoryNavigation) return null;
     const expandedGroup = categoryNavigation.find((item) => item.expanded && item.children && item.children.length > 0);
     const railItems = expandedGroup ? [expandedGroup, ...(expandedGroup.children ?? [])] : categoryNavigation;
 
-    // Inside a group the subcategory chips wrap (two rows, then "Show
-    // more") and the group chip reads "All"; the top-level list of groups
-    // keeps the single scrolling row.
+    // Inside a group the subcategory chips wrap (on phones two rows, then
+    // "Show all") and the group chip reads "All"; the top-level list of
+    // groups keeps the single scrolling row.
     const chips = railItems.map((category) => {
       const isActive = currentCategorySlug === category.slug;
       const isGroupChip = category === expandedGroup;
@@ -1615,8 +1625,15 @@ export function ProductListingClient({
 
     return (
       <nav className={`overflow-hidden ${className}`} data-testid={testId} aria-label={t('categoryFilter')}>
-        {expandedGroup ? (
-          <ClampedChipRows>{chips}</ClampedChipRows>
+        {expandedGroup && clampRows ? (
+          <ClampedChipRows
+            itemCount={railItems.length}
+            activeIndex={railItems.findIndex((category) => category.slug === currentCategorySlug)}
+          >
+            {chips}
+          </ClampedChipRows>
+        ) : expandedGroup ? (
+          <div className="flex flex-wrap gap-1.5 px-4 pb-1">{chips}</div>
         ) : (
           <div className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {chips}
@@ -1706,7 +1723,7 @@ export function ProductListingClient({
             </button>
           </div>
 
-          {renderCategoryRail('mobile-category-rail', '-mx-4')}
+          {renderCategoryRail('mobile-category-rail', '-mx-4', true)}
 
           <div className="h-px w-full" style={{ backgroundColor: 'color-mix(in srgb, var(--color-border) 88%, transparent)' }} />
         </header>
