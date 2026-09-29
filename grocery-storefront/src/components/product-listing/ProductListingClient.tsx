@@ -167,7 +167,8 @@ function ProductSkeleton() {
   );
 }
 
-// Two rows of wrapped chips; the rest open behind "Show more (+N)". Measured
+// Two rows of wrapped chips (when there would be four or more); the rest
+// open behind "Show more (+N)". Measured
 // on layout, so a wide screen where every chip fits gets no toggle, and a
 // page whose own chip sits in a hidden row opens expanded.
 function ClampedChipRows({ children }: { children: ReactNode }) {
@@ -184,7 +185,8 @@ function ClampedChipRows({ children }: { children: ReactNode }) {
       const chips = Array.from(rows.children) as HTMLElement[];
       const rowTops = Array.from(new Set(chips.map((chip) => chip.offsetTop))).sort((a, b) => a - b);
       const thirdRowTop = rowTops[2];
-      if (thirdRowTop === undefined) {
+      // Three rows stay open: the toggle line would cost as much as the row it hides.
+      if (rowTops.length <= 3) {
         setHiddenCount(0);
         return;
       }
