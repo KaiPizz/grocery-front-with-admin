@@ -187,6 +187,8 @@
     "removeFilter": "Usuń filtr {filter}",
     "categoryFilter": "Kategorie",
     "allInCategory": "Wszystkie",
+    "showMoreCategories": "Pokaż więcej (+{count})",
+    "showFewerCategories": "Pokaż mniej",
     "countryOriginFilter": "Kraj pochodzenia",
     "brandFilter": "Marka",
     "inStockOnly": "Tylko dostępne",

@@ -98,6 +98,8 @@ test.describe('category tree pages', () => {
     const rail = page.getByTestId('mobile-category-rail');
     await expect(rail.getByRole('link')).toHaveCount(3);
     await expect(rail.getByRole('link', { name: /^wszystkie/i })).toHaveAttribute('aria-current', 'page');
+    // Three chips fit in two rows: no "show more" toggle.
+    await expect(rail.getByTestId('category-rail-toggle')).toHaveCount(0);
     await expect(page.getByTestId('category-leaf-tiles')).toHaveCount(0);
     await expect(page.getByTestId('category-breadcrumb')).toContainText('Kimchi i kiszonki');
   });

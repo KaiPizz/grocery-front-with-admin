@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
+import { useEffect, useMemo, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { ArrowDownUp, ChevronDown, ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
@@ -164,6 +164,66 @@ function ProductSkeleton() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Two rows of wrapped chips; the rest open behind "Show more (+N)". Measured
+// on layout, so a wide screen where every chip fits gets no toggle, and a
+// page whose own chip sits in a hidden row opens expanded.
+function ClampedChipRows({ children }: { children: ReactNode }) {
+  const t = useTranslations('products');
+  const rowsRef = useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [hiddenCount, setHiddenCount] = useState(0);
+
+  useEffect(() => {
+    const rows = rowsRef.current;
+    if (!rows) return;
+
+    const measure = () => {
+      const chips = Array.from(rows.children) as HTMLElement[];
+      const rowTops = Array.from(new Set(chips.map((chip) => chip.offsetTop))).sort((a, b) => a - b);
+      const thirdRowTop = rowTops[2];
+      if (thirdRowTop === undefined) {
+        setHiddenCount(0);
+        return;
+      }
+      setHiddenCount(chips.filter((chip) => chip.offsetTop >= thirdRowTop).length);
+      const activeChip = chips.find((chip) => chip.getAttribute('aria-current') === 'page');
+      if (activeChip && activeChip.offsetTop >= thirdRowTop) setExpanded(true);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(rows);
+    return () => observer.disconnect();
+  }, []);
+
+  const clamped = hiddenCount > 0 && !expanded;
+
+  return (
+    <>
+      <div
+        ref={rowsRef}
+        className={`flex flex-wrap gap-1.5 px-4 pb-1 ${clamped ? 'max-h-[5.1rem] overflow-hidden' : ''}`}
+        onFocusCapture={() => setExpanded(true)}
+      >
+        {children}
+      </div>
+      {hiddenCount > 0 && (
+        <button
+          type="button"
+          onClick={() => setExpanded((open) => !open)}
+          className="ml-4 mt-1 inline-flex min-h-9 items-center gap-1 text-[13px] font-semibold"
+          style={{ color: 'var(--color-primary)' }}
+          aria-expanded={expanded}
+          data-testid="category-rail-toggle"
+        >
+          {expanded ? t('showFewerCategories') : t('showMoreCategories', { count: hiddenCount })}
+          <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`} aria-hidden="true" />
+        </button>
+      )}
+    </>
   );
 }
 
@@ -1512,50 +1572,54 @@ export function ProductListingClient({
     const expandedGroup = categoryNavigation.find((item) => item.expanded && item.children && item.children.length > 0);
     const railItems = expandedGroup ? [expandedGroup, ...(expandedGroup.children ?? [])] : categoryNavigation;
 
-    // Inside a group every subcategory chip is visible at once (wrapped rows,
-    // at most eight leaves per group) and the group chip reads "All"; the
-    // top-level list of groups keeps the single scrolling row.
+    // Inside a group the subcategory chips wrap (two rows, then "Show
+    // more") and the group chip reads "All"; the top-level list of groups
+    // keeps the single scrolling row.
+    const chips = railItems.map((category) => {
+      const isActive = currentCategorySlug === category.slug;
+      const isGroupChip = category === expandedGroup;
+
+      return (
+        <Link
+          key={category.id}
+          href={`/categories/${category.slug}`}
+          className={`inline-flex shrink-0 items-center rounded-full border font-semibold shadow-[0_12px_24px_-24px_rgba(66,109,72,0.35)] transition-colors duration-fast ${expandedGroup
+            ? 'min-h-9 gap-1.5 px-3 py-1.5 text-[13px]'
+            : 'min-h-[2.45rem] gap-2 px-3.5 py-2 text-sm'}`}
+          style={{
+            borderColor: isActive ? 'var(--color-primary)' : 'var(--color-border)',
+            backgroundColor: isActive ? 'var(--color-accent)' : 'var(--color-card)',
+            color: isActive ? 'var(--color-primary)' : 'var(--color-foreground)',
+          }}
+          aria-current={isActive ? 'page' : undefined}
+        >
+          <span>{isGroupChip ? t('allInCategory') : category.name}</span>
+          {typeof category.count === 'number' && (
+            <span
+              className="rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums"
+              style={{
+                backgroundColor: isActive
+                  ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
+                  : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
+                color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+              }}
+            >
+              {category.count}
+            </span>
+          )}
+        </Link>
+      );
+    });
+
     return (
       <nav className={`overflow-hidden ${className}`} data-testid={testId} aria-label={t('categoryFilter')}>
-        <div
-          className={expandedGroup
-            ? 'flex flex-wrap gap-2 px-4 pb-1'
-            : 'flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'}
-        >
-          {railItems.map((category) => {
-            const isActive = currentCategorySlug === category.slug;
-            const isGroupChip = category === expandedGroup;
-
-            return (
-              <Link
-                key={category.id}
-                href={`/categories/${category.slug}`}
-                className="inline-flex min-h-[2.45rem] shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-semibold shadow-[0_12px_24px_-24px_rgba(66,109,72,0.35)] transition-colors duration-fast"
-                style={{
-                  borderColor: isActive ? 'var(--color-primary)' : 'var(--color-border)',
-                  backgroundColor: isActive ? 'var(--color-accent)' : 'var(--color-card)',
-                  color: isActive ? 'var(--color-primary)' : 'var(--color-foreground)',
-                }}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <span>{isGroupChip ? t('allInCategory') : category.name}</span>
-                {typeof category.count === 'number' && (
-                  <span
-                    className="rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums"
-                    style={{
-                      backgroundColor: isActive
-                        ? 'color-mix(in srgb, var(--color-primary) 13%, white)'
-                        : 'color-mix(in srgb, var(--color-foreground) 6%, transparent)',
-                      color: isActive ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                    }}
-                  >
-                    {category.count}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </div>
+        {expandedGroup ? (
+          <ClampedChipRows>{chips}</ClampedChipRows>
+        ) : (
+          <div className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {chips}
+          </div>
+        )}
       </nav>
     );
   }
