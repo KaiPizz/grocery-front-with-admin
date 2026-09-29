@@ -5,7 +5,7 @@ import { useLocale } from 'next-intl';
 import { useQuery } from 'urql';
 import { BlockRenderer } from '@/components/blocks/BlockRenderer';
 import { isEnglishLocale } from '@/lib/catalog-display-localization';
-import { CATEGORIES_QUERY, PRODUCT_COUNTRY_ORIGINS_QUERY } from '@/lib/graphql/operations/grocery';
+import { CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { buildCategoryTree, type PublicTaxonomyRawCategory } from '@/lib/public-taxonomy';
 import type { HomepageShowcaseConfig, StorefrontConfig } from '@/types/storefront-config';
 import { ProductRail } from './ProductRail';
@@ -23,10 +23,6 @@ import {
 
 interface CategoriesResponse {
   categories: { edges: Array<{ node: PublicTaxonomyRawCategory }> } | null;
-}
-
-interface CountryOriginsResponse {
-  productCountryOrigins: Array<{ value: string; count: number }> | null;
 }
 
 /**
@@ -52,17 +48,6 @@ export function ShowcaseHome({
     { requireProductCount: false, includeEmpty: true },
   ), [categoriesResult.data, locale]);
   const treeReady = Boolean(categoriesResult.data) || Boolean(categoriesResult.error);
-
-  // Cuisine cards show a live product count; a backend without the field only loses the count.
-  const [originsResult] = useQuery<CountryOriginsResponse>({
-    query: PRODUCT_COUNTRY_ORIGINS_QUERY,
-    pause: showcase.cuisines.length === 0,
-    variables: { channel, first: 50 },
-  });
-  const countryCounts = useMemo(
-    () => new Map((originsResult.data?.productCountryOrigins ?? []).map((row) => [row.value, Number(row.count) || 0])),
-    [originsResult.data],
-  );
 
   // Category tiles: the hub items (slug + art) in hub order, named by the live tree.
   const tiles = useMemo<ShowcaseCategoryTile[]>(() => {
@@ -97,7 +82,7 @@ export function ShowcaseHome({
       <UspStrip items={config.commercial?.trustRow?.items ?? []} english={english} />
       <CategoryRow tiles={tiles} />
       {firstRail ? <ProductRail rail={firstRail} {...railProps} /> : null}
-      <CuisineCards cuisines={showcase.cuisines} counts={countryCounts} />
+      <CuisineCards cuisines={showcase.cuisines} />
       <PickupSteps />
       {secondRail ? <ProductRail rail={secondRail} {...railProps} /> : null}
       {promoBlock ? (

@@ -23,7 +23,9 @@ export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[];
   const goTo = useCallback((index: number) => setCurrent((count + index) % count), [count]);
 
   useEffect(() => {
-    if (paused || count <= 1 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    // Phones swipe; a banner changing under the thumb reads as flicker.
+    if (paused || count <= 1 || !window.matchMedia('(min-width: 768px)').matches) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
     const timer = setInterval(() => setCurrent((index) => (index + 1) % count), AUTOPLAY_MS);
     return () => clearInterval(timer);
   }, [paused, count]);
@@ -37,6 +39,30 @@ export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[];
     pointerStart.current = null;
     if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
   };
+
+  // Small dots beside the button (phone) or under it (desktop): never on the product art.
+  const renderDots = (className: string) => (
+    <div className={`flex gap-1.5 ${className}`} data-testid="showcase-hero-dots">
+      {active.map((slide, index) => (
+        <button
+          key={slide.id}
+          type="button"
+          onClick={() => goTo(index)}
+          aria-label={t('goToSlide', { index: index + 1 })}
+          aria-current={index === current}
+          className="flex h-6 items-center"
+        >
+          <span
+            className="block h-1.5 rounded-full transition-all"
+            style={{
+              width: index === current ? 18 : 6,
+              backgroundColor: index === current ? 'var(--color-primary)' : 'color-mix(in srgb, var(--color-foreground) 22%, transparent)',
+            }}
+          />
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <section
@@ -111,22 +137,7 @@ export function ShowcaseHero({ slides, english }: { slides: ShowcaseHeroSlide[];
 
         {count > 1 ? (
           <>
-            <div className="absolute right-3 top-3 flex gap-2 rounded-full bg-white/85 px-2.5 py-2 shadow-sm md:bottom-4 md:left-12 md:right-auto md:top-auto md:bg-transparent md:p-0 md:shadow-none lg:left-16">
-              {active.map((slide, index) => (
-                <button
-                  key={slide.id}
-                  type="button"
-                  onClick={() => goTo(index)}
-                  aria-label={t('goToSlide', { index: index + 1 })}
-                  aria-current={index === current}
-                  className="h-2 rounded-full transition-all"
-                  style={{
-                    width: index === current ? 24 : 8,
-                    backgroundColor: index === current ? 'var(--color-primary)' : 'color-mix(in srgb, var(--color-foreground) 25%, transparent)',
-                  }}
-                />
-              ))}
-            </div>
+            {renderDots('absolute bottom-[26px] right-5 md:bottom-3 md:left-12 md:right-auto lg:left-16')}
             <div className="absolute bottom-3 right-4 hidden gap-2 md:flex">
               {[{ step: -1, Icon: ChevronLeft, label: t('previousSlide') }, { step: 1, Icon: ChevronRight, label: t('nextSlide') }].map(({ step, Icon, label }) => (
                 <button

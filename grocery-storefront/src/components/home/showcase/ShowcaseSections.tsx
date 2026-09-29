@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { SocialBar } from '@/components/layout/SocialBar';
 import { Link } from '@/i18n/navigation';
 import { buildCuisineHref, CUISINE_LINKS } from '@/lib/cuisines';
+import { CuisineFlag } from './CuisineFlag';
 import { todayOpeningHours } from '@/lib/home-showcase';
 import type {
   CommercialTrustRowItem,
@@ -98,35 +99,34 @@ export function CategoryRow({ tiles }: { tiles: ShowcaseCategoryTile[] }) {
   );
 }
 
-export function CuisineCards({ cuisines, counts }: { cuisines: ShowcaseCuisine[]; counts: Map<string, number> }) {
+export function CuisineCards({ cuisines }: { cuisines: ShowcaseCuisine[] }) {
   const t = useTranslations('home.showcase');
   const tNav = useTranslations('nav');
   const cards = cuisines
     .map((cuisine) => ({ ...cuisine, link: CUISINE_LINKS.find((link) => link.key === cuisine.key) }))
     .filter((cuisine): cuisine is ShowcaseCuisine & { link: (typeof CUISINE_LINKS)[number] } => Boolean(cuisine.link));
   if (cards.length === 0) return null;
+  // Real products of each country on its own colour (scripts/showcase-art); the
+  // name sits under the picture so it never covers the packaging.
   return (
     <ShowcaseSection cream testId="showcase-cuisines" labelledBy="showcase-cuisines-title">
       <SectionHeading id="showcase-cuisines-title" eyebrow={t('cuisinesEyebrow')} title={t('cuisinesTitle')} />
       <ul className={`${SCROLL_ROW} md:grid md:grid-cols-5 md:gap-4`}>
-        {cards.map(({ key, imageUrl, link }) => {
-          const count = counts.get(link.country);
-          return (
-            <li key={key} className="w-[42%] min-w-[150px] shrink-0 snap-start md:w-auto md:min-w-0" data-testid="showcase-cuisine-card">
-              <Link href={buildCuisineHref(link.country)} className="group relative block overflow-hidden rounded-2xl">
-                <span className="block aspect-[4/5] bg-white">
-                  {imageUrl ? (
-                    <img src={imageUrl} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" />
-                  ) : null}
-                </span>
-                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent px-3 pb-3 pt-10 text-white">
-                  <span className="block font-display text-lg font-bold leading-tight">{tNav(`cuisine.${key}`)}</span>
-                  {count ? <span className="block text-xs opacity-90">{t('productCount', { count })}</span> : null}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
+        {cards.map(({ imageUrl, link }) => (
+          <li key={link.key} className="w-[42%] min-w-[150px] shrink-0 snap-start md:w-auto md:min-w-0" data-testid="showcase-cuisine-card">
+            <Link href={buildCuisineHref(link.country)} className="group block overflow-hidden rounded-2xl bg-white ring-1 ring-black/5">
+              <span className="relative block aspect-square bg-white">
+                {imageUrl ? (
+                  <img src={imageUrl} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" />
+                ) : null}
+                <CuisineFlag cuisine={link.key} className="absolute left-2.5 top-2.5 h-[18px] w-[27px] rounded-[3px] shadow-sm ring-1 ring-black/10" />
+              </span>
+              <span className="flex min-h-11 items-center px-3 py-2 font-display text-base font-bold leading-tight" style={{ color: 'var(--color-foreground)' }}>
+                {tNav(`cuisine.${link.key}`)}
+              </span>
+            </Link>
+          </li>
+        ))}
       </ul>
     </ShowcaseSection>
   );

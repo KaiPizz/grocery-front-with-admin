@@ -60,6 +60,45 @@ test.describe('showcase landing', () => {
     await expect(page.getByTestId('showcase-step')).toHaveCount(3);
   });
 
+  test('phone: slide dots sit beside the button, never on the art, and the banner does not rotate by itself', async ({ page }, testInfo) => {
+    test.skip(!testInfo.project.use.isMobile, 'phone layout');
+    await page.clock.install();
+    await mockShowcaseConfig(page);
+    await mockMobileStorefront(page);
+    await page.goto('/pl');
+
+    const hero = page.getByTestId('showcase-hero');
+    const firstSlide = hero.getByTestId('showcase-hero-slide').first();
+    await expect(firstSlide).toBeVisible();
+    // The owner's complaint (29/09): a white pill of dots in the banner's top corner.
+    const dots = hero.getByTestId('showcase-hero-dots');
+    await expect(dots).toBeVisible();
+    const art = await firstSlide.locator('img').boundingBox();
+    const cta = await firstSlide.getByTestId('showcase-hero-cta').boundingBox();
+    const dotsBox = await dots.boundingBox();
+    expect(dotsBox!.y).toBeGreaterThan(art!.y + art!.height);
+    expect(dotsBox!.x).toBeGreaterThan(cta!.x + cta!.width);
+
+    await page.clock.fastForward(20_000);
+    await expect(firstSlide).not.toHaveAttribute('aria-hidden', 'true');
+  });
+
+  test('cuisine cards: real-product art with a flag, the name under the picture, no product count', async ({ page }) => {
+    await mockShowcaseConfig(page);
+    await mockMobileStorefront(page);
+    await page.goto('/pl');
+
+    const cards = page.getByTestId('showcase-cuisine-card');
+    await expect(cards).toHaveCount(5);
+    const japanese = cards.filter({ hasText: 'Kuchnia japońska' });
+    await expect(japanese.getByTestId('showcase-cuisine-flag')).toHaveCount(1);
+    await expect(cards.getByTestId('showcase-cuisine-flag')).toHaveCount(5);
+    const picture = await japanese.locator('img').boundingBox();
+    const name = await japanese.getByText('Kuchnia japońska').boundingBox();
+    expect(name!.y).toBeGreaterThanOrEqual(picture!.y + picture!.height - 1);
+    await expect(page.getByTestId('showcase-cuisines')).not.toContainText(/produkt/);
+  });
+
   test('shop block: address, hours and directions; maps, photo, reviews and social stay hidden until configured', async ({ page }) => {
     await mockShowcaseConfig(page);
     await mockMobileStorefront(page);
