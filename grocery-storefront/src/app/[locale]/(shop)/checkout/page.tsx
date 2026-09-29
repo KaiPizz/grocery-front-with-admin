@@ -194,14 +194,6 @@ interface DeliveryFormState {
 
 type FieldErrors = Partial<Record<keyof DeliveryFormState, string>>;
 
-interface PaymentSessionState {
-  id: string;
-  gateway?: string | null;
-  status?: string | null;
-  clientSecret?: string | null;
-  actionUrl?: string | null;
-}
-
 interface CheckoutDraftState {
   form: DeliveryFormState;
   checkoutId: string | null;
@@ -311,6 +303,12 @@ function translatePaymentMethodDescription(locale: string, method: PaymentMethod
     return locale === 'pl'
       ? 'Zapłać w sklepie podczas odbioru zamówienia.'
       : 'Pay in store when collecting your order.';
+  }
+
+  if (code.includes('p24') || code.includes('przelewy24')) {
+    return locale === 'pl'
+      ? 'BLIK lub szybki przelew online, od razu po złożeniu zamówienia.'
+      : 'BLIK or fast online bank transfer, right after placing the order.';
   }
 
   return method.description?.trim() || method.provider?.trim() || null;
@@ -437,7 +435,6 @@ export default function CheckoutPage() {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [paymentMethodsLoaded, setPaymentMethodsLoaded] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
-  const [paymentSession, setPaymentSession] = useState<PaymentSessionState | null>(null);
   const [shippingCost, setShippingCost] = useState<number>(selectedDeliveryOption?.price.amount ?? 0);
   const [serverTotal, setServerTotal] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
@@ -1063,7 +1060,6 @@ export default function CheckoutPage() {
     }
 
     setSelectedPaymentMethod(method);
-    setPaymentSession(null);
     setPaymentError(null);
   }
 
@@ -1089,14 +1085,6 @@ export default function CheckoutPage() {
       toast.error(message);
       return null;
     }
-
-    setPaymentSession({
-      id: payload.payment.id,
-      gateway: payload.payment.gateway,
-      status: payload.payment.status,
-      clientSecret: payload.payment.clientSecret,
-      actionUrl: payload.payment.actionUrl,
-    });
 
     if (payload.payment.total?.amount != null) {
       setServerTotal(payload.payment.total.amount);
@@ -1144,7 +1132,6 @@ export default function CheckoutPage() {
       }
 
       setAppliedPromoCode(nextPromoCode);
-      setPaymentSession(null);
       toast.success(t('promoApplied'));
     } finally {
       setBusy(false);
@@ -1175,7 +1162,6 @@ export default function CheckoutPage() {
       }
 
       setAppliedPromoCode(null);
-      setPaymentSession(null);
       setServerTotal(null);
       setPromoCode('');
     } finally {
