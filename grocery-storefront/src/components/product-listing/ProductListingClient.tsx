@@ -167,11 +167,12 @@ function ProductSkeleton() {
   );
 }
 
-// Phone subcategory chips: two wrapped rows, the rest behind "Show all (N)".
-// The collapsed state comes from the server render (more than three chips →
-// collapsed, the page's own chip past the third → open), so nothing jumps
-// after hydration or under a tapping finger. After mount a measurement may
-// only relax it: every chip fits in two rows → no toggle.
+// Phone subcategory chips. The group page shows two wrapped rows and the
+// rest behind "Show all (N)"; a subcategory page shows every chip, so the
+// chips sit in the same place on every sibling page. The state comes from
+// the server render — nothing jumps after hydration or under a tapping
+// finger — and a measurement after mount may only drop the toggle when every
+// chip fits in two rows.
 function ClampedChipRows({
   children,
   itemCount,
@@ -183,7 +184,7 @@ function ClampedChipRows({
 }) {
   const t = useTranslations('products');
   const rowsRef = useRef<HTMLDivElement>(null);
-  const [expanded, setExpanded] = useState(activeIndex >= 3);
+  const [expanded, setExpanded] = useState(activeIndex > 0);
   const [fitsTwoRows, setFitsTwoRows] = useState(itemCount <= 3);
 
   useEffect(() => {
@@ -193,12 +194,7 @@ function ClampedChipRows({
     const measure = () => {
       const chips = Array.from(rows.children) as HTMLElement[];
       const rowTops = Array.from(new Set(chips.map((chip) => chip.offsetTop))).sort((a, b) => a - b);
-      if (rowTops.length > 0 && rowTops.length <= 2) {
-        setFitsTwoRows(true);
-        return;
-      }
-      const activeChip = chips.find((chip) => chip.getAttribute('aria-current') === 'page');
-      if (activeChip && rowTops[2] !== undefined && activeChip.offsetTop >= rowTops[2]) setExpanded(true);
+      if (rowTops.length > 0 && rowTops.length <= 2) setFitsTwoRows(true);
     };
 
     measure();
