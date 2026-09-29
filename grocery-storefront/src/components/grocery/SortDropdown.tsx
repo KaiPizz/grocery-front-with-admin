@@ -2,6 +2,7 @@
 
 import { useId } from 'react';
 import { useTranslations } from 'next-intl';
+import { DEFAULT_SORT, DEFAULT_SORT_BY } from '@/lib/listing-sort';
 
 export interface SortOption {
   value: string;
@@ -10,7 +11,10 @@ export interface SortOption {
   direction: string;
 }
 
+export { DEFAULT_SORT };
+
 export const SORT_OPTIONS: SortOption[] = [
+  { value: DEFAULT_SORT, label: 'sortRecommended', ...DEFAULT_SORT_BY },
   { value: 'newest', label: 'sortNewest', field: 'DATE', direction: 'DESC' },
   { value: 'price_asc', label: 'sortPrice', field: 'PRICE', direction: 'ASC' },
   { value: 'price_desc', label: 'sortPriceDesc', field: 'PRICE', direction: 'DESC' },

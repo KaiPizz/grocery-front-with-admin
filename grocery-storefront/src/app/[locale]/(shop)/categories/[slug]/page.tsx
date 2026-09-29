@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation';
 import { CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY, PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
 import { serverGraphqlRequest } from '@/lib/graphql/server-request';
 import { resolveChannel } from '@/lib/channel';
+import { DEFAULT_SORT_BY } from '@/lib/listing-sort';
 import { buildCategoryTree, findPublicCategory, type PublicTaxonomyRawCategory } from '@/lib/public-taxonomy';
 import type { GroceryProduct } from '@/types';
 
@@ -161,6 +162,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       channel,
       first: PAGE_SIZE,
       filter: { categories: publicCategory.rawCategoryIds },
+      // Same order the listing client asks for on later pages.
+      sortBy: DEFAULT_SORT_BY,
     }, {
       next: {
         revalidate: CATEGORY_PRODUCTS_REVALIDATE_SECONDS,
@@ -380,6 +383,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               title={category.name}
               categoryId={category.id}
               initialProducts={products}
+              // category.products has no sort argument: the API answers A–Z.
+              initialSort="name_asc"
               initialEndCursor={pageInfo.endCursor}
               initialHasMore={pageInfo.hasNextPage}
               initialTotalCount={totalCount}

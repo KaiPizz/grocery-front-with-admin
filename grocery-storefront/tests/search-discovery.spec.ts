@@ -172,6 +172,6 @@ test.describe('catalog search discovery', () => {
 
     await expect(page).toHaveURL(/\/en\/products$/);
     await expect(page.getByRole('heading', { name: /^all products/i })).toBeVisible();
-    await expect(page.getByTestId('mobile-products-sort-select')).toHaveValue('newest');
+    await expect(page.getByTestId('mobile-products-sort-select')).toHaveValue('recommended');
   });
 });

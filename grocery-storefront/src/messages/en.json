@@ -197,6 +197,7 @@
     "searchBrands": "Search brands",
     "noBrandMatches": "No brand with that name",
     "sortBy": "Sort by",
+    "sortRecommended": "Recommended",
     "sortNewest": "Newest",
     "sortRelevance": "Relevance",
     "sortPrice": "Price: low to high",

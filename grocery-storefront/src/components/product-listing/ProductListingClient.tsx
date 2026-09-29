@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowDownUp, ChevronDown, ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import { useClient, useQuery, type CombinedError } from 'urql';
 
-import { SortDropdown, getSortOptions } from '@/components/grocery/SortDropdown';
+import { DEFAULT_SORT, SortDropdown, getSortOptions } from '@/components/grocery/SortDropdown';
 import { MobileProductCard } from '@/components/product/MobileProductCard';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useHydrated } from '@/hooks/use-hydrated';
@@ -267,7 +267,7 @@ export function ProductListingClient({
   initialHasMore = false,
   initialTotalCount = 0,
   initialSearch = '',
-  initialSort = 'newest',
+  initialSort = DEFAULT_SORT,
   initialZone = '',
   pageSize = 24,
   layoutMode = 'adaptive',
@@ -343,7 +343,7 @@ export function ProductListingClient({
 
   useEffect(() => {
     const urlSearch = (searchParams.get('search') || '').trim();
-    const fallbackSort = urlSearch ? 'relevance' : 'newest';
+    const fallbackSort = urlSearch ? 'relevance' : DEFAULT_SORT;
     const requestedSort = searchParams.get('sort') || fallbackSort;
     const supportedSort = getSortOptions(Boolean(urlSearch)).some((option) => option.value === requestedSort)
       ? requestedSort
@@ -775,7 +775,7 @@ export function ProductListingClient({
   ) {
     const params = new URLSearchParams(searchParams.toString());
     const trimmedSearch = nextSearch.trim();
-    const defaultSort = trimmedSearch ? 'relevance' : 'newest';
+    const defaultSort = trimmedSearch ? 'relevance' : DEFAULT_SORT;
 
     if (nextSort !== defaultSort) {
       params.set('sort', nextSort);
@@ -820,10 +820,10 @@ export function ProductListingClient({
 
   function clearSearch() {
     setSearch('');
-    setSort('newest');
-    setDraftSort('newest');
+    setSort(DEFAULT_SORT);
+    setDraftSort(DEFAULT_SORT);
     setLoadedProducts([]);
-    router.replace(buildListingUrl('newest', ''), { scroll: false });
+    router.replace(buildListingUrl(DEFAULT_SORT, ''), { scroll: false });
   }
 
   function openMobileFilters() {
@@ -1058,10 +1058,10 @@ export function ProductListingClient({
     setCommittedFilters(DEFAULT_FILTERS);
     setDraftFilters(DEFAULT_FILTERS);
     setSearch('');
-    setSort('newest');
-    setDraftSort('newest');
+    setSort(DEFAULT_SORT);
+    setDraftSort(DEFAULT_SORT);
     setLoadedProducts([]);
-    router.replace(buildListingUrl('newest', '', []), { scroll: false });
+    router.replace(buildListingUrl(DEFAULT_SORT, '', []), { scroll: false });
   }
 
   function clearDraftFilters() {

@@ -159,12 +159,12 @@ test.describe('mobile products page', () => {
   });
 
   test('with offset cursors shows first and last page and jumps straight to any page', async ({ page }) => {
-    const pageRequests: Array<{ after: unknown; before: unknown }> = [];
+    const pageRequests: Array<{ after: unknown; before: unknown; sortBy: unknown }> = [];
     await mockMobileStorefront(page, {
       listingPaginationTotalCount: 240,
       listingOffsetCursors: true,
       onProductsQuery: (variables) => {
-        pageRequests.push({ after: variables.after ?? null, before: variables.before ?? null });
+        pageRequests.push({ after: variables.after ?? null, before: variables.before ?? null, sortBy: variables.sortBy ?? null });
       },
     });
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -185,7 +185,12 @@ test.describe('mobile products page', () => {
     await expect(pagination.locator('[aria-label="Strona 9 / 10"]')).toBeVisible();
     await expect(page.getByTestId('product-card').first()).toContainText('(Page 9)');
     // The API shifts `last`/`before` windows, so stepping back must page forward from an offset.
-    expect(pageRequests.at(-1)).toEqual({ after: Buffer.from('offset:191').toString('base64'), before: null });
+    // Every page is asked for in the default "Polecane" order (curated display order, highest first).
+    expect(pageRequests.at(-1)).toEqual({
+      after: Buffer.from('offset:191').toString('base64'),
+      before: null,
+      sortBy: { field: 'RATING', direction: 'DESC' },
+    });
 
     await pagination.getByRole('button', { name: '1', exact: true }).click();
     await expect(pagination.locator('[aria-label="Strona 1 / 10"]')).toBeVisible();
@@ -290,7 +295,7 @@ test.describe('mobile products page', () => {
     const titleCount = page.getByTestId('mobile-products-title-count');
     const sortGroup = page.getByTestId('mobile-products-sort-trigger');
     const sortLabel = page.getByTestId('mobile-products-sort-label');
-    const sortValue = sortGroup.getByText(/^newest$/i);
+    const sortValue = sortGroup.getByText(/^recommended$/i);
     const sortSelect = page.getByTestId('mobile-products-sort-select');
     const grid = page.getByTestId('mobile-products-grid');
     const cards = page.getByTestId('mobile-product-card');
@@ -312,7 +317,7 @@ test.describe('mobile products page', () => {
     expect(titleFontSize).toBeGreaterThan(countFontSize);
 
     await expect(sortSelect).toBeHidden();
-    await expect(sortSelect).toHaveValue('newest');
+    await expect(sortSelect).toHaveValue('recommended');
 
     const [sortLabelBox, sortValueBox] = await Promise.all([
       sortLabel.boundingBox(),
