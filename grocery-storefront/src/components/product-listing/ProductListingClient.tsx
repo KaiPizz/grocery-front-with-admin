@@ -874,6 +874,14 @@ export function ProductListingClient({
       ? Math.min(totalPages, currentPage + 1)
       : Math.max(1, currentPage - 1);
 
+    // Always page forward from an offset: the API answers `last`/`before`
+    // with a shifted window (after a jump to page 10 of 219, "previous"
+    // returned items 197–216 instead of 193–216).
+    if (canJumpToAnyPage) {
+      await fetchPageByCursor(nextPage, offsetAfterCursorForPage(nextPage, pageSize));
+      return;
+    }
+
     if (
       direction === 'previous'
       && Object.prototype.hasOwnProperty.call(pageAfterCursors, nextPage)

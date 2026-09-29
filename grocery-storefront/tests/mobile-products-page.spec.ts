@@ -159,7 +159,14 @@ test.describe('mobile products page', () => {
   });
 
   test('with offset cursors shows first and last page and jumps straight to any page', async ({ page }) => {
-    await mockMobileStorefront(page, { listingPaginationTotalCount: 240, listingOffsetCursors: true });
+    const pageRequests: Array<{ after: unknown; before: unknown }> = [];
+    await mockMobileStorefront(page, {
+      listingPaginationTotalCount: 240,
+      listingOffsetCursors: true,
+      onProductsQuery: (variables) => {
+        pageRequests.push({ after: variables.after ?? null, before: variables.before ?? null });
+      },
+    });
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/pl/products');
 
@@ -177,6 +184,8 @@ test.describe('mobile products page', () => {
     await pagination.getByRole('button', { name: 'Poprzednia', exact: true }).click();
     await expect(pagination.locator('[aria-label="Strona 9 / 10"]')).toBeVisible();
     await expect(page.getByTestId('product-card').first()).toContainText('(Page 9)');
+    // The API shifts `last`/`before` windows, so stepping back must page forward from an offset.
+    expect(pageRequests.at(-1)).toEqual({ after: Buffer.from('offset:191').toString('base64'), before: null });
 
     await pagination.getByRole('button', { name: '1', exact: true }).click();
     await expect(pagination.locator('[aria-label="Strona 1 / 10"]')).toBeVisible();
