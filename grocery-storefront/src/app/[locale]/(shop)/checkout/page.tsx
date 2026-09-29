@@ -23,6 +23,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import {
   AVAILABLE_PAYMENT_METHODS_QUERY,
   CHECKOUT_COMPLETE_MUTATION,
+  UPDATE_PROFILE_MUTATION,
   CHECKOUT_CREATE_MUTATION,
   CHECKOUT_NOTE_UPDATE,
   CHECKOUT_PAYMENT_CREATE,
@@ -1030,6 +1031,24 @@ export default function CheckoutPage() {
     }
   }
 
+  // Signed-in shoppers keep the phone they ordered with on their profile, so the
+  // next checkout (pickup or delivery) is prefilled. Best effort: the order is placed.
+  async function saveProfilePhone(phone: string) {
+    try {
+      const response = await graphqlRequest<{
+        updateProfile: { success: boolean; customer: { phone?: string | null } | null } | null;
+      }>(UPDATE_PROFILE_MUTATION, { input: { phone } });
+      if (!response.data?.updateProfile?.success) return;
+      useAuthStore.setState((state) => ({
+        session: state.session.user
+          ? { ...state.session, user: { ...state.session.user, phone: response.data?.updateProfile?.customer?.phone ?? phone } }
+          : state.session,
+      }));
+    } catch {
+      // The phone is on the order either way.
+    }
+  }
+
   // With another collector the pickup name/phone are theirs; the buyer goes into the note
   // so the store still knows who ordered.
   function buildOrderNote(): string {
@@ -1476,6 +1495,11 @@ export default function CheckoutPage() {
         currency: payload.order.total?.gross?.currency ?? displayCurrency,
         paymentMethod: translatePaymentMethodName(locale, selectedPaymentMethod),
       });
+
+      const buyerPhone = form.phone.trim();
+      if (isAuthenticated && buyerPhone && buyerPhone !== authPhone.trim()) {
+        await saveProfilePhone(buyerPhone);
+      }
 
       if (!isAuthenticated) {
         writeRememberedContact(

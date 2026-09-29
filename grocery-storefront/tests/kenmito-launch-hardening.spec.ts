@@ -375,6 +375,33 @@ test.describe('Kenmito launch truth copy', () => {
     await expect(page.getByLabel(/^email/i)).toHaveCount(0);
   });
 
+  test('a signed-in shopper keeps the phone they ordered with on the profile', async ({ page }) => {
+    const operations: Array<{ name: string; variables: Record<string, any> }> = [];
+    await mockPickupConfig(page);
+    await seedCartStorage(page);
+    await seedAuthSession(page, 'Anna Kowalska');
+    await mockMobileStorefront(page, {
+      cart: 'single-item',
+      checkoutProfile: 'pickup-bank-transfer',
+      onGraphqlOperation: (name, query, variables) => {
+        const derived = name || /(?:mutation|query)\s+(\w+)/.exec(query)?.[1] || '';
+        operations.push({ name: derived, variables: variables ?? {} });
+      },
+    });
+    await page.goto('/en/checkout');
+
+    await page.locator('#checkout-phone').fill('+48777888999');
+    await page.getByTestId('checkout-block-payment').getByRole('radio', { name: /bank transfer/i }).click();
+    await page.locator('#checkout-terms').check();
+    await page.getByRole('button', { name: /order and pay/i }).click();
+    await page.waitForURL(/\/checkout\/confirmation\?order=/);
+
+    const update = operations.find((operation) => operation.name === 'UpdateProfile');
+    expect(update?.variables.input).toEqual({ phone: '+48777888999' });
+    const names = operations.map((operation) => operation.name);
+    expect(names.indexOf('UpdateProfile')).toBeGreaterThan(names.indexOf('CheckoutComplete'));
+  });
+
   test('a guest finds their contact details filled in on the next order', async ({ page }) => {
     await mockPickupConfig(page);
     await seedCartStorage(page);
