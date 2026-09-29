@@ -140,15 +140,14 @@ async function fillDeliveryForm(page: Page) {
 
 async function completePickupBankTransferSelection(page: Page) {
   await fillDeliveryForm(page);
-  await page.getByRole('button', { name: /continue/i }).click();
 
-  const shippingPanel = page.locator('#checkout-panel-shipping');
-  const pickupMethod = shippingPanel.getByRole('button', { name: /pickup in store/i });
+  const shippingPanel = page.getByTestId('checkout-block-delivery');
+  const pickupMethod = shippingPanel.getByRole('radio', { name: /pickup in store/i });
   await expect(pickupMethod).toBeVisible();
   await pickupMethod.click();
 
-  const paymentPanel = page.locator('#checkout-panel-payment');
-  const bankTransfer = paymentPanel.getByRole('button', { name: /bank transfer/i });
+  const paymentPanel = page.getByTestId('checkout-block-payment');
+  const bankTransfer = paymentPanel.getByRole('radio', { name: /bank transfer/i });
   await expect(bankTransfer).toBeVisible();
   await bankTransfer.click();
 }
@@ -219,26 +218,26 @@ test.describe('Kenmito launch truth copy', () => {
 
     await expect(page.getByLabel(/^street address$|^postal code$|^country$/i)).toHaveCount(0);
     await fillDeliveryForm(page);
-    await page.getByRole('button', { name: /continue/i }).click();
 
-    const shippingPanel = page.locator('#checkout-panel-shipping');
-    const pickupMethod = shippingPanel.getByRole('button', { name: /pickup in store/i });
+    const shippingPanel = page.getByTestId('checkout-block-delivery');
+    const pickupMethod = shippingPanel.getByRole('radio', { name: /pickup in store/i });
     await expect(pickupMethod).toBeVisible();
-    await expect(shippingPanel).toContainText(/only fulfillment path/i);
-    await expect(shippingPanel.getByRole('button', { name: /standard courier/i })).toHaveCount(0);
-    await pickupMethod.click();
+    // The only fulfillment option is chosen for the shopper.
+    await expect(pickupMethod).toHaveAttribute('aria-checked', 'true');
+    await expect(shippingPanel).toContainText(/no delivery address needed/i);
+    await expect(shippingPanel.getByRole('radio', { name: /standard courier/i })).toHaveCount(0);
 
-    const paymentPanel = page.locator('#checkout-panel-payment');
-    const bankTransfer = paymentPanel.getByRole('button', { name: /bank transfer/i });
+    const paymentPanel = page.getByTestId('checkout-block-payment');
+    const bankTransfer = paymentPanel.getByRole('radio', { name: /bank transfer/i });
     await expect(bankTransfer).toBeVisible();
-    await expect(paymentPanel.getByRole('button', { name: /credit\/debit card|blik/i })).toHaveCount(0);
+    await expect(paymentPanel.getByRole('radio', { name: /credit\/debit card|blik/i })).toHaveCount(0);
     await expect(paymentPanel).toContainText(/bank transfer after the order is placed/i);
     await bankTransfer.click();
 
     const reviewSection = page.getByTestId('checkout-section-review');
     await expect(reviewSection).toContainText(/complete the bank transfer/i);
-    await expect(reviewSection).toContainText(/pickup confirmation/i);
-    await expect(reviewSection).toContainText(/Zamieniecka 80\/12/i);
+    await expect(reviewSection).toContainText(/ready for pickup/i);
+    await expect(shippingPanel).toContainText(/Zamieniecka 80\/12/i);
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
@@ -249,11 +248,10 @@ test.describe('Kenmito launch truth copy', () => {
     await page.goto('/en/checkout');
 
     await fillDeliveryForm(page);
-    await page.getByRole('button', { name: /continue/i }).click();
 
     const shippingAlert = page.getByRole('alert').filter({ hasText: /pickup is not available for this store yet/i });
     await expect(shippingAlert).toBeVisible();
-    await expect(page.locator('#checkout-panel-shipping').getByRole('button', { name: /pickup in store/i })).toHaveCount(0);
+    await expect(page.getByTestId('checkout-block-delivery').getByRole('radio', { name: /pickup in store/i })).toHaveCount(0);
   });
 
   test('checkout blocks honestly when backend exposes pickup but no payment methods for the channel', async ({ page }) => {
@@ -263,13 +261,11 @@ test.describe('Kenmito launch truth copy', () => {
     await page.goto('/en/checkout');
 
     await fillDeliveryForm(page);
-    await page.getByRole('button', { name: /continue/i }).click();
 
-    const pickupMethod = page.locator('#checkout-panel-shipping').getByRole('button', { name: /pickup in store/i });
+    const pickupMethod = page.getByTestId('checkout-block-delivery').getByRole('radio', { name: /pickup in store/i });
     await expect(pickupMethod).toBeVisible();
-    await pickupMethod.click();
 
-    await expect(page.locator('#checkout-panel-payment')).toContainText(/payment methods are not available for this store yet/i);
+    await expect(page.getByTestId('checkout-block-payment')).toContainText(/payment methods are not available for this store yet/i);
   });
 
   test('checkout complete explains insufficient stock without placing the order', async ({ page }) => {
@@ -283,16 +279,35 @@ test.describe('Kenmito launch truth copy', () => {
     await page.goto('/en/checkout');
 
     await completePickupBankTransferSelection(page);
-    const summaryPanel = page.getByTestId('mobile-checkout-summary-panel');
-    await expect(summaryPanel).toBeVisible();
-    await summaryPanel.getByRole('button', { name: /^close$/i }).click();
-    await expect(summaryPanel).toHaveCount(0);
-    await page.getByTestId('checkout-section-review').getByRole('button', { name: /place order/i }).click();
+    await expect(page.getByTestId('mobile-checkout-summary-panel')).toBeVisible();
+    await page.locator('#checkout-terms').check();
+    await page.getByRole('button', { name: /order and pay/i }).click();
 
     const alert = page.getByRole('alert').filter({ hasText: /not enough stock/i });
     await expect(alert).toBeVisible();
     await expect(alert).toContainText(/review your cart/i);
     await expect(page).not.toHaveURL(/\/checkout\/confirmation/i);
+  });
+
+  test('placing an order keeps the e-mail out of the URL and shows what was ordered', async ({ page }) => {
+    await mockPickupConfig(page);
+    await seedCartStorage(page);
+    await mockMobileStorefront(page, { cart: 'single-item', checkoutProfile: 'pickup-bank-transfer' });
+    await page.goto('/en/checkout');
+
+    await completePickupBankTransferSelection(page);
+    await page.locator('#checkout-terms').check();
+    await page.getByRole('button', { name: /order and pay/i }).click();
+
+    await page.waitForURL(/\/checkout\/confirmation\?order=/);
+    expect(page.url()).not.toMatch(/email|marta/i);
+    const summary = page.getByTestId('confirmation-order-summary');
+    await expect(summary).toContainText(/organic gala apples/i);
+    await expect(summary).toContainText(/Zamieniecka 80\/12/i);
+    await expect(page.getByText(/confirmation sent to marta@example.com/i)).toHaveCount(0);
+    const track = page.getByRole('link', { name: /check order status/i });
+    await expect(track).toHaveAttribute('href', /order=/);
+    await expect(track).not.toHaveAttribute('href', /email/);
   });
 
   test('order confirmation explains bank transfer and pickup next steps', async ({ page }) => {
@@ -302,7 +317,7 @@ test.describe('Kenmito launch truth copy', () => {
 
     await expect(page.getByText(/#1001/i)).toBeVisible();
     await expect(page.getByText(/complete the bank transfer/i)).toBeVisible();
-    await expect(page.getByText(/pickup next step/i)).toBeVisible();
+    await expect(page.getByText(/e-mail you when it is ready for pickup/i)).toBeVisible();
     await expect(page.getByRole('link', { name: /order history/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /continue shopping/i })).toBeVisible();
   });

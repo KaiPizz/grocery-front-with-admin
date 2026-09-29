@@ -49,24 +49,21 @@ test.describe('Przelewy24 checkout', () => {
     );
     await openP24Checkout(page, operations);
     await fillDeliveryForm(page);
-    await page.getByRole('button', { name: /continue/i }).click();
 
-    await page.locator('#checkout-panel-shipping').getByRole('button', { name: /standard courier/i }).press('Enter');
+    await page.getByTestId('checkout-block-delivery').getByRole('radio', { name: /standard courier/i }).press('Enter');
 
-    const p24 = page.locator('#checkout-panel-payment').getByRole('button', { name: /przelewy24/i });
+    const p24 = page.getByTestId('checkout-block-payment').getByRole('radio', { name: /przelewy24/i });
     await expect(p24).toBeEnabled();
     await p24.click();
-    await expect(page.getByTestId('checkout-section-review').getByRole('button', { name: /review/i })).toHaveAttribute('aria-expanded', 'true');
+    await expect(p24).toHaveAttribute('aria-checked', 'true');
     // Selecting the method is local state only; no payment session before the order exists.
     expect(operations.map((operation) => operation.name)).not.toContain('CheckoutPaymentCreate');
 
-    const placeOrder = page.getByRole('button', { name: /order with obligation to pay/i });
+    const placeOrder = page.getByRole('button', { name: /order and pay/i });
     const terms = page.locator('#checkout-terms');
     await expect(terms).not.toBeChecked();
 
-    // The fixed mobile summary bar overlaps the button's centre on iPhone viewports,
-    // so a pointer click lands on the bar; dispatch the click on the button itself.
-    await placeOrder.dispatchEvent('click');
+    await placeOrder.click();
     // WebKit emulation does not report programmatic focus on checkboxes, so the
     // error association is asserted instead of document.activeElement.
     await expect(terms).toHaveAttribute('aria-invalid', 'true');
@@ -108,13 +105,12 @@ test.describe('Przelewy24 checkout retry', () => {
     });
     await page.goto('/en/checkout');
     await fillDeliveryForm(page);
-    await page.getByRole('button', { name: /continue/i }).click();
-    await page.locator('#checkout-panel-shipping').getByRole('button', { name: /standard courier/i }).press('Enter');
-    await page.locator('#checkout-panel-payment').getByRole('button', { name: /przelewy24/i }).click();
+    await page.getByTestId('checkout-block-delivery').getByRole('radio', { name: /standard courier/i }).press('Enter');
+    await page.getByTestId('checkout-block-payment').getByRole('radio', { name: /przelewy24/i }).click();
     await page.locator('#checkout-terms').check();
 
-    const placeOrder = page.getByRole('button', { name: /order with obligation to pay/i });
-    await placeOrder.dispatchEvent('click');
+    const placeOrder = page.getByRole('button', { name: /order and pay/i });
+    await placeOrder.click();
     await expect(page.locator('#main-content').getByRole('alert')).toContainText(/could not start the payment/i);
     const retry = page.getByRole('button', { name: /retry payment/i });
     await expect(retry).toBeVisible();

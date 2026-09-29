@@ -1,13 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   ArrowLeft,
   Banknote,
   Building2,
-  ChevronRight,
   CreditCard,
   Loader2,
   MapPin,
@@ -19,7 +18,6 @@ import {
   X,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { CheckoutSection, CheckoutProgressBar } from '@/components/checkout/CheckoutProgress';
 import { Link, useRouter } from '@/i18n/navigation';
 import {
   AVAILABLE_PAYMENT_METHODS_QUERY,
@@ -48,7 +46,8 @@ import {
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
 import type { CartDeliveryOption, CustomerAddress } from '@/types';
-import type { CheckoutStep, PaymentMethod } from '@/types/checkout';
+import type { PaymentMethod } from '@/types/checkout';
+import { saveLastOrder } from '@/lib/last-order';
 
 interface CheckoutMutationError {
   field?: string[] | string | null;
@@ -204,10 +203,9 @@ interface PaymentSessionState {
 }
 
 interface CheckoutDraftState {
-  step: CheckoutStep;
-  completedSteps: CheckoutStep[];
   form: DeliveryFormState;
   checkoutId: string | null;
+  checkoutKey: string | null;
   promoCode: string;
   appliedPromoCode: string | null;
 }
@@ -224,7 +222,7 @@ const PAYMENT_ICONS: Record<string, typeof CreditCard> = {
 
 const INPUT_CLASS =
   'w-full rounded-lg border bg-transparent px-3 py-2.5 text-sm transition-colors duration-fast focus:outline-none focus-visible:ring-2';
-const CHECKOUT_DRAFT_KEY = 'oms-checkout-draft-v1';
+const CHECKOUT_DRAFT_KEY = 'oms-checkout-draft-v2';
 const DELIVERY_FIELD_ORDER: Array<keyof DeliveryFormState> = [
   'firstName',
   'lastName',
@@ -327,14 +325,65 @@ function isP24Method(method: PaymentMethod | null): boolean {
   return code.includes('p24') || code.includes('przelewy24');
 }
 
+// Paid in cash (or card at the till) when the order is collected.
+function isPayOnCollectionMethod(method: PaymentMethod | null): boolean {
+  if (!method) return false;
+  const code = `${method.id} ${method.provider ?? ''}`.toLowerCase();
+  return code.includes('cash') || code.includes('cod');
+}
+
 const P24_PENDING_KEY = 'adg-p24-pending';
 
 function focusDeliveryField(field: keyof DeliveryFormState) {
+  focusElement(`checkout-${field}`);
+}
+
+function focusElement(id: string) {
   if (typeof window === 'undefined') return;
 
   window.requestAnimationFrame(() => {
-    document.getElementById(`checkout-${field}`)?.focus();
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ block: 'center' });
+    element?.focus({ preventScroll: true });
   });
+}
+
+// One numbered block of the one-page checkout (contact → pickup → payment → confirm).
+function CheckoutBlock({
+  index,
+  title,
+  testId,
+  children,
+}: {
+  index: number;
+  title: string;
+  testId: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      aria-labelledby={`${testId}-title`}
+      data-testid={testId}
+      className="min-w-0 rounded-2xl border p-4 md:p-6"
+      style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+    >
+      <h2
+        id={`${testId}-title`}
+        className="heading-section mb-4 flex items-center gap-2.5 text-base md:text-lg"
+        style={{ color: 'var(--color-foreground)' }}
+      >
+        <span
+          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+          style={{ backgroundColor: 'var(--color-primary)' }}
+          aria-hidden="true"
+        >
+          {index}
+        </span>
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
 }
 
 export default function CheckoutPage() {
@@ -375,13 +424,16 @@ export default function CheckoutPage() {
   const clearCart = useCartStore((state) => state.clearCart);
 
   const sessionEmail = buyerIdentity?.email ?? '';
-  const [step, setStep] = useState<CheckoutStep>('delivery');
-  const [completedSteps, setCompletedSteps] = useState<Set<CheckoutStep>>(new Set());
   const [form, setForm] = useState<DeliveryFormState>(() => createInitialFormState(sessionEmail));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromoCode, setAppliedPromoCode] = useState<string | null>(null);
   const [checkoutId, setCheckoutId] = useState<string | null>(searchParams.get('checkoutId'));
+  // E-mail + basket the backend checkout was created from; any change needs a new checkout.
+  const [checkoutKey, setCheckoutKey] = useState<string | null>(null);
+  const [deliveryOptionsRequested, setDeliveryOptionsRequested] = useState(false);
+  const [deliveryError, setDeliveryError] = useState<string | null>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [paymentMethodsLoaded, setPaymentMethodsLoaded] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
@@ -395,7 +447,6 @@ export default function CheckoutPage() {
   // Set once a P24 order exists but its payment session could not be started;
   // lets the shopper retry against the same unpaid order instead of re-ordering.
   const [pendingP24Order, setPendingP24Order] = useState<{ id: string; number: string } | null>(null);
-  const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
   const authSession = useAuthStore((s) => s.session);
   const isAuthenticated = authSession.status === 'authenticated';
@@ -427,20 +478,10 @@ export default function CheckoutPage() {
         locale === 'pl'
           ? 'Metody płatności nie są jeszcze dostępne dla tego sklepu. Sklep musi dokończyć konfigurację płatności przed przyjęciem zamówień.'
           : 'Payment methods are not available for this store yet. The store must finish payment setup before accepting orders.',
-      paymentAfterDelivery:
-        pickupMode
-          ? locale === 'pl'
-            ? 'Metody płatności pojawią się po potwierdzeniu odbioru w sklepie w kroku 2.'
-            : 'Payment methods will appear after you confirm store pickup in step 2.'
-          : locale === 'pl'
-            ? 'Metody płatności pojawią się po wyborze metody dostawy w kroku 2.'
-            : 'Payment methods will appear after you choose a delivery method in step 2.',
       loadingPaymentMethods: locale === 'pl' ? 'Ładowanie metod płatności…' : 'Loading payment methods…',
       calculatedNext: locale === 'pl' ? 'Wyliczymy dalej' : 'Calculated next',
       discountLabel: locale === 'pl' ? 'Rabat' : 'Discount',
       noneLabel: locale === 'pl' ? 'Brak' : 'None',
-      notSelected: locale === 'pl' ? 'Nie wybrano' : 'Not selected',
-      paymentNotInitialized: locale === 'pl' ? 'Nie wybrano' : 'Not selected',
       insufficientStock:
         locale === 'pl'
           ? 'Nie ma wystarczającego stanu magazynowego, aby złożyć to zamówienie. Sprawdź koszyk i zmień ilości przed ponowną próbą.'
@@ -541,27 +582,57 @@ export default function CheckoutPage() {
     setShippingCost(selectedDeliveryOption.price.amount);
   }, [selectedDeliveryOption]);
 
+  // One page: delivery options and payment methods load up front, and a single
+  // delivery option (ADG: store pickup) is picked for the shopper.
+  const deliveryRequested = useRef(false);
   useEffect(() => {
-    if (!isHydrated || step !== 'payment' || paymentMethods.length > 0 || !selectedDeliveryOption) {
+    if (!isHydrated || !initialized || items.length === 0 || deliveryRequested.current) {
       return;
     }
+    deliveryRequested.current = true;
 
+    void (async () => {
+      const options = await fetchDeliveryOptions();
+      setDeliveryOptionsRequested(true);
+
+      if (options.length === 0) {
+        setDeliveryError(uiText.noDeliveryOptions);
+        return;
+      }
+
+      if (options.length === 1 && useCartStore.getState().selectedDeliveryOption?.id !== options[0].id) {
+        await selectDeliveryOption(options[0]);
+      }
+    })();
+  }, [fetchDeliveryOptions, initialized, isHydrated, items.length, selectDeliveryOption, uiText.noDeliveryOptions]);
+
+  const paymentMethodsRequested = useRef(false);
+  useEffect(() => {
+    if (!isHydrated || paymentMethodsRequested.current) {
+      return;
+    }
+    paymentMethodsRequested.current = true;
     void loadPaymentMethods();
-  }, [isHydrated, loadPaymentMethods, paymentMethods.length, selectedDeliveryOption, step]);
+  }, [isHydrated, loadPaymentMethods]);
 
   useEffect(() => {
+    if (paymentMethods.length === 1) {
+      setSelectedPaymentMethod((current) => current ?? paymentMethods[0]);
+    }
+  }, [paymentMethods]);
+
+  // Legacy redirect gateways come back with ?checkoutId=…&payment=returned.
+  const gatewayReturned = searchParams.get('payment') === 'returned';
+  useEffect(() => {
     const returnedCheckoutId = searchParams.get('checkoutId');
-    const paymentReturned = searchParams.get('payment');
 
     if (!returnedCheckoutId) {
       return;
     }
 
     setCheckoutId((current) => current ?? returnedCheckoutId);
-    setCompletedSteps(new Set<CheckoutStep>(['delivery', 'shipping']));
-    setStep(paymentReturned ? 'review' : 'payment');
 
-    if (paymentReturned) {
+    if (searchParams.get('payment')) {
       setErrorBanner(uiText.paymentReturned);
     }
   }, [searchParams, uiText.paymentReturned]);
@@ -580,9 +651,8 @@ export default function CheckoutPage() {
     try {
       const draft = JSON.parse(rawDraft) as CheckoutDraftState;
       setForm(draft.form);
-      setCompletedSteps(new Set<CheckoutStep>(draft.completedSteps));
-      setStep(draft.step);
       setCheckoutId((current) => current ?? draft.checkoutId);
+      setCheckoutKey(draft.checkoutKey ?? null);
       setPromoCode(draft.promoCode);
       setAppliedPromoCode(draft.appliedPromoCode ?? null);
     } catch {
@@ -596,22 +666,15 @@ export default function CheckoutPage() {
     }
 
     const draft: CheckoutDraftState = {
-      step,
-      completedSteps: Array.from(completedSteps),
       form,
       checkoutId,
+      checkoutKey,
       promoCode,
       appliedPromoCode,
     };
 
     window.sessionStorage.setItem(CHECKOUT_DRAFT_KEY, JSON.stringify(draft));
-  }, [appliedPromoCode, checkoutId, completedSteps, form, isHydrated, promoCode, step]);
-
-  useEffect(() => {
-    if (step === 'review') {
-      setMobileSummaryOpen(true);
-    }
-  }, [step]);
+  }, [appliedPromoCode, checkoutKey, checkoutId, form, isHydrated, promoCode]);
 
   const displaySubtotal = getSubtotal();
   const displayCurrency =
@@ -753,26 +816,6 @@ export default function CheckoutPage() {
     setFieldErrors((current) => ({ ...current, [key]: undefined }));
   }
 
-  function markCompleted(nextStep: CheckoutStep) {
-    setCompletedSteps((current) => {
-      const next = new Set(Array.from(current));
-      next.add(nextStep);
-      return next;
-    });
-  }
-
-  function resetPaymentSelectionForCheckoutChange() {
-    setSelectedPaymentMethod(null);
-    setPaymentSession(null);
-    setCompletedSteps((current) => {
-      const next = new Set(Array.from(current));
-      next.delete('payment');
-      next.delete('review');
-      return next;
-    });
-    setStep((current) => current === 'review' ? 'payment' : current);
-  }
-
   function validateDeliveryStep(formOverride?: DeliveryFormState) {
     const f = formOverride ?? form;
     const errors: FieldErrors = {};
@@ -804,80 +847,24 @@ export default function CheckoutPage() {
     return !firstErrorField;
   }
 
-  async function handleDeliveryContinue(formOverride?: DeliveryFormState) {
-    if (!validateDeliveryStep(formOverride)) {
-      return;
-    }
-
-    const f = formOverride ?? form;
-    const effectiveEmail = isAuthenticated ? authEmail : f.email.trim();
-
-    if (pickupMode && !pickupAddress) {
-      setErrorBanner(uiText.pickupAddressMissing);
-      toast.error(uiText.pickupAddressMissing);
-      return;
-    }
-
-    setBusy(true);
-    setErrorBanner(null);
-
-    try {
-      const buyerUpdated = await updateBuyerIdentity({
-        email: effectiveEmail,
-        phone: f.phone.trim() || null,
-        countryCode: normalizeCountryCode(pickupMode ? pickupAddress?.country ?? 'PL' : f.country),
-      });
-
-      if (!buyerUpdated) {
-        const message = useCartStore.getState().error ?? t('orderError');
-        setErrorBanner(message);
-        toast.error(message);
-        return;
-      }
-
-      if (f.note !== note) {
-        await updateNote(f.note);
-      }
-
-      const options = await fetchDeliveryOptions();
-
-      if (options.length === 0) {
-        const message = uiText.noDeliveryOptions;
-        setErrorBanner(message);
-        toast.error(message);
-        return;
-      }
-
-      markCompleted('delivery');
-      setStep('shipping');
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  /** Fill the form from a saved address and immediately advance to shipping */
+  /** Fill the form from a saved address */
   function handleSavedAddressSelect(addr: CustomerAddress) {
     const parts = (addr.fullName ?? '').trim().split(/\s+/);
     const lastName = parts.length > 1 ? parts[parts.length - 1] : '';
     const firstName = parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0] ?? '';
 
-    const nextForm: DeliveryFormState = {
-      ...form,
+    setForm((current) => ({
+      ...current,
       firstName,
       lastName,
-      email: isAuthenticated ? authEmail : form.email,
+      email: isAuthenticated ? authEmail : current.email,
       phone: addr.phone,
       streetAddress1: addr.street,
       city: addr.city,
       postalCode: addr.postalCode,
       country: addr.country,
-    };
-
-    setForm(nextForm);
+    }));
     setFieldErrors({});
-
-    /* Pass the form snapshot directly so we don't depend on React state */
-    void handleDeliveryContinue(nextForm);
   }
 
   async function handleDeliverySelection(option: CartDeliveryOption) {
@@ -889,42 +876,59 @@ export default function CheckoutPage() {
 
       if (!success) {
         const message = useCartStore.getState().error ?? uiText.failedDeliverySelection;
-        setErrorBanner(message);
+        setDeliveryError(message);
         toast.error(message);
         return;
       }
 
-      await loadPaymentMethods();
-
-      markCompleted('shipping');
-      setStep('payment');
+      setDeliveryError(null);
     } finally {
       setBusy(false);
     }
   }
 
-  async function initializeCheckoutHandoff() {
-    if (checkoutId) {
-      return checkoutId;
-    }
+  async function retryDeliveryOptions() {
+    setBusy(true);
+    setDeliveryError(null);
 
+    try {
+      const options = await fetchDeliveryOptions();
+
+      if (options.length === 0) {
+        setDeliveryError(uiText.noDeliveryOptions);
+      } else if (options.length === 1) {
+        await selectDeliveryOption(options[0]);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  // Creates the backend checkout (again when the e-mail or the basket changed since
+  // the last one) and pushes the current address, delivery method and note into it.
+  // Returns the checkout id and the server total, or null after showing the error.
+  async function initializeCheckoutHandoff(): Promise<{ id: string; total: number | null } | null> {
     const legacyShippingMethodId = selectedDeliveryOption?.id;
 
     if (!legacyShippingMethodId) {
       const message = uiText.selectDeliveryFirst;
-      setErrorBanner(message);
+      setDeliveryError(message);
       toast.error(message);
       return null;
     }
 
-    setBusy(true);
-    setErrorBanner(null);
+    const email = isAuthenticated ? authEmail : form.email.trim();
+    const nextCheckoutKey = JSON.stringify([
+      email,
+      items.map((item) => [item.variantId, item.quantity]),
+    ]);
+    let nextCheckoutId = checkoutId && checkoutKey === nextCheckoutKey ? checkoutId : null;
 
-    try {
+    if (!nextCheckoutId) {
       const checkoutCreate = await graphqlRequest<CheckoutCreateResponse>(CHECKOUT_CREATE_MUTATION, {
         input: {
           channel,
-          email: isAuthenticated ? authEmail : form.email.trim(),
+          email,
           lines: items.map((item) => ({
             variantId: item.variantId,
             quantity: item.quantity,
@@ -944,190 +948,190 @@ export default function CheckoutPage() {
         return null;
       }
 
-      const nextCheckoutId = createPayload.checkout.id;
+      nextCheckoutId = createPayload.checkout.id;
       setCheckoutId(nextCheckoutId);
+      setCheckoutKey(nextCheckoutKey);
 
-      const effectiveAddress = pickupMode && pickupAddress
-        ? pickupAddress
-        : {
-            streetAddress1: form.streetAddress1,
-            city: form.city,
-            postalCode: form.postalCode,
-            country: form.country,
-          };
-      const shippingAddressResponse = await graphqlRequest<CheckoutShippingAddressResponse>(
-        CHECKOUT_SHIPPING_ADDRESS_UPDATE,
-        {
-          input: {
-            checkoutId: nextCheckoutId,
-            shippingAddress: {
-              firstName: form.firstName.trim(),
-              lastName: form.lastName.trim(),
-              streetAddress1: effectiveAddress.streetAddress1.trim(),
-              city: effectiveAddress.city.trim(),
-              postalCode: effectiveAddress.postalCode.trim(),
-              country: normalizeCountryCode(effectiveAddress.country),
-              phone: form.phone.trim(),
-            },
-          },
-        }
-      );
-      const shippingAddressPayload = shippingAddressResponse.data?.checkoutShippingAddressUpdate;
-      const shippingAddressMessage = getRequestMessage(
-        shippingAddressResponse.errors,
-        shippingAddressPayload?.errors,
-        'Failed to set the shipping address.'
-      );
-
-      if (getGraphqlErrorMessage(shippingAddressResponse.errors) || getPayloadMessage(shippingAddressPayload?.errors)) {
-        setErrorBanner(shippingAddressMessage);
-        toast.error(shippingAddressMessage);
-        return null;
-      }
-
-      const shippingMethodResponse = await graphqlRequest<CheckoutShippingMethodResponse>(
-        CHECKOUT_SHIPPING_METHOD_UPDATE,
-        {
-          input: {
-            checkoutId: nextCheckoutId,
-            shippingMethodId: legacyShippingMethodId,
-          },
-        }
-      );
-      const shippingMethodPayload = shippingMethodResponse.data?.checkoutShippingMethodUpdate;
-      const shippingMethodMessage = getRequestMessage(
-        shippingMethodResponse.errors,
-        shippingMethodPayload?.errors,
-        'Failed to set the shipping method.'
-      );
-
-      if (getGraphqlErrorMessage(shippingMethodResponse.errors) || getPayloadMessage(shippingMethodPayload?.errors)) {
-        setErrorBanner(shippingMethodMessage);
-        toast.error(shippingMethodMessage);
-        return null;
-      }
-
-      setShippingCost(shippingMethodPayload?.checkout?.shippingPrice?.amount ?? shippingCost);
-      setServerTotal(shippingMethodPayload?.checkout?.totalPrice?.gross?.amount ?? null);
-
-      if (form.note.trim()) {
-        const noteResponse = await graphqlRequest<CheckoutNoteUpdateResponse>(CHECKOUT_NOTE_UPDATE, {
-          input: {
-            checkoutId: nextCheckoutId,
-            note: form.note.trim(),
-          },
+      // A promo code belongs to the old checkout; carry it over or drop it visibly.
+      if (appliedPromoCode) {
+        const promoResponse = await graphqlRequest<CheckoutPromoCodeAddResponse>(CHECKOUT_PROMO_CODE_ADD, {
+          checkoutId: nextCheckoutId,
+          promoCode: appliedPromoCode,
         });
-        const notePayload = noteResponse.data?.checkoutNoteUpdate;
-        const noteMessage = getRequestMessage(noteResponse.errors, notePayload?.errors, 'Failed to sync order note.');
+        const promoPayload = promoResponse.data?.checkoutPromoCodeAdd;
 
-        if (getGraphqlErrorMessage(noteResponse.errors) || getPayloadMessage(notePayload?.errors)) {
-          setErrorBanner(noteMessage);
-          toast.error(noteMessage);
+        if (getGraphqlErrorMessage(promoResponse.errors) || getPayloadMessage(promoPayload?.errors) || !promoPayload?.checkout) {
+          const message = getRequestMessage(promoResponse.errors, promoPayload?.errors, 'Failed to apply promo code.');
+          setAppliedPromoCode(null);
+          setErrorBanner(message);
+          toast.error(message);
           return null;
         }
       }
-
-      await loadPaymentMethods();
-      return nextCheckoutId;
-    } finally {
-      setBusy(false);
     }
+
+    const effectiveAddress = pickupMode && pickupAddress
+      ? pickupAddress
+      : {
+          streetAddress1: form.streetAddress1,
+          city: form.city,
+          postalCode: form.postalCode,
+          country: form.country,
+        };
+    const shippingAddressResponse = await graphqlRequest<CheckoutShippingAddressResponse>(
+      CHECKOUT_SHIPPING_ADDRESS_UPDATE,
+      {
+        input: {
+          checkoutId: nextCheckoutId,
+          shippingAddress: {
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
+            streetAddress1: effectiveAddress.streetAddress1.trim(),
+            city: effectiveAddress.city.trim(),
+            postalCode: effectiveAddress.postalCode.trim(),
+            country: normalizeCountryCode(effectiveAddress.country),
+            phone: form.phone.trim(),
+          },
+        },
+      }
+    );
+    const shippingAddressPayload = shippingAddressResponse.data?.checkoutShippingAddressUpdate;
+    const shippingAddressMessage = getRequestMessage(
+      shippingAddressResponse.errors,
+      shippingAddressPayload?.errors,
+      'Failed to set the shipping address.'
+    );
+
+    if (getGraphqlErrorMessage(shippingAddressResponse.errors) || getPayloadMessage(shippingAddressPayload?.errors)) {
+      setErrorBanner(shippingAddressMessage);
+      toast.error(shippingAddressMessage);
+      return null;
+    }
+
+    const shippingMethodResponse = await graphqlRequest<CheckoutShippingMethodResponse>(
+      CHECKOUT_SHIPPING_METHOD_UPDATE,
+      {
+        input: {
+          checkoutId: nextCheckoutId,
+          shippingMethodId: legacyShippingMethodId,
+        },
+      }
+    );
+    const shippingMethodPayload = shippingMethodResponse.data?.checkoutShippingMethodUpdate;
+    const shippingMethodMessage = getRequestMessage(
+      shippingMethodResponse.errors,
+      shippingMethodPayload?.errors,
+      'Failed to set the shipping method.'
+    );
+
+    if (getGraphqlErrorMessage(shippingMethodResponse.errors) || getPayloadMessage(shippingMethodPayload?.errors)) {
+      setErrorBanner(shippingMethodMessage);
+      toast.error(shippingMethodMessage);
+      return null;
+    }
+
+    const total = shippingMethodPayload?.checkout?.totalPrice?.gross?.amount ?? null;
+    setShippingCost(shippingMethodPayload?.checkout?.shippingPrice?.amount ?? shippingCost);
+    setServerTotal(total);
+
+    if (form.note.trim()) {
+      const noteResponse = await graphqlRequest<CheckoutNoteUpdateResponse>(CHECKOUT_NOTE_UPDATE, {
+        input: {
+          checkoutId: nextCheckoutId,
+          note: form.note.trim(),
+        },
+      });
+      const notePayload = noteResponse.data?.checkoutNoteUpdate;
+      const noteMessage = getRequestMessage(noteResponse.errors, notePayload?.errors, 'Failed to sync order note.');
+
+      if (getGraphqlErrorMessage(noteResponse.errors) || getPayloadMessage(notePayload?.errors)) {
+        setErrorBanner(noteMessage);
+        toast.error(noteMessage);
+        return null;
+      }
+    }
+
+    return { id: nextCheckoutId, total };
   }
 
-  async function handlePaymentSelection(method: PaymentMethod) {
-    const legacyCheckoutId = await initializeCheckoutHandoff();
-
-    if (!legacyCheckoutId) {
-      return;
-    }
-
+  // Choosing a method is local; the payment is registered when the order is placed.
+  function handlePaymentSelection(method: PaymentMethod) {
     if (pendingP24Order && !isP24Method(method)) {
       // The checkout is already completed as a P24 order; only that payment can proceed.
       toast.error(t('paymentPendingLocked'));
       return;
     }
 
-    if (isP24Method(method)) {
-      // Local selection only: the payment is registered after the order exists.
-      setSelectedPaymentMethod(method);
-      setPaymentSession(null);
-      setPendingP24Order(null);
-      setErrorBanner(null);
-      markCompleted('payment');
-      setStep('review');
-      return;
+    setSelectedPaymentMethod(method);
+    setPaymentSession(null);
+    setPaymentError(null);
+  }
+
+  // Non-P24 gateways get their payment before the order is completed. Returns
+  // 'redirect' when the browser is leaving for the gateway, null on error.
+  async function createGatewayPayment(method: PaymentMethod, legacyCheckoutId: string) {
+    const returnUrl =
+      typeof window !== 'undefined'
+        ? `${window.location.origin}${window.location.pathname}?checkoutId=${encodeURIComponent(legacyCheckoutId)}&payment=returned`
+        : '';
+    const response = await graphqlRequest<PaymentCreateResponse>(CHECKOUT_PAYMENT_CREATE, {
+      checkoutId: legacyCheckoutId,
+      input: {
+        gateway: method.id,
+        returnUrl,
+      },
+    });
+    const payload = response.data?.checkoutPaymentCreate;
+    const message = getRequestMessage(response.errors, payload?.errors, 'Failed to initialize payment.');
+
+    if (getGraphqlErrorMessage(response.errors) || getPayloadMessage(payload?.errors) || !payload?.payment) {
+      setErrorBanner(message);
+      toast.error(message);
+      return null;
     }
 
-    setBusy(true);
-    setErrorBanner(null);
+    setPaymentSession({
+      id: payload.payment.id,
+      gateway: payload.payment.gateway,
+      status: payload.payment.status,
+      clientSecret: payload.payment.clientSecret,
+      actionUrl: payload.payment.actionUrl,
+    });
 
-    try {
-      const returnUrl =
-        typeof window !== 'undefined'
-          ? `${window.location.origin}${window.location.pathname}?checkoutId=${encodeURIComponent(legacyCheckoutId)}&payment=returned`
-          : '';
-      const response = await graphqlRequest<PaymentCreateResponse>(CHECKOUT_PAYMENT_CREATE, {
-        checkoutId: legacyCheckoutId,
-        input: {
-          gateway: method.id,
-          returnUrl,
-        },
-      });
-      const payload = response.data?.checkoutPaymentCreate;
-      const message = getRequestMessage(response.errors, payload?.errors, 'Failed to initialize payment.');
-
-      if (getGraphqlErrorMessage(response.errors) || getPayloadMessage(payload?.errors) || !payload?.payment) {
-        setErrorBanner(message);
-        toast.error(message);
-        return;
-      }
-
-      setSelectedPaymentMethod(method);
-      setPaymentSession({
-        id: payload.payment.id,
-        gateway: payload.payment.gateway,
-        status: payload.payment.status,
-        clientSecret: payload.payment.clientSecret,
-        actionUrl: payload.payment.actionUrl,
-      });
-      markCompleted('payment');
-      setStep('review');
-
-      if (payload.payment.total?.amount != null) {
-        setServerTotal(payload.payment.total.amount);
-      }
-
-      if (payload.payment.actionUrl && typeof window !== 'undefined') {
-        window.sessionStorage.setItem(
-          'oms-pending-checkout',
-          JSON.stringify({ checkoutId: legacyCheckoutId, email: form.email.trim() })
-        );
-        window.location.assign(payload.payment.actionUrl);
-      }
-    } finally {
-      setBusy(false);
+    if (payload.payment.total?.amount != null) {
+      setServerTotal(payload.payment.total.amount);
     }
+
+    if (payload.payment.actionUrl && typeof window !== 'undefined') {
+      window.sessionStorage.setItem(
+        'oms-pending-checkout',
+        JSON.stringify({ checkoutId: legacyCheckoutId })
+      );
+      window.location.assign(payload.payment.actionUrl);
+      return 'redirect' as const;
+    }
+
+    return 'ready' as const;
   }
 
   async function handlePromoApply() {
-    if (!promoCode.trim()) {
+    if (!promoCode.trim() || !validateDeliveryStep()) {
       return;
     }
-
-    const legacyCheckoutId = await initializeCheckoutHandoff();
-
-    if (!legacyCheckoutId) {
-      return;
-    }
-
-    const nextPromoCode = promoCode.trim();
 
     setBusy(true);
     setErrorBanner(null);
 
     try {
+      const handoff = await initializeCheckoutHandoff();
+
+      if (!handoff) {
+        return;
+      }
+
+      const nextPromoCode = promoCode.trim();
       const response = await graphqlRequest<CheckoutPromoCodeAddResponse>(CHECKOUT_PROMO_CODE_ADD, {
-        checkoutId: legacyCheckoutId,
+        checkoutId: handoff.id,
         promoCode: nextPromoCode,
       });
       const payload = response.data?.checkoutPromoCodeAdd;
@@ -1140,7 +1144,7 @@ export default function CheckoutPage() {
       }
 
       setAppliedPromoCode(nextPromoCode);
-      resetPaymentSelectionForCheckoutChange();
+      setPaymentSession(null);
       toast.success(t('promoApplied'));
     } finally {
       setBusy(false);
@@ -1149,9 +1153,8 @@ export default function CheckoutPage() {
 
   async function handlePromoRemove() {
     if (!checkoutId) {
-      const message = 'Checkout is not ready yet.';
-      setErrorBanner(message);
-      toast.error(message);
+      setAppliedPromoCode(null);
+      setPromoCode('');
       return;
     }
 
@@ -1172,7 +1175,8 @@ export default function CheckoutPage() {
       }
 
       setAppliedPromoCode(null);
-      resetPaymentSelectionForCheckoutChange();
+      setPaymentSession(null);
+      setServerTotal(null);
       setPromoCode('');
     } finally {
       setBusy(false);
@@ -1182,8 +1186,8 @@ export default function CheckoutPage() {
   // Registers the Przelewy24 session for an order that already exists, then hands
   // the shopper to P24. Only identifiers go to sessionStorage; the return page
   // asks the backend for the real status.
-  async function startP24Payment(order: { id: string; number: string }) {
-    if (!checkoutId) return;
+  async function startP24Payment(order: { id: string; number: string }, legacyCheckoutId: string | null) {
+    if (!legacyCheckoutId) return;
 
     setPendingP24Order(order);
     setBusy(true);
@@ -1191,7 +1195,7 @@ export default function CheckoutPage() {
 
     try {
       const response = await graphqlRequest<PaymentCreateResponse>(CHECKOUT_PAYMENT_CREATE, {
-        checkoutId,
+        checkoutId: legacyCheckoutId,
         input: {
           gateway: 'p24',
           orderId: order.id,
@@ -1217,7 +1221,6 @@ export default function CheckoutPage() {
             paymentId: payload.payment.id,
             orderId: order.id,
             orderNumber: order.number,
-            email: form.email.trim(),
             // Lets the return page offer "back to Przelewy24" while the session is valid.
             actionUrl: payload.payment.actionUrl,
             registeredAt: new Date().toISOString(),
@@ -1235,60 +1238,86 @@ export default function CheckoutPage() {
   }
 
   async function handlePlaceOrder() {
-    if (!checkoutId) {
-      const message = 'Checkout is not ready yet.';
-      setErrorBanner(message);
-      toast.error(message);
+    if (pendingP24Order) {
+      // The order exists; only its payment is retried.
+      await startP24Payment(pendingP24Order, checkoutId);
+      return;
+    }
+
+    if (!validateDeliveryStep()) {
+      return;
+    }
+
+    if (!selectedDeliveryOption) {
+      setDeliveryError(uiText.selectDeliveryFirst);
+      focusElement('checkout-block-delivery');
+      return;
+    }
+
+    if (!selectedPaymentMethod) {
+      setPaymentError(t('selectPayment'));
+      focusElement('checkout-block-payment');
       return;
     }
 
     if (!termsAccepted) {
       setTermsError(t('termsRequired'));
-      // The checkbox is already mounted; move focus synchronously so the
-      // announcement and the error association land together.
-      if (typeof document !== 'undefined') {
-        document.getElementById('checkout-terms')?.focus();
-      }
+      focusElement('checkout-terms');
       return;
     }
 
-    if (isP24Method(selectedPaymentMethod) && sellerIdentityMissing) {
+    const payWithP24 = isP24Method(selectedPaymentMethod);
+
+    if (payWithP24 && sellerIdentityMissing) {
       setErrorBanner(t('sellerIdentityMissing'));
       return;
     }
 
-    if (pendingP24Order) {
-      await startP24Payment(pendingP24Order);
+    if (pickupMode && !pickupAddress) {
+      setErrorBanner(uiText.pickupAddressMissing);
+      toast.error(uiText.pickupAddressMissing);
       return;
     }
+
+    const email = isAuthenticated ? authEmail : form.email.trim();
 
     setBusy(true);
     setErrorBanner(null);
 
     try {
-      if (form.note.trim()) {
-        await updateNote(form.note.trim());
+      const buyerUpdated = await updateBuyerIdentity({
+        email,
+        phone: form.phone.trim() || null,
+        countryCode: normalizeCountryCode(pickupMode ? pickupAddress?.country ?? 'PL' : form.country),
+      });
 
-        const noteResponse = await graphqlRequest<CheckoutNoteUpdateResponse>(CHECKOUT_NOTE_UPDATE, {
-          input: {
-            checkoutId,
-            note: form.note.trim(),
-          },
-        });
-        const notePayload = noteResponse.data?.checkoutNoteUpdate;
-        const noteMessage = getRequestMessage(noteResponse.errors, notePayload?.errors, 'Failed to sync order note.');
+      if (!buyerUpdated) {
+        const message = useCartStore.getState().error ?? t('orderError');
+        setErrorBanner(message);
+        toast.error(message);
+        return;
+      }
 
-        if (getGraphqlErrorMessage(noteResponse.errors) || getPayloadMessage(notePayload?.errors)) {
-          setErrorBanner(noteMessage);
-          toast.error(noteMessage);
+      if (form.note !== note) {
+        await updateNote(form.note);
+      }
+
+      const handoff = await initializeCheckoutHandoff();
+
+      if (!handoff) {
+        return;
+      }
+
+      if (!payWithP24 && !gatewayReturned) {
+        const gateway = await createGatewayPayment(selectedPaymentMethod, handoff.id);
+        if (gateway !== 'ready') {
           return;
         }
       }
 
-      const payWithP24 = isP24Method(selectedPaymentMethod);
       const response = await graphqlRequest<CheckoutCompleteResponse>(CHECKOUT_COMPLETE_MUTATION, {
         input: {
-          checkoutId,
+          checkoutId: handoff.id,
           termsAccepted: true,
           ...(payWithP24 ? { paymentData: 'p24' } : {}),
         },
@@ -1308,8 +1337,21 @@ export default function CheckoutPage() {
         return;
       }
 
+      saveLastOrder({
+        number: payload.order.number,
+        email,
+        items: items.map((item) => ({
+          name: item.name,
+          quantity: item.quantity,
+          total: item.totalPrice ?? item.price * item.quantity,
+        })),
+        total: payload.order.total?.gross?.amount ?? handoff.total ?? displayTotal,
+        currency: payload.order.total?.gross?.currency ?? displayCurrency,
+        paymentMethod: translatePaymentMethodName(locale, selectedPaymentMethod),
+      });
+
       if (payWithP24) {
-        await startP24Payment({ id: payload.order.id, number: payload.order.number });
+        await startP24Payment({ id: payload.order.id, number: payload.order.number }, handoff.id);
         return;
       }
 
@@ -1319,13 +1361,38 @@ export default function CheckoutPage() {
         window.sessionStorage.removeItem('oms-pending-checkout');
       }
       toast.success(t('orderSuccess'));
-      router.push(`/checkout/confirmation?order=${encodeURIComponent(payload.order.number)}&email=${encodeURIComponent(form.email.trim())}`);
+      router.push(`/checkout/confirmation?order=${encodeURIComponent(payload.order.number)}`);
     } finally {
       setBusy(false);
     }
   }
 
-  if (!isHydrated || !initialized || isCartLoading) {
+  const payAtPickup = pickupMode && isPayOnCollectionMethod(selectedPaymentMethod);
+  const formattedTotal = formatPrice(displayTotal, displayCurrency);
+  const placeOrderLabel = busy
+    ? t('processing')
+    : pendingP24Order
+      ? t('paymentRetry')
+      : payAtPickup
+        ? t('placeOrderPayAtPickup', { total: formattedTotal })
+        : t('placeOrderPay', { total: formattedTotal });
+
+  function placeOrderButton(widthClass: string) {
+    return (
+      <button
+        type="button"
+        onClick={() => void handlePlaceOrder()}
+        disabled={busy || (isP24Method(selectedPaymentMethod) && sellerIdentityMissing)}
+        className={`inline-flex ${widthClass} items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-semibold text-white transition-all duration-fast disabled:opacity-60`}
+        style={{ backgroundColor: 'var(--color-primary)' }}
+      >
+        {busy ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> : <ShieldCheck className="h-5 w-5" aria-hidden="true" />}
+        <span className="tabular-nums">{placeOrderLabel}</span>
+      </button>
+    );
+  }
+
+  if (!isHydrated || !initialized || (isCartLoading && items.length === 0)) {
     return (
       <div className="container-grocery py-16 text-center">
         <ShoppingCart className="mx-auto mb-4 h-16 w-16 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
@@ -1372,17 +1439,6 @@ export default function CheckoutPage() {
         {t('title')}
       </h1>
 
-      <div
-        className="sticky z-30 -mx-4 px-4 py-2 backdrop-blur md:static md:mx-0 md:px-0 md:py-0 md:backdrop-blur-none"
-        style={{
-          top: 'var(--header-height)',
-          backgroundColor: 'color-mix(in srgb, var(--color-background) 92%, transparent)',
-        }}
-        data-testid="checkout-sticky-progress"
-      >
-        <CheckoutProgressBar currentStep={step} />
-      </div>
-
       {(errorBanner || cartError) && (
         <div
           className="mb-6 rounded-2xl border px-4 py-3 text-sm"
@@ -1398,21 +1454,12 @@ export default function CheckoutPage() {
       )}
 
       <div className="grid min-w-0 gap-8 lg:grid-cols-3">
-        <div className="min-w-0 space-y-3 lg:col-span-2">
-          {/* ── Step 1: Delivery ── */}
-          <CheckoutSection
-            step="delivery"
-            currentStep={step}
-            completedSteps={completedSteps}
-            onToggle={setStep}
-            pickupMode={pickupMode}
-            summaryContent={
-              form.firstName
-                ? pickupMode
-                  ? `${form.firstName} ${form.lastName} · ${form.email || authEmail}`
-                  : `${form.firstName} ${form.lastName} · ${form.streetAddress1}, ${form.city}`
-                : undefined
-            }
+        <div className="min-w-0 space-y-4 lg:col-span-2">
+          {/* ── 1: Contact (and address when delivering) ── */}
+          <CheckoutBlock
+            index={1}
+            title={pickupMode ? t('stepPickupContact') : t('delivery')}
+            testId="checkout-block-contact"
           >
               {/* ── Saved address selector ── */}
               {!pickupMode && savedAddresses.length > 0 && (
@@ -1529,250 +1576,173 @@ export default function CheckoutPage() {
                     </div>
                   );
                 })}
-
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-muted-foreground)' }} htmlFor="checkout-note">
-                    {t('note')}
-                  </label>
-                  <textarea
-                    id="checkout-note"
-                    rows={3}
-                    value={form.note}
-                    onChange={(event) => setFieldValue('note', event.target.value)}
-                    className={`${INPUT_CLASS} resize-none`}
-                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                    placeholder={t('notePlaceholder')}
-                  />
-                </div>
               </div>
+          </CheckoutBlock>
 
-              <div className="mt-6 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => void handleDeliveryContinue()}
-                  disabled={busy}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-all duration-fast disabled:opacity-60 sm:w-auto"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
-                >
-                  {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-                  {t('nextStep')}
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                </button>
-              </div>
-          </CheckoutSection>
-
-          {/* ── Step 2: Shipping ── */}
-          <CheckoutSection
-            step="shipping"
-            currentStep={step}
-            completedSteps={completedSteps}
-            onToggle={setStep}
-            pickupMode={pickupMode}
-            summaryContent={
-              selectedDeliveryOption
-                ? `${translateDeliveryOptionName(locale, selectedDeliveryOption)} · ${
-                    selectedDeliveryOption.price.amount === 0
-                      ? t('freeShipping')
-                      : formatPrice(selectedDeliveryOption.price.amount, selectedDeliveryOption.price.currency)
-                  }`
-                : undefined
-            }
+          {/* ── 2: Pickup / delivery method ── */}
+          <CheckoutBlock
+            index={2}
+            title={pickupMode ? t('stepPickupMethod') : t('shippingTitle')}
+            testId="checkout-block-delivery"
           >
-              <p className="text-sm mb-5" style={{ color: 'var(--color-muted-foreground)' }}>
-                {t('selectShipping')}
-              </p>
-
-              {pickupMode && renderCheckoutNotice(checkoutPickupNotice)}
-
-              <div className="space-y-3">
-                {deliveryOptions.map((option) => {
-                  const selected = selectedDeliveryOption?.id === option.id;
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => void handleDeliverySelection(option)}
-                      disabled={busy}
-                      aria-pressed={selected}
-                      className="w-full rounded-2xl border p-4 text-left transition-colors duration-fast disabled:opacity-60"
-                      style={{
-                        borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
-                        backgroundColor: selected ? 'color-mix(in srgb, var(--color-primary) 7%, transparent)' : 'transparent',
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Truck className="h-5 w-5 shrink-0" style={{ color: selected ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }} aria-hidden="true" />
-                        <div className="flex-1">
-                          <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                            {translateDeliveryOptionName(locale, option)}
-                          </p>
-                        </div>
-                        <span className="text-sm font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
-                          {option.price.amount === 0 ? t('freeShipping') : formatPrice(option.price.amount, option.price.currency)}
-                        </span>
+              <div id="checkout-block-delivery" tabIndex={-1} className="outline-none">
+                {deliveryOptions.length === 0 ? (
+                  <div className="rounded-2xl border px-4 py-4 text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                    {deliveryError ? (
+                      <div className="flex flex-col items-start gap-3">
+                        <span role="alert" style={{ color: 'var(--color-destructive)' }}>{deliveryError}</span>
+                        <button
+                          type="button"
+                          onClick={() => void retryDeliveryOptions()}
+                          disabled={busy}
+                          className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium disabled:opacity-60"
+                          style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
+                        >
+                          <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                          {tCommon('retry')}
+                        </button>
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
-          </CheckoutSection>
-
-          {/* ── Step 3: Payment ── */}
-          <CheckoutSection
-            step="payment"
-            currentStep={step}
-            completedSteps={completedSteps}
-            onToggle={setStep}
-            pickupMode={pickupMode}
-            summaryContent={
-              selectedPaymentMethod
-                ? translatePaymentMethodName(locale, selectedPaymentMethod)
-                : undefined
-            }
-          >
-              <div className="mb-4 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                  {t('selectPayment')}
-                </p>
-                {selectedDeliveryOption && paymentMethodsLoaded && paymentMethods.length === 0 && (
-                  <button
-                    type="button"
-                    onClick={() => void initializeCheckoutHandoff()}
-                    disabled={busy}
-                    className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium disabled:opacity-60"
-                    style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                  >
-                    <RefreshCw className="h-4 w-4" aria-hidden="true" />
-                    {uiText.retryHandoff}
-                  </button>
+                    ) : deliveryOptionsRequested ? uiText.noDeliveryOptions : tCommon('loading')}
+                  </div>
+                ) : (
+                  <div className="space-y-3" role="radiogroup" aria-label={pickupMode ? t('stepPickupMethod') : t('shippingTitle')}>
+                    {deliveryOptions.map((option) => {
+                      const selected = selectedDeliveryOption?.id === option.id;
+                      return (
+                        <button
+                          key={option.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={selected}
+                          onClick={() => void handleDeliverySelection(option)}
+                          disabled={busy}
+                          className="w-full rounded-2xl border p-4 text-left transition-colors duration-fast disabled:opacity-60"
+                          style={{
+                            borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
+                            backgroundColor: selected ? 'color-mix(in srgb, var(--color-primary) 7%, transparent)' : 'transparent',
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            {pickupMode
+                              ? <MapPin className="h-5 w-5 shrink-0" style={{ color: selected ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }} aria-hidden="true" />
+                              : <Truck className="h-5 w-5 shrink-0" style={{ color: selected ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }} aria-hidden="true" />}
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                                {translateDeliveryOptionName(locale, option)}
+                              </p>
+                              {pickupMode && pickupAddress && (
+                                <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
+                                  {pickupAddress.streetAddress1}, {pickupAddress.postalCode} {pickupAddress.city}
+                                </p>
+                              )}
+                            </div>
+                            <span className="text-sm font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
+                              {option.price.amount === 0 ? t('freeShipping') : formatPrice(option.price.amount, option.price.currency)}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                    {deliveryError && (
+                      <p role="alert" className="text-sm" style={{ color: 'var(--color-destructive)' }}>
+                        {deliveryError}
+                      </p>
+                    )}
+                  </div>
+                )}
+                {pickupMode && (
+                  <p className="mt-3 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                    {checkoutPickupNotice}
+                  </p>
                 )}
               </div>
+          </CheckoutBlock>
 
-              {bankTransferMode && renderCheckoutNotice(checkoutBankTransferNotice)}
+          {/* ── 3: Payment ── */}
+          <CheckoutBlock index={3} title={t('paymentTitle')} testId="checkout-block-payment">
+              <div id="checkout-block-payment" tabIndex={-1} className="outline-none">
+                {bankTransferMode && renderCheckoutNotice(checkoutBankTransferNotice)}
 
-              {paymentMethods.length === 0 ? (
-                <div className="rounded-2xl border px-4 py-4 text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
-                  {!selectedDeliveryOption
-                    ? uiText.paymentAfterDelivery
-                    : paymentMethodsLoaded
-                      ? uiText.noPaymentMethods
-                      : uiText.loadingPaymentMethods}
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {paymentMethods.map((method) => {
-                    const selected = selectedPaymentMethod?.id === method.id;
-                    const Icon = getPaymentIcon(method);
-                    const paymentDetail = translatePaymentMethodDescription(locale, method);
-
-                    return (
+                {paymentMethods.length === 0 ? (
+                  <div className="flex flex-col items-start gap-3 rounded-2xl border px-4 py-4 text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
+                    <span>{paymentMethodsLoaded ? uiText.noPaymentMethods : uiText.loadingPaymentMethods}</span>
+                    {paymentMethodsLoaded && (
                       <button
-                        key={method.id}
                         type="button"
-                        onClick={() => void handlePaymentSelection(method)}
+                        onClick={() => void loadPaymentMethods()}
                         disabled={busy}
-                        aria-pressed={selected}
-                        className="w-full rounded-2xl border p-4 text-left transition-colors duration-fast disabled:opacity-60"
-                        style={{
-                          borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
-                          backgroundColor: selected ? 'color-mix(in srgb, var(--color-primary) 7%, transparent)' : 'transparent',
-                        }}
+                        className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium disabled:opacity-60"
+                        style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                       >
-                        <div className="flex items-center gap-3">
-                          <Icon className="h-5 w-5 shrink-0" style={{ color: selected ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }} aria-hidden="true" />
-                          <div className="flex-1">
-                            <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                              {translatePaymentMethodName(locale, method)}
-                            </p>
-                            {paymentDetail && (
-                              <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-                                {paymentDetail}
-                              </p>
-                            )}
-                          </div>
-                        </div>
+                        <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                        {uiText.retryHandoff}
                       </button>
-                    );
-                  })}
-                </div>
-              )}
-          </CheckoutSection>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-3" role="radiogroup" aria-label={t('paymentTitle')}>
+                    {paymentMethods.map((method) => {
+                      const selected = selectedPaymentMethod?.id === method.id;
+                      const Icon = getPaymentIcon(method);
+                      const paymentDetail = translatePaymentMethodDescription(locale, method);
 
-          {/* ── Step 4: Review & Place Order ── */}
-          <CheckoutSection
-            step="review"
-            currentStep={step}
-            completedSteps={completedSteps}
-            onToggle={setStep}
-            pickupMode={pickupMode}
-          >
+                      return (
+                        <button
+                          key={method.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={selected}
+                          onClick={() => handlePaymentSelection(method)}
+                          disabled={busy}
+                          className="w-full rounded-2xl border p-4 text-left transition-colors duration-fast disabled:opacity-60"
+                          style={{
+                            borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
+                            backgroundColor: selected ? 'color-mix(in srgb, var(--color-primary) 7%, transparent)' : 'transparent',
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <Icon className="h-5 w-5 shrink-0" style={{ color: selected ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }} aria-hidden="true" />
+                            <div className="flex-1">
+                              <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
+                                {translatePaymentMethodName(locale, method)}
+                              </p>
+                              {paymentDetail && (
+                                <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
+                                  {paymentDetail}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                {paymentError && (
+                  <p role="alert" className="mt-3 text-sm" style={{ color: 'var(--color-destructive)' }}>
+                    {paymentError}
+                  </p>
+                )}
+              </div>
+          </CheckoutBlock>
+
+          {/* ── 4: Confirm ── */}
+          <CheckoutBlock index={4} title={t('confirmTitle')} testId="checkout-section-review">
+              <div className="mb-5 lg:hidden" data-testid="mobile-checkout-summary-panel">
+                {summaryContent}
+              </div>
+
               {bankTransferMode && renderCheckoutNotice(tFulfillment('checkoutReviewNotice'))}
               {pickupMode && renderCheckoutNotice(tFulfillment('checkoutPickupReviewNotice'))}
               {isP24Method(selectedPaymentMethod) && sellerIdentityMissing && renderCheckoutNotice(t('sellerIdentityMissing'))}
 
-              <div className="grid gap-5 md:grid-cols-2 mb-5">
-                  <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--color-border)' }}>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {pickupMode ? t('stepPickupContact') : t('delivery')}
-                    </p>
-                    <p className="mt-2 text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                      {form.firstName} {form.lastName}
-                    </p>
-                    {!pickupMode && (
-                      <>
-                        <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-                          {form.streetAddress1}
-                        </p>
-                        <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                          {form.postalCode} {form.city}
-                        </p>
-                      </>
-                    )}
-                    <p className="text-sm mt-2" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {form.email}
-                    </p>
-                    {pickupMode && pickupAddress && (
-                      <p className="mt-3 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                        {pickupAddress.streetAddress1}, {pickupAddress.postalCode} {pickupAddress.city}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--color-border)' }}>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {t('shippingTitle')}
-                    </p>
-                    <p className="mt-2 text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                      {selectedDeliveryOption ? translateDeliveryOptionName(locale, selectedDeliveryOption) : uiText.notSelected}
-                    </p>
-                    {selectedDeliveryOption && (
-                      <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-                        {selectedDeliveryOption.price.amount === 0
-                          ? t('freeShipping')
-                          : formatPrice(selectedDeliveryOption.price.amount, selectedDeliveryOption.price.currency)}
-                      </p>
-                    )}
-                    <p className="text-xs mt-4 uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                      {t('paymentTitle')}
-                    </p>
-                    <p className="mt-2 text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
-                      {selectedPaymentMethod ? translatePaymentMethodName(locale, selectedPaymentMethod) : uiText.paymentNotInitialized}
-                    </p>
-                    {paymentSession?.status && (
-                      <p className="text-sm mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
-                        Status: {paymentSession.status}
-                      </p>
-                    )}
-                  </div>
-              </div>
-
               <div className="mb-5">
-                  <label htmlFor="review-note" className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
+                  <label htmlFor="checkout-note" className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
                     {t('note')}
                   </label>
                   <textarea
-                    id="review-note"
-                    rows={3}
+                    id="checkout-note"
+                    rows={2}
                     value={form.note}
                     onChange={(event) => setFieldValue('note', event.target.value)}
                     className={`${INPUT_CLASS} resize-none`}
@@ -1818,19 +1788,10 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => void handlePlaceOrder()}
-                  disabled={busy || !checkoutId || (isP24Method(selectedPaymentMethod) && sellerIdentityMissing)}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-all duration-fast disabled:opacity-60 sm:w-auto"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
-                >
-                  {busy ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> : <ShieldCheck className="h-5 w-5" aria-hidden="true" />}
-                  {busy ? t('processing') : pendingP24Order ? t('paymentRetry') : t('placeOrder')}
-                </button>
+              <div className="hidden justify-end lg:flex">
+                {placeOrderButton('w-auto')}
               </div>
-          </CheckoutSection>
+          </CheckoutBlock>
         </div>
 
         <div className="hidden lg:block">
@@ -1843,66 +1804,17 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 lg:hidden">
-        {mobileSummaryOpen && (
-          <div className="container-grocery mb-3">
-            <div
-              id="mobile-checkout-summary-panel"
-              className="rounded-2xl border p-4 shadow-2xl"
-              style={{
-                borderColor: 'var(--color-border)',
-                backgroundColor: 'color-mix(in srgb, var(--color-card) 98%, transparent)',
-              }}
-              data-testid="mobile-checkout-summary-panel"
-            >
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <h2 className="heading-section text-base" style={{ color: 'var(--color-foreground)' }}>
-                  {t('summary')}
-                </h2>
-                <button
-                  type="button"
-                  onClick={() => setMobileSummaryOpen(false)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-sm font-medium hover-surface"
-                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-                >
-                  <X className="h-4 w-4" aria-hidden="true" />
-                  {tCommon('close')}
-                </button>
-              </div>
-              {summaryContent}
-            </div>
-          </div>
-        )}
-
-        <div
-          className="border-t backdrop-blur"
-          style={{
-            borderColor: 'var(--color-border)',
-            backgroundColor: 'color-mix(in srgb, var(--color-card) 96%, transparent)',
-            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)',
-          }}
-          data-testid="mobile-checkout-summary-bar"
-        >
-          <div className="container-grocery flex items-center justify-between gap-3 py-3">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted-foreground)' }}>
-                {t('amountDue')}
-              </p>
-              <p className="text-lg font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>
-                {formatPrice(displayTotal, displayCurrency)}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setMobileSummaryOpen((current) => !current)}
-              className="inline-flex items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold hover-surface"
-              style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
-              aria-expanded={mobileSummaryOpen}
-              aria-controls="mobile-checkout-summary-panel"
-            >
-              {mobileSummaryOpen ? tCommon('close') : t('summary')}
-            </button>
-          </div>
+      <div
+        className="fixed inset-x-0 bottom-0 z-40 border-t backdrop-blur lg:hidden"
+        style={{
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'color-mix(in srgb, var(--color-card) 96%, transparent)',
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)',
+        }}
+        data-testid="mobile-checkout-summary-bar"
+      >
+        <div className="container-grocery py-3">
+          {placeOrderButton('w-full')}
         </div>
       </div>
     </div>

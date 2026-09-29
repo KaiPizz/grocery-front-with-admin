@@ -68,12 +68,12 @@
     "pickupCostLabel": "Odbiór",
     "pickupCostFree": "Bezpłatny",
     "cartBankTransferNotice": "Płatność odbywa się przelewem bankowym po checkoutcie.",
-    "checkoutPickupNotice": "Odbiór osobisty jest jedyną ścieżką realizacji dla tego sklepu.",
+    "checkoutPickupNotice": "Zamówienie odbierasz osobiście w sklepie — nie podajesz adresu dostawy.",
     "checkoutBankTransferNotice": "Płatność odbywa się przelewem bankowym po złożeniu zamówienia.",
     "checkoutReviewNotice": "Po złożeniu zamówienia wykonaj przelew bankowy i poczekaj na potwierdzenie odbioru.",
-    "checkoutPickupReviewNotice": "Po złożeniu zamówienia poczekaj na potwierdzenie sklepu przed przyjazdem po odbiór.",
+    "checkoutPickupReviewNotice": "Skompletujemy zamówienie i wyślemy e-mail, gdy będzie gotowe do odbioru. Przyjdź po tej wiadomości.",
     "confirmationBankTransfer": "Następny krok: wykonaj przelew bankowy zgodnie z instrukcjami sklepu.",
-    "confirmationPickup": "Odbiór: poczekaj na ręczne potwierdzenie odbioru lub kontakt przed odebraniem zamówienia.",
+    "confirmationPickup": "Skompletujemy zamówienie i wyślemy e-mail, gdy będzie gotowe do odbioru.",
     "orderHistory": "Historia zamówień"
   },
   "search": {
@@ -464,7 +464,7 @@
     "trustFast": "Szybka dostawa",
     "trustReturns": "Łatwe zwroty",
     "trustPickup": "Odbiór w sklepie",
-    "trustManualConfirmation": "Termin potwierdzany przez sklep",
+    "trustManualConfirmation": "E-mail, gdy zamówienie będzie gotowe do odbioru",
     "trustContact": "Kontakt przed odbiorem",
     "progressStep": "Krok {current} z {total}",
     "progressCompleted": "Ukończono: {count}",
@@ -486,7 +486,12 @@
       "backToP24": "Wróć do Przelewy24 i dokończ płatność"
     },
     "paymentPendingLocked": "To zamówienie czeka na płatność Przelewy24 — dokończ ją lub ponów płatność.",
-    "sellerIdentityMissing": "Sklep nie opublikował jeszcze pełnych danych sprzedawcy, dlatego płatność online jest tymczasowo niedostępna."
+    "sellerIdentityMissing": "Sklep nie opublikował jeszcze pełnych danych sprzedawcy, dlatego płatność online jest tymczasowo niedostępna.",
+    "confirmTitle": "Potwierdź zamówienie",
+    "placeOrderPay": "Zamawiam i płacę · {total}",
+    "placeOrderPayAtPickup": "Zamawiam i płacę przy odbiorze · {total}",
+    "confirmationPayment": "Płatność",
+    "confirmationPickupAt": "Odbiór"
   },
   "allergens": {
     "cereals": "Zboża (gluten)",

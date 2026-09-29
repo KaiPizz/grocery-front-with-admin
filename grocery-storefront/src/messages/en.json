@@ -68,12 +68,12 @@
     "pickupCostLabel": "Pickup",
     "pickupCostFree": "Free",
     "cartBankTransferNotice": "Payment is handled by bank transfer after checkout.",
-    "checkoutPickupNotice": "Pickup/self-collection is the only fulfillment path for this store.",
+    "checkoutPickupNotice": "You collect the order in person at the store — no delivery address needed.",
     "checkoutBankTransferNotice": "Payment is handled by bank transfer after the order is placed.",
     "checkoutReviewNotice": "After placing the order, complete the bank transfer and wait for pickup confirmation.",
-    "checkoutPickupReviewNotice": "After placing the order, wait for store confirmation before coming to collect it.",
+    "checkoutPickupReviewNotice": "We will pack your order and e-mail you when it is ready for pickup. Please come after that message.",
     "confirmationBankTransfer": "Next step: complete the bank transfer using the store instructions.",
-    "confirmationPickup": "Pickup next step: wait for manual pickup or contact confirmation before collecting the order.",
+    "confirmationPickup": "We will pack your order and e-mail you when it is ready for pickup.",
     "orderHistory": "Order history"
   },
   "search": {
@@ -464,7 +464,7 @@
     "trustFast": "Fast delivery",
     "trustReturns": "Easy returns",
     "trustPickup": "Pickup in store",
-    "trustManualConfirmation": "Collection time confirmed by the store",
+    "trustManualConfirmation": "E-mail when your order is ready for pickup",
     "trustContact": "Contact before collection",
     "progressStep": "Step {current} of {total}",
     "progressCompleted": "Completed: {count}",
@@ -486,7 +486,12 @@
       "backToP24": "Return to Przelewy24 and finish the payment"
     },
     "paymentPendingLocked": "This order is awaiting Przelewy24 payment — finish it or retry the payment.",
-    "sellerIdentityMissing": "The store has not yet published its full seller details, so online payment is temporarily unavailable."
+    "sellerIdentityMissing": "The store has not yet published its full seller details, so online payment is temporarily unavailable.",
+    "confirmTitle": "Confirm order",
+    "placeOrderPay": "Order and pay · {total}",
+    "placeOrderPayAtPickup": "Order, pay at pickup · {total}",
+    "confirmationPayment": "Payment",
+    "confirmationPickupAt": "Pickup"
   },
   "allergens": {
     "cereals": "Cereals (gluten)",

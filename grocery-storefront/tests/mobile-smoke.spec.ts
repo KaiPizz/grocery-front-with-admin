@@ -251,14 +251,12 @@ test.describe('mobile storefront smoke', () => {
     expect(controlsY).toBeGreaterThan(infoY + 1);
   });
 
-  test('keeps mobile checkout progress and order context visible through review', async ({ page }) => {
+  test('keeps the one-page checkout and order context visible on mobile', async ({ page }) => {
     await seedCartStorage(page);
     await mockMobileStorefront(page, { cart: 'single-item' });
     await page.goto('/en/checkout');
 
-    const progress = page.getByTestId('checkout-sticky-progress');
-    await expect(progress).toBeVisible();
-    await expect(progress).toContainText(/step 1 of 4/i);
+    await expect(page.getByTestId('checkout-block-contact')).toBeVisible();
     await expect(page.getByTestId('mobile-checkout-summary-bar')).toBeVisible();
 
     await page.getByLabel(/first name/i).fill('Marta');
@@ -267,12 +265,11 @@ test.describe('mobile storefront smoke', () => {
     await page.getByLabel(/address/i).fill('Marszalkowska 1');
     await page.getByLabel(/city/i).fill('Warsaw');
     await page.getByLabel(/postal code/i).fill('00-001');
-    await page.getByRole('button', { name: /continue/i }).click();
 
-    await page.getByRole('button', { name: /standard courier/i }).click();
-    await page.getByRole('button', { name: /credit\/debit card/i }).click();
+    await page.getByRole('radio', { name: /standard courier/i }).click();
+    await page.getByRole('radio', { name: /credit\/debit card/i }).click();
 
-    await expect(progress).toContainText(/step 4 of 4/i);
+    await expect(page.getByRole('radio', { name: /credit\/debit card/i })).toHaveAttribute('aria-checked', 'true');
     await expect(page.getByTestId('mobile-checkout-summary-panel')).toContainText(/organic gala apples/i);
   });
 });

@@ -4,7 +4,8 @@ import { mockMobileStorefront, seedCartStorage } from './mobile-fixtures';
 
 // SPEC SOURCES:
 // - PRD section 3.2: shoppers enter delivery details, choose shipping, and complete checkout on mobile.
-// - PRD section 5.3: Checkout is a 4-step flow with saved address support.
+// - PRD section 5.3 (revised 29/09/2026): checkout is one page — contact, pickup/delivery,
+//   payment and confirm are always visible; saved address support stays.
 // - `.claude/docs/progress.md`: page-by-page accessibility audit is in progress.
 
 async function openCheckout(page: Page) {
@@ -25,10 +26,10 @@ async function fillDeliveryForm(page: Page) {
 }
 
 test.describe('checkout accessibility', () => {
-  test('moves focus to the first invalid delivery field and associates its error text', async ({ page }) => {
+  test('moves focus to the first invalid contact field and associates its error text', async ({ page }) => {
     await openCheckout(page);
 
-    await page.getByRole('button', { name: /continue/i }).click();
+    await page.getByRole('button', { name: /order and pay/i }).click();
 
     const firstName = page.getByLabel(/first name/i);
     await expect(firstName).toBeFocused();
@@ -37,47 +38,37 @@ test.describe('checkout accessibility', () => {
     await expect(page.locator('#checkout-firstName-error')).toHaveText(/required/i);
   });
 
-  test('exposes selected state on shipping and payment choices', async ({ page }) => {
+  test('exposes selected state on shipping and payment choices as radio groups', async ({ page }) => {
     await openCheckout(page);
     await fillDeliveryForm(page);
-    await page.getByRole('button', { name: /continue/i }).click();
 
-    const shippingSection = page.getByTestId('checkout-section-shipping');
-    const shippingPanel = page.locator('#checkout-panel-shipping');
-    const standardShipping = shippingPanel.getByRole('button', { name: /standard courier/i });
-    await expect(standardShipping).toHaveAttribute('aria-pressed', 'false');
+    const standardShipping = page.getByTestId('checkout-block-delivery').getByRole('radio', { name: /standard courier/i });
+    await expect(standardShipping).toHaveAttribute('aria-checked', 'false');
     await standardShipping.press('Enter');
+    await expect(standardShipping).toHaveAttribute('aria-checked', 'true');
 
-    await shippingSection.getByRole('button', { name: /shipping/i }).click();
-    await expect(standardShipping).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.locator('#checkout-panel-payment').getByRole('button', { name: /credit\/debit card/i })).toHaveCount(0);
-    await standardShipping.press('Enter');
-
-    const paymentSection = page.getByTestId('checkout-section-payment');
-    const paymentPanel = page.locator('#checkout-panel-payment');
-    await expect(paymentSection.getByRole('button', { name: /payment/i })).toHaveAttribute('aria-expanded', 'true');
-
-    const cardPayment = paymentPanel.getByRole('button', { name: /credit\/debit card/i });
-    await expect(cardPayment).toHaveAttribute('aria-pressed', 'false');
+    const cardPayment = page.getByTestId('checkout-block-payment').getByRole('radio', { name: /credit\/debit card/i });
+    await expect(cardPayment).toHaveAttribute('aria-checked', 'false');
     await expect(cardPayment).toBeEnabled();
     await cardPayment.press('Enter');
-
-    await expect(page.getByTestId('checkout-section-review').getByRole('button', { name: /review/i })).toHaveAttribute('aria-expanded', 'true');
-    await paymentSection.getByRole('button', { name: /payment/i }).press('Enter');
-    await expect(cardPayment).toHaveAttribute('aria-pressed', 'true');
+    await expect(cardPayment).toHaveAttribute('aria-checked', 'true');
   });
 
-  test('connects the mobile summary toggle to its expandable panel', async ({ page }) => {
+  test('asks for a payment method before placing the order', async ({ page }) => {
+    await openCheckout(page);
+    await fillDeliveryForm(page);
+    await page.getByTestId('checkout-block-delivery').getByRole('radio', { name: /standard courier/i }).press('Enter');
+
+    await page.getByRole('button', { name: /order and pay/i }).click();
+
+    await expect(page.getByTestId('checkout-block-payment').getByRole('alert')).toHaveText(/select a payment method/i);
+  });
+
+  test('keeps the order summary on the page and the order button in the mobile bar', async ({ page }) => {
     await openCheckout(page);
 
-    const summaryToggle = page.getByTestId('mobile-checkout-summary-bar').locator('button');
-    await expect(summaryToggle).toContainText(/summary/i);
-    await expect(summaryToggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(summaryToggle).toHaveAttribute('aria-controls', 'mobile-checkout-summary-panel');
-
-    await summaryToggle.click();
-
-    await expect(summaryToggle).toHaveAttribute('aria-expanded', 'true');
-    await expect(page.locator('#mobile-checkout-summary-panel')).toBeVisible();
+    await expect(page.getByTestId('mobile-checkout-summary-panel')).toContainText(/organic gala apples/i);
+    const barButton = page.getByTestId('mobile-checkout-summary-bar').getByRole('button');
+    await expect(barButton).toHaveText(/order and pay · .*\d/i);
   });
 });

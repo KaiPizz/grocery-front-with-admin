@@ -1,4 +1,3 @@
-export type CheckoutStep = 'delivery' | 'shipping' | 'payment' | 'review';
 
 export interface PaymentMethod {
   id: string;

@@ -23,7 +23,6 @@ const MAX_POLL_MS = 10 * 60 * 1000;
 interface PendingRecord {
   paymentId?: string;
   orderNumber?: string;
-  email?: string;
   actionUrl?: string;
   registeredAt?: string;
 }
@@ -42,7 +41,6 @@ export default function PaymentReturnPage() {
 
   const [state, setState] = useState<PaymentState>(validId ? 'loading' : 'invalid');
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
-  const [orderEmail, setOrderEmail] = useState<string | null>(null);
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
@@ -56,7 +54,6 @@ export default function PaymentReturnPage() {
       const record = raw ? (JSON.parse(raw) as PendingRecord) : null;
       if (record?.paymentId === paymentId) {
         if (record.orderNumber) setOrderNumber(record.orderNumber);
-        if (record.email) setOrderEmail(record.email);
         const registeredAt = Date.parse(record.registeredAt ?? '');
         if (
           record.actionUrl &&
@@ -189,7 +186,7 @@ export default function PaymentReturnPage() {
           {t('orderNumber')}: <span className="font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>#{orderNumber}</span>
           {' · '}
           <Link
-            href={{ pathname: '/track-order', query: { order: orderNumber, ...(orderEmail ? { email: orderEmail } : {}) } }}
+            href={{ pathname: '/track-order', query: { order: orderNumber } }}
             className="underline underline-offset-4"
             style={{ color: 'var(--color-primary)' }}
             data-testid="payment-return-track"

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { CheckCircle2 } from 'lucide-react';
@@ -11,15 +12,24 @@ import {
   isPickupFulfillment,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
+import { formatPrice } from '@/lib/utils';
+import { readLastOrder, type LastOrderSnapshot } from '@/lib/last-order';
 
 export default function CheckoutConfirmationPage() {
   const t = useTranslations('checkout');
   const tFulfillment = useTranslations('fulfillment');
   const tTrackOrder = useTranslations('trackOrder');
+  const tCart = useTranslations('cart');
   const locale = useLocale();
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('order');
-  const email = searchParams.get('email');
+  // The URL carries only the order number; what was ordered (and the e-mail)
+  // comes from this tab's sessionStorage, written by checkout.
+  const [lastOrder, setLastOrder] = useState<LastOrderSnapshot | null>(null);
+  useEffect(() => {
+    setLastOrder(readLastOrder(orderNumber));
+  }, [orderNumber]);
+  const email = lastOrder?.email ?? null;
   const siteConfig = useStorefrontConfig();
   const fulfillment = getFulfillmentConfig(siteConfig);
   const pickupMode = isPickupFulfillment(siteConfig);
@@ -54,10 +64,48 @@ export default function CheckoutConfirmationPage() {
         {t('orderNumber')}: <span className="font-bold tabular-nums" style={{ color: 'var(--color-foreground)' }}>#{orderNumber}</span>
       </p>
 
-      {email && !pickupMode && !bankTransferMode && (
+      {email && !bankTransferMode && (
         <p className="text-sm mb-8" style={{ color: 'var(--color-muted-foreground)' }}>
           {t('confirmationSent', { email })}
         </p>
+      )}
+
+      {lastOrder && (
+        <div
+          className="mt-8 rounded-2xl border p-4 text-left text-sm"
+          style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
+          data-testid="confirmation-order-summary"
+        >
+          <ul className="space-y-2" role="list">
+            {lastOrder.items.map((item, index) => (
+              <li key={`${item.name}-${index}`} className="flex items-start justify-between gap-3">
+                <span style={{ color: 'var(--color-foreground)' }}>
+                  {item.name} × {item.quantity}
+                </span>
+                <span className="tabular-nums" style={{ color: 'var(--color-foreground)' }}>
+                  {formatPrice(item.total, lastOrder.currency)}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-3 flex justify-between border-t pt-3 font-bold" style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}>
+            <span>{tCart('total')}</span>
+            <span className="tabular-nums">{formatPrice(lastOrder.total, lastOrder.currency)}</span>
+          </div>
+          {lastOrder.paymentMethod && (
+            <p className="mt-3" style={{ color: 'var(--color-muted-foreground)' }}>
+              {t('confirmationPayment')}: <span style={{ color: 'var(--color-foreground)' }}>{lastOrder.paymentMethod}</span>
+            </p>
+          )}
+          {pickupMode && fulfillment.pickupAddress && (
+            <p className="mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
+              {t('confirmationPickupAt')}:{' '}
+              <span style={{ color: 'var(--color-foreground)' }}>
+                {fulfillment.pickupAddress.streetAddress1}, {fulfillment.pickupAddress.postalCode} {fulfillment.pickupAddress.city}
+              </span>
+            </p>
+          )}
+        </div>
       )}
 
       {(bankTransferMode || pickupMode) && (
@@ -84,7 +132,7 @@ export default function CheckoutConfirmationPage() {
         </Link>
         {orderNumber && (
           <Link
-            href={{ pathname: '/track-order', query: { order: orderNumber, ...(email ? { email } : {}) } }}
+            href={{ pathname: '/track-order', query: { order: orderNumber } }}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold border transition-all duration-fast active:scale-95"
             style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
           >

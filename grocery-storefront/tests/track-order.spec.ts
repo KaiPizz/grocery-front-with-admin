@@ -125,9 +125,10 @@ test.describe('Track order (guest)', () => {
     await expect(page.locator('footer').getByRole('link', { name: 'Sprawdź zamówienie' })).toHaveAttribute('href', '/track-order');
 
     await page.goto('/pl/checkout/confirmation?order=ORD-2026-00033&email=paulviet.dinh%40gmail.com');
+    // The e-mail never travels in links; tracking prefills it from this tab's last order.
     await expect(page.getByRole('link', { name: 'Sprawdź status zamówienia' })).toHaveAttribute(
       'href',
-      '/track-order?order=ORD-2026-00033&email=paulviet.dinh%40gmail.com'
+      '/track-order?order=ORD-2026-00033'
     );
 
     const paymentId = '11111111-1111-4111-8111-111111111111';
@@ -135,7 +136,7 @@ test.describe('Track order (guest)', () => {
       ({ id }) => {
         window.sessionStorage.setItem(
           'adg-p24-pending',
-          JSON.stringify({ paymentId: id, orderId: 'order-1', orderNumber: 'ORD-2026-00033', email: 'paulviet.dinh@gmail.com', registeredAt: new Date().toISOString() })
+          JSON.stringify({ paymentId: id, orderId: 'order-1', orderNumber: 'ORD-2026-00033', registeredAt: new Date().toISOString() })
         );
       },
       { id: paymentId }
@@ -143,7 +144,23 @@ test.describe('Track order (guest)', () => {
     await page.goto(`/pl/checkout/payment-return?payment_id=${paymentId}`);
     await expect(page.getByTestId('payment-return-track')).toHaveAttribute(
       'href',
-      '/track-order?order=ORD-2026-00033&email=paulviet.dinh%40gmail.com'
+      '/track-order?order=ORD-2026-00033'
     );
+  });
+
+  test('prefills the e-mail of the order just placed in this tab', async ({ page }) => {
+    await mockMobileStorefront(page, {});
+    await page.addInitScript(() => {
+      window.sessionStorage.setItem(
+        'adg-last-order',
+        JSON.stringify({ number: 'ORD-2026-00033', email: 'marta@example.com', items: [], total: 10, currency: 'PLN', paymentMethod: null })
+      );
+    });
+
+    await page.goto('/pl/track-order?order=ORD-2026-00033');
+    await expect(page.locator('input[type="email"]')).toHaveValue('marta@example.com');
+
+    await page.goto('/pl/track-order?order=ORD-2026-00099');
+    await expect(page.locator('input[type="email"]')).toHaveValue('');
   });
 });

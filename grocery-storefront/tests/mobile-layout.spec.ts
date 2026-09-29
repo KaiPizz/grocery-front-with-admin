@@ -151,16 +151,14 @@ test.describe('mobile layout', () => {
     await expect(page.locator('main .allergen-chip')).toHaveCount(3);
   });
 
-  test('checkout bar labels the amount instead of repeating the toggle text', async ({ page }) => {
+  test('checkout bar is the order button and carries the amount', async ({ page }) => {
     await seedCartStorage(page);
     await mockMobileStorefront(page, { cart: 'single-item' });
     await page.goto('/en/checkout');
 
     const bar = page.getByTestId('mobile-checkout-summary-bar');
     await expect(bar).toBeVisible();
-    const label = (await bar.locator('p').first().innerText()).trim().toLowerCase();
-    const toggle = (await bar.locator('button').innerText()).trim().toLowerCase();
-    expect(label).not.toBe(toggle);
+    await expect(bar.getByRole('button')).toHaveText(/order and pay · .*\d/i);
     await expect(page.getByText(/completed: \d/i)).toHaveCount(0);
   });
 
