@@ -837,11 +837,7 @@ export function Header() {
 
               {showLanguageSwitcher && (
                 <div className="mt-4">
-                  <LanguageSwitcher
-                    className="w-full justify-center rounded-2xl border px-3 py-3 text-sm"
-                    showLabel
-                    buttonTestId="mobile-nav-language"
-                  />
+                  <LanguageSwitcher inline buttonTestId="mobile-nav-language" />
                 </div>
               )}
             </div>

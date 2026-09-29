@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { Globe } from 'lucide-react';
 import { locales } from '@/i18n/config';
-import { usePathname, useRouter } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 
 const LOCALE_LABELS: Record<string, string> = {
@@ -22,9 +22,11 @@ interface LanguageSwitcherProps {
   className?: string;
   showLabel?: boolean;
   buttonTestId?: string;
+  /** Every language as its own tap target, no popup (the phone menu, where a popup opens off screen). */
+  inline?: boolean;
 }
 
-export function LanguageSwitcher({ className, showLabel = false, buttonTestId }: LanguageSwitcherProps) {
+export function LanguageSwitcher({ className, showLabel = false, buttonTestId, inline = false }: LanguageSwitcherProps) {
   const locale = useLocale();
   const tCommon = useTranslations('common');
   const router = useRouter();
@@ -44,11 +46,45 @@ export function LanguageSwitcher({ className, showLabel = false, buttonTestId }:
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
+  const queryString = searchParams.toString();
+  const href = queryString ? `${pathname}?${queryString}` : pathname;
+
   function switchLocale(newLocale: string) {
-    const queryString = searchParams.toString();
-    const href = queryString ? `${pathname}?${queryString}` : pathname;
     router.replace(href, { locale: newLocale });
     setOpen(false);
+  }
+
+  if (inline) {
+    return (
+      <div
+        className={cn('grid grid-cols-2 gap-px overflow-hidden rounded-2xl border', className)}
+        style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-border)' }}
+        role="group"
+        aria-label={tCommon('selectLanguage')}
+        data-testid={buttonTestId}
+      >
+        {locales.map((loc) => (
+          <Link
+            key={loc}
+            href={href}
+            locale={loc}
+            replace
+            aria-current={loc === locale ? 'true' : undefined}
+            className="flex items-center justify-center gap-2 px-3 py-3 text-sm hover-surface"
+            style={{
+              color: loc === locale ? 'var(--color-primary)' : 'var(--color-foreground)',
+              fontWeight: loc === locale ? 600 : 400,
+              backgroundColor: loc === locale ? 'var(--color-accent)' : 'var(--color-card)',
+            }}
+          >
+            <span className="text-xs font-semibold" style={{ color: 'var(--color-muted-foreground)' }}>
+              {LOCALE_LABELS[loc]}
+            </span>
+            <span>{LOCALE_NAMES[loc]}</span>
+          </Link>
+        ))}
+      </div>
+    );
   }
 
   return (

@@ -91,6 +91,28 @@ test.describe('mobile storefront smoke', () => {
     await expect(page.getByTestId('mobile-nav-language')).toBeVisible();
   });
 
+  test('menu language choice is one tap and stays on screen', async ({ page }) => {
+    // Owner report 29/09: the drawer's language popup opened below the last row, off screen.
+    await mockMobileStorefront(page);
+    await page.goto('/en/products');
+    await page.getByRole('button', { name: /open menu/i }).click();
+
+    const language = page.getByTestId('mobile-nav-language');
+    await language.scrollIntoViewIfNeeded();
+    const english = language.getByRole('link', { name: 'English' });
+    const polish = language.getByRole('link', { name: 'Polski' });
+    await expect(english).toHaveAttribute('aria-current', 'true');
+    const viewport = page.viewportSize()!;
+    for (const option of [english, polish]) {
+      const box = await option.boundingBox();
+      expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);
+    }
+
+    await polish.click();
+    await expect(page).toHaveURL(/\/products$/);
+    await expect(page).not.toHaveURL(/\/en\//);
+  });
+
   test('ignores stale dark theme preference because theme switching is disabled', async ({ page }) => {
     await mockMobileStorefront(page);
     await page.addInitScript(() => {
