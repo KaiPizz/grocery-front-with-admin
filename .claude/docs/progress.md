@@ -6,6 +6,24 @@
 
 ---
 
+## 2026-10-11 Contact Link Discovery Follow-Up
+
+- Owner feedback: the homepage contact link blended into ordinary footer text
+  and was hard to find. Add a visible, localized contact link with a phone icon
+  to the existing pickup header strip, and a bordered contact button in the footer.
+- Footer navigation, email and phone links now have persistent underlines;
+  the existing Polish/English contact translations and locale-aware routes are reused.
+- Validation: ESLint, TypeScript and diff checks passed. The broader browser
+  sample passed 24/25 checks (footer, keyboard navigation, carousel controls,
+  and desktop layout). The remaining hero-image count assertion expects six
+  mounted images but receives four; an exact baseline run with both contact
+  components restored to `aacbecd` reproduced the same failure. No test was
+  skipped or weakened. Baseline evidence is saved privately in
+  `/var/tmp/adg-pep-contact-terms-20261011/contact-discovery-baseline-hero-test.log`.
+- Status: implementation candidate; production build and DEV preview pending.
+
+---
+
 ## 2026-10-11 PeP Contact And Order Preparation Details
 
 - The owner approved the public contact number `+48 696 507 107` and confirmed

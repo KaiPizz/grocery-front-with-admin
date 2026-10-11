@@ -977,3 +977,9 @@
 - **Cause:** The first server-rendered category navigation still had a streaming response in progress while the fresh Next dev server compiled the route, so history had not committed when the short assertion expired.
 - **Fix:** Allow 15 seconds on that exact URL assertion and keep the expected destination unchanged, within the overall test timeout.
 - **Rule:** Distinguish a real 404 from cold dev compilation using trace/network and rendered-page evidence; wait for the exact navigation without blanket retries or skipping tests.
+
+### Existing hero image-count failure is independent of contact-link styling
+- **Error:** The broader contact-link QA run passed 24/25 checks but the hero accessibility test expected six mounted images and received four.
+- **Cause:** The unchanged hero test makes an image-count assertion outside the contact components. Restoring both changed components to the exact `aacbecd` baseline reproduced the identical failure.
+- **Fix:** Restored the contact candidate exactly, retained the test unchanged, and recorded the baseline failure separately from contact-specific browser verification.
+- **Rule:** Verify suspected pre-existing failures against the exact baseline before attributing them to an unrelated UI change; do not weaken an unrelated test to manufacture a green result.

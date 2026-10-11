@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Runtime-configured storefront logos can use arbitrary URLs until the production media loader policy is defined. */
 
 import { useLocale, useTranslations } from 'next-intl';
-import { Banknote, CheckCircle2, Clock, Leaf, Mail, MapPin, Phone } from 'lucide-react';
+import { ArrowRight, Banknote, CheckCircle2, Clock, Leaf, Mail, MapPin, Phone } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { SocialBar } from '@/components/layout/SocialBar';
 import { Link } from '@/i18n/navigation';
@@ -172,7 +172,7 @@ export function Footer() {
       ? 'sm:grid-cols-2 lg:grid-cols-3'
       : '';
 
-  const footerLinkClassName = 'inline-block py-1 text-sm transition-colors duration-fast hover:text-primary';
+  const footerLinkClassName = 'inline-block py-1 text-sm underline underline-offset-4 transition-colors duration-fast hover:text-primary';
 
   function renderFooterLink(href: string, label: string) {
     if (!href || href === '#') {
@@ -183,9 +183,15 @@ export function Footer() {
       );
     }
 
+    const isContactLink = href === '/contact';
     return (
-      <Link href={href} className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>
+      <Link
+        href={href}
+        className={isContactLink ? 'inline-flex min-h-11 items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold hover-surface' : footerLinkClassName}
+        style={{ color: isContactLink ? 'var(--color-primary)' : 'var(--color-foreground)', borderColor: isContactLink ? 'var(--color-primary)' : undefined }}
+      >
         {label}
+        {isContactLink && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
       </Link>
     );
   }
@@ -254,7 +260,7 @@ export function Footer() {
                       <li key={label} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                         <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                         {href ? (
-                          <a href={href} className="min-w-0 break-words transition-colors duration-fast hover:text-primary">
+                          <a href={href} className="min-w-0 break-words underline underline-offset-4 transition-colors duration-fast hover:text-primary">
                             {label}
                           </a>
                         ) : (
@@ -284,7 +290,7 @@ export function Footer() {
                     <li key={label} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
                       <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                       {href ? (
-                        <a href={href} className="min-w-0 break-words transition-colors duration-fast hover:text-primary">
+                        <a href={href} className="min-w-0 break-words underline underline-offset-4 transition-colors duration-fast hover:text-primary">
                           {label}
                         </a>
                       ) : (
@@ -304,7 +310,7 @@ export function Footer() {
                 <ul className="space-y-2.5" role="list">
                   <li><Link href="/privacy" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('privacy')}</Link></li>
                   <li><Link href="/terms" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('terms')}</Link></li>
-                  <li><Link href="/contact" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{t('contact')}</Link></li>
+                  <li>{renderFooterLink('/contact', t('contact'))}</li>
                   <li><Link href="/track-order" className={footerLinkClassName} style={{ color: 'var(--color-muted-foreground)' }}>{tTrackOrder('footerLink')}</Link></li>
                 </ul>
               </nav>

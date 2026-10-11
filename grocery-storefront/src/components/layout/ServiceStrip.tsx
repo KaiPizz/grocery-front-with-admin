@@ -1,9 +1,10 @@
 'use client';
 
-import { Landmark, MapPin } from 'lucide-react';
+import { Landmark, MapPin, Phone } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { Link } from '@/i18n/navigation';
 import {
   getConfiguredText,
   getFulfillmentConfig,
@@ -14,6 +15,7 @@ import { ShippingCountdown } from './ShippingCountdown';
 
 export function ServiceStrip() {
   const t = useTranslations('fulfillment');
+  const tFooter = useTranslations('footer');
   const siteConfig = useStorefrontConfig();
   const fulfillment = getFulfillmentConfig(siteConfig);
 
@@ -37,25 +39,32 @@ export function ServiceStrip() {
       }}
     >
       <div
-        className="container-grocery flex items-center justify-center gap-2 py-1 text-center"
+        className="container-grocery flex items-center justify-between gap-4"
         style={{ minHeight: 'var(--shipping-countdown-height)' }}
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
       >
-        <span className="inline-flex min-w-0 items-center justify-center gap-1.5">
-          <MapPin className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
-          <span className="min-w-0 truncate">{pickupText}</span>
-        </span>
-        {bankTransferText && (
-          <>
-            <span className="shrink-0 opacity-60" aria-hidden="true">|</span>
-            <span className="inline-flex min-w-0 items-center justify-center gap-1.5">
-              <Landmark className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
-              <span className="min-w-0 truncate">{bankTransferText}</span>
-            </span>
-          </>
-        )}
+        <div className="flex min-w-0 items-center gap-2" role="status" aria-live="polite" aria-atomic="true">
+          <span className="inline-flex min-w-0 items-center justify-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+            <span className="min-w-0 truncate">{pickupText}</span>
+          </span>
+          {bankTransferText && (
+            <>
+              <span className="shrink-0 opacity-60" aria-hidden="true">|</span>
+              <span className="inline-flex min-w-0 items-center justify-center gap-1.5">
+                <Landmark className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+                <span className="min-w-0 truncate">{bankTransferText}</span>
+              </span>
+            </>
+          )}
+        </div>
+        <Link
+          href="/contact"
+          className="inline-flex min-h-8 shrink-0 items-center gap-1.5 rounded px-2 underline underline-offset-4 hover-surface"
+          style={{ color: 'var(--color-primary)' }}
+        >
+          <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+          {tFooter('contact')}
+        </Link>
       </div>
     </div>
   );
