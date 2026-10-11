@@ -376,7 +376,8 @@ test.describe('catalog display localization', () => {
     });
 
     await readyMealsLink.click();
-    await expect(page).toHaveURL(/\/en\/categories\/dania-gotowe$/);
+    // The isolated dev server compiles this SSR route on its first navigation.
+    await expect(page).toHaveURL(/\/en\/categories\/dania-gotowe$/, { timeout: 15_000 });
   });
 
   test('keeps the same production homepage content in Polish at the default locale', async ({ page }) => {

@@ -971,3 +971,9 @@
 - **Cause:** `mobile-fixtures.ts` supplied `cat-ready-meals` / `dania-gotowe`, but `config-server.mjs` omitted it; the category page resolves catalog data on the server, outside Playwright's browser route interception.
 - **Fix:** Added the same exact category to the SSR fixture and retained the original click/navigation assertion.
 - **Rule:** Keep browser and SSR fixtures consistent for tested routes; do not turn missing categories into wildcard successes or weaken navigation assertions.
+
+### Cold isolated dev compilation needs a navigation-specific wait
+- **Error:** After fixing the missing SSR category fixture, the isolated lane rendered the correct category but failed its URL assertion after 5 seconds; the warm worktree run passed.
+- **Cause:** The first server-rendered category navigation still had a streaming response in progress while the fresh Next dev server compiled the route, so history had not committed when the short assertion expired.
+- **Fix:** Allow 15 seconds on that exact URL assertion and keep the expected destination unchanged, within the overall test timeout.
+- **Rule:** Distinguish a real 404 from cold dev compilation using trace/network and rendered-page evidence; wait for the exact navigation without blanket retries or skipping tests.

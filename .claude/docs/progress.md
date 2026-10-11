@@ -35,6 +35,9 @@
   mocked `dania-gotowe`, but the SSR config server omitted it, so the homepage
   navigation test reached a fixture-only 404. Added the same exact category to
   the SSR fixture without weakening the navigation assertion or changing app code.
+  A second cold isolated run rendered the valid category but exceeded the
+  default 5-second URL assertion while Next compiled the first SSR navigation;
+  that exact navigation assertion now allows 15 seconds, within the test timeout.
 - Status: owner approved production deployment in this conversation. DEV preview at
   `https://adg-dev.159.195.47.45.sslip.io/contact` and `/terms` on
   `fix/adg-pep-contact-terms-20261011`; revalidating the patched lockfiles before
