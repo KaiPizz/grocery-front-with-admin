@@ -6,6 +6,17 @@
 
 ---
 
+### Next diagnostic digests can change between immutable builds
+- **Error:** The post-release verifier rejected the known destination-stream-close
+  diagnostic even though its message and frames matched the previous release.
+- **Cause:** The verifier pinned the previous build's numeric error digest, which
+  changed in the new compiled artifact.
+- **Fix:** Inspected the full fresh log, matched only the exact known message and
+  frame shape with a numeric digest, and independently drained five public
+  responses to prove that normal complete requests generate no new stderr.
+- **Rule:** Classify diagnostics by stable content and observed behavior; do not
+  pin a build-dependent digest or ignore other server errors.
+
 ### A contact shortcut must not repeat its own footer heading
 - **Error:** Making the footer link prominent added an outlined Kontakt button
   immediately below an existing Kontakt heading; the owner found it redundant.

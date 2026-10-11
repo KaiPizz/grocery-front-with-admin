@@ -15,8 +15,24 @@
   link with an arrow, followed by the existing contact details. Removed the
   duplicate button and simplified the shared footer-link renderer; the fallback
   footer keeps its ordinary contact link. The header contact shortcut stays.
-- Status: implemented; DEV preview, exact-source checks and guarded release
-  verification are pending under the continuing owner-approved contact update.
+- Status: DONE on production under the continuing owner-approved contact
+  update. Source `74acfc22e93b9166ac44feca4c817b1bcb91b340` passed both guarded
+  check-only and release: admin unit 118/118, storefront browser 60/60, zero
+  production vulnerabilities, lint/types, builds and standalone smoke.
+- DEV and production PL/EN checks passed 8/8 each at 320/390/768/1440px,
+  including the single footer contact heading, visible underline/arrow,
+  mouse/keyboard navigation, direct phone and no overflow. Health/auth probes
+  passed 12/12; complete public-response probes passed 5/5 without new stderr.
+- Live artifacts: `admin-74acfc22e93b-20261011T123306Z` (BUILD_ID
+  `Jwc3KWaLSGqdYRuM2qfsu`) and `storefront-74acfc22e93b-20261011T123306Z`
+  (BUILD_ID `ktD9zwIkF3qujpclkheNG`). Manifests, source/tree/build identity,
+  previous targets, PM2 definitions and shared-state hashes were independently
+  verified before normal admin authentication checks; backend identity stayed
+  unchanged. Admin login/security read/config read/logout and post-logout
+  draft denial passed. Published config remains version 58 with the phone.
+- Fresh logs contained only known QA navigation stream-cancellation diagnostics;
+  fully drained public responses produced no new stderr. Private evidence:
+  `/var/tmp/adg-pep-contact-terms-20261011/contact-simplification-*`.
 
 ---
 
