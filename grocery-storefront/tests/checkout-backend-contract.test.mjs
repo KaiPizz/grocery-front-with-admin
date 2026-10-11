@@ -68,21 +68,18 @@ const paymentReturnPageSource = readFileSync(
 );
 
 function functionBlock(source, name, nextName) {
-  const start = source.indexOf(`async function ${name}(`);
+  const start = source.indexOf(`function ${name}(`);
   assert.notEqual(start, -1, `Missing function ${name}`);
-  const end = source.indexOf(`async function ${nextName}(`, start + 1);
+  const end = source.indexOf(`function ${nextName}(`, start + 1);
   assert.notEqual(end, -1, `Missing function ${nextName} after ${name}`);
   return source.slice(start, end);
 }
 
 test('P24 selection is local state and never registers a payment before the order exists', () => {
-  const selection = functionBlock(checkoutPageSource, 'handlePaymentSelection', 'handlePromoApply');
-  const p24Branch = selection.indexOf('isP24Method(method)');
-  const legacyCreate = selection.indexOf('CHECKOUT_PAYMENT_CREATE');
-
-  assert.notEqual(p24Branch, -1);
-  assert.notEqual(legacyCreate, -1);
-  assert.ok(p24Branch < legacyCreate, 'P24 branch must return before the legacy payment session is created');
+  const selection = functionBlock(checkoutPageSource, 'handlePaymentSelection', 'createGatewayPayment');
+  assert.match(selection, /setSelectedPaymentMethod\(method\)/);
+  assert.doesNotMatch(selection, /CHECKOUT_PAYMENT_CREATE|createGatewayPayment|startP24Payment|client\.(?:query|mutation)|fetch\(/,
+    'Selecting a payment method must not register a payment or call a gateway');
 });
 
 test('P24 checkout completes the order with explicit Terms acceptance, then registers the payment for that order', () => {

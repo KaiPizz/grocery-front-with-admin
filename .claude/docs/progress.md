@@ -1,8 +1,36 @@
 # Feature Progress
 
-> **Last updated:** 2026-09-23
+> **Last updated:** 2026-10-11
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
+
+---
+
+## 2026-10-11 PeP Contact And Order Preparation Details
+
+- The owner approved the public contact number `+48 696 507 107` and confirmed
+  the existing store address for both complaints and returns. The mirrored
+  storefront/admin config candidates now contain the phone number; publishing
+  the runtime admin config remains a separate step.
+- Polish and English terms, cart and checkout copy state 1–2 working days,
+  Monday–Friday: before 12:00 noon Polish local time means the next working day,
+  from noon onwards means the second following working day. Friday examples
+  explicitly map to Monday and Tuesday; weekends do not count.
+- The terms label the complaints address as the returns address too and repeat
+  the configured address beside the withdrawal instructions.
+- Validation: legal/static-config contracts 15/15, checkout contracts 26/26,
+  exact-source ESLint and TypeScript passed; production build and standalone
+  smoke passed. DEV Contact/Terms passed Polish/English desktop/mobile checks
+  (8/8), including phone links, the Friday examples and both returns-address
+  placements. The obsolete checkout contract was corrected and mutation-tested.
+- DEV admin config version 63 publishes only the approved phone-number change;
+  the prior config is backed up at
+  `/var/tmp/adg-pep-contact-terms-20261011/dev-config-before.json`.
+- Status: DEV preview ready at
+  `https://adg-dev.159.195.47.45.sslip.io/contact` and `/terms` on
+  `fix/adg-pep-contact-terms-20261011`; awaiting preview approval before the
+  guarded production release and a phone-only runtime admin publish. Production
+  public config remains version 56 with an empty phone number.
 
 ---
 

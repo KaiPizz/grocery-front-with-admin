@@ -954,3 +954,8 @@
 - **Cause:** The backend storefront API filters `isActive: true` everywhere, so a deactivated category silently returns null.
 - **Fix:** `MERGED_CATEGORY_REDIRECTS` in `src/lib/category-seo.ts` 308-redirects each merged slug to its surviving category in both locales, in `generateMetadata` and the layout render.
 - **Rule:** Every catalog merge that retires a public slug ships with a permanent redirect from the retired slug in the same release.
+### Payment-selection contract test still assumed the old async checkout flow
+- **Error:** The existing checkout contract suite failed with `Missing function handlePaymentSelection` on the unchanged current trunk.
+- **Cause:** The one-page checkout made selection synchronous and moved all payment registration to order placement, but the source-contract test still searched only for async declarations and expected legacy registration inside selection.
+- **Fix:** Accept both synchronous and async function declarations and assert that selection only changes local state, with no payment registration or gateway/network calls.
+- **Rule:** Keep source-contract boundaries aligned with the actual entry point and verify the business invariant rather than assuming an async declaration or an obsolete payment sequence.
