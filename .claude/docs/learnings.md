@@ -959,3 +959,9 @@
 - **Cause:** The one-page checkout made selection synchronous and moved all payment registration to order placement, but the source-contract test still searched only for async declarations and expected legacy registration inside selection.
 - **Fix:** Accept both synchronous and async function declarations and assert that selection only changes local state, with no payment registration or gateway/network calls.
 - **Rule:** Keep source-contract boundaries aligned with the actual entry point and verify the business invariant rather than assuming an async declaration or an obsolete payment sequence.
+
+### Patch compatible transitive resolutions before forcing a framework upgrade
+- **Error:** The October 2026 guarded release audit failed on sharp and source-map-js; npm suggested a forced Next upgrade beyond the pinned version.
+- **Cause:** The existing lockfiles retained vulnerable transitive versions even though their patched versions satisfy the current dependency ranges.
+- **Fix:** Updated only sharp, source-map-js and baseline-browser-mapping in both lockfiles. Both production audits now report zero vulnerabilities while Next/React remain unchanged.
+- **Rule:** Check compatible transitive patches first; keep the security gate enabled and run the normal build, tests and DEV preview against the updated lockfiles.

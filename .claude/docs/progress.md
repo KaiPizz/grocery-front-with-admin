@@ -26,10 +26,15 @@
 - DEV admin config version 63 publishes only the approved phone-number change;
   the prior config is backed up at
   `/var/tmp/adg-pep-contact-terms-20261011/dev-config-before.json`.
-- Status: DEV preview ready at
+- 2026-10-11 release gate: new production advisories blocked the original
+  candidate. Updated only compatible transitive lockfile resolutions in both
+  apps: sharp 0.35.5 (libvips 1.3.4), source-map-js 1.2.2 and
+  baseline-browser-mapping 2.11.28. Next/React and direct dependencies are
+  unchanged; both production audits now report zero vulnerabilities.
+- Status: owner approved production deployment in this conversation. DEV preview at
   `https://adg-dev.159.195.47.45.sslip.io/contact` and `/terms` on
-  `fix/adg-pep-contact-terms-20261011`; awaiting preview approval before the
-  guarded production release and a phone-only runtime admin publish. Production
+  `fix/adg-pep-contact-terms-20261011`; revalidating the patched lockfiles before
+  the guarded release and a phone-only runtime admin publish. Production
   public config remains version 56 with an empty phone number.
 
 ---
