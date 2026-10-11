@@ -183,15 +183,13 @@ export function Footer() {
       );
     }
 
-    const isContactLink = href === '/contact';
     return (
       <Link
         href={href}
-        className={isContactLink ? 'inline-flex min-h-11 items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold hover-surface' : footerLinkClassName}
-        style={{ color: isContactLink ? 'var(--color-primary)' : 'var(--color-foreground)', borderColor: isContactLink ? 'var(--color-primary)' : undefined }}
+        className={footerLinkClassName}
+        style={{ color: 'var(--color-foreground)' }}
       >
         {label}
-        {isContactLink && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
       </Link>
     );
   }
@@ -252,9 +250,17 @@ export function Footer() {
                 </nav>
               ))}
               <nav aria-label={t('contact')} className="col-span-2 md:col-span-1">
-                  <h3 className="heading-section text-sm mb-4" style={{ color: 'var(--color-foreground)' }}>{t('contact')}</h3>
+                  <h3 className="heading-section text-sm mb-3">
+                    <Link
+                      href="/contact"
+                      className="inline-flex min-h-6 items-center gap-2 underline underline-offset-4 transition-colors duration-fast hover:text-primary"
+                      style={{ color: 'var(--color-primary)' }}
+                    >
+                      {t('contact')}
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                  </h3>
                   <ul className="space-y-2.5" role="list">
-                    <li>{renderFooterLink('/contact', t('contact'))}</li>
                     <li>{renderFooterLink('/track-order', tTrackOrder('footerLink'))}</li>
                     {contactItems.map(({ label, href, icon: Icon }) => (
                       <li key={label} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>

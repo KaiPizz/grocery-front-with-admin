@@ -6,6 +6,20 @@
 
 ---
 
+## 2026-10-11 Contact Footer Simplification
+
+- Owner feedback: the footer repeated the Kontakt heading as a second outlined
+  Kontakt button. Reviewed live Kuchnie Świata and My Korea footer/navigation
+  patterns: ordinary contact links, with phone/email as separate direct links.
+- The configured contact column now uses one underlined Kontakt/Contact heading
+  link with an arrow, followed by the existing contact details. Removed the
+  duplicate button and simplified the shared footer-link renderer; the fallback
+  footer keeps its ordinary contact link. The header contact shortcut stays.
+- Status: implemented; DEV preview, exact-source checks and guarded release
+  verification are pending under the continuing owner-approved contact update.
+
+---
+
 ## 2026-10-11 Contact Link Discovery Follow-Up
 
 - Owner feedback: the homepage contact link blended into ordinary footer text

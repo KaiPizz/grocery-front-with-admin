@@ -6,6 +6,16 @@
 
 ---
 
+### A contact shortcut must not repeat its own footer heading
+- **Error:** Making the footer link prominent added an outlined Kontakt button
+  immediately below an existing Kontakt heading; the owner found it redundant.
+- **Cause:** The link was styled independently instead of reviewing the whole
+  contact column and its information hierarchy.
+- **Fix:** Use one underlined heading link with a small arrow, keeping phone and
+  email as direct links and the separate header shortcut for easy discovery.
+- **Rule:** Review navigation changes in context on both desktop and mobile;
+  one clear contact entry per footer group is enough.
+
 ### A full storefront release can overwrite production-only visual assets
 - **Error:** The canonical standalone storefront repository still contained
   the older category artwork even though production and the eNail canonical
