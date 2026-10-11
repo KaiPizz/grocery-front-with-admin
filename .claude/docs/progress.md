@@ -10,8 +10,8 @@
 
 - The owner approved the public contact number `+48 696 507 107` and confirmed
   the existing store address for both complaints and returns. The mirrored
-  storefront/admin config candidates now contain the phone number; publishing
-  the runtime admin config remains a separate step.
+  storefront/admin config candidates and the published runtime config now
+  contain the phone number.
 - Polish and English terms, cart and checkout copy state 1–2 working days,
   Monday–Friday: before 12:00 noon Polish local time means the next working day,
   from noon onwards means the second following working day. Friday examples
@@ -38,10 +38,21 @@
   A second cold isolated run rendered the valid category but exceeded the
   default 5-second URL assertion while Next compiled the first SSR navigation;
   that exact navigation assertion now allows 15 seconds, within the test timeout.
-- Status: owner approved production deployment in this conversation. DEV preview at
-  `https://adg-dev.159.195.47.45.sslip.io/contact` and `/terms` on
-  `fix/adg-pep-contact-terms-20261011`; revalidating the patched lockfiles before
-  the guarded code release. The normal authenticated admin API published only
+- Status: DONE on production after owner approval. The guarded lane released
+  `3cbe3319e583fc194cf01c51ec583fbdae25696f`, following a matching DEV preview,
+  successful check-only and fast-forward to `origin/main`. Both lane runs passed
+  admin unit tests 118/118, storefront browser tests 60/60, production audits,
+  lint/types, builds and standalone smoke.
+- Production admin release `admin-3cbe3319e583-20261011T103518Z` has BUILD_ID
+  `64Jj2Kw4GCdg4DrxmxRst`; storefront release
+  `storefront-3cbe3319e583-20261011T103518Z` has BUILD_ID
+  `DimgrS3TpkQDZ1Yf1Y3fL`. Independent checks matched both runtime manifests,
+  PM2 definitions and fresh logs. The shared backend was not restarted.
+- Production Contact/Terms passed Polish/English desktop/mobile checks 8/8,
+  including the phone link, complete preparation copy, Friday examples, two
+  returns-address placements, asset loading and page errors. Public storefront,
+  admin and eNail health/auth route probes passed 12/12.
+- The normal authenticated admin API published only
   `general.phone` on production (public/draft were equal before the change),
   moving public config from version 56 to 58. Private before/after backups are
   in `/var/tmp/adg-pep-contact-terms-20261011/`. Production admin login,
