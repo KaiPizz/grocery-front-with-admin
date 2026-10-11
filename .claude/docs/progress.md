@@ -31,11 +31,18 @@
   apps: sharp 0.35.5 (libvips 1.3.4), source-map-js 1.2.2 and
   baseline-browser-mapping 2.11.28. Next/React and direct dependencies are
   unchanged; both production audits now report zero vulnerabilities.
+- The guarded browser suite exposed an existing fixture mismatch: the browser
+  mocked `dania-gotowe`, but the SSR config server omitted it, so the homepage
+  navigation test reached a fixture-only 404. Added the same exact category to
+  the SSR fixture without weakening the navigation assertion or changing app code.
 - Status: owner approved production deployment in this conversation. DEV preview at
   `https://adg-dev.159.195.47.45.sslip.io/contact` and `/terms` on
   `fix/adg-pep-contact-terms-20261011`; revalidating the patched lockfiles before
-  the guarded release and a phone-only runtime admin publish. Production
-  public config remains version 56 with an empty phone number.
+  the guarded code release. The normal authenticated admin API published only
+  `general.phone` on production (public/draft were equal before the change),
+  moving public config from version 56 to 58. Private before/after backups are
+  in `/var/tmp/adg-pep-contact-terms-20261011/`. Production admin login,
+  authenticated security page/read, logout and post-logout draft denial passed.
 
 ---
 

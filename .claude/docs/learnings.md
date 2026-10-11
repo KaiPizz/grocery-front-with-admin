@@ -965,3 +965,9 @@
 - **Cause:** The existing lockfiles retained vulnerable transitive versions even though their patched versions satisfy the current dependency ranges.
 - **Fix:** Updated only sharp, source-map-js and baseline-browser-mapping in both lockfiles. Both production audits now report zero vulnerabilities while Next/React remain unchanged.
 - **Rule:** Check compatible transitive patches first; keep the security gate enabled and run the normal build, tests and DEV preview against the updated lockfiles.
+
+### Browser GraphQL mocks do not cover server-rendered category navigation
+- **Error:** The guarded homepage localization test rendered correctly, then hit a 404 when clicking the Ready meals category link.
+- **Cause:** `mobile-fixtures.ts` supplied `cat-ready-meals` / `dania-gotowe`, but `config-server.mjs` omitted it; the category page resolves catalog data on the server, outside Playwright's browser route interception.
+- **Fix:** Added the same exact category to the SSR fixture and retained the original click/navigation assertion.
+- **Rule:** Keep browser and SSR fixtures consistent for tested routes; do not turn missing categories into wildcard successes or weaken navigation assertions.

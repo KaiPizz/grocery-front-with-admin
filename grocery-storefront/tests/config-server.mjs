@@ -274,6 +274,8 @@ const LEAF_PARENT_ID = {
 
 const categories = [
   ...CATEGORY_GROUPS,
+  // Match the browser's Polish-source fixture so SSR navigation resolves this real category.
+  { id: 'cat-ready-meals', name: 'Dania gotowe', slug: 'dania-gotowe' },
   { id: 'cat-fruit', name: 'Fruit', slug: 'fruit' },
   { id: 'cat-bakery', name: 'Bakery', slug: 'bakery' },
   { id: 'cat-kimchi', name: 'Kimchi', slug: 'kimchi' },
