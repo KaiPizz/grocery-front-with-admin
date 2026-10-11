@@ -983,3 +983,9 @@
 - **Cause:** The unchanged hero test makes an image-count assertion outside the contact components. Restoring both changed components to the exact `aacbecd` baseline reproduced the identical failure.
 - **Fix:** Restored the contact candidate exactly, retained the test unchanged, and recorded the baseline failure separately from contact-specific browser verification.
 - **Rule:** Verify suspected pre-existing failures against the exact baseline before attributing them to an unrelated UI change; do not weaken an unrelated test to manufacture a green result.
+
+### Fast navigation can cancel otherwise healthy Next assets and response streams
+- **Error:** Contact discovery QA initially counted an aborted chunk as a failed asset, and rapid navigation/context shutdown produced `The destination stream closed early` server diagnostics. Waiting for network idle also timed out once on a healthy homepage.
+- **Cause:** The QA client navigated away while Next prefetch/stream work was still active; network idleness is unrelated to the contact link's rendered readiness.
+- **Fix:** Wait for DOM readiness and the required visible controls, keep genuine HTTP/page errors fatal, and independently fetch every `net::ERR_ABORTED` asset to prove HTTP 200 with the correct content type. Fully read five live homepage/contact/terms responses and confirm no new stderr.
+- **Rule:** Distinguish deliberate client cancellation from broken assets or rendering; inspect fresh log content and complete responses instead of requiring an empty error log or perpetual network idle.

@@ -20,7 +20,26 @@
   components restored to `aacbecd` reproduced the same failure. No test was
   skipped or weakened. Baseline evidence is saved privately in
   `/var/tmp/adg-pep-contact-terms-20261011/contact-discovery-baseline-hero-test.log`.
-- Status: implementation candidate; production build and DEV preview pending.
+- DEV production build and standalone smoke passed; Polish/English browser
+  verification passed 8/8 at 320, 390, 768 and 1440px, including first-viewport
+  discovery, mouse/keyboard navigation, persistent link underlines and no overflow.
+- Status: DONE on production under the existing owner approval for the contact
+  update. The guarded check-only and real release both passed admin unit tests
+  118/118, storefront browser tests 60/60, audits with zero production
+  vulnerabilities, lint/types, builds and standalone smoke. Released source:
+  `bef46155efa9dd9200fb42b74a4563da8a8731d9`.
+- Runtime releases: `admin-bef46155efa9-20261011T115556Z` (BUILD_ID
+  `LqFC4Q_YJMfFcsjt9CRom`) and `storefront-bef46155efa9-20261011T115556Z`
+  (BUILD_ID `7pKT1N3Z41P2_v4a_fjna`). Independent checks matched manifests,
+  BUILD_IDs, previous targets, PM2 definitions and shared-state hashes before
+  the normal admin login/logout verification; backend identity stayed unchanged.
+- Live discovery checks passed 8/8, route/health/auth probes 12/12 and complete
+  public-response probes 5/5. Production admin login, security page, published
+  config read (version 58), logout and subsequent draft denial passed.
+- Fresh startup logs passed review. Rapid QA navigation/context shutdown logged
+  destination-stream-close diagnostics; fully drained homepage/contact/terms
+  responses produced no new stderr. Evidence is saved privately under
+  `/var/tmp/adg-pep-contact-terms-20261011/contact-discovery-*`.
 
 ---
 
