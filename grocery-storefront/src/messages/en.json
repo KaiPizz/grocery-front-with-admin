@@ -482,7 +482,7 @@
       "pending": "Waiting for Przelewy24 to confirm your payment. This can take a few minutes.",
       "paid": "Payment confirmed. Thank you for your order!",
       "review": "Your payment reached us, but the store could not attach it to the order. The store already knows and will contact you (to fulfil the order or refund you). Do not pay again.",
-      "failed": "The payment was not completed and the order was cancelled. You can restore your cart and place it again.",
+      "failed": "The payment was not completed. An unpaid order is cancelled — you can restore your cart and place it again. If in doubt, contact the store.",
       "stillPending": "Still waiting for confirmation. If you paid, the confirmation will arrive by email — do not pay again.",
       "invalid": "Missing payment identifier.",
       "checkFailed": "Could not check the payment status.",

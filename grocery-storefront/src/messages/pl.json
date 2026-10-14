@@ -482,7 +482,7 @@
       "pending": "Czekamy na potwierdzenie płatności z Przelewy24. Może to potrwać do kilku minut.",
       "paid": "Płatność potwierdzona. Dziękujemy za zamówienie!",
       "review": "Płatność do nas dotarła, ale sklep nie mógł jej przypisać do zamówienia. Sklep już o tym wie i skontaktuje się z Tobą (realizacja albo zwrot pieniędzy). Nie płać ponownie.",
-      "failed": "Płatność nie została zrealizowana, a zamówienie zostało anulowane. Możesz przywrócić koszyk i złożyć zamówienie ponownie.",
+      "failed": "Płatność nie została zrealizowana. Nieopłacone zamówienie zostaje anulowane — możesz przywrócić koszyk i złożyć je ponownie. W razie wątpliwości skontaktuj się ze sklepem.",
       "stillPending": "Nadal czekamy na potwierdzenie. Jeśli zapłaciłeś, potwierdzenie dotrze e-mailem — nie płać ponownie.",
       "invalid": "Brak identyfikatora płatności.",
       "checkFailed": "Nie udało się sprawdzić statusu płatności.",
