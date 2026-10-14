@@ -54,8 +54,18 @@ test('Google button keeps a fixed-height placeholder until the Google frame has 
   assert.match(googleSource, /const \[buttonReady, setButtonReady\] = useState\(false\)/);
   assert.match(googleSource, /className="relative h-11 w-full/);
   assert.match(googleSource, /\{!buttonReady && \(/);
-  assert.match(googleSource, /buttonReady \? 'opacity-100' : 'opacity-0'/);
+  assert.match(googleSource, /buttonReady \? 'opacity-100' : 'pointer-events-none opacity-0'/);
+  assert.match(googleSource, /aria-hidden=\{!buttonReady\}/);
   assert.match(googleSource, /addEventListener\('load', markReady, \{ once: true \}\)/);
   assert.match(googleSource, /new MutationObserver/);
+  // A resize re-render replaces the frame: every new frame must be watched.
+  assert.match(googleSource, /const watchedFrames = new WeakSet<HTMLIFrameElement>\(\)/);
+  assert.doesNotMatch(googleSource, /if \(watchFrame\(\)\) frameObserver\.disconnect\(\)/);
   assert.match(googleSource, /setTimeout\(markReady, GOOGLE_BUTTON_REVEAL_FALLBACK_MS\)/);
+});
+
+test('an early Facebook click waits for the page-load discovery before issuing its own state', () => {
+  assert.match(facebookSource, /const initialDiscoveryRef = useRef<Promise<FacebookFlowConfig \| null> \| null>\(null\)/);
+  assert.match(facebookSource, /initialDiscoveryRef\.current = startFlow\(\)/);
+  assert.match(facebookSource, /await initialDiscoveryRef\.current;\s*const activeConfig = await startFlow\(\)/);
 });

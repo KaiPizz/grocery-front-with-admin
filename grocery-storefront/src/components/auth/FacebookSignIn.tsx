@@ -101,6 +101,7 @@ export function FacebookSignIn({
   const facebookLogin = useAuthStore((state) => state.facebookLogin);
   const isSubmitting = useAuthStore((state) => state.isSubmitting);
   const loginInFlightRef = useRef(false);
+  const initialDiscoveryRef = useRef<Promise<FacebookFlowConfig | null> | null>(null);
   const [providerEnabled, setProviderEnabled] = useState<boolean | null>(null);
   const [sdkLoading, setSdkLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -144,7 +145,7 @@ export function FacebookSignIn({
   }, []);
 
   useEffect(() => {
-    void startFlow();
+    initialDiscoveryRef.current = startFlow();
   }, [startFlow]);
 
   useEffect(() => {
@@ -160,6 +161,10 @@ export function FacebookSignIn({
     setError(null);
 
     try {
+      // The button is live before page-load discovery answers. Let that
+      // response (and its state cookie) land first so it cannot overwrite the
+      // state this click is about to use.
+      await initialDiscoveryRef.current;
       const activeConfig = await startFlow();
       if (!activeConfig) {
         setError(t('facebookFailed'));

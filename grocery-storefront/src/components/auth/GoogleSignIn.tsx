@@ -198,23 +198,24 @@ export function GoogleSignIn({
     // (possibly personalised as "Continue as …"). Keep the placeholder until
     // the frame has loaded so the visitor sees one change, not two.
     let revealed = false;
+    const watchedFrames = new WeakSet<HTMLIFrameElement>();
+    const frameObserver = new MutationObserver(() => watchFrame());
     const markReady = () => {
       if (revealed) return;
       revealed = true;
+      frameObserver.disconnect();
       setButtonReady(true);
     };
-    const watchFrame = () => {
-      const frame = button.querySelector('iframe');
-      if (!frame) return false;
+    // A resize re-render replaces the frame, so keep watching every new one
+    // until the first of them has loaded.
+    function watchFrame() {
+      const frame = button?.querySelector('iframe');
+      if (!frame || watchedFrames.has(frame)) return;
+      watchedFrames.add(frame);
       frame.addEventListener('load', markReady, { once: true });
-      return true;
-    };
-    const frameObserver = new MutationObserver(() => {
-      if (watchFrame()) frameObserver.disconnect();
-    });
-    if (!watchFrame()) {
-      frameObserver.observe(button, { childList: true, subtree: true });
     }
+    watchFrame();
+    frameObserver.observe(button, { childList: true, subtree: true });
     const revealFallback = window.setTimeout(markReady, GOOGLE_BUTTON_REVEAL_FALLBACK_MS);
 
     return () => {
@@ -259,7 +260,8 @@ export function GoogleSignIn({
         )}
         <div
           ref={buttonRef}
-          className={`flex h-11 w-full items-center justify-center transition-opacity duration-200 ${isSubmitting ? 'pointer-events-none opacity-60' : buttonReady ? 'opacity-100' : 'opacity-0'}`}
+          aria-hidden={!buttonReady}
+          className={`flex h-11 w-full items-center justify-center transition-opacity duration-200 ${isSubmitting ? 'pointer-events-none opacity-60' : buttonReady ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
         />
       </div>
       {error && (

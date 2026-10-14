@@ -136,7 +136,7 @@ test('official Facebook SDK is click-gated, privacy-reduced and keeps state/toke
   assert.doesNotMatch(componentSource, /from 'next\/script'/);
   assert.match(componentSource, /https:\/\/connect\.facebook\.net\/\$\{sdkLocale\}\/sdk\.js/);
   assert.match(handleClickSource, /await loadFacebookSdk\(locale\)/);
-  assert.match(componentSource, /void startFlow\(\)/);
+  assert.match(componentSource, /initialDiscoveryRef\.current = startFlow\(\)/);
   assert.match(componentSource, /loginResponse\.status === 'connected'/);
   assert.match(componentSource, /authResponse\?\.accessToken/);
   assert.match(componentSource, /cookie: false/);
