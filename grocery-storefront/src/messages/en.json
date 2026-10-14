@@ -486,7 +486,9 @@
       "invalid": "Missing payment identifier.",
       "checkFailed": "Could not check the payment status.",
       "checkAgain": "Check again",
-      "backToP24": "Return to Przelewy24 and finish the payment"
+      "backToP24": "Return to Przelewy24 and finish the payment",
+      "restoreCart": "Restore my cart and try again",
+      "restoreCartFailed": "Could not restore your cart. Please add the products again."
     },
     "paymentPendingLocked": "This order is awaiting Przelewy24 payment — finish it or retry the payment.",
     "sellerIdentityMissing": "The store has not yet published its full seller details, so online payment is temporarily unavailable.",

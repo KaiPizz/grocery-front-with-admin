@@ -224,3 +224,126 @@ test.describe('Przelewy24 return page', () => {
     expect(calls).toBe(0);
   });
 });
+
+// Back from P24 and the cart: the cart is emptied when the shopper is sent to
+// P24 (a paid order must not stay in it). Back must then resume the SAME P24
+// session instead of showing an empty checkout that invites a second order, and
+// the cart comes back only once the backend reports the payment as failed.
+test.describe('Przelewy24 back button and cart', () => {
+  test('Back from P24 shows the payment status with the way back to the same session', async ({ page }) => {
+    const operations: RecordedOperation[] = [];
+    await page.route(`${P24_ACTION_URL}*`, (route) =>
+      route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body><h1>P24 sandbox</h1></body></html>' })
+    );
+    await page.route('**/api/v1/payments/p24/status*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'pending' }) })
+    );
+    // Seed the cart once: seedCartStorage re-seeds on every navigation, which
+    // would refill the cart that checkout emptied before the redirect.
+    await page.addInitScript(() => {
+      if (window.sessionStorage.getItem('test-cart-seeded')) return;
+      window.sessionStorage.setItem('test-cart-seeded', '1');
+      window.localStorage.setItem('grocery-cart', JSON.stringify({ state: { cartId: 'cart-1' }, version: 1 }));
+    });
+    await mockStorefrontConfigWithLegalIdentity(page);
+    await mockMobileStorefront(page, {
+      cart: 'single-item',
+      checkoutProfile: 'delivery-p24',
+      onGraphqlOperation: (name, query, variables) => {
+        const derived = name || /(?:mutation|query)\s+(\w+)/.exec(query)?.[1] || '';
+        operations.push({ name: derived, variables: variables ?? {} });
+      },
+    });
+    await page.goto('/en/checkout');
+    await fillDeliveryForm(page);
+    await page.getByTestId('checkout-block-delivery').getByRole('radio', { name: /standard courier/i }).press('Enter');
+    await page.getByTestId('checkout-block-payment').getByRole('radio', { name: /przelewy24/i }).click();
+    await page.locator('#checkout-terms').check();
+    await page.getByRole('button', { name: /order and pay/i }).dispatchEvent('click');
+    await page.waitForURL((url) => url.href.startsWith(P24_ACTION_URL));
+
+    await page.goBack();
+    await page.waitForURL(/\/checkout\/payment-return\?payment_id=/);
+    // Read back on the shop origin: the cart paid for was kept aside.
+    const snapshot = await page.evaluate(() => window.localStorage.getItem('adg-p24-cart-snapshot'));
+    expect(JSON.parse(snapshot ?? '{}')).toMatchObject({
+      paymentId: PAYMENT_ID,
+      lines: [expect.objectContaining({ quantity: expect.any(Number) })],
+    });
+    await expect(page.getByTestId('payment-return-status')).toHaveAttribute('data-state', 'pending');
+    await expect(page.getByTestId('payment-return-resume')).toHaveAttribute('href', P24_ACTION_URL);
+    // No second order and no second P24 registration.
+    expect(operations.filter((operation) => operation.name === 'CheckoutComplete')).toHaveLength(1);
+    expect(operations.filter((operation) => operation.name === 'CheckoutPaymentCreate')).toHaveLength(1);
+  });
+
+  test('a stale pending payment does not hold the checkout hostage', async ({ page }) => {
+    await page.addInitScript((paymentId) => {
+      window.sessionStorage.setItem(
+        'adg-p24-pending',
+        JSON.stringify({ paymentId, registeredAt: new Date(Date.now() - 31 * 60 * 1000).toISOString() })
+      );
+    }, PAYMENT_ID);
+    await openP24Checkout(page, []);
+    await expect(page).toHaveURL(/\/en\/checkout$/);
+  });
+
+  test('a failed payment offers to restore the cart and clears the pending payment', async ({ page }) => {
+    const operations: RecordedOperation[] = [];
+    await page.route('**/api/v1/payments/p24/status*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'failed' }) })
+    );
+    await mockMobileStorefront(page, {
+      cart: 'single-item',
+      onGraphqlOperation: (name, query, variables) => {
+        const derived = name || /(?:mutation|query)\s+(\w+)/.exec(query)?.[1] || '';
+        operations.push({ name: derived, variables: variables ?? {} });
+      },
+    });
+    await page.addInitScript((paymentId) => {
+      window.sessionStorage.setItem(
+        'adg-p24-pending',
+        JSON.stringify({ paymentId, orderNumber: '1001', registeredAt: new Date().toISOString() })
+      );
+      window.localStorage.setItem(
+        'adg-p24-cart-snapshot',
+        JSON.stringify({ paymentId, lines: [{ merchandiseId: 'variant-1', quantity: 2 }], savedAt: new Date().toISOString() })
+      );
+    }, PAYMENT_ID);
+    await page.goto(`/en/checkout/payment-return?payment_id=${PAYMENT_ID}`);
+    await expect(page.getByTestId('payment-return-status')).toHaveAttribute('data-state', 'failed');
+
+    await page.getByTestId('payment-return-restore-cart').click();
+    await page.waitForURL(/\/en\/checkout$/);
+    // An empty cart is recreated with the lines (CartCreate); an existing one gets them added.
+    const restored = operations.find((operation) => operation.name === 'CartCreate' || operation.name === 'CartLinesAdd');
+    expect(restored?.variables.input?.lines ?? restored?.variables.lines).toEqual([{ merchandiseId: 'variant-1', quantity: 2 }]);
+    const storage = await page.evaluate(() => ({
+      pending: window.sessionStorage.getItem('adg-p24-pending'),
+      snapshot: window.localStorage.getItem('adg-p24-cart-snapshot'),
+    }));
+    expect(storage).toEqual({ pending: null, snapshot: null });
+  });
+
+  test('a paid payment clears the pending payment and the cart snapshot, with no restore offer', async ({ page }) => {
+    await page.route('**/api/v1/payments/p24/status*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'paid' }) })
+    );
+    await mockMobileStorefront(page, {});
+    await page.addInitScript((paymentId) => {
+      window.sessionStorage.setItem('adg-p24-pending', JSON.stringify({ paymentId, registeredAt: new Date().toISOString() }));
+      window.localStorage.setItem(
+        'adg-p24-cart-snapshot',
+        JSON.stringify({ paymentId, lines: [{ merchandiseId: 'variant-1', quantity: 1 }], savedAt: new Date().toISOString() })
+      );
+    }, PAYMENT_ID);
+    await page.goto(`/en/checkout/payment-return?payment_id=${PAYMENT_ID}`);
+    await expect(page.getByTestId('payment-return-status')).toHaveAttribute('data-state', 'paid');
+    await expect(page.getByTestId('payment-return-restore-cart')).toHaveCount(0);
+    await expect
+      .poll(() =>
+        page.evaluate(() => [window.sessionStorage.getItem('adg-p24-pending'), window.localStorage.getItem('adg-p24-cart-snapshot')])
+      )
+      .toEqual([null, null]);
+  });
+});

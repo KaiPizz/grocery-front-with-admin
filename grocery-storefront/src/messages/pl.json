@@ -486,7 +486,9 @@
       "invalid": "Brak identyfikatora płatności.",
       "checkFailed": "Nie udało się sprawdzić statusu płatności.",
       "checkAgain": "Sprawdź ponownie",
-      "backToP24": "Wróć do Przelewy24 i dokończ płatność"
+      "backToP24": "Wróć do Przelewy24 i dokończ płatność",
+      "restoreCart": "Przywróć koszyk i spróbuj ponownie",
+      "restoreCartFailed": "Nie udało się przywrócić koszyka. Dodaj produkty ponownie."
     },
     "paymentPendingLocked": "To zamówienie czeka na płatność Przelewy24 — dokończ ją lub ponów płatność.",
     "sellerIdentityMissing": "Sklep nie opublikował jeszcze pełnych danych sprzedawcy, dlatego płatność online jest tymczasowo niedostępna.",

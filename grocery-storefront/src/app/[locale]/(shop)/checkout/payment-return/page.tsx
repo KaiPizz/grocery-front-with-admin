@@ -3,8 +3,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { CheckCircle2, Clock, Loader2, RefreshCw, XCircle } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
+import { CheckCircle2, Clock, Loader2, RefreshCw, ShoppingCart, XCircle } from 'lucide-react';
+import { toast } from 'sonner';
+import { Link, useRouter } from '@/i18n/navigation';
+import { useCartStore } from '@/stores/cart-store';
+import {
+  P24_SESSION_TTL_MS,
+  clearP24CartSnapshot,
+  clearP24Pending,
+  p24PendingAge,
+  readP24CartSnapshot,
+  readP24Pending,
+} from '@/lib/p24-pending';
 
 // The shopper lands here from Przelewy24. The URL carries only the payment id;
 // the state shown always comes from the backend, which itself flips to "paid"
@@ -13,22 +23,12 @@ import { Link } from '@/i18n/navigation';
 type PaymentState = 'loading' | 'pending' | 'paid' | 'failed' | 'error' | 'invalid';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const PENDING_KEY = 'adg-p24-pending';
 // The public status endpoint allows five requests per minute per IP:
 // 0s, 15s, 30s, 45s, then every 30s, for at most ten minutes.
 const EARLY_DELAYS_MS = [15000, 15000, 15000];
 const STEADY_DELAY_MS = 30000;
 const MAX_POLL_MS = 10 * 60 * 1000;
 
-interface PendingRecord {
-  paymentId?: string;
-  orderNumber?: string;
-  actionUrl?: string;
-  registeredAt?: string;
-}
-
-// The P24 session registered by checkout stays valid for 15 minutes.
-const SESSION_TTL_MS = 15 * 60 * 1000;
 const MAX_CONSECUTIVE_FAILURES = 3;
 
 export default function PaymentReturnPage() {
@@ -44,28 +44,22 @@ export default function PaymentReturnPage() {
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
+  const [canRestoreCart, setCanRestoreCart] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+  const addLines = useCartStore((state) => state.addLines);
+  const router = useRouter();
   const startedAt = useRef(Date.now());
   const failures = useRef(0);
 
   useEffect(() => {
     if (!validId || typeof window === 'undefined') return;
-    try {
-      const raw = window.sessionStorage.getItem(PENDING_KEY);
-      const record = raw ? (JSON.parse(raw) as PendingRecord) : null;
-      if (record?.paymentId === paymentId) {
-        if (record.orderNumber) setOrderNumber(record.orderNumber);
-        const registeredAt = Date.parse(record.registeredAt ?? '');
-        if (
-          record.actionUrl &&
-          /^https:\/\//.test(record.actionUrl) &&
-          Number.isFinite(registeredAt) &&
-          Date.now() - registeredAt < SESSION_TTL_MS
-        ) {
-          setResumeUrl(record.actionUrl);
-        }
+    const record = readP24Pending();
+    if (record?.paymentId === paymentId) {
+      if (record.orderNumber) setOrderNumber(record.orderNumber);
+      // The P24 session registered by checkout stays valid for 15 minutes.
+      if (record.actionUrl && /^https:\/\//.test(record.actionUrl) && p24PendingAge(record) < P24_SESSION_TTL_MS) {
+        setResumeUrl(record.actionUrl);
       }
-    } catch {
-      // Display-only convenience; ignore unreadable storage.
     }
   }, [paymentId, validId]);
 
@@ -93,11 +87,16 @@ export default function PaymentReturnPage() {
         setState(next);
 
         if (next === 'paid') {
-          try {
-            window.sessionStorage.removeItem(PENDING_KEY);
-          } catch {
-            // ignore
-          }
+          clearP24Pending();
+          clearP24CartSnapshot();
+          return;
+        }
+
+        if (next === 'failed') {
+          // Closed for good: checkout must not send the shopper back here, and
+          // the cart they paid for may be restored to try again.
+          clearP24Pending();
+          setCanRestoreCart(readP24CartSnapshot(paymentId) !== null);
           return;
         }
 
@@ -166,6 +165,25 @@ export default function PaymentReturnPage() {
       message = t('paymentReturn.pending');
   }
 
+  const restoreCart = async () => {
+    const snapshot = paymentId ? readP24CartSnapshot(paymentId) : null;
+    if (!snapshot) {
+      setCanRestoreCart(false);
+      return;
+    }
+    setRestoring(true);
+    try {
+      if (await addLines(snapshot.lines)) {
+        clearP24CartSnapshot();
+        router.push('/checkout');
+        return;
+      }
+      toast.error(t('paymentReturn.restoreCartFailed'));
+    } finally {
+      setRestoring(false);
+    }
+  };
+
   const showCheckAgain = state === 'error' || (state === 'pending' && timedOut);
   const showResume = state === 'pending' && resumeUrl !== null;
 
@@ -205,6 +223,20 @@ export default function PaymentReturnPage() {
         >
           {t('paymentReturn.backToP24')}
         </a>
+      )}
+
+      {state === 'failed' && canRestoreCart && (
+        <button
+          type="button"
+          onClick={() => void restoreCart()}
+          disabled={restoring}
+          data-testid="payment-return-restore-cart"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white transition-all duration-fast active:scale-95 mb-6 disabled:opacity-60"
+          style={{ backgroundColor: 'var(--color-primary)' }}
+        >
+          {restoring ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <ShoppingCart className="h-4 w-4" aria-hidden="true" />}
+          {t('paymentReturn.restoreCart')}
+        </button>
       )}
 
       {showCheckAgain && (

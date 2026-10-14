@@ -38,6 +38,13 @@ import { formatPrice } from '@/lib/utils';
 import { useChannel } from '@/hooks/use-channel';
 import { useHydrated } from '@/hooks/use-hydrated';
 import { useCartStore } from '@/stores/cart-store';
+import {
+  P24_PENDING_REDIRECT_MS,
+  p24PendingAge,
+  readP24Pending,
+  saveP24CartSnapshot,
+  writeP24Pending,
+} from '@/lib/p24-pending';
 import { useAuthStore } from '@/stores/auth-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
@@ -374,8 +381,6 @@ function isPayOnCollectionMethod(method: PaymentMethod | null): boolean {
   const code = `${method.id} ${method.provider ?? ''}`.toLowerCase();
   return code.includes('cash') || code.includes('cod');
 }
-
-const P24_PENDING_KEY = 'adg-p24-pending';
 
 function focusDeliveryField(field: keyof DeliveryFormState) {
   focusElement(`checkout-${field}`);
@@ -717,6 +722,36 @@ export default function CheckoutPage() {
       setErrorBanner(uiText.paymentReturned);
     }
   }, [searchParams, uiText.paymentReturned]);
+
+  // Back from Przelewy24 (fresh load or bfcache restore) lands here with the
+  // cart already emptied for the order sent to P24. Show that order's payment
+  // status instead — it offers the way back to the same P24 session — so an
+  // empty checkout does not invite a second order and a second payment. A
+  // shopper who has since filled the cart again checks out normally. Checked
+  // once per page load (and on bfcache restore), never while leaving for P24.
+  const leavingForP24 = useRef(false);
+  const pendingRedirectChecked = useRef(false);
+  useEffect(() => {
+    const redirectToPendingPayment = () => {
+      const state = useCartStore.getState();
+      if (leavingForP24.current || state.items.length > 0) return;
+      const pending = readP24Pending();
+      if (pending && p24PendingAge(pending) < P24_PENDING_REDIRECT_MS) {
+        router.replace(`/checkout/payment-return?payment_id=${encodeURIComponent(pending.paymentId)}`);
+      }
+    };
+    if (initialized && !pendingRedirectChecked.current) {
+      pendingRedirectChecked.current = true;
+      redirectToPendingPayment();
+    }
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      leavingForP24.current = false;
+      redirectToPendingPayment();
+    };
+    window.addEventListener('pageshow', onPageShow);
+    return () => window.removeEventListener('pageshow', onPageShow);
+  }, [initialized, router]);
 
   useEffect(() => {
     if (!isHydrated) {
@@ -1360,17 +1395,18 @@ export default function CheckoutPage() {
       }
 
       if (typeof window !== 'undefined') {
-        window.sessionStorage.setItem(
-          P24_PENDING_KEY,
-          JSON.stringify({
-            paymentId: payload.payment.id,
-            orderId: order.id,
-            orderNumber: order.number,
-            // Lets the return page offer "back to Przelewy24" while the session is valid.
-            actionUrl: payload.payment.actionUrl,
-            registeredAt: new Date().toISOString(),
-          })
-        );
+        writeP24Pending({
+          paymentId: payload.payment.id,
+          orderId: order.id,
+          orderNumber: order.number,
+          // Lets the return page offer "back to Przelewy24" while the session is valid.
+          actionUrl: payload.payment.actionUrl,
+          registeredAt: new Date().toISOString(),
+        });
+        // The cart is emptied below; this copy is offered back only if the
+        // backend later reports the payment as failed.
+        saveP24CartSnapshot(payload.payment.id, items);
+        leavingForP24.current = true;
         window.sessionStorage.removeItem(CHECKOUT_DRAFT_KEY);
         window.sessionStorage.removeItem('oms-pending-checkout');
       }
