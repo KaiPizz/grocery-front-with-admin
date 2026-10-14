@@ -101,7 +101,6 @@ export function FacebookSignIn({
   const facebookLogin = useAuthStore((state) => state.facebookLogin);
   const isSubmitting = useAuthStore((state) => state.isSubmitting);
   const loginInFlightRef = useRef(false);
-  const [config, setConfig] = useState<FacebookFlowConfig | null>(null);
   const [providerEnabled, setProviderEnabled] = useState<boolean | null>(null);
   const [sdkLoading, setSdkLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -133,7 +132,6 @@ export function FacebookSignIn({
           apiVersion: payload.apiVersion,
           state: payload.state,
         };
-        setConfig(nextConfig);
         setProviderEnabled(true);
         return nextConfig;
       }
@@ -141,7 +139,6 @@ export function FacebookSignIn({
       // Email/password remains available when provider discovery is unavailable.
     }
 
-    setConfig(null);
     setProviderEnabled(false);
     return null;
   }, []);
@@ -151,7 +148,8 @@ export function FacebookSignIn({
   }, [startFlow]);
 
   useEffect(() => {
-    onAvailabilityChange(providerEnabled === true);
+    if (providerEnabled === null) return;
+    onAvailabilityChange(providerEnabled);
   }, [onAvailabilityChange, providerEnabled]);
 
   const handleClick = useCallback(async () => {
@@ -219,7 +217,9 @@ export function FacebookSignIn({
     }
   }, [facebookLogin, locale, returnTo, router, startFlow, t]);
 
-  if (providerEnabled !== true || !config) return null;
+  // The server already said Facebook is configured, so the button is shown
+  // from the first paint; a click runs a fresh discovery before the SDK loads.
+  if (providerEnabled === false) return null;
 
   const isBusy = sdkLoading || isSubmitting;
 

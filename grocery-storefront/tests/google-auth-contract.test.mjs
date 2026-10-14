@@ -133,7 +133,7 @@ test('server service forwards the provider credential and nonce without exposing
 });
 
 test('official responsive Google button appears on both auth modes with localized email fallback', () => {
-  assert.match(authFormSource, /<SocialSignIn mode=\{mode\} returnTo=\{returnTo\} \/>/);
+  assert.match(authFormSource, /<SocialSignIn mode=\{mode\} returnTo=\{returnTo\} providers=\{socialProviders\} \/>/);
   assert.match(socialComponentSource, /<GoogleSignIn/);
   assert.match(socialComponentSource, /role="separator"/);
   assert.match(socialComponentSource, /t\('emailDivider'\)/);
@@ -141,7 +141,7 @@ test('official responsive Google button appears on both auth modes with localize
   assert.match(componentSource, /googleIdentity\.renderButton/);
   assert.match(componentSource, /mode === 'login' \? 'signin_with' : 'signup_with'/);
   assert.match(componentSource, /ResizeObserver/);
-  assert.match(componentSource, /if \(providerEnabled !== true \|\| !config\) return null/);
+  assert.match(componentSource, /if \(providerEnabled === false\) return null/);
   assert.doesNotMatch(componentSource, /role="separator"|t\('emailDivider'\)/);
   assert.doesNotMatch(componentSource, /localStorage|sessionStorage|console\.(?:log|warn|error)/);
   for (const messages of [plMessages, enMessages]) {

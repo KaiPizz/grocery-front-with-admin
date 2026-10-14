@@ -154,7 +154,7 @@ test('official Facebook SDK is click-gated, privacy-reduced and keeps state/toke
 });
 
 test('PL/EN login and registration keep one localized email fallback and unverified-email prompt', () => {
-  assert.match(authFormSource, /<SocialSignIn mode=\{mode\} returnTo=\{returnTo\} \/>/);
+  assert.match(authFormSource, /<SocialSignIn mode=\{mode\} returnTo=\{returnTo\} providers=\{socialProviders\} \/>/);
   assert.match(socialComponentSource, /<GoogleSignIn/);
   assert.match(socialComponentSource, /<FacebookSignIn/);
   assert.equal((socialComponentSource.match(/role="separator"/g) ?? []).length, 1);

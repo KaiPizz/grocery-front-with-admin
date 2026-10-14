@@ -53,6 +53,9 @@ declare global {
   }
 }
 
+// Never leave the slot blank if Google's frame never reports a load.
+const GOOGLE_BUTTON_REVEAL_FALLBACK_MS = 2_500;
+
 interface GoogleSignInProps {
   mode: 'login' | 'register';
   returnTo: string;
@@ -75,6 +78,7 @@ export function GoogleSignIn({
   const [config, setConfig] = useState<GoogleFlowConfig | null>(null);
   const [providerEnabled, setProviderEnabled] = useState<boolean | null>(null);
   const [scriptReady, setScriptReady] = useState(false);
+  const [buttonReady, setButtonReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const startFlow = useCallback(async () => {
@@ -114,7 +118,8 @@ export function GoogleSignIn({
   }, [startFlow]);
 
   useEffect(() => {
-    onAvailabilityChange(providerEnabled === true);
+    if (providerEnabled === null) return;
+    onAvailabilityChange(providerEnabled);
   }, [onAvailabilityChange, providerEnabled]);
 
   useEffect(() => {
@@ -189,31 +194,73 @@ export function GoogleSignIn({
     const resizeObserver = new ResizeObserver(renderButton);
     resizeObserver.observe(button);
 
+    // Google first paints a plain fallback button, then swaps in its frame
+    // (possibly personalised as "Continue as …"). Keep the placeholder until
+    // the frame has loaded so the visitor sees one change, not two.
+    let revealed = false;
+    const markReady = () => {
+      if (revealed) return;
+      revealed = true;
+      setButtonReady(true);
+    };
+    const watchFrame = () => {
+      const frame = button.querySelector('iframe');
+      if (!frame) return false;
+      frame.addEventListener('load', markReady, { once: true });
+      return true;
+    };
+    const frameObserver = new MutationObserver(() => {
+      if (watchFrame()) frameObserver.disconnect();
+    });
+    if (!watchFrame()) {
+      frameObserver.observe(button, { childList: true, subtree: true });
+    }
+    const revealFallback = window.setTimeout(markReady, GOOGLE_BUTTON_REVEAL_FALLBACK_MS);
+
     return () => {
+      window.clearTimeout(revealFallback);
+      frameObserver.disconnect();
       resizeObserver.disconnect();
       googleIdentity.cancel();
       button.replaceChildren();
     };
   }, [config, handleCredential, mode, scriptReady]);
 
-  if (providerEnabled !== true || !config) return null;
+  // The server already said Google is configured, so the slot is reserved
+  // from the first paint and only collapses if discovery fails.
+  if (providerEnabled === false) return null;
 
   return (
     <div data-testid="google-auth-section">
-      <Script
-        id={`google-identity-services-${locale}`}
-        src={`https://accounts.google.com/gsi/client?hl=${locale}`}
-        strategy="afterInteractive"
-        onLoad={() => setScriptReady(true)}
-        onReady={() => setScriptReady(true)}
-        onError={() => setError(t('googleFailed'))}
-      />
+      {config && (
+        <Script
+          id={`google-identity-services-${locale}`}
+          src={`https://accounts.google.com/gsi/client?hl=${locale}`}
+          strategy="afterInteractive"
+          onLoad={() => setScriptReady(true)}
+          onReady={() => setScriptReady(true)}
+          onError={() => {
+            setError(t('googleFailed'));
+            setButtonReady(true);
+          }}
+        />
+      )}
       <div
-        className={`min-h-11 w-full overflow-hidden rounded-full transition-opacity ${isSubmitting ? 'pointer-events-none opacity-60' : ''}`}
-        aria-busy={!scriptReady || isSubmitting}
+        className="relative h-11 w-full overflow-hidden rounded-full"
+        aria-busy={!buttonReady || isSubmitting}
       >
         <span className="sr-only">{t(mode === 'login' ? 'googleLoginLabel' : 'googleRegisterLabel')}</span>
-        <div ref={buttonRef} className="flex min-h-11 w-full justify-center" />
+        {!buttonReady && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 animate-pulse rounded-full border"
+            style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-muted)' }}
+          />
+        )}
+        <div
+          ref={buttonRef}
+          className={`flex h-11 w-full items-center justify-center transition-opacity duration-200 ${isSubmitting ? 'pointer-events-none opacity-60' : buttonReady ? 'opacity-100' : 'opacity-0'}`}
+        />
       </div>
       {error && (
         <p className="mt-2 text-center text-xs" style={{ color: 'var(--color-destructive)' }} role="alert">

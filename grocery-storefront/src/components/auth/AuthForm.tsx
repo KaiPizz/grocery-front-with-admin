@@ -11,10 +11,13 @@ import { isValidOptionalPhoneNumber } from '@/lib/phone-validation';
 import { useAuthStore } from '@/stores/auth-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import type { AuthError } from '@/types';
+import type { SocialAuthProviders } from '@/lib/auth/social-availability';
+
 import { SocialSignIn } from './SocialSignIn';
 
 interface AuthFormProps {
   mode: 'login' | 'register';
+  socialProviders: SocialAuthProviders;
 }
 
 type AuthField = 'fullName' | 'email' | 'phone' | 'password' | 'confirmPassword';
@@ -45,7 +48,7 @@ function getAuthErrorFields(errors: AuthError[]): AuthField[] {
   }))];
 }
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ mode, socialProviders }: AuthFormProps) {
   const t = useTranslations('auth');
   const activeLocale = useLocale();
   const locale: 'pl' | 'en' = activeLocale === 'en' ? 'en' : 'pl';
@@ -199,7 +202,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             </p>
           </div>
 
-          <SocialSignIn mode={mode} returnTo={returnTo} />
+          <SocialSignIn mode={mode} returnTo={returnTo} providers={socialProviders} />
 
           <p className="mb-5 text-center text-xs leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
             {t('legalNoticePrefix')}{' '}
