@@ -20,6 +20,11 @@ export const P24_SESSION_TTL_MS = 15 * 60 * 1000;
  * outcome (paid / failed) will appear.
  */
 export const P24_PENDING_REDIRECT_MS = 30 * 60 * 1000;
+/**
+ * When the outcome of an unfinished payment is known at the latest: the
+ * backend's check runs every 5 minutes after the 30-minute mark.
+ */
+export const P24_CLOSE_EXPECTED_MS = P24_PENDING_REDIRECT_MS + 5 * 60 * 1000;
 const SNAPSHOT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

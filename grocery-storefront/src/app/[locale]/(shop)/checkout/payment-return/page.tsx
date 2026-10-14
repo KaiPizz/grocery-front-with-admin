@@ -2,13 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { CheckCircle2, Clock, Loader2, RefreshCw, ShoppingCart, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import {
+  P24_CLOSE_EXPECTED_MS,
   P24_SESSION_TTL_MS,
+  type P24PendingRecord,
   clearP24CartSnapshot,
   clearP24Pending,
   p24PendingAge,
@@ -24,15 +26,24 @@ type PaymentState = 'loading' | 'pending' | 'paid' | 'failed' | 'error' | 'inval
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 // The public status endpoint allows five requests per minute per IP:
-// 0s, 15s, 30s, 45s, then every 30s, for at most ten minutes.
+// 0s, 15s, 30s, 45s, then every 30s, for ten minutes — or, for the payment this
+// tab started, until the backend has closed it if unfinished, so "restore the
+// cart" appears without the shopper having to ask.
 const EARLY_DELAYS_MS = [15000, 15000, 15000];
 const STEADY_DELAY_MS = 30000;
 const MAX_POLL_MS = 10 * 60 * 1000;
 
 const MAX_CONSECUTIVE_FAILURES = 3;
+const CLOSE_GRACE_MS = 60 * 1000;
+
+function registeredAtMs(record: P24PendingRecord | null): number | null {
+  const value = Date.parse(record?.registeredAt ?? '');
+  return Number.isFinite(value) ? value : null;
+}
 
 export default function PaymentReturnPage() {
   const t = useTranslations('checkout');
+  const locale = useLocale();
   const tFulfillment = useTranslations('fulfillment');
   const tTrackOrder = useTranslations('trackOrder');
   const searchParams = useSearchParams();
@@ -41,7 +52,8 @@ export default function PaymentReturnPage() {
 
   const [state, setState] = useState<PaymentState>(validId ? 'loading' : 'invalid');
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
-  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+  const [pendingRecord, setPendingRecord] = useState<P24PendingRecord | null>(null);
+  const [now, setNow] = useState(() => Date.now());
   const [attempt, setAttempt] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
   const [canRestoreCart, setCanRestoreCart] = useState(false);
@@ -50,16 +62,16 @@ export default function PaymentReturnPage() {
   const router = useRouter();
   const startedAt = useRef(Date.now());
   const failures = useRef(0);
+  const pollUntil = useRef<number | null>(null);
 
   useEffect(() => {
     if (!validId || typeof window === 'undefined') return;
     const record = readP24Pending();
     if (record?.paymentId === paymentId) {
       if (record.orderNumber) setOrderNumber(record.orderNumber);
-      // The P24 session registered by checkout stays valid for 15 minutes.
-      if (record.actionUrl && /^https:\/\//.test(record.actionUrl) && p24PendingAge(record) < P24_SESSION_TTL_MS) {
-        setResumeUrl(record.actionUrl);
-      }
+      setPendingRecord(record);
+      const registeredAt = registeredAtMs(record);
+      if (registeredAt !== null) pollUntil.current = registeredAt + P24_CLOSE_EXPECTED_MS + CLOSE_GRACE_MS;
     }
   }, [paymentId, validId]);
 
@@ -81,6 +93,7 @@ export default function PaymentReturnPage() {
         const data = (await response.json()) as { status?: string };
         if (cancelled) return;
         failures.current = 0;
+        setNow(Date.now());
 
         const next: PaymentState =
           data.status === 'paid' ? 'paid' : data.status === 'failed' ? 'failed' : 'pending';
@@ -101,7 +114,8 @@ export default function PaymentReturnPage() {
         }
 
         if (next === 'pending') {
-          if (Date.now() - startedAt.current >= MAX_POLL_MS) {
+          const deadline = Math.max(startedAt.current + MAX_POLL_MS, pollUntil.current ?? 0);
+          if (Date.now() >= deadline) {
             setTimedOut(true);
             return;
           }
@@ -184,6 +198,17 @@ export default function PaymentReturnPage() {
     }
   };
 
+  // The P24 session registered by checkout stays valid for 15 minutes.
+  const resumeUrl =
+    pendingRecord?.actionUrl && /^https:\/\//.test(pendingRecord.actionUrl) && p24PendingAge(pendingRecord, now) < P24_SESSION_TTL_MS
+      ? pendingRecord.actionUrl
+      : null;
+  const registeredAt = registeredAtMs(pendingRecord);
+  const closesAt = registeredAt === null ? null : registeredAt + P24_CLOSE_EXPECTED_MS;
+  // Too late to resume, not closed yet: say when the cart can be restored. A
+  // late BLIK can still succeed until then, so restore is not offered early.
+  const showClosesAt = state === 'pending' && resumeUrl === null && closesAt !== null && now < closesAt + CLOSE_GRACE_MS;
+
   const showCheckAgain = state === 'error' || (state === 'pending' && timedOut);
   const showResume = state === 'pending' && resumeUrl !== null;
 
@@ -223,6 +248,14 @@ export default function PaymentReturnPage() {
         >
           {t('paymentReturn.backToP24')}
         </a>
+      )}
+
+      {showClosesAt && closesAt !== null && (
+        <p className="text-sm mb-6" data-testid="payment-return-closes-at" style={{ color: 'var(--color-muted-foreground)' }}>
+          {t('paymentReturn.closesAt', {
+            time: new Date(closesAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }),
+          })}
+        </p>
       )}
 
       {state === 'failed' && canRestoreCart && (

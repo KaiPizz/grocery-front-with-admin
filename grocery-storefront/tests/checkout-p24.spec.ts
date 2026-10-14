@@ -325,6 +325,53 @@ test.describe('Przelewy24 back button and cart', () => {
     expect(storage).toEqual({ pending: null, snapshot: null });
   });
 
+  test('too late to resume: says when the payment closes, keeps polling, then offers the cart back', async ({ page }) => {
+    let failed = false;
+    let calls = 0;
+    await page.route('**/api/v1/payments/p24/status*', (route) => {
+      calls += 1;
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ status: failed ? 'failed' : 'pending' }),
+      });
+    });
+    await mockMobileStorefront(page, {});
+    await page.clock.install();
+    const registeredAt = new Date(Date.now() - 20 * 60 * 1000).toISOString();
+    await page.addInitScript(
+      ({ paymentId, actionUrl, registeredAt }) => {
+        window.sessionStorage.setItem(
+          'adg-p24-pending',
+          JSON.stringify({ paymentId, orderNumber: '1001', actionUrl, registeredAt })
+        );
+        window.localStorage.setItem(
+          'adg-p24-cart-snapshot',
+          JSON.stringify({ paymentId, lines: [{ merchandiseId: 'variant-1', quantity: 1 }], savedAt: registeredAt })
+        );
+      },
+      { paymentId: PAYMENT_ID, actionUrl: P24_ACTION_URL, registeredAt }
+    );
+    await page.goto(`/en/checkout/payment-return?payment_id=${PAYMENT_ID}`);
+    await expect(page.getByTestId('payment-return-status')).toHaveAttribute('data-state', 'pending');
+    await expect(page.getByTestId('payment-return-closes-at')).toBeVisible();
+    // The 15-minute P24 session is over, and a late BLIK may still land: no
+    // resume link and no restore yet.
+    await expect(page.getByTestId('payment-return-resume')).toHaveCount(0);
+    await expect(page.getByTestId('payment-return-restore-cart')).toHaveCount(0);
+
+    // Still polling past the usual ten minutes, up to the backend closing it.
+    await page.clock.runFor(11 * 60_000);
+    const callsAfterTenMinutes = calls;
+    await page.clock.runFor(61_000);
+    await expect.poll(() => calls).toBeGreaterThan(callsAfterTenMinutes);
+
+    failed = true;
+    await page.clock.runFor(31_000);
+    await expect(page.getByTestId('payment-return-status')).toHaveAttribute('data-state', 'failed');
+    await expect(page.getByTestId('payment-return-restore-cart')).toBeVisible();
+  });
+
   test('a paid payment clears the pending payment and the cart snapshot, with no restore offer', async ({ page }) => {
     await page.route('**/api/v1/payments/p24/status*', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'paid' }) })

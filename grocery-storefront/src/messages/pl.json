@@ -488,7 +488,8 @@
       "checkAgain": "Sprawdź ponownie",
       "backToP24": "Wróć do Przelewy24 i dokończ płatność",
       "restoreCart": "Przywróć koszyk i spróbuj ponownie",
-      "restoreCartFailed": "Nie udało się przywrócić koszyka. Dodaj produkty ponownie."
+      "restoreCartFailed": "Nie udało się przywrócić koszyka. Dodaj produkty ponownie.",
+      "closesAt": "Jeśli płatność nie zostanie dokończona, zamkniemy ją około {time}. Wtedy będzie można przywrócić koszyk i zapłacić ponownie."
     },
     "paymentPendingLocked": "To zamówienie czeka na płatność Przelewy24 — dokończ ją lub ponów płatność.",
     "sellerIdentityMissing": "Sklep nie opublikował jeszcze pełnych danych sprzedawcy, dlatego płatność online jest tymczasowo niedostępna.",
