@@ -393,4 +393,28 @@ test.describe('Przelewy24 back button and cart', () => {
       )
       .toEqual([null, null]);
   });
+
+  test('money that reached P24 but not the order says the store will contact, with no restore offer', async ({ page }) => {
+    await page.route('**/api/v1/payments/p24/status*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'review' }) })
+    );
+    await mockMobileStorefront(page, {});
+    await page.addInitScript((paymentId) => {
+      window.sessionStorage.setItem('adg-p24-pending', JSON.stringify({ paymentId, registeredAt: new Date().toISOString() }));
+      window.localStorage.setItem(
+        'adg-p24-cart-snapshot',
+        JSON.stringify({ paymentId, lines: [{ merchandiseId: 'variant-1', quantity: 1 }], savedAt: new Date().toISOString() })
+      );
+    }, PAYMENT_ID);
+    await page.goto(`/en/checkout/payment-return?payment_id=${PAYMENT_ID}`);
+    const status = page.getByTestId('payment-return-status');
+    await expect(status).toHaveAttribute('data-state', 'review');
+    await expect(status).toContainText('Do not pay again');
+    await expect(page.getByTestId('payment-return-restore-cart')).toHaveCount(0);
+    await expect
+      .poll(() =>
+        page.evaluate(() => [window.sessionStorage.getItem('adg-p24-pending'), window.localStorage.getItem('adg-p24-cart-snapshot')])
+      )
+      .toEqual([null, null]);
+  });
 });

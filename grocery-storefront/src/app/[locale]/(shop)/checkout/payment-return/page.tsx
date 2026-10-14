@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { CheckCircle2, Clock, Loader2, RefreshCw, ShoppingCart, XCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Clock, Loader2, RefreshCw, ShoppingCart, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
@@ -22,7 +22,9 @@ import {
 // the state shown always comes from the backend, which itself flips to "paid"
 // only after the signed P24 notification has been verified server-side.
 
-type PaymentState = 'loading' | 'pending' | 'paid' | 'failed' | 'error' | 'invalid';
+// review: the money reached P24 but the store could not take it for this
+// order; the store was alerted and contacts the shopper.
+type PaymentState = 'loading' | 'pending' | 'paid' | 'review' | 'failed' | 'error' | 'invalid';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 // The public status endpoint allows five requests per minute per IP:
@@ -96,10 +98,17 @@ export default function PaymentReturnPage() {
         setNow(Date.now());
 
         const next: PaymentState =
-          data.status === 'paid' ? 'paid' : data.status === 'failed' ? 'failed' : 'pending';
+          data.status === 'paid'
+            ? 'paid'
+            : data.status === 'review'
+              ? 'review'
+              : data.status === 'failed'
+                ? 'failed'
+                : 'pending';
         setState(next);
 
-        if (next === 'paid') {
+        // Money taken either way: never offer the cart back (paying twice).
+        if (next === 'paid' || next === 'review') {
           clearP24Pending();
           clearP24CartSnapshot();
           return;
@@ -157,6 +166,10 @@ export default function PaymentReturnPage() {
     case 'paid':
       icon = iconWrap('var(--color-fresh)', <CheckCircle2 className="w-8 h-8" style={{ color: 'var(--color-fresh)' }} aria-hidden="true" />);
       message = t('paymentReturn.paid');
+      break;
+    case 'review':
+      icon = iconWrap('var(--color-primary)', <AlertTriangle className="w-8 h-8" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />);
+      message = t('paymentReturn.review');
       break;
     case 'failed':
       icon = iconWrap('var(--color-destructive)', <XCircle className="w-8 h-8" style={{ color: 'var(--color-destructive)' }} aria-hidden="true" />);
