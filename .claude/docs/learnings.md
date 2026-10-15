@@ -6,6 +6,17 @@
 
 ---
 
+### A mock transport failure must remain a failed release attempt
+- **Error:** The first Facebook-hidden production lane stopped at59/60 browser
+  tests after `route.fetch: socket hang up` against localhost4199/api/config/test.
+- **Cause:** The mock upstream connection reset; its underlying reset cause was
+  not isolated. The same catalog assertion passed check-only and an unchanged
+  full rerun, and no relevant catalog source had changed.
+- **Fix:** Preserve the failure/trace, confirm production was not mutated, then
+  rerun the complete guarded lane once with identical source and assertions.
+- **Rule:** Never count infrastructure failures as passes or weaken/skip a test;
+  if the failure repeats, isolate the fixture before further release attempts.
+
 ### Playwright grep matches the full test title
 - **Error:** An anchored `^pl login:` filter found no tests during a causal control.
 - **Cause:** Playwright prefixes the title with file/suite context.

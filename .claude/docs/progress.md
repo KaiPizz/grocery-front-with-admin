@@ -19,7 +19,7 @@
   browser spec. No backend/API/schema/env/i18n/state changes; no migration.
   The obsolete active-Facebook UI scenarios now verify the paused product state:
   PL/EN login/register on mobile and desktop, even with Facebook configured.
-- Validation so far:104 account contracts,6 layout contracts, lint, TypeScript
+- DEV validation:104 account contracts,6 layout contracts, lint, TypeScript
   and8 browser scenarios passed with no skips. Browser checks verify initial
   HTML and hydrated UI, no Facebook discovery/SDK requests, Google visible and
   email fields/submit usable. Restoring baseline Facebook visibility caused the
@@ -30,9 +30,36 @@
   passed (PL/EN login/register, mobile390x844 and desktop1440x900), with zero
   Facebook discovery/SDK requests and zero page errors; all19 Next assets passed.
   Mobile screenshot visually inspected. Preview: existing protected ADG DEV
-  `/en/login` and `/en/register`. Production remains accepted cart releasef278;
-  awaiting owner preview acceptance for this new UI change. Source26343bd pushed
-  on `fix/adg-hide-facebook-20261015`, not merged to main or deployed production.
+  `/en/login` and `/en/register`. Owner then approved “duyệt, force peak”.
+- ✅ Production completed: exact commit `db1459210dea11eff87ec8a334ca2d5271a73d8e`
+  was fast-forwarded to main and released through the guarded Grocery lane.
+  This frontend/admin lane needs no force-peak flag and did not restart backend.
+  Storefront `storefront-db1459210dea-20261015T122314Z`, BUILD_ID
+  `7AINVOcX2WTKFhGId7Zof`; admin `admin-db1459210dea-20261015T122314Z`, BUILD_ID
+  `NDo3ic7ptUYNSe2m2gkwt`. Atomic activation committed; priorf278 releases retained.
+- Fresh root preflight and full check-only passed after waiting for a peer's
+  frontend lock and15minutes of backend uptime. The first actual release stopped
+  before production mutation:59browser passes and one `route.fetch: socket hang up`
+  to the local4199 config fixture (catalog localization case461). No application
+  source or assertions changed; one complete guarded retry passed all60browser
+  cases,118admin/104account/additionalsecurity-checkout contracts, audits with
+  zero production dependency vulnerabilities, lint/types, both builds and smokes.
+  The exact cause of the mock transport reset was not isolated; it was not
+  suppressed or presented as a passing first attempt.
+- Independent production verification passed14HTTP/API checks,8PL/ENlogin/register
+  browser checks on desktop/mobile (zero page errors and Facebook requests), and
+  all19Next assets. Google remained enabled and visible; email forms usable;
+  Facebook absent from both initialHTML and hydratedUI. Production mobile
+  screenshot inspected; no customer, order or payment created by probes.
+- Actual processcwd, manifests and BUILD_IDs matched activation output. Backend
+  PID374145/start1792065012366/restartcount remained unchanged, all4PM2apps online;
+  both runtime-env and admin-auth-state fingerprints unchanged. Fresh Grocery
+  service logs had no diagnostics. No migration/env/payment/shipping/Nginx/admin
+  config/upload changes. Private evidence and first-failure trace:
+  `/home/paul/.local/share/enail/adg-hide-facebook-20261015/`.
+  Verification covers visibility/configuration, not a real Google provider popup
+  or authenticated production admin login; unchanged admin auth/revocation was
+  tested in the standalone smoke with protected runtime state verified.
 
 ---
 
