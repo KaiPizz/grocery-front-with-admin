@@ -1093,3 +1093,9 @@
 - **Cause:** Email is a convention-based bridge and UUID possession was sufficient for anonymous carts. Neither identifies a persistent private account cart across identity lifecycle changes.
 - **Fix:** Bind a distinct private cart UUID to the verified global customer marker and salon Owner FK, validate canonical authentication at shared cart boundaries, and exclude reserved carts from the legacy header and recovery paths.
 - **Rule:** Verify the actual FK and every reader/writer of shared storage before adding account persistence. Preserve immutable identity as well as tenant scope.
+
+### Evaluating the outgoing document inside a paused navigation deadlocks the browser test
+- **Error:** Two new P24 browser tests timed out while the route handler tried to read localStorage with `page.evaluate` before fulfilling the destination navigation.
+- **Cause:** Navigation and the evaluation waited on the same document transition; the product had already saved the expected state and issued the correct retry.
+- **Fix:** Fulfill navigation first, then inspect the original shop origin using `context.storageState()`. All three new browser cases passed with the original quantity and retry assertions.
+- **Rule:** Keep navigation interception callbacks free of outgoing-document evaluation; inspect persisted state after the navigation commits.
