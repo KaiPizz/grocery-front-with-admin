@@ -6,6 +6,16 @@
 
 ---
 
+### Shared backend restarts reset the storefront stability window
+- **Error:** A long storefront check-only completed its tests/build/artifact gates
+  while another guarded backend release held the shared locks; terminal preflight
+  refused activation. A later peer restart also invalidated the first uptime window.
+- **Fix:** Preserve the refusal as infrastructure evidence, reverify the original
+  source/artifact hashes, wait for current backend uptime≥15minutes and clear
+  locks, then use a fresh preflight and the normal full guarded release. Never
+  claim the earlier nonzero check-only passed, remove another session's locks,
+  interrupt its deploy or bypass the stability requirement.
+
 ### Optional-auth mutations need renewal before their first upstream write
 - **Error:** Checkout could create a guest order after the access cookie expired,
   even while the refresh session still belonged to a signed-in customer.

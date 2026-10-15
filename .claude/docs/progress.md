@@ -1,8 +1,40 @@
 # Feature Progress
 
-> **Last updated:** 2026-10-11
+> **Last updated:** 2026-10-15
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
+
+---
+
+## 2026-10-15 Account Cart Production Release
+
+- ✅ Owner accepted DEV and authorized peak backend release. Exact cart backend
+  source landed as eNail `b5cb48f05`; guarded 20-file release snapshot
+  `cc7d852cf`, stamp `20261015_104458`. No migration, dependency or env change.
+- Grocery application code accepted at `68ae0d160c94` was released from exact
+  main commit `f2780d4169834d2ce854778ff387e14f20a871c1` (docs-only delta).
+  Storefront `storefront-f2780d416983-20261015T112534Z`, BUILD_ID
+  `skS-j3eInPuosfkgiQAS8`; admin `admin-f2780d416983-20261015T112534Z`,
+  BUILD_ID `z7EfJ9yyMEVBT5jbrW-6p`. Atomic activation committed; previous8aed
+  releases retained and protected admin auth state preserved.
+- Initial check-only passed every code/build/artifact gate but correctly refused
+  the concurrent backend lock at terminal preflight. Another session's invoice
+  backend restart reset the required15-minute window; cart20 source/artifact
+  hashes were reverified. After clear locks +905s uptime and fresh root preflight,
+  the normal guarded --yes lane repeated all tests/build/smoke/artifact/preflight
+  checks and passed. No guard bypass or skipped tests.
+- Release lane passed118 admin tests,104 account tests, additional checkout and
+  security contracts,60 browser regressions, lint/types/audit and both production
+  builds/standalone smokes. Independent postprod23HTTP/API/auth/schema checks,
+  eight desktop/mobile browser checks (zero page errors) and19Next assets passed.
+  Actual live process cwd, release manifests and BUILD_IDs matched;20 backend
+  source+20artifact hashes and five protected file fingerprints remained intact.
+- Production verification was read-only for business data: no test customer,
+  order or payment. Signed-in two-device/race/PG scenarios were tested on DEV.
+  Full report: eNail `docs/reviews/adg-account-cart-design-20261015.md`; private
+  evidence `/home/paul/.local/share/enail/adg-account-cart-review-20261015/`.
+  Shared eNail logs also contain a separately qualified unchanged SMS admin SQL
+  error and prior public-account SSR issue; no cart activation fatal was found.
 
 ---
 
