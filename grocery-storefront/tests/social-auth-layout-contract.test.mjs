@@ -21,15 +21,13 @@ test('login and register pages decide provider availability on the server per re
   }
 });
 
-test('server availability mirrors the start routes and exposes booleans only', () => {
+test('server availability enables configured Google and keeps Facebook hidden', () => {
   assert.match(availabilitySource, /^import 'server-only';/);
   assert.match(availabilitySource, /normalizeGoogleClientId\(process\.env\.CUSTOMER_GOOGLE_CLIENT_ID\)/);
-  assert.match(availabilitySource, /normalizeFacebookAppId\(process\.env\.CUSTOMER_FACEBOOK_APP_ID\)/);
-  assert.match(availabilitySource, /normalizeFacebookGraphVersion\(process\.env\.CUSTOMER_FACEBOOK_GRAPH_VERSION\)/);
   assert.match(availabilitySource, /hasCustomerAuthBffSecret\(process\.env\.CUSTOMER_AUTH_BFF_SECRET\)/);
   assert.match(availabilitySource, /normalizeCustomerAuthGraphqlUrl\(process\.env\.CUSTOMER_AUTH_GRAPHQL_URL\)/);
   assert.match(availabilitySource, /google: Boolean\(/);
-  assert.match(availabilitySource, /facebook: Boolean\(/);
+  assert.match(availabilitySource, /facebook: false/);
   assert.doesNotMatch(availabilitySource, /clientId:|appId:|SECRET[^)]*:/);
 });
 

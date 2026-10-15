@@ -1,6 +1,5 @@
 import 'server-only';
 
-import { normalizeFacebookAppId, normalizeFacebookGraphVersion } from '@/lib/auth/facebook-oauth';
 import {
   hasCustomerAuthBffSecret,
   normalizeCustomerAuthGraphqlUrl,
@@ -12,7 +11,7 @@ export interface SocialAuthProviders {
   facebook: boolean;
 }
 
-// Same gates as /api/auth/{google,facebook}/start, evaluated while rendering
+// Provider visibility is evaluated while rendering
 // the auth page so the provider section is laid out from the first paint
 // instead of popping in (and pushing the form down) after client discovery.
 export function getSocialAuthAvailability(): SocialAuthProviders {
@@ -22,10 +21,7 @@ export function getSocialAuthAvailability(): SocialAuthProviders {
     google: Boolean(
       bffReady && normalizeGoogleClientId(process.env.CUSTOMER_GOOGLE_CLIENT_ID),
     ),
-    facebook: Boolean(
-      bffReady
-      && normalizeFacebookAppId(process.env.CUSTOMER_FACEBOOK_APP_ID)
-      && normalizeFacebookGraphVersion(process.env.CUSTOMER_FACEBOOK_GRAPH_VERSION),
-    ),
+    // Temporarily hidden until the Facebook sign-in rollout resumes.
+    facebook: false,
   };
 }

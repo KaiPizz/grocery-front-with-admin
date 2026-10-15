@@ -6,6 +6,29 @@
 
 ---
 
+## 2026-10-15 Temporarily Hide Facebook Sign-in
+
+- Owner explicitly deferred Facebook: offer account creation/email sign-in and
+  Google only. Scope is login/register visibility on the public storefront.
+- Reuse the existing server-side `getSocialAuthAvailability()` shared by both
+  auth pages; keep Facebook visibility false before first paint. Google retains
+  its existing configuration/availability checks. This avoids client-side flash,
+  extra configuration, new components or new dependencies. Facebook integration
+  and its security/API contracts remain available for a later rollout.
+- Impact: one production source file, the existing layout contract and Facebook
+  browser spec. No backend/API/schema/env/i18n/state changes; no migration.
+  The obsolete active-Facebook UI scenarios now verify the paused product state:
+  PL/EN login/register on mobile and desktop, even with Facebook configured.
+- Validation so far:104 account contracts,6 layout contracts, lint, TypeScript
+  and8 browser scenarios passed with no skips. Browser checks verify initial
+  HTML and hydrated UI, no Facebook discovery/SDK requests, Google visible and
+  email fields/submit usable. Restoring baseline Facebook visibility caused the
+  expected browser assertion failure; final source was restored byte-for-byte.
+  DEV production build/preview follows; production
+  remains the accepted account-cart release pending review of this new change.
+
+---
+
 ## 2026-10-15 Account Cart Production Release
 
 - ✅ Owner accepted DEV and authorized peak backend release. Exact cart backend

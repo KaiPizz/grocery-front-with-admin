@@ -6,6 +6,14 @@
 
 ---
 
+### Playwright grep matches the full test title
+- **Error:** An anchored `^pl login:` filter found no tests during a causal control.
+- **Cause:** Playwright prefixes the title with file/suite context.
+- **Fix:** Use the distinctive unanchored case text and verify an actual assertion
+  failure, not merely a nonzero exit. The corrected control failed on Facebook
+  markup and the final source was restored.
+- **Rule:** Check selected test count and failure reason before counting a control.
+
 ### Shared backend restarts reset the storefront stability window
 - **Error:** A long storefront check-only completed its tests/build/artifact gates
   while another guarded backend release held the shared locks; terminal preflight
