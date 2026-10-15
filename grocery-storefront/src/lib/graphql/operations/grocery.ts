@@ -442,6 +442,12 @@ export const WISHLIST_SYNC_MUTATION = `
   }
 `;
 
+export const WISHLIST_REMOVE_MUTATION = `
+  mutation WishlistRemoveProduct($productId: ID!) {
+    wishlistRemoveProduct(productId: $productId) { success message }
+  }
+`;
+
 export const WISHLIST_PRODUCT_FIELDS = `
   fragment WishlistProductFields on Product {
     id

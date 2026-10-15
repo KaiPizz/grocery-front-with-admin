@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import {
   clearLegacyAuthStorage,
+  invalidateCustomerState,
   readLegacyAuthTokens,
   setAuthenticatedSessionHint,
 } from '@/lib/auth';
@@ -33,6 +34,8 @@ interface AuthState {
   session: AuthSession;
   initialized: boolean;
   isSubmitting: boolean;
+  customerStateRevision: number;
+  synchronizeSession: (owner: string | null) => void;
   initialize: () => Promise<void>;
   login: (input: { email: string; password: string }) => Promise<AuthActionResult>;
   googleLogin: (credential: string) => Promise<AuthActionResult>;
@@ -68,9 +71,52 @@ function createAuthenticatedSession(user: CustomerProfile): AuthSession {
   return { user, status: 'authenticated' };
 }
 
-function clearCustomerScopedState(): void {
-  useCartStore.getState().clear();
-  useWishlistStore.getState().resetLocal();
+export const CUSTOMER_STATE_OWNER_KEY = 'grocery-customer-state-owner';
+
+function readCustomerStateOwner(storage: 'localStorage' | 'sessionStorage' = 'localStorage'): string | null {
+  try {
+    return typeof window === 'undefined' ? null : window[storage].getItem(CUSTOMER_STATE_OWNER_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writeCustomerStateOwner(id: string | null, publish = true): void {
+  try {
+    window.sessionStorage.setItem(CUSTOMER_STATE_OWNER_KEY, id ?? 'guest');
+  } catch {
+    // Tab storage may be blocked independently of shared storage.
+  }
+  try {
+    if (publish) {
+      if (id) window.localStorage.setItem(CUSTOMER_STATE_OWNER_KEY, id);
+      else window.localStorage.removeItem(CUSTOMER_STATE_OWNER_KEY);
+    }
+  } catch {
+    // A blocked storage must not prevent local logout or session changes.
+  }
+}
+
+function clearCheckoutStorage(sessionOnly = false): void {
+  for (const [storageName, keys] of [
+    ['localStorage', ['adg-checkout-contact', 'adg-p24-cart-snapshot']],
+    ['sessionStorage', ['oms-checkout-draft-v2', 'oms-pending-checkout', 'adg-p24-pending', 'adg-last-order']],
+  ] as const) {
+    if (sessionOnly && storageName !== 'sessionStorage') continue;
+    for (const key of keys) {
+      try { window[storageName].removeItem(key); } catch { /* Storage may be blocked. */ }
+    }
+  }
+}
+
+function clearCustomerScopedState(): number {
+  const generation = invalidateCustomerState();
+  // Zustand updates memory before its persistence middleware writes storage.
+  // A denied persistence write must not interrupt the remaining privacy cleanup.
+  try { useCartStore.getState().clear(); } catch { /* Memory is already cleared. */ }
+  try { useWishlistStore.getState().resetLocal(); } catch { /* Memory is already cleared. */ }
+  clearCheckoutStorage();
+  return generation;
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<{ response: Response; payload: T | null }> {
@@ -149,16 +195,53 @@ async function migrateLegacySession(): Promise<'migrated' | 'missing' | 'invalid
   }
 }
 
-export const useAuthStore = create<AuthState>((set) => {
+export const useAuthStore = create<AuthState>((set, get) => {
   let initializePromise: Promise<void> | null = null;
+  let requestVersion = 0;
+  let ownerId = readCustomerStateOwner();
+  let tabOwnerId = readCustomerStateOwner('sessionStorage');
+  let logoutPending = false;
+
+  function acceptSession(customer: CustomerProfile | null, rejected = false): void {
+    const nextOwnerId = customer?.id ?? null;
+    const changed = rejected || (ownerId !== null && ownerId !== nextOwnerId);
+    let customerStateRevision = get().customerStateRevision;
+    if (changed) customerStateRevision = clearCustomerScopedState();
+    else if (tabOwnerId === null || (tabOwnerId !== (nextOwnerId ?? 'guest') && tabOwnerId !== 'guest')) {
+      // A restored tab may have missed the shared storage event. Its draft can
+      // belong to A even though the shared cart and cookie already belong to B.
+      // Pre-upgrade drafts without an owner are also untrusted; retain the cart.
+      clearCheckoutStorage(true);
+      customerStateRevision = invalidateCustomerState();
+    }
+    ownerId = nextOwnerId;
+    tabOwnerId = nextOwnerId ?? 'guest';
+    writeCustomerStateOwner(ownerId);
+    setAuthenticatedSessionHint(Boolean(customer));
+    set({ session: customer ? createAuthenticatedSession(customer) : createGuestSession(), initialized: true, customerStateRevision });
+  }
 
   return {
     session: createLoadingSession(),
     initialized: false,
     isSubmitting: false,
+    customerStateRevision: 0,
+
+    synchronizeSession: (owner) => {
+      if (owner !== readCustomerStateOwner()) return;
+      ++requestVersion;
+      const customerStateRevision = invalidateCustomerState();
+      setAuthenticatedSessionHint(false);
+      clearCheckoutStorage(true);
+      set({ session: createLoadingSession(), initialized: false, customerStateRevision });
+      // The initiating tab owns shared persistence cleanup. Rehydrate its new
+      // state instead of letting this stale tab overwrite the new customer's cart.
+      window.location.reload();
+    },
 
     initialize: async () => {
       if (initializePromise) return initializePromise;
+      const version = ++requestVersion;
 
       initializePromise = (async () => {
         set({ session: createLoadingSession(), initialized: false });
@@ -205,6 +288,7 @@ export const useAuthStore = create<AuthState>((set) => {
           }
         }
 
+        if (version !== requestVersion) return;
         if (sessionResult.state === 'transient') {
           setAuthenticatedSessionHint(false);
           set({ session: createUnavailableSession(), initialized: true });
@@ -212,25 +296,19 @@ export const useAuthStore = create<AuthState>((set) => {
         }
 
         clearLegacyAuthStorage();
-        const customer = sessionResult.customer;
-        if (hadRejectedCredentials) {
-          clearCustomerScopedState();
-        }
-        setAuthenticatedSessionHint(sessionResult.state === 'authenticated');
-        set({
-          session: customer ? createAuthenticatedSession(customer) : createGuestSession(),
-          initialized: true,
-        });
+        acceptSession(sessionResult.customer, hadRejectedCredentials);
       })();
 
       try {
         await initializePromise;
       } finally {
-        initializePromise = null;
+        if (version === requestVersion) initializePromise = null;
       }
     },
 
     login: async ({ email, password }) => {
+      if (logoutPending) return { success: false, message: null, errors: [] };
+      const version = ++requestVersion;
       set({ isSubmitting: true });
 
       try {
@@ -247,9 +325,9 @@ export const useAuthStore = create<AuthState>((set) => {
           };
         }
 
+        if (version !== requestVersion) return { success: false, message: null, errors: [] };
         clearLegacyAuthStorage();
-        setAuthenticatedSessionHint(true);
-        set({ session: createAuthenticatedSession(payload.customer), initialized: true });
+        acceptSession(payload.customer);
         return { success: true, message: payload.message, errors: [] };
       } catch {
         return { success: false, message: 'Login failed', errors: [] };
@@ -259,6 +337,8 @@ export const useAuthStore = create<AuthState>((set) => {
     },
 
     googleLogin: async (credential) => {
+      if (logoutPending) return { success: false, message: null, errors: [] };
+      const version = ++requestVersion;
       set({ isSubmitting: true });
 
       try {
@@ -275,9 +355,9 @@ export const useAuthStore = create<AuthState>((set) => {
           };
         }
 
+        if (version !== requestVersion) return { success: false, message: null, errors: [] };
         clearLegacyAuthStorage();
-        setAuthenticatedSessionHint(true);
-        set({ session: createAuthenticatedSession(payload.customer), initialized: true });
+        acceptSession(payload.customer);
         return { success: true, message: payload.message, errors: [] };
       } catch {
         return { success: false, message: 'Google sign-in failed', errors: [] };
@@ -287,6 +367,8 @@ export const useAuthStore = create<AuthState>((set) => {
     },
 
     facebookLogin: async (accessToken, state, locale) => {
+      if (logoutPending) return { success: false, message: null, errors: [] };
+      const version = ++requestVersion;
       set({ isSubmitting: true });
 
       try {
@@ -303,9 +385,9 @@ export const useAuthStore = create<AuthState>((set) => {
           };
         }
 
+        if (version !== requestVersion) return { success: false, message: null, errors: [] };
         clearLegacyAuthStorage();
-        setAuthenticatedSessionHint(true);
-        set({ session: createAuthenticatedSession(payload.customer), initialized: true });
+        acceptSession(payload.customer);
         return { success: true, message: payload.message, errors: [] };
       } catch {
         return { success: false, message: 'Facebook sign-in failed', errors: [] };
@@ -315,6 +397,8 @@ export const useAuthStore = create<AuthState>((set) => {
     },
 
     register: async ({ fullName, email, password, phone, locale }) => {
+      if (logoutPending) return { success: false, message: null, errors: [] };
+      const version = ++requestVersion;
       set({ isSubmitting: true });
 
       try {
@@ -331,9 +415,9 @@ export const useAuthStore = create<AuthState>((set) => {
           };
         }
 
+        if (version !== requestVersion) return { success: false, message: null, errors: [] };
         clearLegacyAuthStorage();
-        setAuthenticatedSessionHint(true);
-        set({ session: createAuthenticatedSession(payload.customer), initialized: true });
+        acceptSession(payload.customer);
         return { success: true, message: payload.message, errors: [] };
       } catch {
         return { success: false, message: 'Registration failed', errors: [] };
@@ -343,23 +427,34 @@ export const useAuthStore = create<AuthState>((set) => {
     },
 
     logout: async () => {
+      logoutPending = true;
+      set({ isSubmitting: true });
+      get().clearSession();
       try {
-        await requestJson('/api/auth/logout', { method: 'POST', body: '{}' });
-      } catch {
-        // The BFF clears cookies even if upstream revocation fails; local state must also clear.
+        const { response } = await requestJson('/api/auth/logout', { method: 'POST', body: '{}' });
+        if (!response.ok) throw new Error('Logout failed');
+        // The BFF clears cookies even if upstream revocation fails. Publish only
+        // after that response so peers cannot bootstrap the outgoing cookie.
+        writeCustomerStateOwner(null);
+      } catch (error) {
+        set({ session: createUnavailableSession(), initialized: true });
+        throw error;
       } finally {
-        clearLegacyAuthStorage();
-        setAuthenticatedSessionHint(false);
-        clearCustomerScopedState();
-        set({ session: createGuestSession(), initialized: true });
+        logoutPending = false;
+        set({ isSubmitting: false });
       }
     },
 
     clearSession: () => {
+      ++requestVersion;
+      initializePromise = null;
       clearLegacyAuthStorage();
       setAuthenticatedSessionHint(false);
-      clearCustomerScopedState();
-      set({ session: createGuestSession(), initialized: true });
+      const customerStateRevision = clearCustomerScopedState();
+      ownerId = null;
+      tabOwnerId = 'guest';
+      writeCustomerStateOwner(null, !logoutPending);
+      set({ session: createGuestSession(), initialized: true, customerStateRevision });
     },
   };
 });

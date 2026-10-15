@@ -232,7 +232,7 @@ test('session checks fail closed without discarding state on ambiguous GraphQL n
 test('definitive local session clearing removes shared-device customer state', () => {
   assert.match(authStoreSource, /function clearCustomerScopedState[\s\S]*useCartStore\.getState\(\)\.clear\(\)/);
   assert.match(authStoreSource, /function clearCustomerScopedState[\s\S]*useWishlistStore\.getState\(\)\.resetLocal\(\)/);
-  assert.match(authStoreSource, /if \(hadRejectedCredentials\) \{\s*clearCustomerScopedState\(\)/);
+  assert.match(authStoreSource, /acceptSession\(sessionResult\.customer, hadRejectedCredentials\)/);
   assert.match(authStoreSource, /clearSession: \(\) => \{[\s\S]*clearCustomerScopedState\(\)/);
 });
 
@@ -241,7 +241,7 @@ test('ordinary guests are distinct from rejected credentials during bootstrap', 
   assert.match(sessionRouteSource, /code: 'NO_SESSION_COOKIE'/);
   assert.match(authStoreSource, /'invalid' \| 'missing' \| 'transient' \| 'guest'/);
   assert.match(authStoreSource, /payload\.code === 'NO_SESSION_COOKIE'/);
-  assert.match(authStoreSource, /if \(hadRejectedCredentials\)/);
+  assert.match(authStoreSource, /const changed = rejected \|\| \(ownerId !== null && ownerId !== nextOwnerId\)/);
   assert.match(
     releaseActivatorSource,
     /if \[\[ "\$status" != "200" \]\]; then[\s\S]*guest customer session endpoint returned \$status[\s\S]*payload\.authenticated !== false[\s\S]*payload\.code !== 'NO_SESSION_COOKIE'/,

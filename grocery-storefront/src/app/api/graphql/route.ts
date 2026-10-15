@@ -60,6 +60,33 @@ function isUnauthenticatedResponse(status: number, data: string): boolean {
   }
 }
 
+function needsAccessRenewal(accessToken: string | null): boolean {
+  if (!accessToken) return true;
+  try {
+    const payload = JSON.parse(Buffer.from(accessToken.split('.')[1], 'base64url').toString('utf8')) as { exp?: number };
+    // This schedules renewal only; upstream still validates the signed token.
+    return typeof payload.exp !== 'number' || payload.exp <= Date.now() / 1000;
+  } catch {
+    return true;
+  }
+}
+
+async function refreshSession(refreshToken: string) {
+  const renewal = await renewCustomerSessionSingleFlight(refreshToken);
+  if (renewal.payload?.success && renewal.payload.accessToken) {
+    return { payload: renewal.payload, failure: null };
+  }
+  const rejected = isDefinitiveRefreshFailure(renewal.payload);
+  const rotated = isRefreshAlreadyRotated(renewal.payload);
+  const response = NextResponse.json({ errors: [{
+    message: rejected ? 'Customer session has expired.' : rotated
+      ? 'Session renewal is already in progress.' : 'Authentication service is temporarily unavailable.',
+    extensions: { code: rejected ? 'CUSTOMER_SESSION_EXPIRED' : rotated ? 'REFRESH_ALREADY_ROTATED' : 'UPSTREAM_UNAVAILABLE' },
+  }] }, { status: rejected ? 401 : rotated ? 409 : 502 });
+  if (rejected) clearCustomerCookies(response);
+  return { payload: null, failure: setNoStoreHeaders(response) };
+}
+
 export async function POST(request: NextRequest) {
   const rejection = validateJsonMutationRequest(request);
   if (rejection) {
@@ -97,40 +124,19 @@ export async function POST(request: NextRequest) {
       ));
     }
 
-    let upstream = await fetchUpstream(body, tokens.accessToken);
-    let renewalRejected = false;
-    let renewalUnavailable = false;
-    let renewalAlreadyRotated = false;
-
-    if (
-      isUnauthenticatedResponse(upstream.response.status, upstream.data)
-      && tokens.refreshToken
-    ) {
-      const renewal = await renewCustomerSessionSingleFlight(tokens.refreshToken);
-      if (renewal.payload?.success && renewal.payload.accessToken) {
-        renewed = renewal.payload;
-        upstream = await fetchUpstream(body, renewal.payload.accessToken);
-      } else if (isRefreshAlreadyRotated(renewal.payload)) {
-        renewalAlreadyRotated = true;
-      } else if (isDefinitiveRefreshFailure(renewal.payload)) {
-        renewalRejected = true;
-      } else {
-        renewalUnavailable = true;
-      }
+    // Guest-capable mutations do not return an auth error when access is absent.
+    // Renew before forwarding so checkout runs exactly once with its customer.
+    if (tokens.refreshToken && needsAccessRenewal(tokens.accessToken)) {
+      const renewal = await refreshSession(tokens.refreshToken);
+      if (renewal.failure) return renewal.failure;
+      renewed = renewal.payload;
     }
-
-    if (renewalUnavailable) {
-      return setNoStoreHeaders(NextResponse.json(
-        { errors: [{ message: 'Authentication service is temporarily unavailable.', extensions: { code: 'UPSTREAM_UNAVAILABLE' } }] },
-        { status: 502 },
-      ));
-    }
-
-    if (renewalAlreadyRotated) {
-      return setNoStoreHeaders(NextResponse.json(
-        { errors: [{ message: 'Session renewal is already in progress.', extensions: { code: 'REFRESH_ALREADY_ROTATED' } }] },
-        { status: 409 },
-      ));
+    let upstream = await fetchUpstream(body, renewed?.accessToken ?? tokens.accessToken);
+    if (!renewed && tokens.refreshToken && isUnauthenticatedResponse(upstream.response.status, upstream.data)) {
+      const renewal = await refreshSession(tokens.refreshToken);
+      if (renewal.failure) return renewal.failure;
+      renewed = renewal.payload;
+      upstream = await fetchUpstream(body, renewed?.accessToken ?? null);
     }
 
     const response = new NextResponse(upstream.data, {
@@ -146,8 +152,6 @@ export async function POST(request: NextRequest) {
         renewed.expiresIn,
       );
       clearLegacyCookies(response);
-    } else if (renewalRejected) {
-      clearCustomerCookies(response);
     }
 
     return setNoStoreHeaders(response);

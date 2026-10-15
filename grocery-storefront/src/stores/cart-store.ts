@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { getCustomerStateGeneration } from '@/lib/auth';
 import {
   CART_BUYER_IDENTITY_UPDATE_MUTATION,
   CART_CREATE_MUTATION,
@@ -458,6 +459,7 @@ export const useCartStore = create<CartState>()(
         cart: CartGraphqlShape | null,
         metadataPatch?: Record<string, CartLineMetadata>
       ) => {
+        const generation = getCustomerStateGeneration();
         if (!cart) {
           set({
             ...createEmptyState(),
@@ -475,6 +477,7 @@ export const useCartStore = create<CartState>()(
           cart.lines.map((line) => line.merchandiseId),
           metadataByMerchandiseId
         );
+        if (generation !== getCustomerStateGeneration()) return;
         const resolvedMetadata = {
           ...metadataByMerchandiseId,
           ...fetchedMetadata,

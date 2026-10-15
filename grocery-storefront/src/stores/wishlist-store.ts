@@ -2,10 +2,11 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { hasAuthenticatedSession } from '@/lib/auth';
+import { getCustomerStateGeneration, hasAuthenticatedSession } from '@/lib/auth';
 import {
   WISHLIST_PRODUCT_FIELDS,
   WISHLIST_QUERY,
+  WISHLIST_REMOVE_MUTATION,
   WISHLIST_SYNC_MUTATION,
 } from '@/lib/graphql/operations/grocery';
 import { resolveChannel } from '@/lib/channel';
@@ -46,6 +47,13 @@ interface WishlistSyncResponse {
 }
 
 type WishlistSetter = (partial: Partial<WishlistState>) => void;
+
+function sessionSetter(set: WishlistSetter): WishlistSetter {
+  const generation = getCustomerStateGeneration();
+  return (partial) => {
+    if (generation === getCustomerStateGeneration()) set(partial);
+  };
+}
 
 function setGuestWishlistState(
   set: WishlistSetter,
@@ -291,7 +299,7 @@ async function syncServerWishlist(nextGuestItems: WishlistItem[], set: WishlistS
 
 export const useWishlistStore = create<WishlistState>()(
   persist(
-    (set, get) => ({
+    (storeSet, get) => ({
       items: [],
       guestItems: [],
       pendingSyncProductIds: null,
@@ -301,6 +309,7 @@ export const useWishlistStore = create<WishlistState>()(
       initialized: false,
 
       loadWishlist: async () => {
+        const set = sessionSetter(storeSet);
         const authenticated = hasAuthenticatedSession();
 
         if (!authenticated) {
@@ -388,6 +397,7 @@ export const useWishlistStore = create<WishlistState>()(
       },
 
       syncGuestWishlist: async (items) => {
+        const set = sessionSetter(storeSet);
         const nextGuestItems = items ?? get().guestItems;
         const authenticated = hasAuthenticatedSession();
 
@@ -419,6 +429,7 @@ export const useWishlistStore = create<WishlistState>()(
       },
 
       addItem: async (item) => {
+        const set = sessionSetter(storeSet);
         const nextGuestItems = upsertWishlistItem(get().guestItems, item);
         const nextProductIds = getWishlistProductIds(nextGuestItems);
         const canUseServer = hasAuthenticatedSession() && get().serverStatus !== 'unavailable';
@@ -444,9 +455,11 @@ export const useWishlistStore = create<WishlistState>()(
       },
 
       removeItem: async (productId) => {
+        const set = sessionSetter(storeSet);
+        const previous = get();
         const nextGuestItems = removeWishlistItem(get().guestItems, productId);
         const nextProductIds = getWishlistProductIds(nextGuestItems);
-        const canUseServer = hasAuthenticatedSession() && get().serverStatus !== 'unavailable';
+        const canUseServer = hasAuthenticatedSession();
 
         set({
           items: removeWishlistItem(get().items, productId),
@@ -461,10 +474,15 @@ export const useWishlistStore = create<WishlistState>()(
         }
 
         try {
-          return await syncServerWishlist(nextGuestItems, set);
-        } catch {
-          setGuestWishlistState(set, nextGuestItems, 'unavailable', nextProductIds);
+          const response = await graphqlRequest<{ wishlistRemoveProduct: { success: boolean; message: string | null } | null }>(WISHLIST_REMOVE_MUTATION, { productId });
+          if (getGraphqlErrorMessage(response.errors) || !response.data?.wishlistRemoveProduct?.success) {
+            throw new Error(response.data?.wishlistRemoveProduct?.message ?? 'Wishlist removal failed');
+          }
+          set({ pendingSyncProductIds: null, source: 'server', serverStatus: 'available', isLoading: false });
           return true;
+        } catch {
+          set({ items: previous.items, guestItems: previous.guestItems, pendingSyncProductIds: previous.pendingSyncProductIds, isLoading: false });
+          return false;
         }
       },
 
@@ -479,28 +497,19 @@ export const useWishlistStore = create<WishlistState>()(
       hasItem: (productId) => get().items.some((item) => item.productId === productId),
 
       clear: async () => {
-        const canUseServer = hasAuthenticatedSession() && get().serverStatus !== 'unavailable';
-        const emptyItems: WishlistItem[] = [];
-
-        set({
-          items: emptyItems,
-          guestItems: emptyItems,
-          pendingSyncProductIds: canUseServer ? [] : null,
-          source: 'guest',
-          initialized: true,
-        });
-
-        if (!canUseServer) return;
-
-        try {
-          await syncServerWishlist(emptyItems, set);
-        } catch {
-          setGuestWishlistState(set, get().guestItems, 'unavailable', []);
+        if (!hasAuthenticatedSession()) {
+          get().resetLocal();
+          return;
+        }
+        const generation = getCustomerStateGeneration();
+        for (const productId of getWishlistProductIds(get().items)) {
+          if (generation !== getCustomerStateGeneration()) return;
+          if (!await get().removeItem(productId)) return;
         }
       },
 
       resetLocal: () => {
-        setGuestWishlistState(set, []);
+        setGuestWishlistState(storeSet, []);
       },
     }),
     {

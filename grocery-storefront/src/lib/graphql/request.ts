@@ -1,6 +1,6 @@
 'use client';
 
-import { emitSessionExpired } from '@/lib/auth';
+import { emitSessionExpired, getCustomerStateGeneration } from '@/lib/auth';
 import { isGraphqlAuthenticationFailure } from '@/lib/auth/authentication-policy';
 
 interface GraphQLErrorPayload {
@@ -26,12 +26,21 @@ export async function graphqlRequest<T>(
   query: string,
   variables?: Record<string, unknown>,
 ): Promise<GraphQLResponse<T>> {
+  const generation = getCustomerStateGeneration();
   const firstResponse = await sendGraphqlRequest<T>(query, variables);
+  if (generation !== getCustomerStateGeneration()) throw new Error('Customer session changed.');
+  if (firstResponse.errors.some((error) => error.extensions?.code === 'CUSTOMER_SESSION_EXPIRED')) {
+    emitSessionExpired();
+    return firstResponse;
+  }
   if (!isUnauthenticated(firstResponse)) return firstResponse;
 
   const refreshResult = await refreshCustomerSession();
+  if (generation !== getCustomerStateGeneration()) throw new Error('Customer session changed.');
   if (refreshResult === 'renewed') {
-    return sendGraphqlRequest<T>(query, variables);
+    const response = await sendGraphqlRequest<T>(query, variables);
+    if (generation !== getCustomerStateGeneration()) throw new Error('Customer session changed.');
+    return response;
   }
 
   if (refreshResult === 'invalid') {

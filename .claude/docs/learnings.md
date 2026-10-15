@@ -6,6 +6,47 @@
 
 ---
 
+### Optional-auth mutations need renewal before their first upstream write
+- **Error:** Checkout could create a guest order after the access cookie expired,
+  even while the refresh session still belonged to a signed-in customer.
+- **Cause:** The BFF refreshed only after an authentication error, while the
+  guest-capable checkout mutation legitimately accepted missing access.
+- **Fix:** Renew absent/expired access before forwarding; fail closed on rejected
+  refresh, preserve cookies on concurrency/transient errors, and retain rotated
+  cookies on a later transport failure.
+- **Rule:** Do not use an optional-auth operation's failure as the trigger for
+  authentication recovery. Establish identity before its first side effect.
+
+### Cross-tab cleanup must preserve the incoming customer's shared storage
+- **Error:** A stale tab could erase B's new cart, restore A while logout cookies
+  were still valid, or recover an A draft after missing a storage event.
+- **Cause:** Every receiver cleared shared persisted stores, the owner marker
+  changed before logout returned, and a global marker did not identify tab drafts.
+- **Fix:** The initiating tab clears shared state; peers invalidate/hide local UI,
+  remove only tab-private hints and reload. Publish logout after cookie clearing;
+  tag tab ownership and reject late responses and concurrent sign-in during logout.
+- **Rule:** Cookie completion, shared state ownership and per-tab drafts are
+  separate boundaries. Test delayed responses, missed events and multiple tabs.
+
+### A denied persistence write must not abort the rest of logout
+- **Error:** Browser-denied legacy storage could throw before cart, wishlist and
+  tab-private data were cleared; Zustand persistence could also stop the cleanup.
+- **Cause:** Optional browser storage/cookie operations propagated exceptions
+  into the shared privacy boundary.
+- **Fix:** Catch each legacy access independently and continue remaining cleanup;
+  tolerate persistence errors after Zustand has cleared its in-memory state.
+- **Rule:** Logout must complete every available local privacy cleanup even when
+  another browser storage or cookie operation is denied.
+
+### Wishlist merge-import cannot implement explicit deletion
+- **Error:** Sending remaining product IDs to wishlistSync appeared to remove an
+  item locally but the backend merge retained it after the next load.
+- **Cause:** Import and deletion had been treated as interchangeable operations.
+- **Fix:** Use existing wishlistRemoveProduct for removal; clear invokes deletion
+  for each current item, stopping on failure or a customer generation change.
+- **Rule:** Preserve merge-import semantics and call the explicit delete API for
+  user removal. Mock fixtures must model the backend's merge behavior.
+
 ### Next diagnostic digests can change between immutable builds
 - **Error:** The post-release verifier rejected the known destination-stream-close
   diagnostic even though its message and frames matched the previous release.

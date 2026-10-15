@@ -6,6 +6,37 @@
 
 ---
 
+## 2026-10-15 Customer Session And Checkout Isolation
+
+- ✅ Source changes complete; DEV runtime preview and production release remain
+  owned by the main session. No production mutation/restart was performed here.
+- Password, Google, Facebook and registration share one customer boundary:
+  switching accounts, logout and definitive expiration remove cart/wishlist,
+  checkout/contact drafts, last-order details and local P24 hints. First guest
+  sign-in retains the guest cart. Customer markers contain only an ID, never
+  tokens, email or profile data.
+- Cross-tab events hide old checkout state and reload the new shared state
+  without overwriting the new customer's persisted cart/wishlist. Per-tab owner
+  markers discard stale/restored or legacy unowned drafts. Late GraphQL/store
+  responses cannot repopulate the previous customer's data.
+- Logout clears this page immediately, broadcasts only after BFF cookies are
+  cleared, blocks concurrent sign-in, and reports network failure truthfully.
+- Denied browser storage/cookies cannot interrupt in-memory logout or cleanup
+  of other available stores; internal stale/blocked auth results use localized
+  caller fallbacks instead of raw English messages.
+- The GraphQL BFF renews missing/expired access before forwarding guest-capable
+  checkout; invalid/reused refresh sessions fail closed, rotation conflicts keep
+  cookies, and transient failures return 502. Successful rotation survives a
+  later upstream transport error. Guests still submit normally.
+- Wishlist removal now uses the existing server delete mutation; clear removes
+  explicitly and stops on a failure or customer change, preserving merge-only
+  guest import semantics.
+- Validation: new real-store/BFF behavior suite, existing account/checkout
+  contracts, TypeScript and ESLint. Two browser regression cases cover mounted
+  checkout logout and cross-tab A-to-B switching; main runs them on built DEV.
+
+---
+
 ## 2026-10-11 Contact Footer Simplification
 
 - Owner feedback: the footer repeated the Kontakt heading as a second outlined

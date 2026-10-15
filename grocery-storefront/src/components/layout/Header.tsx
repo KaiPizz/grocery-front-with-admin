@@ -349,10 +349,14 @@ export function Header() {
   ];
 
   async function handleLogout() {
-    await logout();
-    setMenuOpen(false);
-    toast.success(tAuth('logoutSuccess'));
-    router.push('/');
+    try {
+      await logout();
+      setMenuOpen(false);
+      toast.success(tAuth('logoutSuccess'));
+      router.push('/');
+    } catch {
+      toast.error(tAuth('logoutFailed'));
+    }
   }
 
   const mobileShopItems = [

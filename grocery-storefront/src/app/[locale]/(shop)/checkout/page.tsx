@@ -34,6 +34,7 @@ import {
   CUSTOMER_ADDRESSES_QUERY,
 } from '@/lib/graphql/operations/grocery';
 import { getGraphqlErrorMessage, graphqlRequest } from '@/lib/graphql/request';
+import { getCustomerStateGeneration } from '@/lib/auth';
 import { formatPrice } from '@/lib/utils';
 import { useChannel } from '@/hooks/use-channel';
 import { useHydrated } from '@/hooks/use-hydrated';
@@ -435,6 +436,26 @@ function CheckoutBlock({
 }
 
 export default function CheckoutPage() {
+  const tAuth = useTranslations('auth');
+  const tCommon = useTranslations('common');
+  const initialize = useAuthStore((state) => state.initialize);
+  const initialized = useAuthStore((state) => state.initialized);
+  const authStatus = useAuthStore((state) => state.session.status);
+  const revision = useAuthStore((state) => state.customerStateRevision);
+  // Wait for identity validation before reading a persisted draft; remount on an
+  // account boundary so an old form cannot write private values back to storage.
+  if (!initialized) return null;
+  if (authStatus === 'unavailable') return (
+    <div className="container-grocery py-12" role="alert">
+      <p>{tAuth('sessionUnavailable')}</p>
+      <button type="button" className="mt-4 underline" onClick={() => void initialize()}>{tCommon('retry')}</button>
+    </div>
+  );
+  return <CheckoutForm key={revision} />;
+}
+
+function CheckoutForm() {
+  const customerGeneration = useRef(getCustomerStateGeneration());
   const locale = useLocale();
   const t = useTranslations('checkout');
   const tCart = useTranslations('cart');
@@ -754,7 +775,7 @@ export default function CheckoutPage() {
   }, [initialized, router]);
 
   useEffect(() => {
-    if (!isHydrated) {
+    if (!isHydrated || customerGeneration.current !== getCustomerStateGeneration()) {
       return;
     }
 
@@ -787,7 +808,7 @@ export default function CheckoutPage() {
   }, [isHydrated]);
 
   useEffect(() => {
-    if (!isHydrated) {
+    if (!isHydrated || customerGeneration.current !== getCustomerStateGeneration()) {
       return;
     }
 
@@ -1097,6 +1118,7 @@ export default function CheckoutPage() {
   // the last one) and pushes the current address, delivery method and note into it.
   // Returns the checkout id and the server total, or null after showing the error.
   async function initializeCheckoutHandoff(): Promise<{ id: string; total: number | null } | null> {
+    if (customerGeneration.current !== getCustomerStateGeneration()) return null;
     const legacyShippingMethodId = selectedDeliveryOption?.id;
 
     if (!legacyShippingMethodId) {
@@ -1367,6 +1389,7 @@ export default function CheckoutPage() {
   // the shopper to P24. Only identifiers go to sessionStorage; the return page
   // asks the backend for the real status.
   async function startP24Payment(order: { id: string; number: string }, legacyCheckoutId: string | null) {
+    if (customerGeneration.current !== getCustomerStateGeneration()) return;
     if (!legacyCheckoutId) return;
 
     setPendingP24Order(order);
@@ -1536,6 +1559,8 @@ export default function CheckoutPage() {
       if (isAuthenticated && buyerPhone && buyerPhone !== authPhone.trim()) {
         await saveProfilePhone(buyerPhone);
       }
+
+      if (customerGeneration.current !== getCustomerStateGeneration()) return;
 
       if (!isAuthenticated) {
         writeRememberedContact(

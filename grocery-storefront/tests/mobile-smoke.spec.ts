@@ -216,14 +216,14 @@ test.describe('mobile storefront smoke', () => {
     expect(Math.round(addButtonBox!.height)).toBeLessThanOrEqual(48);
   });
 
-  test('keeps signed-in wishlist removals after stale sync responses', async ({ page }) => {
-    let syncedProductIds: string[] | null = null;
+  test('keeps signed-in wishlist removals after reload using the server delete operation', async ({ page }) => {
+    let removedProductId: string | null = null;
 
     await seedAuthSession(page);
     await mockMobileStorefront(page, {
       wishlist: 'stale-remove',
-      onWishlistSyncMutation: (productIds) => {
-        syncedProductIds = productIds;
+      onWishlistRemoveMutation: (productId) => {
+        removedProductId = productId;
       },
     });
 
@@ -236,7 +236,7 @@ test.describe('mobile storefront smoke', () => {
     await wishlistButton.click();
 
     await expect(wishlistButton).toHaveAttribute('aria-label', /add to wishlist/i);
-    expect(syncedProductIds).toEqual([]);
+    expect(removedProductId).toBe('prod-apples');
 
     await page.reload();
     await expect(page.getByRole('heading', { name: /organic gala apples family value pack/i })).toBeVisible();

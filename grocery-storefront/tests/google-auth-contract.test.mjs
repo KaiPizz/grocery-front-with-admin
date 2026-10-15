@@ -121,7 +121,7 @@ test('server service forwards the provider credential and nonce without exposing
   assert.match(serverServiceSource, /googleLoginCustomer\(input: \{ token: string; nonce: string \}\)/);
   assert.match(authStoreSource, /googleLogin: async \(credential\)/);
   assert.match(authStoreSource, /fetch\(path/);
-  assert.doesNotMatch(authStoreSource, /localStorage\.setItem|sessionStorage\.setItem/);
+  assert.doesNotMatch(authStoreSource, /(?:localStorage|sessionStorage)\.setItem\([^,]*(?:TOKEN|PROFILE)|JSON\.stringify\(payload\.customer\)/);
   assert.match(serverServiceSource, /privateCustomerAuthGraphqlRequest<GoogleLoginResult>/);
   assert.match(serverServiceSource, /'x-customer-auth-bff-secret': bffSecret/);
   assert.match(serverServiceSource, /normalizeCustomerAuthGraphqlUrl\(process\.env\.CUSTOMER_AUTH_GRAPHQL_URL\)/);

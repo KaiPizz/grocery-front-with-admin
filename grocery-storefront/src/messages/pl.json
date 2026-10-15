@@ -652,6 +652,8 @@
     "legalNoticeConnector": "oraz",
     "legalNoticePrivacy": "Polityką prywatności",
     "logoutSuccess": "Wylogowano pomyślnie",
+    "logoutFailed": "Nie udało się zakończyć wylogowania. Dane zostały usunięte z tej strony. Odśwież stronę i spróbuj ponownie.",
+    "sessionUnavailable": "Nie udało się potwierdzić stanu logowania. Spróbuj ponownie przed kontynuowaniem zamówienia.",
     "forgotPasswordLink": "Nie pamiętasz hasła?",
     "forgotPasswordEyebrow": "Pomoc z hasłem",
     "forgotPasswordTitle": "Nie pamiętasz hasła?",

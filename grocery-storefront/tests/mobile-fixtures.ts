@@ -1120,6 +1120,7 @@ interface MockMobileStorefrontOptions {
   onProductDetailQuery?: (query: string, variables: Record<string, unknown>) => void;
   onSearchProductsIndexQuery?: (variables: Record<string, unknown>) => void;
   onWishlistSyncMutation?: (productIds: string[]) => void;
+  onWishlistRemoveMutation?: (productId: string) => void;
 }
 
 // Ten brands, so the listing shows eight and a "show more (2)" toggle.
@@ -1513,6 +1514,14 @@ export async function mockMobileStorefront(
       return;
     }
 
+    if (operationName === 'WishlistRemoveProduct' || query.includes('mutation WishlistRemoveProduct')) {
+      const productId = String(body.variables?.productId ?? '');
+      options.onWishlistRemoveMutation?.(productId);
+      wishlistItems = wishlistItems.filter((item) => item.productId !== productId);
+      await fulfill(route, { wishlistRemoveProduct: { success: true, message: null } });
+      return;
+    }
+
     if (operationName === 'WishlistSync' || query.includes('mutation WishlistSync')) {
       const productIds = Array.isArray(body.variables?.productIds)
         ? body.variables.productIds.map((value: unknown) => String(value))
@@ -1531,7 +1540,7 @@ export async function mockMobileStorefront(
         return;
       }
 
-      wishlistItems = productIds
+      wishlistItems = [...new Set([...wishlistItems.map((item) => item.productId), ...productIds])]
         .map((productId: string) => buildWishlistServerItem(productId))
         .filter((item: WishlistServerItemState | null): item is WishlistServerItemState => item !== null);
 

@@ -652,6 +652,8 @@
     "legalNoticeConnector": "and",
     "legalNoticePrivacy": "Privacy Policy",
     "logoutSuccess": "Signed out successfully",
+    "logoutFailed": "Could not finish signing out. Your details were cleared on this page. Reload and try again.",
+    "sessionUnavailable": "Your sign-in status could not be confirmed. Try again before continuing checkout.",
     "forgotPasswordLink": "Forgot your password?",
     "forgotPasswordEyebrow": "Password help",
     "forgotPasswordTitle": "Forgot your password?",

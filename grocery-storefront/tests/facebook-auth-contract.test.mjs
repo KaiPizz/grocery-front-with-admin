@@ -150,7 +150,7 @@ test('official Facebook SDK is click-gated, privacy-reduced and keeps state/toke
   assert.doesNotMatch(componentSource, /localStorage|sessionStorage|console\.(?:log|warn|error)/);
   assert.match(authStoreSource, /facebookLogin: async \(accessToken, state, locale\)/);
   assert.match(authStoreSource, /JSON\.stringify\(\{ accessToken, state, locale \}\)/);
-  assert.doesNotMatch(authStoreSource, /localStorage\.setItem|sessionStorage\.setItem/);
+  assert.doesNotMatch(authStoreSource, /(?:localStorage|sessionStorage)\.setItem\([^,]*(?:TOKEN|PROFILE)|JSON\.stringify\(payload\.customer\)/);
 });
 
 test('PL/EN login and registration keep one localized email fallback and unverified-email prompt', () => {
