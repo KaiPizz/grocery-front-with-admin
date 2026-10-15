@@ -563,6 +563,16 @@ export const GET_CART_QUERY = `
   }
 `;
 
+export const ACCOUNT_CART_SYNC_MUTATION = `
+  ${CART_FIELDS}
+  mutation AccountCartSync($guestCartId: ID) {
+    accountCartSync(guestCartId: $guestCartId) {
+      cart { ...CartFields }
+      userErrors { field message code }
+    }
+  }
+`;
+
 export const CART_LINES_ADD_MUTATION = `
   ${CART_FIELDS}
   mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
@@ -732,6 +742,7 @@ export const CHECKOUT_COMPLETE_MUTATION = `
         total { gross { amount currency } }
       }
       confirmationNeeded
+      cartChanged
       errors { field message code }
     }
   }

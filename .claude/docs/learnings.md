@@ -1081,3 +1081,15 @@
 - **Cause:** The QA client navigated away while Next prefetch/stream work was still active; network idleness is unrelated to the contact link's rendered readiness.
 - **Fix:** Wait for DOM readiness and the required visible controls, keep genuine HTTP/page errors fatal, and independently fetch every `net::ERR_ABORTED` asset to prove HTTP 200 with the correct content type. Fully read five live homepage/contact/terms responses and confirm no new stderr.
 - **Rule:** Distinguish deliberate client cancellation from broken assets or rendering; inspect fresh log content and complete responses instead of requiring an empty error log or perpetual network idle.
+
+### A saved shopping cart must be consumed with the order transaction
+- **Error:** Clearing an account cart only after a successful browser response leaves purchased items active if the tab or network disappears after the order commits; clearing the latest cart can erase another device's additions.
+- **Cause:** The storefront creates a separate checkout from the shopping-cart snapshot, so local cleanup and server order creation are different operations.
+- **Fix:** Pass the submitted source cart and revision to completion; the backend validates identity and line quantities, closes only that revision in the first-order transaction, and records conflicts in order metadata. The client reloads the authoritative account cart and retains the pending P24 retry view.
+- **Rule:** Link shopping-cart consumption to the first order commit. A response, an old replay, or a local reset is not proof that the current server cart was consumed.
+
+### Account cart identity cannot rely on a recyclable email or a browser cart UUID
+- **Error:** The legacy cart FK points to salon Owners while storefront authentication uses global Customers; public aliases and legacy REST/recovery paths can otherwise reach the same cart rows.
+- **Cause:** Email is a convention-based bridge and UUID possession was sufficient for anonymous carts. Neither identifies a persistent private account cart across identity lifecycle changes.
+- **Fix:** Bind a distinct private cart UUID to the verified global customer marker and salon Owner FK, validate canonical authentication at shared cart boundaries, and exclude reserved carts from the legacy header and recovery paths.
+- **Rule:** Verify the actual FK and every reader/writer of shared storage before adding account persistence. Preserve immutable identity as well as tenant scope.

@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { getCustomerStateGeneration } from '@/lib/auth';
 import {
+  ACCOUNT_CART_SYNC_MUTATION,
   CART_BUYER_IDENTITY_UPDATE_MUTATION,
   CART_CREATE_MUTATION,
   CART_DELIVERY_OPTIONS_QUERY,
@@ -85,6 +86,12 @@ interface CartQueryResponse {
 interface CartCreateResponse {
   cartCreate: CartPayload | null;
 }
+
+interface AccountCartSyncResponse {
+  accountCartSync: CartPayload | null;
+}
+
+type CartSyncStatus = 'waiting' | 'guest' | 'unverified' | 'pending' | 'ready' | 'error' | 'unavailable';
 
 interface CartLinesAddResponse {
   cartLinesAdd: CartPayload | null;
@@ -189,6 +196,14 @@ interface CartOperationResult {
 
 interface CartState {
   cartId: string | null;
+  cartOwnerId: string | null;
+  customerId: string | null;
+  customerVerified: boolean;
+  syncStatus: CartSyncStatus;
+  syncNotice: 'changed' | 'attention' | null;
+  setCustomerSession: (customerId: string | null, verified: boolean, available?: boolean) => void;
+  syncAccountCart: () => Promise<boolean>;
+  checkoutCompleted: (sourceCartId: string | null, cartChanged: boolean) => Promise<void>;
   items: CartItem[];
   cost: CartCost;
   buyerIdentity: CartBuyerIdentity | null;
@@ -244,6 +259,13 @@ const CART_METADATA_MAX_PAGES = 20;
 function createEmptyState(): Omit<
   CartState,
   | 'hydrateCart'
+  | 'customerId'
+  | 'customerVerified'
+  | 'syncStatus'
+  | 'syncNotice'
+  | 'setCustomerSession'
+  | 'syncAccountCart'
+  | 'checkoutCompleted'
   | 'ensureCart'
   | 'addItem'
   | 'addLines'
@@ -267,6 +289,7 @@ function createEmptyState(): Omit<
 > {
   return {
     cartId: null,
+    cartOwnerId: null,
     items: [],
     cost: EMPTY_COST,
     buyerIdentity: null,
@@ -455,11 +478,69 @@ function resolveCartItem(items: CartItem[], identifier: string): CartItem | unde
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => {
+      let snapshotVersion = 0;
+      let pendingWrites = 0;
+      let writeQueue: Promise<void> = Promise.resolve();
+      let queueGeneration = getCustomerStateGeneration();
+      let syncFlight: { generation: number; version: number; promise: Promise<boolean> } | null = null;
+      let createFlight: { generation: number; version: number; promise: Promise<string | null> } | null = null;
+      let resolveSession: () => void;
+      const sessionReady = new Promise<void>((resolve) => { resolveSession = resolve; });
+
+      function normalizeWriteQueue(): number {
+        const generation = getCustomerStateGeneration();
+        if (queueGeneration !== generation) {
+          queueGeneration = generation;
+          writeQueue = Promise.resolve();
+          pendingWrites = 0;
+        }
+        return generation;
+      }
+
+      function scopedSetter(): typeof set {
+        const generation = getCustomerStateGeneration();
+        const version = snapshotVersion;
+        return (partial) => {
+          if (generation === getCustomerStateGeneration() && version === snapshotVersion) set(partial);
+        };
+      }
+
+      async function cartRequest<T>(query: string, variables?: Record<string, unknown>) {
+        const generation = getCustomerStateGeneration();
+        const version = snapshotVersion;
+        const response = await graphqlRequest<T>(query, variables);
+        if (generation !== getCustomerStateGeneration() || version !== snapshotVersion) throw new Error('Cart operation was superseded.');
+        return response;
+      }
+
+      function serializeMutation<TArgs extends unknown[], TResult>(action: (...args: TArgs) => Promise<TResult>, fallback: TResult, recoverGuest?: (...args: TArgs) => boolean) {
+        return (...args: TArgs): Promise<TResult> => {
+          const generation = normalizeWriteQueue();
+          pendingWrites++;
+          const result = writeQueue.then(async () => {
+            await sessionReady;
+            if (generation !== getCustomerStateGeneration() || get().syncStatus === 'unavailable') return fallback;
+            if (get().customerId && get().customerVerified && get().syncStatus !== 'ready') {
+              if (!await syncAccountCart(true) && !(get().cartId && get().cartOwnerId === null && recoverGuest?.(...args))) return fallback;
+            }
+            if (generation !== getCustomerStateGeneration()) return fallback;
+            snapshotVersion++;
+            set({ syncNotice: null });
+            const value = await action(...args);
+            return generation === getCustomerStateGeneration() ? value : fallback;
+          });
+          writeQueue = result.then(() => {}, () => {});
+          return result.finally(() => { if (generation === queueGeneration) pendingWrites--; });
+        };
+      }
+
       const applyCartSnapshot = async (
         cart: CartGraphqlShape | null,
-        metadataPatch?: Record<string, CartLineMetadata>
+        metadataPatch?: Record<string, CartLineMetadata>,
+        expectedVersion = snapshotVersion,
       ) => {
         const generation = getCustomerStateGeneration();
+        if (expectedVersion !== snapshotVersion) return;
         if (!cart) {
           set({
             ...createEmptyState(),
@@ -477,7 +558,7 @@ export const useCartStore = create<CartState>()(
           cart.lines.map((line) => line.merchandiseId),
           metadataByMerchandiseId
         );
-        if (generation !== getCustomerStateGeneration()) return;
+        if (generation !== getCustomerStateGeneration() || expectedVersion !== snapshotVersion) return;
         const resolvedMetadata = {
           ...metadataByMerchandiseId,
           ...fetchedMetadata,
@@ -542,11 +623,86 @@ export const useCartStore = create<CartState>()(
         return { success: true, message: null };
       };
 
+      async function syncAccountCart(fromWrite = false): Promise<boolean> {
+        const generation = normalizeWriteQueue();
+        const customerId = get().customerId;
+        if (!fromWrite && get().cartOwnerId === null && pendingWrites > 0) {
+          await writeQueue;
+          if (generation !== getCustomerStateGeneration()) return false;
+          return syncAccountCart();
+        }
+        if (!customerId || !get().customerVerified) return true;
+        if (syncFlight?.generation === generation && syncFlight.version === snapshotVersion) return syncFlight.promise;
+        if (pendingWrites > 0 && get().syncStatus === 'ready') return true;
+        const expectedVersion = ++snapshotVersion;
+        const guestCartId = get().cartOwnerId === null ? get().cartId : null;
+        const promise = (async () => {
+          set({ syncStatus: get().syncStatus === 'ready' ? 'ready' : 'pending', isLoading: true });
+          try {
+            const response = await graphqlRequest<AccountCartSyncResponse>(ACCOUNT_CART_SYNC_MUTATION, { guestCartId });
+            if (generation !== getCustomerStateGeneration() || expectedVersion !== snapshotVersion) return false;
+            const payload = response.data?.accountCartSync;
+            const requiresAttention = payload?.userErrors?.some((error) => error.code === 'CART_REQUIRES_ATTENTION') === true;
+            const fatalError = payload?.userErrors?.some((error) => error.code !== 'CART_REQUIRES_ATTENTION') === true;
+            if (getGraphqlErrorMessage(response.errors) || fatalError || !payload?.cart) {
+              set({ syncStatus: 'error', isLoading: false, initialized: true });
+              return false;
+            }
+            await applyCartSnapshot(payload.cart, undefined, expectedVersion);
+            if (generation !== getCustomerStateGeneration() || expectedVersion !== snapshotVersion) return false;
+            set({ cartOwnerId: customerId, syncStatus: 'ready', isLoading: false, syncNotice: requiresAttention ? 'attention' : get().syncNotice === 'changed' ? 'changed' : null });
+            return true;
+          } catch {
+            if (generation === getCustomerStateGeneration() && expectedVersion === snapshotVersion) set({ syncStatus: 'error', isLoading: false, initialized: true });
+            return false;
+          }
+        })();
+        const flight = { generation, version: expectedVersion, promise };
+        syncFlight = flight;
+        try { return await promise; } finally { if (syncFlight === flight) syncFlight = null; }
+      }
+
       return {
         ...createEmptyState(),
+        customerId: null,
+        customerVerified: false,
+        syncStatus: 'waiting',
+        syncNotice: null,
+
+        setCustomerSession: (customerId, verified, available = true) => {
+          if (available && get().customerId === customerId && get().customerVerified === verified && get().syncStatus !== 'waiting' && get().syncStatus !== 'unavailable') return;
+          try {
+            set({ customerId, customerVerified: verified, syncStatus: !available ? 'unavailable' : !customerId ? 'guest' : verified ? 'pending' : 'unverified' });
+          } catch {
+            // Zustand has updated memory; denied persistence must not block auth.
+          }
+          resolveSession();
+        },
+
+        syncAccountCart: () => syncAccountCart(),
+
+        checkoutCompleted: async (sourceCartId, cartChanged) => {
+          const generation = getCustomerStateGeneration();
+          if (!sourceCartId || !get().customerId || !get().customerVerified) {
+            get().clearCart();
+            return;
+          }
+          // A replay can describe an older order/source. Only the server's
+          // canonical snapshot proves what remains; keep local recovery data
+          // until that snapshot arrives, fencing older responses meanwhile.
+          snapshotVersion++;
+          set({ syncStatus: 'pending' });
+          await get().syncAccountCart();
+          if (generation !== getCustomerStateGeneration()) return;
+          if (cartChanged) set({ syncNotice: 'changed' });
+        },
 
         hydrateCart: async () => {
+          const set = scopedSetter();
+          if (get().customerId && get().customerVerified) { await get().syncAccountCart(); return; }
+          if (pendingWrites > 0) return;
           const generation = getCustomerStateGeneration();
+          const expectedVersion = snapshotVersion;
           const cartId = get().cartId;
 
           if (!cartId) {
@@ -557,7 +713,8 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartQueryResponse>(GET_CART_QUERY, { id: cartId });
+            const response = await cartRequest<CartQueryResponse>(GET_CART_QUERY, { id: cartId });
+            if (generation !== getCustomerStateGeneration() || expectedVersion !== snapshotVersion) return;
             const message = getGraphqlErrorMessage(response.errors);
 
             if (message) {
@@ -565,7 +722,7 @@ export const useCartStore = create<CartState>()(
               return;
             }
 
-            await applyCartSnapshot(response.data?.cart ?? null);
+            await applyCartSnapshot(response.data?.cart ?? null, undefined, expectedVersion);
           } catch (error) {
             if (generation !== getCustomerStateGeneration()) return;
             set({
@@ -577,40 +734,55 @@ export const useCartStore = create<CartState>()(
         },
 
         ensureCart: async (input) => {
+          const set = scopedSetter();
+          await sessionReady;
+          const generation = getCustomerStateGeneration();
+          if (get().syncStatus === 'unavailable') return null;
+          if (get().customerId && get().customerVerified && get().syncStatus !== 'ready') {
+            if (!await syncAccountCart(true)) return null;
+          }
+          if (generation !== getCustomerStateGeneration()) return null;
           const existingCartId = get().cartId;
 
           if (existingCartId) {
             return existingCartId;
           }
 
-          set({ isLoading: true, error: null });
+          if (createFlight?.generation === generation && createFlight.version === snapshotVersion) return createFlight.promise;
+          const expectedVersion = snapshotVersion;
+          const promise = (async () => {
+            set({ isLoading: true, error: null });
 
-          try {
-            const response = await graphqlRequest<CartCreateResponse>(CART_CREATE_MUTATION, {
-              channel: getCurrentChannel(),
-              input: {
-                lines: input?.lines,
-                buyerIdentity: input?.buyerIdentity,
-                note: input?.note,
-                discountCodes: input?.discountCodes,
-              },
-            });
-            const topLevelMessage = getGraphqlErrorMessage(response.errors);
+            try {
+              const response = await cartRequest<CartCreateResponse>(CART_CREATE_MUTATION, {
+                channel: getCurrentChannel(),
+                input: {
+                  lines: input?.lines,
+                  buyerIdentity: input?.buyerIdentity,
+                  note: input?.note,
+                  discountCodes: input?.discountCodes,
+                },
+              });
+              const topLevelMessage = getGraphqlErrorMessage(response.errors);
 
-            if (topLevelMessage) {
-              set({ isLoading: false, error: topLevelMessage });
+              if (topLevelMessage) {
+                set({ isLoading: false, error: topLevelMessage });
+                return null;
+              }
+
+              const result = await handleCartPayload(response.data?.cartCreate, input?.metadata);
+              return result.success ? get().cartId : null;
+            } catch (error) {
+              set({
+                isLoading: false,
+                error: error instanceof Error ? error.message : 'Failed to create cart.',
+              });
               return null;
             }
-
-            const result = await handleCartPayload(response.data?.cartCreate, input?.metadata);
-            return result.success ? get().cartId : null;
-          } catch (error) {
-            set({
-              isLoading: false,
-              error: error instanceof Error ? error.message : 'Failed to create cart.',
-            });
-            return null;
-          }
+          })();
+          const flight = { generation, version: expectedVersion, promise };
+          createFlight = flight;
+          try { return await promise; } finally { if (createFlight === flight) createFlight = null; }
         },
 
         addItem: async (item) => {
@@ -620,7 +792,8 @@ export const useCartStore = create<CartState>()(
           );
         },
 
-        addLines: async (lines, metadata = {}) => {
+        addLines: serializeMutation(async (lines: AddCartLineInput[], metadata: Record<string, CartLineMetadata> = {}) => {
+          const set = scopedSetter();
           if (lines.length === 0) {
             return true;
           }
@@ -639,7 +812,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartLinesAddResponse>(CART_LINES_ADD_MUTATION, {
+            const response = await cartRequest<CartLinesAddResponse>(CART_LINES_ADD_MUTATION, {
               cartId,
               lines,
             });
@@ -659,7 +832,7 @@ export const useCartStore = create<CartState>()(
             });
             return false;
           }
-        },
+        }, false),
 
         updateQuantity: async (identifier, quantity) => {
           const item = resolveCartItem(get().items, identifier);
@@ -672,7 +845,8 @@ export const useCartStore = create<CartState>()(
           return get().updateLines([{ id: item.id, quantity }]);
         },
 
-        updateLines: async (lines) => {
+        updateLines: serializeMutation(async (lines: UpdateCartLineInput[]) => {
+          const set = scopedSetter();
           const cartId = get().cartId;
 
           if (!cartId || lines.length === 0) {
@@ -682,7 +856,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartLinesUpdateResponse>(CART_LINES_UPDATE_MUTATION, {
+            const response = await cartRequest<CartLinesUpdateResponse>(CART_LINES_UPDATE_MUTATION, {
               cartId,
               lines,
             });
@@ -702,7 +876,10 @@ export const useCartStore = create<CartState>()(
             });
             return false;
           }
-        },
+        }, false, (lines) => lines.every((line) => {
+          const existing = get().items.find((item) => item.id === line.id);
+          return existing !== undefined && line.quantity >= 0 && line.quantity <= existing.quantity;
+        })),
 
         removeItem: async (identifier) => {
           const item = resolveCartItem(get().items, identifier);
@@ -715,7 +892,8 @@ export const useCartStore = create<CartState>()(
           return get().removeLines([item.id]);
         },
 
-        removeLines: async (lineIds) => {
+        removeLines: serializeMutation(async (lineIds: string[]) => {
+          const set = scopedSetter();
           const cartId = get().cartId;
 
           if (!cartId || lineIds.length === 0) {
@@ -725,7 +903,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartLinesRemoveResponse>(CART_LINES_REMOVE_MUTATION, {
+            const response = await cartRequest<CartLinesRemoveResponse>(CART_LINES_REMOVE_MUTATION, {
               cartId,
               lineIds,
             });
@@ -745,9 +923,10 @@ export const useCartStore = create<CartState>()(
             });
             return false;
           }
-        },
+        }, false, () => true),
 
-        updateBuyerIdentity: async (buyerIdentity) => {
+        updateBuyerIdentity: serializeMutation(async (buyerIdentity: CartBuyerIdentity) => {
+          const set = scopedSetter();
           const mergedBuyerIdentity = {
             ...(get().buyerIdentity ?? {}),
             ...buyerIdentity,
@@ -761,7 +940,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartBuyerIdentityUpdateResponse>(CART_BUYER_IDENTITY_UPDATE_MUTATION, {
+            const response = await cartRequest<CartBuyerIdentityUpdateResponse>(CART_BUYER_IDENTITY_UPDATE_MUTATION, {
               cartId,
               buyerIdentity: mergedBuyerIdentity,
             });
@@ -781,9 +960,10 @@ export const useCartStore = create<CartState>()(
             });
             return false;
           }
-        },
+        }, false),
 
-        updateDiscountCodes: async (discountCodes) => {
+        updateDiscountCodes: serializeMutation(async (discountCodes: string[]) => {
+          const set = scopedSetter();
           const cartId = get().cartId;
 
           if (!cartId) {
@@ -794,7 +974,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartDiscountCodesUpdateResponse>(CART_DISCOUNT_CODES_UPDATE_MUTATION, {
+            const response = await cartRequest<CartDiscountCodesUpdateResponse>(CART_DISCOUNT_CODES_UPDATE_MUTATION, {
               cartId,
               discountCodes,
             });
@@ -814,7 +994,7 @@ export const useCartStore = create<CartState>()(
             });
             return false;
           }
-        },
+        }, false),
 
         applyDiscountCode: async (code) => {
           return get().updateDiscountCodes(code.trim() ? [code.trim()] : []);
@@ -824,7 +1004,8 @@ export const useCartStore = create<CartState>()(
           return get().updateDiscountCodes([]);
         },
 
-        updateNote: async (note) => {
+        updateNote: serializeMutation(async (note: string) => {
+          const set = scopedSetter();
           const cartId = await get().ensureCart({ note });
 
           if (!cartId) {
@@ -834,7 +1015,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartNoteUpdateResponse>(CART_NOTE_UPDATE_MUTATION, {
+            const response = await cartRequest<CartNoteUpdateResponse>(CART_NOTE_UPDATE_MUTATION, {
               cartId,
               note,
             });
@@ -854,9 +1035,10 @@ export const useCartStore = create<CartState>()(
             });
             return false;
           }
-        },
+        }, false),
 
         fetchDeliveryOptions: async () => {
+          const set = scopedSetter();
           const cartId = get().cartId;
 
           if (!cartId) {
@@ -867,7 +1049,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartDeliveryOptionsResponse>(CART_DELIVERY_OPTIONS_QUERY, {
+            const response = await cartRequest<CartDeliveryOptionsResponse>(CART_DELIVERY_OPTIONS_QUERY, {
               cartId,
               channel: getCurrentChannel(),
             });
@@ -907,7 +1089,8 @@ export const useCartStore = create<CartState>()(
           }
         },
 
-        selectDeliveryOption: async (option) => {
+        selectDeliveryOption: serializeMutation(async (option: CartDeliveryOption) => {
+          const set = scopedSetter();
           const cartId = get().cartId;
 
           set((state) => ({
@@ -928,7 +1111,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartSelectedDeliveryOptionsUpdateResponse>(
+            const response = await cartRequest<CartSelectedDeliveryOptionsUpdateResponse>(
               CART_SELECTED_DELIVERY_OPTIONS_UPDATE_MUTATION,
               {
                 cartId,
@@ -956,9 +1139,10 @@ export const useCartStore = create<CartState>()(
             });
             return false;
           }
-        },
+        }, false),
 
-        submitForCompletion: async () => {
+        submitForCompletion: serializeMutation(async () => {
+          const set = scopedSetter();
           const cartId = get().cartId;
 
           if (!cartId) {
@@ -970,7 +1154,7 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, error: null });
 
           try {
-            const response = await graphqlRequest<CartSubmitForCompletionResponse>(CART_SUBMIT_FOR_COMPLETION_MUTATION, {
+            const response = await cartRequest<CartSubmitForCompletionResponse>(CART_SUBMIT_FOR_COMPLETION_MUTATION, {
               cartId,
             });
             const topLevelMessage = getGraphqlErrorMessage(response.errors);
@@ -987,12 +1171,14 @@ export const useCartStore = create<CartState>()(
             set({ isLoading: false, error: message });
             return { success: false, message };
           }
-        },
+        }, { success: false, message: null } as CartOperationResult),
 
         clearCart: () => {
+          snapshotVersion++;
           set({
             ...createEmptyState(),
             initialized: true,
+            syncStatus: get().customerId && get().customerVerified ? 'pending' : get().syncStatus,
           });
         },
 
@@ -1020,6 +1206,7 @@ export const useCartStore = create<CartState>()(
       version: 1,
       partialize: (state) => ({
         cartId: state.cartId,
+        cartOwnerId: state.cartOwnerId,
         metadataByMerchandiseId: state.metadataByMerchandiseId,
       }),
       merge: (persistedState, currentState) => ({

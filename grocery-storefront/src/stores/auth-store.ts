@@ -219,6 +219,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
     tabOwnerId = nextOwnerId ?? 'guest';
     writeCustomerStateOwner(ownerId);
     setAuthenticatedSessionHint(Boolean(customer));
+    useCartStore.getState().setCustomerSession(nextOwnerId, customer?.emailVerified === true);
     set({ session: customer ? createAuthenticatedSession(customer) : createGuestSession(), initialized: true, customerStateRevision });
   }
 
@@ -292,6 +293,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         if (version !== requestVersion) return;
         if (sessionResult.state === 'transient') {
           setAuthenticatedSessionHint(false);
+          useCartStore.getState().setCustomerSession(null, false, false);
           set({ session: createUnavailableSession(), initialized: true });
           return;
         }
@@ -457,6 +459,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
       clearLegacyAuthStorage();
       setAuthenticatedSessionHint(false);
       const customerStateRevision = clearCustomerScopedState();
+      useCartStore.getState().setCustomerSession(null, false);
       ownerId = null;
       tabOwnerId = 'guest';
       writeCustomerStateOwner(null, !logoutPending);

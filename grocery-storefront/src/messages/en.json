@@ -416,6 +416,8 @@
     "zoneSectionAria": "{zone}, {countLabel}"
   },
   "checkout": {
+    "accountCartSyncRequired": "Your account cart must be synced before checkout. Please retry syncing.",
+    "accountCartChanged": "Your cart changed on another device. The newer cart was kept; review it before ordering again.",
     "amountDue": "Total due",
     "title": "Checkout",
     "delivery": "Delivery details",

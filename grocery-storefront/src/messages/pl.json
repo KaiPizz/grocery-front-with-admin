@@ -416,6 +416,8 @@
     "zoneSectionAria": "{zone}, {countLabel}"
   },
   "checkout": {
+    "accountCartSyncRequired": "Koszyk konta musi zostać zsynchronizowany przed zamówieniem. Spróbuj ponownie zsynchronizować koszyk.",
+    "accountCartChanged": "Koszyk zmienił się na innym urządzeniu. Zachowano nowszy koszyk; sprawdź go przed kolejnym zamówieniem.",
     "amountDue": "Do zapłaty",
     "title": "Finalizacja zamówienia",
     "delivery": "Dane dostawy",

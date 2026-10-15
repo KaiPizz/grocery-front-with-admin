@@ -55,7 +55,7 @@ import {
   isPickupFulfillment,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
-import type { CartDeliveryOption, CustomerAddress } from '@/types';
+import type { CartDeliveryOption, CartItem, CustomerAddress } from '@/types';
 import type { PaymentMethod } from '@/types/checkout';
 import { saveLastOrder } from '@/lib/last-order';
 
@@ -186,6 +186,7 @@ interface CheckoutCompleteResponse {
       } | null;
     } | null;
     confirmationNeeded?: boolean | null;
+    cartChanged?: boolean;
     errors: CheckoutMutationError[] | null;
   } | null;
 }
@@ -490,7 +491,9 @@ function CheckoutForm() {
   const fetchDeliveryOptions = useCartStore((state) => state.fetchDeliveryOptions);
   const selectDeliveryOption = useCartStore((state) => state.selectDeliveryOption);
   const hydrateCart = useCartStore((state) => state.hydrateCart);
-  const clearCart = useCartStore((state) => state.clearCart);
+  const checkoutCompleted = useCartStore((state) => state.checkoutCompleted);
+  const syncAccountCart = useCartStore((state) => state.syncAccountCart);
+  const cartSyncStatus = useCartStore((state) => state.syncStatus);
 
   const sessionEmail = buyerIdentity?.email ?? '';
   const [form, setForm] = useState<DeliveryFormState>(() => createInitialFormState(sessionEmail));
@@ -515,6 +518,8 @@ function CheckoutForm() {
   // Set once a P24 order exists but its payment session could not be started;
   // lets the shopper retry against the same unpaid order instead of re-ordering.
   const [pendingP24Order, setPendingP24Order] = useState<{ id: string; number: string } | null>(null);
+  const purchasedItems = useRef<CartItem[]>([]);
+  const purchasedCartCanRestore = useRef(false);
   const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
   const [pickupByOther, setPickupByOther] = useState(false);
   const [rememberContact, setRememberContact] = useState(true);
@@ -1428,12 +1433,11 @@ function CheckoutForm() {
         });
         // The cart is emptied below; this copy is offered back only if the
         // backend later reports the payment as failed.
-        saveP24CartSnapshot(payload.payment.id, items);
+        if (purchasedCartCanRestore.current) saveP24CartSnapshot(payload.payment.id, purchasedItems.current);
         leavingForP24.current = true;
         window.sessionStorage.removeItem(CHECKOUT_DRAFT_KEY);
         window.sessionStorage.removeItem('oms-pending-checkout');
       }
-      clearCart();
       toast.success(t('paymentRedirecting'));
       window.location.assign(payload.payment.actionUrl);
     } finally {
@@ -1445,6 +1449,13 @@ function CheckoutForm() {
     if (pendingP24Order) {
       // The order exists; only its payment is retried.
       await startP24Payment(pendingP24Order, checkoutId);
+      return;
+    }
+    const accountCart = isAuthenticated && authSession.user?.emailVerified === true;
+    if (accountCart && useCartStore.getState().syncStatus !== 'ready') {
+      setErrorBanner(t('accountCartSyncRequired'));
+      toast.error(t('accountCartSyncRequired'));
+      await syncAccountCart();
       return;
     }
 
@@ -1520,11 +1531,21 @@ function CheckoutForm() {
         }
       }
 
+      const source = useCartStore.getState();
+      const quantities = (lines: CartItem[]) => JSON.stringify(lines.map((item) => [item.merchandiseId, item.quantity]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))));
+      if (accountCart && (source.cartOwnerId !== authSession.user?.id || source.syncStatus !== 'ready' || !source.serverCart?.updatedAt || quantities(source.items) !== quantities(items))) {
+        setErrorBanner(t('accountCartChanged'));
+        toast.error(t('accountCartChanged'));
+        return;
+      }
+      const sourceCartId = accountCart ? source.cartId : null;
+      const sourceCartUpdatedAt = accountCart ? source.serverCart?.updatedAt : null;
       const response = await graphqlRequest<CheckoutCompleteResponse>(CHECKOUT_COMPLETE_MUTATION, {
         input: {
           checkoutId: handoff.id,
           termsAccepted: true,
           ...(payWithP24 ? { paymentData: 'p24' } : {}),
+          ...(sourceCartId && sourceCartUpdatedAt ? { sourceCartId, sourceCartUpdatedAt } : {}),
         },
       });
       const payload = response.data?.checkoutComplete;
@@ -1541,6 +1562,14 @@ function CheckoutForm() {
         toast.error(message);
         return;
       }
+
+      purchasedItems.current = items;
+      if (payWithP24) setPendingP24Order({ id: payload.order.id, number: payload.order.number });
+      await checkoutCompleted(sourceCartId, payload.cartChanged === true);
+      if (customerGeneration.current !== getCustomerStateGeneration()) return;
+      const completedCart = useCartStore.getState();
+      purchasedCartCanRestore.current = !sourceCartId || (payload.cartChanged !== true && completedCart.syncStatus === 'ready' && completedCart.cartId !== sourceCartId);
+      if (payload.cartChanged) toast.info(t('accountCartChanged'));
 
       saveLastOrder({
         number: payload.order.number,
@@ -1575,7 +1604,6 @@ function CheckoutForm() {
         return;
       }
 
-      clearCart();
       if (typeof window !== 'undefined') {
         window.sessionStorage.removeItem(CHECKOUT_DRAFT_KEY);
         window.sessionStorage.removeItem('oms-pending-checkout');
@@ -1658,7 +1686,8 @@ function CheckoutForm() {
     );
   }
 
-  if (!isHydrated || !initialized || (isCartLoading && items.length === 0)) {
+  const waitingForAccountCart = isAuthenticated && authSession.user?.emailVerified === true && cartSyncStatus !== 'ready' && !pendingP24Order;
+  if (!isHydrated || !initialized || waitingForAccountCart || (isCartLoading && items.length === 0 && !pendingP24Order)) {
     return (
       <div className="container-grocery py-16 text-center">
         <ShoppingCart className="mx-auto mb-4 h-16 w-16 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
@@ -1669,7 +1698,7 @@ function CheckoutForm() {
     );
   }
 
-  if (items.length === 0) {
+  if (items.length === 0 && !pendingP24Order) {
     return (
       <div className="container-grocery py-16 text-center">
         <ShoppingCart className="mx-auto mb-4 h-16 w-16 opacity-20" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
