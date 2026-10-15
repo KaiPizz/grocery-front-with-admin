@@ -111,6 +111,33 @@ test('logout invalidates mounted checkout revision and late wishlist/cart respon
   assert.deepEqual(useWishlistStore.getState().items, []);
   assert.equal(useCartStore.getState().cartId, null);
   assert.equal(useCartStore.getState().buyerIdentity, null);
+  assert.equal(useCartStore.getState().error, null);
+});
+
+test('post-login wishlist import uses current-owner state, preserving guests without importing A into B', async () => {
+  for (const previousCustomer of [null, customer('A')]) {
+    browser();
+    const load = moduleLoader();
+    const { useAuthStore } = load('@/stores/auth-store');
+    const { useWishlistStore } = load('@/stores/wishlist-store');
+    globalThis.fetch = async () => Response.json({ success: true, customer: previousCustomer });
+    if (previousCustomer) await useAuthStore.getState().googleLogin('A');
+    const items = [{ productId: previousCustomer ? 'A-private' : 'guest-item' }];
+    useWishlistStore.setState({ items, guestItems: items });
+    const staleSnapshot = [...items];
+    globalThis.fetch = async () => Response.json({ success: true, customer: customer('B') });
+    await useAuthStore.getState().googleLogin('B');
+    let submittedProductIds;
+    globalThis.fetch = async (_url, init) => {
+      submittedProductIds = JSON.parse(init.body).variables.productIds;
+      return Response.json({ data: { wishlistSync: { success: true, items: [] } } });
+    };
+    // Old JS callers must not be able to override the current boundary with a
+    // snapshot captured before sign-in; TypeScript callers now take no argument.
+    await useWishlistStore.getState().syncGuestWishlist(staleSnapshot);
+    assert.deepEqual(submittedProductIds, previousCustomer ? [] : ['guest-item']);
+    assert.equal(useWishlistStore.getState().items.some((item) => item.productId === 'A-private'), false);
+  }
 });
 
 test('initialize removes persisted A data when shared cookies now identify B or guest', async () => {
@@ -284,6 +311,110 @@ test('a stale sign-in response cannot restore the account and uses the localized
   useAuthStore.getState().clearSession();
   finish();
   assert.deepEqual(await login, { success: false, message: null, errors: [] });
+  assert.equal(useAuthStore.getState().session.status, 'guest');
+});
+
+test('discarding an unowned draft does not cancel valid in-flight guest cart hydration', async () => {
+  browser();
+  const load = moduleLoader();
+  const { useAuthStore } = load('@/stores/auth-store');
+  const { useCartStore } = load('@/stores/cart-store');
+  useCartStore.setState({ cartId: 'guest-cart' });
+  window.sessionStorage.setItem('oms-checkout-draft-v2', 'unowned-draft');
+  let finishCart;
+  globalThis.fetch = async (url, init) => {
+    if (url === '/api/auth/session') return Response.json({ authenticated: false, customer: null, code: 'NO_SESSION_COOKIE' });
+    if (JSON.parse(init.body).query.includes('query GetCart')) return new Promise((resolve) => {
+      finishCart = () => resolve(Response.json({ data: { cart: { id: 'guest-cart', lines: [{ id: 'line', merchandiseId: 'variant', quantity: 1 }] } } }));
+    });
+    return Response.json({ data: {} });
+  };
+  const hydration = useCartStore.getState().hydrateCart();
+  await useAuthStore.getState().initialize();
+  finishCart();
+  await hydration;
+  assert.equal(window.sessionStorage.getItem('oms-checkout-draft-v2'), null);
+  assert.equal(useCartStore.getState().cartId, 'guest-cart');
+  assert.equal(useCartStore.getState().items.length, 1);
+  assert.equal(useCartStore.getState().error, null);
+});
+
+test('a real A-to-B account switch still rejects A cart hydration already in flight', async () => {
+  browser();
+  const load = moduleLoader();
+  const { useAuthStore } = load('@/stores/auth-store');
+  const { useCartStore } = load('@/stores/cart-store');
+  globalThis.fetch = async () => Response.json({ success: true, customer: customer('A') });
+  await useAuthStore.getState().googleLogin('A');
+  useCartStore.setState({ cartId: 'A-cart' });
+  let finishCart;
+  globalThis.fetch = async (url) => url === '/api/auth/google'
+    ? Response.json({ success: true, customer: customer('B') })
+    : new Promise((resolve) => { finishCart = () => resolve(Response.json({ data: { cart: { id: 'A-cart', lines: [], buyerIdentity: { email: 'A@example.test' } } } })); });
+  const hydration = useCartStore.getState().hydrateCart();
+  await useAuthStore.getState().googleLogin('B');
+  finishCart();
+  await hydration;
+  assert.equal(useAuthStore.getState().session.user.id, 'B');
+  assert.equal(useCartStore.getState().cartId, null);
+  assert.equal(useCartStore.getState().buyerIdentity, null);
+  assert.equal(useCartStore.getState().error, null);
+});
+
+test('failed sign-in leaves pending bootstrap usable and subsequent initialization can fetch again', async () => {
+  for (const action of ['login', 'googleLogin', 'facebookLogin', 'register']) {
+    browser();
+    const load = moduleLoader();
+    const { useAuthStore } = load('@/stores/auth-store');
+    let finishBootstrap;
+    globalThis.fetch = async (url) => url === '/api/auth/session'
+      ? new Promise((resolve) => { finishBootstrap = () => resolve(Response.json({ authenticated: true, customer: customer('A') })); })
+      : Response.json({ success: false, message: 'Rejected' }, { status: 401 });
+    const bootstrap = useAuthStore.getState().initialize();
+    assert.equal((await useAuthStore.getState()[action]({ email: 'B@example.test', password: 'test' })).success, false);
+    finishBootstrap();
+    await bootstrap;
+    assert.equal(useAuthStore.getState().initialized, true, action);
+    assert.equal(useAuthStore.getState().session.user.id, 'A', action);
+    let calls = 0;
+    globalThis.fetch = async () => { calls++; return Response.json({ authenticated: true, customer: customer('A') }); };
+    await useAuthStore.getState().initialize();
+    assert.equal(calls, 1, `${action} retry`);
+  }
+});
+
+test('successful sign-in wins over pending bootstrap and does not leave a cached initialization', async () => {
+  browser();
+  const load = moduleLoader();
+  const { useAuthStore } = load('@/stores/auth-store');
+  let finishBootstrap;
+  globalThis.fetch = async (url) => url === '/api/auth/session'
+    ? new Promise((resolve) => { finishBootstrap = () => resolve(Response.json({ authenticated: true, customer: customer('A') })); })
+    : Response.json({ success: true, customer: customer('B') });
+  const bootstrap = useAuthStore.getState().initialize();
+  await useAuthStore.getState().googleLogin('B');
+  finishBootstrap();
+  await bootstrap;
+  assert.equal(useAuthStore.getState().session.user.id, 'B');
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; return Response.json({ authenticated: true, customer: customer('B') }); };
+  await useAuthStore.getState().initialize();
+  assert.equal(calls, 1);
+});
+
+test('logout still invalidates an earlier bootstrap response', async () => {
+  browser();
+  const load = moduleLoader();
+  const { useAuthStore } = load('@/stores/auth-store');
+  let finishBootstrap;
+  globalThis.fetch = async (url) => url === '/api/auth/session'
+    ? new Promise((resolve) => { finishBootstrap = () => resolve(Response.json({ authenticated: true, customer: customer('A') })); })
+    : Response.json({ success: true });
+  const bootstrap = useAuthStore.getState().initialize();
+  await useAuthStore.getState().logout();
+  finishBootstrap();
+  await bootstrap;
+  assert.equal(useAuthStore.getState().initialized, true);
   assert.equal(useAuthStore.getState().session.status, 'guest');
 });
 

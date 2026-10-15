@@ -31,6 +31,10 @@
 - Wishlist removal now uses the existing server delete mutation; clear removes
   explicitly and stops on a failure or customer change, preserving merge-only
   guest import semantics.
+- All three sign-in UI callers import the current post-auth wishlist, with no
+  captured pre-auth snapshot that could restore A's items after switching to B.
+- Bootstrap tab-only draft cleanup preserves in-flight current guest cart
+  hydration; stale account hydration does not overwrite the new cart's errors.
 - Validation: new real-store/BFF behavior suite, existing account/checkout
   contracts, TypeScript and ESLint. Two browser regression cases cover mounted
   checkout logout and cross-tab A-to-B switching; main runs them on built DEV.

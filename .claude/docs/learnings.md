@@ -38,6 +38,16 @@
 - **Rule:** Logout must complete every available local privacy cleanup even when
   another browser storage or cookie operation is denied.
 
+### Tab-draft cleanup must not cancel hydration of the current shared cart
+- **Error:** First checkout rendered an empty cart even though a valid guest cart
+  was persisted and its mocked server response contained items.
+- **Cause:** Removing an unowned legacy draft incremented the shared generation
+  while the independent CartBootstrap request was in flight, rejecting valid data.
+- **Fix:** Bootstrap removes only the untrusted tab draft without invalidating
+  current cart requests; true account switches/logout still invalidate generation.
+- **Rule:** Invalidate requests only across a shared customer boundary. Per-tab
+  cleanup during gated identity bootstrap must preserve current cart hydration.
+
 ### Wishlist merge-import cannot implement explicit deletion
 - **Error:** Sending remaining product IDs to wishlistSync appeared to remove an
   item locally but the backend merge retained it after the next load.
@@ -46,6 +56,26 @@
   for each current item, stopping on failure or a customer generation change.
 - **Rule:** Preserve merge-import semantics and call the explicit delete API for
   user removal. Mock fixtures must model the backend's merge behavior.
+
+### Post-login import must use state after the customer boundary
+- **Error:** Password, Google and Facebook UI callers captured wishlist items
+  before authentication and could re-import A's cached list into B after cleanup.
+- **Cause:** An optional snapshot argument allowed callers to override the shared
+  store's newly established ownership with older data.
+- **Fix:** Removed the snapshot parameter and all three captures; import always
+  reads the current store, preserving true guest items and respecting A-to-B reset.
+- **Rule:** Follow asynchronous authentication with current-owner state. Never
+  reapply a snapshot captured before a trust or customer boundary.
+
+### Failed authentication must not invalidate the only pending bootstrap
+- **Error:** A failed sign-in started during bootstrap could leave initialization
+  false indefinitely, with a completed stale promise blocking later retries.
+- **Cause:** Authentication invalidated bootstrap before success, while promise
+  cleanup depended on the request generation still matching.
+- **Fix:** Only successful sign-in advances the generation; initialization clears
+  its cache by promise identity, so an older completion cannot clear newer work.
+- **Rule:** Cancel bootstrap on an established identity change, not a failed
+  attempt. Verify retry, successful-login precedence and logout invalidation.
 
 ### Next diagnostic digests can change between immutable builds
 - **Error:** The post-release verifier rejected the known destination-stream-close

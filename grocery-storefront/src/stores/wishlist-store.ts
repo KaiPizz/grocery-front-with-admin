@@ -23,7 +23,7 @@ interface WishlistState {
   isLoading: boolean;
   initialized: boolean;
   loadWishlist: () => Promise<void>;
-  syncGuestWishlist: (items?: WishlistItem[]) => Promise<boolean>;
+  syncGuestWishlist: () => Promise<boolean>;
   addItem: (item: Omit<WishlistItem, 'addedAt'>) => Promise<boolean>;
   removeItem: (productId: string) => Promise<boolean>;
   toggleItem: (item: Omit<WishlistItem, 'addedAt'>) => Promise<boolean>;
@@ -396,9 +396,9 @@ export const useWishlistStore = create<WishlistState>()(
         }
       },
 
-      syncGuestWishlist: async (items) => {
+      syncGuestWishlist: async () => {
         const set = sessionSetter(storeSet);
-        const nextGuestItems = items ?? get().guestItems;
+        const nextGuestItems = get().guestItems;
         const authenticated = hasAuthenticatedSession();
 
         if (!authenticated) {

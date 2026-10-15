@@ -149,7 +149,6 @@ export function AuthForm({ mode, socialProviders }: AuthFormProps) {
       return;
     }
 
-    const guestSnapshot = [...useWishlistStore.getState().guestItems];
     const result = mode === 'login'
       ? await login({ email: trimmedEmail, password })
       : await register({
@@ -167,7 +166,7 @@ export function AuthForm({ mode, socialProviders }: AuthFormProps) {
       return;
     }
 
-    await useWishlistStore.getState().syncGuestWishlist(guestSnapshot);
+    await useWishlistStore.getState().syncGuestWishlist();
     await useWishlistStore.getState().loadWishlist();
 
     toast.success(mode === 'login' ? t('loginSuccess') : t('registerSuccess'));

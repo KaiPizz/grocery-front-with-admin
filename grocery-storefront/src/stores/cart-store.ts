@@ -546,6 +546,7 @@ export const useCartStore = create<CartState>()(
         ...createEmptyState(),
 
         hydrateCart: async () => {
+          const generation = getCustomerStateGeneration();
           const cartId = get().cartId;
 
           if (!cartId) {
@@ -566,6 +567,7 @@ export const useCartStore = create<CartState>()(
 
             await applyCartSnapshot(response.data?.cart ?? null);
           } catch (error) {
+            if (generation !== getCustomerStateGeneration()) return;
             set({
               isLoading: false,
               initialized: true,

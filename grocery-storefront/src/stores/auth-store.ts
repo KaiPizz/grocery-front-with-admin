@@ -212,7 +212,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
       // belong to A even though the shared cart and cookie already belong to B.
       // Pre-upgrade drafts without an owner are also untrusted; retain the cart.
       clearCheckoutStorage(true);
-      customerStateRevision = invalidateCustomerState();
+      // Checkout waits for bootstrap, so no old form is mounted here. Keep
+      // already-running hydration of the current shared cart alive.
     }
     ownerId = nextOwnerId;
     tabOwnerId = nextOwnerId ?? 'guest';
@@ -299,16 +300,17 @@ export const useAuthStore = create<AuthState>((set, get) => {
         acceptSession(sessionResult.customer, hadRejectedCredentials);
       })();
 
+      const pendingInitialization = initializePromise;
       try {
-        await initializePromise;
+        await pendingInitialization;
       } finally {
-        if (version === requestVersion) initializePromise = null;
+        if (initializePromise === pendingInitialization) initializePromise = null;
       }
     },
 
     login: async ({ email, password }) => {
       if (logoutPending) return { success: false, message: null, errors: [] };
-      const version = ++requestVersion;
+      const version = requestVersion;
       set({ isSubmitting: true });
 
       try {
@@ -326,6 +328,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         }
 
         if (version !== requestVersion) return { success: false, message: null, errors: [] };
+        ++requestVersion;
         clearLegacyAuthStorage();
         acceptSession(payload.customer);
         return { success: true, message: payload.message, errors: [] };
@@ -338,7 +341,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     googleLogin: async (credential) => {
       if (logoutPending) return { success: false, message: null, errors: [] };
-      const version = ++requestVersion;
+      const version = requestVersion;
       set({ isSubmitting: true });
 
       try {
@@ -356,6 +359,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         }
 
         if (version !== requestVersion) return { success: false, message: null, errors: [] };
+        ++requestVersion;
         clearLegacyAuthStorage();
         acceptSession(payload.customer);
         return { success: true, message: payload.message, errors: [] };
@@ -368,7 +372,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     facebookLogin: async (accessToken, state, locale) => {
       if (logoutPending) return { success: false, message: null, errors: [] };
-      const version = ++requestVersion;
+      const version = requestVersion;
       set({ isSubmitting: true });
 
       try {
@@ -386,6 +390,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         }
 
         if (version !== requestVersion) return { success: false, message: null, errors: [] };
+        ++requestVersion;
         clearLegacyAuthStorage();
         acceptSession(payload.customer);
         return { success: true, message: payload.message, errors: [] };
@@ -398,7 +403,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     register: async ({ fullName, email, password, phone, locale }) => {
       if (logoutPending) return { success: false, message: null, errors: [] };
-      const version = ++requestVersion;
+      const version = requestVersion;
       set({ isSubmitting: true });
 
       try {
@@ -416,6 +421,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         }
 
         if (version !== requestVersion) return { success: false, message: null, errors: [] };
+        ++requestVersion;
         clearLegacyAuthStorage();
         acceptSession(payload.customer);
         return { success: true, message: payload.message, errors: [] };

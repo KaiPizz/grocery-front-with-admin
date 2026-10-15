@@ -137,7 +137,6 @@ export function GoogleSignIn({
 
     exchangeInFlightRef.current = true;
     setError(null);
-    const guestSnapshot = [...useWishlistStore.getState().guestItems];
 
     try {
       const result = await googleLogin(credential);
@@ -147,7 +146,7 @@ export function GoogleSignIn({
         return;
       }
 
-      await useWishlistStore.getState().syncGuestWishlist(guestSnapshot);
+      await useWishlistStore.getState().syncGuestWishlist();
       await useWishlistStore.getState().loadWishlist();
       toast.success(t('googleSuccess'));
       router.replace(returnTo);

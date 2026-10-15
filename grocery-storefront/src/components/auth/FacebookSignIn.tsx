@@ -198,7 +198,6 @@ export function FacebookSignIn({
         return;
       }
 
-      const guestSnapshot = [...useWishlistStore.getState().guestItems];
       const result = await facebookLogin(accessToken, activeConfig.state, locale);
       if (!result.success) {
         setError(t('facebookFailed'));
@@ -206,7 +205,7 @@ export function FacebookSignIn({
         return;
       }
 
-      await useWishlistStore.getState().syncGuestWishlist(guestSnapshot);
+      await useWishlistStore.getState().syncGuestWishlist();
       await useWishlistStore.getState().loadWishlist();
       toast.success(t('facebookSuccess'));
       if (useAuthStore.getState().session.user?.emailVerified === false) {
