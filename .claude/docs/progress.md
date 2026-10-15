@@ -24,8 +24,15 @@
   HTML and hydrated UI, no Facebook discovery/SDK requests, Google visible and
   email fields/submit usable. Restoring baseline Facebook visibility caused the
   expected browser assertion failure; final source was restored byte-for-byte.
-  DEV production build/preview follows; production
-  remains the accepted account-cart release pending review of this new change.
+  DEV production build and standalone smoke passed. Immutable DEV release:
+  `storefront-26343bd10bff-20261015T115016Z`, BUILD_ID
+  `r2Ok_m_dnGA_boG2JQG-V`; health200. Eight additional actual DEV browser checks
+  passed (PL/EN login/register, mobile390x844 and desktop1440x900), with zero
+  Facebook discovery/SDK requests and zero page errors; all19 Next assets passed.
+  Mobile screenshot visually inspected. Preview: existing protected ADG DEV
+  `/en/login` and `/en/register`. Production remains accepted cart releasef278;
+  awaiting owner preview acceptance for this new UI change. Source26343bd pushed
+  on `fix/adg-hide-facebook-20261015`, not merged to main or deployed production.
 
 ---
 
