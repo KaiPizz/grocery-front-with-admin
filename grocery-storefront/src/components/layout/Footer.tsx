@@ -12,6 +12,7 @@ import {
   getConfiguredText,
   getFulfillmentConfig,
   isPickupFulfillment,
+  pickupServiceKey,
   usesAvailabilityOnlyStock,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
@@ -102,7 +103,7 @@ export function Footer() {
   const serviceNotes: FooterServiceNote[] = [
     pickupMode
       ? {
-          label: getConfiguredText(fulfillment.pickupInstructions, tFulfillment('pickupService')),
+          label: getConfiguredText(fulfillment.pickupInstructions, tFulfillment(pickupServiceKey(siteConfig))),
           icon: MapPin,
         }
       : null,

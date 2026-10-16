@@ -9,6 +9,7 @@ import {
   getConfiguredText,
   getFulfillmentConfig,
   isPickupFulfillment,
+  pickupServiceKey,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
 import { ShippingCountdown } from './ShippingCountdown';
@@ -23,7 +24,7 @@ export function ServiceStrip() {
     return <ShippingCountdown cutoff={siteConfig?.general?.sameDayShippingCutoff} />;
   }
 
-  const pickupText = getConfiguredText(fulfillment.pickupInstructions, t('pickupService'));
+  const pickupText = getConfiguredText(fulfillment.pickupInstructions, t(pickupServiceKey(siteConfig)));
   const bankTransferText = usesBankTransferPromise(siteConfig)
     ? getConfiguredText(fulfillment.bankTransferInstructions, t('bankTransferService'))
     : null;

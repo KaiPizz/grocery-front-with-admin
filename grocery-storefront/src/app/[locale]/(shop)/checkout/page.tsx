@@ -1612,6 +1612,8 @@ function CheckoutForm() {
         total: payload.order.total?.gross?.amount ?? handoff.total ?? displayTotal,
         currency: payload.order.total?.gross?.currency ?? displayCurrency,
         paymentMethod: translatePaymentMethodName(locale, selectedPaymentMethod),
+        // Only a pickup shop that also ships by DPD has two ways; delivery shops keep their own copy.
+        fulfillment: pickupMode ? (pickupSelected ? 'pickup' : 'courier') : null,
       });
 
       const buyerPhone = form.phone.trim();

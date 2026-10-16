@@ -13,7 +13,7 @@ import {
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
 import { formatPrice } from '@/lib/utils';
-import { readLastOrder, type LastOrderSnapshot } from '@/lib/last-order';
+import { lastOrderIsPickup, readLastOrder, type LastOrderSnapshot } from '@/lib/last-order';
 
 export default function CheckoutConfirmationPage() {
   const t = useTranslations('checkout');
@@ -32,7 +32,9 @@ export default function CheckoutConfirmationPage() {
   const email = lastOrder?.email ?? null;
   const siteConfig = useStorefrontConfig();
   const fulfillment = getFulfillmentConfig(siteConfig);
-  const pickupMode = isPickupFulfillment(siteConfig);
+  // The order itself says pickup or Kurier DPD; older snapshots (or none) fall back to the shop mode.
+  const pickupMode = lastOrderIsPickup(lastOrder, isPickupFulfillment(siteConfig));
+  const courierOrder = lastOrder?.fulfillment === 'courier';
   const bankTransferMode = usesBankTransferPromise(siteConfig);
   const bankTransferText = getConfiguredText(
     fulfillment.bankTransferInstructions,
@@ -108,7 +110,7 @@ export default function CheckoutConfirmationPage() {
         </div>
       )}
 
-      {(bankTransferMode || pickupMode) && (
+      {(bankTransferMode || pickupMode || courierOrder) && (
         <div
           className="mt-8 rounded-lg border p-4 text-left text-sm"
           style={{
@@ -119,6 +121,11 @@ export default function CheckoutConfirmationPage() {
         >
           {bankTransferMode && <p>{bankTransferText}</p>}
           {pickupMode && <p className={bankTransferMode ? 'mt-2' : undefined}>{pickupText}</p>}
+          {courierOrder && (
+            <p className={bankTransferMode ? 'mt-2' : undefined} data-testid="confirmation-courier">
+              {tFulfillment('confirmationCourier')}
+            </p>
+          )}
         </div>
       )}
 

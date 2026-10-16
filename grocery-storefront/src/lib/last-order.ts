@@ -11,6 +11,13 @@ export interface LastOrderSnapshot {
   total: number;
   currency: string;
   paymentMethod: string | null;
+  /** How the order is fulfilled; snapshots saved before Kurier DPD existed have no value. */
+  fulfillment?: 'pickup' | 'courier' | null;
+}
+
+/** Whether the confirmation speaks of pickup: the order says so, or (older snapshot / none) the shop mode. */
+export function lastOrderIsPickup(snapshot: LastOrderSnapshot | null, shopIsPickup: boolean): boolean {
+  return snapshot?.fulfillment ? snapshot.fulfillment === 'pickup' : shopIsPickup;
 }
 
 export function saveLastOrder(snapshot: LastOrderSnapshot): void {

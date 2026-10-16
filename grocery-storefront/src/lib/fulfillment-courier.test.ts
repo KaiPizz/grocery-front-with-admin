@@ -10,6 +10,7 @@ import {
   isColdChainProduct,
   isPickupOption,
   offersCourierDelivery,
+  pickupServiceKey,
   showsFreeShippingBar,
   visibleDeliveryOptions,
 } from './fulfillment';
@@ -118,4 +119,11 @@ test('showsFreeShippingBar: a pickup shop with DPD and a delivery shop show it',
 test('ADG (and its legacy kenmito alias) advertises free DPD shipping from 200 zł', () => {
   assert.equal(liveConfig('asiandeligo').general.freeShippingThreshold, 200);
   assert.equal(liveConfig('kenmito').general.freeShippingThreshold, 200);
+});
+
+test('pickupServiceKey names DPD next to pickup only for a courier shop', () => {
+  assert.equal(pickupServiceKey(liveConfig('kenmito')), 'pickupService');
+  const adg = liveConfig('asiandeligo');
+  adg.general.fulfillment.courier = 'dpd';
+  assert.equal(pickupServiceKey(adg), 'pickupAndCourierService');
 });
