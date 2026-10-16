@@ -50,6 +50,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
 import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
 import {
+  freeShippingThresholdFor,
   getConfiguredText,
   getFulfillmentConfig,
   isColdChainProduct,
@@ -856,6 +857,10 @@ function CheckoutForm() {
     ? cartTotalAmount
     : displaySubtotal;
   const displayTotal = serverTotal ?? discountedTotal + shippingCost;
+  // Pickup shops with Kurier DPD: how far the goods (after discount) are from free DPD delivery.
+  const courierFreeShippingRemaining = courierOffered && !cartHasColdChain
+    ? Math.max(freeShippingThresholdFor(siteConfig, deliveryOptions) - discountedTotal, 0)
+    : 0;
   const orderSummary = (
     <>
       <ul className="space-y-3 mb-5" role="list">
@@ -888,6 +893,12 @@ function CheckoutForm() {
               : uiText.calculatedNext}
           </span>
         </div>
+        {courierFreeShippingRemaining > 0 && (
+          <p className="flex items-center gap-1 text-xs" style={{ color: 'var(--color-muted-foreground)' }} data-testid="checkout-free-shipping-remaining">
+            <Truck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            {tCart('freeShippingRemainingCourier', { amount: formatPrice(courierFreeShippingRemaining, displayCurrency) })}
+          </p>
+        )}
         {appliedPromoCode && (
           <div className="flex justify-between text-sm">
             <span style={{ color: 'var(--color-muted-foreground)' }}>{uiText.discountLabel}</span>

@@ -186,6 +186,8 @@ export interface CartDeliveryOption {
   name: string;
   /** Backend carrier (PICKUP, ZIRA_KURIER, …); older backends omit it. */
   carrierCode?: string | null;
+  /** Goods total from which this option ships free (backend); null = no threshold. */
+  freeAbove?: number | null;
   price: CartMoney;
   estimatedDeliveryTime?: string | null;
 }

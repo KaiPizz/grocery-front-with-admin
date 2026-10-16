@@ -639,6 +639,7 @@ export const CART_DELIVERY_OPTIONS_QUERY = `
       id
       name
       carrierCode
+      freeAbove
       price { amount currency }
     }
   }

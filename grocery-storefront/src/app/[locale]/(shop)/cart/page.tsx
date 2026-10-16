@@ -12,9 +12,11 @@ import { useHydrated } from '@/hooks/use-hydrated';
 import {
   getConfiguredText,
   getFulfillmentConfig,
+  freeShippingThresholdFor,
   isColdChainProduct,
   isPickupFulfillment,
   offersCourierDelivery,
+  showsFreeShippingBar,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
@@ -46,7 +48,11 @@ export default function CartPage() {
   // Chilled / frozen lines travel only by pickup; the checkout locks Kurier DPD for this cart.
   const cartHasColdChain = items.some(isColdChainProduct);
   const bankTransferMode = usesBankTransferPromise(siteConfig);
-  const freeShippingThreshold = siteConfig?.general?.freeShippingThreshold ?? 150;
+  // Kurier DPD's threshold comes from the backend (freeAbove) once delivery options are loaded.
+  const deliveryOptions = useCartStore((state) => state.deliveryOptions);
+  const freeShippingThreshold = freeShippingThresholdFor(siteConfig, deliveryOptions);
+  // A cold-chain cart cannot go by DPD, so it gets no free-delivery bar.
+  const showFreeShippingBar = showsFreeShippingBar(siteConfig) && !(courierOffered && cartHasColdChain);
   const pickupNotice = getConfiguredText(fulfillment.pickupInstructions, tFulfillment('cartPickupNotice'));
   const bankTransferNotice = getConfiguredText(fulfillment.bankTransferInstructions, tFulfillment('cartBankTransferNotice'));
 
@@ -274,7 +280,8 @@ export default function CartPage() {
               </span>
             </div>
 
-            {pickupMode ? renderFulfillmentNotice() : (() => {
+            {pickupMode && renderFulfillmentNotice()}
+            {showFreeShippingBar && (() => {
               const progress = freeShippingThreshold > 0 ? Math.min(subtotal / freeShippingThreshold, 1) : 1;
               const remaining = Math.max(freeShippingThreshold - subtotal, 0);
               return (
@@ -292,7 +299,7 @@ export default function CartPage() {
                     <Truck className="w-3.5 h-3.5" aria-hidden="true" />
                     {progress >= 1
                       ? (t('freeShippingReached') || 'You qualify for free shipping!')
-                      : (t('freeShippingRemaining', { amount: formatPrice(remaining, currency) }) || `Add ${formatPrice(remaining, currency)} more for free shipping`)}
+                      : (t(courierOffered ? 'freeShippingRemainingCourier' : 'freeShippingRemaining', { amount: formatPrice(remaining, currency) }) || `Add ${formatPrice(remaining, currency)} more for free shipping`)}
                   </p>
                 </div>
               );
@@ -321,7 +328,8 @@ export default function CartPage() {
         data-testid="mobile-cart-summary-bar"
       >
         <div className="container-grocery py-3">
-          {pickupMode ? renderFulfillmentNotice(true) : (() => {
+          {pickupMode && renderFulfillmentNotice(true)}
+          {showFreeShippingBar && (() => {
             const progress = freeShippingThreshold > 0 ? Math.min(subtotal / freeShippingThreshold, 1) : 1;
             const remaining = Math.max(freeShippingThreshold - subtotal, 0);
             return (
@@ -347,7 +355,7 @@ export default function CartPage() {
                   <span className="truncate">
                     {progress >= 1
                       ? (t('freeShippingReached') || 'You qualify for free shipping!')
-                      : (t('freeShippingRemaining', { amount: formatPrice(remaining, currency) }) || `Add ${formatPrice(remaining, currency)} more for free shipping`)}
+                      : (t(courierOffered ? 'freeShippingRemainingCourier' : 'freeShippingRemaining', { amount: formatPrice(remaining, currency) }) || `Add ${formatPrice(remaining, currency)} more for free shipping`)}
                   </span>
                 </p>
               </div>

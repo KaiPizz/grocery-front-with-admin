@@ -28,6 +28,23 @@ export function offersCourierDelivery(config: StorefrontConfig | null): boolean 
   return getFulfillmentConfig(config).courier === 'dpd';
 }
 
+/**
+ * The goods total from which delivery is free: the backend freeAbove of the first non-pickup option
+ * (Kurier DPD), else the shop config.
+ */
+export function freeShippingThresholdFor(
+  config: StorefrontConfig | null,
+  options: CartDeliveryOption[],
+): number {
+  const courierThreshold = options.find((option) => !isPickupOption(option) && typeof option.freeAbove === 'number')?.freeAbove;
+  return courierThreshold ?? config?.general?.freeShippingThreshold ?? 150;
+}
+
+/** The free-shipping bar belongs to shops that deliver: delivery mode, or a pickup shop that also offers DPD. */
+export function showsFreeShippingBar(config: StorefrontConfig | null): boolean {
+  return !isPickupFulfillment(config) || offersCourierDelivery(config);
+}
+
 /** Chilled and frozen products travel only by pickup (no cold chain on the DPD parcel). */
 export function isColdChainProduct(product: { storageZone?: string | null }): boolean {
   return product.storageZone === 'CHILLED' || product.storageZone === 'FROZEN';

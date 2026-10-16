@@ -551,7 +551,7 @@
         "terms": "/terms",
         "about": "#"
       },
-      "freeShippingThreshold": 150,
+      "freeShippingThreshold": 200,
       "sameDayShippingCutoff": "12:00",
       "lowStockThreshold": 10,
       "fulfillment": {
@@ -1302,7 +1302,7 @@
         "terms": "/terms",
         "about": "#"
       },
-      "freeShippingThreshold": 150,
+      "freeShippingThreshold": 200,
       "sameDayShippingCutoff": "12:00",
       "lowStockThreshold": 10,
       "fulfillment": {

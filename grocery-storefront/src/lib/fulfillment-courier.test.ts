@@ -6,9 +6,11 @@ import type { CartDeliveryOption } from '../types';
 import type { StorefrontConfig } from '../types/storefront-config';
 import {
   DEFAULT_FULFILLMENT_CONFIG,
+  freeShippingThresholdFor,
   isColdChainProduct,
   isPickupOption,
   offersCourierDelivery,
+  showsFreeShippingBar,
   visibleDeliveryOptions,
 } from './fulfillment';
 
@@ -84,4 +86,36 @@ test('isColdChainProduct: ambient, unknown and missing zones are not cold', () =
   assert.equal(isColdChainProduct({ storageZone: null }), false);
   assert.equal(isColdChainProduct({ storageZone: undefined }), false);
   assert.equal(isColdChainProduct({}), false);
+});
+
+test('freeShippingThresholdFor prefers the backend freeAbove of the courier option', () => {
+  const adg = liveConfig('asiandeligo');
+  adg.general.freeShippingThreshold = 150;
+  assert.equal(freeShippingThresholdFor(adg, [pickup, { ...dpd, freeAbove: 200 }]), 200);
+});
+
+test('freeShippingThresholdFor falls back to the shop config without a courier threshold', () => {
+  const adg = liveConfig('asiandeligo');
+  adg.general.freeShippingThreshold = 150;
+  assert.equal(freeShippingThresholdFor(adg, [pickup]), 150);
+  assert.equal(freeShippingThresholdFor(adg, [pickup, { ...dpd, freeAbove: null }]), 150);
+  assert.equal(freeShippingThresholdFor(adg, []), 150);
+});
+
+test('showsFreeShippingBar: a pickup-only shop shows no free-shipping bar', () => {
+  assert.equal(showsFreeShippingBar(liveConfig('kenmito')), false);
+});
+
+test('showsFreeShippingBar: a pickup shop with DPD and a delivery shop show it', () => {
+  const adg = liveConfig('asiandeligo');
+  adg.general.fulfillment.courier = 'dpd';
+  assert.equal(showsFreeShippingBar(adg), true);
+  const delivery = liveConfig('kenmito');
+  delivery.general.fulfillment.mode = 'delivery';
+  assert.equal(showsFreeShippingBar(delivery), true);
+});
+
+test('ADG (and its legacy kenmito alias) advertises free DPD shipping from 200 zł', () => {
+  assert.equal(liveConfig('asiandeligo').general.freeShippingThreshold, 200);
+  assert.equal(liveConfig('kenmito').general.freeShippingThreshold, 200);
 });
