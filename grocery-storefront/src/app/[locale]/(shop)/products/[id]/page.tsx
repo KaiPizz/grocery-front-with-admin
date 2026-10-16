@@ -29,7 +29,9 @@ import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import {
   getConfiguredText,
   getFulfillmentConfig,
+  isColdChainProduct,
   isPickupFulfillment,
+  offersCourierDelivery,
   usesAvailabilityOnlyStock,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
@@ -725,6 +727,7 @@ export default function ProductDetailPage() {
   const siteConfig = useStorefrontConfig();
   const fulfillment = getFulfillmentConfig(siteConfig);
   const pickupMode = isPickupFulfillment(siteConfig);
+  const courierOffered = pickupMode && offersCourierDelivery(siteConfig);
   const bankTransferMode = usesBankTransferPromise(siteConfig);
   const availabilityOnlyStock = usesAvailabilityOnlyStock(siteConfig);
   const cutoffStr = siteConfig?.general?.sameDayShippingCutoff ?? DEFAULT_SAME_DAY_SHIPPING_CUTOFF;
@@ -1008,7 +1011,13 @@ export default function ProductDetailPage() {
                 color: 'var(--color-foreground)',
               }}
             >
-              {pickupMode && <p>{pickupNotice}</p>}
+              {pickupMode && (
+                <p data-testid="product-fulfillment-notice">
+                  {courierOffered
+                    ? t(isColdChainProduct(product) ? 'fulfillment.productColdChainNotice' : 'fulfillment.productCourierNotice')
+                    : pickupNotice}
+                </p>
+              )}
               {bankTransferMode && <p className={pickupMode ? 'mt-1' : undefined}>{bankTransferNotice}</p>}
               <p className="mt-2 border-t pt-2 text-xs" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
                 {t('fulfillment.manualFulfillmentNotice')}

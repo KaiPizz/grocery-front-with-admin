@@ -12,7 +12,9 @@ import { useHydrated } from '@/hooks/use-hydrated';
 import {
   getConfiguredText,
   getFulfillmentConfig,
+  isColdChainProduct,
   isPickupFulfillment,
+  offersCourierDelivery,
   usesBankTransferPromise,
 } from '@/lib/fulfillment';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
@@ -40,6 +42,9 @@ export default function CartPage() {
   const siteConfig = useStorefrontConfig();
   const fulfillment = getFulfillmentConfig(siteConfig);
   const pickupMode = isPickupFulfillment(siteConfig);
+  const courierOffered = pickupMode && offersCourierDelivery(siteConfig);
+  // Chilled / frozen lines travel only by pickup; the checkout locks Kurier DPD for this cart.
+  const cartHasColdChain = items.some(isColdChainProduct);
   const bankTransferMode = usesBankTransferPromise(siteConfig);
   const freeShippingThreshold = siteConfig?.general?.freeShippingThreshold ?? 150;
   const pickupNotice = getConfiguredText(fulfillment.pickupInstructions, tFulfillment('cartPickupNotice'));
@@ -181,6 +186,11 @@ export default function CartPage() {
         }}
       >
         {pickupMode && <p>{pickupNotice}</p>}
+        {courierOffered && (
+          <p className="mt-1" data-testid="cart-courier-notice">
+            {tFulfillment(cartHasColdChain ? 'cartColdChainNotice' : 'cartCourierNotice')}
+          </p>
+        )}
         {bankTransferMode && <p className={pickupMode ? 'mt-1' : undefined}>{bankTransferNotice}</p>}
       </div>
     );

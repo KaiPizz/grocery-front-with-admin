@@ -52,6 +52,7 @@ import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
 import {
   getConfiguredText,
   getFulfillmentConfig,
+  isColdChainProduct,
   isPickupFulfillment,
   isPickupOption,
   offersCourierDelivery,
@@ -62,6 +63,7 @@ import {
   allowedPaymentMethods,
   defaultDeliveryOption,
   firstVisibleErrorField,
+  isDeliveryOptionLocked,
   isPayOnCollectionMethod,
   resolvePickupSelected,
 } from './_lib/checkout-rules';
@@ -477,6 +479,8 @@ function CheckoutForm() {
   const deliveryOptions = visibleDeliveryOptions(siteConfig, serverDeliveryOptions);
   // Pickup wording, pickup collector and no address while pickup is the selected option.
   const pickupSelected = resolvePickupSelected(selectedDeliveryOption, siteConfig);
+  // Chilled / frozen lines travel only by pickup: Kurier DPD stays visible but locked.
+  const cartHasColdChain = items.some(isColdChainProduct);
   const initialized = useCartStore((state) => state.initialized);
   const isCartLoading = useCartStore((state) => state.isLoading);
   const cartError = useCartStore((state) => state.error);
@@ -722,6 +726,15 @@ function CheckoutForm() {
     paymentMethodsRequested.current = true;
     void loadPaymentMethods();
   }, [isHydrated, loadPaymentMethods]);
+
+  // A cold item in a cart that already chose the courier moves the order back to pickup.
+  useEffect(() => {
+    if (!selectedDeliveryOption || !isDeliveryOptionLocked(selectedDeliveryOption, cartHasColdChain)) return;
+    const pickupOption = serverDeliveryOptions.find(isPickupOption);
+    if (!pickupOption) return;
+    setServerTotal(null);
+    void selectDeliveryOption(pickupOption);
+  }, [cartHasColdChain, selectDeliveryOption, selectedDeliveryOption, serverDeliveryOptions]);
 
   // A courier parcel is prepaid: cash at collection disappears once Kurier DPD is selected.
   const visiblePaymentMethods = useMemo(
@@ -2003,14 +2016,16 @@ function CheckoutForm() {
                   <div className="space-y-3" role="radiogroup" aria-label={pickupMode && !courierOffered ? t('stepPickupMethod') : t('shippingTitle')}>
                     {deliveryOptions.map((option) => {
                       const selected = selectedDeliveryOption?.id === option.id;
+                      const locked = isDeliveryOptionLocked(option, cartHasColdChain);
                       return (
                         <button
                           key={option.id}
                           type="button"
                           role="radio"
                           aria-checked={selected}
+                          aria-disabled={locked || undefined}
                           onClick={() => void handleDeliverySelection(option)}
-                          disabled={busy}
+                          disabled={busy || locked}
                           className="w-full rounded-2xl border p-4 text-left transition-colors duration-fast disabled:opacity-60"
                           style={{
                             borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
@@ -2028,6 +2043,11 @@ function CheckoutForm() {
                               {pickupMode && isPickupOption(option) && pickupAddress && (
                                 <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
                                   {pickupAddress.streetAddress1}, {pickupAddress.postalCode} {pickupAddress.city}
+                                </p>
+                              )}
+                              {locked && (
+                                <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }} data-testid="checkout-option-locked">
+                                  {tFulfillment('cartColdChainNotice')}
                                 </p>
                               )}
                             </div>

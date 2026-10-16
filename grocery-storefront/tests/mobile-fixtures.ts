@@ -961,12 +961,17 @@ function buildCart(lines: CartLineState[]): CartState {
   };
 }
 
-function buildCartLine(quantity = 1, cartCosts: 'priced' | 'zero' = 'priced'): CartLineState {
+function buildCartLine(
+  quantity = 1,
+  cartCosts: 'priced' | 'zero' = 'priced',
+  merchandiseId = 'variant-apples',
+  lineId = 'line-1'
+): CartLineState {
   const unitAmount = cartCosts === 'zero' ? 0 : 12.99;
 
   return {
-    id: 'line-1',
-    merchandiseId: 'variant-apples',
+    id: lineId,
+    merchandiseId,
     quantity,
     cost: {
       amountPerQuantity: { amount: unitAmount, currency: 'PLN' },
@@ -1094,7 +1099,7 @@ export async function seedAuthSession(page: Page, fullName = 'Mobile Shopper', p
 }
 
 interface MockMobileStorefrontOptions {
-  cart?: 'empty' | 'single-item';
+  cart?: 'empty' | 'single-item' | 'cold-item';
   cartCosts?: 'priced' | 'zero';
   checkoutProfile?: 'delivery' | 'delivery-p24' | 'pickup-bank-transfer' | 'pickup-no-payment' | 'unconfigured';
   checkoutComplete?: 'success' | 'insufficient-stock';
@@ -1192,7 +1197,14 @@ export async function mockMobileStorefront(
         ? P24_PAYMENT_METHODS
         : PAYMENT_METHODS;
   let p24CreateCalls = 0;
-  let cart = buildCart(options.cart === 'single-item' ? [buildCartLine(1, cartCostMode)] : []);
+  // 'cold-item': an ambient line plus the CHILLED berries (SECONDARY_PRODUCT), which lock Kurier DPD.
+  let cart = buildCart(
+    options.cart === 'single-item'
+      ? [buildCartLine(1, cartCostMode)]
+      : options.cart === 'cold-item'
+        ? [buildCartLine(1, cartCostMode), buildCartLine(1, cartCostMode, 'variant-berries', 'line-2')]
+        : []
+  );
   let checkout = buildCheckoutState(deliveryOptions);
   let wishlistItems = (() => {
     if (options.wishlist === 'single-item' || options.wishlist === 'stale-remove') {

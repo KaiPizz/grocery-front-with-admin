@@ -62,3 +62,8 @@ export function defaultDeliveryOption(
   if (visible.length === 1) return visible[0];
   return preferPickup ? visible.find(isPickupOption) ?? null : null;
 }
+
+/** A cart with chilled or frozen items can only be collected: every non-pickup option is locked. */
+export function isDeliveryOptionLocked(option: CartDeliveryOption, cartHasColdChain: boolean): boolean {
+  return cartHasColdChain && !isPickupOption(option);
+}

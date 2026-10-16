@@ -6,6 +6,7 @@ import type { CartDeliveryOption } from '../types';
 import type { StorefrontConfig } from '../types/storefront-config';
 import {
   DEFAULT_FULFILLMENT_CONFIG,
+  isColdChainProduct,
   isPickupOption,
   offersCourierDelivery,
   visibleDeliveryOptions,
@@ -71,4 +72,16 @@ test('the courier flag defaults to off', () => {
   assert.equal(DEFAULT_FULFILLMENT_CONFIG.courierTermsVersion, null);
   assert.equal(DEFAULT_FULFILLMENT_CONFIG.courierCutoff, null);
   assert.equal(liveConfig('asiandeligo').general.fulfillment.courier, 'none');
+});
+
+test('isColdChainProduct: chilled and frozen products are pickup only', () => {
+  assert.equal(isColdChainProduct({ storageZone: 'CHILLED' }), true);
+  assert.equal(isColdChainProduct({ storageZone: 'FROZEN' }), true);
+});
+
+test('isColdChainProduct: ambient, unknown and missing zones are not cold', () => {
+  assert.equal(isColdChainProduct({ storageZone: 'AMBIENT' }), false);
+  assert.equal(isColdChainProduct({ storageZone: null }), false);
+  assert.equal(isColdChainProduct({ storageZone: undefined }), false);
+  assert.equal(isColdChainProduct({}), false);
 });

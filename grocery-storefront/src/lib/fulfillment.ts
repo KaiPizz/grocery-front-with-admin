@@ -28,6 +28,11 @@ export function offersCourierDelivery(config: StorefrontConfig | null): boolean 
   return getFulfillmentConfig(config).courier === 'dpd';
 }
 
+/** Chilled and frozen products travel only by pickup (no cold chain on the DPD parcel). */
+export function isColdChainProduct(product: { storageZone?: string | null }): boolean {
+  return product.storageZone === 'CHILLED' || product.storageZone === 'FROZEN';
+}
+
 /** In-store pickup option: the backend carrier when present, else the legacy "PICKUP" id. */
 export function isPickupOption(option: Pick<CartDeliveryOption, 'carrierCode' | 'id' | 'name'>): boolean {
   if (option.carrierCode) return option.carrierCode === 'PICKUP';

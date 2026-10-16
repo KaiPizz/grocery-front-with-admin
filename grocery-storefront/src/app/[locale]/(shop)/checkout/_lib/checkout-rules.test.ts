@@ -9,6 +9,7 @@ import {
   allowedPaymentMethods,
   defaultDeliveryOption,
   firstVisibleErrorField,
+  isDeliveryOptionLocked,
   isPayOnCollectionMethod,
   resolvePickupSelected,
 } from './checkout-rules';
@@ -90,4 +91,14 @@ test('defaultDeliveryOption leaves a multi-option delivery shop to the shopper',
   const standard: CartDeliveryOption = { id: 'std', name: 'Standard', price: { amount: 9.99, currency: 'PLN' } };
   assert.equal(defaultDeliveryOption([standard, pickup], null, false), null);
   assert.equal(defaultDeliveryOption([standard], null, false), standard);
+});
+
+test('a cold-chain cart locks every option except pickup', () => {
+  assert.equal(isDeliveryOptionLocked(dpd, true), true);
+  assert.equal(isDeliveryOptionLocked(pickup, true), false);
+});
+
+test('a cart without cold-chain items locks nothing', () => {
+  assert.equal(isDeliveryOptionLocked(dpd, false), false);
+  assert.equal(isDeliveryOptionLocked(pickup, false), false);
 });
