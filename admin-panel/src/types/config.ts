@@ -388,6 +388,12 @@ export interface FulfillmentConfig {
   pickupAddress: PickupAddressConfig | null;
   pickupInstructions: string | null;
   bankTransferInstructions: string | null;
+  /** 'dpd' = the shop also ships by Kurier DPD (Zira Kurier); 'none' = backend courier options stay hidden. */
+  courier: 'none' | 'dpd';
+  /** Version of the courier terms the shop publishes (YYYY-MM-DD); courier wording renders only when set. */
+  courierTermsVersion: string | null;
+  /** Daily DPD hand-over cut-off (HH:MM) shown to customers; null = not shown. */
+  courierCutoff: string | null;
 }
 
 export type CommercialSurfaceKind = 'category' | 'collection' | 'outlet' | 'external';

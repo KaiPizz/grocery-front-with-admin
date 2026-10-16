@@ -184,6 +184,8 @@ export interface CartDiscountCode {
 export interface CartDeliveryOption {
   id: string;
   name: string;
+  /** Backend carrier (PICKUP, ZIRA_KURIER, …); older backends omit it. */
+  carrierCode?: string | null;
   price: CartMoney;
   estimatedDeliveryTime?: string | null;
 }

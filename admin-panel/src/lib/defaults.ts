@@ -245,6 +245,9 @@ export const DEFAULT_CONFIG: StorefrontConfig = {
       pickupAddress: null,
       pickupInstructions: null,
       bankTransferInstructions: null,
+      courier: 'none',
+      courierTermsVersion: null,
+      courierCutoff: null,
     },
   },
 

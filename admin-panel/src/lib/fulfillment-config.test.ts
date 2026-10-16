@@ -29,6 +29,9 @@ test('default config keeps delivery/backend fulfillment behavior', () => {
     pickupAddress: null,
     pickupInstructions: null,
     bankTransferInstructions: null,
+    courier: 'none',
+    courierTermsVersion: null,
+    courierCutoff: null,
   });
 });
 
@@ -47,6 +50,9 @@ test('validation accepts pickup and bank transfer fulfillment config', () => {
     },
     pickupInstructions: null,
     bankTransferInstructions: null,
+    courier: 'dpd',
+    courierTermsVersion: '2026-11-15',
+    courierCutoff: '13:00',
   };
 
   const result = storefrontConfigSchema.safeParse(config);

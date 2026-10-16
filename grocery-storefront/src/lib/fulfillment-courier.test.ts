@@ -1,0 +1,74 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import test from 'node:test';
+
+import type { CartDeliveryOption } from '../types';
+import type { StorefrontConfig } from '../types/storefront-config';
+import {
+  DEFAULT_FULFILLMENT_CONFIG,
+  isPickupOption,
+  offersCourierDelivery,
+  visibleDeliveryOptions,
+} from './fulfillment';
+
+function liveConfig(slug: 'asiandeligo' | 'kenmito'): StorefrontConfig {
+  const envelope = JSON.parse(
+    readFileSync(new URL(`../../public/config/${slug}.json`, import.meta.url), 'utf8')
+  );
+  return structuredClone(envelope.config) as StorefrontConfig;
+}
+
+const pickup: CartDeliveryOption = {
+  id: 'cfg-pickup',
+  name: 'Odbiór osobisty',
+  carrierCode: 'PICKUP',
+  price: { amount: 0, currency: 'PLN' },
+};
+const dpd: CartDeliveryOption = {
+  id: 'cfg-dpd',
+  name: 'Kurier DPD',
+  carrierCode: 'ZIRA_KURIER',
+  price: { amount: 19.99, currency: 'PLN' },
+};
+
+test('isPickupOption reads the backend carrier, falling back to the legacy PICKUP id', () => {
+  assert.equal(isPickupOption({ id: 'x', name: 'x', carrierCode: 'PICKUP' }), true);
+  assert.equal(isPickupOption({ id: 'x', name: 'x', carrierCode: 'ZIRA_KURIER' }), false);
+  assert.equal(isPickupOption({ id: 'PICKUP', name: 'x' }), true);
+  assert.equal(isPickupOption({ id: 'PICKUP', name: 'x', carrierCode: 'ZIRA_KURIER' }), false);
+  assert.equal(isPickupOption({ id: 'delivery-standard', name: 'x' }), false);
+});
+
+test('offersCourierDelivery only for courier "dpd"', () => {
+  assert.equal(offersCourierDelivery(null), false);
+  assert.equal(offersCourierDelivery(liveConfig('asiandeligo')), false);
+  const adg = liveConfig('asiandeligo');
+  adg.general.fulfillment.courier = 'dpd';
+  assert.equal(offersCourierDelivery(adg), true);
+});
+
+test('a pickup shop without the courier flag never shows DPD, even when the backend returns it', () => {
+  const kenmito = liveConfig('kenmito');
+  assert.deepEqual(visibleDeliveryOptions(kenmito, [pickup, dpd]), [pickup]);
+});
+
+test('a pickup shop with courier "dpd" keeps pickup and DPD', () => {
+  const adg = liveConfig('asiandeligo');
+  adg.general.fulfillment.courier = 'dpd';
+  assert.deepEqual(visibleDeliveryOptions(adg, [pickup, dpd]), [pickup, dpd]);
+});
+
+test('a delivery-mode shop keeps every backend option', () => {
+  const shop = liveConfig('asiandeligo');
+  shop.general.fulfillment.mode = 'delivery';
+  const standard: CartDeliveryOption = { id: 'delivery-standard', name: 'Standard', price: { amount: 9.99, currency: 'PLN' } };
+  assert.deepEqual(visibleDeliveryOptions(shop, [standard, pickup, dpd]), [standard, pickup, dpd]);
+  assert.deepEqual(visibleDeliveryOptions(null, [standard, dpd]), [standard, dpd]);
+});
+
+test('the courier flag defaults to off', () => {
+  assert.equal(DEFAULT_FULFILLMENT_CONFIG.courier, 'none');
+  assert.equal(DEFAULT_FULFILLMENT_CONFIG.courierTermsVersion, null);
+  assert.equal(DEFAULT_FULFILLMENT_CONFIG.courierCutoff, null);
+  assert.equal(liveConfig('asiandeligo').general.fulfillment.courier, 'none');
+});

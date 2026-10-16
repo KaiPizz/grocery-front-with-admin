@@ -564,7 +564,10 @@
           "country": "PL"
         },
         "pickupInstructions": null,
-        "bankTransferInstructions": null
+        "bankTransferInstructions": null,
+        "courier": "none",
+        "courierTermsVersion": null,
+        "courierCutoff": null
       }
     },
     "commercial": {

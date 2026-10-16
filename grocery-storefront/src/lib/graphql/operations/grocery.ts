@@ -638,6 +638,7 @@ export const CART_DELIVERY_OPTIONS_QUERY = `
     cartDeliveryOptions(cartId: $cartId, channel: $channel) {
       id
       name
+      carrierCode
       price { amount currency }
     }
   }

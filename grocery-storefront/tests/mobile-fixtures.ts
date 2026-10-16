@@ -675,6 +675,7 @@ const DELIVERY_OPTIONS = [
   {
     id: 'delivery-standard',
     name: 'Standard courier',
+    carrierCode: 'DPD',
     price: {
       amount: 9.99,
       currency: 'PLN',
@@ -683,6 +684,7 @@ const DELIVERY_OPTIONS = [
   {
     id: 'delivery-pickup',
     name: 'Pickup in store',
+    carrierCode: 'PICKUP',
     price: {
       amount: 0,
       currency: 'PLN',
@@ -977,6 +979,7 @@ const PICKUP_ONLY_DELIVERY_OPTIONS = [
   {
     id: 'PICKUP',
     name: 'Pickup in store',
+    carrierCode: 'PICKUP',
     price: {
       amount: 0,
       currency: 'PLN',
