@@ -53,8 +53,18 @@ import {
   getConfiguredText,
   getFulfillmentConfig,
   isPickupFulfillment,
+  isPickupOption,
+  offersCourierDelivery,
   usesBankTransferPromise,
+  visibleDeliveryOptions,
 } from '@/lib/fulfillment';
+import {
+  allowedPaymentMethods,
+  defaultDeliveryOption,
+  firstVisibleErrorField,
+  isPayOnCollectionMethod,
+  resolvePickupSelected,
+} from './_lib/checkout-rules';
 import type { CartDeliveryOption, CartItem, CustomerAddress } from '@/types';
 import type { PaymentMethod } from '@/types/checkout';
 import { saveLastOrder } from '@/lib/last-order';
@@ -231,19 +241,6 @@ const PAYMENT_ICONS: Record<string, typeof CreditCard> = {
 const INPUT_CLASS =
   'w-full rounded-lg border bg-transparent px-3 py-2.5 text-sm transition-colors duration-fast focus:outline-none focus-visible:ring-2';
 const CHECKOUT_DRAFT_KEY = 'oms-checkout-draft-v2';
-const DELIVERY_FIELD_ORDER: Array<keyof DeliveryFormState> = [
-  'firstName',
-  'lastName',
-  'email',
-  'phone',
-  'recipientFirstName',
-  'recipientLastName',
-  'recipientPhone',
-  'streetAddress1',
-  'city',
-  'postalCode',
-];
-
 function getPayloadMessage(errors?: CheckoutMutationError[] | null): string | null {
   return errors?.find((error) => error.message?.trim())?.message ?? null;
 }
@@ -377,13 +374,6 @@ function isP24Method(method: PaymentMethod | null): boolean {
   return code.includes('p24') || code.includes('przelewy24');
 }
 
-// Paid in cash (or card at the till) when the order is collected.
-function isPayOnCollectionMethod(method: PaymentMethod | null): boolean {
-  if (!method) return false;
-  const code = `${method.id} ${method.provider ?? ''}`.toLowerCase();
-  return code.includes('cash') || code.includes('cod');
-}
-
 function focusDeliveryField(field: keyof DeliveryFormState) {
   focusElement(`checkout-${field}`);
 }
@@ -469,6 +459,7 @@ function CheckoutForm() {
   const siteConfig = useStorefrontConfig();
   const fulfillment = getFulfillmentConfig(siteConfig);
   const pickupMode = isPickupFulfillment(siteConfig);
+  const courierOffered = pickupMode && offersCourierDelivery(siteConfig);
   const bankTransferMode = usesBankTransferPromise(siteConfig);
   // Consumer law requires the seller's identity before a contract is concluded.
   const sellerIdentityMissing = getPublicLegalIdentity(siteConfig) === null;
@@ -480,8 +471,12 @@ function CheckoutForm() {
   const cost = useCartStore((state) => state.cost);
   const buyerIdentity = useCartStore((state) => state.buyerIdentity);
   const note = useCartStore((state) => state.note);
-  const deliveryOptions = useCartStore((state) => state.deliveryOptions);
+  const serverDeliveryOptions = useCartStore((state) => state.deliveryOptions);
   const selectedDeliveryOption = useCartStore((state) => state.selectedDeliveryOption);
+  // A pickup shop shows the courier only once it published courier terms (fulfillment.courier).
+  const deliveryOptions = visibleDeliveryOptions(siteConfig, serverDeliveryOptions);
+  // Pickup wording, pickup collector and no address while pickup is the selected option.
+  const pickupSelected = resolvePickupSelected(selectedDeliveryOption, siteConfig);
   const initialized = useCartStore((state) => state.initialized);
   const isCartLoading = useCartStore((state) => state.isLoading);
   const cartError = useCartStore((state) => state.error);
@@ -704,7 +699,7 @@ function CheckoutForm() {
     deliveryRequested.current = true;
 
     void (async () => {
-      const options = await fetchDeliveryOptions();
+      const options = visibleDeliveryOptions(siteConfig, await fetchDeliveryOptions());
       setDeliveryOptionsRequested(true);
 
       if (options.length === 0) {
@@ -712,11 +707,12 @@ function CheckoutForm() {
         return;
       }
 
-      if (options.length === 1 && useCartStore.getState().selectedDeliveryOption?.id !== options[0].id) {
-        await selectDeliveryOption(options[0]);
+      const preferred = defaultDeliveryOption(options, useCartStore.getState().selectedDeliveryOption, courierOffered);
+      if (preferred) {
+        await selectDeliveryOption(preferred);
       }
     })();
-  }, [fetchDeliveryOptions, initialized, isHydrated, items.length, selectDeliveryOption, uiText.noDeliveryOptions]);
+  }, [courierOffered, fetchDeliveryOptions, initialized, isHydrated, items.length, selectDeliveryOption, siteConfig, uiText.noDeliveryOptions]);
 
   const paymentMethodsRequested = useRef(false);
   useEffect(() => {
@@ -727,11 +723,18 @@ function CheckoutForm() {
     void loadPaymentMethods();
   }, [isHydrated, loadPaymentMethods]);
 
+  // A courier parcel is prepaid: cash at collection disappears once Kurier DPD is selected.
+  const visiblePaymentMethods = useMemo(
+    () => (pickupMode ? allowedPaymentMethods(paymentMethods, pickupSelected) : paymentMethods),
+    [paymentMethods, pickupMode, pickupSelected]
+  );
+
   useEffect(() => {
-    if (paymentMethods.length === 1) {
-      setSelectedPaymentMethod((current) => current ?? paymentMethods[0]);
-    }
-  }, [paymentMethods]);
+    setSelectedPaymentMethod((current) => {
+      const stillOffered = current && visiblePaymentMethods.some((method) => method.id === current.id) ? current : null;
+      return stillOffered ?? (visiblePaymentMethods.length === 1 ? visiblePaymentMethods[0] : null);
+    });
+  }, [visiblePaymentMethods]);
 
   // Legacy redirect gateways come back with ?checkoutId=…&payment=returned.
   const gatewayReturned = searchParams.get('payment') === 'returned';
@@ -895,7 +898,7 @@ function CheckoutForm() {
     <>
       <div className="border-t pt-4 mt-5 space-y-2.5" style={{ borderColor: 'var(--color-border)' }}>
         {[
-          ...(pickupMode
+          ...(pickupSelected
             ? [
                 { icon: MapPin, label: t('trustPickup') },
                 { icon: ShieldCheck, label: t('trustManualConfirmation') },
@@ -1010,26 +1013,26 @@ function CheckoutForm() {
     // Required: the store calls if something in the order is missing.
     if (!f.phone.trim()) errors.phone = t('required');
 
-    if (pickupMode && pickupByOther) {
+    if (pickupSelected && pickupByOther) {
       if (!f.recipientFirstName.trim()) errors.recipientFirstName = t('required');
       if (!f.recipientLastName.trim()) errors.recipientLastName = t('required');
       if (!f.recipientPhone.trim()) errors.recipientPhone = t('required');
     }
 
-    if (!pickupMode) {
+    if (!pickupSelected) {
       if (!f.streetAddress1.trim()) errors.streetAddress1 = t('required');
       if (!f.city.trim()) errors.city = t('required');
       if (!f.postalCode.trim()) errors.postalCode = t('required');
     }
 
-    const firstErrorField = DELIVERY_FIELD_ORDER.find((field) => Boolean(errors[field]));
+    const firstErrorField = firstVisibleErrorField(errors, pickupSelected);
 
     setFieldErrors(errors);
     if (firstErrorField) {
-      if (errors.firstName || errors.lastName || errors.email || errors.phone) {
-        setEditingContact(true);
-      }
-      focusDeliveryField(firstErrorField);
+      // Every input sits inside the editable form (the saved-contact card hides them): open it,
+      // then focus once it has rendered.
+      setEditingContact(true);
+      window.requestAnimationFrame(() => focusDeliveryField(firstErrorField));
     }
 
     return !firstErrorField;
@@ -1058,6 +1061,8 @@ function CheckoutForm() {
   async function handleDeliverySelection(option: CartDeliveryOption) {
     setBusy(true);
     setErrorBanner(null);
+    // The server total belongs to the previous method (DPD adds shipping, pickup is free).
+    setServerTotal(null);
 
     try {
       const success = await selectDeliveryOption(option);
@@ -1080,12 +1085,13 @@ function CheckoutForm() {
     setDeliveryError(null);
 
     try {
-      const options = await fetchDeliveryOptions();
+      const options = visibleDeliveryOptions(siteConfig, await fetchDeliveryOptions());
 
       if (options.length === 0) {
         setDeliveryError(uiText.noDeliveryOptions);
-      } else if (options.length === 1) {
-        await selectDeliveryOption(options[0]);
+      } else {
+        const preferred = defaultDeliveryOption(options, useCartStore.getState().selectedDeliveryOption, courierOffered);
+        if (preferred) await selectDeliveryOption(preferred);
       }
     } finally {
       setBusy(false);
@@ -1113,7 +1119,7 @@ function CheckoutForm() {
   // With another collector the pickup name/phone are theirs; the buyer goes into the note
   // so the store still knows who ordered.
   function buildOrderNote(): string {
-    const buyerLine = pickupMode && pickupByOther
+    const buyerLine = pickupSelected && pickupByOther
       ? `${t('orderedBy')}: ${form.firstName.trim()} ${form.lastName.trim()}, ${form.phone.trim()}`
       : '';
     return [buyerLine, form.note.trim()].filter(Boolean).join('\n');
@@ -1186,8 +1192,8 @@ function CheckoutForm() {
       }
     }
 
-    const collectedByOther = pickupMode && pickupByOther;
-    const effectiveAddress = pickupMode && pickupAddress
+    const collectedByOther = pickupSelected && pickupByOther;
+    const effectiveAddress = pickupSelected && pickupAddress
       ? pickupAddress
       : {
           streetAddress1: form.streetAddress1,
@@ -1488,7 +1494,7 @@ function CheckoutForm() {
       return;
     }
 
-    if (pickupMode && !pickupAddress) {
+    if (pickupSelected && !pickupAddress) {
       setErrorBanner(uiText.pickupAddressMissing);
       toast.error(uiText.pickupAddressMissing);
       return;
@@ -1503,7 +1509,7 @@ function CheckoutForm() {
       const buyerUpdated = await updateBuyerIdentity({
         email,
         phone: form.phone.trim() || null,
-        countryCode: normalizeCountryCode(pickupMode ? pickupAddress?.country ?? 'PL' : form.country),
+        countryCode: normalizeCountryCode(pickupSelected ? pickupAddress?.country ?? 'PL' : form.country),
       });
 
       if (!buyerUpdated) {
@@ -1660,8 +1666,8 @@ function CheckoutForm() {
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   // The only fulfilment option (ADG: store pickup) is a fact, not a choice.
-  const singlePickup = pickupMode && deliveryOptions.length === 1;
-  const payAtPickup = pickupMode && isPayOnCollectionMethod(selectedPaymentMethod);
+  const singlePickup = pickupSelected && deliveryOptions.length === 1;
+  const payAtPickup = pickupSelected && isPayOnCollectionMethod(selectedPaymentMethod);
   const formattedTotal = formatPrice(displayTotal, displayCurrency);
   const placeOrderLabel = busy
     ? t('processing')
@@ -1787,7 +1793,7 @@ function CheckoutForm() {
           {/* ── 1: Contact (and address when delivering) ── */}
           <CheckoutBlock
             index={1}
-            title={pickupMode ? t('stepPickupContact') : t('delivery')}
+            title={pickupSelected ? t('stepPickupContact') : t('delivery')}
             testId="checkout-block-contact"
           >
               {isAuthenticated && !editingContact ? (
@@ -1827,7 +1833,7 @@ function CheckoutForm() {
                 </p>
               )}
               {/* ── Saved address selector ── */}
-              {!pickupMode && savedAddresses.length > 0 && (
+              {!pickupSelected && savedAddresses.length > 0 && (
                 <div className="mb-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.14em] mb-2.5" style={{ color: 'var(--color-muted-foreground)' }}>
                     {locale === 'pl' ? 'Użyj zapisanego adresu' : 'Use a saved address'}
@@ -1902,7 +1908,7 @@ function CheckoutForm() {
                 {renderField('lastName', t('lastName'), { autoComplete: 'family-name' })}
                 {!isAuthenticated && renderField('email', t('email'), { autoComplete: 'email', type: 'email', inputMode: 'email', wide: true })}
                 {renderField('phone', t('phone'), { autoComplete: 'tel', type: 'tel', inputMode: 'tel', hint: t('phoneHint') })}
-                {!pickupMode && (
+                {!pickupSelected && (
                   <>
                     {renderField('streetAddress1', t('address'), { autoComplete: 'street-address', wide: true })}
                     {renderField('city', t('city'), { autoComplete: 'address-level2' })}
@@ -1914,7 +1920,7 @@ function CheckoutForm() {
               </>
               )}
 
-              {pickupMode && (
+              {pickupSelected && (
                 <div className="mt-4">
                   <label htmlFor="checkout-pickup-by-other" className="flex cursor-pointer items-center gap-3 text-sm" style={{ color: 'var(--color-foreground)' }}>
                     <input
@@ -1953,7 +1959,7 @@ function CheckoutForm() {
           {/* ── 2: Pickup / delivery method ── */}
           <CheckoutBlock
             index={2}
-            title={pickupMode ? t('stepPickupMethod') : t('shippingTitle')}
+            title={pickupMode && !courierOffered ? t('stepPickupMethod') : t('shippingTitle')}
             testId="checkout-block-delivery"
           >
               <div id="checkout-block-delivery" tabIndex={-1} className="outline-none">
@@ -1994,7 +2000,7 @@ function CheckoutForm() {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-3" role="radiogroup" aria-label={pickupMode ? t('stepPickupMethod') : t('shippingTitle')}>
+                  <div className="space-y-3" role="radiogroup" aria-label={pickupMode && !courierOffered ? t('stepPickupMethod') : t('shippingTitle')}>
                     {deliveryOptions.map((option) => {
                       const selected = selectedDeliveryOption?.id === option.id;
                       return (
@@ -2012,14 +2018,14 @@ function CheckoutForm() {
                           }}
                         >
                           <div className="flex items-center gap-3">
-                            {pickupMode
+                            {pickupMode && isPickupOption(option)
                               ? <MapPin className="h-5 w-5 shrink-0" style={{ color: selected ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }} aria-hidden="true" />
                               : <Truck className="h-5 w-5 shrink-0" style={{ color: selected ? 'var(--color-primary)' : 'var(--color-muted-foreground)' }} aria-hidden="true" />}
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
                                 {translateDeliveryOptionName(locale, option)}
                               </p>
-                              {pickupMode && pickupAddress && (
+                              {pickupMode && isPickupOption(option) && pickupAddress && (
                                 <p className="text-xs mt-1" style={{ color: 'var(--color-muted-foreground)' }}>
                                   {pickupAddress.streetAddress1}, {pickupAddress.postalCode} {pickupAddress.city}
                                 </p>
@@ -2039,9 +2045,14 @@ function CheckoutForm() {
                     )}
                   </div>
                 )}
-                {pickupMode && (
+                {pickupSelected && (
                   <p className="mt-3 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
                     {checkoutPickupNotice}
+                  </p>
+                )}
+                {pickupMode && !pickupSelected && (
+                  <p className="mt-3 text-xs" style={{ color: 'var(--color-muted-foreground)' }} data-testid="checkout-courier-notice">
+                    {tFulfillment('checkoutCourierNotice')}
                   </p>
                 )}
               </div>
@@ -2052,7 +2063,7 @@ function CheckoutForm() {
               <div id="checkout-block-payment" tabIndex={-1} className="outline-none">
                 {bankTransferMode && renderCheckoutNotice(checkoutBankTransferNotice)}
 
-                {paymentMethods.length === 0 ? (
+                {visiblePaymentMethods.length === 0 ? (
                   <div className="flex flex-col items-start gap-3 rounded-2xl border px-4 py-4 text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted-foreground)' }}>
                     <span>{paymentMethodsLoaded ? uiText.noPaymentMethods : uiText.loadingPaymentMethods}</span>
                     {paymentMethodsLoaded && (
@@ -2070,7 +2081,7 @@ function CheckoutForm() {
                   </div>
                 ) : (
                   <div className="space-y-3" role="radiogroup" aria-label={t('paymentTitle')}>
-                    {paymentMethods.map((method) => {
+                    {visiblePaymentMethods.map((method) => {
                       const selected = selectedPaymentMethod?.id === method.id;
                       const Icon = getPaymentIcon(method);
                       const paymentDetail = translatePaymentMethodDescription(locale, method);
@@ -2118,7 +2129,7 @@ function CheckoutForm() {
           {/* ── 4: Confirm ── */}
           <CheckoutBlock index={4} title={t('confirmTitle')} testId="checkout-section-review">
               {bankTransferMode && renderCheckoutNotice(tFulfillment('checkoutReviewNotice'))}
-              {pickupMode && renderCheckoutNotice(tFulfillment('checkoutPickupReviewNotice'))}
+              {pickupSelected && renderCheckoutNotice(tFulfillment('checkoutPickupReviewNotice'))}
               {isP24Method(selectedPaymentMethod) && sellerIdentityMissing && renderCheckoutNotice(t('sellerIdentityMissing'))}
 
               <div className="mb-5 space-y-3">
