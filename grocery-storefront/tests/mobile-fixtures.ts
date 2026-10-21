@@ -1,5 +1,6 @@
 import type { Locator, Page, Route } from '@playwright/test';
 import { expect } from '@playwright/test';
+import type { FulfillmentConfig } from '../src/types/storefront-config';
 
 type Money = {
   amount: number;
@@ -992,6 +993,32 @@ const PICKUP_ONLY_DELIVERY_OPTIONS = [
   },
 ];
 
+// ADG after the DPD launch: pickup first, then Kurier DPD (19,99 zł, free from 200 zł).
+const PICKUP_COURIER_DELIVERY_OPTIONS = [
+  {
+    id: 'delivery-pickup',
+    name: 'Odbiór osobisty',
+    carrierCode: 'PICKUP',
+    price: { amount: 0, currency: 'PLN' },
+  },
+  {
+    id: 'delivery-dpd',
+    name: 'Kurier DPD',
+    carrierCode: 'ZIRA_KURIER',
+    price: { amount: 19.99, currency: 'PLN' },
+    freeAbove: 200,
+  },
+];
+
+const CASH_PAYMENT_METHOD = {
+  id: 'cash',
+  name: 'Cash at pickup',
+  description: 'Pay in store when collecting the order',
+  provider: 'cash',
+  isActive: true,
+  fee: { amount: 0, currency: 'PLN' },
+};
+
 const P24_PAYMENT_METHODS = [
   {
     id: 'p24',
@@ -1101,7 +1128,12 @@ export async function seedAuthSession(page: Page, fullName = 'Mobile Shopper', p
 interface MockMobileStorefrontOptions {
   cart?: 'empty' | 'single-item' | 'cold-item';
   cartCosts?: 'priced' | 'zero';
-  checkoutProfile?: 'delivery' | 'delivery-p24' | 'pickup-bank-transfer' | 'pickup-no-payment' | 'unconfigured';
+  checkoutProfile?: 'delivery' | 'delivery-p24' | 'pickup-bank-transfer' | 'pickup-no-payment' | 'pickup-courier' | 'unconfigured';
+  /**
+   * Serves the config-server fixture with this fulfillment merged in, plus a seller identity (online
+   * payment needs one) — e.g. ADG pickup + Kurier DPD, or Kenmito pickup only.
+   */
+  siteConfigOverride?: Partial<FulfillmentConfig>;
   checkoutComplete?: 'success' | 'insufficient-stock';
   p24PaymentCreate?: 'ok' | 'fail-once';
   products?: 'ok' | 'error' | 'filter-error';
@@ -1188,14 +1220,21 @@ export async function mockMobileStorefront(
     ? []
     : options.checkoutProfile === 'pickup-bank-transfer' || options.checkoutProfile === 'pickup-no-payment'
       ? PICKUP_ONLY_DELIVERY_OPTIONS
-      : DELIVERY_OPTIONS;
+      : options.checkoutProfile === 'pickup-courier'
+        ? PICKUP_COURIER_DELIVERY_OPTIONS
+        : DELIVERY_OPTIONS;
   const paymentMethods = options.checkoutProfile === 'unconfigured' || options.checkoutProfile === 'pickup-no-payment'
     ? []
     : options.checkoutProfile === 'pickup-bank-transfer'
       ? BANK_TRANSFER_PAYMENT_METHODS
       : options.checkoutProfile === 'delivery-p24'
         ? P24_PAYMENT_METHODS
-        : PAYMENT_METHODS;
+        : options.checkoutProfile === 'pickup-courier'
+          ? [...P24_PAYMENT_METHODS, CASH_PAYMENT_METHOD]
+          : PAYMENT_METHODS;
+  if (options.siteConfigOverride) {
+    await mockStorefrontConfigWithLegalIdentity(page, options.siteConfigOverride);
+  }
   let p24CreateCalls = 0;
   // 'cold-item': an ambient line plus the CHILLED berries (SECONDARY_PRODUCT), which lock Kurier DPD.
   let cart = buildCart(
@@ -1964,13 +2003,14 @@ export const TEST_LEGAL_IDENTITY = {
 // Serves the shared config-server fixture with a seller identity and phone added.
 // Checkout refuses online payment without a published seller identity, and the
 // footer specs assert "no phone", so this stays opt-in instead of changing the fixture.
-export async function mockStorefrontConfigWithLegalIdentity(page: Page) {
+export async function mockStorefrontConfigWithLegalIdentity(page: Page, fulfillment?: Partial<FulfillmentConfig>) {
   const response = await page.request.get('http://127.0.0.1:4199/api/config/test');
   const envelope = await response.json();
   envelope.config.general = {
     ...envelope.config.general,
     phone: '+48 500 600 700',
     legalIdentity: { ...TEST_LEGAL_IDENTITY },
+    ...(fulfillment ? { fulfillment: { ...envelope.config.general.fulfillment, ...fulfillment } } : {}),
   };
   await page.route('**/api/config/**', (route) =>
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(envelope) })

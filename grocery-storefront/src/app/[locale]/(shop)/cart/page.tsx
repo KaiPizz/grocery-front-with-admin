@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { ShoppingCart, Trash2, Minus, Plus, Package, ArrowRight, Truck, Heart } from 'lucide-react';
@@ -50,7 +51,12 @@ export default function CartPage() {
   const bankTransferMode = usesBankTransferPromise(siteConfig);
   // Kurier DPD's threshold comes from the backend (freeAbove) once delivery options are loaded.
   const deliveryOptions = useCartStore((state) => state.deliveryOptions);
+  const fetchDeliveryOptions = useCartStore((state) => state.fetchDeliveryOptions);
   const freeShippingThreshold = freeShippingThresholdFor(siteConfig, deliveryOptions);
+  const hasItems = isHydrated && initialized && items.length > 0;
+  useEffect(() => {
+    if (courierOffered && hasItems && deliveryOptions.length === 0) void fetchDeliveryOptions();
+  }, [courierOffered, hasItems, deliveryOptions.length, fetchDeliveryOptions]);
   // A cold-chain cart cannot go by DPD, so it gets no free-delivery bar.
   const showFreeShippingBar = showsFreeShippingBar(siteConfig) && !(courierOffered && cartHasColdChain);
   const pickupNotice = getConfiguredText(fulfillment.pickupInstructions, tFulfillment('cartPickupNotice'));

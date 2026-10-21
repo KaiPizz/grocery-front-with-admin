@@ -1822,7 +1822,8 @@ function CheckoutForm() {
             title={pickupSelected ? t('stepPickupContact') : t('delivery')}
             testId="checkout-block-contact"
           >
-              {isAuthenticated && !editingContact ? (
+              {/* The saved-contact card has no address: Kurier DPD always shows the form. */}
+              {isAuthenticated && !editingContact && !(courierOffered && !pickupSelected) ? (
                 <div
                   className="flex items-start justify-between gap-3 rounded-xl border p-4"
                   style={{ borderColor: 'var(--color-border)' }}
