@@ -1,8 +1,30 @@
 # Feature Progress
 
-> **Last updated:** 2026-10-15
+> **Last updated:** 2026-10-21
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
+
+---
+
+## 2026-10-21 ADG Kurier DPD checkout 🔧 (branch `feat/adg-dpd-checkout-20261016`, not deployed)
+
+- Pickup shop + `general.fulfillment.courier = 'dpd'` offers "Kurier DPD" from the eNail backend
+  (`carrierCode: ZIRA_KURIER`, 19,99 zł, free from backend `freeAbove` 200 zł, prepaid P24 only).
+  Without the flag a pickup shop hides every non-PICKUP option (Kenmito stays pickup-only).
+- Checkout follows the selected option: address form for DPD (also for signed-in shoppers), cash
+  hidden for DPD; chilled/frozen carts lock DPD ("tylko odbiór osobisty"); confirmation page and
+  service strip name DPD; ADG `freeShippingThreshold` 150 → 200 (kenmito alias too).
+- Terms/privacy DPD text (`legal.*Courier`, PL/EN, from the Vietnamese draft) renders only when
+  `courier === 'dpd'` AND `courierTermsVersion` is set; cut-off sentence only with `courierCutoff`.
+  Old keys byte-identical (`tests/fixtures/legal-baseline.json`). Text still awaits owner approval.
+- Tests: `tests/checkout-pickup-courier.spec.ts` (5), legal contract, fulfillment/checkout-rules
+  unit tests. `kenmito-launch-hardening.spec.ts` failures (pickup review copy, category discovery)
+  pre-date this branch.
+- DEV preview NOT done yet: the storefront queries `CheckoutShippingMethod.freeAbove`, which only
+  exists on the eNail branch `feat/adg-dpd-shipping-20261016`; dev backend (trunk) rejects it, so
+  `adg-dev.sh` from this branch would break ADG dev checkout. Order: eNail backend first, then
+  storefront (dev and prod alike). Enable on dev by setting `courier`/`courierTermsVersion` in
+  `/var/www/adg-dev/admin/shared/data/config-asiandeligo.json` (runtime config, no rebuild).
 
 ---
 

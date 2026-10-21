@@ -6,6 +6,22 @@
 
 ---
 
+### A storefront GraphQL field that only exists on an unlanded backend breaks every environment it ships to first
+- **Error:** The DPD branch selects `cartDeliveryOptions { carrierCode freeAbove }`; eNail trunk
+  answers `Cannot query field "freeAbove" on type "CheckoutShippingMethod"` and the whole
+  delivery list fails, so checkout shows no methods.
+- **Cause:** Apollo validates the full document; one unknown field fails the query, not just that field.
+- **Fix:** Deploy the eNail backend before the storefront on dev and prod; check with a one-field
+  probe (`curl … -d '{"query":"query { cartDeliveryOptions(cartId:\"…\",channel:\"asiandeligo\"){ freeAbove } }"}'`)
+  before `adg-dev.sh` / the Contabo lane.
+
+### Two `next dev` servers in one worktree corrupt `.next/dev/types`
+- **Error:** `tsc --noEmit` failed in `.next/dev/types/validator.ts` (TS1128) with no source change.
+- **Cause:** Two sessions ran Playwright (`next dev -p 3018`) in the same worktree at once; both
+  wrote the generated validator and the file came out interleaved.
+- **Fix:** One Playwright run per worktree at a time; if it happens, delete `.next/dev/types`
+  (git-ignored, regenerated).
+
 ### A mock transport failure must remain a failed release attempt
 - **Error:** The first Facebook-hidden production lane stopped at59/60 browser
   tests after `route.fetch: socket hang up` against localhost4199/api/config/test.
