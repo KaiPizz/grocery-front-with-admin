@@ -1,12 +1,17 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { courierLegalActive, courierTermsDate, getFulfillmentConfig } from '@/lib/fulfillment';
 import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
 
 export default function TermsPage() {
   const t = useTranslations('legal');
+  const locale = useLocale();
   const siteConfig = useStorefrontConfig();
+  // Kurier DPD text only once the owner has published its terms version; otherwise the pickup-only text.
+  const courier = courierLegalActive(siteConfig);
+  const { courierTermsVersion, courierCutoff } = getFulfillmentConfig(siteConfig);
   const legalIdentity = getPublicLegalIdentity(siteConfig);
   const email = siteConfig?.general.email?.trim() ?? '';
   const phone = siteConfig?.general.phone?.trim() ?? '';
@@ -22,8 +27,12 @@ export default function TermsPage() {
         {t('termsTitle')}
       </h1>
       <div className="max-w-prose text-sm leading-relaxed space-y-4" style={{ color: 'var(--color-muted-foreground)' }}>
-        <p>{t('termsIntro')}</p>
-        <p>{t('termsEffectiveDate')}</p>
+        <p>{t(courier ? 'termsIntroCourier' : 'termsIntro')}</p>
+        <p>
+          {courier && courierTermsVersion
+            ? t('termsEffectiveDateCourier', { date: courierTermsDate(courierTermsVersion, locale), version: courierTermsVersion })
+            : t('termsEffectiveDate')}
+        </p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsSellerTitle')}</h2>
         {legalIdentity ? (
           <div className="space-y-2">
@@ -54,15 +63,23 @@ export default function TermsPage() {
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsOrdersTitle')}</h2>
         <p>{t('termsOrdersContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsPaymentsTitle')}</h2>
-        <p>{t('termsPaymentsContent')}</p>
-        <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsDeliveryTitle')}</h2>
+        <p>{t(courier ? 'termsPaymentsContentCourier' : 'termsPaymentsContent')}</p>
+        <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t(courier ? 'termsDeliveryTitleCourier' : 'termsDeliveryTitle')}</h2>
+        {courier && (
+          <>
+            <h3 className="text-sm font-semibold mt-4" style={{ color: 'var(--color-foreground)' }}>{t('termsDeliveryCourierSubtitle')}</h3>
+            <p>{t('termsDeliveryCourierContent')}</p>
+            {courierCutoff && <p>{t('termsDeliveryCutoffCourier', { cutoff: courierCutoff })}</p>}
+            <h3 className="text-sm font-semibold mt-4" style={{ color: 'var(--color-foreground)' }}>{t('termsDeliveryPickupSubtitle')}</h3>
+          </>
+        )}
         <p>{t('termsDeliveryContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsWithdrawalTitle')}</h2>
-        <p>{t('termsWithdrawalContent')}</p>
+        <p>{t(courier ? 'termsWithdrawalContentCourier' : 'termsWithdrawalContent')}</p>
         {legalIdentity?.complaintAddress && <p>{t('complaintAddressLabel')} {legalIdentity.complaintAddress}</p>}
-        <p>{t('termsWithdrawalForm')}</p>
+        <p>{t(courier ? 'termsWithdrawalFormCourier' : 'termsWithdrawalForm')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsComplaintsTitle')}</h2>
-        <p>{t('termsComplaintsContent')}</p>
+        <p>{t(courier ? 'termsComplaintsContentCourier' : 'termsComplaintsContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsDisputesTitle')}</h2>
         <p>{t('termsDisputesContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('termsReturnsTitle')}</h2>

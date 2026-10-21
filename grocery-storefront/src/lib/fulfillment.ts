@@ -28,6 +28,23 @@ export function offersCourierDelivery(config: StorefrontConfig | null): boolean 
   return getFulfillmentConfig(config).courier === 'dpd';
 }
 
+/** Terms and privacy switch to the Kurier DPD text only once the owner has published its version. */
+export function courierLegalActive(config: StorefrontConfig | null): boolean {
+  return offersCourierDelivery(config) && !!getFulfillmentConfig(config).courierTermsVersion;
+}
+
+/** The terms version (YYYY-MM-DD) as a date in the page language; read in UTC so no time zone shifts the day. */
+export function courierTermsDate(version: string, locale: string): string {
+  const date = new Date(`${version}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return version;
+  return new Intl.DateTimeFormat(locale === 'pl' ? 'pl-PL' : 'en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
+}
+
 /**
  * The goods total from which delivery is free: the backend freeAbove of the first non-pickup option
  * (Kurier DPD), else the shop config.

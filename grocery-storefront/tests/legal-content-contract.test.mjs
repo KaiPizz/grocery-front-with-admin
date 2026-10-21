@@ -60,3 +60,72 @@ test('the checkout button label matches the Terms wording about the obligation t
   assert.equal(messages.pl.checkout.placeOrder, 'Zamówienie z obowiązkiem zapłaty');
   assert.match(messages.pl.legal.termsOrdersContent, /Zamówienie z obowiązkiem zapłaty/);
 });
+
+// Kurier DPD copy (ADG, behind fulfillment.courier = 'dpd' + courierTermsVersion). The old keys stay
+// byte-identical so Kenmito and a pickup-only ADG keep the text they render today.
+const baseline = JSON.parse(readFileSync(new URL('./fixtures/legal-baseline.json', import.meta.url), 'utf8'));
+const COURIER_LEGAL_KEYS = [
+  'termsIntroCourier',
+  'termsPaymentsContentCourier',
+  'termsDeliveryTitleCourier',
+  'termsDeliveryCourierSubtitle',
+  'termsDeliveryPickupSubtitle',
+  'termsDeliveryCourierContent',
+  'termsDeliveryCutoffCourier',
+  'termsWithdrawalContentCourier',
+  'termsWithdrawalFormCourier',
+  'termsComplaintsContentCourier',
+  'privacyIntroCourier',
+  'privacyDataContentCourier',
+  'privacyRecipientsContentCourier',
+  'termsEffectiveDateCourier',
+];
+const COURIER_FULFILLMENT_KEYS = [
+  'pickupAndCourierService',
+  'productCourierNotice',
+  'productColdChainNotice',
+  'cartCourierNotice',
+  'cartColdChainNotice',
+  'checkoutCourierNotice',
+  'confirmationCourier',
+];
+
+for (const locale of ['pl', 'en']) {
+  test(`${locale}: Kurier DPD copy exists and states prepayment, price, threshold and parcel limit`, () => {
+    const { legal, fulfillment, cart } = messages[locale];
+    for (const key of COURIER_LEGAL_KEYS) assert.ok(legal[key]?.trim(), `legal.${key} missing`);
+    for (const key of COURIER_FULFILLMENT_KEYS) assert.ok(fulfillment[key]?.trim(), `fulfillment.${key} missing`);
+    assert.match(cart.freeShippingRemainingCourier, /\{amount\}/);
+    assert.match(legal.termsPaymentsContentCourier, /Przelewy24/);
+    assert.match(legal.termsDeliveryCourierContent, /19[,.]99/);
+    assert.match(legal.termsDeliveryCourierContent, /200/);
+    assert.match(legal.termsDeliveryCourierContent, /31[,.]5/);
+    assert.doesNotMatch(legal.termsDeliveryCourierContent, /CHỜ|TODO|\{cutoff\}/);
+    assert.match(legal.termsDeliveryCutoffCourier, /\{cutoff\}/);
+    assert.match(legal.termsEffectiveDateCourier, /\{date\}/);
+    assert.match(legal.termsEffectiveDateCourier, /\{version\}/);
+    assert.match(legal.privacyRecipientsContentCourier, /DPD Polska/);
+    assert.match(legal.privacyRecipientsContentCourier, /5272616887/);
+    assert.doesNotMatch(legal.privacyRecipientsContentCourier, /Royal Fashion/i);
+    // No draft markers; the model withdrawal form is the one text with [blanks] for the customer to fill.
+    const published = [
+      ...COURIER_LEGAL_KEYS.filter((k) => k !== 'termsWithdrawalFormCourier').map((k) => legal[k]),
+      ...COURIER_FULFILLMENT_KEYS.map((k) => fulfillment[k]),
+    ];
+    for (const value of published) assert.doesNotMatch(value, /CHỜ|TODO|\[|\]/, value);
+    assert.doesNotMatch(legal.termsWithdrawalFormCourier, /CHỜ|TODO/);
+    assert.match(legal.termsWithdrawalFormCourier, locale === 'pl' ? /odbioru \/ doręczenia/ : /Collected \/ delivered on/);
+  });
+
+  test(`${locale}: Kurier DPD prepayment rules out cash on delivery`, () => {
+    const pattern = locale === 'pl' ? /pobraniem/ : /cash on delivery/i;
+    assert.match(messages[locale].legal.termsPaymentsContentCourier, pattern);
+  });
+
+  test(`${locale}: the pre-DPD copy is unchanged (Kenmito and pickup-only ADG)`, () => {
+    const { legal, fulfillment, cart } = messages[locale];
+    for (const [key, value] of Object.entries(baseline[locale].legal)) assert.equal(legal[key], value, `legal.${key}`);
+    for (const [key, value] of Object.entries(baseline[locale].fulfillment)) assert.equal(fulfillment[key], value, `fulfillment.${key}`);
+    assert.equal(cart.freeShippingRemaining, baseline[locale].cart.freeShippingRemaining);
+  });
+}

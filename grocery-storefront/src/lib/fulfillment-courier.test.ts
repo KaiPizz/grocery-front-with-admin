@@ -5,6 +5,8 @@ import test from 'node:test';
 import type { CartDeliveryOption } from '../types';
 import type { StorefrontConfig } from '../types/storefront-config';
 import {
+  courierLegalActive,
+  courierTermsDate,
   DEFAULT_FULFILLMENT_CONFIG,
   freeShippingThresholdFor,
   isColdChainProduct,
@@ -126,4 +128,22 @@ test('pickupServiceKey names DPD next to pickup only for a courier shop', () => 
   const adg = liveConfig('asiandeligo');
   adg.general.fulfillment.courier = 'dpd';
   assert.equal(pickupServiceKey(adg), 'pickupAndCourierService');
+});
+
+test('courierLegalActive: the DPD terms switch on only with courier dpd AND a published terms version', () => {
+  const adg = liveConfig('asiandeligo');
+  assert.equal(courierLegalActive(adg), false);
+  adg.general.fulfillment.courier = 'dpd';
+  adg.general.fulfillment.courierTermsVersion = null;
+  assert.equal(courierLegalActive(adg), false);
+  adg.general.fulfillment.courierTermsVersion = '2026-11-02';
+  assert.equal(courierLegalActive(adg), true);
+  adg.general.fulfillment.courier = 'none';
+  assert.equal(courierLegalActive(adg), false);
+});
+
+test('courierTermsDate writes the published version as a calendar date in the page language', () => {
+  assert.equal(courierTermsDate('2026-11-02', 'pl'), '2 listopada 2026');
+  assert.equal(courierTermsDate('2026-11-02', 'en'), '2 November 2026');
+  assert.equal(courierTermsDate('not-a-date', 'pl'), 'not-a-date');
 });

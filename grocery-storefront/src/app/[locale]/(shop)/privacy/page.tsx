@@ -3,11 +3,14 @@
 import { useTranslations } from 'next-intl';
 
 import { useStorefrontConfig } from '@/components/ConfigProvider';
+import { courierLegalActive } from '@/lib/fulfillment';
 import { getPublicLegalIdentity } from '@/lib/storefront-config-shared';
 
 export default function PrivacyPage() {
   const t = useTranslations('legal');
   const siteConfig = useStorefrontConfig();
+  // DPD recipients and the required phone number appear only once the courier terms are published.
+  const courier = courierLegalActive(siteConfig);
   const legalIdentity = getPublicLegalIdentity(siteConfig);
   const contactEmail = siteConfig?.general.email?.trim() ?? '';
   const hasContactEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail);
@@ -24,7 +27,7 @@ export default function PrivacyPage() {
         {t('privacyTitle')}
       </h1>
       <div className="max-w-prose space-y-4 text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
-        <p>{t('privacyIntro')}</p>
+        <p>{t(courier ? 'privacyIntroCourier' : 'privacyIntro')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyControllerTitle')}</h2>
         {legalIdentity ? (
           <p>
@@ -35,11 +38,11 @@ export default function PrivacyPage() {
           <p>{t('privacyControllerUnavailable')}</p>
         )}
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyDataTitle')}</h2>
-        <p>{t('privacyDataContent')}</p>
+        <p>{t(courier ? 'privacyDataContentCourier' : 'privacyDataContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyLegalBasisTitle')}</h2>
         <p>{t('privacyLegalBasisContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyRecipientsTitle')}</h2>
-        <p>{t('privacyRecipientsContent')}</p>
+        <p>{t(courier ? 'privacyRecipientsContentCourier' : 'privacyRecipientsContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacyRetentionTitle')}</h2>
         <p>{t('privacyRetentionContent')}</p>
         <h2 className="text-base font-semibold mt-6" style={{ color: 'var(--color-foreground)' }}>{t('privacySocialTitle')}</h2>
