@@ -60,3 +60,20 @@ Preview rollback retains the former immutable DEV release via the existing
 `previous` symlink. A future production release must inspect its actual then-live
 application baseline and follow the guarded Asia Deli Go lane; this branch also
 contains prior audit documentation and is based on the current development trunk.
+
+## Deployment preparation follow-up
+
+The owner approved deployment during peak hours. Live manifests showed that a
+separate session had already released canonical `fc2297f9a3d1` at10:25UTC,
+including DPD application source; this catalog release preserves that baseline.
+Its admin, checkout and deployment scripts have no source delta.
+
+The first complete check-only stopped at59/60 browser cases before any
+production write. A pre-existing race test expected a disabled old pager, while
+the approved loading behavior hides the old rows, count and pager. The updated
+test retains all race assertions and additionally waits for each controlled
+response and render. Temporarily removing both stale-response guards caused
+the final current-page assertion to fail; exact source restoration passed.
+Application source remains byte-identical to the accepted DEV preview.
+Failure trace/logs are retained privately under
+`~/.local/share/enail/adg-catalog-sections-20261022/`.

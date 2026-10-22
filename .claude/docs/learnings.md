@@ -1188,3 +1188,10 @@
 - **Cause:** Product information inferred food status from optional metadata, while country origin and merchandise kind were treated as one dimension.
 - **Fix:** Resolve the existing category ancestry, require explicit food categories before cuisine pagination/facets, and render cosmetic INCI or neutral product information by kind. Metadata loading/error/empty states fail closed.
 - **Rule:** Keep origin independent from product kind. Unknown categories stay neutral; do not manufacture food identity, usage or specification claims from missing data.
+
+
+### Stale-page race tests must wait for both responses and the approved loading state
+- **Error:** The catalog release check stopped at59/60 because an old race test expected a disabled pager while a replacement filter request was held.
+- **Cause:** The approved listing now hides stale rows, totals and pagination; the test also released the old page before proving that the replacement response had rendered.
+- **Fix:** Assert the blank loading state, wait for the current filtered rows/pager, release the old response and wait for response completion plus rendering before checking that current rows/page remain intact. Removing both stale-response guards made the updated test fail; restoring the exact source made it pass.
+- **Rule:** Synchronize each deliberately delayed response and test the user-visible invariant. Do not keep stale rows/pagers merely to satisfy an obsolete loading-state assertion.

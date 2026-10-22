@@ -272,12 +272,23 @@ test.describe('mobile products page', () => {
     await openFilterGroup(filterPanel, 'filter-brand');
     await filterPanel.getByRole('button', { name: 'Samyang', exact: true }).click();
     await filteredPageOneRequested;
-    await expect(pagination.getByRole('button', { name: 'Następna', exact: true })).toBeDisabled();
+    // A new filter hides the previous rows, count and pager while it loads.
+    await expect(page.getByTestId('product-card')).toHaveCount(0);
+    await expect(pagination).toHaveCount(0);
 
     releaseFilteredPageOne();
+    await expect(page.getByRole('link', { name: /organic gala apples/i }).first()).toBeVisible();
+    await expect(pagination.locator('[aria-label="Strona 1 / 4"]')).toBeVisible();
     await expect(page.getByRole('link', { name: /sourdough sandwich bread/i })).toHaveCount(0);
 
+    const oldPageResponse = page.waitForResponse((response) => {
+      if (!response.url().includes('/api/graphql')) return false;
+      const variables = response.request().postDataJSON()?.variables;
+      return typeof variables?.after === 'string';
+    });
     releasePageTwo();
+    await (await oldPageResponse).finished();
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
 
     await expect(pagination.locator('[aria-label="Strona 1 / 4"]')).toBeVisible();
     await expect(page.getByRole('link', { name: /sourdough sandwich bread/i })).toHaveCount(0);

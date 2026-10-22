@@ -34,7 +34,10 @@
   DEV release: `storefront-e094e93f6f43-20261022T104653Z`, BUILD_ID
   `jDn9iO6Nqu-U0dICUPXXf`, health200. Full evidence/screenshots in
   grocery-storefront/docs/catalog-sections-review-20261022/.
-  This phase does not authorize a production app deploy. The prior 13 physical
+  Owner then approved deployment during peak hours. Full release checks are in
+  progress; a stale-pager test expectation was corrected and causally verified,
+  without changing approved application source. The actual live base is now
+  canonical fc2297f (separate DPD release at10:25UTC). The prior13 physical
   product ambiguities and ADG-000119 ingredient conflict remain separate.
 
 ---
