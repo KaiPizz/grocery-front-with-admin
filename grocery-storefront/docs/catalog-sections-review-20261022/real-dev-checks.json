@@ -1,0 +1,274 @@
+[
+  {
+    "check": "home-navigation",
+    "locale": "pl",
+    "width": 320,
+    "layout": {
+      "width": 320,
+      "scroll": 320
+    },
+    "pageErrors": []
+  },
+  {
+    "check": "home-navigation",
+    "locale": "pl",
+    "width": 390,
+    "layout": {
+      "width": 390,
+      "scroll": 390
+    },
+    "pageErrors": []
+  },
+  {
+    "check": "home-navigation",
+    "locale": "pl",
+    "width": 1280,
+    "layout": {
+      "width": 1280,
+      "scroll": 1280
+    },
+    "pageErrors": []
+  },
+  {
+    "check": "home-navigation",
+    "locale": "pl",
+    "width": 1440,
+    "layout": {
+      "width": 1440,
+      "scroll": 1440
+    },
+    "pageErrors": []
+  },
+  {
+    "check": "product-kind",
+    "locale": "pl",
+    "width": 390,
+    "kind": "cosmetics",
+    "title": "Aloe Facial Cleansing Foam Pianka do oczyszczania twarzy z ekstraktem z aloesu 150ml Holika Holika"
+  },
+  {
+    "check": "product-kind",
+    "locale": "pl",
+    "width": 390,
+    "kind": "kitchenware",
+    "title": "Chiński nóż szefa kuchni, tasak 32,5 cm – do mięsa i warzyw - Xiao Tian Zi"
+  },
+  {
+    "check": "category-label",
+    "locale": "pl",
+    "width": 390,
+    "slug": "kosmetyki-koreanskie",
+    "label": "Kosmetyki i pielęgnacja"
+  },
+  {
+    "check": "category-label",
+    "locale": "pl",
+    "width": 390,
+    "slug": "akcesoria-kuchenne",
+    "label": "Akcesoria kuchenne i zastawa"
+  },
+  {
+    "check": "product-kind",
+    "locale": "pl",
+    "width": 1440,
+    "kind": "cosmetics",
+    "title": "Aloe Facial Cleansing Foam Pianka do oczyszczania twarzy z ekstraktem z aloesu 150ml Holika Holika"
+  },
+  {
+    "check": "product-kind",
+    "locale": "pl",
+    "width": 1440,
+    "kind": "kitchenware",
+    "title": "Chiński nóż szefa kuchni, tasak 32,5 cm – do mięsa i warzyw - Xiao Tian Zi"
+  },
+  {
+    "check": "category-label",
+    "locale": "pl",
+    "width": 1440,
+    "slug": "kosmetyki-koreanskie",
+    "label": "Kosmetyki i pielęgnacja"
+  },
+  {
+    "check": "category-label",
+    "locale": "pl",
+    "width": 1440,
+    "slug": "akcesoria-kuchenne",
+    "label": "Akcesoria kuchenne i zastawa"
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "pl",
+    "country": "Japonia",
+    "count": 376,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "pl",
+    "country": "Korea Południowa",
+    "count": 380,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "pl",
+    "country": "Chiny",
+    "count": 256,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "pl",
+    "country": "Tajlandia",
+    "count": 170,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "pl",
+    "country": "Wietnam",
+    "count": 57,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "home-navigation",
+    "locale": "en",
+    "width": 320,
+    "layout": {
+      "width": 320,
+      "scroll": 320
+    },
+    "pageErrors": []
+  },
+  {
+    "check": "home-navigation",
+    "locale": "en",
+    "width": 390,
+    "layout": {
+      "width": 390,
+      "scroll": 390
+    },
+    "pageErrors": []
+  },
+  {
+    "check": "home-navigation",
+    "locale": "en",
+    "width": 1280,
+    "layout": {
+      "width": 1280,
+      "scroll": 1280
+    },
+    "pageErrors": []
+  },
+  {
+    "check": "home-navigation",
+    "locale": "en",
+    "width": 1440,
+    "layout": {
+      "width": 1440,
+      "scroll": 1440
+    },
+    "pageErrors": []
+  },
+  {
+    "check": "product-kind",
+    "locale": "en",
+    "width": 390,
+    "kind": "cosmetics",
+    "title": "Aloe Facial Cleansing Foam 150ml Holika Holika"
+  },
+  {
+    "check": "product-kind",
+    "locale": "en",
+    "width": 390,
+    "kind": "kitchenware",
+    "title": "Xiao Tian Zi Chinese Chef's Knife, Cleaver 32.5 cm – for Meat and Vegetables"
+  },
+  {
+    "check": "category-label",
+    "locale": "en",
+    "width": 390,
+    "slug": "kosmetyki-koreanskie",
+    "label": "Beauty and personal care"
+  },
+  {
+    "check": "category-label",
+    "locale": "en",
+    "width": 390,
+    "slug": "akcesoria-kuchenne",
+    "label": "Kitchenware and tableware"
+  },
+  {
+    "check": "product-kind",
+    "locale": "en",
+    "width": 1440,
+    "kind": "cosmetics",
+    "title": "Aloe Facial Cleansing Foam 150ml Holika Holika"
+  },
+  {
+    "check": "product-kind",
+    "locale": "en",
+    "width": 1440,
+    "kind": "kitchenware",
+    "title": "Xiao Tian Zi Chinese Chef's Knife, Cleaver 32.5 cm – for Meat and Vegetables"
+  },
+  {
+    "check": "category-label",
+    "locale": "en",
+    "width": 1440,
+    "slug": "kosmetyki-koreanskie",
+    "label": "Beauty and personal care"
+  },
+  {
+    "check": "category-label",
+    "locale": "en",
+    "width": 1440,
+    "slug": "akcesoria-kuchenne",
+    "label": "Kitchenware and tableware"
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "en",
+    "country": "Japonia",
+    "count": 376,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "en",
+    "country": "Korea Południowa",
+    "count": 380,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "en",
+    "country": "Chiny",
+    "count": 256,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "en",
+    "country": "Tajlandia",
+    "count": 170,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  },
+  {
+    "check": "cuisine-listing",
+    "locale": "en",
+    "country": "Wietnam",
+    "count": 57,
+    "pageSize": 24,
+    "foodCategoryIds": 51
+  }
+]

@@ -92,3 +92,13 @@ fixtures. Root owns integration, docs, verification, DEV build and screenshots.
   source files were never changed for these controls.
 - Current public data:1560 food,37 cosmetics,181 kitchenware,0 unknown; independent
   API cuisine food totals KR380,JP376,CN256,TH169,VN58.
+
+## DEV outcome
+
+Production build and standalone smoke passed. DEV release
+`storefront-e094e93f6f43-20261022T104653Z`, BUILD_ID
+`jDn9iO6Nqu-U0dICUPXXf`, health200. 34 real DEV browser checks passed;
+PL/EN navigation fits 320–1440px, all five cuisine queries carry 51 current
+food-category IDs, both non-food labels and PDP kinds render correctly.
+Screenshots visually inspected. Evidence: grocery-storefront/docs/catalog-sections-review-20261022/.
+No production app deployment or catalog-data mutation occurred in this phase.

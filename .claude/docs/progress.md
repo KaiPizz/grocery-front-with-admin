@@ -25,12 +25,16 @@
 - The full public snapshot classifies 1,560 food, 37 cosmetics, 181 kitchenware,
   zero unknown. Read-only food API counts: KR380, JP376, CN256, TH169, VN58.
   This verifies current category membership, not the physical packaging queue.
-- Validation:23 unit cases, TypeScript, source ESLint and92 unique browser cases
+- Validation: 23 unit cases, TypeScript, source ESLint and 92 unique browser cases
   passed across affected/focused runs. Temporary isolated mutations of cosmetic
   classification and category-scope intersection caused the expected test failures;
   working source was untouched. Initial browser fixture/locator failures were fixed
-  without weakening product assertions. DEV build/real-data checks remain pending.
-  This phase does not authorize a production app deploy. The prior13 physical
+  without weakening product assertions. DEV production build/smoke and34 additional
+  real-data checks passed (PL/EN, 320–1440px, five cuisines and both non-food kinds).
+  DEV release: `storefront-e094e93f6f43-20261022T104653Z`, BUILD_ID
+  `jDn9iO6Nqu-U0dICUPXXf`, health200. Full evidence/screenshots in
+  grocery-storefront/docs/catalog-sections-review-20261022/.
+  This phase does not authorize a production app deploy. The prior 13 physical
   product ambiguities and ADG-000119 ingredient conflict remain separate.
 
 ---
