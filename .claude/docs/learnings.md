@@ -6,6 +6,27 @@
 
 ---
 
+### Catalog image identity cannot be inferred from file paths, alt text or successful HTTP responses
+- **Error:** Near-identical variants and unrelated stock photos were linked to
+  one product, including Hot/Super Hot sauce and kombu/katsuo dashi. Shared generic
+  packaging graphics also depicted a different rice variant.
+- **Fix:** Compare visible brand, variant, volume and pack count. Retain source
+  blobs, detach only verified wrong links, and use an actual matching barcode
+  before reusing an owner photo for another SKU. Hold unresolved stock decisions.
+- **Rule:** Record the reviewed media URL and one-based gallery position. The
+  older temporary audit cache used zero-based filenames; copying it into a
+  one-based cache corrupts evidence. Fetch exact snapshot URLs when uncertain.
+
+### The existing SQL write helper needs external verification of its exact post-state
+- **Error:** A trailing semicolon makes node-sql-parser return an array and the
+  helper rejects a single statement as multiple statements. PostgreSQL UPDATE/
+  DELETE success output also reports result.length rather than actual row count.
+- **Fix:** Pass one statement without a trailing semicolon, dry-run it, inspect
+  the supported WHERE AST and compare exact before/after row sets after execution.
+- **Rule:** Never use unsupported WHERE nodes: its fallback is 1=1. Do not treat
+  the helper's displayed affected-row number as proof. Prepare guarded recovery
+  and retain original rows/assets; this image task did not alter the shared helper.
+
 ### Canonical main can contain DPD code that is not deployed
 - **Error:** A normal whole-main release for a logo fix would also include the
   queued DPD checkout work, although production still ran `db145921` plus two

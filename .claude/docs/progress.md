@@ -6,6 +6,28 @@
 
 ---
 
+## 2026-10-22 Product Image Identity Corrections
+
+- Reviewed all 1,778 public products / 2,214 gallery images on labelled contact
+  sheets, enlarging suspicious cases. This is a visual catalog scan, not physical
+  stock/EAN verification of every product or every character on a label.
+- Corrected live catalog data under owner approval: detached ten wrong gallery
+  images across nine products and replaced ADG-000119's brown-cap image/fallback
+  with the owned red-cap Super Hot 200ml photo. The photo's visible EAN
+  8853662056050 matches that variant's recorded EAN.
+- All source assets retained. Category, names, ingredients, nutrition, prices,
+  stock and application releases unchanged. The known119ingredient conflict is
+  still open; thirteen other product/packaging cases require physical confirmation.
+- Exact before/after tenant snapshot diff: ten image rows deleted, one media row
+  updated, one product's image_url plus trigger timestamp updated, no variant or
+  unrelated row changes. All ten affected live product pages returned200, decoded
+  their expected main images, excluded removed images and had zero page errors.
+- Recovery rehearsed locally from observed post-state; a later product edit
+  correctly rejects restoration. Evidence and exact pending queue are in
+  grocery-storefront/docs/catalog-image-review-20261022/.
+
+---
+
 ## 2026-10-22 Home Logo Navigation
 
 - Header and footer brand logos open the locale's homepage at scroll position

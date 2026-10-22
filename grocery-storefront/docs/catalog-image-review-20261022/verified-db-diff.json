@@ -1,0 +1,100 @@
+{
+  "images": {
+    "beforeCount": 2284,
+    "afterCount": 2274,
+    "removed": [
+      "00bef7ca-a4b6-424e-8d13-0e20a4d08237",
+      "0532276f-00ea-4084-bbf6-67d5a0b355e8",
+      "089bcb19-60e6-4f13-b154-5c363020ff1e",
+      "38d8fb41-4da1-492f-91bd-888568ae675b",
+      "7c620bee-fcb8-47c2-8cee-1459aef16899",
+      "a4e693ac-23cb-453c-bde3-c7eb8e30b2ce",
+      "d8f24c7e-4133-4334-acdb-57bceeb34ebc",
+      "e706d7ad-0aa1-48d8-bab9-053d79fd326e",
+      "e8f06da2-f258-42f9-9938-cf229c22fb73",
+      "e9d4f335-6d26-4907-8ff8-47fe7c80a4f6"
+    ],
+    "added": [],
+    "updated": {
+      "1e1c7b94-1580-46d8-adae-8834ace8f364": {
+        "file_hash": [
+          "d5eab50a582198e1ea3acc18326a5d43320b383f260d81aa7dea6033599c2a84",
+          "30ec6563c322796b44884e429c59f6c520693a462bbc0cf40767cfc7804d7117"
+        ],
+        "image_medium_url": [
+          null,
+          "https://img.zira.pl/asiandeligo/owner-images/folder01/ADG-000052/02-SAU_9762.jpg"
+        ],
+        "url_thumbnail": [
+          null,
+          "https://img.zira.pl/asiandeligo/owner-images/folder01/ADG-000052/02-SAU_9762.jpg"
+        ],
+        "url_small": [
+          null,
+          "https://img.zira.pl/asiandeligo/owner-images/folder01/ADG-000052/02-SAU_9762.jpg"
+        ],
+        "alt_text": [
+          null,
+          "Sos chili Sriracha, bardzo ostry (chili 70%) 200ml - Flying Goose"
+        ],
+        "image_large_url": [
+          "https://img.zira.pl/asiandeligo/products/KIMCHI-440/1.webp",
+          "https://img.zira.pl/asiandeligo/owner-images/folder01/ADG-000052/02-SAU_9762.jpg"
+        ],
+        "file_size": [
+          null,
+          731917
+        ],
+        "updated_at": [
+          "2026-07-07T20:17:18.811115+00:00",
+          "2026-10-22T09:53:37.684667+00:00"
+        ],
+        "height": [
+          null,
+          2048
+        ],
+        "width": [
+          null,
+          1365
+        ],
+        "url_micro": [
+          null,
+          "https://img.zira.pl/asiandeligo/owner-images/folder01/ADG-000052/02-SAU_9762.jpg"
+        ],
+        "image_small_url": [
+          null,
+          "https://img.zira.pl/asiandeligo/owner-images/folder01/ADG-000052/02-SAU_9762.jpg"
+        ],
+        "mime_type": [
+          "image/webp",
+          "image/jpeg"
+        ]
+      }
+    }
+  },
+  "products": {
+    "beforeCount": 1837,
+    "afterCount": 1837,
+    "removed": [],
+    "added": [],
+    "updated": {
+      "a418903f-3562-42dc-b9a4-b02c4aa9d136": {
+        "updated_at": [
+          "2026-09-29T11:01:36.575444+00:00",
+          "2026-10-22T09:53:39.316704+00:00"
+        ],
+        "image_url": [
+          "https://img.zira.pl/asiandeligo/products/KIMCHI-440/1.webp",
+          "https://img.zira.pl/asiandeligo/owner-images/folder01/ADG-000052/02-SAU_9762.jpg"
+        ]
+      }
+    }
+  },
+  "variants": {
+    "beforeCount": 1837,
+    "afterCount": 1837,
+    "removed": [],
+    "added": [],
+    "updated": {}
+  }
+}

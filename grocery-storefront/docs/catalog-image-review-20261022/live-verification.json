@@ -1,0 +1,82 @@
+[
+  {
+    "sku": "ADG-000052",
+    "url": "https://asiadeligo.com/products/sos-chili-sriracha-bardzo-ostry-chili-61-200ml-flying-goose",
+    "status": 200,
+    "expectedGalleryCount": 3,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-001638",
+    "url": "https://asiadeligo.com/products/bulion-koncentrat-dashi-no-moto-z-wodorostow-kombu-1kg-shimaya",
+    "status": 200,
+    "expectedGalleryCount": 1,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-000730",
+    "url": "https://asiadeligo.com/products/buchim-garu-miks-na-koreanskie-nalesniki-1kg-cj-beksul",
+    "status": 200,
+    "expectedGalleryCount": 1,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-001236",
+    "url": "https://asiadeligo.com/products/kawa-boss-world-journey-colombia-185ml-suntory",
+    "status": 200,
+    "expectedGalleryCount": 1,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-000806",
+    "url": "https://asiadeligo.com/products/shizuoka-sencha-zielona-herbata-50g-maruka",
+    "status": 200,
+    "expectedGalleryCount": 1,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-001487",
+    "url": "https://asiadeligo.com/products/ryz-gotowy-hetban-czany-mix-210g-cj-cheiljedang",
+    "status": 200,
+    "expectedGalleryCount": 1,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-001488",
+    "url": "https://asiadeligo.com/products/ryz-gotowy-hetban-brazowy-210g-cj-cheiljedang",
+    "status": 200,
+    "expectedGalleryCount": 1,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-000216",
+    "url": "https://asiadeligo.com/products/jelly-belly-bean-boozled-7-edycja-fasolki-nowe-smaki-54g",
+    "status": 200,
+    "expectedGalleryCount": 2,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-001084",
+    "url": "https://asiadeligo.com/products/kitkat-mini-matcha-latte-wafelki-o-smaku-mlecznej-herbaty-matcha-torebka-10-sztuk-116g-nestle",
+    "status": 200,
+    "expectedGalleryCount": 2,
+    "mainDecoded": true,
+    "pageErrors": []
+  },
+  {
+    "sku": "ADG-000119",
+    "url": "https://asiadeligo.com/products/sos-chili-sriracha-bardzo-ostry-chili-70-200ml-flying-goose",
+    "status": 200,
+    "expectedGalleryCount": 1,
+    "mainDecoded": true,
+    "pageErrors": []
+  }
+]
