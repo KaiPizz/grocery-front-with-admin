@@ -1,6 +1,6 @@
 # Feature Progress
 
-> **Last updated:** 2026-10-21
+> **Last updated:** 2026-10-22
 >
 > Status key: ✅ Done · 🔧 Partial · ❌ Not started · 🐛 Has known issues
 
@@ -13,8 +13,18 @@
   now a keyboard-accessible link with a localized home label.
 - Reused Next Link's navigation event so modified/new-tab clicks retain native
   browser behavior. No API, schema, configuration or translation-key change.
-- Preview candidate only; production currently has only the approved category
-  background images from the preceding release.
+- Released live with the approved `logo-only` production-base profile:
+  `storefront-516b98a50408-20261022T091044Z` (BUILD_ID `U72ujmJCzHCEBL93cN3JS`)
+  and matching admin release. Base application source remains `db145921`;
+  selected tree is `1aabf67e8f06b542d10805962460c1f32dbd24a5`.
+- The queued DPD application changes were excluded. Canonical `source_commit`
+  `516b98a` identifies the release recipe; read `source_profile`,
+  `source_base_commit` and `source_tree` before comparing live application code.
+- Validation passed: 118 admin unit tests, existing contracts/security gates,
+  60 catalog/product browser cases, 12 logo cases, both production builds and
+  standalone smokes. All 12 additional real-public-site logo checks passed
+  across Polish/English and desktop/mobile. Core health returned 200 and
+  invalid login 401; both category asset SHA-256 values remain approved.
 
 ---
 
@@ -25,7 +35,8 @@
   product artwork, labels, composition, and contact shadows using masks.
 - Both assets remain 800 × 800 WebP within the existing 120 KiB media limit.
   Product pixels in the masked editing masters are unchanged; web exports
-  use standard WebP compression. Preview candidate only, not released live.
+  use standard WebP compression. Released live through the canonical eNail
+  asset lane (snapshot `eae615a08`) and retained in the later logo-only release.
 
 ---
 

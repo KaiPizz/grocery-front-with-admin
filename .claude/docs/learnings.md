@@ -6,6 +6,22 @@
 
 ---
 
+### Canonical main can contain DPD code that is not deployed
+- **Error:** A normal whole-main release for a logo fix would also include the
+  queued DPD checkout work, although production still ran `db145921` plus two
+  category image overlays.
+- **Cause:** Main records reviewed development, while the storefront's
+  immutable release manifest records the actual application baseline.
+- **Fix:** The existing coordinator's approved one-shot `--logo-only` profile
+  builds the pinned live base, applies a checksum-pinned two-component patch,
+  and retains only the approved image overlays and logo regression test.
+  Its exact five-path tree and rejection of changed patch bytes are tested.
+- **Rule:** Read `source_profile`, `source_base_commit` and `source_tree` as
+  well as `source_commit`. For selected-source profiles, `source_commit` pins
+  the committed release recipe, not every application file in current main.
+  Do not infer that DPD is live from canonical ancestry. Re-review changed
+  live targets before reusing a one-shot profile.
+
 ### A storefront GraphQL field that only exists on an unlanded backend breaks every environment it ships to first
 - **Error:** The DPD branch selects `cartDeliveryOptions { carrierCode freeAbove }`; eNail trunk
   answers `Cannot query field "freeAbove" on type "CheckoutShippingMethod"` and the whole
