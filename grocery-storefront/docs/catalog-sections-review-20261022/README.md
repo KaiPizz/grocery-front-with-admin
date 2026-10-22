@@ -1,8 +1,9 @@
 # Catalog section and product information review — 22 October 2026
 
 Owner-approved phase after the gallery identity corrections. The application
-change is prepared and available on DEV; no production application release was
-performed by this task.
+change was accepted on DEV and has now been released to production.
+See [verified production release](production-release.md) for exact artifacts,
+post-release checks and qualified logs.
 
 ## Behavior
 

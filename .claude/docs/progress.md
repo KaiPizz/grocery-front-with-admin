@@ -34,11 +34,17 @@
   DEV release: `storefront-e094e93f6f43-20261022T104653Z`, BUILD_ID
   `jDn9iO6Nqu-U0dICUPXXf`, health200. Full evidence/screenshots in
   grocery-storefront/docs/catalog-sections-review-20261022/.
-  Owner then approved deployment during peak hours. Full release checks are in
-  progress; a stale-pager test expectation was corrected and causally verified,
-  without changing approved application source. The actual live base is now
-  canonical fc2297f (separate DPD release at10:25UTC). The prior13 physical
-  product ambiguities and ADG-000119 ingredient conflict remain separate.
+  Owner then approved deployment during peak hours. ✅ Released canonical e77f0b6
+  through the guarded two-component lane after complete check-only and release
+  validation. Storefront BUILD_ID `45PqXxPkpvK2MIEVHY5rk`; admin BUILD_ID
+  `3NcSmDoJiAX8IiZtZIaWv`. Independent 40 public browser checks, 7 HTTP/API checks
+  and 21 Next assets passed. Five protected hashes and all PM2 definitions remain
+  unchanged; backend/frontend did not restart. The prior fc2297f DPD source/config
+  was preserved. Logs are qualified in the production report (client stream
+  cancellation and a successful image proxy hitting the 2MB data-cache limit).
+  Details: grocery-storefront/docs/catalog-sections-review-20261022/production-release.md.
+  The prior 13 physical product ambiguities and ADG-000119 ingredient conflict
+  remain separate.
 
 ---
 
