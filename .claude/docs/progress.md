@@ -6,6 +6,17 @@
 
 ---
 
+## 2026-10-22 Category Background Consistency
+
+- Updated only the drinks and sauces/pastes category image backgrounds to
+  warm cream sampled from the existing kimchi tile; retained the original
+  product artwork, labels, composition, and contact shadows using masks.
+- Both assets remain 800 × 800 WebP within the existing 120 KiB media limit.
+  Product pixels in the masked editing masters are unchanged; web exports
+  use standard WebP compression. Preview candidate only, not released live.
+
+---
+
 ## 2026-10-21 ADG Kurier DPD checkout 🔧 (branch `feat/adg-dpd-checkout-20261016`, not deployed)
 
 - Pickup shop + `general.fulfillment.courier = 'dpd'` offers "Kurier DPD" from the eNail backend
