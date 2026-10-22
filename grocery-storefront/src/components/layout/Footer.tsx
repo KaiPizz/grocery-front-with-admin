@@ -204,7 +204,12 @@ export function Footer() {
       <div className="container-grocery py-12 md:py-16">
         <div className={`grid grid-cols-2 gap-8 md:gap-12 ${footerGridColumns}`}>
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
+            <Link
+              href="/"
+              onNavigate={() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' })}
+              aria-label={`${storeName} ${tNav('home')}`}
+              className="flex items-center gap-2.5 mb-4"
+            >
               {logoUrl ? (
                 <img src={logoUrl} alt={storeName} className="h-12 max-w-[8.5rem] w-auto rounded-lg object-contain" />
               ) : (
@@ -223,7 +228,7 @@ export function Footer() {
                   {logoText}
                 </span>
               )}
-            </div>
+            </Link>
             <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-muted-foreground)' }}>
               {tagline}
             </p>

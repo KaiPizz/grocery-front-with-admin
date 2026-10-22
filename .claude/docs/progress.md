@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-10-22 Home Logo Navigation
+
+- Header and footer brand logos open the locale's homepage at scroll position
+  zero, including clicks while already on the homepage. The footer brand is
+  now a keyboard-accessible link with a localized home label.
+- Reused Next Link's navigation event so modified/new-tab clicks retain native
+  browser behavior. No API, schema, configuration or translation-key change.
+- Preview candidate only; production currently has only the approved category
+  background images from the preceding release.
+
+---
+
 ## 2026-10-22 Category Background Consistency
 
 - Updated only the drinks and sauces/pastes category image backgrounds to

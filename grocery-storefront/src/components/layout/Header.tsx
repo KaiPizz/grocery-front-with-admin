@@ -386,11 +386,12 @@ export function Header() {
       >
         <Link
           href="/"
+          onNavigate={() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' })}
           // The logo yields before the row overflows: the image keeps its size, the
           // store name truncates. Without this a wide nav pushes the header past the
           // container and the page gets a horizontal scrollbar (desktop-layout spec).
           className="group flex min-w-[6.5rem] items-center gap-2.5 sm:min-w-[8rem] lg:min-w-[9rem]"
-          aria-label={`${storeName} Home`}
+          aria-label={`${storeName} ${t('home')}`}
         >
           {logoUrl ? (
             <img
