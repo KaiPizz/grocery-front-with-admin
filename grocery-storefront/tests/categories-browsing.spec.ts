@@ -152,15 +152,24 @@ test.describe('B1 category browsing', () => {
       await expect(page.getByRole('link', { name: /kimchi and pickles.*2 products/i })).toBeVisible();
       await expect(page.getByRole('link', { name: /noodles and rice.*1 product/i })).toBeVisible();
 
-      // Fixture tree: 4 groups with leaves + 3 leafless groups (fruit, bakery, household).
+      // The existing SSR fixture includes 4 groups with leaves plus 4 leafless
+      // groups: ready meals, fruit, bakery and household. Only two have artwork.
       const cards = page.getByTestId('category-hub-card');
-      await expect(cards).toHaveCount(7);
+      await expect(cards).toHaveCount(8);
       await expect(cards.nth(0)).toHaveAccessibleName(/noodles and rice.*1 product/i);
       await expect(cards.nth(1)).toHaveAccessibleName(/kimchi and pickles.*2 products/i);
       await expect(cards.nth(0).getByTestId('category-hub-image')).toBeVisible();
       await expect(cards.nth(1).getByTestId('category-hub-image')).toBeVisible();
-      await expect(page.getByTestId('category-hub-image-fallback')).toHaveCount(5);
+      await expect(page.getByTestId('category-hub-image-fallback')).toHaveCount(6);
       await expect(page.getByRole('searchbox', { name: /search categories/i })).toHaveCount(0);
+      await expect(cards.filter({ hasText: 'Ready meals and instant soups' })).toHaveAttribute('href', '/en/categories/dania-gotowe');
+      await expect(cards.filter({ hasText: 'Beauty and personal care' })).toHaveAttribute('href', '/en/categories/kosmetyki-koreanskie');
+
+      // Public labels must override the legacy Korean-only DB name in both locales,
+      // including first render without client-side localization. URLs stay stable.
+      await page.goto('/categories');
+      await expect(page.getByTestId('category-hub-card').filter({ hasText: 'Kosmetyki i pielęgnacja' }))
+        .toHaveAttribute('href', '/categories/kosmetyki-koreanskie');
     } finally {
       await context.close();
     }

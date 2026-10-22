@@ -26,7 +26,8 @@ export function CuisineMenu() {
   // menu open (the pointer is still inside, so nothing would reopen it).
   const openedByHoverRef = useRef(false);
 
-  const activeCountries = pathname === '/products' ? parseCountryQueryParams(searchParams) : [];
+  const activeCountries = searchParams.get('type') === 'food' && (pathname === '/products' || pathname.startsWith('/categories/'))
+    ? parseCountryQueryParams(searchParams) : [];
   const isCurrentCuisine = (country: string) => activeCountries.includes(country);
   const anyCuisineActive = CUISINE_LINKS.some((link) => isCurrentCuisine(link.country));
 

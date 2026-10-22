@@ -6,7 +6,7 @@ export interface CuisineLink {
   country: string;
 }
 
-// The "Kuchnie" menu: one entry per country of origin the catalog is built
+// The "Kuchnie" menu: food and drink from each country the catalog is built
 // around, ordered by catalog size (27/09/2026: JP 441 · KR 418 · CN 334 ·
 // TH 174 · VN 60). Labels come from `nav.cuisine.<key>`.
 export const CUISINE_LINKS: CuisineLink[] = [
@@ -18,5 +18,5 @@ export const CUISINE_LINKS: CuisineLink[] = [
 ];
 
 export function buildCuisineHref(country: string): string {
-  return `/products?country=${encodeURIComponent(country)}`;
+  return `/products?country=${encodeURIComponent(country)}&type=food`;
 }

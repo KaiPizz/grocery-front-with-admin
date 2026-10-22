@@ -71,8 +71,8 @@ export const PUBLIC_CATEGORY_DEFINITIONS: PublicCategoryDefinition[] = [
   { slug: 'napoje-herbaty-i-kawy', names: { pl: 'Napoje, herbaty i kawy', en: 'Drinks, tea and coffee' }, descriptions: { pl: 'Herbaty, kawy, napoje gazowane, soki i napoje mleczne.', en: 'Teas, coffee, soft drinks, juices, and milk drinks.' } },
   { slug: 'dania-gotowe', names: { pl: 'Dania gotowe i zupy instant', en: 'Ready meals and instant soups' }, descriptions: { pl: 'Dania gotowe, curry i zupy instant.', en: 'Ready meals, curry, and instant soups.' } },
   { slug: 'do-gotowania-i-sushi', names: { pl: 'Do gotowania i sushi', en: 'Cooking and sushi essentials' }, descriptions: { pl: 'Algi, grzyby suszone, tofu, mąki, mleczko kokosowe i papier ryżowy.', en: 'Seaweed, dried mushrooms, tofu, flours, coconut milk, and rice paper.' } },
-  { slug: 'akcesoria-kuchenne', names: { pl: 'Akcesoria kuchenne', en: 'Kitchen accessories' }, descriptions: { pl: 'Pałeczki, noże, woki, miski, parowary i zestawy do sushi.', en: 'Chopsticks, knives, woks, bowls, steamers, and sushi kits.' } },
-  { slug: 'kosmetyki-koreanskie', names: { pl: 'Kosmetyki koreańskie', en: 'Korean cosmetics' }, descriptions: { pl: 'Maseczki, kremy, serum, oczyszczanie i filtry UV.', en: 'Sheet masks, creams, serums, cleansing, and sunscreens.' } },
+  { slug: 'akcesoria-kuchenne', names: { pl: 'Akcesoria kuchenne i zastawa', en: 'Kitchenware and tableware' }, descriptions: { pl: 'Pałeczki, noże, woki, miski, parowary i zestawy do sushi.', en: 'Chopsticks, knives, woks, bowls, steamers, and sushi kits.' } },
+  { slug: 'kosmetyki-koreanskie', names: { pl: 'Kosmetyki i pielęgnacja', en: 'Beauty and personal care' }, descriptions: { pl: 'Maseczki, kremy, serum, oczyszczanie i filtry UV.', en: 'Sheet masks, creams, serums, cleansing, and sunscreens.' } },
 ];
 
 function normalizeText(value: string) {
@@ -96,6 +96,11 @@ function definitionFor(slug: string) {
 }
 
 function localizedName(node: PublicTaxonomyRawCategory, locale: string) {
+  // These public section names intentionally override the old database labels.
+  if (node.slug === 'kosmetyki-koreanskie' || node.slug === 'akcesoria-kuchenne') {
+    const definition = definitionFor(node.slug)!;
+    return locale === 'en' ? definition.names.en : definition.names.pl;
+  }
   if (locale === 'en') {
     const translated = node.translation?.name?.trim();
     if (translated) return translated;

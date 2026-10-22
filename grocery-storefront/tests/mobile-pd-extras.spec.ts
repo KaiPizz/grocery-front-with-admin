@@ -427,11 +427,11 @@ test.describe('PDP food-label sections', () => {
     await expect(sections.getByTestId('pdp-missing-catalog-data')).toHaveCount(0);
   });
 
-  test('drops ingredients, allergens and nutrition entirely for non-food products', async ({ page }) => {
+  test('drops ingredients, allergens and nutrition entirely for explicit kitchenware', async ({ page }) => {
     await mockMobileStorefront(page, { productDetailLabels: 'non-food' });
     await page.goto('/en/products/organic-gala-apples');
 
-    const sections = page.getByTestId('pdp-food-label-sections');
+    const sections = page.getByTestId('pdp-product-information-sections');
     await expect(sections).toBeVisible();
     await expect(sections.getByRole('heading', { name: /allergens/i })).toHaveCount(0);
     await expect(sections.getByRole('heading', { name: /nutrition facts/i })).toHaveCount(0);
@@ -471,7 +471,8 @@ test.describe('PDP related product rail', () => {
     await mockMobileStorefront(page, { productDetailCategory: 'missing' });
     await page.goto('/en/products/organic-gala-apples');
 
-    await expect(page.getByTestId('pdp-food-label-sections')).toBeVisible();
+    await expect(page.getByTestId('pdp-product-information-sections')).toBeVisible();
+    await expect(page.getByTestId('pdp-food-label-sections')).toHaveCount(0);
     await expect(page.getByTestId('pdp-related-products')).toHaveCount(0);
   });
 

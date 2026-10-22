@@ -44,7 +44,7 @@ const GROCERY_PRODUCT_FIELDS = `
     certifications
     freshness
     nearestExpiry
-    category { id name slug }
+    category { id name slug parent { id slug } }
     pricing {
       priceRange {
         start { gross { amount currency } }
@@ -89,7 +89,7 @@ const GROCERY_PRODUCT_LISTING_FIELDS = `
     storageZone
     freshness
     nearestExpiry
-    category { id name slug }
+    category { id name slug parent { id slug } }
     pricing {
       priceRange {
         start { gross { amount currency } }

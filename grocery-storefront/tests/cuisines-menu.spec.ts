@@ -14,7 +14,7 @@ function isExactly(countries: unknown, expected: string[]): boolean {
 }
 
 test.describe('cuisines menu', () => {
-  test('desktop: hovering "Kuchnie" reveals five cuisines and a click filters the listing by country', async ({ page }) => {
+  test('desktop: hovering "Kuchnie" reveals five cuisines and a click filters food and drink by country', async ({ page }) => {
     const productQueries: ProductVariables[] = [];
     await mockMobileStorefront(page, {
       catalogLabels: 'polish-source',
@@ -43,13 +43,20 @@ test.describe('cuisines menu', () => {
       /^kuchnia wietnamska$/i,
     ]);
     const japanLink = menu.getByRole('link', { name: /^kuchnia japońska$/i });
-    await expect(japanLink).toHaveAttribute('href', '/products?country=Japonia');
+    await expect(japanLink).toHaveAttribute('href', '/products?country=Japonia&type=food');
 
     await japanLink.click();
-    await expect(page).toHaveURL(/\/products\?country=Japonia$/);
+    await expect(page).toHaveURL(/\/products\?country=Japonia&type=food$/);
     await expect(menu).toHaveCount(0);
     await expect.poll(() => productQueries.some((variables) => isExactly(countriesOf(variables), ['Japonia']))).toBe(true);
     await expect(page.getByTestId('product-card')).toHaveCount(1);
+    await expect.poll(() => productQueries.some((variables) => (
+      Array.isArray(variables.filter?.categories)
+      && variables.filter.categories.length > 0
+      && variables.filter.categories.includes('cat-group-cooking')
+      && !variables.filter.categories.includes('cat-group-cosmetics')
+      && !variables.filter.categories.includes('cat-kitchenware')
+    ))).toBe(true);
 
     const filterPanel = page.getByRole('region', { name: /^filtry$/i });
     await expect(filterPanel.getByTestId('filter-country').getByRole('button', { name: /^japonia$/i }))
@@ -89,7 +96,7 @@ test.describe('cuisines menu', () => {
       },
     });
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/pl/products?country=Japonia');
+    await page.goto('/pl/products?country=Japonia&type=food');
 
     const countryGroup = page.getByRole('region', { name: /^filtry$/i }).getByTestId('filter-country');
     const japanChip = countryGroup.getByRole('button', { name: /^japonia$/i });
@@ -103,11 +110,18 @@ test.describe('cuisines menu', () => {
     await expect(menu.getByRole('link', { name: /^kuchnia koreańska$/i })).not.toHaveAttribute('aria-current', 'page');
 
     await menu.getByRole('link', { name: /^kuchnia koreańska$/i }).click();
-    await expect(page).toHaveURL(/\/products\?country=Korea%20Po%C5%82udniowa$/);
+    await expect(page).toHaveURL(/\/products\?country=Korea%20Po%C5%82udniowa&type=food$/);
     await expect.poll(() => productQueries.some((variables) => isExactly(countriesOf(variables), ['Korea Południowa']))).toBe(true);
     await expect(koreaChip).toHaveAttribute('aria-pressed', 'true');
     await expect(japanChip).toHaveAttribute('aria-pressed', 'false');
     await expect(page.getByTestId('product-card')).toHaveCount(1);
+    await expect.poll(() => productQueries.some((variables) => (
+      Array.isArray(variables.filter?.categories)
+      && variables.filter.categories.length > 0
+      && variables.filter.categories.includes('cat-group-cooking')
+      && !variables.filter.categories.includes('cat-group-cosmetics')
+      && !variables.filter.categories.includes('cat-kitchenware')
+    ))).toBe(true);
 
     await trigger.hover();
     await expect(menu.getByRole('link', { name: /^kuchnia koreańska$/i })).toHaveAttribute('aria-current', 'page');
@@ -156,10 +170,10 @@ test.describe('cuisines menu', () => {
     await expect(cuisines.getByRole('link')).toHaveCount(5);
 
     const japanLink = cuisines.getByRole('link', { name: /^japanese cuisine$/i });
-    await expect(japanLink).toHaveAttribute('href', '/en/products?country=Japonia');
+    await expect(japanLink).toHaveAttribute('href', '/en/products?country=Japonia&type=food');
     await japanLink.click();
 
-    await expect(page).toHaveURL(/\/en\/products\?country=Japonia$/);
+    await expect(page).toHaveURL(/\/en\/products\?country=Japonia&type=food$/);
     await expect(drawer).toHaveCount(0);
     await expect(page.getByTestId('mobile-product-card')).toHaveCount(1);
   });

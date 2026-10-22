@@ -69,3 +69,25 @@ test('areFiltersEqual compares brands and in-stock', () => {
   assert.equal(areFiltersEqual(left, { ...left, inStockOnly: false }), false);
   assert.equal(areFiltersEqual(left, { ...left, brands: ['OTTOGI'] }), false);
 });
+
+// Cuisine scope constrains the API before pagination; origin is an independent
+// filter and clearing origin cannot remove the explicit food-only URL mode.
+test('cuisine category scope and country are sent together before pagination', () => {
+  const filter = buildProductFilter({ ...DEFAULT_FILTERS, countryOfOrigin: ['Korea Południowa'] }, '', ['food-root', 'food-leaf']);
+  assert.deepEqual(filter, { categories: ['food-root', 'food-leaf'], countryOfOrigin: ['Korea Południowa'] });
+});
+
+test('selected categories intersect the food scope and cannot add non-food IDs', () => {
+  const state = { ...DEFAULT_FILTERS, categoryIds: ['food-leaf', 'cosmetics'] };
+  assert.deepEqual(buildProductFilter(state, '', ['food-root', 'food-leaf']).categories, ['food-leaf']);
+  assert.deepEqual(buildProductFilter({ ...state, categoryIds: ['cosmetics'] }, '', ['food-root', 'food-leaf']).categories, ['food-root', 'food-leaf']);
+});
+
+test('clearing country keeps explicit food mode and sort, while a plain country URL stays unrestricted', () => {
+  const params = new URLSearchParams('type=food&country=Japonia&sort=price_asc');
+  setCountryQueryParams(params, []);
+  assert.equal(params.get('type'), 'food');
+  assert.equal(params.get('sort'), 'price_asc');
+  assert.deepEqual(parseCountryQueryParams(params), []);
+  assert.deepEqual(buildProductFilter({ ...DEFAULT_FILTERS, countryOfOrigin: ['Japonia'] }, ''), { countryOfOrigin: ['Japonia'] });
+});

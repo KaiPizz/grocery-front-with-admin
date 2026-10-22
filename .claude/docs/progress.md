@@ -6,6 +6,35 @@
 
 ---
 
+## 2026-10-22 Cuisine, Beauty And Kitchenware Separation
+
+- Owner-approved implementation: all five cuisine menu/homepage links now scope
+  food categories before API pagination, counts and facets. Country origin stays
+  independent; ordinary country URLs continue to include all merchandise kinds.
+- Reused the current category tree, stable product/category URLs and shared link
+  builder. Added separate Beauty/Kosmetyki and Kitchenware/Akcesoria entry points;
+  full PL/EN category labels include personal care and tableware. No DB, schema,
+  price, stock, media, origin or fulfillment-configuration changes.
+- PDP and cards use category identity. Cosmetics show existing description/usage
+  and INCI; kitchenware/unknown show neutral information. Food nutrition, allergens,
+  dietary/freshness badges, eating warnings and recipes are food-only. Known food
+  with missing label data retains explicit missing-data feedback.
+- Product/facet queries fail closed while category metadata is unavailable. Scope
+  is preserved across category links, filter reset, sort, pagination and history;
+  stale data from a previous scope stays hidden during replacement.
+- The full public snapshot classifies 1,560 food, 37 cosmetics, 181 kitchenware,
+  zero unknown. Read-only food API counts: KR380, JP376, CN256, TH169, VN58.
+  This verifies current category membership, not the physical packaging queue.
+- Validation:23 unit cases, TypeScript, source ESLint and92 unique browser cases
+  passed across affected/focused runs. Temporary isolated mutations of cosmetic
+  classification and category-scope intersection caused the expected test failures;
+  working source was untouched. Initial browser fixture/locator failures were fixed
+  without weakening product assertions. DEV build/real-data checks remain pending.
+  This phase does not authorize a production app deploy. The prior13 physical
+  product ambiguities and ADG-000119 ingredient conflict remain separate.
+
+---
+
 ## 2026-10-22 Product Image Identity Corrections
 
 - Reviewed all 1,778 public products / 2,214 gallery images on labelled contact

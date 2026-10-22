@@ -2,6 +2,8 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { ChevronRight, PackageOpen, RefreshCw } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
+import { parseCountryQueryParams, setCountryQueryParams } from '@/components/product-listing/listing-filters';
+import { getFoodCategoryIds } from '@/lib/catalog-product-kind';
 import { ProductListingClient } from '@/components/product-listing/ProductListingClient';
 import { Link } from '@/i18n/navigation';
 import { CATEGORY_BY_SLUG_QUERY, PRODUCT_LISTING_QUERY, PUBLIC_CATEGORIES_QUERY } from '@/lib/graphql/operations/grocery';
@@ -76,6 +78,7 @@ interface CategoryPageProps {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 function formatProductCount(locale: string, count: number) {
@@ -101,11 +104,13 @@ function CategoryBreadcrumb({
   allCategoriesLabel,
   group,
   current,
+  query,
 }: {
   label: string;
   allCategoriesLabel: string;
   group: { slug: string; name: string } | null;
   current: string;
+  query: string;
 }) {
   const crumbClassName = 'font-medium transition-opacity duration-fast hover:opacity-80';
 
@@ -122,7 +127,7 @@ function CategoryBreadcrumb({
       {group && (
         <>
           <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <Link href={`/categories/${group.slug}`} className={crumbClassName}>
+          <Link href={`/categories/${group.slug}${query}`} className={crumbClassName}>
             {group.name}
           </Link>
         </>
@@ -135,8 +140,18 @@ function CategoryBreadcrumb({
   );
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { slug } = await params;
+  const queryValues = await searchParams;
+  const countryParams = new URLSearchParams();
+  for (const value of [queryValues.country].flat()) {
+    if (value) countryParams.append('country', value);
+  }
+  const countries = parseCountryQueryParams(countryParams);
+  const foodOnly = queryValues.type === 'food';
+  setCountryQueryParams(countryParams, countries);
+  if (foodOnly) countryParams.set('type', 'food');
+  const discoveryQuery = countryParams.size > 0 ? `?${countryParams.toString()}` : '';
   const [locale, t, tCommon] = await Promise.all([
     getLocale(),
     getTranslations('categories'),
@@ -155,13 +170,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     },
   );
   const rawCategories = categoriesResult.data?.categories?.edges.map((edge) => edge.node) ?? [];
-  const tree = buildCategoryTree(rawCategories, locale, TREE_OPTIONS);
+  const foodCategoryIds = getFoodCategoryIds(rawCategories);
+  const tree = buildCategoryTree(rawCategories, locale, TREE_OPTIONS)
+    .filter((group) => !foodOnly || foodCategoryIds.includes(group.id));
   const publicCategory = findPublicCategory(rawCategories, categorySlug, locale, TREE_OPTIONS);
+  // A cuisine URL must never fall through to an unscoped legacy category query.
+  if (foodOnly && (!publicCategory || !publicCategory.rawCategoryIds.some((id) => foodCategoryIds.includes(id)))) {
+    if (categoriesResult.errorMessage) throw new Error(tCommon('error'));
+    notFound();
+  }
+  const scopedCategoryIds = publicCategory?.rawCategoryIds.filter((id) => !foodOnly || foodCategoryIds.includes(id)) ?? [];
   const publicProductsResult = publicCategory
     ? await serverGraphqlRequest<ProductsResponse>(PRODUCT_LISTING_QUERY, {
       channel,
       first: PAGE_SIZE,
-      filter: { categories: publicCategory.rawCategoryIds },
+      filter: {
+        categories: scopedCategoryIds,
+        ...(countries.length > 0 ? { countryOfOrigin: countries } : {}),
+      },
       // Same order the listing client asks for on later pages.
       sortBy: DEFAULT_SORT_BY,
     }, {
@@ -223,6 +249,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         allCategoriesLabel={t('allCategories')}
         group={breadcrumbGroup}
         current={currentName}
+        query={discoveryQuery}
       />
 
       {publicCategory && (
@@ -250,7 +277,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 color: publicTotalCount > 0 ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
               }}
             >
-              {publicTotalCount > 0 ? formatProductCount(locale, publicTotalCount) : t('comingSoon')}
+              {publicTotalCount > 0 || countries.length > 0 ? formatProductCount(locale, publicTotalCount) : t('comingSoon')}
             </div>
           </div>
 
@@ -263,7 +290,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 {result.errorMessage}
               </p>
               <Link
-                href={`/categories/${slug}`}
+                href={`/categories/${slug}${discoveryQuery}`}
                 className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
               >
@@ -273,12 +300,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             </div>
           )}
 
-          {!result.errorMessage && publicProductItems.length > 0 && (
+          {!result.errorMessage && (publicProductItems.length > 0 || countries.length > 0) && (
             <ProductListingClient
               channel={channel}
               basePath={`/categories/${publicCategory.slug}`}
               title={publicCategory.name}
-              categoryIds={publicCategory.rawCategoryIds}
+              categoryIds={scopedCategoryIds}
+              initialCountries={countries}
               initialProducts={publicProductItems}
               initialEndCursor={publicPageInfo.endCursor}
               initialHasMore={publicPageInfo.hasNextPage}
@@ -292,7 +320,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             />
           )}
 
-          {!result.errorMessage && publicProductItems.length === 0 && (
+          {!result.errorMessage && publicProductItems.length === 0 && countries.length === 0 && (
             <div className="rounded-lg border px-5 py-10 text-center" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}>
               <PackageOpen className="mx-auto h-10 w-10" style={{ color: 'var(--color-muted-foreground)' }} aria-hidden="true" />
               <p className="mt-4 text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
@@ -322,7 +350,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {categoryLookupError}
           </p>
           <Link
-            href={`/categories/${slug}`}
+            href={`/categories/${slug}${discoveryQuery}`}
             className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
             style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
           >
@@ -366,7 +394,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               {childCategories.map((child) => (
                 <Link
                   key={child.id}
-                  href={`/categories/${child.slug}`}
+                  href={`/categories/${child.slug}${discoveryQuery}`}
                   className="rounded-full border px-3 py-1.5 text-sm font-medium transition-opacity duration-fast hover:opacity-80"
                   style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
                 >

@@ -26,6 +26,8 @@
     "skipToContent": "Przejdź do treści"
   },
   "nav": {
+    "cosmetics": "Kosmetyki",
+    "kitchenware": "Akcesoria",
     "home": "Strona główna",
     "categories": "Kategorie",
     "products": "Produkty",
@@ -273,6 +275,8 @@
     "groupToggle": "Rozwiń {name}"
   },
   "product": {
+    "inci": "Skład INCI",
+    "cosmeticsDescription": "Opis i sposób użycia",
     "nutrition": "Wartości odżywcze",
     "nutritionDialogDescription": "Wartości odżywcze, skład, alergeny i informacje o produkcie {name}.",
     "nutritionPer100": "Na 100g / 100ml",

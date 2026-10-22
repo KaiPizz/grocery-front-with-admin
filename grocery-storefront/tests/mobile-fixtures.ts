@@ -344,6 +344,18 @@ type ProductDetailLabelMode = 'complete' | 'missing' | 'non-food' | 'no-allergen
 type ProductDetailCategoryMode = 'present' | 'missing';
 type ProductFixture = (typeof PRODUCTS)[number];
 
+// Generic legacy fixture names still describe food. Give PDP/card classification
+// explicit taxonomy identity instead of relying on ingredients/nutrition fields.
+function withFoodCategoryParents(products: ProductFixture[]): ProductFixture[] {
+  return products.map((product) => ({
+    ...product,
+    category: {
+      ...product.category,
+      parent: { id: 'cat-group-cooking', slug: 'do-gotowania-i-sushi' },
+    },
+  }));
+}
+
 function withPolishSourceLabels<TProduct extends ProductFixture>(products: TProduct[]): TProduct[] {
   const countryOrigins = ['Polska', 'Japonia', 'Korea Południowa', 'Nieznany region'];
 
@@ -582,8 +594,9 @@ function buildProductDetailFixture(
     }
     : labelMode === 'non-food'
       ? {
-        // Kitchenware / tableware: nothing that belongs on a food label.
+        // Explicit kitchenware identity wins even if unrelated metadata exists.
         ...product,
+        category: { id: 'cat-kitchenware', name: 'Kitchenware', slug: 'akcesoria-kuchenne' },
         allergens: [],
         dietaryTags: [],
         ingredients: null,
@@ -800,7 +813,11 @@ function buildCategoryNode(
     displayOrder: index,
     description: null,
     backgroundImage: getCategoryBackgroundImage(category),
-    parent: parentId ? { id: parentId, slug: parentId, name: parentId } : null,
+    parent: parentId ? {
+      id: parentId,
+      slug: CATEGORY_GROUPS.find((group) => group.id === parentId)?.slug ?? parentId,
+      name: CATEGORY_GROUPS.find((group) => group.id === parentId)?.name ?? parentId,
+    } : null,
     translation: category.translation ?? null,
     children: { edges: [] },
     products: {
@@ -1203,11 +1220,12 @@ export async function mockMobileStorefront(
   page: Page,
   options: MockMobileStorefrontOptions = {}
 ) {
-  const baseProducts = options.productPromotions === 'none'
+  const rawProducts = options.productPromotions === 'none'
     ? PRODUCTS_WITHOUT_SALES
     : options.facets === 'empty'
       ? PRODUCTS_WITH_EMPTY_FACETS
       : PRODUCTS;
+  const baseProducts = withFoodCategoryParents(rawProducts);
   const products = options.catalogLabels === 'polish-source'
     ? withPolishSourceLabels(baseProducts)
     : baseProducts;
@@ -1350,7 +1368,16 @@ export async function mockMobileStorefront(
           product.category.id === categoryKey || product.category.slug === categoryKey
         ))
       ));
-      const defaultListingProducts = usesPublicTaxonomy ? PUBLIC_TAXONOMY_PRODUCTS : products;
+      const usesGeneralCategories = categoryKeys.some((categoryKey) => (
+        products.some((product) => (
+          product.category.id === categoryKey || product.category.slug === categoryKey
+        ))
+      ));
+      // A cuisine's food scope spans both fixture cohorts. Category-only pages
+      // retain their original cohort; filtering still happens before pagination.
+      const defaultListingProducts = usesPublicTaxonomy && usesGeneralCategories
+        ? categoryProducts
+        : usesPublicTaxonomy ? PUBLIC_TAXONOMY_PRODUCTS : products;
       const usesNewestHomepageSource = body.variables?.sortBy?.field === 'DATE'
         && body.variables?.sortBy?.direction === 'DESC';
       const unpaginatedProducts = options.homepageShelfSources === 'distinct'

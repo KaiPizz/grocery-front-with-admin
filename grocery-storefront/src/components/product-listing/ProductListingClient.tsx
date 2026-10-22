@@ -82,6 +82,10 @@ interface ProductListingClientProps {
   withContainer?: boolean;
   categoryNavigation?: CategoryNavigationItem[];
   currentCategorySlug?: string | null;
+  initialCountries?: string[];
+  categoryScopeReady?: boolean;
+  categoryScopeError?: string | null;
+  onCategoryScopeRetry?: () => void;
 }
 
 interface CategoryFilterOption {
@@ -275,6 +279,10 @@ export function ProductListingClient({
   withContainer = true,
   categoryNavigation = [],
   currentCategorySlug = null,
+  initialCountries = EMPTY_CATEGORY_IDS,
+  categoryScopeReady = true,
+  categoryScopeError = null,
+  onCategoryScopeRetry,
 }: ProductListingClientProps) {
   const t = useTranslations('products');
   const tCommon = useTranslations('common');
@@ -385,19 +393,60 @@ export function ProductListingClient({
   const normalizedSearch = search.trim();
   const sortOptions = getSortOptions(Boolean(normalizedSearch));
   const sortOption = sortOptions.find((option) => option.value === sort) || sortOptions[0];
-  const listingSourceKey = `${channel}\u0000${pageSize}`;
-  const listingDisplayKey = `${listingSourceKey}\u0000${normalizedSearch}\u0000${sortOption.value}`;
-  const listingDisplayKeyRef = useRef(listingDisplayKey);
-  const initialListingSourceKeyRef = useRef(listingSourceKey);
-  const listingDisplayChanged = listingDisplayKeyRef.current !== listingDisplayKey;
-  const displayedProducts = listingDisplayChanged ? [] : loadedProducts;
   const activeCategoryIds = useMemo(() => (
     categoryIds.length > 0 ? categoryIds : categoryId ? [categoryId] : []
   ), [categoryId, categoryIds]);
-  const countryOriginCategoryIds = activeCategoryIds.length > 0 ? activeCategoryIds : null;
+  const normalizedCommittedFilters = useMemo(
+    () => normalizeFiltersState({ ...committedFilters, countryOfOrigin: countriesFromUrl }, null),
+    [committedFilters, countriesFromUrl],
+  );
+  const normalizedDraftFilters = useMemo(
+    () => normalizeFiltersState(draftFilters, null),
+    [draftFilters],
+  );
+  const initialFilters = useMemo<ProductFiltersState>(() => ({
+    ...DEFAULT_FILTERS,
+    storageZone: initialZone || '',
+    countryOfOrigin: initialCountries,
+  }), [initialZone, initialCountries]);
+  const normalizedInitialFilters = useMemo(
+    () => normalizeFiltersState(initialFilters, null),
+    [initialFilters],
+  );
+
+  const filter = useMemo(
+    () => buildProductFilter(normalizedCommittedFilters, search, activeCategoryIds),
+    [activeCategoryIds, normalizedCommittedFilters, search],
+  );
+  const queryFilter = Object.keys(filter).length > 0 ? filter : undefined;
+  const queryFilterKey = JSON.stringify(queryFilter ?? null);
+  const listingSourceKey = `${channel}\u0000${pageSize}\u0000${activeCategoryIds.join(',')}\u0000${countryQueryKey}`;
+  const listingDisplayKey = `${listingSourceKey}\u0000${normalizedSearch}\u0000${sortOption.value}\u0000${queryFilterKey}`;
+  const listingDisplayKeyRef = useRef(listingDisplayKey);
+  const initialListingSourceKeyRef = useRef(listingSourceKey);
+  const initialListingMatchesCurrentState = initialProducts.length > 0
+    && listingSourceKey === initialListingSourceKeyRef.current
+    && search === initialSearch
+    && sort === initialSort
+    && areFiltersEqual(normalizedCommittedFilters, normalizedInitialFilters);
+  const canUseInitialListingResult = initialListingReusable && initialListingMatchesCurrentState;
+
+  const [loadedListingKey, setLoadedListingKey] = useState<string | null>(
+    initialListingMatchesCurrentState ? listingDisplayKey : null,
+  );
+  const listingScopeBlocked = !categoryScopeReady || Boolean(categoryScopeError);
+  const listingDisplayChanged = loadedListingKey !== listingDisplayKey;
+  const displayedProducts = listingScopeBlocked || listingDisplayChanged ? [] : loadedProducts;
+  const listingQueryResetKey = listingDisplayKey;
+  const listingQueryResetKeyRef = useRef(listingQueryResetKey);
+  const latestListingQueryKeyRef = useRef(listingQueryResetKey);
+  latestListingQueryKeyRef.current = listingQueryResetKey;
+  const countryOriginCategoryIds = Array.isArray(filter.categories) && filter.categories.length > 0
+    ? filter.categories : null;
+  const facetCategoryKey = JSON.stringify(countryOriginCategoryIds);
   const [countryOriginsResult] = useQuery<ProductCountryOriginsQueryResponse>({
     query: PRODUCT_COUNTRY_ORIGINS_QUERY,
-    pause: !filterMetadataRequested,
+    pause: !filterMetadataRequested || listingScopeBlocked,
     variables: {
       channel,
       first: 100,
@@ -407,12 +456,13 @@ export function ProductListingClient({
   // The brand list is scoped to the selected countries (the "Kuchnie" landing
   // sets one): a channel-wide list would offer brands with no product in the
   // country and most chips would lead to an empty listing.
-  const brandFacetCountries = committedFilters.countryOfOrigin
+  const brandFacetCountries = normalizedCommittedFilters.countryOfOrigin
     .map((country) => country.trim())
     .filter(Boolean);
+  const brandCountryKey = JSON.stringify(brandFacetCountries.length > 0 ? brandFacetCountries : null);
   const [brandsResult] = useQuery<ProductBrandsQueryResponse>({
     query: PRODUCT_BRANDS_QUERY,
-    pause: !filterMetadataRequested,
+    pause: !filterMetadataRequested || listingScopeBlocked,
     variables: {
       channel,
       // The backend caps this at 100; the group shows 8 and the search box
@@ -427,7 +477,9 @@ export function ProductListingClient({
   // A backend without `productBrands` answers with a validation error; that
   // only hides the brand section, every other filter keeps working.
   const availableBrands = useMemo<FilterChipOption[]>(() => {
-    if (brandsResult.error) return [];
+    if (listingScopeBlocked || brandsResult.error
+      || JSON.stringify(brandsResult.operation?.variables?.categoryIds ?? null) !== facetCategoryKey
+      || JSON.stringify(brandsResult.operation?.variables?.countryOfOrigin ?? null) !== brandCountryKey) return [];
 
     return (brandsResult.data?.productBrands ?? [])
       .filter((brand) => brand?.value?.trim())
@@ -436,8 +488,10 @@ export function ProductListingClient({
         label: brand.value.trim(),
         count: Number(brand.count) || 0,
       }));
-  }, [brandsResult.data, brandsResult.error]);
+  }, [brandsResult.data, brandsResult.error, brandsResult.operation, listingScopeBlocked, facetCategoryKey, brandCountryKey]);
   const availableCountryOrigins = useMemo(() => {
+    if (listingScopeBlocked
+      || JSON.stringify(countryOriginsResult.operation?.variables?.categoryIds ?? null) !== facetCategoryKey) return [];
     const origins = countryOriginsResult.data?.productCountryOrigins ?? [];
 
     return origins
@@ -453,7 +507,7 @@ export function ProductListingClient({
         if (right.count !== left.count) return right.count - left.count;
         return left.label.localeCompare(right.label, locale);
       });
-  }, [countryOriginsResult.data, locale]);
+  }, [countryOriginsResult.data, countryOriginsResult.operation, listingScopeBlocked, facetCategoryKey, locale]);
   const availableCategories = useMemo(() => {
     const categories = new Map<string, CategoryFilterOption>();
 
@@ -480,40 +534,6 @@ export function ProductListingClient({
   const categoryNameById = useMemo(() => new Map(availableCategories.map((category) => [category.id, category.name])), [availableCategories]);
   const countryOriginByValue = useMemo(() => new Map(availableCountryOrigins.map((origin) => [origin.value, origin.label])), [availableCountryOrigins]);
 
-  const normalizedCommittedFilters = useMemo(
-    () => normalizeFiltersState(committedFilters, null),
-    [committedFilters],
-  );
-  const normalizedDraftFilters = useMemo(
-    () => normalizeFiltersState(draftFilters, null),
-    [draftFilters],
-  );
-  const initialFilters = useMemo<ProductFiltersState>(() => ({
-    ...DEFAULT_FILTERS,
-    storageZone: initialZone || '',
-  }), [initialZone]);
-  const normalizedInitialFilters = useMemo(
-    () => normalizeFiltersState(initialFilters, null),
-    [initialFilters],
-  );
-
-  const filter = useMemo(
-    () => buildProductFilter(normalizedCommittedFilters, search, activeCategoryIds),
-    [activeCategoryIds, normalizedCommittedFilters, search],
-  );
-  const queryFilter = Object.keys(filter).length > 0 ? filter : undefined;
-  const queryFilterKey = JSON.stringify(queryFilter ?? null);
-  const listingQueryResetKey = `${listingDisplayKey}\u0000${queryFilterKey}`;
-  const listingQueryResetKeyRef = useRef(listingQueryResetKey);
-  const latestListingQueryKeyRef = useRef(listingQueryResetKey);
-  latestListingQueryKeyRef.current = listingQueryResetKey;
-  const initialListingMatchesCurrentState = initialProducts.length > 0
-    && listingSourceKey === initialListingSourceKeyRef.current
-    && search === initialSearch
-    && sort === initialSort
-    && areFiltersEqual(normalizedCommittedFilters, normalizedInitialFilters);
-  const canUseInitialListingResult = initialListingReusable && initialListingMatchesCurrentState;
-
   useEffect(() => {
     if (initialListingReusable && !initialListingMatchesCurrentState) {
       setInitialListingReusable(false);
@@ -522,7 +542,7 @@ export function ProductListingClient({
 
   const [result, reexecuteProductsQuery] = useQuery<ProductsQueryResponse>({
     query: PRODUCT_LISTING_QUERY,
-    pause: canUseInitialListingResult,
+    pause: canUseInitialListingResult || listingScopeBlocked,
     variables: {
       channel,
       first: pageSize,
@@ -548,9 +568,8 @@ export function ProductListingClient({
     }
     listingQueryResetKeyRef.current = listingQueryResetKey;
 
-    // Do not keep products from a previous channel, page-size, search, or sort
-    // visible while their replacement is in flight. Category navigation may
-    // reuse server-provided products, so filters alone do not clear the grid.
+    // A country or category change must not show rows from the old scope while
+    // the server computes its replacement, counts and pagination.
     if (listingDisplayKeyRef.current !== listingDisplayKey) {
       listingDisplayKeyRef.current = listingDisplayKey;
       setLoadedProducts([]);
@@ -568,7 +587,13 @@ export function ProductListingClient({
   }, [listingDisplayKey, listingQueryResetKey]);
 
   useEffect(() => {
-    if (!result.fetching && result.data?.products) {
+    if (!listingScopeBlocked && !result.fetching && result.data?.products
+      && JSON.stringify(result.operation?.variables?.filter ?? null) === queryFilterKey
+      && result.operation?.variables?.channel === channel
+      && result.operation?.variables?.first === pageSize
+      && result.operation?.variables?.sortBy?.field === sortOption.field
+      && result.operation?.variables?.sortBy?.direction === sortOption.direction) {
+      setLoadedListingKey(listingDisplayKey);
       const products = result.data.products.edges?.map((edge) => edge.node) || [];
       setLoadedProducts(products);
       setVisibleTotalCount(result.data.products.totalCount ?? 0);
@@ -593,18 +618,18 @@ export function ProductListingClient({
         },
       });
     }
-  }, [result.data, result.fetching]);
+  }, [result.data, result.fetching, result.operation, listingScopeBlocked, listingDisplayKey, queryFilterKey, channel, pageSize, sortOption.field, sortOption.direction]);
 
-  const productsErrorMessage = getProductsErrorMessage(result.error, tCommon('error'));
+  const productsErrorMessage = categoryScopeError || getProductsErrorMessage(result.error, tCommon('error'));
   const hasProductsError = Boolean(productsErrorMessage);
-  const totalCount = hasProductsError || listingDisplayChanged ? 0 : visibleTotalCount;
+  const totalCount = hasProductsError || listingScopeBlocked || listingDisplayChanged ? 0 : visibleTotalCount;
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
   const canJumpToAnyPage = decodeOffsetCursor(endCursor) !== null || decodeOffsetCursor(startCursor) !== null;
   const currentRangeStart = displayedProducts.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0;
   const currentRangeEnd = displayedProducts.length > 0 ? Math.min(totalCount, currentRangeStart + displayedProducts.length - 1) : 0;
   const activeFilterCount = countActiveFilters(normalizedCommittedFilters);
   const draftFilterCount = countActiveFilters(normalizedDraftFilters);
-  const isInitialLoading = result.fetching && displayedProducts.length === 0 && !hasProductsError;
+  const isInitialLoading = (result.fetching || !categoryScopeReady) && displayedProducts.length === 0 && !hasProductsError;
   const hasCategoryNavigation = categoryNavigation.length > 0;
   const hasDesktopSidebar = hasCategoryNavigation;
 
@@ -858,6 +883,7 @@ export function ProductListingClient({
     const nextHasMore = productsResult.pageInfo?.hasNextPage || false;
 
     setLoadedProducts(products);
+    setLoadedListingKey(listingDisplayKey);
     setVisibleTotalCount(productsResult.totalCount ?? totalCount);
     setStartCursor(nextStartCursor);
     setEndCursor(nextEndCursor);
@@ -888,6 +914,7 @@ export function ProductListingClient({
 
   function applyPageSnapshot(targetPage: number, snapshot: ProductPageSnapshot) {
     setLoadedProducts(snapshot.products);
+    setLoadedListingKey(listingDisplayKey);
     setVisibleTotalCount(snapshot.totalCount);
     setStartCursor(snapshot.startCursor);
     setEndCursor(snapshot.endCursor);
@@ -934,7 +961,7 @@ export function ProductListingClient({
   }
 
   async function handlePageMove(direction: 'next' | 'previous') {
-    if (loadingPage) return;
+    if (loadingPage || listingScopeBlocked || listingDisplayChanged) return;
     if (direction === 'next' && !endCursor) return;
     if (direction === 'previous' && !startCursor) return;
 
@@ -1381,7 +1408,8 @@ export function ProductListingClient({
           </p>
           <button
             type="button"
-            onClick={() => reexecuteProductsQuery({ requestPolicy: 'network-only' })}
+            onClick={() => categoryScopeError && onCategoryScopeRetry
+              ? onCategoryScopeRetry() : reexecuteProductsQuery({ requestPolicy: 'network-only' })}
             className="mt-4 inline-flex items-center justify-center rounded-full border px-4 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
             style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
           >
@@ -1435,7 +1463,8 @@ export function ProductListingClient({
           </p>
           <button
             type="button"
-            onClick={() => reexecuteProductsQuery({ requestPolicy: 'network-only' })}
+            onClick={() => categoryScopeError && onCategoryScopeRetry
+              ? onCategoryScopeRetry() : reexecuteProductsQuery({ requestPolicy: 'network-only' })}
             className="mt-4 inline-flex items-center justify-center rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors duration-fast hover-surface"
             style={{ borderColor: 'var(--color-border)', color: 'var(--color-foreground)' }}
           >
@@ -1462,6 +1491,14 @@ export function ProductListingClient({
     return renderEmptyState(false);
   }
 
+  function buildCategoryHref(slug: string) {
+    const params = new URLSearchParams();
+    setCountryQueryParams(params, countriesFromUrl);
+    if (searchParams.get('type') === 'food') params.set('type', 'food');
+    const query = params.toString();
+    return `/categories/${slug}${query ? `?${query}` : ''}`;
+  }
+
   function renderDesktopSidebar() {
     if (!hasDesktopSidebar) return null;
 
@@ -1482,7 +1519,7 @@ export function ProductListingClient({
               return (
                 <div key={item.id}>
                   <Link
-                    href={`/categories/${item.slug}`}
+                    href={buildCategoryHref(item.slug)}
                     className="flex min-h-[2.75rem] items-center justify-between gap-3 rounded-[0.9rem] px-3 py-2 text-sm font-semibold transition-colors duration-fast hover-surface"
                     style={{
                       backgroundColor: isActive ? 'var(--color-accent)' : 'transparent',
@@ -1491,7 +1528,7 @@ export function ProductListingClient({
                     aria-current={isActive ? 'page' : undefined}
                   >
                     <span className="min-w-0 leading-snug">{item.name}</span>
-                    {typeof item.count === 'number' && (
+                    {typeof item.count === 'number' && countriesFromUrl.length === 0 && (
                       <span
                         className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
                         style={{
@@ -1517,7 +1554,7 @@ export function ProductListingClient({
                         return (
                           <li key={leaf.id}>
                             <Link
-                              href={`/categories/${leaf.slug}`}
+                              href={buildCategoryHref(leaf.slug)}
                               className="flex min-h-[2.4rem] items-center justify-between gap-2 rounded-[0.8rem] px-2.5 py-1.5 text-sm transition-colors duration-fast hover-surface"
                               style={{
                                 backgroundColor: isLeafActive ? 'var(--color-accent)' : 'transparent',
@@ -1526,7 +1563,7 @@ export function ProductListingClient({
                               aria-current={isLeafActive ? 'page' : undefined}
                             >
                               <span className="min-w-0 line-clamp-1">{leaf.name}</span>
-                              {typeof leaf.count === 'number' && (
+                              {typeof leaf.count === 'number' && countriesFromUrl.length === 0 && (
                                 <span
                                   className="shrink-0 text-[11px] tabular-nums"
                                   style={{ color: 'var(--color-muted-foreground)' }}
@@ -1590,7 +1627,7 @@ export function ProductListingClient({
       return (
         <Link
           key={category.id}
-          href={`/categories/${category.slug}`}
+          href={buildCategoryHref(category.slug)}
           className={`inline-flex shrink-0 items-center rounded-full border font-semibold shadow-[0_12px_24px_-24px_rgba(66,109,72,0.35)] transition-colors duration-fast ${expandedGroup
             ? 'min-h-9 gap-1.5 px-3 py-1.5 text-[13px]'
             : 'min-h-[2.45rem] gap-2 px-3.5 py-2 text-sm'}`}
@@ -1602,7 +1639,7 @@ export function ProductListingClient({
           aria-current={isActive ? 'page' : undefined}
         >
           <span>{isGroupChip ? t('allInCategory') : category.name}</span>
-          {typeof category.count === 'number' && (
+          {typeof category.count === 'number' && countriesFromUrl.length === 0 && (
             <span
               className="rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums"
               style={{

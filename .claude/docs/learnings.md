@@ -1181,3 +1181,10 @@
 - **Cause:** Navigation and the evaluation waited on the same document transition; the product had already saved the expected state and issued the correct retry.
 - **Fix:** Fulfill navigation first, then inspect the original shop origin using `context.storageState()`. All three new browser cases passed with the original quantity and retry assertions.
 - **Rule:** Keep navigation interception callbacks free of outgoing-document evaluation; inspect persisted state after the navigation commits.
+
+
+### Product kind follows category identity, not incidental label fields
+- **Error:** INCI or imported ingredients/nutrition fields made cosmetics and kitchenware look like food; country-based cuisine links also included those products.
+- **Cause:** Product information inferred food status from optional metadata, while country origin and merchandise kind were treated as one dimension.
+- **Fix:** Resolve the existing category ancestry, require explicit food categories before cuisine pagination/facets, and render cosmetic INCI or neutral product information by kind. Metadata loading/error/empty states fail closed.
+- **Rule:** Keep origin independent from product kind. Unknown categories stay neutral; do not manufacture food identity, usage or specification claims from missing data.

@@ -26,6 +26,8 @@
     "skipToContent": "Skip to content"
   },
   "nav": {
+    "cosmetics": "Beauty",
+    "kitchenware": "Kitchenware",
     "home": "Home",
     "categories": "Categories",
     "products": "Products",
@@ -273,6 +275,8 @@
     "groupToggle": "Expand {name}"
   },
   "product": {
+    "inci": "INCI ingredients",
+    "cosmeticsDescription": "Description and directions",
     "nutrition": "Nutrition facts",
     "nutritionDialogDescription": "Nutrition, ingredients, allergens, and product details for {name}.",
     "nutritionPer100": "Per 100g / 100ml",

@@ -217,6 +217,12 @@ const longDetailDescription = `
   and structured data. Końcowa informacja pozostaje wyłącznie w pełnym opisie produktu.
 `;
 
+// The generic test food categories predate the public taxonomy. Keep their
+// explicit food parent when food labels are deliberately missing.
+for (const product of products) {
+  product.category.parent = { id: 'cat-group-cooking', slug: 'do-gotowania-i-sushi' };
+}
+
 const detailProducts = [
   ...products,
   {
@@ -253,6 +259,23 @@ const detailProducts = [
     ],
   },
 ];
+
+// Detail-only identities for the mixed catalog regression. These never enter
+// listing counts; browser mocks provide the deliberate bad/missing metadata.
+for (const [id, name, categorySlug, parentSlug] of [
+  ['aloe-cleanser-fixture', 'Aloe facial cleansing foam fixture', 'facial-care-fixture', 'kosmetyki-koreanskie'],
+  ['ceramic-bowl-fixture', 'Ceramic ramen bowl fixture', 'bowls-fixture', 'akcesoria-kuchenne'],
+  ['unknown-catalog-fixture', 'Unclassified catalog fixture', 'unclassified-catalog', null],
+  ['korean-food-01', 'Korean ramen food 1', 'ramen-fixture', 'makaron-i-ryz'],
+]) {
+  detailProducts.push({
+    ...products[0], id, slug: id, name, translation: null,
+    seoTitle: null, seoDescription: null,
+    category: { id: categorySlug, slug: categorySlug, name: categorySlug,
+      parent: parentSlug ? { id: parentSlug, slug: parentSlug } : null },
+    variants: products[0].variants.map((variant) => ({ ...variant, id: `${id}-variant`, sku: id })),
+  });
+}
 
 // Two-level public tree: the four group rows are level 0 parents of the leaves
 // named in LEAF_PARENT_ID; every other row stays a leafless level-0 group.
@@ -514,7 +537,11 @@ function buildCategoryNode(category, index = 0) {
     displayOrder: index,
     description: null,
     backgroundImage: null,
-    parent: parentId ? { id: parentId, slug: parentId, name: parentId } : null,
+    parent: parentId ? {
+      id: parentId,
+      slug: CATEGORY_GROUPS.find((group) => group.id === parentId)?.slug ?? parentId,
+      name: CATEGORY_GROUPS.find((group) => group.id === parentId)?.name ?? parentId,
+    } : null,
     translation: category.translation ?? null,
     children: { edges: [] },
     products: {

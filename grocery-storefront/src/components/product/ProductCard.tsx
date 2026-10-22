@@ -12,6 +12,7 @@ import { Link } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { getLocalizedProductName } from '@/lib/localization';
+import { getCatalogProductKind } from '@/lib/catalog-product-kind';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import type { GroceryProduct } from '@/types';
 
@@ -82,6 +83,7 @@ export function ProductCard({
   const t = useTranslations();
   const locale = useLocale();
   const productName = getLocalizedProductName(product, locale);
+  const isFoodProduct = getCatalogProductKind(product.category) === 'food';
   const displayProduct = productName === product.name ? product : { ...product, name: productName };
   const variant = product.variants?.[0] as any;
   const addItem = useCartStore((s) => s.addItem);
@@ -127,7 +129,7 @@ export function ProductCard({
   const storageLabel = product.storageZone ? t(`cart.zoneGroup.${product.storageZone}` as any) : null;
   // Only cold chain needs a signal on the photo; category, origin and storage
   // live in the listing filters, allergens on the product page and in the cart.
-  const storageBadge = product.storageZone === 'FROZEN' || product.storageZone === 'CHILLED' ? (
+  const storageBadge = isFoodProduct && (product.storageZone === 'FROZEN' || product.storageZone === 'CHILLED') ? (
     <span
       role="img"
       className={`px-2 py-0.5 rounded-md text-[10px] font-bold text-white zone-${product.storageZone.toLowerCase()}`}
@@ -399,7 +401,7 @@ export function ProductCard({
             </span>
           )}
 
-          {product.freshness && (
+          {isFoodProduct && product.freshness && (
             <div
               className="pointer-events-none absolute left-2.5 top-2.5 z-20 hidden sm:block"
               data-testid="product-card-freshness-badge"
@@ -477,7 +479,7 @@ export function ProductCard({
             {storageBadge}
           </div>
 
-          {product.nutritionFacts && (
+          {isFoodProduct && product.nutritionFacts && (
             <button
               type="button"
               onClick={handleNutritionClick}
@@ -499,16 +501,16 @@ export function ProductCard({
         </div>
 
         <div className="flex flex-1 flex-col p-3.5 sm:bg-[var(--color-card)]">
-          {(product.freshness || storageBadge || product.nutritionFacts) && (
+          {isFoodProduct && (product.freshness || storageBadge || product.nutritionFacts) && (
             <div className="mb-2 flex items-start justify-between gap-2 sm:hidden">
               <div className="flex min-w-0 flex-wrap items-center gap-1">
-                {product.freshness && (
+                {isFoodProduct && product.freshness && (
                   <FreshnessBadge freshness={product.freshness} nearestExpiry={product.nearestExpiry} compact />
                 )}
                 {storageBadge}
               </div>
 
-              {product.nutritionFacts && (
+              {isFoodProduct && product.nutritionFacts && (
                 <button
                   type="button"
                   onClick={handleNutritionClick}
@@ -525,7 +527,7 @@ export function ProductCard({
             </div>
           )}
 
-          {product.dietaryTags && product.dietaryTags.length > 0 && (
+          {isFoodProduct && product.dietaryTags && product.dietaryTags.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-2">
               {product.dietaryTags.map((tag) => (
                 <span
@@ -667,6 +669,7 @@ export function ProductCard({
         </div>
       </article>
 
+      {isFoodProduct && (
       <NutritionModal
         open={nutritionOpen}
         onOpenChange={setNutritionOpen}
@@ -678,6 +681,7 @@ export function ProductCard({
         certifications={product.certifications}
         countryOfOrigin={product.countryOfOrigin}
       />
+      )}
     </>
   );
 }

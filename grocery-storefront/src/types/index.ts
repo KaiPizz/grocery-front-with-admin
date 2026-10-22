@@ -67,6 +67,7 @@ export interface GroceryProduct {
     id: string;
     name: string;
     slug: string;
+    parent?: { id: string; slug: string } | null;
   };
   variants: ProductVariant[];
   price: number;

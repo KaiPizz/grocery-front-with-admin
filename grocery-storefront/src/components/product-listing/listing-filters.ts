@@ -152,7 +152,8 @@ export function buildProductFilter(
   const scopedCategoryIds = Array.from(new Set(categoryIds.filter(Boolean)));
 
   if (scopedCategoryIds.length > 0) {
-    nextFilter.categories = scopedCategoryIds;
+    const selectedIds = filters.categoryIds.filter((id) => scopedCategoryIds.includes(id));
+    nextFilter.categories = selectedIds.length > 0 ? selectedIds : scopedCategoryIds;
   } else if (filters.categoryIds.length > 0) {
     nextFilter.categories = filters.categoryIds;
   }

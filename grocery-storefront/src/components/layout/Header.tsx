@@ -79,6 +79,10 @@ export function Header() {
   const navItems = configuredNavItems && configuredNavItems.length > 0
     ? configuredNavItems
     : fallbackNavItems;
+  const nonFoodNavItems = [
+    { label: t('cosmetics'), href: '/categories/kosmetyki-koreanskie', enabled: true, order: 4 },
+    { label: t('kitchenware'), href: '/categories/akcesoria-kuchenne', enabled: true, order: 5 },
+  ].filter((item) => !navItems.some((navItem) => navItem.href === item.href));
   const commercialQuickLinks = getEnabledCommercialQuickLinks(siteConfig).map((link) => ({
     ...link,
     label: link.href === '/collections/korean-pantry' ? t('koreanPantry') : link.label,
@@ -361,9 +365,12 @@ export function Header() {
 
   const mobileShopItems = [
     ...navItems,
+    ...nonFoodNavItems,
     ...commercialQuickLinks.map(({ href, label, order }) => ({ href, label, enabled: true, order })),
   ];
-  const activeCuisineCountries = isProductsRoute ? parseCountryQueryParams(searchParams) : [];
+  const activeCuisineCountries = searchParams.get('type') === 'food'
+    && (isProductsRoute || pathname.startsWith('/categories/'))
+    ? parseCountryQueryParams(searchParams) : [];
 
   return (
     <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
@@ -464,6 +471,17 @@ export function Header() {
             );
           })}
           <CuisineMenu />
+          {nonFoodNavItems.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className="whitespace-nowrap rounded-lg px-2 py-2 text-sm font-medium hover-surface"
+              style={{ color: isCurrentNavigationHref(href) ? 'var(--color-primary)' : 'var(--color-foreground)' }}
+              aria-current={isCurrentNavigationHref(href) ? 'page' : undefined}
+            >
+              {label}
+            </Link>
+          ))}
           {commercialQuickLinks.map(({ id, href, label }) => (
             <Link
               key={`commercial-${id}`}

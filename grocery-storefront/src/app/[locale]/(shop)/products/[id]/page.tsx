@@ -25,6 +25,7 @@ import {
 } from '@/lib/catalog-display-localization';
 import { getLocalizedProductDescription, getLocalizedProductName } from '@/lib/localization';
 import { getDescriptionBeyondTitle } from '@/lib/product-description';
+import { getCatalogProductKind } from '@/lib/catalog-product-kind';
 import { formatPrice, getImageSrc, isImageProxySrc } from '@/lib/utils';
 import {
   getConfiguredText,
@@ -75,6 +76,7 @@ interface PurchaseFact {
 }
 
 interface ProductInformationSource {
+  category?: GroceryProduct['category'] | null;
   description?: string | null;
   ingredients?: string | null;
   allergens?: string[] | null;
@@ -316,10 +318,12 @@ function formatProductDate(value: string | null | undefined, locale: string): st
 function ProductInformationSections({ product, sku, currency }: ProductInformationSectionsProps) {
   const t = useTranslations();
   const locale = useLocale();
-  const nutrition = product.nutritionFacts ?? null;
-  const allergens = Array.isArray(product.allergens) ? product.allergens : [];
-  const mayContainAllergens = Array.isArray(product.mayContainAllergens) ? product.mayContainAllergens : [];
-  const dietaryTags = Array.isArray(product.dietaryTags) ? product.dietaryTags : [];
+  const productKind = getCatalogProductKind(product.category);
+  const isFoodProduct = productKind === 'food';
+  const nutrition = isFoodProduct ? product.nutritionFacts ?? null : null;
+  const allergens = isFoodProduct && Array.isArray(product.allergens) ? product.allergens : [];
+  const mayContainAllergens = isFoodProduct && Array.isArray(product.mayContainAllergens) ? product.mayContainAllergens : [];
+  const dietaryTags = isFoodProduct && Array.isArray(product.dietaryTags) ? product.dietaryTags : [];
   const localizedDietaryTags = dietaryTags.map((tag) => (
     t.has(`products.${tag}` as any) ? t(`products.${tag}` as any) : tag
   ));
@@ -336,16 +340,6 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
     && (hasIngredients || Boolean(nutrition?.servingSize?.trim()));
   const missingCatalogLabels: string[] = [];
   const attributeChips: string[] = [];
-  // Kitchenware, tableware and cosmetics carry no food label at all. Showing them empty
-  // "missing ingredients / allergens / nutrition" panels reads as broken data, not as caution.
-  const isFoodProduct = hasIngredients
-    || hasNutrition
-    || allergens.length > 0
-    || mayContainAllergens.length > 0
-    || dietaryTags.length > 0
-    || Boolean(product.storageZone)
-    || Boolean(product.isAlcohol)
-    || product.spiceLevel != null;
   // A full producer ingredient list with no Annex II allergen in it is an answer, not a gap.
   const allergensCheckedAndNoneFound = isFoodProduct
     && hasIngredients
@@ -391,7 +385,7 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
     isMissing: !hasUnitPrice,
   });
 
-  detailFacts.push({ label: t('product.netWeight'), value: t('product.checkPackageLabel') });
+  if (isFoodProduct) detailFacts.push({ label: t('product.netWeight'), value: t('product.checkPackageLabel') });
   detailFacts.push({ label: t('product.origin'), value: displayCountryOfOrigin ?? t('product.catalogMissing'), isMissing: !displayCountryOfOrigin });
 
   if (isFoodProduct) {
@@ -412,12 +406,12 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
     attributeChips.push(...localizedDietaryTags);
   }
 
-  if (product.spiceLevel != null) {
+  if (isFoodProduct && product.spiceLevel != null) {
     detailFacts.push({ label: t('product.spiceLevel'), value: t('product.spiceLevelValue', { level: product.spiceLevel }) });
     attributeChips.push(t('product.spiceLevelValue', { level: product.spiceLevel }));
   }
 
-  if (product.isAlcohol) {
+  if (isFoodProduct && product.isAlcohol) {
     detailFacts.push({ label: t('product.warnings'), value: t('product.containsAlcohol') });
     attributeChips.push(t('product.containsAlcohol'));
   }
@@ -438,7 +432,8 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
   if (!hasUnitPrice) missingCatalogLabels.push(t('product.unitPrice'));
 
   return (
-    <section className="mt-12 border-t pt-8" style={{ borderColor: 'var(--color-border)' }} data-testid="pdp-food-label-sections">
+    <section className="mt-12 border-t pt-8" style={{ borderColor: 'var(--color-border)' }} data-testid={isFoodProduct ? 'pdp-food-label-sections' : 'pdp-product-information-sections'} data-product-kind={productKind}>
+      {isFoodProduct && (
       <div
         className="mb-6 rounded-2xl border p-4 sm:p-5"
         style={{
@@ -497,20 +492,22 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
         )}
       </div>
 
+      )}
+
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.8fr)]">
         <div className="space-y-8">
           {product.description && (
             <section>
               <h2 className="heading-section mb-3 text-xl" style={{ color: 'var(--color-foreground)' }}>
-                {t('product.description')}
+                {t(productKind === 'cosmetics' ? 'product.cosmeticsDescription' : 'product.description')}
               </h2>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
+              <p className="whitespace-pre-line text-sm leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
                 {product.description}
               </p>
             </section>
           )}
 
-          {isFoodProduct && (
+          {(isFoodProduct || (productKind === 'cosmetics' && hasIngredients)) && (
           <details
             className="group rounded-lg border p-4"
             style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card)' }}
@@ -518,7 +515,7 @@ function ProductInformationSections({ product, sku, currency }: ProductInformati
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
               <span className="heading-section text-xl" style={{ color: 'var(--color-foreground)' }}>
-                {t('product.ingredients')}
+                {t(productKind === 'cosmetics' ? 'product.inci' : 'product.ingredients')}
               </span>
               <span
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-lg font-semibold leading-none transition-transform duration-fast group-open:rotate-45"
@@ -777,11 +774,12 @@ export default function ProductDetailPage() {
   });
 
   const product = productResult.data?.product;
+  const isFoodProduct = getCatalogProductKind(product?.category) === 'food';
 
   const [recipesResult] = useQuery({
     query: PRODUCT_RECIPES_QUERY,
     variables: { channel, productId: product?.id || '', first: 4 },
-    pause: !product?.id,
+    pause: !product?.id || !isFoodProduct,
   });
 
   const [relatedProductsResult] = useQuery({
@@ -823,6 +821,8 @@ export default function ProductDetailPage() {
     ...product,
     name: productName,
     description: getDescriptionBeyondTitle(productDescription, productName) ?? undefined,
+    freshness: isFoodProduct ? product.freshness : null,
+    nearestExpiry: isFoodProduct ? product.nearestExpiry : null,
   };
   const displayCategory = getCatalogCategoryDisplay(product.category, locale);
   const displayCountryOfOrigin = getLocalizedCountryOrigin(product.countryOfOrigin, locale);
@@ -844,18 +844,18 @@ export default function ProductDetailPage() {
     purchaseFacts.push({ label: t('product.origin'), value: displayCountryOfOrigin });
   }
 
-  if (product.storageZone) {
+  if (isFoodProduct && product.storageZone) {
     purchaseFacts.push({ label: t('product.storage'), value: t(`cart.zoneGroup.${product.storageZone}` as any) });
   }
 
-  if (Array.isArray(product.dietaryTags) && product.dietaryTags.length > 0) {
+  if (isFoodProduct && Array.isArray(product.dietaryTags) && product.dietaryTags.length > 0) {
     const localizedDietaryTags = product.dietaryTags.map((tag: string) => (
       t.has(`products.${tag}` as any) ? t(`products.${tag}` as any) : tag
     ));
     purchaseFacts.push({ label: t('product.dietary'), value: localizedDietaryTags.join(', ') });
   }
 
-  if (Array.isArray(product.allergens) && product.allergens.length > 0) {
+  if (isFoodProduct && Array.isArray(product.allergens) && product.allergens.length > 0) {
     purchaseFacts.push({
       label: t('product.allergens'),
       value: t('product.allergenCount', { count: product.allergens.length }),
@@ -1126,7 +1126,7 @@ export default function ProductDetailPage() {
       />
 
       {/* Related recipes */}
-      {recipes.length > 0 && (
+      {isFoodProduct && recipes.length > 0 && (
         <section className="mt-16 pt-8 border-t" style={{ borderColor: 'var(--color-border)' }}>
           <h2
             className="heading-section text-xl md:text-2xl mb-6"
