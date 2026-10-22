@@ -136,3 +136,38 @@ After the script succeeds, independently verify:
 
 Checkout, payment and delivery remain explicitly out of launch scope until the
 owner registers and supplies the corresponding providers.
+
+## Approved logo-only production-base profile — 22 October 2026
+
+Paul explicitly approved deploying the logo fix while excluding the queued DPD
+release. Use the existing guarded coordinator with `--logo-only`; all normal
+source, audit, test, secret, runtime, staging, activation and rollback gates
+still apply. No peak bypass is needed or permitted for this frontend release.
+
+The controller must be clean, committed and pushed to canonical `origin/main`.
+Its source profile builds the existing production application commit
+`db1459210dea11eff87ec8a334ca2d5271a73d8e`, applies only the checksum-pinned
+`deploy/patches/asiadeligo-logo-home.patch` (header/footer brand links), retains
+both previously approved category background images, and includes the new logo
+regression test. No checkout, delivery, admin, dependency, configuration,
+translation or database source changes are selected. The five-path tree is
+verified by `deploy/tests/asiandeligo-logo-source.test.sh`, including rejection
+of changed patch bytes. This is a one-shot profile, not arbitrary partial-file
+selection.
+
+The source materializer is `deploy/lib/asiadeligo-logo-source.sh`. The existing
+coordinator records the actual materialized Git tree, production base commit,
+canonical controller/source commit and patch hash in each artifact manifest.
+It verifies that neither the index nor worktree changes during build/tests.
+Before building and again under deployment locks, production must still point
+to storefront `storefront-category-assets-20261022T082955Z` and admin
+`admin-db1459210dea-20261015T122314Z`. Any changed baseline requires a new review.
+
+Preview the selected source on ADG dev, verify both logos on desktop/mobile in
+Polish/English, then run `--logo-only --check-only` followed by
+`--logo-only --yes` for the same committed canonical controller. The existing
+transaction activates both immutable artifacts and automatically restores both
+old targets on failure; admin application source remains the live base. No
+production build/install, backend restart or configuration change is allowed.
+Post-release checks include the twelve logo cases, unchanged checkout/source
+profile, both image hashes, health/auth, PM2 and fresh logs.

@@ -36,6 +36,9 @@ REMOTE_FRONTEND_SWAP_LOCK="/tmp/enail-fe-swap.lock"
 EXPECTED_COMMIT=""
 CHECK_ONLY=""
 CONFIRMED=""
+LOGO_ONLY=""
+SOURCE_TREE_HASH=""
+SOURCE_BASE_COMMIT=""
 BUILD_ROOT=""
 BUILD_SOURCE=""
 WORKTREE_ADDED=""
@@ -61,6 +64,7 @@ usage() {
 Usage:
   deploy/deploy-asiandeligo-contabo.sh --commit <full-40-char-sha> --check-only
   deploy/deploy-asiandeligo-contabo.sh --commit <full-40-char-sha> --yes
+  Add --logo-only for the pinned production-base logo profile (see ASIANDELIGO_RELEASE.md).
 
 --check-only performs all local build/test/artifact checks and read-only
 production preflights. It never creates remote directories, transfers files or
@@ -122,6 +126,10 @@ while (($#)); do
       (($# >= 2)) || die "--commit requires a value"
       EXPECTED_COMMIT="$2"
       shift 2
+      ;;
+    --logo-only)
+      LOGO_ONLY=1
+      shift
       ;;
     --check-only)
       CHECK_ONLY=1
@@ -552,6 +560,15 @@ available_kb="$(df -Pk "$store_base" | awk 'NR==2 {print $4}')"
 
 printf 'Contabo preflight passed; no production state changed.\n'
 REMOTE_PREFLIGHT
+  if [[ -n "$LOGO_ONLY" ]]; then
+    ssh "$REMOTE" bash -s <<'LOGO_BASELINE'
+set -euo pipefail
+[[ "$(readlink -f /var/www/kenmito-storefront/current)" == /var/www/kenmito-storefront/releases/storefront-category-assets-20261022T082955Z ]]
+[[ "$(readlink -f /var/www/kenmito-admin/current)" == /var/www/kenmito-admin/releases/admin-db1459210dea-20261015T122314Z ]]
+grep -qx 'source_commit=db1459210dea11eff87ec8a334ca2d5271a73d8e' /var/www/kenmito-storefront/current/RELEASE_MANIFEST.txt
+echo 'Pinned logo-only production baseline verified'
+LOGO_BASELINE
+  fi
 }
 
 assert_direct_ports_blocked() {
@@ -1041,7 +1058,7 @@ write_manifest_and_archive() {
   lock_hash="$(sha256sum "$app_dir/package-lock.json" | awk '{print $1}')"
   script_hash="$(sha256sum "$ROOT_DIR/deploy/deploy-asiandeligo-contabo.sh" | awk '{print $1}')"
   activator_hash="$(sha256sum "$ACTIVATOR_SNAPSHOT" | awk '{print $1}')"
-  tree_hash="$(git -C "$ROOT_DIR" rev-parse "$EXPECTED_COMMIT^{tree}")"
+  tree_hash="$SOURCE_TREE_HASH"
   repo_url="$(git -C "$ROOT_DIR" config --get remote.origin.url)"
   env_names_hash="$(fingerprint_env_names "$env_file")"
   next_version="$(node -p "require('$app_dir/node_modules/next/package.json').version")"
@@ -1055,6 +1072,9 @@ write_manifest_and_archive() {
 repository=$repo_url
 source_commit=$EXPECTED_COMMIT
 source_tree=$tree_hash
+source_base_commit=$SOURCE_BASE_COMMIT
+source_profile=${LOGO_ONLY:+logo-only}
+source_patch_sha256=${LOGO_ONLY:+$LOGO_PATCH_SHA256}
 component=$component
 release_id=$release_id
 node_version=$(node --version)
@@ -1100,8 +1120,18 @@ build_and_package() {
   ADMIN_RELEASE_ID="admin-${EXPECTED_COMMIT:0:12}-$RELEASE_STAMP"
 
   note "Create isolated detached builder at $EXPECTED_COMMIT"
-  git -C "$ROOT_DIR" worktree add --detach "$BUILD_SOURCE" "$EXPECTED_COMMIT" >/dev/null
-  WORKTREE_ADDED=1
+  if [[ -n "$LOGO_ONLY" ]]; then
+    source "$ROOT_DIR/deploy/lib/asiadeligo-logo-source.sh"
+    SOURCE_BASE_COMMIT="$LOGO_BASE_COMMIT"
+    WORKTREE_ADDED=1
+    materialize_logo_source "$ROOT_DIR" "$BUILD_SOURCE" "$EXPECTED_COMMIT" "$BUILD_ROOT/logo.patch" \
+      || die "logo-only source materialization failed"
+  else
+    SOURCE_BASE_COMMIT="$EXPECTED_COMMIT"
+    git -C "$ROOT_DIR" worktree add --detach "$BUILD_SOURCE" "$EXPECTED_COMMIT" >/dev/null
+    WORKTREE_ADDED=1
+    SOURCE_TREE_HASH="$(git -C "$BUILD_SOURCE" write-tree)"
+  fi
   ACTIVATOR_SNAPSHOT="$BUILD_ROOT/activate-asiandeligo-release.sh"
   git -C "$ROOT_DIR" show "$EXPECTED_COMMIT:deploy/activate-asiandeligo-release.sh" >"$ACTIVATOR_SNAPSHOT"
   chmod 500 "$ACTIVATOR_SNAPSHOT"
@@ -1163,7 +1193,9 @@ build_and_package() {
       npm run test:production-smoke
   )
 
-  [[ -z "$(git -C "$BUILD_SOURCE" status --porcelain=v1 --untracked-files=all)" ]] \
+  [[ "$(git -C "$BUILD_SOURCE" write-tree)" == "$SOURCE_TREE_HASH" ]] \
+    && git -C "$BUILD_SOURCE" diff --quiet \
+    && [[ -z "$(git -C "$BUILD_SOURCE" ls-files --others --exclude-standard)" ]] \
     || die "build/test lifecycle modified tracked or unignored candidate source"
 
   ADMIN_BUILD_ID="$(<"$admin_app/.next/BUILD_ID")"
