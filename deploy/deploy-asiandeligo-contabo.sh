@@ -39,6 +39,7 @@ CONFIRMED=""
 LOGO_ONLY=""
 SOURCE_TREE_HASH=""
 SOURCE_BASE_COMMIT=""
+SOURCE_PROFILE="canonical"
 BUILD_ROOT=""
 BUILD_SOURCE=""
 WORKTREE_ADDED=""
@@ -129,6 +130,7 @@ while (($#)); do
       ;;
     --logo-only)
       LOGO_ONLY=1
+      SOURCE_PROFILE="logo-only"
       shift
       ;;
     --check-only)
@@ -1073,7 +1075,7 @@ repository=$repo_url
 source_commit=$EXPECTED_COMMIT
 source_tree=$tree_hash
 source_base_commit=$SOURCE_BASE_COMMIT
-source_profile=${LOGO_ONLY:+logo-only}
+source_profile=$SOURCE_PROFILE
 source_patch_sha256=${LOGO_ONLY:+$LOGO_PATCH_SHA256}
 component=$component
 release_id=$release_id
@@ -1160,12 +1162,16 @@ build_and_package() {
   run_sanitized npm --prefix "$store_app" run test:static-config
   run_sanitized npm --prefix "$store_app" run test:catalog-audit
   (cd "$store_app" && run_sanitized node --test tests/tracking-script-security.test.mjs)
-  (cd "$store_app" && run_sanitized npx playwright test \
+  (cd "$store_app" && run_sanitized WATCHPACK_POLLING=1000 npx playwright test \
     tests/catalog-display-localization.regression-1.spec.ts \
     tests/mobile-products-page.spec.ts \
     tests/mobile-pd-extras.spec.ts \
     tests/product-card-scan-value.spec.ts \
     --project=pixel-7)
+  if [[ -n "$LOGO_ONLY" ]]; then
+    (cd "$store_app" && run_sanitized WATCHPACK_POLLING=1000 npx playwright test \
+      tests/logo-home-navigation.spec.ts --project=pixel-7)
+  fi
 
   note "Create secret-free production build env files"
   capture_remote_env_hashes
